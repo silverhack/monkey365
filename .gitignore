@@ -1,0 +1,9 @@
+# logs
+azurereview.log
+
+# Data folder and logs
+monkey-reports*
+log*
+
+site/
+*.csv

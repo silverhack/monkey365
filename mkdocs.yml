@@ -1,0 +1,47 @@
+site_name: Monkey365
+site_url: https://silverhack.github.io/monkey365/
+site_description: Monkey365
+site_author: Juan Garrido
+
+repo_url: https://github.com/silverhack/monkey365
+edit_uri: blob/main/docs/
+
+theme:
+  language: en
+  name: material
+  #custom_dir: overrides
+  font:
+    text: Roboto
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+      primary: black
+      accent: blue
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+      primary: black
+  logo: assets/logo/MonkeyLogo.png
+  favicon: assets/logo/favicon.ico
+  icon:
+    repo: fontawesome/brands/github
+  features:
+  - navigation.instant
+  - navigation.indexes
+  - navigation.sections:
+      level: 1
+  - navigation.tabs
+  - content.code.annotate
+
+nav:
+  - Home: index.md
+  - Getting started:
+    - Overview:
+      - About: about.md
+    - Installation: install-instructions.md
+    - Permissions: permissions.md
+    - Authentication: authentication.md
+    - Basic Usage: basic-usage.md
