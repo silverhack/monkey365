@@ -1,0 +1,74 @@
+{
+    "about": "This ruleset contains a collection of rules for Azure that are considered standard by Monkey 365 app. The rules are used as a mechanism to evaluate the configuration of Azure resources and to determine whether controls within a standard are being adhered to. Rules are also divided into categories and subcategories according to the rule's type. Monkey365 also generates its own findings by running specific checks across multiple Azure services. This will ensures that Azure cloud will meet the industry standards.",
+    "partials": [
+			"cis_azure_1.4.json"
+    ],
+	"rules": {
+		"aad-application-non-privacy-disclosure.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"aad-test-application-present.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"aad-application-excessive-permissions.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"aad-application-lack-fte-owner.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"aad-application-lack-homepage-ssl.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"aad-application-lack-owners.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"aad-application-non-https-logoutUrl.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"aad-application-non-https-returnurl.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"azure-postgresql-unsupported-version.json": [
+            {
+                "enabled": true,
+                "level": "high"
+            }
+        ],
+		"azure-postgresql-log-duration-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"azure-storage-accounts-public-access.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ]
+    }
+}

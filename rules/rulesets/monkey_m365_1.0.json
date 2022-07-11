@@ -1,0 +1,422 @@
+{
+    "about": "This ruleset contains a collection of rules for Microsoft 365 that are considered standard by Monkey 365 app. These rules perform static analysis on Microsoft 365 artifacts within Exchange Online, SharePoint Online, Microsoft Teams or OneDrive, among others, and are used as a mechanism to evaluate the configuration of these Microsoft 365 workloads. Rules are also divided into categories and subcategories according to the rule's type. These rules are designed to determine whether controls within a standard are being adhered to. Monkey365 also generates its own findings by running specific checks across multiple Microsoft 365 applications. This will ensures that Microsoft 365 tenant will meet the industry standards.",
+    "partials": [
+			"cis_m365_1.4.json"
+    ],
+	"rules": {
+		"sharepoint-online-missing-cap.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"sharepoint-sensitivity-label-feature-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"dlp-policies-for-ExchangeOnline-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"dlp-policies-for-OneDrive-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"dlp-policies-for-SharePoint-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"missing-dlp-sits-for-company-data.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"missing-dlp-sits-for-ephi-data.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"missing-dlp-sits-for-financial-data.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"missing-dlp-sits-for-government-data.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"missing-dlp-sits-for-personally-identifiable-data.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"teams-guest-users-allowed.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-anti-malware-external-users-notification-enabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-anti-malware-users-notification-enabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-anti-malware-zap-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-attachment-type-block-action-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-connection-filter-policies-ip-whitelisted.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-mail-transport-rules-safe-attachment-whitelisted.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-mail-transport-rules-safe-links-whitelisted.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-transport-rule-block-forwarding-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-transport-rules-ip-whitelisted.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-transport-rules-organisation-domain-whitelisted.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-bulkspamaction-not-configured.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-high-confidence-spam-action-sendTo-Quarantine.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-enduser-spam-notifications-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-mailbox-intelligence-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-mark-as-spam-bulkmail-disabled.json": [
+            {
+                "enabled": true,
+                "level": "info"
+            }
+        ],
+		"exchange-outbound-spam-filter-policy-limits-enforced.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-phish-action-sendTo-Quarantine-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-phish-filter-policy-zap-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-phish-spam-filter-policy-action-enforced.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-safety-tips-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-spam-filter-policy-sendTo-JunkFolder.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-spam-filter-policy-whitelist-domains.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-spam-filter-policy-whitelist-senders.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-spam-filter-policy-zap-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-anti-spoof-filter-policy-sendTo-JunkFolder.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-anti-spoof-protection-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-anti-user-impersonation-protection-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-atp-safe-documents-policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-atp-safe-links-allowclickthrough-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-atp-safe-links-deliver-message-after-scan-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-atp-safe-links-internal-senders-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-atp-similar-domain-safetytips-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-atp-safe-links-office365-apps-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-atp-similar-user-safetytips-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-bcl-spam-threshold-enforced.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-atp-user-impersonation-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-global-atp-safe-links-allowclickthrough-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-high-confidence-phish-action-enforced.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-hosted-content-quarantined-period-enforced.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-mailbox-intelligence-protection-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-mailbox-intelligence-protection-junk-folder-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-atp-advanced-phish-threshold-enforced.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-atp-default-track-clicks-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-atp-domain-impersonation-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"aad-application-non-privacy-disclosure.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"aad-test-application-present.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"aad-application-excessive-permissions.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"aad-application-lack-fte-owner.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"aad-application-lack-homepage-ssl.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"aad-application-lack-owners.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"aad-application-non-https-logoutUrl.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"aad-application-non-https-returnurl.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"sharepoint-online-weak-sharing-permissions.json": [
+            {
+                "enabled": true,
+                "level": "high"
+            }
+        ],
+		"onedrive-weak-sharing-permissions.json": [
+            {
+                "enabled": true,
+                "level": "high"
+            }
+        ],
+		"exchange-users-remote-powershell-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-online-read-tracking-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"sharepoint-online-malware-detected.json": [
+            {
+                "enabled": true,
+                "level": "critical"
+            }
+        ],
+		"sharepoint-iam-excessive-user-permissions.json": [
+            {
+                "enabled": true,
+                "level": "high"
+            }
+        ]
+    }
+}

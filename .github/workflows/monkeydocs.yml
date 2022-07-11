@@ -1,0 +1,42 @@
+#
+# Build monkey365 docs
+#
+
+# NOTES:
+# This workflow generates and published the documentation site https://silverhack.github.io/monkey365/.
+
+name: ci docs
+on:
+  push:
+    branches:
+    - main
+jobs:
+  deploy:
+    name: Publish monkey365 docs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Configure
+        run: |
+          git config user.name github-actions
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+          architecture: 'x64'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install wheel
+          python3 -m pip install -r requirements-docs.txt
+
+      - name: Deploy site
+        run: mkdocs gh-deploy --force
