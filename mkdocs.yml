@@ -24,8 +24,8 @@ theme:
         icon: material/toggle-switch-off-outline
         name: Switch to light mode
       primary: black
-  logo: assets/logo/MonkeyLogo.png
-  favicon: assets/logo/favicon.ico
+  logo: assets/images/MonkeyLogo.png
+  favicon: assets/images/favicon.ico
   icon:
     repo: fontawesome/brands/github
   features:
