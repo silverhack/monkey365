@@ -1,0 +1,22 @@
+{
+	"o365_forms_phishing_protection_disabled": [
+        {
+            "translate": {
+                "externalCollaboration": "External Collaboration",
+                "externalShareCollaboration": "External Sharing Collaboration",
+				"allowFileUpload": "Allow File Upload",
+                "RestrictSurveyAccessEnabled": "Restrict Survey Access",
+				"InOrgFormsPhishingScan": "Phishing Protection"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ]
+}

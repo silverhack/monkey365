@@ -1,0 +1,6 @@
+{
+    "name": "Slack",
+    "description": "Writes messages to slack",
+    "function": "Write-Slack",
+    "validate": "Initialize-WebHook"
+}

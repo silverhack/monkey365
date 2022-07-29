@@ -1,0 +1,144 @@
+{
+    "azure_subscription_free": [
+        {
+            "translate": {
+                "Id": "Id",
+                "name": "Object Name",
+                "pricingTier": "Pricing Tier"
+            },
+            "emphasis": ["Pricing Tier"],
+            "table": "asList"
+        }
+    ],
+    "network_watcher_flowlogs_retention_days": [
+        {
+            "translate": {
+                "target_resource_id": "Target Resource Id",
+                "enabled": "Enabled",
+                "retentionPolicyEnabled": "Retention policy enabled",
+                "retentionPolicyDays": "Retention policy days"
+            },
+            "table": "asList",
+            "emphasis": ["Retention policy days"]
+        }
+    ],
+    "azure_nsg_security_port_open_all": [
+        {
+            "translate": {
+                "Rulename": "Rule name",
+                "RuleDescription": "Description",
+                "ResourceGroupName": "Enabled",
+                "name": "NSG name",
+                "RulesAppliedOn": "Rule applies on",
+                "Protocol": "Protocol",
+                "SourcePortRange": "Source Port range",
+                "DestinationPortRange": "Destination Port range",
+                "DestinationPortRanges": "Destination Ports range",
+                "SourceAddressPrefix": "Source Address Prefix",
+                "DestinationAddressPrefix": "Destination Address Prefix",
+                "DestinationAddressPrefixes": "Destination Addresses Prefix",
+                "Access": "Access",
+                "direction": "Direction",
+                "Priority": "Priority"
+            },
+            "table": "Normal"
+        }
+    ],
+    "azure_nsg_security_ports_open_all": [
+        {
+            "translate": {
+                "Rulename": "Rule name",
+                "RuleDescription": "Description",
+                "ResourceGroupName": "Enabled",
+                "name": "NSG name",
+                "RulesAppliedOn": "Rule applies on",
+                "Protocol": "Protocol",
+                "SourcePortRange": "Source Port range",
+                "DestinationPortRange": "Destination Port range",
+                "SourceAddressPrefix": "Source Address Prefix",
+                "DestinationAddressPrefix": "Destination Address Prefix",
+                "Access": "Access",
+                "direction": "Direction",
+                "Priority": "Priority"
+            },
+            "table": "Normal"
+        }
+    ],
+    "network_watcher_disabled": [
+        {
+            "translate": {
+                "locations": "Locations",
+                "all_locations_enabled": "All locations enabled"
+            },
+            "table": "asList",
+            "emphasis": ["All locations enabled"]
+        }
+    ],
+    "security_contact_phone_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "email": "Email",
+                "phone": "Phone",
+                "alertNotifications": "Alerts notifications",
+                "alertsToAdmins": "Alerts to admins"
+            },
+            "table": "asList",
+            "emphasis": ["Phone"]
+        }
+    ],
+    "security_contact_mail_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "email": "Email",
+                "phone": "Phone",
+                "alertNotifications": "Alerts notifications",
+                "alertsToAdmins": "Alerts to admins"
+            },
+            "table": "asList",
+            "emphasis": ["Email"]
+        }
+    ],
+    "security_contact_notification_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "email": "Email",
+                "phone": "Phone",
+                "alertNotifications": "Alerts notifications",
+                "alertsToAdmins": "Alerts to admins"
+            },
+            "table": "asList",
+            "emphasis": ["Alerts notifications"]
+        }
+    ],
+    "security_contact_email_to_owners_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "email": "Email",
+                "phone": "Phone",
+                "alertNotifications": "Alerts notifications",
+                "alertsToAdmins": "Alerts to admins"
+            },
+            "table": "asList",
+            "emphasis": ["Alerts to admins"]
+        }
+    ],
+    "azure_sql_fw_rule_enabled": [
+        {
+            "translate": {
+                "ServerName": "Server Name",
+                "Location": "Location",
+                "ResourceGroupName": "Resource Group Name",
+                "RuleName": "Rule Name",
+                "StartIpAddress": "Start IP Address",
+                "EndIpAddress": "End IP Address"
+            },
+            "table": "asList",
+            "emphasis": ["Start IP Address",
+                         "End IP Address"]
+        }
+    ]
+}

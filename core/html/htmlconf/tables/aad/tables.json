@@ -1,0 +1,291 @@
+{
+	"aad_group_feature_access_enabled": [
+        {
+            "translate": {
+                "usersCanAddExternalUsers": "Users Can Add External Users",
+                "limitedAccessCanAddExternalUsers": "Limited Users Can Add External Users",
+                "securityGroupsEnabled": "Security Groups Enabled",
+                "groupsInAccessPanelEnabled":"Users Can Access To Groups Features"
+            },
+            "emphasis": ["Users Can Access To Groups Features"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_lack_privacy_disclosure": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "objectType": "Object Type",
+                "identifierUris":"Identifier URIs",
+                "informationalUrls.privacy": "Informational URIs"
+            },
+            "emphasis": ["Informational URIs"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_lack_homepage_ssl": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "objectType": "Object Type",
+                "identifierUris":"Identifier URIs",
+                "homepage": "Home Page"
+            },
+            "emphasis": ["Home Page"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_plain_logouturl": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "objectType": "Object Type",
+                "homepage": "Home Page",
+                "identifierUris":"Identifier URIs",
+                "logoutUrl": "Logout Url"
+            },
+            "emphasis": ["Logout Url"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_plain_returnurl": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "objectType": "Object Type",
+                "homepage": "Home Page",
+                "identifierUris":"Identifier URIs",
+                "replyUrls": "Replay Urls"
+            },
+            "emphasis": ["Replay Urls"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_empty_owners": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "objectType": "Object Type",
+                "homepage": "Home Page",
+                "identifierUris":"Identifier URIs",
+                "Owners": "Owners"
+            },
+            "emphasis": ["Owners"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_excessive_permissions": [
+        {
+            "translate": {
+                "ClientPrincipalId": "Application Id",
+                "ClientDisplayName": "Display Name",
+                "Permission": "Permision",
+                "UserConsentDescription": "Consent description",
+                "ConsentType": "Consent type"
+            },
+            "emphasis": ["Permission"],
+            "table": "asList"
+        }
+    ],
+    "aad_all_users_group_disabled": [
+        {
+            "translate": {
+                "usersCanRegisterApps": "Users Can Register Apps",
+                "showUserActivityReportsFeature": "Show User Activity Reports Feature",
+                "usersCanRegisterApps": "Users Can Register Apps",
+                "usersCanAddExternalUsers": "Users Can Add External Users",
+                "restrictDirectoryAccess": "Restrict Directory Access",
+                "usersCanAddExternalUsers": "Users Can Add External Users",
+                "allUsersGroupEnabled": "All Users Dynamic Group Enabled"
+            },
+            "emphasis": ["All Users Dynamic Group Enabled"],
+            "table": "asList"
+        }
+    ],
+    "aad_mfa_devices_disabled": [
+        {
+            "translate": {
+                "isEnabled": "Enabled",
+                "requireMfaSetting": "Require MFA setting",
+                "maxDeviceNumberPerUserSetting": "Max devices per user"
+            },
+            "emphasis": ["Require MFA setting"],
+            "table": "asList"
+        }
+    ],
+    "aad_guests_can_invite": [
+        {
+            "translate": {
+                "TenantAuthPolicy.displayName": "Display Name",
+                "TenantAuthPolicy.description": "Description",
+                "TenantAuthPolicy.allowInvitesFrom": "Guest Invite Settings"
+            },
+            "emphasis": ["Guest Invite Settings"],
+            "table": "asList"
+        }
+    ],
+    "aad_members_can_invite": [
+        {
+            "translate": {
+                "limitedAccessCanAddExternalUsers": "Limited access can add external users",
+                "usersCanAddExternalUsers": "Users can add external users",
+                "restrictDirectoryAccess": "Restrict directory access",
+                "allowInvitations": "Allow invitations"
+            },
+            "emphasis": ["Users can add external users"],
+            "table": "asList"
+        }
+    ],
+    "aad_guest_permissions": [
+        {
+            "translate": {
+                "usersCanAddExternalUsers": "Users can add external users",
+                "limitedAccessCanAddExternalUsers": "Limited access can add external users",
+                "restrictDirectoryAccess": "Restrict directory access",
+                "allowInvitations": "Allow invitations"
+            },
+            "emphasis": ["Restrict directory access"],
+            "table": "asList"
+        }
+    ],
+    "aad_restrict_users_ad_portal": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps",
+                "restrictNonAdminUsers": "Restrict non-admin users"
+            },
+            "emphasis": ["Restrict non-admin users"],
+            "table": "asList"
+        }
+    ],
+    "aad_restrict_o365_group_creation_admins": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps",
+                "restrictNonAdminUsers": "Restrict non-admin users",
+                "office365GroupsEnabled": "Office 365 group enabled"
+            },
+            "emphasis": ["Office 365 group enabled"],
+            "table": "asList"
+        }
+    ],
+    "aad_restrict_security_group_creation_admins": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps",
+                "restrictNonAdminUsers": "Restrict non-admin users",
+                "securityGroupsEnabled": "Security Group enabled"
+            },
+            "emphasis": ["Security Group enabled"],
+            "table": "asList"
+        }
+    ],
+    "aad_restrict_o365_group_management_admins": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps",
+                "restrictNonAdminUsers": "Restrict non-admin users",
+                "usersCanManageOfficeGroups": "Users can manage office groups"
+            },
+            "emphasis": ["Users can manage office groups"],
+            "table": "asList"
+        }
+    ],
+    "aad_restrict_group_management_admins": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps",
+                "restrictNonAdminUsers": "Restrict non-admin users",
+                "usersCanManageSecurityGroups": "Users can manage security groups"
+            },
+            "emphasis": ["Users can manage security groups"],
+            "table": "asList"
+        }
+    ],
+    "aad_self_service_group_management_enabled": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps",
+                "selfServiceGroupManagementEnabled": "Self service group management Enabled"
+            },
+            "emphasis": ["Self service group management Enabled"],
+            "table": "asList"
+        }
+    ],
+    "aad_require_admin_consent_apps": [
+        {
+            "translate": {
+                "usersCanAddGalleryApps": "Users can add gallery apps",
+                "usersCanAllowAppsToAccessData": "Users can allow apps to access data"
+            },
+            "emphasis": ["Users can allow apps to access data"],
+            "table": "asList"
+        }
+    ],
+    "aad_require_admins_gallery_apps": [
+        {
+            "translate": {
+                "usersCanAllowAppsToAccessData": "Users can allow apps to access data",
+                "usersCanAddGalleryApps": "Users can add gallery apps"
+            },
+            "emphasis": ["Users can add gallery apps"],
+            "table": "asList"
+        }
+    ],
+    "aad_3rd_apps_all_users_enabled": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps"
+            },
+            "emphasis": ["Users can register apps"],
+            "table": "asList"
+        }
+    ],
+    "aad_guest_users_present": [
+        {
+            "translate": {
+                "mailNickname": "Mail Nick Name",
+                "accountEnabled": "Account Enabled",
+                "userType": "User Type"
+            },
+            "table": "Normal"
+        }
+    ],
+	"aad_sbd_enabled": [
+        {
+            "translate": {
+                "anyCAPolicyEnabled": "Any Conditional Access Policy Enabled",
+                "securityDefaultsEnabled": "Security Defaults Enabled",
+                "anyClassicPolicyEnabled": "Any Classic Policy Enabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ]
+}

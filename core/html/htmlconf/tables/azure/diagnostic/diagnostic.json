@@ -1,0 +1,21 @@
+{
+	"azure_diagnostic_settings_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "type": "Type",
+                "location": "Location",
+				"diagnostic_settings": "Diagnostic Settings"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ]
+}

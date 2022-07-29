@@ -1,0 +1,172 @@
+{
+	"sps_document_sharing_all_enabled": [
+        {
+            "translate": {
+                "AllowEditing": "Allow Editing",
+                "AnyoneLinkTrackUsers": "Link Track Users",
+				"ConditionalAccessPolicy": "Conditional Access Policy",
+                "SharingDomainRestrictionMode": "Sharing Domain Restriction Mode"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"exo_sensitivity_label_disabled": [
+        {
+            "translate": {
+                "DisplayName": "Display Name",
+                "IsParent": "Is Parent",
+				"ContentType": "Content Type",
+                "Tooltip": "ToolTip",
+				"Disabled": "Disabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"o365_spo_sensitivity_label_feature_disabled": [
+        {
+            "translate": {
+                "RootSiteUrl": "Root Site",
+                "SharingCapability": "Sharing Capability",
+				"ConditionalAccessPolicy": "Conditional Access Policy",
+                "EnableAIPIntegration": "Sensitivity Label For Office Enabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"o365_spo_external_users_sharing_disabled": [
+        {
+            "translate": {
+                "AllowEditing": "Allow Editing",
+                "AnyoneLinkTrackUsers": "Link Track Users",
+				"ConditionalAccessPolicy": "Conditional Access Policy",
+                "PreventExternalUsersFromResharing": "Prevent External Users From Resharing"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"o365_spo_infected_files_allowed_download": [
+        {
+            "translate": {
+                "RootSiteUrl": "Root Site",
+                "SharingCapability": "Sharing Capability",
+				"ConditionalAccessPolicy": "Conditional Access Policy",
+                "DisallowInfectedFileDownload": "Disallow Infected File Download"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"o365_spo_modern_auth_disabled": [
+        {
+            "translate": {
+                "RootSiteUrl": "Root Site",
+                "SharingCapability": "Sharing Capability",
+				"ConditionalAccessPolicy": "Conditional Access Policy",
+                "LegacyAuthProtocolsEnabled": "Legacy Auth Enabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"sps_sharing_links_missing_expiration": [
+        {
+            "translate": {
+                "AllowEditing": "Allow Editing",
+                "AnyoneLinkTrackUsers": "Link Track Users",
+				"ConditionalAccessPolicy": "Conditional Access Policy",
+                "RequireAnonymousLinksExpireInDays": "Require Anonymous Links Expire In Days"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"o365_spo_malware_detected": [
+        {
+            "translate": {
+                "Title": "File Name",
+                "URL": "Url",
+				"raw_element._VirusInfo": "Virus Info"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["raw_element"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"o365_spo_excessive_full_control_members": [
+        {
+            "translate": {
+                "URL": "Url",
+                "Users": "Users",
+				"Permissions.Name": "Permissions"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["group_members"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ]
+}

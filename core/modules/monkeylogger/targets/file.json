@@ -1,0 +1,6 @@
+{
+    "name": "File",
+    "description": "Writes messages to a file",
+    "function": "Write-File",
+    "validate": "Initialize-File"
+}

@@ -1,0 +1,21 @@
+{
+	"azure_subscription_custom_role_definition": [
+        {
+            "translate": {
+                "properties.roleName": "Role Name",
+                "properties.type": "Type",
+                "properties.description": "Description",
+				"properties.createdOn": "Created"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ]
+}

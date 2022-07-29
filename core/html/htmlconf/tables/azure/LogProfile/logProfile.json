@@ -1,0 +1,90 @@
+{
+	"azure_log_profile_all_activities": [
+        {
+            "translate": {
+                "name": "Profile Name",
+                "location": "Location",
+                "retentionPolicyEnabled": "Retention policy enabled",
+                "categories": "Categories"
+            },
+            "table": "asList",
+            "emphasis": ["Categories"]
+        }
+    ],
+    "azure_log_profile_all_regions": [
+        {
+            "translate": {
+                "name": "Profile Name",
+                "location": "Location",
+                "retentionPolicyEnabled": "Retention policy enabled",
+                "activityLogForAllRegions": "Activity log enabled for all regions"
+            },
+            "table": "asList",
+            "emphasis": ["Activity log enabled for all regions"]
+        }
+    ],
+    "azure_log_profile_retention_days": [
+        {
+            "translate": {
+                "name": "Profile Name",
+                "location": "Location",
+                "retentionPolicyEnabled": "Retention policy enabled",
+                "retentionPolicyDays": "Retention policy days"
+            },
+            "table": "asList",
+            "emphasis": ["Retention policy days",
+                         "Retention policy enabled"]
+        }
+    ],
+    "azure_log_profile_public_all": [
+        {
+            "translate": {
+                "storageaccount": "Storage account Name",
+                "blobname": "Blob name",
+                "publicaccess": "Public Access"
+            },
+            "table": "asList",
+            "emphasis": ["Public Access"]
+        }
+    ],
+	"azure_log_profile_storage_byok_disabled": [
+        {
+            "translate": {
+                "name": "Log Profile",
+				"properties.retentionPolicy.enabled": "Retention Policy",
+				"properties.retentionPolicy.days": "Retention Policy days",
+                "storageAccountUsingOwnKey": "Encrypted Using Own Key"
+            },
+            "table": "asList",
+            "emphasis": ["Encrypted Using Own Key"]
+        }
+    ],
+    "azure_log_profile_disabled": [
+        {
+            "translate": {
+                "Id": "Profile Id",
+                "name": "Profile name"
+            },
+            "table": "asList",
+            "emphasis": ["Profile name"]
+        }
+    ],
+    "azure_log_profile_queue_log_all": [
+        {
+            "translate": {
+                "name": "Storage account name",
+                "location": "Location",
+                "ResourceGroupName": "Resource Group Name",
+                "CreationTime": "Creation Time",
+                "supportsHttpsTrafficOnly": "Support Https Traffic Only",
+                "queueLogReadEnabled": "Queue log read enabled",
+                "queueLogWriteEnabled": "Queue log write enabled",
+                "queueLogDeleteEnabled": "Queue log delete enabled"
+            },
+            "table": "asList",
+            "emphasis": ["Queue log delete enabled",
+                         "Queue log read enabled",
+                         "Queue log write enabled"]
+        }
+    ]
+}

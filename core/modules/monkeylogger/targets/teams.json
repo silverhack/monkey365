@@ -1,0 +1,6 @@
+{
+    "name": "Teams",
+    "description": "Writes messages to Microsoft Teams",
+    "function": "Write-Teams",
+    "validate": "Initialize-WebHook"
+}

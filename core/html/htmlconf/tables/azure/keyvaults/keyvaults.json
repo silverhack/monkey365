@@ -1,0 +1,81 @@
+{
+	"azure_key_vault_keys_notexpire": [
+        {
+            "translate": {
+                "id": "KeyVault Id",
+                "enabled": "Enabled",
+                "created": "Creation time",
+                "updated": "Updated",
+                "expires": "Expires"
+            },
+            "table": "asList",
+            "emphasis": ["Expires"]
+        }
+    ],
+    "azure_key_vault_keys_notexpire": [
+        {
+            "translate": {
+                "id": "KeyVault Id",
+                "enabled": "Enabled",
+                "created": "Creation time",
+                "updated": "Updated",
+                "expires": "Expires"
+            },
+            "table": "asList",
+            "emphasis": ["Expires"]
+        }
+    ],
+    "azure_key_vault_secrets_notexpire": [
+        {
+            "translate": {
+                "id": "KeyVault Id",
+                "enabled": "Enabled",
+                "created": "Creation time",
+                "updated": "Updated",
+                "expires": "Expires"
+            },
+            "table": "asList",
+            "emphasis": ["Expires"]
+        }
+    ],
+    "azure_key_vault_logging_disabled": [
+        {
+            "translate": {
+                "name": "KeyVault Name",
+                "location": "Location",
+                "vaultUri": "KeyVault URI",
+                "loggingEnabled": "Logging Enabled"
+            },
+            "table": "asList",
+            "emphasis": ["Logging Enabled"]
+        }
+    ],
+    "azure_key_vault_recoverable_disabled": [
+        {
+            "translate": {
+                "name": "KeyVault Name",
+                "location": "Location",
+                "vaultUri": "KeyVault URI",
+                "enableSoftDelete": "SoftDelete Enabled",
+                "enablePurgeProtection": "Purge Protection Enabled"
+            },
+            "table": "asList",
+            "emphasis": ["SoftDelete Enabled",
+                         "Purge Protection Enabled"]
+        }
+    ],
+    "azure_key_vault_retention_days": [
+        {
+            "translate": {
+                "name": "KeyVault Name",
+                "location": "Location",
+                "vaultUri": "KeyVault URI",
+                "loggingEnabled": "Logging Enabled",
+                "logsRetentionPolicyDays": "Log retention policy days"
+            },
+            "table": "asList",
+            "emphasis": ["Logging Enabled",
+                         "Log retention policy days"]
+        }
+    ]
+}

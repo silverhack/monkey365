@@ -1,0 +1,196 @@
+{
+	"storage_accounts_missing_key_rotation": [
+        {
+            "translate": {
+                "name": "Name",
+                "location": "Location",
+                "ResourceGroupName": "ResourceGroupName",
+				"isKeyRotated": "Key Rotated"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"storage_accounts_missing_queue_logging": [
+        {
+            "translate": {
+                "name": "Name",
+                "ResourceGroupName": "ResourceGroupName",
+				"queueLogReadEnabled": "Queue Log Read Enabled",
+				"queueLogWriteEnabled": "Queue Log Write Rotated",
+				"queueLogDeleteEnabled": "Queue Log Delete Rotated"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"storage_accounts_missing_blob_data_protection": [
+        {
+            "translate": {
+                "name": "Name",
+                "location": "Location",
+                "ResourceGroupName": "ResourceGroupName",
+				"dataProtection.properties.deleteRetentionPolicy.enabled": "SoftDelete Enabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"storage_accounts_missing_cmk_encryption": [
+        {
+            "translate": {
+                "name": "Name",
+                "location": "Location",
+                "ResourceGroupName": "ResourceGroupName",
+				"usingOwnKey": "Customer Managed Key"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"storage_accounts_missing_blob_logging": [
+        {
+            "translate": {
+                "name": "Name",
+                "ResourceGroupName": "ResourceGroupName",
+				"blobLogReadEnabled": "Blob Log Read Enabled",
+				"blobLogWriteEnabled": "Blob Log Write Rotated",
+				"blobLogDeleteEnabled": "Blob Log Delete Rotated"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"storage_accounts_missing_table_logging": [
+        {
+            "translate": {
+                "name": "Name",
+                "ResourceGroupName": "ResourceGroupName",
+				"tableLogReadEnabled": "Table Log Read Enabled",
+				"tableLogWriteEnabled": "Table Log Write Rotated",
+				"tableLogDeleteEnabled": "Table Log Delete Rotated"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"storage_accounts_https_traffic_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "CreationTime": "Creation Time",
+                "location": "Location",
+                "supportsHttpsTrafficOnly": "Https Only"
+            },
+            "table": "Normal"
+        }
+    ],
+    "storage_accounts_all_networks": [
+        {
+            "translate": {
+                "name": "Name",
+                "CreationTime": "Creation Time",
+                "location": "Location",
+                "AllowAccessFromAllNetworks": "Allow Access from all networks"
+            },
+            "table": "Normal"
+        }
+    ],
+    "storage_accounts_encryptblob_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "CreationTime": "Creation Time",
+                "location": "Location",
+                "isBlobEncrypted": "Blob encrypted"
+            },
+            "table": "Normal"
+        }
+    ],
+    "storage_accounts_protection_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "CreationTime": "Creation Time",
+                "location": "Location",
+                "AdvancedProtectionEnabled": "Advanced Protection enabled"
+            },
+            "table": "Normal"
+        }
+    ],
+    "storage_accounts_filencrypt_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "CreationTime": "Creation Time",
+                "location": "Location",
+                "isFileEncrypted": "File encryption enabled"
+            },
+            "table": "Normal"
+        }
+    ],
+    "storage_accounts_trusted_ms_services_bypass": [
+        {
+            "translate": {
+                "name": "Name",
+                "CreationTime": "Creation Time",
+                "location": "Location",
+                "AllowAzureServices": "Allow Azure services"
+            },
+            "table": "Normal"
+        }
+    ],
+    "storage_accounts_anonymous_access_enabled": [
+        {
+            "translate": {
+                "storageaccountname": "Storage account Name",
+                "blobname": "Blob name",
+                "publicaccess": "Public Access"
+            },
+            "table": "asList",
+            "emphasis": ["Public Access"]
+        }
+    ]
+}

@@ -1,0 +1,206 @@
+{
+	"sql_server_ad_admin_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+                "isSQLActiveDirectoryAdministratorEnabled": "Active Directory Admin enabled",
+                "version": "SQL version"
+            },
+            "table": "asList",
+            "emphasis": ["Active Directory Admin enabled"]
+        }
+    ],
+    "sql_server_tdp_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+                "threatDetectionPolicy": "Threat Detection policy enabled",
+                "version": "SQL version"
+            },
+            "table": "asList",
+            "emphasis": ["Threat Detection policy enabled"]
+        }
+    ],
+    "sql_server_audit_action_groups": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+                "auditActionsAndGroups": "Audit actions",
+                "version": "SQL version"
+            },
+            "table": "asList",
+            "emphasis": ["Audit actions"]
+        }
+    ],
+    "sql_server_auditing_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+                "auditingPolicyState": "Auditing policy state",
+                "version": "SQL version"
+            },
+            "table": "asList",
+            "emphasis": ["Auditing policy state"]
+        }
+    ],
+    "sql_server_audit_retention": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+                "auditingRetentionDays": "Auditing retention days",
+                "version": "SQL version"
+            },
+            "table": "asList",
+            "emphasis": ["Auditing retention days"]
+        }
+    ],
+    "sql_server_tdp_alerts_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+                "threatDetectionPolicyEmailAddresses": "TDP email addresses",
+                "version": "SQL version"
+            },
+            "table": "asList",
+            "emphasis": ["TDP email addresses"]
+        }
+    ],
+    "sql_server_tdp_alerts_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+                "threatDetectionPolicyDisabledAlerts": "TDP disabled alerts",
+                "version": "SQL version"
+            },
+            "table": "asList",
+            "emphasis": ["TDP disabled alerts"]
+        }
+    ],
+    "sql_server_tdp_own_key_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+                "TDEProtectorMode": "TDE Protector mode",
+                "TDEProtectorServerkeyName": "TDE Protector key name",
+                "TDEProtectorServerkeyType": "TDE Protector server key type",
+                "TDEProtectorUri": "TDE Protector URI",
+                "version": "SQL version"
+            },
+            "table": "asList",
+            "emphasis": ["TDE Protector mode",
+                         "TDE Protector key name",
+                         "TDE Protector server key type",
+                         "TDE Protector URI"]
+        }
+    ],
+    "sql_server_tdp_email_admin_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+                "threatDetectionPolicyEmailAccountAdmins": "TDP notify admins",
+                "version": "SQL version"
+            },
+            "table": "asList",
+            "emphasis": ["TDP notify admins"]
+        }
+    ],
+    "sql_server_encryption_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "databaseName": "Database Name",
+                "resourceGroupName": "Resource group name",
+                "databaseEncryptionStatus": "Encryption Status"
+            },
+            "table": "asList",
+            "emphasis": ["Encryption Status",
+                         "Database Name"]
+        }
+    ],
+	"sql_server_va_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+				"vulnerabilityAssessmentConfig.properties.recurringScans.isEnabled": "VA Enabled"
+            },
+            "table": "asList",
+            "emphasis": ["VA Enabled"]
+        }
+    ],
+	"sql_server_va_send_reports_empty": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+				"vulnerabilityAssessmentConfig.properties.recurringScans.emails": "SendTo"
+            },
+            "table": "asList",
+            "emphasis": ["SendTo"]
+        }
+    ],
+	"sql_server_va_send_reports_admins_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+				"vulnerabilityAssessmentConfig.properties.recurringScans.emailSubscriptionAdmins": "SendTo"
+            },
+            "table": "asList",
+            "emphasis": ["SendTo"]
+        }
+    ],
+	"sql_server_va_periodic_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+				"vulnerabilityAssessmentConfig.properties.recurringScans.isEnabled": "Recurring Scans"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ]
+}

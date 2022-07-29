@@ -1,0 +1,16 @@
+{
+	"mysql_enforcessl_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "serverLocation": "Location",
+                "resourceGroupName": "Resource group name",
+                "fullyQualifiedDomainName": "FQDN",
+                "sslEnforcement": "SSL Enforcement",
+                "version": "MySQL version"
+            },
+            "table": "asList",
+            "emphasis": ["SSL Enforcement"]
+        }
+    ]
+}

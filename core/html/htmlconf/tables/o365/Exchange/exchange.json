@@ -1,0 +1,1133 @@
+{
+	"o365_exo_owa_additional_storage_allowed": [
+        {
+            "translate": {
+                "Name": "Policy Name",
+                "OrganizationalUnitRoot": "Organization",
+				"ConditionalAccessPolicy": "Conditional Access Policy Enabled",
+                "AdditionalStorageProvidersAvailable": "Additional Storage Available"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"o365_exo_automatic_forward_enabled": [
+        {
+            "translate": {
+                "Name": "Policy Name",
+                "OrganizationalUnitRoot": "Organization",
+				"AutoForwardEnabled": "Automatic Forward"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"o365_exo_calendar_sharing_external_enabled": [
+		{
+			"translate": {
+				"Name": "Policy Name",
+				"OrganizationalUnitRoot": "Organization",
+				"Enabled": "Enabled",
+				"Domains": "Domains"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_customer_lockout_disabled": [
+		{
+			"translate": {
+				"Name": "Name",
+				"GuestsEnabled": "Guest Enabled",
+				"CustomerLockBoxEnabled": "Customer LockBox"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_mailtips_disabled": [
+		{
+			"translate": {
+				"Name": "Name",
+				"MailTipsAllTipsEnabled": "All Tips Enabled",
+				"MailTipsExternalRecipientsTipsEnabled": "External Recipients Tips Enabled",
+				"MailTipsGroupMetricsEnabled": "Group Metrics Tips Enabled",
+				"MailTipsLargeAudienceThreshold": "Large Audience Threshold Tips Enabled"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_modern_auth_disabled": [
+		{
+			"translate": {
+				"Name": "Name",
+				"ServicePlan": "Service Plan",
+				"OAuth2ClientProfileEnabled": "Modern Authentication Enabled"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_owa_additional_storage_allowed": [
+		{
+			"translate": {
+				"Name": "Name",
+				"OrganizationalUnitRoot": "Organization",
+				"ConditionalAccessPolicy": "Conditional Access Policy",
+				"AdditionalStorageProvidersAvailable": "Additional Storage Providers"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_anti_malware_admin_notification_disabled": [
+		{
+			"translate": {
+				"policyName": "Name",
+				"IsEnabled": "Enabled",
+				"Policy.EnableInternalSenderAdminNotifications": "Internal Senders Admin Notify",
+				"Policy.InternalSenderAdminAddress": "Internal Senders Admin Address"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_attachment_type_filter_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"isEnabled": "Is Enabled",
+				"Policy.EnableFileFilter": "Enable File Filter",
+				"Policy.FileTypes": "Filetypes"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_transport_rules_forward_enabled": [
+		{
+			"translate": {
+				"Name": "Name",
+				"CreatedBy": "Created By",
+				"RedirectMessageTo": "Redirect Message To"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_transport_rules_auto": [
+		{
+			"translate": {
+				"Feature": "Feature",
+				"Status": "Status"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_transport_rules_domain_whitelisted": [
+		{
+			"translate": {
+				"Name": "Name",
+				"Description": "Description",
+				"setscl": "SetSCL",
+				"SenderDomainIs": "Sender Domain"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_outbound_spam_notification_disabled": [
+		{
+			"translate": {
+				"Name": "Name",
+				"BccSuspiciousOutboundMail": "BCC Nofity",
+				"NotifyOutboundSpam": "Notify Outbound Spam"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_safe_attachment_policy_disabled": [
+		{
+			"translate": {
+				"Name": "Name",
+				"Identity": "Identity",
+				"Enable": "Is enabled"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_default_safe_link_policy_missing": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"isEnabled": "Enabled",
+				"Policy.EnableSafeLinksForEmail": "Enable SafeLinks For Email",
+				"Policy.EnableSafeLinksForTeams": "Enable SafeLinks For Teams",
+				"Policy.AllowClickThrough": "Allow Click Through"
+			},
+			"table": "Normal",
+			"format":{
+				"elements":[
+					{
+						"ItemName": "Allow Click Through",
+						"ItemValue": "enabled",
+						"className": "badge bg-danger larger-badge"
+					}
+				]
+			},
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_safe_links_office365_disabled": [
+		{
+			"translate": {
+				"Name": "Name",
+				"Identity": "Identity",
+				"EnableATPForSPOTeamsODB": "SafeLinks Enabled For Office"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_safe_links_office_disabled": [
+		{
+			"translate": {
+				"Name": "Name",
+				"AllowClickThrough": "Allow Click Through",
+				"EnableSafeLinksForClients": "SafeLinks For Clients",
+				"EnableSafeLinksForO365Clients": "SafeLinks Office365 Clients",
+				"EnableSafeLinksForWebAccessCompanion": "SafeLinks For Web Access"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_bcl_spam_threshold_enforced": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Enabled",
+				"Policy.BulkThreshold": "BulkThreshold"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_markasspam_bulk_mail_enforced": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Enabled",
+				"Policy.MarkAsSpamBulkMail": "Bulk Mail Mark As Spam"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_out_spam_filter_policy_limits": [
+		{
+			"translate": {
+				"Name": "Policy Name",
+				"RecipientLimitExternalPerHour": "External Recipient Limit",
+				"RecipientLimitInternalPerHour": "Internal Recipient Limit",
+				"RecipientLimitPerDay": "Limit Per Day",
+				"ActionWhenThresholdReached": "Action When Threshold Reached"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_high_confidence_phish_action": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Enabled",
+				"Policy.HighConfidencePhishAction": "High Confidence Phish Action"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_sfl_deliver_message_after_scan_action": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Enabled",
+				"Policy.ScanUrls": "Scan Urls",
+				"Policy.DeliverMessageAfterScan": "Deliver Message After Scan"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_hosted_content_quarantined_period": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Enabled",
+				"Policy.QuarantineRetentionPeriod": "Quarantine Retention Period"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_spam_notifications_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"QuarantinePolicy.Name": "Quarantine Policy",
+				"QuarantinePolicy.ESNEnabled": "Quarantine Enabled",
+				"QuarantinePolicy.AdminNotificationFrequencyInDays": "Notify Admins Frequency"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_hosted_content_whitelist_senders": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.AllowedSenders.Sender.Address": "Allowed Senders"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_anti_malware_user_notification_enabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Enabled",
+				"Policy.EnableInternalSenderNotifications": "Internal Senders Notify"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_anti_spoofing_sendTo_JunkOrQuarantine_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Enabled",
+				"Policy.AuthenticationFailAction": "Authentication Fail Action"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_safelinks_allowclickthrough_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Enabled",
+				"Policy.AllowClickThrough": "Allow Click Through Urls"
+			},
+			"table": "Normal",
+			"format":{
+				"elements":[
+					{
+						"ItemName": "Allow Click Through Urls",
+						"ItemValue": "enabled",
+						"className": "badge bg-danger larger-badge"
+					}
+				]
+			},
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_global_atp_allowclickthrough_disabled": [
+		{
+			"translate": {
+				"Name": "Policy Name",
+				"EnableSafeDocs": "Enable Safe Docs",
+				"AllowClickThrough": "Allow Click Through Urls"
+			},
+			"table": "Normal",
+			"format":{
+				"elements":[
+					{
+						"ItemName": "Allow Click Through Urls",
+						"ItemValue": "enabled",
+						"className": "badge bg-danger larger-badge"
+					}
+				]
+			},
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_connection_policy_ip_whitelisted": [
+		{
+			"translate": {
+				"Name": "Policy Name",
+				"IsDefault": "Default",
+				"IPAllowList": "IP Allow list"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_mailbox_intelligence_protection_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"isEnabled": "Enabled",
+				"Policy.IsDefault": "Default Policy",
+				"Policy.EnableMailboxIntelligenceProtection": "MIP enabled"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_mailbox_intelligence_protection_junk_folder_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"isEnabled": "Enabled",
+				"Policy.IsDefault": "Default Policy",
+				"Policy.MailboxIntelligenceProtectionAction": "MIP action"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_transport_rules_company_domain_whitelisted": [
+		{
+			"translate": {
+				"Name": "Name",
+				"Description": "Description",
+				"setscl": "SetSCL",
+				"SenderDomainIs": "Sender Domain",
+				"FromAddressContainsWords": "From Address Contains"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_hosted_content_whitelist_domains": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.AllowedSenderDomains.Domain": "Allowed Domains"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"exchange-transport-rules-domain-whitelisted.json": [
+		{
+			"translate": {
+				"Name": "Name",
+				"Description": "Description",
+				"setscl": "SetSCL",
+				"SenderDomainIs": "Sender Domains",
+				"FromAddressContainsWords": "From Address Contains",
+				"FromAddressMatchesPatterns": "From Address Match Pattern"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_phish_policy_domain_impersonation_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.EnableSimilarDomainsSafetyTips": "Domain Impersonation Safety Tips enabled"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_malware_policy_zap_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.ZapEnabled": "ZAP enabled"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_phish_policy_zap_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.PhishZapEnabled": "Phish ZAP enabled"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_spam_policy_zap_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.SpamZapEnabled": "Spam ZAP enabled"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_phish_policy_zap_action_enforced": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.SpamAction": "Spam action",
+				"Policy.PhishSpamAction": "Phish Spam action"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_phish_policy_user_impersonation_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.EnableUnusualCharactersSafetyTips": "User Impersonation Safety Tips enabled"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_malware_policy_block_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.Action": "Action"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_malware_policy_block_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.EnableExternalSenderNotifications": "Notify External Sender"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_anti_spam_sendTo_JunkOrQuarantine_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.SpamAction": "Spam Action"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_anti_spam_high_confidence_spam_action_enforced": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.HighConfidenceSpamAction": "High Confidence Spam Action"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_anti_spam_bulk_message_action_enforced": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.BulkSpamAction": "Bulk Spam Action"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_anti_spam_phish_message_action_enforced": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.PhishSpamAction": "Phish Spam Action"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_safety_tips_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.InlineSafetyTipsEnabled": "Inline Safety Tips Enabled"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_atp_track_clicks_disabled": [
+		{
+			"translate": {
+				"Name": "Policy Name",
+				"TrackClicks": "Track Clicks",
+				"AllowClickThrough": "Allow Click Through",
+				"EnableSafeLinksForO365Clients": "Enable Safe Links for Microsoft 365 clients"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_safelinks_internal_senders_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.EnableForInternalSenders": "Enable For Internal Senders"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_anti_phish_spoof_intelligence_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"IsEnabled": "Policy Enabled",
+				"Policy.EnableSpoofIntelligence": "Enable Spoof Intelligence"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_safe_attachment_policy_whitelisted": [
+		{
+			"translate": {
+				"Name": "Rule Name",
+				"State": "Rule State",
+				"Mode": "Mode",
+				"Priority": "Priority",
+				"SetHeaderName": "Header Name"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_safe_links_policy_whitelisted": [
+		{
+			"translate": {
+				"Name": "Rule Name",
+				"State": "Rule State",
+				"Mode": "Mode",
+				"Priority": "Priority",
+				"SetHeaderName": "Header Name"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_advanced_phish_threshold_enforced": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"isEnabled": "Is Enabled",
+				"Policy.PhishThresholdLevel": "Phish Threshold Level"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_mailbox_intelligence_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"isEnabled": "Is Enabled",
+				"Policy.EnableMailboxIntelligence": "Mailbox Intelligence"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_domain_impersonation_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"isEnabled": "Is Enabled",
+				"Policy.EnableTargetedDomainsProtection": "Domains Protection",
+				"Policy.EnableOrganizationDomainsProtection": "Org Protection",
+				"Policy.TargetedDomainProtectionAction": "Protection Action"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_user_impersonation_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"isEnabled": "Is Enabled",
+				"Policy.EnableTargetedUserProtection": "Targeted User Protection",
+				"Policy.TargetedUserProtectionAction": "Protection Action"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_phish_policy_users_impersonation_safetytips_disabled": [
+		{
+			"translate": {
+				"policyName": "Policy Name",
+				"isEnabled": "Is Enabled",
+				"Policy.EnableSimilarUsersSafetyTips": "Similar User Safety Tips Enabled"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	],
+	"o365_exo_safe_docs_office_disabled": [
+		{
+			"translate": {
+				"Name": "Policy Name",
+				"isValid": "Is Valid",
+				"EnableSafeDocs": "Safe Docs Enabled",
+				"AllowSafeDocsOpen": "Allow Safe Docs Open"
+			},
+			"table": "Normal",
+			"format":{
+				"elements":[
+					{
+						"ItemName": "Allow Safe Docs Open",
+						"ItemValue": "enabled",
+						"className": "badge bg-danger larger-badge"
+					}
+				]
+			},
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
+	]
+}
