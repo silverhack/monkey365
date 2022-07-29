@@ -1,0 +1,45 @@
+FROM mcr.microsoft.com/powershell
+#Labels
+LABEL version="1.0"
+LABEL description="Monkey365 container"
+LABEL author "Juan Garrido"
+LABEL email "diariode@gmail.com"
+LABEL twitter "https://twitter.com/tr1ana"
+# Metadata parameters
+ARG VERSION
+ARG VCS_URL
+ARG BUILD_DATE
+
+# Metadata ("http://label-schema.org/rc1/")
+LABEL org.label-schema.vendor="Juan Garrido" \
+      org.label-schema.name="PowerShell Monkey365 Windows container" \
+      org.label-schema.description="PowerShell Monkey365 tool running in a Windows container" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url="https://github.com/silverhack/monkey365" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.schema-version="1.0" \
+      readme.md="https://github.com/silverhack/monkey365/README.md"
+	  
+ARG USERNAME=ContainerUser
+
+# Set the home directory to our app user's home.
+ENV HOME=C:/Users/ContainerUser
+ENV MODULE_HOME=$HOME/monkey365
+
+# Change to the app user.
+USER $USERNAME
+
+## SETTING UP THE APP ##
+RUN PowerShell -Command "New-Item -Path $env:USERPROFILE -Name monkey365 -Type Directory -Force"
+
+#Copy files
+COPY ./ $MODULE_HOME
+
+# Create a path in .config, then add required Import-Module command to the file
+RUN PowerShell -Command "New-Item -Path $env:USERPROFILE/Documents/PowerShell -Name Microsoft.PowerShell_profile.ps1 -Value 'Import-Module $Home/monkey365 -InformationAction Continue' -Force"
+
+#Set WORKDIR
+WORKDIR $HOME
+
+# Change to the app user.
+USER $USERNAME

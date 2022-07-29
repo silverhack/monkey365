@@ -1,0 +1,56 @@
+#bueno para mirar https://github.com/Stijnc/polaris-pshtml-docker
+FROM mcr.microsoft.com/powershell
+#Labels
+LABEL version="1.0"
+LABEL description="Monkey365 container"
+LABEL author "Juan Garrido"
+LABEL email "diariode@gmail.com"
+LABEL twitter "https://twitter.com/tr1ana"
+# Metadata parameters
+ARG VERSION
+ARG VCS_URL
+ARG BUILD_DATE
+
+# Metadata ("http://label-schema.org/rc1/")
+LABEL org.label-schema.vendor="Juan Garrido" \
+      org.label-schema.name="PowerShell Monkey365 linux container" \
+      org.label-schema.description="PowerShell Monkey365 tool running in a Linux container" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url="https://github.com/silverhack/monkey365" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.schema-version="1.0" \
+      readme.md="https://github.com/silverhack/monkey365/README.md"
+	  
+ARG USERNAME=monkey365
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+# Create the home directory for the new app user.
+RUN mkdir -p /home/$USERNAME
+
+# Create an app user so our program doesn't run as root.
+RUN groupadd --gid $USER_GID $USERNAME &&\
+    useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /sbin/nologin -c "Docker Monkey365 app user" &&\
+	chown -R $USER_UID:$USER_GID /home/$USERNAME
+
+# Set the home directory to our app user's home.
+ENV HOME=/home/$USERNAME
+ENV MODULE_HOME=/home/$USERNAME/monkey365
+
+## SETTING UP THE APP ##
+RUN mkdir -p $MODULE_HOME
+
+#Copy files
+COPY --chown=$USER_UID:$USER_GID ./ $MODULE_HOME
+
+# Create a path in .config, then add required Import-Module command to the file
+RUN mkdir -p $HOME/.config/powershell/
+RUN echo "Import-Module /home/$USERNAME/monkey365 -InformationAction Continue" > $HOME/.config/powershell/Microsoft.PowerShell_profile.ps1
+
+#Run chown
+RUN chown -R $USER_UID:$USER_GID /home/monkey365
+
+#Set WORKDIR
+WORKDIR $HOME
+
+# Change to the app user.
+USER $USERNAME

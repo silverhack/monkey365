@@ -1,0 +1,92 @@
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+Function Get-MonkeyTeamsOrgConfiguration{
+    <#
+        .SYNOPSIS
+		Plugin to get information about Teams organisation settings
+
+        .DESCRIPTION
+		Plugin to get information about Teams organisation settings
+
+        .INPUTS
+
+        .OUTPUTS
+
+        .EXAMPLE
+
+        .NOTES
+	        Author		: Juan Garrido
+            Twitter		: @tr1ana
+            File Name	: Get-MonkeyTeamsOrgConfiguration
+            Version     : 1.0
+
+        .LINK
+            https://github.com/silverhack/monkey365
+    #>
+
+    [cmdletbinding()]
+    Param (
+        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
+        [String]$pluginId
+    )
+    Begin{
+        #Getting environment
+        $Environment = $O365Object.Environment
+        #Get Access Token from Teams
+        $access_token = $O365Object.auth_tokens.Teams
+        $organisationSettings= $null
+    }
+    Process{
+        if($null -ne $access_token){
+            $msg = @{
+                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft 365 Teams: Organisation settings", $O365Object.TenantID);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'info';
+                InformationAction = $InformationAction;
+                Tags = @('TeamsOrgSettings');
+            }
+            Write-Information @msg
+            $params = @{
+                Authentication = $access_token;
+                InternalPath = 'PowerShell';
+                ObjectType = "TeamsClientConfiguration";
+                AdminDomain = 'common';
+                Environment = $Environment;
+                Method = "GET";
+            }
+            $organisationSettings = Get-TeamsObject @params
+        }
+    }
+    End{
+        if($organisationSettings){
+            $organisationSettings.PSObject.TypeNames.Insert(0,'Monkey365.Teams.OrgSettings')
+            [pscustomobject]$obj = @{
+                Data = $organisationSettings
+            }
+            $returnData.o365_teams_org_settings = $obj
+        }
+        else{
+            $msg = @{
+                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Organisation settings", $O365Object.TenantID);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'warning';
+                InformationAction = $InformationAction;
+                Tags = @('TeamsOrgSettingsEmptyResponse');
+            }
+            Write-Warning @msg
+        }
+    }
+}
