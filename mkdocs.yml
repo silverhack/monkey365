@@ -1,0 +1,79 @@
+site_name: Monkey365
+site_url: https://silverhack.github.io/monkey365/
+site_description: Monkey365
+site_author: Juan Garrido
+
+repo_url: https://github.com/silverhack/monkey365
+edit_uri: blob/main/docs/
+
+extra_css:
+- assets/css/extra.css
+
+theme:
+  language: en
+  name: material
+  #custom_dir: overrides
+  font:
+    text: Roboto
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+      primary: black
+      accent: blue
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+      primary: black
+  logo: assets/images/MonkeyLogo.png
+  favicon: assets/images/favicon.ico
+  icon:
+    repo: fontawesome/brands/github
+  features:
+  - navigation.instant
+  - navigation.indexes
+  - navigation.sections:
+      level: 1
+  - navigation.tabs
+  - content.code.annotate
+
+nav:
+  - Home: index.md
+  - Getting started:
+    - Overview:
+      - Installation: install-instructions.md
+      - Permissions: permissions.md
+      - Authentication: authentication.md
+      - Basic Usage: basic-usage.md
+    - Configuration:
+      - General Options: configuration/general-options.md
+      - Azure Options: configuration/azure-options.md
+      - Microsoft365 Options: configuration/microsoft365-options.md
+      - Configuration File: configuration/configuration-file.md
+      - Handle Rate Limit: configuration/rate-limit.md
+    - Docker:
+      - Overview: docker/docker.md
+    - Export Data:
+      - Overview: exporting/exporting-data.md
+      - Excel: exporting/export-excel.md
+      - HTML: exporting/export-html.md
+    - Logging:
+      - Introduction: logging/introduction.md
+      - Channels: logging/channels.md
+      - File logger: logging/File.md
+      - Slack logger: logging/Slack.md
+    - License and Contributing: license-contributing.md
+    - Support: support.md
+    - Disclaimer: disclaimer.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/silverhack/monkey365
+
+  local:
+    social_preview: https://user-images.githubusercontent.com/5271640/178448433-2eb54eaa-ffc4-40b7-9b90-4a6021a2f609.png
+    repo_issue: https://github.com/silverhack/monkey365/issues
+    repo_discussion: https://github.com/silverhack/monkey365/discussions

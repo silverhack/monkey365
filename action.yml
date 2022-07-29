@@ -1,0 +1,92 @@
+name: 'Install and run PSScriptAnalyzer'
+author: 'Juan Garrido'
+description: 'Install and run PSScriptAnalyzer'
+branding:
+  icon: "check-circle"
+  color: "gray-dark"
+inputs:
+  path:
+    description: 'Specifies the path to the scripts or module to be analyzed. Wildcard characters are supported.'
+    required: true
+    default: '.\'
+  customRulePath:
+    description: 'Uses only the custom rules defined in the specified paths to the analysis. To still use the built-in rules, add the -IncludeDefaultRules switch.'
+    required: false
+  recurseCustomRulePath:
+    description: 'Adds rules defined in subdirectories of the CustomRulePath location. By default, Invoke-ScriptAnalyzer uses only the custom rules defined in the specified file or directory. To still use the built-in rules, additionally use the -IncludeDefaultRules switch.'
+    required: false
+  excludeRule:
+    description: 'Omits the specified rules from the Script Analyzer test. Wildcard characters are supported.'
+    required: false
+  includeDefaultRules:
+    description: 'Invoke default rules along with Custom rules.'
+    required: false
+  includeRule:
+    description: 'Runs only the specified rules in the Script Analyzer test. By default, PSScriptAnalyzer runs all rules.'
+    required: false
+  severity:
+    description: 'After running Script Analyzer with all rules, this parameter selects rule violations with the specified severity.'
+    required: false
+  recurse:
+    description: 'Runs Script Analyzer on the files in the Path directory and all subdirectories recursively.'
+    required: false
+  suppressedOnly:
+    description: 'Returns rules that are suppressed, instead of analyzing the files in the path.'
+    required: false
+  fix:
+    description: 'Fixes certain warnings which contain a fix in their DiagnosticRecord.'
+    required: false
+  enableExit:
+    description: 'Exits PowerShell and returns an exit code equal to the number of error records. This can be useful in CI systems.'
+    required: false
+  reportSummary:
+    description: 'Writes a report summary of the found warnings to the host.'
+    required: false
+  settings:
+    description: 'File path that contains user profile or hash table for ScriptAnalyzer.'
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - name: Install PSScriptAnalyzer module
+      shell: pwsh
+      run: |
+        Set-PSRepository PSGallery -InstallationPolicy Trusted
+        Install-Module PSScriptAnalyzer -ErrorAction Stop
+    - name: Run PSScriptAnalyzer
+      shell: pwsh
+      run: |
+        $PSA_args = [ordered]@{ Path = '${{ inputs.path }}'; }
+        if(![string]::IsNullOrEmpty('${{ inputs.customRulePath }}')) { $PSA_args.add('CustomRulePath', @(${{ inputs.customRulePath }})) }
+        if(![string]::IsNullOrEmpty('${{ inputs.recurseCustomRulePath }}')) { $PSA_args.add('RecurseCustomRulePath', $true) }
+        if(![string]::IsNullOrEmpty('${{ inputs.excludeRule }}')) { $PSA_args.add('ExcludeRule', @(${{ inputs.excludeRule }})) }
+        if(![string]::IsNullOrEmpty('${{ inputs.includeDefaultRules }}') -and '${{ inputs.includeDefaultRules }}' -ne 'false') { $PSA_args.add('IncludeDefaultRules', $true) }
+        if(![string]::IsNullOrEmpty('${{ inputs.includeRule }}')) { $PSA_args.add('IncludeRule', @(${{ inputs.includeRule }})) }
+        if(![string]::IsNullOrEmpty('${{ inputs.severity }}')) { $PSA_args.add('Severity', @(${{ inputs.severity }})) }
+        if(![string]::IsNullOrEmpty('${{ inputs.recurse }}') -and '${{ inputs.includeDefaultRules }}' -ne 'false') { $PSA_args.add('Recurse', $true) }
+        if(![string]::IsNullOrEmpty('${{ inputs.fix }}')) { $PSA_args.add('Fix', $true) }
+        if(![string]::IsNullOrEmpty('${{ inputs.enableExit }}')) { $PSA_args.add('EnableExit', $true) }
+        if(![string]::IsNullOrEmpty('${{ inputs.settings }}')) { $PSA_args.add('Settings', '${{ inputs.settings }}') }
+        [System.Void](Invoke-ScriptAnalyzer @PSA_args -Outvariable issues)
+        $errors   = $issues.Where({($_.Severity -eq 'Error') -or ($_.Severity -eq 'ParseError')})
+        $warnings = $issues.Where({$_.Severity -eq 'Warning'})
+        $info = $issues.Where({$_.Severity -eq 'Information'})
+        if($errors){
+          foreach ($e in $errors){
+            $message = ("file={0},line={1},message{2}" -f $e.ScriptName,$e.Line,$e.Message)
+            Write-Error -Message $message
+          }
+        }
+        if($warnings){
+          foreach ($e in $warnings){
+            $message = ("file={0},line={1},message{2}" -f $e.ScriptName,$e.Line,$e.Message)
+            Write-Warning -Message $message
+          }
+        }
+        if($info){
+          foreach ($e in $info){
+            $message = ("file={0},line={1},message{2}" -f $e.ScriptName,$e.Line,$e.Message)
+            Write-Warning -Message $message
+          }
+        }
