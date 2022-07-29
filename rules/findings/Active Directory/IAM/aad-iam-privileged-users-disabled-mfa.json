@@ -1,0 +1,51 @@
+{
+    "dashboard_name":  "Active Directory Identity",
+    "menu_name":  "IAM",
+    "issue_name":  "Ensure that multi-factor authentication is enabled for all privileged users",
+    "description":  "Enable multi-factor authentication for all user credentials who have write access to Azure resources. These include roles like:
+					
+					* Service Co-Administrators
+					* Subscription Owners
+					* Contributors
+					",
+    "rationale":  "Multi-factor authentication requires an individual to present a minimum of two separate forms of authentication before access is granted. Multi-factor authentication provides additional assurance that the individual attempting to gain access is who they claim to be. With multi-factor authentication, an attacker would need to compromise at least two different authentication mechanisms, increasing the difficulty of compromise and thus reducing the risk.",
+    "impact":  "Users would require two forms of authentication before any action is granted. Also, this requires an overhead for managing dual forms of authentication.",
+    "remediation":  "Follow Microsoft Azure documentation and setup multi-factor authentication in your environment.
+					<a class='external-link' href='https://docs.microsoft.com/en-us/azure/active-directory/authentication/tutorial-enable-azure-mfa' target='_blank'>Secure user sign-in events with Azure AD Multi-Factor Authentication</a>
+					",
+    "references":  [
+					   "https://docs.microsoft.com/en-us/azure/multi-factor-authentication/multi-factor-authentication",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-4-use-strong-authentication-controls-for-all-azure-active-directory-based-access",
+                       "https://docs.microsoft.com/en-us/azure/security/fundamentals/identity-management-best-practices"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "1.1.1"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "aad_directory_user_roles",
+    "display_path":  "aad_directory_user_roles",
+    "conditions":  [
+                       "and",
+                       [
+                           "_INCLUDE_(_ARG_0_)",
+                           "",
+                           ""
+                       ],
+					   [
+                           "and",
+                           [
+                               "or",
+                               [
+                                   "mfaenabled",
+                                   "eq",
+                                   "false"
+                               ]
+                           ]
+                       ]
+                   ],
+    "id_suffix":  "aad_privileged_users_with_mfa_disabled"
+}

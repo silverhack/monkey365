@@ -1,0 +1,58 @@
+{
+    "dashboard_name":  "Azure Virtual Machines",
+    "menu_name":  "Compute",
+    "issue_name":  "Ensure that OS and Data disks are encrypted with customer managed keys",
+    "description":  "Ensure that OS disks (boot volumes) and data disks (non-boot volumes) are encrypted with CMK.",
+    "rationale":  "Encrypting the IaaS VM's OS disk (boot volume), Data disks (non-boot volume) ensures that the entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads. CMK is superior encryption although requires additional planning.",
+    "impact":  "Using CMK/BYOK will entail additional management of keys.
+				**NOTE**: You must have your key vault setup to utilize this.
+	",
+    "remediation": "
+					###### From Azure Console
+					**Note**: Disks must be detached from VMs to have encryption changed.
+					1. Go to `Virtual machines`
+					2. For each virtual machine, go to `Settings`
+					3. Click on `Disks`
+					4. Click the `X` to detach the disk from the VM
+					5. Now search for `Disks` and locate the unattached disk
+					6. Click the disk then select `Encryption`
+					7. Change your encryption type, then select your encryption set
+					8. Click `Save`
+					9. Go back to the VM and re-attach the disk
+
+	",
+    "references":  [
+                       "https://docs.microsoft.com/azure/security/fundamentals/azure-disk-encryption-vms-vmss",
+					   "https://docs.microsoft.com/en-us/azure/security-center/security-center-disk-encryption?toc=%2fazure%2fsecurity%2ftoc.json",
+					   "https://docs.microsoft.com/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest",
+					   "https://docs.microsoft.com/azure/virtual-machines/windows/disk-encryption-portal-quickstart",
+					   "https://docs.microsoft.com/en-us/rest/api/compute/disks/delete",
+					   "https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-5-encrypt-sensitive-data-at-rest",
+					   "https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disks-enable-customer-managed-keys-powershell"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "7.2"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_virtual_machines",
+    "display_path":  "az_virtual_machines",
+    "conditions":  [
+                       "or",
+                       [
+                           "os_sse_encryption",
+                           "ne",
+                           "EncryptionAtRestWithCustomerKey"
+                       ],
+					   [
+                           "data_disks.sse_encryption",
+                           "ne",
+                           "EncryptionAtRestWithCustomerKey"
+                       ]
+                   ],
+    "id_suffix":  "az_vm_os_data_disks_cmk_disabled"
+}

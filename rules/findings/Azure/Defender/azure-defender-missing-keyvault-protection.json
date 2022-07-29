@@ -1,0 +1,48 @@
+{
+    "dashboard_name":  "Azure Defender",
+    "menu_name":  "Subscription",
+    "issue_name":  "Ensure that Azure Defender is set to On for Key Vault",
+    "description":  "Turning on Azure Defender enables threat detection for Key Vault, providing threat intelligence, anomaly detection, and behavior analytics in the Azure Security Center.",
+    "rationale":  "Enabling Azure Defender for Key Vault allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
+    "impact":  "Turning on Azure Defender in Azure Security Center incurs an additional cost per resource.",
+    "remediation":  "
+					###### From Azure Console
+					1. Go to `Security Center`
+					2. Select `Pricing & settings blade`
+					3. Click on the subscription name
+					4. Select the `Azure Defender plans` blade
+					5. On the line in the table for `Key Vault` Select `On` under `Plan`.
+					6. Select `Save`
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/security-center/security-center-detection-capabilities",
+					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
+					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/update",
+					   "https://docs.microsoft.com/en-us/powershell/module/az.security/get-azsecuritypricing",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security#es-1-use-endpoint-detection-and-response-edr"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "2.8"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_pricing_tier",
+    "display_path":  "az_pricing_tier",
+    "conditions":  [
+                       "and",
+                       [
+                           "name",
+						   "eq",
+						   "KeyVaults"
+					    ],
+						[
+						   "properties.pricingTier",
+                           "eq",
+                           "Free"
+                       ]
+                   ],
+    "id_suffix":  "azure_defender_missing_keyvault_protection"
+}

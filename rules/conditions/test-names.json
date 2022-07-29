@@ -1,0 +1,7 @@
+{
+    "conditions":[
+          "or",
+          ["displayName", "imatch", "Demo"],
+          ["displayName", "imatch", "test"]
+      ]
+}

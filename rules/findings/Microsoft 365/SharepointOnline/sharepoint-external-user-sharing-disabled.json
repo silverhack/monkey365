@@ -1,0 +1,45 @@
+{
+    "dashboard_name":  "Sharepoint Online",
+    "menu_name":  "Microsoft 365",
+    "issue_name":  "Ensure that external users cannot share files, folders, and sites they do not own",
+    "description":  "SharePoint gives users the ability to share files, folder, and site collections. Internal users can share with external collaborators, who with the right permissions, could share those to another external party.",
+    "rationale":  "Sharing and collaboration are key; however, file, folder, or site collection owners should have the authority over what external users get shared with to prevent unauthorized disclosures of information.",
+    "impact":  "Impact associated with this change is highly dependent upon current practices. If users do not regularly share with external parties, then minimal impact is likely. However, if users do regularly share with guests/externally, minimum impacts could occur as those external users will be unable to 're-share' content.",
+    "remediation":  "
+					###### To set SharePoint sharing settings, use the Microsoft 365 Admin Center
+					1. Under `Admin centers` select `SharePoint`.
+					2. Expand `Policies` then select `Sharing`.
+					3. Expand `More external sharing settings`, uncheck `Allow guests to share items they don't own`.
+					4. Click `Save`
+					
+					###### To Set Prevent external users from sharing files, folders, and sites that they don’t own, use the SharePoint Online PowerShell Module:
+					1. Connect to SharePoint Online service using `Connect-SPOService`.
+					2. Run the following SharePoint Online PowerShell command:
+					```Powershell
+					Set-SPOTenant -PreventExternalUsersFromResharing $True
+					```
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-us/sharepoint/external-sharing-overview",
+					   "https://docs.microsoft.com/en-us/sharepoint/turn-external-sharing-on-or-off"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft 365 Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "3.6"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "o365_spo_tenant_details",
+    "display_path":  "o365_spo_tenant_details",
+    "conditions":  [
+                       "and",
+                       [
+                           "PreventExternalUsersFromResharing",
+                           "eq",
+                           "false"
+                       ]
+                   ],
+    "id_suffix":  "o365_spo_external_users_sharing_disabled"
+}

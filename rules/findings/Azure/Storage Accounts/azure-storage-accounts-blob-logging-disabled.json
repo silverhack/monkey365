@@ -1,0 +1,51 @@
+{
+    "dashboard_name":  "Storage Accounts",
+    "menu_name":  "Storage",
+    "issue_name":  "Ensure Storage logging is enabled for Blob service for read, write, and delete requests",
+    "description":  "The Storage Blob service provides scalable, cost-efficient objective storage in the cloud. Storage Logging happens server-side and allows details for both successful and failed requests to be recorded in the storage account. These logs allow users to see the details of read, write, and delete operations against the blobs. Storage Logging log entries contain the following information about individual requests: Timing information such as start time, end-to-end latency, and server latency, authentication details , concurrency information and the sizes of the request and response messages.",
+    "rationale":  "Storage Analytics logs contain detailed information about successful and failed requests to a storage service. This information can be used to monitor individual requests and to diagnose issues with a storage service. Requests are logged on a best-effort basis.",
+    "impact":  "Enabling storage account blob service logging does have a cost implication.",
+    "remediation":  '
+					###### From Azure Console
+					1. Go to `Storage Accounts`.
+					2. Select the specific `Storage Account`.
+					3. Click the `Diagnostics settings (classic)` blade from `Monitoring (classic)` section.
+					4. Set the Status to `On`, if set to `Off`.
+					5. Select `Blob` properties.
+					6. Select `Read, Write` and `Delete` options under the Logging section to enable Storage Logging for Blob service.
+	',
+    "references":  [
+                       "https://docs.microsoft.com/en-us/rest/api/storageservices/about-storage-analytics-logging",
+					   "https://docs.microsoft.com/en-us/cli/azure/storage/logging?view=azure-cli-latest",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "3.10"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_storage_accounts",
+    "display_path":  "az_storage_accounts",
+    "conditions":  [
+                       "or",
+                       [
+                           "blobLogReadEnabled",
+                           "eq",
+                           "False"
+                       ],
+					   [
+                           "blobLogWriteEnabled",
+                           "eq",
+                           "False"
+                       ],
+					   [
+                           "blobLogDeleteEnabled",
+                           "eq",
+                           "False"
+                       ]
+                   ],
+    "id_suffix":  "storage_accounts_missing_blob_logging"
+}

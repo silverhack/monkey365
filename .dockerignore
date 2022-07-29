@@ -1,0 +1,10 @@
+log
+Dockerfile*
+docker-compose*
+.dockerignore
+docker
+.git
+.env
+README.md
+LICENSE
+monkey-reports

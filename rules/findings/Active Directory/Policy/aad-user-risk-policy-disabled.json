@@ -1,0 +1,51 @@
+{
+    "dashboard_name":  "Active Directory",
+    "menu_name":  "Active Directory",
+    "issue_name":  "Ensure Azure AD Identity Protection user risk policy is enabled",
+    "description":  "Azure Active Directory Identity Protection user risk policies detect the probability that a user account has been compromised.",
+    "rationale":  "With the user risk policy turned on, Azure AD detects the probability that a user account has been compromised. As an administrator, you can configure a user risk conditional access policy to automatically respond to a specific user risk level. For example, you can block access to your resources or require a password change to get a user account back into a clean state.",
+    "impact":  "When the policy triggers, access to the account will either be blocked or the user would be required to use multi-factor authentication and change their password. Users who haven't registered MFA on their account will be blocked from accessing it. If account access is blocked, an admin would need to recover the account. It is therefore recommended that the MFA registration policy be configured for all users who are a part of the User Risk policy.",
+    "remediation": "
+					###### From Azure AD Portal
+					1. Log in to <a href='https://aad.portal.azure.com' target='_blank'>https://aad.portal.azure.com</a> as a Global Administrator.
+					2. Select `Security`.
+					3. Select `Identity Protection`.
+					4. Select `User risk policy`.
+					5. Set the following conditions within the policy.
+						* Under Users or workload identities choose `All users`
+						* Under `User risk` set the appropriate level.
+						* Under `Access` select `Allow access` then in the right pane select `Require password change`.
+					6. Click `Done`
+					7. In `Enforce Policy` set `On`.
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/active-directory/authentication/tutorial-risk-based-sspr-mfa"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft 365 Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "1.1.8"
+                       }
+   ],
+    "tags":  [
+                 "Microsoft 365 CIS benchmark 1.1.8"
+             ],
+    "path":  "aad_domain_policies",
+    "display_path":  "aad_domain_policies",
+    "conditions":  [
+                       "and",
+                       [
+                           "displayName",
+                           "eq",
+                           "Sign-In Risk Policy"
+                       ]
+					   
+	],
+	"shouldExist":  "true",
+	"returnObject":  {
+		"PolicyName":  "User risk policy",
+		"Status":  "DoesNotExists"
+	},
+    "id_suffix":  "aad_user_risk_policy_disabled"
+}

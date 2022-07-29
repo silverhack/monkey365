@@ -1,0 +1,32 @@
+{
+    "dashboard_name":  "Azure Virtual Machines",
+    "menu_name":  "Compute",
+    "issue_name":  "Ensure that the latest Critical OS patches for all virtual machines are applied",
+    "description":  "The Azure Security Center retrieves a list of available security and critical updates from Windows Update or Windows Server Update Services (WSUS), depending on which service is configured on a Windows VM. The security center also checks for the latest updates in Linux systems. If a VM is missing a system update, the security center will recommend system updates be applied.",
+    "rationale":  null,
+    "impact":  null,
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/security-center/security-center-apply-system-updates",
+                       "https://docs.microsoft.com/en-us/azure/security/fundamentals/iaas"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "7.5"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_vm_missing_patches",
+    "display_path":  "az_vm_missing_patches",
+    "conditions":  [
+                       "and",
+                       [
+                           "MSRCSeverity",
+                           "eq",
+                           "Critical"
+                       ]
+                   ],
+    "id_suffix":  "azure_vm_missing_critical_updates"
+}

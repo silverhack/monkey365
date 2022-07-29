@@ -1,0 +1,34 @@
+{
+    "conditions":[
+         [ "or",   
+            [ "and",
+                ["Permission", "eq", "Application.ReadWrite.All"],
+                ["ConsentType", "eq", "Admin"]
+            ]
+         ],
+         [ "or",   
+            [ "and",
+                ["Permission", "eq", "Directory.ReadWrite.All"],
+                ["ConsentType", "eq", "Admin"]
+            ]
+         ],
+         [ "or",   
+            [ "and",
+                ["Permission", "eq", "Domain.ReadWrite.All"],
+                ["ConsentType", "eq", "Admin"]
+            ]
+         ],
+         [ "or",   
+            [ "and",
+                ["Permission", "eq", "Member.Read.Hidden"],
+                ["ConsentType", "eq", "Admin"]
+            ]
+         ],
+         [ "or",   
+            [ "and",
+                ["Permission", "eq", "User.ReadWrite.All"],
+                ["ConsentType", "eq", "Admin"]
+            ]
+         ]
+      ]
+}

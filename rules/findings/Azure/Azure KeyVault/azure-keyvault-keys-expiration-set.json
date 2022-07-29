@@ -1,0 +1,37 @@
+{
+    "dashboard_name":  "Azure KeyVault",
+    "menu_name":  "Keyvaults",
+    "issue_name":  "Ensure that the expiration date is set on all keys",
+    "description":  "Ensure that all keys in Azure Key Vault have an expiration time set.",
+    "rationale":  "Azure Key Vault enables users to store and use cryptographic keys within the Microsoft Azure environment. The `exp` (expiration time) attribute identifies the expiration time on or after which the key MUST NOT be used for a cryptographic operation. By default, keys never expire. It is thus recommended that keys be rotated in the key vault and set an explicit expiration time for all keys. This ensures that the keys cannot be used beyond their assigned lifetimes.",
+    "impact":  "Keys cannot be used beyond their assigned expiration times respectively. Keys need to be rotated periodically wherever they are used.",
+    "remediation": "
+					###### From Azure Console
+					1. Go to `Key vaults`
+					2. For each Key vault, click on `Keys`.
+					3. Under the `Settings` section, Make sure `Enabled?` is set to Yes
+					4. Set an appropriate **expiration date** on all keys.
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "8.1"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_key_vaults",
+    "display_path":  "az_key_vaults",
+    "conditions":  [
+                       "and",
+                       [
+                           "keys.expires",
+                           "eq",
+                           "False"
+                       ]
+                   ],
+    "id_suffix":  "azure_key_vault_keys_notexpire"
+}

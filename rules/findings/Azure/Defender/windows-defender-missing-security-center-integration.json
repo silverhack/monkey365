@@ -1,0 +1,50 @@
+{
+    "dashboard_name":  "Azure Defender",
+    "menu_name":  "Subscription",
+    "issue_name":  "Ensure that Windows Defender ATP (WDATP) integration with Security Center is selected",
+    "description":  "This setting enables Windows Defender ATP (WDATP) integration with Security Center.",
+    "rationale":  "WDATP integration brings comprehensive Endpoint Detection and Response (EDR) capabilities within security center. This integration helps to spot abnormalities, detect and respond to advanced attacks on Windows server endpoints monitored by Azure Security Center. Windows Defender ATP in Security Center supports detection on Windows Server 2016, 2012 R2, and 2008 R2 SP1 operating systems in a Standard service subscription.  
+				   WDATP works only with Standard Tier subscriptions.	
+	",
+    "impact":  "WDATP works with Standard pricing tier Subscription.Choosing the Standard pricing tier of Azure Security Center incurs an additional cost per resource.",
+    "remediation":  "
+					###### From Azure Console
+					1. Go to `Security Center`
+					2. Select `Security policy` blade
+					3. Click on `Edit Settings` to alter the the security policy for a subscription
+					4. Select the `Threat Detection` blade
+					5. Check/Enable option `Allow Windows Defender ATP to access my data`
+					6. Select `Save`
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-in/azure/security-center/security-center-wdatp",
+					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/settings/list",
+					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/settings/update",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security#es-1-use-endpoint-detection-and-response-edr",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security#es-2-use-centrally-managed-modern-anti-malware-software"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "2.9"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_security_center_config",
+    "display_path":  "az_security_center_config",
+    "conditions":  [
+                       "and",
+                       [
+                           "name",
+						   "eq",
+						   "WDATP"
+					    ],
+						[
+						   "properties.enabled",
+                           "eq",
+                           "False"
+                       ]
+                   ],
+    "id_suffix":  "windows_defender_atp_missing_integration"
+}

@@ -1,0 +1,45 @@
+{
+    "dashboard_name":  "Subscription Policies",
+    "menu_name":  "Subscription",
+    "issue_name":  "Ensure that 'Automatic provisioning of monitoring agent' is set to 'On'",
+    "description":  "Consider to enable automatic provisioning of the monitoring agent to collect security data.",
+    "rationale":  "When `Automatic provisioning of monitoring agent` is turned on, Azure Security Center provisions the Microsoft Monitoring Agent on all existing supported Azure virtual machines and any new ones that are created. The Microsoft Monitoring Agent scans for various security-related configurations and events such as system updates, OS vulnerabilities, endpoint protection, and provides alerts.",
+    "impact":  null,
+    "remediation":  "
+					###### From Azure Console
+					1. Go to `Security Center`
+					2. Select `Pricing & settings` blade
+					3. Click on the subscription name
+					4. Click on `Data Collection`
+					5. Set `Automatic provisioning` to `On`
+					6. Select `Save`
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/security-center/security-center-data-security",
+					   "https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection",
+					   "https://msdn.microsoft.com/en-us/library/mt704062.aspx",
+					   "https://msdn.microsoft.com/en-us/library/mt704063.aspx",
+					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/list",
+					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/create",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "2.11"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_vm_provisioning_status",
+    "display_path":  "az_vm_provisioning_status",
+    "conditions":  [
+                       "and",
+                       [
+                           "autoprovision",
+                           "ne",
+                           "On"
+                       ]
+                   ],
+    "id_suffix":  "azure_vm_autoprovision_disabled"
+}

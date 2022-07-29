@@ -1,0 +1,47 @@
+{
+    "dashboard_name":  "Exchange Online",
+    "menu_name":  "Microsoft 365",
+    "issue_name":  "Ensure calendar details sharing with external users is disabled",
+    "description":  "Consider to not allow your users to share the full details of their calendars with external users.",
+    "rationale":  "Attackers often spend time learning about your organization before launching an attack. Publicly available calendars can help attackers understand organizational relationships and determine when specific users may be more vulnerable to an attack, such as when they are traveling.",
+    "impact":  "This functionality is not widely used. As a result, it is unlikely that implementation of this setting will cause an impact to most users. Users that do utilize this functionality are likely to experience a minor inconvenience when scheduling meetings or synchronizing calendars with people outside the tenant.",
+    "remediation":  '
+					###### To disable calendar details sharing with external users, use the Microsoft 365 Admin Center
+					1. Select `Admin Center` and Click to expand `Settings`.
+					2. Click `Org Settings`.
+					3. Click `Calendar`.
+					4. Set `Let your users share their calendars with external users who have O365 or Exchange` to Off or unchecked.
+					5. Click `Save`.		
+					
+					###### To disabled calendar details sharing with external users policy, use the Exchange Online PowerShell Module
+					1. Connect to Exchange Online using `Connect-ExchangeOnline`
+					2. Run the following PowerShell command:					
+					```powershell
+					Set-SharingPolicy -Identity "Name of the policy" -Enabled $False
+					```
+	',
+    "references":  [
+                       "https://docs.microsoft.com/en-us/exchange/sharing/sharing"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft 365 Foundations",
+                           "version":  "1.3.0",
+                           "reference":  "2.2"
+                       }
+                   ],
+    "tags":  [
+                 "Microsoft 365 CIS benchmark 2.2"
+             ],
+    "path":  "o365_exo_sharing_policy",
+    "display_path":  "o365_exo_sharing_policy",
+    "conditions":  [
+                       "and",
+                       [
+                           "Domains",
+                           "like",
+                           "*CalendarSharing*"
+                       ]
+                   ],
+    "id_suffix":  "o365_exo_calendar_sharing_external_enabled"
+}

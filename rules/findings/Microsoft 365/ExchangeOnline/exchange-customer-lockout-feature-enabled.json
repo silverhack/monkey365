@@ -1,0 +1,46 @@
+{
+    "dashboard_name":  "Exchange Online",
+    "menu_name":  "Microsoft 365",
+    "issue_name":  "Ensure the customer lockbox feature is enabled",
+    "description":  "Consider to enable the Customer Lockbox feature. It requires Microsoft to get your approval for any datacenter operation that grants a Microsoft support engineer or other employee direct access to any of your data. For example, in some cases a Microsoft support engineer might need access to your Microsoft 365 content in order to help troubleshoot and fix an issue for you. Customer lockbox requests also have an expiration time, and content access is removed after the support engineer has fixed the issue.",
+    "rationale":  "Enabling this feature protects your data against data spillage and exfiltration.",
+    "impact":  "The impact associated with this setting is a requirement to grant Microsoft access to the tenant environment prior to a Microsoft engineer accessing the environment for support or troubleshooting.",
+    "remediation":  '
+					###### To enable the Customer Lockbox feature, use the Microsoft 365 Admin Portal
+					1. Browse to the `Microsoft 365 admin center`.
+					2. Expand `Settings` and then select `Org Settings`.
+					3. Choose `Security & privacy` in the right pane.
+					4. Click `Customer Lockbox`.
+					5. Check the the box `Require approval for all data access requests`.
+					6. Click `Save changes`.		
+					
+					###### To set the Customer Lockbox feature to enabled, use the Microsoft Online PowerShell Module
+					1. Connect to Exchange Online using `Connect-ExchangeOnline`
+					2. Run the following PowerShell command:					
+					```powershell
+					Set-OrganizationConfig -CustomerLockBoxEnabled $true
+					```
+	',
+    "references":  [
+                       "https://docs.microsoft.com/en-us/microsoft-365/compliance/customer-lockbox-requests?view=o365-worldwide"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft 365 Foundations",
+                           "version":  "1.3.0",
+                           "reference":  "3.1"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "o365_exo_org_config",
+    "display_path":  "o365_exo_org_config",
+    "conditions":  [
+                       "and",
+                       [
+                           "CustomerLockBoxEnabled",
+                           "eq",
+                           "false"
+                       ]
+                   ],
+    "id_suffix":  "o365_exo_customer_lockout_disabled"
+}

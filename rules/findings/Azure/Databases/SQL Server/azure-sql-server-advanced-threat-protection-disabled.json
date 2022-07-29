@@ -1,0 +1,39 @@
+{
+    "dashboard_name":  "SQL Server",
+    "menu_name":  "Databases",
+    "issue_name":  "Ensure that Advanced Threat Protection (ATP) on a SQL server is set to 'Enabled'",
+    "description":  "Advanced data security is a unified package for advanced SQL security capabilities. It includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database.",
+    "rationale":  "Azure Defender for SQL is a unified package for advanced SQL security capabilities. Azure Defender is available for Azure SQL Database, Azure SQL Managed Instance, and Azure Synapse Analytics. It includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database. It provides a single go-to location for enabling and managing these capabilities.",
+    "impact":  "Azure Defender for SQL is a paid feature and will incur additional cost for each SQL server.",
+    "remediation":  '
+					###### From Azure Console
+					1. Go to `SQL servers`.
+					2. For each server instance
+					3. Click on `Azure Defender` for SQL
+					4. Set Azure Defender for SQL to `On`
+	',
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql",
+					   "https://docs.microsoft.com/cs-cz/powershell/module/azurerm.sql/get-azurermsqlserverthreatdetectionpolicy?view=azurermps-5.2.0",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-3-monitor-for-unauthorized-transfer-of-sensitive-data"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "4.2.1"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_sql_servers",
+    "display_path":  "az_sql_servers",
+    "conditions":  [
+                       "and",
+                       [
+                           "threatDetectionPolicy",
+                           "eq",
+                           "Disabled"
+                       ]
+                   ],
+    "id_suffix":  "sql_server_tdp_disabled"
+}

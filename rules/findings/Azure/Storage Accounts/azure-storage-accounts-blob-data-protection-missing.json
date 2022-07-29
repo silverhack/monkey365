@@ -1,0 +1,46 @@
+{
+    "dashboard_name":  "Storage Accounts",
+    "menu_name":  "Storage",
+    "issue_name":  "Ensure soft delete is enabled for Azure Storage",
+    "description":  "The Azure Storage blobs contain data like ePHI, Financial, secret or personal. Erroneously modified or deleted accidentally by an application or other storage account user cause data loss or data unavailability.  
+					It is recommended the Azure Storage be made recoverable by enabling **soft delete** configuration. This is to save and recover data when blobs or blob snapshots are deleted.
+	",
+    "rationale":  "There could be scenarios where users accidentally run delete commands on Azure Storage blobs or blob snapshot or attacker/malicious user does it deliberately to cause disruption. Deleting an Azure Storage blob leads to immediate data loss / non-accessible data.  
+				   There is a property of Azure Storage blob service to make recoverable blobs.
+				   
+				   * Soft Delete
+				   Enabling this configuration for azure storage ensures that even if blobs/data were deleted from the storage account, Blobs/data objects remain recoverable for a particular time which set in the `Retention policies` [Retention policies can be 7 days to 365 days]
+	
+	",
+    "impact":  null,
+    "remediation":  '
+					###### From Azure Console
+					1. Go to `Storage Accounts`.
+					2. For each Storage Account, navigate to `Data Protection`
+					3. Select set soft delete enabled and enter a number of days you want to retain soft deleted data.
+
+	',
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-soft-delete"
+
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "3.8"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_storage_accounts",
+    "display_path":  "az_storage_accounts",
+    "conditions":  [
+                       "and",
+                       [
+                           "dataProtection.properties.deleteRetentionPolicy.enabled",
+                           "eq",
+                           "False"
+                       ]
+                   ],
+    "id_suffix":  "storage_accounts_missing_blob_data_protection"
+}

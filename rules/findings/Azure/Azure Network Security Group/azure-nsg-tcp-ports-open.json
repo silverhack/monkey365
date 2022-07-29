@@ -1,0 +1,61 @@
+{
+    "arg_names": [ "Network protocol name", "Port number", "description", "rationale", "compliance_version", "additional_compliance" ],
+	"dashboard_name":  "Network Security Groups",
+    "menu_name":  "Network",
+    "issue_name":  "Ensure that _ARG_0_ access is restricted from the internet",
+    "description":  "_ARG_2_",
+    "rationale":  "_ARG_3_",
+    "impact":  null,
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/virtual-network/security-overview"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.3.1",
+                           "reference":  "_ARG_4_"
+                       },
+                       [
+                           "_ARG_5_"
+                       ]
+                   ],
+    "tags":  null,
+    "path":  "az_nsg_rules",
+    "display_path":  "az_nsg_rules",
+    "conditions":  [
+                       "and",
+                       [
+                           "_INCLUDE_(conditions/allow-tcp.json)",
+                           "",
+                           ""
+                       ],
+                       [
+                           "_INCLUDE_(conditions/exposed-to-the-internet.json)",
+                           "",
+                           ""
+                       ],
+                       [
+                           "and",
+                           [
+                               "or",
+                               [
+                                   "DestinationPortRange",
+                                   "like",
+                                   "*_ARG_1_*"
+                               ],
+                               [
+                                   "DestinationPortRanges",
+                                   "like",
+                                   "*_ARG_1_*"
+                               ]
+                           ]
+                       ],
+                       [
+                           "Priority",
+                           "notlike",
+                           "65*"
+                       ]
+                   ],
+    "id_suffix":  "azure_nsg_security_port_open_all"
+}

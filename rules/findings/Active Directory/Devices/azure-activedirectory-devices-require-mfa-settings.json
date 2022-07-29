@@ -1,0 +1,40 @@
+{
+    "dashboard_name":  "Active Directory",
+    "menu_name":  "Active Directory",
+    "issue_name":  "Joining devices to the active directory should require Multi-factor authentication",
+    "description":  "Multi-factor authentication is recommended when adding devices to Azure AD. When set to \"Yes\", users who are adding devices from the internet must first use the second method of authentication before their device is successfully added to the directory. This ensures that rogue devices are not added to the directory for a compromised user account",
+    "rationale":  "Multi-factor authentication is recommended when adding devices to Azure AD. When set to `Yes`, users who are adding devices from the internet must first use the second method of authentication before their device is successfully added to the directory. This ensures that rogue devices are not added to the directory for a compromised user account.",
+    "impact":  null,
+    "remediation":  "
+					###### From Azure Console
+					1. Go to `Azure Active Directory`
+					2. Go to `Devices`
+					3. Go to `Device settings`
+					4. Ensure that `Require Multi-Factor Auth to join devices` is set to `Yes`
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/active-directory/devices/concept-azure-ad-join",
+                       "https://docs.microsoft.com/en-us/azure/active-directory/devices/device-management-azure-portal",
+					   "https://blogs.technet.microsoft.com/janketil/2016/02/29/azure-mfa-for-enrollment-in-intune-and-azure-ad-device-registration-explained/",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-4-use-strong-authentication-controls-for-all-azure-active-directory-based-access"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "1.19"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "aad_device_settings",
+    "display_path":  "aad_device_settings",
+    "conditions":  [
+                       "and",
+                       [
+                           "requireMfaSetting",
+                           "eq",
+                           "False"
+                       ]
+                   ],
+    "id_suffix":  "aad_mfa_devices_disabled"
+}

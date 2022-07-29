@@ -1,0 +1,16 @@
+{
+    "conditions":[
+          "and",
+          ["direction", "eq", "Inbound"],
+          ["Access", "eq", "Allow"],
+		  [ "and",
+            [ "or",
+                [ "SourceAddressPrefix", "eq", "*" ],
+				[ "SourceAddressPrefix", "eq", "Internet" ],
+				[ "SourceAddressPrefixes", "eq", "*" ],
+				[ "SourceAddressPrefixes", "eq", "Internet" ]
+            ]
+          ]
+      ]
+	  
+}

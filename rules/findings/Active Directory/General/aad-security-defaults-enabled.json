@@ -1,0 +1,57 @@
+{
+    "dashboard_name":  "Active Directory",
+    "menu_name":  "Active Directory",
+    "issue_name":  "Ensure Security Defaults is disabled on Azure Active Directory",
+    "description":  "Security defaults in Azure Active Directory (Azure AD) make it easier to be secure and help protect your organization. Security defaults contain preconfigured security settings for common attacks.
+					Microsoft is making security defaults available to everyone. The goal is to ensure that all organizations have a basic level of security-enabled at no extra cost. The use of security defaults however will prohibit custom settings which are being set with more advanced settings.",
+    "rationale":  "
+					Security defaults provide secure default settings that we manage on behalf of organizations to keep customers safe until they are ready to manage their own identity security settings.
+					
+					For example doing the following:
+					
+					* Requiring all users and admins to register for MFA.
+					* Challenging users with MFA - mostly when they show up on a new device or app, but more often for critical roles and tasks.
+					* Disabling authentication from legacy authentication clients, which can’t do MFA.
+	",
+    "impact":  "The potential impact associated with disabling of Security Defaults is dependent upon the security controls implemented in the environment. It is likely that most organizations disabling Security Defaults plan to implement equivalent controls to replace Security Defaults.
+				It may be necessary to check settings in other Microsoft products, such as Azure, to ensure settings and functionality are as expected when disabling security defaults for MS365.
+
+	",
+    "remediation":  "
+					###### From Azure Console
+					1. Sign in to the Azure portal as a security administrator, Conditional Access administrator, or global administrator.
+					2. Browse to Azure Active Directory > Properties.
+					3. Select Manage security defaults.
+					4. Set the Enable security defaults toggle to No.
+					5. Select Save.
+	
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions",
+                       "http://www.rebeladmin.com/2019/04/step-step-guide-restrict-azure-ad-administration-portal/",
+					   "https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/concept-fundamentals-security-defaults",
+					   "https://techcommunity.microsoft.com/t5/azure-active-directory-identity/introducing-security-defaults/ba-p/1061414"
+
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft 365 Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "1.21"
+                       }
+                   ],
+    "tags":  [
+                 "Microsoft 365 CIS benchmark 1.21"
+             ],
+    "path":  "aad_security_default_status",
+    "display_path":  "aad_security_default_status",
+    "conditions":  [
+                       "and",
+                       [
+                           "securityDefaultsEnabled",
+                           "eq",
+                           "True"
+                       ]
+                   ],
+    "id_suffix":  "aad_sbd_enabled"
+}

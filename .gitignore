@@ -1,0 +1,17 @@
+# logs
+azurereview.log
+/log/*.log
+
+# Data folder
+monkey-reports*
+
+site/
+*.csv
+
+config/monkey_365_dev.config
+
+profiles/
+
+rules/findings/extra/*
+rules/rulesets/monkey_azure_1.0.json
+rules/rulesets/monkey_m365_1.0.json

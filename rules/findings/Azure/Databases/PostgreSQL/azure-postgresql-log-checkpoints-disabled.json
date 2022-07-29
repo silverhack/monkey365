@@ -1,0 +1,36 @@
+{
+    "dashboard_name":  "PostgreSQL Configuration",
+    "menu_name":  "Database Configuration",
+    "issue_name":  "Enable log_checkpoints on PostgreSQL Servers",
+    "description":  "Enabling log_checkpoints helps the PostgreSQL Database to Log each checkpoint in turn generates query and error logs. However, access to transaction logs is not supported. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
+    "rationale":  null,
+    "impact":  null,
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "4.3.2"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_postgresql_configuration",
+    "display_path":  "az_postgresql_configuration",
+    "conditions":  [
+                       "and",
+                       [
+                           "parameterName",
+                           "eq",
+                           "log_checkpoints"
+                       ],
+                       [
+                           "parameterValue",
+                           "eq",
+                           "off"
+                       ]
+                   ],
+    "id_suffix":  "postgresql_log_checkpoints_disabled"
+}

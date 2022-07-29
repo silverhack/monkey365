@@ -1,0 +1,49 @@
+{
+    "dashboard_name":  "Sharepoint Online",
+    "menu_name":  "Microsoft 365",
+    "issue_name":  "Ensure document sharing is being controlled by domains with whitelist or blacklist",
+    "description":  "Consider to control sharing of documents to external domains by either blocking domains or only allowing sharing with specific named domains.",
+    "rationale":  "Attackers will often attempt to expose sensitive information to external entities through sharing, and restricting the domains that your users can share documents with will reduce that surface area.",
+    "impact":  "Enabling this feature will prevent users from sharing documents with domains outside of the organization unless allowed.",
+    "remediation":  '
+					###### To configure document sharing restrictions, use the Microsoft 365 Admin Center
+					1. Log in as an SharePoint Administrator
+					2. Navigate to <a href="https://admin.microsoft.com" target="_blank">Microsoft 365 administration portal</a>, Click on Admin Centers and then SharePoint.
+					3. Expand `Policies` then click `Sharing`.
+					4. Expand `More external sharing settings` and check `Limit external sharing by domain`..
+					5. Select `Add domains` to add a list of approved domains.
+					6. Click `Save` at the bottom of the page.
+					
+					###### To configure document sharing restrictions, you can also use SharePoint Online PowerShell
+					1. Connect to SharePoint Online using Connect-SPOService
+					2. Run the following PowerShell command:					
+					```
+					Set-SPOTenant -SharingDomainRestrictionMode AllowList -SharingAllowedDomainList "domain1.com domain2.com"
+					```
+	',
+    "references":  [
+                       "https://docs.microsoft.com/en-us/sharepoint/turn-external-sharing-on-or-off",
+					   "https://docs.microsoft.com/en-us/microsoft-365/solutions/microsoft-365-limit-sharing?view=o365-worldwide"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft 365 Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "6.1"
+                       }
+                   ],
+    "tags":  [
+                 "Microsoft 365 CIS benchmark 6.1"
+             ],
+    "path":  "o365_spo_tenant_details",
+    "display_path":  "o365_spo_tenant_details",
+    "conditions":  [
+                       "and",
+                       [
+                           "SharingDomainRestrictionMode",
+                           "eq",
+                           "0"
+                       ]
+                   ],
+    "id_suffix":  "sps_document_sharing_all_enabled"
+}

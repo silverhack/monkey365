@@ -1,0 +1,7 @@
+{
+    "conditions":[
+          "or",
+          ["Protocol", "eq", "*"],
+          ["Protocol", "eq", "TCP"]
+      ]
+}

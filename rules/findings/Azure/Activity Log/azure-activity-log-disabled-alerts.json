@@ -1,0 +1,25 @@
+{
+	"arg_names": [ "Alert name", "Operation Name", "Enabled", "compliance_version", "rationale" ],
+	"menu_name": "Subscription",
+    "dashboard_name": "Azure Alerts",
+    "issue_name": "_ARG_0_ disabled alert",
+	"description": '_ARG_0_ alert was not enabled at subscription level. _ARG_4_',
+	"rationale": null,
+	"references": ["https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-collect"],
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.4.0", "reference": "_ARG_3_"}
+    ],
+    "path": "az_monitor_alerts",
+    "display_path": "az_monitor_alerts",
+    "conditions": [ "and",
+		["operationName", "eq", "_ARG_1_"],
+         ["and",
+            [ "and",
+                ["operationName", "eq", "_ARG_1_"],
+                ["enabled", "ne", "_ARG_2_"]
+            ]
+        ]
+    ],
+    "removeIfNotExists": "true",
+    "id_suffix": "azure_monitor_alert_disabled"
+}

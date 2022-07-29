@@ -1,0 +1,37 @@
+{
+    "dashboard_name":  "Azure Disks",
+    "menu_name":  "Storage",
+    "issue_name":  "Enable Disk encryption recommendations for OS disks",
+    "description":  "Ensure that OS disks (boot volumes) are encrypted, where possible. Encrypting the IaaS VM\u0027s OS disk (boot volume) ensures that its entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads. VHD (Virtual Hard Disks) are stored in BLOB storage and are the old style disks that were attached to Virtual Machines, and the BLOB VHD was then leased to the VM. By Default storage accounts are not encrypted, and Azure Defender(Security Centre) would then recommend that the OS disks should be encrypted. Storage accounts can be encrypted as a whole using PMK or CMK and this should be turned on for storage accounts containing VHD's.",
+    "rationale":  "While it is recommended to use managed disks that are encrypted by default, `legacy` disk that may for a number of reasons need to be left as VHD's should also be encrypted to protect the data content. These `legacy` VHD's are not encrypted by default",
+    "impact":  "Depending on how the encryption is implemented will change the size of the impact, if provider managed keys (PMK) are utilised the impact is relatively low, but processes need to be put in place to regularly rotate the keys. If Customer managed keys (CMK) are utilised a key management process needs to be implemented to store and manage key rotation and thus the impact is medium to high depending on user maturity with key management.",
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-overview",
+                       "https://docs.microsoft.com/en-us/azure/governance/policy/overview"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "7.7"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_managed_disks",
+    "display_path":  "az_managed_disks",
+    "conditions":  [
+                       "and",
+                       [
+                           "ostype",
+                           "ne",
+                           ""
+                       ],
+                       [
+                           "os_disk_encryption",
+                           "eq",
+                           "Disabled"
+                       ]
+   ],
+    "id_suffix":  "azure_os_disk_encryption_disabled"
+}

@@ -1,0 +1,431 @@
+{
+    "about": "This ruleset contains a collection of rules for Microsoft 365 based on CIS benchmark. These rules perform static analysis on Microsoft 365 artifacts within Exchange Online, SharePoint Online, Microsoft Teams or OneDrive, among others, and are used as a mechanism to evaluate the configuration of these Microsoft 365 workloads. Rules are also divided into categories and subcategories according to the rule's type. These rules are designed to determine whether controls within a standard are being adhered to. This will ensures that Microsoft 365 tenant will meet the industry standards.",
+    "rules": {
+		"aad-iam-privileged-users-disabled-mfa.json": [
+            {
+				"args": [
+                    "conditions/aad-m365-privileged-roles.json"
+                ],
+                "enabled": true,
+                "level": "high",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.1"
+				   }
+				]
+            }
+        ],
+		"aad-iam-users-disabled-mfa.json": [
+            {
+                "enabled": true,
+                "level": "high",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.2"
+				   }
+				]
+            }
+        ],
+		"aad-iam-excessive-global-admins.json": [
+            {
+                "enabled": true,
+                "level": "high",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.3"
+				   }
+				]
+            }
+        ],
+		"aad-iam-only-one-global-admin.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.3"
+				   }
+				]
+            }
+        ],
+		"aad-sspr-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.4"
+				   }
+				]
+            }
+        ],
+		"aad-password-protection-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.5"
+				   }
+				]
+            }
+        ],
+		"aad-sign-in-policy-all_users_disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.8"
+				   }
+				]
+            }
+        ],
+		"aad-sign-in-policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.8"
+				   }
+				]
+            }
+        ],
+		"aad-user-risk-policy-all_users_disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.9"
+				   }
+				]
+            }
+        ],
+		"aad-user-risk-policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.9"
+				   }
+				]
+            }
+        ],
+		"aad-security-defaults-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.11"
+				   }
+				]
+            }
+        ],
+		"aad-restrict-collaboration-specific-domains-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.13"
+				   }
+				]
+            }
+        ],
+		"aad-linkedin-sync-enabled.json": [
+            {
+                "enabled": true,
+                "level": "low",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.14"
+				   }
+				]
+            }
+        ],
+		"aad-stay_signed_policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.1.13"
+				   }
+				]
+            }
+        ],
+		"exchange-modern-authentication-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.2"
+				   }
+				]
+            }
+        ],
+		"sharepoint-online-modern-authentication-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.4"
+				   }
+				]
+            }
+        ],
+		"aad-password-expiring-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "1.5"
+				   }
+				]
+            }
+        ],
+		"azure-activedirectory-users-can-register-apps-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "2.1"
+				   }
+				]
+            }
+        ],
+		"exchange-calendar-sharing-external-user-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "2.2"
+				   }
+				]
+            }
+        ],
+		"exchange-atp-safe-links-office-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"sharepoint-online-infected-files-download-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"azure-activedirectory-users-can-consent-apps-data-access.json": [
+            {
+                "enabled": true,
+                "level": "low",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "2.6"
+				   }
+				]
+            }
+        ],
+		"azure-activedirectory-apps-required-admin-consent.json": [
+            {
+                "enabled": true,
+                "level": "info",
+				"compliance": [
+					{
+						"name":  "CIS Microsoft 365 Foundations",
+						"version":  "1.4.0",
+						"reference":  "2.7"
+				   }
+				]
+            }
+        ],
+		"forms-internal-phishing-protection-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-customer-lockout-feature-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"sharepoint-data-classification-policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"teams-external-domain-allowed.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],		
+		"exchange-dlp-policies-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+        "exchange-dlp-policies-Teams-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"sharepoint-external-user-sharing-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"teams-external-file-sharing-approved-storage.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-common-attachment-type-filter-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-outbound-spam-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-mail-transport-rules-forward-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-automatic-forward-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-transport-rules-domain-whitelisted.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-atp-default-safe-links-policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-atp-safe-attachments-policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-anti-phishing-policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-anti-malware-admin-notification-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-mailtips-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low"
+            }
+        ],
+		"exchange-audit-log-search-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"sharepoint-document-sharing-enable-all.json": [
+            {
+                "enabled": true,
+                "level": "high"
+            }
+        ],
+		"onedrive-sync-from-unmanaged-domains-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"sharepoint-sharing-links-missing-expiration.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ],
+		"exchange-owa-external-storage-allowed.json": [
+            {
+                "enabled": true,
+                "level": "medium"
+            }
+        ]
+    }
+}

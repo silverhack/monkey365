@@ -1,0 +1,30 @@
+{
+    "dashboard_name":  "App Services",
+    "menu_name":  "App Services",
+    "issue_name":  "Update TLS version for Application service",
+    "description":  "The TLS(Transport Layer Security) protocol secures transmission of data over the internet using standard encryption technology. Encryption should be set with the latest version of TLS. App service allows TLS 1.2 by default, which is the recommended TLS level by industry standards, such as PCI DSS. App service currently allows the web app to set TLS versions 1.0, 1.1 and 1.2. It is highly recommended to use the latest TLS 1.2 version for web app secure connections.",
+    "rationale":  "App service currently allows the web app to set TLS versions 1.0, 1.1 and 1.2. It is highly recommended to use the latest TLS 1.2 version for web app secure connections.",    "impact":  null,
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "9.9"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_app_services",
+    "display_path":  "az_app_services",
+    "conditions":  [
+                       "and",
+                       [
+                           "configuration.properties.minTlsVersion",
+                           "ne",
+                           "1.2"
+                       ]
+                   ],
+    "id_suffix":  "app_service_latest_tls_missing"
+}

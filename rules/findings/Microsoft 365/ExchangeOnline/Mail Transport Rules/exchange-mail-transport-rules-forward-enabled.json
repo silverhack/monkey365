@@ -1,0 +1,49 @@
+{
+    "dashboard_name":  "Exchange Online",
+    "menu_name":  "Microsoft 365",
+    "issue_name":  "Ensure mail transport rules do not forward email to external domains",
+    "description":  "Consider to set Exchange Online mail transport rules to not forward email to domains outside of your organization.",
+    "rationale":  "Attackers often create these rules to exfiltrate data from your tenancy.",
+    "impact":  "Care should be taken before implementation to ensure there is no business need for case-by-case auto-forwarding. Disabling auto-forwarding to remote domains will affect all users and in an organization.",
+    "remediation":  '
+					###### To alter the mail transport rules so they do not forward email to external domains, use the Microsoft 365 Admin Center
+					1. Select `Exchange`.
+					2. Select `Mail Flow` and `Rules`.
+					3. For each rule that forwards email to external domains, select the rule and click the *Delete* icon.
+					
+					###### To perform remediation you may also use the Exchange Online PowerShell Module
+					1. Connect to Exchange Online using `Connect-ExchangeOnline`
+					2. Run the following PowerShell command:					
+					```powershell
+					Remove-TransportRule {RuleName}
+					```
+					3. To verify this worked you may re-run the audit command as follows:					
+					```powershell
+					Get-TransportRule | Where-Object {$null -ne $_.RedirectMessageTo} | ft Name,RedirectMessageTo
+					```
+	',
+    "references":  [
+                       "https://docs.microsoft.com/en-us/exchange/policy-and-compliance/mail-flow-rules/mail-flow-rule-procedures?view=exchserver-2019"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft 365 Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "4.3"
+                       }
+                   ],
+    "tags":  [
+                 "Microsoft 365 CIS benchmark 4.3"
+             ],
+    "path":  "o365_exo_transport_rules",
+    "display_path":  "o365_exo_transport_rules",
+    "conditions":  [
+                       "and",
+                       [
+                           "RedirectMessageTo",
+                           "ne",
+                           ""
+                       ]
+                   ],
+    "id_suffix":  "o365_exo_transport_rules_forward_enabled"
+}

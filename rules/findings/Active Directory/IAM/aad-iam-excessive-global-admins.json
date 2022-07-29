@@ -1,0 +1,34 @@
+{
+    "dashboard_name":  "Active Directory Identity",
+    "menu_name":  "IAM",
+    "issue_name":  "Excessive number of Global Administrators",
+    "description":  "The total number of Global Administrators was higher than recommended. A tenancy should have more than two but fewer than five Global Administrators. Having an excessive number of Global Administrators has an increased risk that one of those accounts will be successfully breached by an external attacker.",
+    "rationale":  "If there is only one global tenant administrator, he or she can perform malicious activity without the possibility of being discovered by another admin. If there are numerous global tenant administrators, the more likely it is that one of their accounts will be successfully breached by an external attacker.",
+    "impact":  "The potential impact associated with ensuring compliance with this requirement is dependent upon the current number of global administrators configured in the tenant. If there is only one global administrator in a tenant, an additional global administrator will need to be identified and configured. If there are more than four global administrators, a review of role requirements for current global administrators will be required to identify which of the users require global administrator access.",
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-admin-roles-secure",
+                       "https://docs.microsoft.com/en-us/windows-server/identity/securing-privileged-access/securing-privileged-access",
+                       "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-assign-admin-roles"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Microsoft 365 Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "1.1.3"
+                       }
+   ],
+    "tags":  null,
+    "path":  "aad_directory_user_roles",
+    "display_path":  "aad_directory_user_roles",
+    "conditions":  [
+                       "and",
+                       [
+                           "roleTemplateId",
+                           "eq",
+                           "62e90394-69f5-4237-9190-012177145e10"
+                       ]
+                   ],
+    "id_suffix":  "aad_excessive_global_admins",
+    "moreThan":  "4"
+}

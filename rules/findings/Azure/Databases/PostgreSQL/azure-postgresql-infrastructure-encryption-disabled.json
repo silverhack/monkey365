@@ -1,0 +1,36 @@
+{
+    "dashboard_name":  "PostgreSQL Configuration",
+    "menu_name":  "Database Configuration",
+    "issue_name":  "Ensure Infrastructure double encryption for PostgreSQL Database Server is Enabled",
+    "description":  "Consider to enable encryption at rest for PostgreSQL Databases.",
+    "rationale":  "If Double Encryption is enabled, another layer of encryption is implemented at the hardware level before the storage or network level. Information will be encrypted before it is even accessed, preventing both interception of data in motion if the network layer encryption is broken and data at rest in system resources such as memory or processor cache. Encryption will also be in place for any backups taken of the database, so the key will secure access the data in all forms. For the most secure implementation of key based encryption, it is recommended to use a Customer Managed asymmetric RSA 2048 Key in Azure Key Vault.",
+    "impact":  "The read and write speeds to the database will be impacted if both default encryption and Infrastructure Encryption are checked, as a secondary form of encryption requires more resource overhead for the cryptography of information. This cost is justified for information security. Customer managed keys are recommended for the most secure implementation, leading to overhead of key management. The key will also need to be backed up in a secure location, as loss of the key will mean loss of the information in the database.",
+    "remediation":  "
+					###### From Azure Console
+					1. Go to `Azure Database for PostgreSQL servers`.
+					2. For each PostgreSQL database, go to `Additional Settings`
+					3. Ensure that 'Infrastructure encryption enabled' is 'checked'
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/postgresql/single-server/concepts-infrastructure-double-encryption"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "4.3.8"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_postgresql_servers",
+    "display_path":  "az_postgresql_servers",
+    "conditions":  [
+                       "and",
+                       [
+                           "properties.infrastructureEncryption",
+                           "eq",
+                           "Disabled"
+                       ]
+                   ],
+    "id_suffix":  "postgresql_infra_encryption_disabled"
+}

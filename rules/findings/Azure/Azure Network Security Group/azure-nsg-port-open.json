@@ -1,0 +1,41 @@
+{
+    "arg_names": [ "Network protocol name", "Port number", "rationale" ],
+	"dashboard_name":  "Network Security Groups",
+    "menu_name":  "Network",
+    "issue_name":  "_ARG_0_ port open to all",
+    "description":  "_ARG_2_",
+    "rationale":  null,
+    "impact":  null,
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/virtual-network/security-overview"
+                   ],
+    "compliance":  ["monkey365 rule"],
+    "tags":  null,
+    "path":  "az_nsg_rules",
+    "display_path":  "az_nsg_rules",
+    "conditions":  [
+                       "and",
+                       [
+                           "_INCLUDE_(conditions/allow-tcp.json)",
+                           "",
+                           ""
+                       ],
+					   [
+                           "_INCLUDE_(conditions/allow-udp.json)",
+                           "",
+                           ""
+                       ],
+                       [
+                           "_INCLUDE_(conditions/exposed-to-the-internet.json)",
+                           "",
+                           ""
+                       ],
+                       [
+                           "DestinationPortRange",
+                           "eq",
+                           "_ARG_1_"
+                       ]
+                   ],
+    "id_suffix":  "azure_nsg_security_port_open_all"
+}

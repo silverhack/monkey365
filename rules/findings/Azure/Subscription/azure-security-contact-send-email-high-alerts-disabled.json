@@ -1,0 +1,46 @@
+{
+    "dashboard_name":  "Subscription Security",
+    "menu_name":  "Subscription",
+    "issue_name":  "Enable emailing security alerts to the security contact",
+    "description":  "Azure Security Center best practices recommend that security contact details for the affected Azure subscription should be added. This information will be used by Microsoft to contact subscription\u0027s owner if the Microsoft Security Response Center (MSRC) discovers that the subscription data has potentially been accessed by an unlawful or unauthorized party.",
+    "rationale":  "Enabling security alert emails ensures that security alert emails are received from Microsoft. This ensures that the right people are aware of any potential security issues and are able to mitigate the risk.",
+    "impact":  null,
+    "remediation":  '
+					###### From Azure Console
+					1. Navigate to `Security Center`
+					2. Click on Pricing & settings
+					3. Click on the appropriate Management Group, Subscription, or Workspace
+					4. Click on `Email notifications`
+					5. Under "Notification types", check the check box next to `Notify about alerts with the following severity (or higher):` and select `High` from the drop down menu
+					6. Click Save
+	',
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details",
+					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/list",
+					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/update",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "2.14"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_security_contacts",
+    "display_path":  "az_security_contacts",
+    "conditions":  [
+                       "or",
+                       [
+                           "alertNotifications",
+                           "eq",
+                           "Off"
+                       ],
+                       [
+                           "alertNotifications",
+                           "eq"
+                       ]
+                   ],
+    "id_suffix":  "security_contact_notification_disabled"
+}

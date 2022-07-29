@@ -1,0 +1,37 @@
+{
+    "arg_names": [ "Rule name", "Start IP", "End IP", "Rationale", "compliance_version" ],
+	"dashboard_name":  "Azure SQL Firewall",
+    "menu_name":  "Network",
+    "issue_name":  "_ARG_0_ allow ingress from _ARG_1_ to _ARG_2_",
+    "description":  "_ARG_3_",
+    "rationale":  null,
+    "impact":  null,
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "_ARG_4_"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_sql_database_fw",
+    "display_path":  "az_sql_database_fw",
+    "conditions":  [
+                       "and",
+                       [
+                           "StartIpAddress",
+                           "eq",
+                           "_ARG_1_"
+                       ],
+                       [
+                           "EndIpAddress",
+                           "eq",
+                           "_ARG_2_"
+                       ]
+                   ],
+    "id_suffix":  "azure_sql_fw_rule_enabled"
+}

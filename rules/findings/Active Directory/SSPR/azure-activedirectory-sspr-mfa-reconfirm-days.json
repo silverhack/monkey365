@@ -1,0 +1,48 @@
+{
+    "dashboard_name":  "Active Directory",
+    "menu_name":  "Active Directory",
+    "issue_name":  'Ensure That "Number of days before users are asked to re-confirm their authentication information" is set to "0"',
+    "description":  "Ensure that the number of days before users are asked to re-confirm their authentication information is not set to 0.",
+    "rationale":  "This setting is necessary if you have setup 'Require users to register when signing in option'. If authentication re-confirmation is disabled, registered users will never be prompted to re-confirm their existing authentication information. If the authentication information for a user, such as a phone number or email changes, then the password reset information for that user reverts to the previously registered authentication information.",
+    "impact":  "",
+    "remediation":  "
+						###### From Azure Console
+						1. Go to `Azure Active Directory`
+						2. Go to `Users`
+						3. Go to `Password reset`
+						4. Go to `Registration`
+						4. Ensure that `Number of days before users are asked to re-confirm their authentication information` is not set to `0`
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/active-directory/active-directory-passwords-how-it-works#notifications",
+					   "https://docs.microsoft.com/en-us/azure/active-directory/authentication/howto-sspr-deployment",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "1.6"
+                       }
+                   ],
+    "tags":  [
+                 "Microsoft 365 CIS benchmark 1.6",
+				 "CIS Microsoft Azure Foundations"
+             ],
+    "path":  "aad_password_reset_policy",
+    "display_path":  "aad_password_reset_policy",
+    "conditions":  [
+                       "and",
+                       [
+                           "enablementType",
+                           "ne",
+                           "0"
+                       ],
+					   [
+                           "registrationReconfirmIntevalInDays",
+                           "eq",
+                           "0"
+                       ]
+                   ],
+    "id_suffix":  "aad_sspr_mfa_auth_reconfirm_disabled"
+}

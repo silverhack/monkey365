@@ -1,0 +1,53 @@
+{
+    "dashboard_name":  "Azure Virtual Machines",
+    "menu_name":  "Compute",
+    "issue_name":  "Ensure Virtual Machines are utilizing Managed Disks",
+    "description":  "
+					Migrate BLOB based VHD's to Managed Disks on Virtual Machines to exploit the default features of this configuration. The features include:
+					1. Default Disk Encryption
+					2. Resilience as Microsoft will managed the disk storage and move around if underlying hardware goes faulty
+					3. Reduction of costs over storage accounts
+	",
+    "rationale":  "
+					Managed disks are by default encrypted on the underlying hardware so no additional encryption is required for basic protection, it is available if additional encryption is required. Managed disks are by design more resilient that storage accounts.
+					For ARM deployed Virtual Machines, Azure Adviser will at some point recommend moving VHD's to managed disks both from a security and cost management perspective.
+	",
+    "impact":  "
+				There is no operational impact of migrating to managed disks other than the benefits mentioned above.
+				**NOTE** When converting to managed disks VMs will be powered off and back on.
+	",
+    "remediation": "
+					###### From Azure Console
+					1. Using the search feature, go to `Virtual Machines`
+					2. Select the virtual machine you would like to convert
+					3. Select `Disks` in the menu for the VM
+					4. At the top select `Migrate to managed disks`
+					5. You may follow the prompts to convert the disk and finish by selecting `Migrate` to start the process
+					
+					**NOTE** VMs will be stopped and restarted after migration is complete.
+
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-overview",
+                       "https://docs.microsoft.com/en-us/azure/governance/policy/overview"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "7.1"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_virtual_machines",
+    "display_path":  "az_virtual_machines",
+    "conditions":  [
+                       "and",
+                       [
+                           "os_managed_disk",
+                           "ne",
+                           "true"
+                       ]
+    ],
+    "id_suffix":  "azure_os_managed_disk_disabled"
+}
