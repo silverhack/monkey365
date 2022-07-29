@@ -1,0 +1,21 @@
+name: Scan Code with PSScriptAnalyzer
+
+on:
+  # Triggers the workflow on push or pull request events but only for the develop branch
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  psscriptanalyzer_job:
+    name: PsScriptAnalyzer Scan Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run PsScriptAnalyzer
+        uses: ./
+        with:
+          path: .\
+          recurse: true

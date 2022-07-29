@@ -1,0 +1,60 @@
+name: Pester Tests
+on:
+  # Triggers the workflow on push or pull request events but only for the develop branch
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  pester-test:
+    name: Pester test
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        experimental: [false]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Perform a Pester test from the Tests.ps1 file
+        shell: pwsh
+        run: |
+          [System.Void](Invoke-Pester -script .\tests -PassThru -Show None -OutputFormat NUnit2.5 -OutVariable issues)
+          $failed_tests = @()
+          $passed_tests = @()
+          Foreach ($Result in $issues.Failed) {
+            [System.Array]$failed_tests += [PSCustomObject]@{
+              Name = $Result.Name
+              Status = $Result.Result
+              Passed = $Result.Passed
+              ExecutedAt = $Result.ExecutedAt
+              ErrorMessage = $Result.ErrorRecord.Exception.Message
+            }
+          }
+          Foreach ($Result in $issues.Passed) {
+            [System.Array]$passed_tests += [PSCustomObject]@{
+              Name = $Result.Name
+              Status = $Result.Result
+              Passed = $Result.Passed
+              ExecutedAt = $Result.ExecutedAt
+            }
+          }
+          if($passed_tests){
+            foreach ($e in $passed_tests){
+              $message = ("test_Name={0},Status={1},Passed={2}, ExecutedAt={3}" -f $e.Name,$e.Status,$e.Passed,$e.ExecutedAt)
+              $msgObject = [System.Management.Automation.HostInformationMessage]@{
+                Message = $message
+                ForegroundColor = [consolecolor]::Green
+                BackgroundColor = $Host.UI.RawUI.BackgroundColor
+              }
+              Write-Information -MessageData $msgObject -InformationAction Continue
+            }
+          }
+          if($failed_tests){
+            foreach ($e in $failed_tests){
+              $message = ("test_Name={0},Status={1},Passed={2}, ExecutedAt={3}, ErrorMessage={4}" -f $e.Name,$e.Status,$e.Passed,$e.ExecutedAt,$e.ErrorMessage)
+              Write-Error -Message $message
+            }
+          }
