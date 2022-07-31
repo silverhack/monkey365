@@ -1,5 +1,5 @@
 {
-    "dashboard_name":  "Sharepoint Online",
+    "dashboard_name":  "SharePoint Online",
     "menu_name":  "Microsoft 365",
     "issue_name":  "Ensure that external users cannot share files, folders, and sites they do not own",
     "description":  "SharePoint gives users the ability to share files, folder, and site collections. Internal users can share with external collaborators, who with the right permissions, could share those to another external party.",
