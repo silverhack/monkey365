@@ -1,16 +1,16 @@
 {
-    "dashboard_name":  "Azure Defender",
+    "dashboard_name":  "Microsoft Defender for Cloud",
     "menu_name":  "Subscription",
-    "issue_name":  "Ensure that Azure Defender is set to On for Storage",
-    "description":  "Turning on Azure Defender enables threat detection for Storage, providing threat intelligence, anomaly detection, and behavior analytics in the Azure Security Center.",
-    "rationale":  "Enabling Azure Defender for Storage allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
-    "impact":  "Turning on Azure Defender in Azure Security Center incurs an additional cost per resource.",
+    "issue_name":  "Ensure that Microsoft Defender for Cloud is set to On for Storage",
+    "description":  "Turning on Microsoft Defender for Cloud enables threat detection for Storage, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
+    "rationale":  "Enabling Microsoft Defender for Cloud for Storage allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
+    "impact":  "Turning on Microsoft Defender for Cloud in Microsoft Defender for Cloud incurs an additional cost per resource.",
     "remediation":  "
 					###### From Azure Console
 					1. Go to `Security Center`
 					2. Select `Pricing & settings blade`
 					3. Click on the subscription name
-					4. Select the `Azure Defender plans` blade
+					4. Select the `Microsoft Defender for Cloud plans` blade
 					5. On the line in the table for `Storage` Select `On` under `Plan`.
 					6. Select `Save`
 	",

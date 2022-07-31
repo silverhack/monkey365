@@ -1,12 +1,12 @@
 {
-    "dashboard_name":  "Azure Defender",
+    "dashboard_name":  "Microsoft Defender for Cloud",
     "menu_name":  "Subscription",
     "issue_name":  "Ensure that Windows Defender ATP (WDATP) integration with Security Center is selected",
     "description":  "This setting enables Windows Defender ATP (WDATP) integration with Security Center.",
-    "rationale":  "WDATP integration brings comprehensive Endpoint Detection and Response (EDR) capabilities within security center. This integration helps to spot abnormalities, detect and respond to advanced attacks on Windows server endpoints monitored by Azure Security Center. Windows Defender ATP in Security Center supports detection on Windows Server 2016, 2012 R2, and 2008 R2 SP1 operating systems in a Standard service subscription.  
+    "rationale":  "WDATP integration brings comprehensive Endpoint Detection and Response (EDR) capabilities within security center. This integration helps to spot abnormalities, detect and respond to advanced attacks on Windows server endpoints monitored by Microsoft Defender for Cloud. Windows Defender ATP in Security Center supports detection on Windows Server 2016, 2012 R2, and 2008 R2 SP1 operating systems in a Standard service subscription.  
 				   WDATP works only with Standard Tier subscriptions.	
 	",
-    "impact":  "WDATP works with Standard pricing tier Subscription.Choosing the Standard pricing tier of Azure Security Center incurs an additional cost per resource.",
+    "impact":  "WDATP works with Standard pricing tier Subscription.Choosing the Standard pricing tier of Microsoft Defender for Cloud incurs an additional cost per resource.",
     "remediation":  "
 					###### From Azure Console
 					1. Go to `Security Center`

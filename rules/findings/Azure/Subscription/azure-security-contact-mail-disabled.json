@@ -2,8 +2,8 @@
     "dashboard_name":  "Subscription Security",
     "menu_name":  "Subscription",
     "issue_name":  "Provide a security contact email address",
-    "description":  "Azure Security Center best practices recommend that security contact details for the affected Azure subscription should be added. This information will be used by Microsoft to contact subscription\u0027s owner if the Microsoft Security Response Center (MSRC) discovers that the subscription data has potentially been accessed by an unlawful or unauthorized party.",
-    "rationale":  "Azure Security Center emails the Subscription Owner to notify them about security alerts. Adding your Security Contact's email address to the 'Additional email addresses' field ensures that your organization's Security Team is included in these alerts. This ensures that the proper people are aware of any potential compromise in order to mitigate the risk in a timely fashion.",
+    "description":  "Microsoft Defender for Cloud best practices recommend that security contact details for the affected Azure subscription should be added. This information will be used by Microsoft to contact subscription\u0027s owner if the Microsoft Security Response Center (MSRC) discovers that the subscription data has potentially been accessed by an unlawful or unauthorized party.",
+    "rationale":  "Microsoft Defender for Cloud emails the Subscription Owner to notify them about security alerts. Adding your Security Contact's email address to the 'Additional email addresses' field ensures that your organization's Security Team is included in these alerts. This ensures that the proper people are aware of any potential compromise in order to mitigate the risk in a timely fashion.",
     "impact":  null,
     "remediation":  '
 					###### From Azure Console

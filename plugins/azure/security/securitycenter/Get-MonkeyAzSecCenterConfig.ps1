@@ -55,7 +55,7 @@ Function Get-MonkeyAZSecCenterConfig{
     }
     Process{
         $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Security Center Configuration", $O365Object.current_subscription.DisplayName);
+            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft Defender for Cloud Configuration", $O365Object.current_subscription.DisplayName);
             callStack = (Get-PSCallStack | Select-Object -First 1);
             logLevel = 'info';
             InformationAction = $InformationAction;
@@ -84,7 +84,7 @@ Function Get-MonkeyAZSecCenterConfig{
         }
         else{
             $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Center", $O365Object.TenantID);
+                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Defender for Cloud", $O365Object.TenantID);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'warning';
                 InformationAction = $InformationAction;

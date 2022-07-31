@@ -2,7 +2,7 @@
     "dashboard_name":  "Subscription Security",
     "menu_name":  "Subscription",
     "issue_name":  "Enable emailing security alerts to the security contact",
-    "description":  "Azure Security Center best practices recommend that security contact details for the affected Azure subscription should be added. This information will be used by Microsoft to contact subscription\u0027s owner if the Microsoft Security Response Center (MSRC) discovers that the subscription data has potentially been accessed by an unlawful or unauthorized party.",
+    "description":  "Microsoft Defender for Cloud best practices recommend that security contact details for the affected Azure subscription should be added. This information will be used by Microsoft to contact subscription\u0027s owner if the Microsoft Security Response Center (MSRC) discovers that the subscription data has potentially been accessed by an unlawful or unauthorized party.",
     "rationale":  "Enabling security alert emails ensures that security alert emails are received from Microsoft. This ensures that the right people are aware of any potential security issues and are able to mitigate the risk.",
     "impact":  null,
     "remediation":  '
