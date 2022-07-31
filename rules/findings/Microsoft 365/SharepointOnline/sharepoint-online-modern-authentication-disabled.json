@@ -1,5 +1,5 @@
 {
-    "dashboard_name":  "Sharepoint Online",
+    "dashboard_name":  "SharePoint Online",
     "menu_name":  "Microsoft 365",
     "issue_name":  "Ensure modern authentication for SharePoint applications is required",
     "description":  "Modern authentication in Microsoft 365 enables authentication features like multifactor authentication (MFA) using smart cards, certificate-based authentication (CBA), and third party SAML identity provider.",
@@ -15,7 +15,7 @@
 					
 					###### To set Apps that don't use modern authentication is set to Block, use the SharePoint Online PowerShell Module:
 					1. Connect to SharePoint Online using `Connect-SPOService` -Url https://tenant-admin.sharepoint.com replacing `tenant` with your value.
-					2. Run the following Sharepoint Online PowerShell command:
+					2. Run the following SharePoint Online PowerShell command:
 					```Powershell
 					Set-SPOTenant -LegacyAuthProtocolsEnabled $false
 					```
