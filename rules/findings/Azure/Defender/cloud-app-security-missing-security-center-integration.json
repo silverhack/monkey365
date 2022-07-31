@@ -1,15 +1,15 @@
 {
     "dashboard_name":  "Microsoft Defender for Cloud",
     "menu_name":  "Subscription",
-    "issue_name":  "Ensure that Microsoft Cloud App Security (MCAS) integration with Security Center is selected",
-    "description":  "This setting enables Microsoft Cloud App Security (MCAS) integration with Security Center.",
-    "rationale":  "Security Center offers an additional layer of protection by using Azure Resource Manager events, which is considered to be the control plane for Azure. By analyzing the Azure Resource Manager records, Security Center detects unusual or potentially harmful operations in the Azure subscription environment. Several of the preceding analytics are powered by Microsoft Cloud App Security. To benefit from these analytics, subscription must have a Cloud App Security license.  
+    "issue_name":  "Ensure that Microsoft Defender for Cloud Apps (MDA) integration with Microsoft Defender for Cloud is selected",
+    "description":  "This setting enables Microsoft Defender for Cloud Apps (MDA) integration with Microsoft Defender for Cloud.",
+    "rationale":  "Microsoft Defender for Cloud offers an additional layer of protection by using Azure Resource Manager events, which is considered to be the control plane for Azure. By analyzing the Azure Resource Manager records, Microsoft Defender for Cloud detects unusual or potentially harmful operations in the Azure subscription environment. Several of the preceding analytics are powered by Microsoft Cloud App Security. To benefit from these analytics, subscription must have a Cloud App Security license.  
 				   MCAS works only with Standard Tier subscriptions.
 	",
     "impact":  "MCAS works with Standard pricing tier Subscription.Choosing the Standard pricing tier of Microsoft Defender for Cloud incurs an additional cost per resource.",
     "remediation":  "
 					###### From Azure Console
-					1. Go to `Security Center`
+					1. Go to `Microsoft Defender for Cloud`
 					2. Select `Pricing & settings` blade
 					3. Click on the subscription name
 					4. Select the `Threat Detection` blade

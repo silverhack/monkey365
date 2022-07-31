@@ -2,7 +2,7 @@
     "dashboard_name":  "Azure Virtual Machines",
     "menu_name":  "Compute",
     "issue_name":  "Ensure that the latest moderate OS patches for all virtual machines are applied",
-    "description":  "The Microsoft Defender for Cloud retrieves a list of available security and critical updates from Windows Update or Windows Server Update Services (WSUS), depending on which service is configured on a Windows VM. The security center also checks for the latest updates in Linux systems. If a VM is missing a system update, the security center will recommend system updates be applied.",
+    "description":  "The Microsoft Defender for Cloud retrieves a list of available security and critical updates from Windows Update or Windows Server Update Services (WSUS), depending on which service is configured on a Windows VM. The Microsoft Defender for Cloud also checks for the latest updates in Linux systems. If a VM is missing a system update, the Microsoft Defender for Cloud will recommend system updates be applied.",
     "rationale":  null,
     "impact":  null,
     "remediation":  null,

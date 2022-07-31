@@ -7,7 +7,7 @@
     "impact":  null,
     "remediation":  '
 					###### From Azure Console
-					1. Navigate to `Security Center`
+					1. Navigate to `Microsoft Defender for Cloud`
 					2. Click on Pricing & settings
 					3. Click on the appropriate Management Group, Subscription, or Workspace
 					4. Click on `Email notifications`

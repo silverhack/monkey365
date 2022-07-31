@@ -16,10 +16,10 @@
 Function Get-MonkeyAZSecCenterConfig{
     <#
         .SYNOPSIS
-		Azure plugin to get security center settings
+		Azure plugin to get Microsoft Defender for Cloud settings
 
         .DESCRIPTION
-		Azure plugin to get security center settings
+		Azure plugin to get Microsoft Defender for Cloud settings
 
         .INPUTS
 
@@ -50,7 +50,7 @@ Function Get-MonkeyAZSecCenterConfig{
         $Environment = $O365Object.Environment
         #Get Azure RM Auth
         $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get Security Center Config
+        #Get Microsoft Defender for Cloud Config
         $AzureSecCenterConfig = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "securityCenter"} | Select-Object -ExpandProperty resource
     }
     Process{

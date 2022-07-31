@@ -16,10 +16,10 @@
 Function Get-MonkeyAzSecCenterBuiltin{
     <#
         .SYNOPSIS
-		Azure plugin to get Security Center Builtin
+		Azure plugin to get Microsoft Defender for Cloud Builtin
 
         .DESCRIPTION
-		Azure plugin to get Security Center Builtin
+		Azure plugin to get Microsoft Defender for Cloud Builtin
 
         .INPUTS
 
@@ -62,7 +62,7 @@ Function Get-MonkeyAzSecCenterBuiltin{
             Tags = @('AzureSecCenterInfo');
         }
         Write-Information @msg
-        #List Security Center Bulletin
+        #List Microsoft Defender for Cloud Bulletin
         $params = @{
             Authentication = $rm_auth;
             Provider = $azure_auth_config.provider;

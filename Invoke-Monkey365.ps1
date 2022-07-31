@@ -25,7 +25,7 @@ Function Invoke-Monkey365{
                 Role Assignments (RBAC)
                 Security Patches
                 Security Baseline
-                Security Center
+                Microsoft Defender for Cloud
                 Network Security Groups
                 Classic Endpoints
                 Azure Security Alerts
@@ -92,7 +92,7 @@ Function Invoke-Monkey365{
             Databases                    Retrieves information from Azure SQL, including databases, Transparent Data Encryption or Threat Detection Policy
             VirtualMachines              Retrieves information from virtual machines deployed on both classic mode and resource manager.
             SecurityAlerts               Get Security Alerts from Microsoft Azure.
-            SecurityCenter               Get information about Security Center
+            SecurityCenter               Get information about Microsoft Defender for Cloud
             RoleAssignments              Retrieves information about RBAC Users and Groups
             StorageAccounts              Retrieves information about storage accounts deployed on Classic mode and resource manager
             MissingPatches               Retrieves information about missing patches by using the new Azure Log Analytics query language.

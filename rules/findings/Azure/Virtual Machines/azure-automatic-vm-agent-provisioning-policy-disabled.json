@@ -7,7 +7,7 @@
     "impact":  null,
     "remediation":  "
 					###### From Azure Console
-					1. Go to `Security Center`
+					1. Go to `Microsoft Defender for Cloud`
 					2. Select `Pricing & settings` blade
 					3. Click on the subscription name
 					4. Click on `Data Collection`

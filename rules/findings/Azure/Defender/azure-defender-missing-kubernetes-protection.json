@@ -7,7 +7,7 @@
     "impact":  "Turning on Microsoft Defender for Cloud in Microsoft Defender for Cloud incurs an additional cost per resource.",
     "remediation":  "
 					###### From Azure Console
-					1. Go to `Security Center`
+					1. Go to `Microsoft Defender for Cloud`
 					2. Select `Pricing & settings blade`
 					3. Click on the subscription name
 					4. Select the `Microsoft Defender for Cloud plans` blade
