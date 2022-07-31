@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Get-MSALTokenForSharepointOnline {
+Function Get-MSALTokenForSharePointOnline {
     <#
         .SYNOPSIS
 
@@ -27,7 +27,7 @@ Function Get-MSALTokenForSharepointOnline {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MSALTokenForSharepointOnline
+            File Name	: Get-MSALTokenForSharePointOnline
             Version     : 1.0
 
         .LINK
@@ -125,16 +125,16 @@ Function Get-MSALTokenForSharepointOnline {
         [Switch]$DeviceCode,
 
         # Tenant identifier of the authority to issue token.
-        [Parameter(Mandatory = $false, HelpMessage="Connect Sharepoint Url")]
+        [Parameter(Mandatory = $false, HelpMessage="Connect SharePoint Url")]
         [string] $Endpoint,
 
-        [Parameter(Mandatory=$false, HelpMessage="Connect Sharepoint Admin Url")]
+        [Parameter(Mandatory=$false, HelpMessage="Connect SharePoint Admin Url")]
         [Switch]$Admin,
 
-        [Parameter(Mandatory=$false, HelpMessage="Connect Sharepoint Siteroot Url")]
+        [Parameter(Mandatory=$false, HelpMessage="Connect SharePoint Siteroot Url")]
         [Switch]$rootSite,
 
-        [Parameter(Mandatory=$false, HelpMessage="Connect Sharepoint Siteroot Url")]
+        [Parameter(Mandatory=$false, HelpMessage="Connect SharePoint Siteroot Url")]
         [Switch]$oneDrive
     )
     Begin{
@@ -166,12 +166,12 @@ Function Get-MSALTokenForSharepointOnline {
         }
         elseif($Admin){
             if($null -ne $Tenant){
-                $sharepointUrl = Get-SharepointAdminUrl -TenantDetails $Tenant
+                $sharepointUrl = Get-SharePointAdminUrl -TenantDetails $Tenant
             }
         }
         elseif($rootSite){
             if($null -ne $Tenant){
-                $sharepointUrl = Get-SharepointUrl -TenantDetails $Tenant
+                $sharepointUrl = Get-SharePointUrl -TenantDetails $Tenant
             }
         }
         elseif($oneDrive){
@@ -180,8 +180,8 @@ Function Get-MSALTokenForSharepointOnline {
             }
         }
         else{
-            #Connect to Sharepoint Admin Url
-            $sharepointUrl = Get-SharepointAdminUrl -TenantDetails $Tenant
+            #Connect to SharePoint Admin Url
+            $sharepointUrl = Get-SharePointAdminUrl -TenantDetails $Tenant
         }
         #Set clientId
         if($null -ne $PublicApp -and $PublicApp -is [Microsoft.Identity.Client.PublicClientApplication]){
@@ -203,7 +203,7 @@ Function Get-MSALTokenForSharepointOnline {
         if($null -ne $sps_login -and $sps_login -is [Microsoft.Identity.Client.AuthenticationResult]){
             #Write message
             $msg = @{
-                MessageData = ($Script:messages.SuccessfullyConnectedTo -f "Sharepoint Online")
+                MessageData = ($Script:messages.SuccessfullyConnectedTo -f "SharePoint Online")
                 Tags = @('MSALSuccessAuth');
                 InformationAction = $informationAction;
             }
@@ -212,7 +212,7 @@ Function Get-MSALTokenForSharepointOnline {
         }
         else{
             #Write message
-            Write-Warning -Message ($Script:messages.UnableToGetToken -f "Sharepoint Online")
+            Write-Warning -Message ($Script:messages.UnableToGetToken -f "SharePoint Online")
             return $null
         }
     }
