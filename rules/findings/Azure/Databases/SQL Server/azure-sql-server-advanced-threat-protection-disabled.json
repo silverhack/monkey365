@@ -3,14 +3,14 @@
     "menu_name":  "Databases",
     "issue_name":  "Ensure that Advanced Threat Protection (ATP) on a SQL server is set to 'Enabled'",
     "description":  "Advanced data security is a unified package for advanced SQL security capabilities. It includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database.",
-    "rationale":  "Azure Defender for SQL is a unified package for advanced SQL security capabilities. Azure Defender is available for Azure SQL Database, Azure SQL Managed Instance, and Azure Synapse Analytics. It includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database. It provides a single go-to location for enabling and managing these capabilities.",
-    "impact":  "Azure Defender for SQL is a paid feature and will incur additional cost for each SQL server.",
+    "rationale":  "Microsoft Defender for Cloud for SQL is a unified package for advanced SQL security capabilities. Microsoft Defender for Cloud is available for Azure SQL Database, Azure SQL Managed Instance, and Azure Synapse Analytics. It includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database. It provides a single go-to location for enabling and managing these capabilities.",
+    "impact":  "Microsoft Defender for Cloud for SQL is a paid feature and will incur additional cost for each SQL server.",
     "remediation":  '
 					###### From Azure Console
 					1. Go to `SQL servers`.
 					2. For each server instance
-					3. Click on `Azure Defender` for SQL
-					4. Set Azure Defender for SQL to `On`
+					3. Click on `Microsoft Defender for Cloud` for SQL
+					4. Set Microsoft Defender for Cloud for SQL to `On`
 	',
     "references":  [
                        "https://docs.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql",

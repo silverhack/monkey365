@@ -51,7 +51,7 @@ Function Get-HtmlIcon{
             'Subscription Identity'='assets/inc-azicons/Identity/10235-icon-service-Identity-Governance.svg'
             'Subscription Security'='assets/inc-azicons/General/10002-icon-service-Subscriptions.svg'
             'Azure Subscription'='assets/inc-azicons/General/10002-icon-service-Subscriptions.svg'
-            'Azure Defender'='assets/inc-azicons/Security/02247-icon-service-Azure-Defender.svg'
+            'Microsoft Defender for Cloud'='assets/inc-azicons/Security/02247-icon-service-Azure-Defender.svg'
             'Azure Log Profile'='assets/inc-azicons/Management + Governance/00001-icon-service-Monitor.svg'
             'Azure Alerts'='assets/inc-azicons/Management + Governance/00002-icon-service-Alerts.svg'
             'Azure KeyVault'='assets/inc-azicons/Security/10245-icon-service-Key-Vaults.svg'

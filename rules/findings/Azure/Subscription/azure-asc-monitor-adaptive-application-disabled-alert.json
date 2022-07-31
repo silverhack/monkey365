@@ -2,9 +2,9 @@
 	"arg_names": [ "Policy Name","Policy"],
 	"menu_name": "Subscription",
     "dashboard_name": "Subscription Policies",
-    "issue_name": "Enable _ARG_1_ in Azure Security Center Default policy",
+    "issue_name": "Enable _ARG_1_ in Microsoft Defender for Cloud Default policy",
 	"description": '_ARG_1_ alert was not enabled at subscription level.',
-	"rationale": "A security policy defines the desired configuration of your workloads and helps ensure compliance with company or regulatory security requirements. ASC Default policy is associated with every subscription by default. ASC default policy assignment is set of security recommendations based on best practices. Enabling recommendations in ASC default policy ensures that Azure security center provides ability to monitor all of the supported recommendations and allow automated action optionally for few of the supported recommendations.",
+	"rationale": "A security policy defines the desired configuration of your workloads and helps ensure compliance with company or regulatory security requirements. ASC Default policy is associated with every subscription by default. ASC default policy assignment is set of security recommendations based on best practices. Enabling recommendations in ASC default policy ensures that Microsoft Defender for Cloud provides ability to monitor all of the supported recommendations and allow automated action optionally for few of the supported recommendations.",
 	"remediation":  '
 					###### From Azure Console
 					1. Navigate to `Azure Policy`

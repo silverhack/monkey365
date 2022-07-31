@@ -3,11 +3,11 @@
     "menu_name":  "Subscription",
     "issue_name":  "Ensure that 'Automatic provisioning of monitoring agent' is set to 'On'",
     "description":  "Consider to enable automatic provisioning of the monitoring agent to collect security data.",
-    "rationale":  "When `Automatic provisioning of monitoring agent` is turned on, Azure Security Center provisions the Microsoft Monitoring Agent on all existing supported Azure virtual machines and any new ones that are created. The Microsoft Monitoring Agent scans for various security-related configurations and events such as system updates, OS vulnerabilities, endpoint protection, and provides alerts.",
+    "rationale":  "When `Automatic provisioning of monitoring agent` is turned on, Microsoft Defender for Cloud provisions the Microsoft Monitoring Agent on all existing supported Azure virtual machines and any new ones that are created. The Microsoft Monitoring Agent scans for various security-related configurations and events such as system updates, OS vulnerabilities, endpoint protection, and provides alerts.",
     "impact":  null,
     "remediation":  "
 					###### From Azure Console
-					1. Go to `Security Center`
+					1. Go to `Microsoft Defender for Cloud`
 					2. Select `Pricing & settings` blade
 					3. Click on the subscription name
 					4. Click on `Data Collection`
