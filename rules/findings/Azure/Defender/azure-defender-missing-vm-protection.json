@@ -15,7 +15,7 @@
 					6. Select `Save`
 	",
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/security-center/security-center-detection-capabilities",
+                       "https://docs.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview",
 					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
 					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/update",
 					   "https://docs.microsoft.com/en-us/powershell/module/az.security/get-azsecuritypricing",
