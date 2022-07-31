@@ -8,9 +8,9 @@
     "remediation":  "
 					###### From Azure Console
 					1. Go to `Microsoft Defender for Cloud`
-					2. Select `Pricing & settings blade`
+					2. Select `Environment settings`
 					3. Click on the subscription name
-					4. Select the `Microsoft Defender for Cloud plans` blade
+					4. Select the `Defender plans` blade
 					5. On the line in the table for `Azure SQL database servers` Select `On` under `Plan`.
 					6. Select `Save`
 	",
