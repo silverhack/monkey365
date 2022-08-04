@@ -39,7 +39,7 @@ Function Get-MonkeyPSWebPermission{
 
     [cmdletbinding()]
     Param (
-        [Parameter(Mandatory= $true, HelpMessage="Sharepoint Web Object")]
+        [Parameter(Mandatory= $true, HelpMessage="SharePoint Web Object")]
         [Object]$Web
     )
     Begin{

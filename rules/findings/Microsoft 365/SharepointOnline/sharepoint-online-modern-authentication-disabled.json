@@ -12,7 +12,6 @@
 					3. Select `Apps that don't use modern authentication`.
 					4. Select the radio button for `Block`.
 					5. Click `Save`
-					
 					###### To set Apps that don't use modern authentication is set to Block, use the SharePoint Online PowerShell Module:
 					1. Connect to SharePoint Online using `Connect-SPOService` -Url https://tenant-admin.sharepoint.com replacing `tenant` with your value.
 					2. Run the following SharePoint Online PowerShell command:

@@ -168,7 +168,7 @@ Function Get-AdalTokenForSharePointOnline {
         }
         $sps_login = $null
         $Tenant = $null
-        $sharepointUrl = $null
+        $shareointUrl = $null
         $AzureEnvironment = Get-MonkeyEnvironment -Environment $Environment
         $isPublicApp = Confirm-IfPublicApp -parameters $PSBoundParameters
         $internal_params = $PSBoundParameters

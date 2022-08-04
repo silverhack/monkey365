@@ -50,7 +50,7 @@ Function Get-MonkeySharePointOnlineExternalLink{
     }
     Process{
         $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Sharepoint Online external links", $O365Object.TenantID);
+            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "SharePoint Online external links", $O365Object.TenantID);
             callStack = (Get-PSCallStack | Select-Object -First 1);
             logLevel = 'info';
             InformationAction = $InformationAction;
@@ -166,7 +166,7 @@ Function Get-MonkeySharePointOnlineExternalLink{
         }
         else{
             $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online external links", $O365Object.TenantID);
+                MessageData = ($message.MonkeyEmptyResponseMessage -f "SharePoint Online external links", $O365Object.TenantID);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'warning';
                 InformationAction = $InformationAction;

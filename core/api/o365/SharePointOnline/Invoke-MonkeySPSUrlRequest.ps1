@@ -54,7 +54,7 @@ Function Invoke-MonkeySPSUrlRequest{
     )
     Begin{
         if($null -eq $Authentication){
-            Write-Warning -Message ($message.NullAuthenticationDetected -f "Sharepoint Online")
+            Write-Warning -Message ($message.NullAuthenticationDetected -f "SharePoint Online")
             return
         }
         #Get Authorization Header
