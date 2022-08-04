@@ -44,7 +44,7 @@ Function Get-MonkeySPSExternalUser{
     )
     Begin{
         #Get Access Token for Sharepoint admin
-        $sps_admin_auth = $O365Object.auth_tokens.SharepointAdminOnline
+        $sps_admin_auth = $O365Object.auth_tokens.SharePointAdminOnline
         #Check if user is sharepoint administrator
         $isSharepointAdministrator = Test-IsUserSharepointAdministrator
         #Set new array

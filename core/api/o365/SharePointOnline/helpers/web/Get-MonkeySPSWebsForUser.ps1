@@ -39,9 +39,9 @@ Function Get-MonkeySPSWebsForUser{
 
     Begin{
         #Get Access Token for Sharepoint
-        $sps_auth = $O365Object.auth_tokens.SharepointOnline
+        $sps_auth = $O365Object.auth_tokens.SharePointOnline
         #Get Access Token for Sharepoint admin
-        $sps_admin_auth = $O365Object.auth_tokens.SharepointAdminOnline
+        $sps_admin_auth = $O365Object.auth_tokens.SharePointAdminOnline
         #Get switchs
         $scanSites = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.ScanSites)
         $recurseScan = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Subsites.Recursive)

@@ -44,7 +44,7 @@ Function Get-MonkeySharePointOnlineExternalLink{
     )
     Begin{
         #Get Access Token for Sharepoint
-        $sps_auth = $O365Object.auth_tokens.SharepointOnline
+        $sps_auth = $O365Object.auth_tokens.SharePointOnline
         #Set array
         $all_external_links = @()
     }

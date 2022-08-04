@@ -44,7 +44,7 @@ Function Get-MonkeySharePointOnlineTenantSyncClientRestriction{
     )
     Begin{
         #Get Access Token from AADRM
-        $sps_auth = $O365Object.auth_tokens.SharepointAdminOnline
+        $sps_auth = $O365Object.auth_tokens.SharePointAdminOnline
         #Check if user is sharepoint administrator
         $isSharepointAdministrator = Test-IsUserSharepointAdministrator
     }

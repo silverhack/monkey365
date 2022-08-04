@@ -44,7 +44,7 @@ Function Invoke-MonkeyPSCrawlWeb{
     )
     Begin{
         #Get Access Token for Sharepoint
-        $sps_auth = $O365Object.auth_tokens.SharepointOnline
+        $sps_auth = $O365Object.auth_tokens.SharePointOnline
         #Exclude system lists
         $ExcludedLists = @(
             "Access Requests","App Packages","appdata","appfiles",

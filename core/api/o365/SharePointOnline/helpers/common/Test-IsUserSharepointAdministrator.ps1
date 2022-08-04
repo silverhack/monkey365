@@ -39,7 +39,7 @@ Function Test-IsUserSharepointAdministrator{
     Param()
     Begin{
         #Get Access Token for Sharepoint admin
-        $sps_admin_auth = $O365Object.auth_tokens.SharepointAdminOnline
+        $sps_admin_auth = $O365Object.auth_tokens.SharePointAdminOnline
     }
     Process{
         $params = @{

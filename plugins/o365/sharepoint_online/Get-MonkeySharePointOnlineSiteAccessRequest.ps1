@@ -44,7 +44,7 @@ Function Get-MonkeySharePointOnlineSiteAccessRequest{
     )
     Begin{
         #Get Access Token from SPO
-        $sps_auth = $O365Object.auth_tokens.SharepointOnline
+        $sps_auth = $O365Object.auth_tokens.SharePointOnline
         $all_access_requests = @()
     }
     Process{

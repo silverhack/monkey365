@@ -44,7 +44,7 @@ Function Get-MonkeyPSWebPermission{
     )
     Begin{
         #Get Access Token for Sharepoint
-        $sps_auth = $O365Object.auth_tokens.SharepointOnline
+        $sps_auth = $O365Object.auth_tokens.SharePointOnline
         #Get switchs
         $inherited = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.SitePermissions.IncludeInheritedPermissions)
         #Get Web object
