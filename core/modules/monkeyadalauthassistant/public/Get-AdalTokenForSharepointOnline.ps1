@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Get-AdalTokenForSharepointOnline {
+Function Get-AdalTokenForSharePointOnline {
     <#
         .SYNOPSIS
 
@@ -27,7 +27,7 @@ Function Get-AdalTokenForSharepointOnline {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-AdalTokenForSharepointOnline
+            File Name	: Get-AdalTokenForSharePointOnline
             Version     : 1.0
 
         .LINK
@@ -48,7 +48,7 @@ Function Get-AdalTokenForSharepointOnline {
         [parameter(Mandatory= $false, ParameterSetName = 'Implicit', HelpMessage= "User for access to the O365 services")]
         [String]$UserPrincipalName,
 
-        [parameter(Mandatory= $false, HelpMessage= "Sharepoint Url")]
+        [parameter(Mandatory= $false, HelpMessage= "SharePoint Url")]
         [String]$Endpoint,
 
         # Tenant identifier of the authority to issue token.
@@ -149,13 +149,13 @@ Function Get-AdalTokenForSharepointOnline {
         [Parameter(Mandatory=$false, ParameterSetName = 'Implicit', HelpMessage="Device code authentication")]
         [Switch]$DeviceCode,
 
-        [Parameter(Mandatory=$false, HelpMessage="Connect Sharepoint Admin Url")]
+        [Parameter(Mandatory=$false, HelpMessage="Connect SharePoint Admin Url")]
         [Switch]$Admin,
 
-        [Parameter(Mandatory=$false, HelpMessage="Connect Sharepoint Siteroot Url")]
+        [Parameter(Mandatory=$false, HelpMessage="Connect SharePoint Siteroot Url")]
         [Switch]$rootSite,
 
-        [Parameter(Mandatory=$false, HelpMessage="Connect Sharepoint Siteroot Url")]
+        [Parameter(Mandatory=$false, HelpMessage="Connect SharePoint Siteroot Url")]
         [Switch]$oneDrive
     )
     Begin{
@@ -186,12 +186,12 @@ Function Get-AdalTokenForSharepointOnline {
         }
         elseif($Admin){
             if($null -ne $Tenant){
-                $sharepointUrl = Get-SharepointAdminUrl -TenantDetails $Tenant
+                $sharepointUrl = Get-SharePointAdminUrl -TenantDetails $Tenant
             }
         }
         elseif($rootSite){
             if($null -ne $Tenant){
-                $sharepointUrl = Get-SharepointUrl -TenantDetails $Tenant
+                $sharepointUrl = Get-SharePointUrl -TenantDetails $Tenant
             }
         }
         elseif($oneDrive){
@@ -201,8 +201,8 @@ Function Get-AdalTokenForSharepointOnline {
         }
         else{
             if($null -ne $Tenant){
-                #Connect to Sharepoint Admin Url
-                $sharepointUrl = Get-SharepointAdminUrl -TenantDetails $Tenant
+                #Connect to SharePoint Admin Url
+                $sharepointUrl = Get-SharePointAdminUrl -TenantDetails $Tenant
             }
         }
         #Set clientId
@@ -222,7 +222,7 @@ Function Get-AdalTokenForSharepointOnline {
         if($null -ne $sps_login -and $sps_login -is [Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationResult]){
             #Write message
             $msg = @{
-                MessageData = ($Script:messages.SuccessfullyConnectedTo -f "Sharepoint Online")
+                MessageData = ($Script:messages.SuccessfullyConnectedTo -f "SharePoint Online")
                 Tags = @('adalSuccessAuth');
                 InformationAction = $informationAction;
             }
@@ -231,7 +231,7 @@ Function Get-AdalTokenForSharepointOnline {
         }
         else{
             #Write message
-            Write-Warning -Message ($Script:messages.UnableToGetToken -f "Sharepoint Online")
+            Write-Warning -Message ($Script:messages.UnableToGetToken -f "SharePoint Online")
             return $null
         }
     }
