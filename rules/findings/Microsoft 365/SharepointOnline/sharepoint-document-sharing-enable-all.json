@@ -1,5 +1,5 @@
 {
-    "dashboard_name":  "Sharepoint Online",
+    "dashboard_name":  "SharePoint Online",
     "menu_name":  "Microsoft 365",
     "issue_name":  "Ensure document sharing is being controlled by domains with whitelist or blacklist",
     "description":  "Consider to control sharing of documents to external domains by either blocking domains or only allowing sharing with specific named domains.",

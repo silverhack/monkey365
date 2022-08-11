@@ -157,9 +157,14 @@ Function Get-MonkeyPlugin{
                 if($azure_ad_plugins){
                     foreach($element in $azure_ad_plugins){
                         $p_path = ("{0}/{1}" -f $O365Object.Localpath, $element)
-                        $selected_plugins+= Get-ChildItem -Path $p_path -Recurse `
-                                                          -File -Include "*.ps1" `
-                                                          -ErrorAction Ignore
+                        $params = @{
+                            Path = $p_path;
+                            Recurse = $true;
+                            File = $true;
+                            Include = "*.ps1";
+                            ErrorAction = 'Ignore';
+                        }
+                        $selected_plugins+= Get-ChildItem @params
                     }
                 }
                 #Check if dump users with internal Graph API
@@ -173,11 +178,16 @@ Function Get-MonkeyPlugin{
             if($null -ne $O365Object.Instance){
                 switch ($O365Object.Instance.ToLower()){
                     'azure'{
-                        if($O365Object.initParams.Analysis.ToLower().Contains('all')){
+                        if($O365Object.initParams.Analysis.ToLower() -eq 'all'){
                             $p_path = ("{0}/{1}" -f $O365Object.Localpath, "plugins/azure/")
-                            $selected_plugins+= Get-ChildItem -Path $p_path -Recurse `
-                                                              -File -Include "*.ps1" `
-                                                              -ErrorAction Ignore
+                            $params = @{
+                                Path = $p_path;
+                                Recurse = $true;
+                                File = $true;
+                                Include = "*.ps1";
+                                ErrorAction = 'Ignore';
+                            }
+                            $selected_plugins+= Get-ChildItem @params
                         }
                         else{
                             foreach($plugin in $O365Object.initParams.Analysis.GetEnumerator()){
@@ -185,9 +195,14 @@ Function Get-MonkeyPlugin{
                                     $pluginPaths = $AzurePlugins.Item($plugin)
                                     foreach($element in $pluginPaths){
                                         $p_path = ("{0}/{1}" -f $O365Object.Localpath, $element.Trim())
-                                        $selected_plugins+= Get-ChildItem -Path $p_path -Recurse `
-                                                                          -File -Include "*.ps1" `
-                                                                          -ErrorAction Ignore
+                                        $params = @{
+                                            Path = $p_path;
+                                            Recurse = $true;
+                                            File = $true;
+                                            Include = "*.ps1";
+                                            ErrorAction = 'Ignore';
+                                        }
+                                        $selected_plugins+= Get-ChildItem @params
                                     }
                                 }
                                 else{
@@ -200,9 +215,14 @@ Function Get-MonkeyPlugin{
                     'office365'{
                         if($O365Object.initParams.Analysis.ToLower().Contains('all')){
                             $p_path = ("{0}/{1}" -f $O365Object.Localpath, "plugins/o365/")
-                            $selected_plugins+= Get-ChildItem -Path $p_path -Recurse `
-                                                              -File -Include "*.ps1" `
-                                                              -ErrorAction Ignore
+                            $params = @{
+                                Path = $p_path;
+                                Recurse = $true;
+                                File = $true;
+                                Include = "*.ps1";
+                                ErrorAction = 'Ignore';
+                            }
+                            $selected_plugins+= Get-ChildItem @params
                         }
                         else{
                             foreach($plugin in $O365Object.initParams.Analysis.GetEnumerator()){
@@ -210,9 +230,14 @@ Function Get-MonkeyPlugin{
                                     $pluginPaths = $O365Plugins.Item($plugin)
                                     foreach($element in $pluginPaths){
                                         $p_path = ("{0}/{1}" -f $O365Object.Localpath, $element)
-                                        $selected_plugins+= Get-ChildItem -Path $p_path -Recurse `
-                                                                          -File -Include "*.ps1" `
-                                                                          -ErrorAction Ignore
+                                        $params = @{
+                                            Path = $p_path;
+                                            Recurse = $true;
+                                            File = $true;
+                                            Include = "*.ps1";
+                                            ErrorAction = 'Ignore';
+                                        }
+                                        $selected_plugins+= Get-ChildItem @params
                                     }
                                 }
                                 else{

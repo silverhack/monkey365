@@ -1,5 +1,5 @@
 {
-    "dashboard_name":  "Sharepoint Online",
+    "dashboard_name":  "SharePoint Online",
     "menu_name":  "Microsoft 365",
     "issue_name":  "Ensure expiration time for external sharing links is set",
     "description":  "Consider to restrict the length of time that anonymous access links are valid.",
