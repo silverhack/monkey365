@@ -5,6 +5,10 @@ azurereview.log
 # Data folder
 monkey-reports*
 
+# Azurite
+__azurite_db_queue__.json
+__azurite_db_queue_extent__.json
+
 site/
 *.csv
 
