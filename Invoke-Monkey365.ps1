@@ -138,7 +138,7 @@ Function Invoke-Monkey365{
         .PARAMETER DeviceCode
             Authenticate by using device code authentication flow
     #>
-    [CmdletBinding()]
+    [CmdletBinding(HelpUri='https://silverhack.github.io/monkey365/')]
     Param (
         # pscredential of the user requesting the token
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]

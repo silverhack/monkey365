@@ -46,8 +46,6 @@ foreach($module in $Modules.GetEnumerator()){
 #$ScriptPath = $PSScriptRoot
 New-Variable -Name ScriptPath -Value $PSScriptRoot -Scope Script -Force
 
-#Update PsObject
-Update-PsObject
 #Import ADAL/MSAL MODULES
 Import-O365Lib
 
