@@ -45,7 +45,7 @@ Function New-HumanGuid{
     )
     Begin{
         $encoding = [System.Text.Encoding]::UTF8
-        $random_key = -join (1..256 | ForEach {[char]((33..126) | Get-Random)})
+        $random_key = -join (1..256 | ForEach-Object {[char]((33..126) | Get-Random)})
         $xorkey = $encoding.GetBytes($random_key)
         $human_array = New-Object System.Collections.Generic.List[System.String]
         $output = [String]::Empty
