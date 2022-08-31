@@ -45,7 +45,7 @@ Function Get-MonkeySharePointOnlineTenantInfo{
     Begin{
         $sps_tenant_details = $null
         #Get Access Token from AADRM
-        $sps_auth = $O365Object.auth_tokens.SharepointOnline
+        $sps_auth = $O365Object.auth_tokens.SharePointOnline
         #Check if user is sharepoint administrator
         $isSharepointAdministrator = Test-IsUserSharepointAdministrator
     }

@@ -126,7 +126,7 @@ Function New-HtmlAboutAuthorModal{
         #Create strong tag
         $strong = $modal_body.CreateNode([System.Xml.XmlNodeType]::Element, $modal_body.Prefix, 'strong', $modal_body.NamespaceURI);
         #Set strong InnerText
-        $strong.InnerText = "Managing Security Consultant"
+        $strong.InnerText = "Principal Security Consultant"
         #Set P InnerText
         $p_owner.InnerText = "Juan Garrido is a "
         #Append data

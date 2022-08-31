@@ -16,10 +16,10 @@
 Function Get-MonkeySharePointOnlineTenantSitesProperty{
     <#
         .SYNOPSIS
-		Plugin to extract information about O365 Sharepoint Online services Tenant site properties
+		Plugin to extract information about O365 SharePoint Online services Tenant site properties
 
         .DESCRIPTION
-		Plugin to extract information about O365 Sharepoint Online services Tenant site properties
+		Plugin to extract information about O365 SharePoint Online services Tenant site properties
 
         .INPUTS
 
@@ -43,25 +43,25 @@ Function Get-MonkeySharePointOnlineTenantSitesProperty{
         [String]$pluginId
     )
     Begin{
-        #Get Access Token for Sharepoint
-        $sps_auth = $O365Object.auth_tokens.SharepointOnline
-        #Get Access Token for Sharepoint admin
-        $sps_admin_auth = $O365Object.auth_tokens.SharepointAdminOnline
+        #Get Access Token for SharePoint
+        $sps_auth = $O365Object.auth_tokens.SharePointOnline
+        #Get Access Token for SharePoint admin
+        $sps_admin_auth = $O365Object.auth_tokens.SharePointAdminOnline
         #Check if user is sharepoint administrator
-        $isSharepointAdministrator = Test-IsUserSharepointAdministrator
+        $isSharePointAdministrator = Test-IsUserSharePointAdministrator
         #Get flag
         $scanSites = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.ScanSites)
     }
     Process{
         $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Sharepoint Online Tenant Sites", $O365Object.TenantID);
+            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "SharePoint Online Tenant Sites", $O365Object.TenantID);
             callStack = (Get-PSCallStack | Select-Object -First 1);
             logLevel = 'info';
             InformationAction = $InformationAction;
             Tags = @('SPSTenantSites');
         }
         Write-Information @msg
-        if($isSharepointAdministrator){
+        if($isSharePointAdministrator){
             if($scanSites){
                 #Get current site
                 $param = @{
@@ -99,7 +99,7 @@ Function Get-MonkeySharePointOnlineTenantSitesProperty{
         }
         else{
             $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Tenant Sites", $O365Object.TenantID);
+                MessageData = ($message.MonkeyEmptyResponseMessage -f "SharePoint Online Tenant Sites", $O365Object.TenantID);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'warning';
                 InformationAction = $InformationAction;

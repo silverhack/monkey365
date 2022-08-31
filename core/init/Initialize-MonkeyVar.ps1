@@ -73,8 +73,8 @@ Function Initialize-MonkeyVar{
         Yammer = $null;
         Forms = $null;
         Lync= $null;
-        SharepointAdminOnline = $null;
-        SharepointOnline = $null;
+        SharePointAdminOnline = $null;
+        SharePointOnline = $null;
         OneDrive = $null;
         AADRM = $null;
         MSGraph = $null;

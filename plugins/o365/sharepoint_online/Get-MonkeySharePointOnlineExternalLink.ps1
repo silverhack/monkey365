@@ -44,13 +44,13 @@ Function Get-MonkeySharePointOnlineExternalLink{
     )
     Begin{
         #Get Access Token for Sharepoint
-        $sps_auth = $O365Object.auth_tokens.SharepointOnline
+        $sps_auth = $O365Object.auth_tokens.SharePointOnline
         #Set array
         $all_external_links = @()
     }
     Process{
         $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Sharepoint Online external links", $O365Object.TenantID);
+            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "SharePoint Online external links", $O365Object.TenantID);
             callStack = (Get-PSCallStack | Select-Object -First 1);
             logLevel = 'info';
             InformationAction = $InformationAction;
@@ -166,7 +166,7 @@ Function Get-MonkeySharePointOnlineExternalLink{
         }
         else{
             $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online external links", $O365Object.TenantID);
+                MessageData = ($message.MonkeyEmptyResponseMessage -f "SharePoint Online external links", $O365Object.TenantID);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'warning';
                 InformationAction = $InformationAction;

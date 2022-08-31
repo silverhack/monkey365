@@ -198,6 +198,10 @@ Function Invoke-AzureScanner{
             Out-MonkeyData -MonkeyExportObject $MonkeyExportObject
             #Increment count
             $count+= 1
+            #Reset Report var
+            if($null -ne (Get-Variable -Name Report -Scope Script -ErrorAction Ignore)){
+                Remove-Variable -Name Report -Scope Script -Force
+            }
         }
     }
 }

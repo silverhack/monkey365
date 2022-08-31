@@ -203,16 +203,16 @@ Function Connect-MonkeyCloud{
                     #Connect to root site
                     $sps_params = $app_params.Clone()
                     $sps_params.Add('rootSite',$true);
-                    $Script:o365_connections.SharepointOnline = (Connect-MonkeySharepointOnline -parameters $sps_params)
+                    $Script:o365_connections.SharePointOnline = (Connect-MonkeySharepointOnline -parameters $sps_params)
                     #Connect to the admin site
                     $sps_params = $app_params.Clone()
                     $sps_params.Add('Admin',$true);
-                    $Script:o365_connections.SharepointAdminOnline = (Connect-MonkeySharepointOnline -parameters $sps_params)
+                    $Script:o365_connections.SharePointAdminOnline = (Connect-MonkeySharepointOnline -parameters $sps_params)
                     #Connects to OneDrive site
                     $sps_params = $app_params.Clone()
                     $sps_params.Add('oneDrive',$true);
                     $Script:o365_connections.OneDrive = (Connect-MonkeySharepointOnline -parameters $sps_params)
-                    if($null -ne $Script:o365_connections.SharepointOnline){
+                    if($null -ne $Script:o365_connections.SharePointOnline){
                         $Script:OnlineServices.SPS = $True
                     }
                 }

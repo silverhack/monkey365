@@ -94,6 +94,7 @@ Function Select-MonkeyAzureSubscription{
             $selected_subscriptions = $AllSubscriptions
         }
         elseif($O365Object.initParams.ContainsKey('subscriptions')){
+            $selected_subscriptions = @()
             foreach($subscriptionId in $O365Object.initParams.subscriptions.Split(' ')){
                 $sub = $AllSubscriptions | Where-Object {$_.subscriptionId -eq $subscriptionId} | Select-Object * -ErrorAction Ignore
                 if($sub){$selected_subscriptions += $sub}

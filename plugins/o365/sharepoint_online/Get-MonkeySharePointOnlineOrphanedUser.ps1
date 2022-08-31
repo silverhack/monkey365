@@ -44,7 +44,7 @@ Function Get-MonkeySPSOrphanedUser{
     )
     Begin{
         #Get Access Token for Sharepoint
-        $sps_auth = $O365Object.auth_tokens.SharepointOnline
+        $sps_auth = $O365Object.auth_tokens.SharePointOnline
         #Set new array
         $sps_orphaned_users = @()
         $sps_orphaned_groups = @()

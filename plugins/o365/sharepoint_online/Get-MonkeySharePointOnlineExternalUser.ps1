@@ -43,9 +43,9 @@ Function Get-MonkeySPSExternalUser{
         [String]$pluginId
     )
     Begin{
-        #Get Access Token for Sharepoint admin
-        $sps_admin_auth = $O365Object.auth_tokens.SharepointAdminOnline
-        #Check if user is sharepoint administrator
+        #Get Access Token for SharePoint admin
+        $sps_admin_auth = $O365Object.auth_tokens.SharePointAdminOnline
+        #Check if user is sharePoint administrator
         $isSharepointAdministrator = Test-IsUserSharepointAdministrator
         #Set new array
         $sps_external_users = @()
@@ -53,7 +53,7 @@ Function Get-MonkeySPSExternalUser{
     Process{
         if($isSharepointAdministrator){
             $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Sharepoint Online external users", $O365Object.TenantID);
+                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "SharePoint Online external users", $O365Object.TenantID);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'info';
                 InformationAction = $InformationAction;

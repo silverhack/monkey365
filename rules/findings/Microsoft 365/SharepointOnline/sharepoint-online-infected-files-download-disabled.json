@@ -1,5 +1,5 @@
 {
-    "dashboard_name":  "Sharepoint Online",
+    "dashboard_name":  "SharePoint Online",
     "menu_name":  "Microsoft 365",
     "issue_name":  "Ensure Office 365 SharePoint infected files are disallowed for download",
     "description":  "Office 365 ATP for SharePoint, OneDrive, and Microsoft Teams protects your organization from inadvertently sharing malicious files. When an infected file is detected, that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization\u0027s security team.",

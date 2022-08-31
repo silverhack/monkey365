@@ -16,10 +16,10 @@
 Function Invoke-MonkeyPSCrawlWeb{
     <#
         .SYNOPSIS
-		Plugin to get information about O365 Sharepoint Online sites, including List items, files, folders, etc..
+		Plugin to get information about O365 SharePoint Online sites, including List items, files, folders, etc..
 
         .DESCRIPTION
-		Plugin to get information about O365 Sharepoint Online sites, including List items, files, folders, etc..
+		Plugin to get information about O365 SharePoint Online sites, including List items, files, folders, etc..
 
         .INPUTS
 
@@ -39,12 +39,12 @@ Function Invoke-MonkeyPSCrawlWeb{
 
     [cmdletbinding()]
     Param (
-        [Parameter(Mandatory= $true, HelpMessage="Sharepoint Web Object")]
+        [Parameter(Mandatory= $true, HelpMessage="SharePoint Web Object")]
         [Object]$Web
     )
     Begin{
-        #Get Access Token for Sharepoint
-        $sps_auth = $O365Object.auth_tokens.SharepointOnline
+        #Get Access Token for SharePoint
+        $sps_auth = $O365Object.auth_tokens.SharePointOnline
         #Exclude system lists
         $ExcludedLists = @(
             "Access Requests","App Packages","appdata","appfiles",

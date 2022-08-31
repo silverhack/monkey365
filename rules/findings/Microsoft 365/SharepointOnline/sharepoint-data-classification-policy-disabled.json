@@ -1,5 +1,5 @@
 {
-    "dashboard_name":  "Sharepoint Online",
+    "dashboard_name":  "SharePoint Online",
     "menu_name":  "Microsoft 365",
     "issue_name":  "Ensure SharePoint Online Information Protection policies are set up and used",
     "description":  "Consider to set up and use SharePoint Online data classification policies on data stored in your SharePoint Online sites.",

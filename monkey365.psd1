@@ -18,7 +18,7 @@ ModuleVersion = '1.0.0'
 # CompatiblePSEditions = @()
 
 # ID used to uniquely identify this module
-GUID = 'a3c21b7a-ec2c-4e8c-93a5-33eab8120b86'
+GUID = 'b040dfab-f762-4ce1-bcc4-1b3963603ff1'
 
 # Author of this module
 Author = 'Juan Garrido'
@@ -30,7 +30,7 @@ CompanyName = 'Unknown'
 Copyright = '(c)2021 Juan Garrido. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Donkey token is a set of functions which aim to help security consultants who need to validate Conditional Access Policies'
+Description = 'Monkey365 provides a tool for security consultants to easily conduct not only Microsoft 365, but also Azure subscriptions and Azure Active Directory security configuration reviews.'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '3.0'
@@ -157,7 +157,7 @@ PrivateData = @{
  } # End of PrivateData hashtable
 
 # HelpInfo URI of this module
-# HelpInfoURI = ''
+HelpInfoURI = 'https://silverhack.github.io/monkey365/'
 
 # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
 # DefaultCommandPrefix = ''

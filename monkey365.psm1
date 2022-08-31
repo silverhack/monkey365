@@ -27,7 +27,7 @@ $Modules = @{
 #Import modules
 foreach($module in $Modules.GetEnumerator()){
     $metadata = [System.IO.File]::GetAttributes(("{0}{1}" -f $PSScriptRoot, $module.value))
-    if($metadata -eq "Directory"){
+    if($metadata -band [System.IO.FileAttributes]::Directory){
         $all_files = Get-ChildItem -Recurse -Path ("{0}{1}" -f $PSScriptRoot, $module.value) -File -Include "*.ps1" -ErrorAction SilentlyContinue
         if($null -ne $all_files){
             foreach ($mod in $all_files){
@@ -46,8 +46,6 @@ foreach($module in $Modules.GetEnumerator()){
 #$ScriptPath = $PSScriptRoot
 New-Variable -Name ScriptPath -Value $PSScriptRoot -Scope Script -Force
 
-#Update PsObject
-Update-PsObject
 #Import ADAL/MSAL MODULES
 Import-O365Lib
 
