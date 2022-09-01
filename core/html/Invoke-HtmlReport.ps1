@@ -40,9 +40,6 @@ Function Invoke-HtmlReport{
         [object]$outDir
     )
     Begin{
-        #Import-Module C:\psmodules\monkeyruleset -Force
-        #Import-Module C:\psmodules\psmarkdig -Force
-        #Import-Module C:\psmodules\monkeyhtml -Force
         $charts = @()
         $tables = @()
         $dashboards = @()
@@ -103,41 +100,20 @@ Function Invoke-HtmlReport{
         $user_info = $MonkeyExportObject.execution_info
         #Get ruleset results
         $matched = Invoke-RuleCheck -rules $all_rules -conditionsPath $conditions_path -MonkeyData $monkeyData
-        #Set table and chart formatting data
-        $chartPath = $O365Object.internal_config.htmlSettings.chartformat
-        $isRoot = [System.IO.Path]::IsPathRooted($chartPath)
-        if(-NOT $isRoot){
-            $chartPath = ("{0}/{1}" -f $O365Object.Localpath, $chartPath)
-        }
-        if (!(Test-Path -Path $chartPath)){
-            Write-Warning ("{0} does not exists" -f $chartPath)
-        }
+        #Get JSON table options
         $tablePath = $O365Object.internal_config.htmlSettings.tableformat
-        $isRoot = [System.IO.Path]::IsPathRooted($tablePath)
-        if(-NOT $isRoot){
-            $tablePath = ("{0}/{1}" -f $O365Object.Localpath, $tablePath)
+        if($null -ne $tablePath){
+            $isRoot = [System.IO.Path]::IsPathRooted($tablePath)
+            if(-NOT $isRoot){
+                $tablePath = ("{0}/{1}" -f $O365Object.Localpath, $tablePath)
+            }
+            if (!(Test-Path -Path $tablePath)){
+                Write-Warning ("{0} does not exists" -f $tablePath)
+            }
         }
-        if (!(Test-Path -Path $tablePath)){
-            Write-Warning ("{0} does not exists" -f $tablePath)
-        }
-        $dashboardPath = $O365Object.internal_config.htmlSettings.dashboardformat
-        $isRoot = [System.IO.Path]::IsPathRooted($dashboardPath)
-        if(-NOT $isRoot){
-            $dashboardPath = ("{0}/{1}" -f $O365Object.Localpath, $dashboardPath)
-        }
-        if (!([system.io.Directory]::Exists($dashboardPath))){
-            Write-Warning ("{0} does not exists" -f $dashboardPath)
-        }
-        #Get table, charts and dashboard
+        #Get table
         switch ($O365Object.Instance.ToLower()){
             'azure'{
-                #Get charts
-                if($null -ne $chartPath){
-                    $_charts = Get-JsonFromFile -path ("{0}/azure" -f $chartPath)
-                    if($_charts){
-                        $charts+=$_charts
-                    }
-                }
                 #Get tables
                 if($null -ne $tablePath){
                     $_tables = Get-JsonFromFile -path ("{0}/azure" -f $tablePath)
@@ -145,22 +121,8 @@ Function Invoke-HtmlReport{
                         $tables+=$_tables
                     }
                 }
-                #Get dashboard
-                if($null -ne $dashboardPath){
-                    $_dashboards = Get-JsonFromFile -path ("{0}/azure" -f $dashboardPath)
-                    if($_dashboards){
-                        $dashboards+=$_dashboards
-                    }
-                }
             }
             'office365'{
-                #Get charts
-                if($null -ne $chartPath){
-                    $_charts = Get-JsonFromFile -path ("{0}/o365" -f $chartPath)
-                    if($_charts){
-                        $charts+=$_charts
-                    }
-                }
                 #Get tables
                 if($null -ne $tablePath){
                     $_tables = Get-JsonFromFile -path ("{0}/o365" -f $tablePath)
@@ -168,36 +130,15 @@ Function Invoke-HtmlReport{
                         $tables+=$_tables
                     }
                 }
-                #Get dashboard
-                if($null -ne $dashboardPath){
-                    $_dashboards = Get-JsonFromFile -path ("{0}/o365" -f $dashboardPath)
-                    if($_dashboards){
-                        $dashboards+=$_dashboards
-                    }
-                }
             }
         }
         #Check if includeAAD
         if($O365Object.IncludeAAD){
-            #Get charts
-            if($null -ne $chartPath){
-                $_charts = Get-JsonFromFile -path ("{0}/aad" -f $chartPath)
-                if($_charts){
-                    $charts+=$_charts
-                }
-            }
             #Get tables
             if($null -ne $tablePath){
                 $_tables = Get-JsonFromFile -path ("{0}/aad" -f $tablePath)
                 if($_tables){
                     $tables+=$_tables
-                }
-            }
-            #Get dashboard
-            if($null -ne $dashboardPath){
-                $_dashboards = Get-JsonFromFile -path ("{0}/aad" -f $dashboardPath)
-                if($_dashboards){
-                    $dashboards+=$_dashboards
                 }
             }
         }
@@ -231,9 +172,7 @@ Function Invoke-HtmlReport{
                 Instance = $O365Object.Instance;
                 Environment = $O365Object.Environment;
                 Tenant = $O365Object.Tenant;
-                chartData = $charts;
                 tableData= $tables;
-                dashboardData = $dashboards;
             }
             Set-Variable matched -Value $matched -Scope Global -Force
             $html_report = New-HtmlReport @param
