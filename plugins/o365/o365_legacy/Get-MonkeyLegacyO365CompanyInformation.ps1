@@ -42,6 +42,10 @@ Function Get-MonkeyLegacyO365CompanyInformation{
         [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
         [String]$pluginId
     )
+    Begin{
+        #Begin Block
+
+    }
     Process{
         $msg = @{
             MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Company information", $O365Object.TenantID);

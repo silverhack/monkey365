@@ -42,6 +42,9 @@ Function Get-MonkeyADUser{
             [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
             [String]$pluginId
     )
+    Begin{
+
+    }
     Process{
         #create array
         $all_users = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))

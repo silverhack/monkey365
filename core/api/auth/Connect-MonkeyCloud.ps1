@@ -143,8 +143,17 @@ Function Connect-MonkeyCloud{
     #Select tenant
     if($Script:OnlineServices.O365 -eq $true -and $null -eq $O365Object.TenantId){
         $reconnect = Select-MonkeyTenant
-        #If reconnect is true, then a new tenant was selected by the user
-        if($reconnect){return}
+        if($null -ne $reconnect){
+            #If reconnect is true, then a new tenant was selected by the user
+            if($reconnect){
+                Connect-MonkeyCloud -Silent
+            }
+            else{
+                #Probably cancelled connection
+                return
+            }
+        }
+        #if($null -ne $reconnect -and ($reconnect -eq $true -or $reconnect -eq $false)){return}
     }
     #Get token from MS Graph
     $Script:o365_connections.Graph = (Connect-MonkeyGraph $app_params)

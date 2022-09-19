@@ -42,6 +42,9 @@ Function Get-MonkeyADAuthorisationPolicy{
             [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
             [String]$pluginId
     )
+    Begin{
+
+    }
     Process{
         $msg = @{
             MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD authorisation policy", $O365Object.TenantID);

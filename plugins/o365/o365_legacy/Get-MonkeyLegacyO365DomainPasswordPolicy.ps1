@@ -42,6 +42,9 @@ Function Get-MonkeyLegacyO365DomainPasswordPolicy{
         [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
         [String]$pluginId
     )
+    Begin{
+
+    }
     Process{
         $msg = @{
             MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Domain password policy", $O365Object.TenantID);

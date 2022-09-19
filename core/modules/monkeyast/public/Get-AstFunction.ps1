@@ -68,7 +68,7 @@ Function Get-AstFunction{
                 }
                 else{
                     # Get only first function definition ASTs
-                    $all_functions += $ast.Find({
+                    $match = $ast.Find({
                         param([System.Management.Automation.Language.Ast] $Ast)
 
                         $Ast -is [System.Management.Automation.Language.FunctionDefinitionAst] -and
@@ -77,6 +77,12 @@ Function Get-AstFunction{
                         $Ast.Parent -isnot [System.Management.Automation.Language.FunctionMemberAst])
 
                     }, $true)
+                    if($match){
+                        $all_functions += $match
+                    }
+                    else{
+                        Write-Verbose ("No Function was found on {0}" -f $object.FullName)
+                    }
                 }
             }
             elseif($object -is [string]){

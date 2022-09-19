@@ -65,7 +65,7 @@ Function Select-MonkeyTenant{
     End{
         if($null -eq $selected_Tenant){
             #Tenant not selected. Probably cancelled
-            return
+            return $false
         }
         elseif($selected_Tenant -and $bypassSelection -eq $false){
             #Authenticate with selected TenantId
@@ -91,7 +91,7 @@ Function Select-MonkeyTenant{
             if($O365Object.application_args.ContainsKey('authContext')){
                 [ref]$null = $O365Object.application_args.Remove('authContext')
             }
-            Connect-MonkeyCloud -Silent
+            #Connect-MonkeyCloud -Silent
             return $True
         }
         else{

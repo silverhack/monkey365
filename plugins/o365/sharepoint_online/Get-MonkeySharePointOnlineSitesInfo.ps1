@@ -42,6 +42,9 @@ Function Get-MonkeySharePointOnlineSitesInfo{
         [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
         [String]$pluginId
     )
+    Begin{
+
+    }
     Process{
         $msg = @{
             MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Sharepoint Online Sites", $O365Object.TenantID);
