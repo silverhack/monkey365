@@ -104,7 +104,7 @@ Function Invoke-RuleCheck{
                     #Check for moreThan exception rule
                     if($rule.psobject.properties.Name.Contains('moreThan')){
                         $count = @($matched_elements).Count
-                        if($count -gt $rule.moreThan){
+                        if($count -le $rule.moreThan){
                             $matched_elements = $null
                         }
                     }
