@@ -183,7 +183,7 @@ Function Connect-MonkeyCloud{
         }
     }
     #Check if Microsoft 365 is selected
-    elseif($O365Object.initParams.Instance -eq "Office365"){
+    elseif($O365Object.initParams.Instance -eq "Microsoft365"){
         $count = 0
         foreach ($service in $O365Object.initParams.Analysis){
             switch ($service.ToLower()) {
@@ -261,7 +261,7 @@ Function Connect-MonkeyCloud{
     $O365Object.o365_sessions = $Script:o365_sessions
     $O365Object.OnlineServices = $Script:OnlineServices
     #$O365Object.userPrincipalName = $Script:userPrincipalName
-    if($O365Object.initParams.Instance -eq "Office365"){
+    if($O365Object.initParams.Instance -eq "Microsoft365"){
         $O365Object.ATPEnabled = Get-O365ATPLicense
     }
     $O365Object.Licensing = Get-O365LicenseSKU

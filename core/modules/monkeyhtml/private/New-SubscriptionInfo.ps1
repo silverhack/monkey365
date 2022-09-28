@@ -39,7 +39,7 @@ function New-SubscriptionInfo{
     [OutputType([System.Xml.XmlDocument])]
     Param (
         [Parameter(Mandatory=$false)]
-        [ValidateSet('Azure','Office365','AzureAD')]
+        [ValidateSet('Azure','Microsoft365','AzureAD')]
         [String]$Instance
     )
     Begin{
@@ -58,7 +58,7 @@ function New-SubscriptionInfo{
                 $CloudType = $sub_info.SelectSingleNode('//span[@id="cloudType"]')
                 $CloudType.InnerText = 'Microsoft Azure'
             }
-            'Office365'{
+            'Microsoft365'{
                 #Select subscription ID
                 $span = $sub_info.SelectSingleNode('//span[@class="subscription"]')
                 $span.InnerText = $script:user_info.tenant.TenantName

@@ -40,16 +40,18 @@ Function Select-MonkeySubscriptionConsole{
         [object]$Subscriptions
     )
     Begin{
-        $selected_subscriptions = $null;
+        $selected_subscriptions = $choices = $null;
         try{
-            $choices = @()
-            For($index = 0; $index -lt $Subscriptions.Count; $index++){
-                $Subscriptions[$index] | Add-Member -type NoteProperty -name Id -value $index -Force
-                [psobject]$s = @{
-                    id = $index+1
-                    displayName = $Subscriptions[$index].displayName
+            if($Subscriptions.Count -gt 0){
+                $choices = @()
+                For($index = 0; $index -lt $Subscriptions.Count; $index++){
+                    $Subscriptions[$index] | Add-Member -type NoteProperty -name Id -value $index -Force
+                    [psobject]$s = @{
+                        id = $index+1
+                        displayName = $Subscriptions[$index].displayName
+                    }
+                    $choices+=$s
                 }
-                $choices+=$s
             }
         }
         catch{

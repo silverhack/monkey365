@@ -67,7 +67,7 @@ Function Invoke-Monkey365{
                 https://github.com/silverhack/monkey365
 
         .EXAMPLE
-	        $assets = Invoke-Monkey365 -ExportTo PRINT -PromptBehavior SelectAccount -IncludeAzureActiveDirectory -Instance Office365 -Analysis SharePointOnline
+	        $assets = Invoke-Monkey365 -ExportTo PRINT -PromptBehavior SelectAccount -IncludeAzureActiveDirectory -Instance Microsoft365 -Analysis SharePointOnline
 
             This example retrieves information of both Azure AD and SharePoint Online and print results. If credentials are not supplied, Monkey365 will prompt for credentials.
 
@@ -82,7 +82,7 @@ Function Invoke-Monkey365{
             This example retrieves information of an Azure subscription and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey-reports folder. The script will connect to Azure using the client credential flow.
 
         .EXAMPLE
-            Invoke-Monkey365 -certificate C:\monkey365\testapp.pfx -ClientId 00000000-0000-0000-0000-000000000000 -CertFilePassword ("MySuperCertSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Office365 -Analysis SharePointOnline -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,EXCEL,CSV,JSON,HTML
+            Invoke-Monkey365 -certificate C:\monkey365\testapp.pfx -ClientId 00000000-0000-0000-0000-000000000000 -CertFilePassword ("MySuperCertSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Microsoft365 -Analysis SharePointOnline -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,EXCEL,CSV,JSON,HTML
 	        This example retrieves information of an Microsoft 365 subscription and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey-reports folder. The script will connect to Azure using the certificate credential flow.
 
         .EXAMPLE
@@ -94,7 +94,7 @@ Function Invoke-Monkey365{
 	        Select an Environment of Azure services. Valid options are AzureCloud, Preproduction, China, AzureUSGovernment. Default value is AzureCloud
 
         .PARAMETER Instance
-	        Select the instance to scan. Valid options are Azure or Office365
+	        Select the instance to scan. Valid options are Azure or Microsoft365
 
         .PARAMETER Analysis
 	        Collect data from specified assets. Depending of what instance was selected, the following values are accepted:
@@ -174,7 +174,7 @@ Function Invoke-Monkey365{
         [String]$Environment= "AzurePublic",
 
         [Parameter(Mandatory=$false)]
-        [ValidateSet('Azure','Office365')]
+        [ValidateSet('Azure','Microsoft365')]
         $Instance,
 
         [Parameter(Mandatory=$false, HelpMessage="Clear token cache")]
@@ -302,7 +302,7 @@ Function Invoke-Monkey365{
                     'SecurityPolicies', 'SecurityContacts',
                     'Custom', 'AppServices', 'DocumentDB',
                     'KeyVaults', 'All'
-            Office365 = 'ExchangeOnline',
+            Microsoft365 = 'ExchangeOnline',
                         'PurView',
                         'SharePointOnline',
                         'MicrosoftTeams',
@@ -438,7 +438,7 @@ Function Invoke-Monkey365{
                 'azure'{
                     Invoke-AzureScanner
                 }
-                'office365'{
+                'microsoft365'{
                     Invoke-O365Scanner
                 }
                 'azuread'{

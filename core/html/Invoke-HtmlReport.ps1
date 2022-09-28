@@ -122,7 +122,7 @@ Function Invoke-HtmlReport{
                     }
                 }
             }
-            'office365'{
+            'microsoft365'{
                 #Get tables
                 if($null -ne $tablePath){
                     $_tables = Get-JsonFromFile -path ("{0}/o365" -f $tablePath)

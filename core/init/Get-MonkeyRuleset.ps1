@@ -44,12 +44,12 @@ Function Get-MonkeyRuleset{
                 if($null -ne $O365Object.Instance -and $O365Object.Instance.ToLower() -eq "azure"){
                     $ruleSet = $O365Object.internal_config.ruleSettings.azureDefaultRuleset
                 }
-                elseif($null -ne $O365Object.Instance -and $O365Object.Instance.ToLower() -eq "Office365"){
-                    $ruleSet = $O365Object.internal_config.ruleSettings.o365DefaultRuleset
+                elseif($null -ne $O365Object.Instance -and $O365Object.Instance.ToLower() -eq "microsoft365"){
+                    $ruleSet = $O365Object.internal_config.ruleSettings.m365DefaultRuleset
                 }
                 else{
                     #Probably Azure AD
-                    $ruleSet = $O365Object.internal_config.ruleSettings.o365DefaultRuleset
+                    $ruleSet = $O365Object.internal_config.ruleSettings.m365DefaultRuleset
                 }
             }
         }

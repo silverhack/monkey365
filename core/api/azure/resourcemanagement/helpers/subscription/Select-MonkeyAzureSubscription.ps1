@@ -35,12 +35,11 @@ Function Select-MonkeyAzureSubscription{
     #>
 
     Begin{
-        $sub = $null
         $param = $O365Object.application_args.Clone()
         #Create Array for subscriptions
         $AllSubscriptions = @()
-        #Create selected subscriptions var
-        $selected_subscriptions = $null
+        #Create selected subscriptions and sub vars
+        $selected_subscriptions = $sub = $null
         $param.TenantId = $O365Object.TenantId
         if($O365Object.isUsingAdalLib){
             $auth_context = Get-MonkeyADALAuthenticationContext -TenantID $param.TenantId
@@ -87,25 +86,27 @@ Function Select-MonkeyAzureSubscription{
         }
     }
     Process{
-        if($AllSubscriptions.Count -eq 1){
-            $selected_subscriptions = $AllSubscriptions
-        }
-        elseif($O365Object.initParams.ContainsKey('all_subscriptions') -and $O365Object.initParams.all_subscriptions -eq $true){
-            $selected_subscriptions = $AllSubscriptions
-        }
-        elseif($O365Object.initParams.ContainsKey('subscriptions')){
-            $selected_subscriptions = @()
-            foreach($subscriptionId in $O365Object.initParams.subscriptions.Split(' ')){
-                $sub = $AllSubscriptions | Where-Object {$_.subscriptionId -eq $subscriptionId} | Select-Object * -ErrorAction Ignore
-                if($sub){$selected_subscriptions += $sub}
+        if($AllSubscriptions.Count -gt 0){
+            if($AllSubscriptions.Count -eq 1){
+                $selected_subscriptions = $AllSubscriptions
             }
-        }
-        else{
-            if($PSEdition -eq "Desktop"){
-                $selected_subscriptions = $AllSubscriptions | Out-GridView -Title "Choose a Source Subscription ..." -PassThru
+            elseif($O365Object.initParams.ContainsKey('all_subscriptions') -and $O365Object.initParams.all_subscriptions -eq $true){
+                $selected_subscriptions = $AllSubscriptions
+            }
+            elseif($O365Object.initParams.ContainsKey('subscriptions')){
+                $selected_subscriptions = @()
+                foreach($subscriptionId in $O365Object.initParams.subscriptions.Split(' ')){
+                    $sub = $AllSubscriptions | Where-Object {$_.subscriptionId -eq $subscriptionId} | Select-Object * -ErrorAction Ignore
+                    if($sub){$selected_subscriptions += $sub}
+                }
             }
             else{
-                $selected_subscriptions = Select-MonkeySubscriptionConsole -Subscriptions $AllSubscriptions
+                if($PSEdition -eq "Desktop"){
+                    $selected_subscriptions = $AllSubscriptions | Out-GridView -Title "Choose a Source Subscription ..." -PassThru
+                }
+                else{
+                    $selected_subscriptions = Select-MonkeySubscriptionConsole -Subscriptions $AllSubscriptions
+                }
             }
         }
     }

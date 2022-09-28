@@ -124,7 +124,6 @@ Function Get-JobStatus{
                             Exception = $record;
                         }
                         #Add exception to ref
-                        #$psError = New-Object PSObject -Property $JobError
                         $JobsErrors.Value += New-Object PSObject -Property $JobError
 					}
 				}

@@ -212,7 +212,7 @@ Function Get-MonkeyPlugin{
                         }
                         break;
                     }
-                    'office365'{
+                    'microsoft365'{
                         if($O365Object.initParams.Analysis.ToLower().Contains('all')){
                             $p_path = ("{0}/{1}" -f $O365Object.Localpath, "plugins/o365/")
                             $params = @{

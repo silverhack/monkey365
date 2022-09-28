@@ -110,6 +110,7 @@ SPSUniquePermsMessage            = Found unique permissions on {0}
 LoggerError                      = Unable to start Monkey logger
 ReusePortErrorMessage            = Unable to set ReusePort property
 AzureSubscriptionNotFound        = No Azure subscription was found on {0}
+AzureSubscriptionError           = Azure subscription {0} is expired or cancelled. Subscription status is {1}
 ClassicAdminsInfoMessage         = Getting classic administrators from {0}
 ClassicAdminsWarningMessage      = Unable to get classic administrators
 RoleAssignmentWarningMessage     = Unable to get role assignments from {0} subscription

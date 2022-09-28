@@ -62,7 +62,7 @@ Function New-HtmlReport{
         [Object]$dashboardData,
 
         [Parameter(Mandatory=$True)]
-        [ValidateSet('Azure','Office365','AzureAD')]
+        [ValidateSet('Azure','Microsoft365','AzureAD')]
         [String]$Instance,
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
