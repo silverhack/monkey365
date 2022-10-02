@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOInboundConnectorInfo{
-    <#
+function Get-MonkeyEXOInboundConnectorInfo {
+<#
         .SYNOPSIS
 		Plugin to get information about Inbound connector in Exchange Online
 
@@ -37,46 +37,57 @@ Function Get-MonkeyEXOInboundConnectorInfo{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $inbound_connector = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online Inbound connector information", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoInboundConnectorInfo');
-            }
-            Write-Information @msg
-            $inbound_connector = Get-ExoMonkeyInboundConnector
-        }
-    }
-    End{
-        if($inbound_connector){
-            $inbound_connector.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.InboundConnector')
-            [pscustomobject]$obj = @{
-                Data = $inbound_connector
-            }
-            $returnData.o365_exo_inbound_connector = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online inbound connector", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoInboundConnectorEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$inbound_connector = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0012";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about Inbound connector in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online Inbound Connector";
+			PluginName = "Get-MonkeyEXOInboundConnectorInfo";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online Inbound connector information",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoInboundConnectorInfo');
+			}
+			Write-Information @msg
+			$inbound_connector = Get-ExoMonkeyInboundConnector
+		}
+	}
+	end {
+		if ($inbound_connector) {
+			$inbound_connector.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.InboundConnector')
+			[pscustomobject]$obj = @{
+				Data = $inbound_connector;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_inbound_connector = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online inbound connector",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoInboundConnectorEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

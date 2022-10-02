@@ -17,5 +17,59 @@
 				"showModalButton":"True"
 			}
         }
+    ],
+	"security_contact_email_to_owners_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "email": "Email",
+                "phone": "Phone",
+                "alertNotifications.state": "Alert notification status",
+				"alertNotifications.minimalSeverity": "Minimal severity alert",
+				"notificationsByRole.state": "Alert to selected roles status",
+                "notificationsByRole.roles": "Alert to selected roles"
+            },
+            "table": "asList",
+            "emphasis": ["Alert to selected roles"]
+        }
+    ],
+	"security_contact_high_severity_notification_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "email": "Email",
+                "phone": "Phone",
+                "alertNotifications.state": "Alert notification status",
+				"alertNotifications.minimalSeverity": "Minimal severity alert"
+            },
+            "table": "asList",
+            "emphasis": ["Minimal severity alert"]
+        }
+    ],
+	"security_contact_mail_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "email": "Email",
+				"phone": "Phone",
+                "alertNotifications.state": "Alert notification status",
+				"alertNotifications.minimalSeverity": "Minimal severity alert"
+            },
+            "table": "asList",
+            "emphasis": ["Email"]
+        }
+    ],
+	"security_contact_phone_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "email": "Email",
+                "phone": "Phone",
+                "alertNotifications.state": "Alert notification status",
+				"alertNotifications.minimalSeverity": "Minimal severity alert"
+            },
+            "table": "asList",
+            "emphasis": ["Phone"]
+        }
     ]
 }

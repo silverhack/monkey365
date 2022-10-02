@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOLabelPolicy{
-    <#
+function Get-MonkeyEXOLabelPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about label policies from Exchange Online
 
@@ -37,46 +37,57 @@ Function Get-MonkeyEXOLabelPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $label_policy = $null;
-        #Check if already connected to Exchange Online Compliance Center
-        $exo_session = Test-EXOConnection -ComplianceCenter
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Security and Compliance label policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompLabelPolicyInfo');
-            }
-            Write-Information @msg
-            $label_policy = Get-LabelPolicy
-        }
-    }
-    End{
-        if($null -ne $label_policy){
-            $label_policy.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.labelPolicy')
-            [pscustomobject]$obj = @{
-                Data = $label_policy
-            }
-            $returnData.o365_secomp_label_policy = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance label policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompLabelPolicyEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$label_policy = $null;
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "purv006";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about label policies from Exchange Online";
+			Group = @("PurView");
+			ServiceName = "Microsoft PurView Label policy";
+			PluginName = "Get-MonkeyEXOLabelPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online Compliance Center
+		$exo_session = Test-EXOConnection -ComplianceCenter
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance label policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompLabelPolicyInfo');
+			}
+			Write-Information @msg
+			$label_policy = Get-LabelPolicy
+		}
+	}
+	end {
+		if ($null -ne $label_policy) {
+			$label_policy.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.labelPolicy')
+			[pscustomobject]$obj = @{
+				Data = $label_policy;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_secomp_label_policy = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance label policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompLabelPolicyEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

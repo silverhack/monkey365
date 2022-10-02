@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyTeamsTargetingPolicy{
-    <#
+function Get-MonkeyTeamsTargetingPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about Teams targeting policy
 
@@ -37,56 +37,67 @@ Function Get-MonkeyTeamsTargetingPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        #Getting environment
-        $Environment = $O365Object.Environment
-        #Get Access Token from Teams
-        $access_token = $O365Object.auth_tokens.Teams
-        $targeting_policy= $null
-    }
-    Process{
-        if($null -ne $access_token){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft 365 Teams: Targeting policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsTargetingPolicyInfo');
-            }
-            Write-Information @msg
-            $params = @{
-                Authentication = $access_token;
-                InternalPath = 'PowerShell';
-                ObjectType = "TeamsTargetingPolicy";
-                AdminDomain = 'common';
-                Environment = $Environment;
-                Method = "GET";
-            }
-            $targeting_policy = Get-TeamsObject @params
-        }
-    }
-    End{
-        if($targeting_policy){
-            $targeting_policy.PSObject.TypeNames.Insert(0,'Monkey365.Teams.TargetingPolicy')
-            [pscustomobject]$obj = @{
-                Data = $targeting_policy
-            }
-            $returnData.o365_teams_targeting_policy = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Targeting policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsTargetingPolicyEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "teams11";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about Teams targeting policy";
+			Group = @("MicrosoftTeams");
+			ServiceName = "Microsoft Teams targeting policy";
+			PluginName = "Get-MonkeyTeamsTargetingPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Getting environment
+		$Environment = $O365Object.Environment
+		#Get Access Token from Teams
+		$access_token = $O365Object.auth_tokens.Teams
+		$targeting_policy = $null
+	}
+	process {
+		if ($null -ne $access_token) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft 365 Teams: Targeting policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsTargetingPolicyInfo');
+			}
+			Write-Information @msg
+			$params = @{
+				Authentication = $access_token;
+				InternalPath = 'PowerShell';
+				ObjectType = "TeamsTargetingPolicy";
+				AdminDomain = 'common';
+				Environment = $Environment;
+				Method = "GET";
+			}
+			$targeting_policy = Get-TeamsObject @params
+		}
+	}
+	end {
+		if ($targeting_policy) {
+			$targeting_policy.PSObject.TypeNames.Insert(0,'Monkey365.Teams.TargetingPolicy')
+			[pscustomobject]$obj = @{
+				Data = $targeting_policy;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_teams_targeting_policy = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Targeting policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsTargetingPolicyEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

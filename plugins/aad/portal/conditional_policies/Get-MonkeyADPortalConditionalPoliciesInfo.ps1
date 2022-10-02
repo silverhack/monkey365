@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADPortalConditionalPoliciesInfo{
-    <#
+function Get-MonkeyADPortalConditionalPoliciesInfo {
+<#
         .SYNOPSIS
 		Plugin to get conditional policies from Azure AD
 
@@ -37,70 +37,81 @@ Function Get-MonkeyADPortalConditionalPoliciesInfo{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $AADAuth = $O365Object.auth_tokens.AzurePortal
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD conditional policies", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePortalCAPs');
-        }
-        Write-Information @msg
-        #Get Policies
-        $params = @{
-            Authentication = $AADAuth;
-            Query = 'Policies/Policies?top=100&nextLink=null&appId=&includeBaseline=true';
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-        $ad_conditional_policies = Get-MonkeyAzurePortalObject @params
-        if($ad_conditional_policies){
-            foreach($policy in $ad_conditional_policies){
-                $params = @{
-                    Authentication = $AADAuth;
-                    Query = ('Policies/{0}' -f $policy.policyId);
-                    Environment = $Environment;
-                    ContentType = 'application/json';
-                    Method = "GET";
-                }
-                $raw_policy = Get-MonkeyAzurePortalObject @params
-                if($raw_policy){
-                    $policy | Add-Member -type NoteProperty -name rawPolicy -value $raw_policy -Force
-                }
-                else{
-                    $policy | Add-Member -type NoteProperty -name rawPolicy -value $null -Force
-                }
-            }
-        }
-    }
-    End{
-        if ($ad_conditional_policies){
-            $ad_conditional_policies.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.ConditionalPolicies')
-            [pscustomobject]$obj = @{
-                Data = $ad_conditional_policies
-            }
-            $returnData.aad_conditional_policies = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD conditional policies", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalCAPsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$Environment = $O365Object.Environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0023";
+			Provider = "AzureAD";
+			Title = "Plugin to get conditional policies from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD Conditional Policies";
+			PluginName = "Get-MonkeyADPortalConditionalPoliciesInfo";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Azure Active Directory Auth
+		$AADAuth = $O365Object.auth_tokens.AzurePortal
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD conditional policies",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePortalCAPs');
+		}
+		Write-Information @msg
+		#Get Policies
+		$params = @{
+			Authentication = $AADAuth;
+			Query = 'Policies/Policies?top=100&nextLink=null&appId=&includeBaseline=true';
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+		$ad_conditional_policies = Get-MonkeyAzurePortalObject @params
+		if ($ad_conditional_policies) {
+			foreach ($policy in $ad_conditional_policies) {
+				$params = @{
+					Authentication = $AADAuth;
+					Query = ('Policies/{0}' -f $policy.policyId);
+					Environment = $Environment;
+					ContentType = 'application/json';
+					Method = "GET";
+				}
+				$raw_policy = Get-MonkeyAzurePortalObject @params
+				if ($raw_policy) {
+					$policy | Add-Member -Type NoteProperty -Name rawPolicy -Value $raw_policy -Force
+				}
+				else {
+					$policy | Add-Member -Type NoteProperty -Name rawPolicy -Value $null -Force
+				}
+			}
+		}
+	}
+	end {
+		if ($ad_conditional_policies) {
+			$ad_conditional_policies.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.ConditionalPolicies')
+			[pscustomobject]$obj = @{
+				Data = $ad_conditional_policies;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_conditional_policies = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD conditional policies",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalCAPsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

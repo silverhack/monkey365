@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAZSecurityRecommendation{
-    <#
+function Get-MonkeyAZSecurityRecommendation {
+<#
         .SYNOPSIS
 		Plugin to get security recommendations from Azure
 
@@ -37,60 +37,71 @@ Function Get-MonkeyAZSecurityRecommendation{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure RM Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get Config
-        $AzureAdvisorConfig = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureRecommendations"} | Select-Object -ExpandProperty resource
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Security recommendations", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureSecRecommendationInfo');
-        }
-        Write-Information @msg
-        #Get security recommendations
-        $URI = ("{0}{1}/providers/Microsoft.Advisor/recommendations?api-Version={2}" `
-                -f $O365Object.Environment.ResourceManager,$O365Object.current_subscription.id,$AzureAdvisorConfig.api_version)
-        $params = @{
-            Authentication = $rm_auth;
-            OwnQuery = $URI;
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-        $azure_recommendations = Get-MonkeyRMObject @params
-    }
-    End{
-        if($azure_recommendations){
-            $azure_recommendations.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Recommendations')
-            [pscustomobject]$obj = @{
-                Data = $azure_recommendations
-            }
-            $returnData.az_security_tips = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Recommendations", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureSecRecommendationsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00026";
+			Provider = "Azure";
+			Title = "Plugin to get security recommendations from Azure";
+			Group = @("Subscription","DefenderForCloud");
+			ServiceName = "Azure Security Recommendations";
+			PluginName = "Get-MonkeyAZSecurityRecommendation";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Import Localized data
+		$LocalizedDataParams = $O365Object.LocalizedDataParams
+		Import-LocalizedData @LocalizedDataParams;
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure RM Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get Config
+		$AzureAdvisorConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureRecommendations" } | Select-Object -ExpandProperty resource
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure Security recommendations",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureSecRecommendationInfo');
+		}
+		Write-Information @msg
+		#Get security recommendations
+		$URI = ("{0}{1}/providers/Microsoft.Advisor/recommendations?api-Version={2}" `
+ 				-f $O365Object.Environment.ResourceManager,$O365Object.current_subscription.id,$AzureAdvisorConfig.api_version)
+		$params = @{
+			Authentication = $rm_auth;
+			OwnQuery = $URI;
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+		$azure_recommendations = Get-MonkeyRMObject @params
+	}
+	end {
+		if ($azure_recommendations) {
+			$azure_recommendations.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Recommendations')
+			[pscustomobject]$obj = @{
+				Data = $azure_recommendations;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_security_tips = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Recommendations",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureSecRecommendationsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

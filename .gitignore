@@ -11,6 +11,8 @@ __azurite_db_queue_extent__.json
 
 site/
 *.csv
+*.ps1.bak
+*_extra.json
 
 config/monkey_365_dev.config
 

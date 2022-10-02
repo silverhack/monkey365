@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyTeamsGuestCallingConfiguration{
-    <#
+function Get-MonkeyTeamsGuestCallingConfiguration {
+<#
         .SYNOPSIS
 		Plugin to get information about Teams guest calling configuration
 
@@ -37,56 +37,67 @@ Function Get-MonkeyTeamsGuestCallingConfiguration{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        #Getting environment
-        $Environment = $O365Object.Environment
-        #Get Access Token from Teams
-        $access_token = $O365Object.auth_tokens.Teams
-        $guest_call_conf= $null
-    }
-    Process{
-        if($null -ne $access_token){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft 365 Teams: Guest calling configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsGuestSettings');
-            }
-            Write-Information @msg
-            $params = @{
-                Authentication = $access_token;
-                InternalPath = 'PowerShell';
-                ObjectType = "TeamsGuestCallingConfiguration";
-                AdminDomain = 'common';
-                Environment = $Environment;
-                Method = "GET";
-            }
-            $guest_call_conf = Get-TeamsObject @params
-        }
-    }
-    End{
-        if($guest_call_conf){
-            $guest_call_conf.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Guest.Calling.Configuration')
-            [pscustomobject]$obj = @{
-                Data = $guest_call_conf
-            }
-            $returnData.o365_teams_guest_calling_conf = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Guest calling configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsGuestCallingEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "teams03";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about Teams guest calling configuration";
+			Group = @("MicrosoftTeams");
+			ServiceName = "Microsoft Teams Guest calling configuration";
+			PluginName = "Get-MonkeyTeamsGuestCallingConfiguration";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Getting environment
+		$Environment = $O365Object.Environment
+		#Get Access Token from Teams
+		$access_token = $O365Object.auth_tokens.Teams
+		$guest_call_conf = $null
+	}
+	process {
+		if ($null -ne $access_token) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft 365 Teams: Guest calling configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsGuestSettings');
+			}
+			Write-Information @msg
+			$params = @{
+				Authentication = $access_token;
+				InternalPath = 'PowerShell';
+				ObjectType = "TeamsGuestCallingConfiguration";
+				AdminDomain = 'common';
+				Environment = $Environment;
+				Method = "GET";
+			}
+			$guest_call_conf = Get-TeamsObject @params
+		}
+	}
+	end {
+		if ($guest_call_conf) {
+			$guest_call_conf.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Guest.Calling.Configuration')
+			[pscustomobject]$obj = @{
+				Data = $guest_call_conf;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_teams_guest_calling_conf = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Guest calling configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsGuestCallingEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

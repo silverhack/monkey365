@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyFormsUserInfo{
-    <#
+function Get-MonkeyFormsUserInfo {
+<#
         .SYNOPSIS
 		Plugin to get information about current user in Microsoft Forms
 
@@ -37,54 +37,65 @@ Function Get-MonkeyFormsUserInfo{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $forms_user_info = $null
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft Forms. Current user info", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('FormsCurrentUserInfo');
-        }
-        if($null -ne $O365Object.auth_tokens.Forms){
-            $authHeader = @{
-                Authorization = $O365Object.auth_tokens.Forms.CreateAuthorizationHeader()
-            }
-            $url = ("{0}/formapi/api/userInfo" -f $O365Object.Environment.Forms)
-            $params = @{
-                Url = $url;
-                Method = 'Get';
-                Content_Type = 'application/json';
-                Headers = $authHeader;
-            }
-            #call user info
-            $forms_user_info  = Invoke-UrlRequest @params
-        }
-    }
-    End{
-        if($forms_user_info){
-            $forms_user_info.PSObject.TypeNames.Insert(0,'Monkey365.Forms.UserInfo')
-            [pscustomobject]$obj = @{
-                Data = $forms_user_info
-            }
-            $returnData.o365_forms_current_user_info = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Forms. Current user info", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('FormsCurrentUserEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$forms_user_info = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "forms02";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about current user in Microsoft Forms";
+			Group = @("MicrosoftForms");
+			ServiceName = "Microsoft Forms user info";
+			PluginName = "Get-MonkeyFormsUserInfo";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft Forms. Current user info",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('FormsCurrentUserInfo');
+		}
+		if ($null -ne $O365Object.auth_tokens.Forms) {
+			$authHeader = @{
+				authorization = $O365Object.auth_tokens.Forms.CreateAuthorizationHeader()
+			}
+			$url = ("{0}/formapi/api/userInfo" -f $O365Object.Environment.Forms)
+			$params = @{
+				url = $url;
+				Method = 'Get';
+				Content_Type = 'application/json';
+				Headers = $authHeader;
+			}
+			#call user info
+			$forms_user_info = Invoke-UrlRequest @params
+		}
+	}
+	end {
+		if ($forms_user_info) {
+			$forms_user_info.PSObject.TypeNames.Insert(0,'Monkey365.Forms.UserInfo')
+			[pscustomobject]$obj = @{
+				Data = $forms_user_info;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_forms_current_user_info = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Forms. Current user info",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('FormsCurrentUserEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

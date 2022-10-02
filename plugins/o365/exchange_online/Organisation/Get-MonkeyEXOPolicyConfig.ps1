@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOPolicyConfig{
-    <#
+function Get-MonkeyEXOPolicyConfig {
+<#
         .SYNOPSIS
 		Plugin to get information about policy config in Exchange Online
 
@@ -37,46 +37,57 @@ Function Get-MonkeyEXOPolicyConfig{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $exo_policy_config = $null;
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online policy config", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoPolicyConfigInfo');
-            }
-            Write-Information @msg
-            $exo_policy_config = Get-ExoMonkeyPolicyConfig
-        }
-    }
-    End{
-        if($null -ne $exo_policy_config){
-            $exo_policy_config.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.PolicyConfig')
-            [pscustomobject]$obj = @{
-                Data = $exo_policy_config
-            }
-            $returnData.o365_exo_policy_config = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online policy config", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoPolicyConfigResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$exo_policy_config = $null;
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0026";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about policy config in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online Policy config";
+			PluginName = "Get-MonkeyEXOPolicyConfig";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online policy config",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoPolicyConfigInfo');
+			}
+			Write-Information @msg
+			$exo_policy_config = Get-ExoMonkeyPolicyConfig
+		}
+	}
+	end {
+		if ($null -ne $exo_policy_config) {
+			$exo_policy_config.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.PolicyConfig')
+			[pscustomobject]$obj = @{
+				Data = $exo_policy_config;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_policy_config = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online policy config",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoPolicyConfigResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

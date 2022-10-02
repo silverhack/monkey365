@@ -14,8 +14,8 @@
 
 
 
-Function Get-MonkeyAzCognitiveService{
-    <#
+function Get-MonkeyAzCognitiveService {
+<#
         .SYNOPSIS
 		Azure Cognitive Service
         https://docs.microsoft.com/en-us/rest/api/cognitiveservices/
@@ -40,80 +40,91 @@ Function Get-MonkeyAzCognitiveService{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get Config
-        $CognitiveAPI = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureCognitive"} | Select-Object -ExpandProperty resource
-        #Get Cognitive Services accounts
-        $cognitive_services = $O365Object.all_resources | Where-Object {$_.type -like 'Microsoft.CognitiveServices/accounts'}
-        if(-NOT $cognitive_services){continue}
-        $all_cognitive_services = @();
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Cognitive Services", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureCognitiveInfo');
-        }
-        Write-Information @msg
-        #Get All Cognitive accounts
-        if($cognitive_services){
-            foreach($cognitive_service in $cognitive_services){
-                $URI = ("{0}{1}?api-version={2}" `
-                        -f $O365Object.Environment.ResourceManager,$cognitive_service.id,`
-                            $CognitiveAPI.api_version)
-                $params = @{
-                    Authentication = $rm_auth;
-                    OwnQuery = $URI;
-                    Environment = $Environment;
-                    ContentType = 'application/json';
-                    Method = "GET";
-                }
-                $my_cognitive_account = Get-MonkeyRMObject @params
-                if($my_cognitive_account){
-                    #Get Network properties
-                    if(-NOT $my_cognitive_account.properties.NetworkRuleSet){
-                        $my_cognitive_account | Add-Member -type NoteProperty -name allowAccessFromAllNetworks -value $true
-                    }
-                    else{
-                        $my_cognitive_account | Add-Member -type NoteProperty -name allowAccessFromAllNetworks -value $false
-                    }
-                    #Add cognitive account to array
-                    $all_cognitive_services += $my_cognitive_account
-                }
-            }
-        }
-    }
-    End{
-        if($all_cognitive_services){
-            $all_cognitive_services.PSObject.TypeNames.Insert(0,'Monkey365.Azure.CognitiveAccounts')
-            [pscustomobject]$obj = @{
-                Data = $all_cognitive_services
-            }
-            $returnData.az_cognitive_accounts = $obj
-        }
-        else{
-           $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Cognitive Services", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureCognitiveEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Import Localized data
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00006";
+			Provider = "Azure";
+			Title = "Azure Cognitive Service";
+			Group = @("CognitiveServices");
+			ServiceName = "Azure Cognitive Service";
+			PluginName = "Get-MonkeyAzCognitiveService";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$LocalizedDataParams = $O365Object.LocalizedDataParams
+		Import-LocalizedData @LocalizedDataParams;
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure Active Directory Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get Config
+		$CognitiveAPI = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureCognitive" } | Select-Object -ExpandProperty resource
+		#Get Cognitive Services accounts
+		$cognitive_services = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.CognitiveServices/accounts' }
+		if (-not $cognitive_services) { continue }
+		$all_cognitive_services = @();
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure Cognitive Services",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureCognitiveInfo');
+		}
+		Write-Information @msg
+		#Get All Cognitive accounts
+		if ($cognitive_services) {
+			foreach ($cognitive_service in $cognitive_services) {
+				$URI = ("{0}{1}?api-version={2}" `
+ 						-f $O365Object.Environment.ResourceManager,$cognitive_service.id,`
+ 						$CognitiveAPI.api_version)
+				$params = @{
+					Authentication = $rm_auth;
+					OwnQuery = $URI;
+					Environment = $Environment;
+					ContentType = 'application/json';
+					Method = "GET";
+				}
+				$my_cognitive_account = Get-MonkeyRMObject @params
+				if ($my_cognitive_account) {
+					#Get Network properties
+					if (-not $my_cognitive_account.Properties.NetworkRuleSet) {
+						$my_cognitive_account | Add-Member -Type NoteProperty -Name allowAccessFromAllNetworks -Value $true
+					}
+					else {
+						$my_cognitive_account | Add-Member -Type NoteProperty -Name allowAccessFromAllNetworks -Value $false
+					}
+					#Add cognitive account to array
+					$all_cognitive_services += $my_cognitive_account
+				}
+			}
+		}
+	}
+	end {
+		if ($all_cognitive_services) {
+			$all_cognitive_services.PSObject.TypeNames.Insert(0,'Monkey365.Azure.CognitiveAccounts')
+			[pscustomobject]$obj = @{
+				Data = $all_cognitive_services;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_cognitive_accounts = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Cognitive Services",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureCognitiveEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

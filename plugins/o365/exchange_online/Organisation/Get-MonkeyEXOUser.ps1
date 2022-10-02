@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOUser{
-    <#
+function Get-MonkeyEXOUser {
+<#
         .SYNOPSIS
 		Plugin to get information about users in Exchange Online
 
@@ -37,52 +37,63 @@ Function Get-MonkeyEXOUser{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        #Getting environment
-        $Environment = $O365Object.Environment
-        #Get EXO authentication
-        $exo_auth = $O365Object.auth_tokens.ExchangeOnline
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online users", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('ExoUsersInfo');
-        }
-        Write-Information @msg
-        #Get data
-        $param = @{
-            Authentication = $exo_auth;
-            Environment = $Environment;
-            ObjectType = "User";
-            extraParameters = "PropertySet=All";
-        }
-        $exo_users = Get-PSExoAdminApiObject @param
-    }
-    End{
-        if($exo_users){
-            $exo_users.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.Users')
-            [pscustomobject]$obj = @{
-                Data = $exo_users
-            }
-            $returnData.o365_exo_users = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online users", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoUsersEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Getting environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0029";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about users in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online User";
+			PluginName = "Get-MonkeyEXOUser";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$Environment = $O365Object.Environment
+		#Get EXO authentication
+		$exo_auth = $O365Object.auth_tokens.ExchangeOnline
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online users",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('ExoUsersInfo');
+		}
+		Write-Information @msg
+		#Get data
+		$param = @{
+			Authentication = $exo_auth;
+			Environment = $Environment;
+			ObjectType = "User";
+			extraParameters = "PropertySet=All";
+		}
+		$exo_users = Get-PSExoAdminApiObject @param
+	}
+	end {
+		if ($exo_users) {
+			$exo_users.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.Users')
+			[pscustomobject]$obj = @{
+				Data = $exo_users;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_users = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online users",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoUsersEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

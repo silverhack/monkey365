@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOSensitivityInfoType{
-    <#
+function Get-MonkeyEXOSensitivityInfoType {
+<#
         .SYNOPSIS
 		Plugin to get information about sensitive information types that are defined for organisation
 
@@ -37,46 +37,57 @@ Function Get-MonkeyEXOSensitivityInfoType{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $sensitivity_info = $null
-        #Check if already connected to Exchange Online Compliance Center
-        $exo_session = Test-EXOConnection -ComplianceCenter
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Security and Compliance Sensitivity Information Types", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompComplianceTagsInfo');
-            }
-            Write-Information @msg
-            $sensitivity_info = Get-DlpSensitiveInformationType
-        }
-    }
-    End{
-        if($null -ne $sensitivity_info){
-            $sensitivity_info.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.DLPInfoTypes')
-            [pscustomobject]$obj = @{
-                Data = $sensitivity_info
-            }
-            $returnData.o365_secomp_dlp_sinfo_type = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance Sensitivity Information Types", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompDLPSentivityInfoEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$sensitivity_info = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "purv007";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about sensitive information types that are defined for organisation";
+			Group = @("PurView");
+			ServiceName = "Microsoft PurView Sensitivity Information Types";
+			PluginName = "Get-MonkeyEXOSensitivityInfoType";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online Compliance Center
+		$exo_session = Test-EXOConnection -ComplianceCenter
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance Sensitivity Information Types",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompComplianceTagsInfo');
+			}
+			Write-Information @msg
+			$sensitivity_info = Get-DlpSensitiveInformationType
+		}
+	}
+	end {
+		if ($null -ne $sensitivity_info) {
+			$sensitivity_info.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.DLPInfoTypes')
+			[pscustomobject]$obj = @{
+				Data = $sensitivity_info;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_secomp_dlp_sinfo_type = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance Sensitivity Information Types",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompDLPSentivityInfoEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADDirectoryProperty{
-    <#
+function Get-MonkeyADDirectoryProperty {
+<#
         .SYNOPSIS
 		Plugin to get directory properties from Azure AD
 
@@ -37,118 +37,132 @@ Function Get-MonkeyADDirectoryProperty{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $AADAuth = $O365Object.auth_tokens.AzurePortal
-        #Query
-        $params = @{
-            Authentication = $AADAuth;
-            Query = $null;
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD directory properties", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePortalDirectoryProperties');
-        }
-        Write-Information @msg
-        #Get directory properties
-        $params.Query = "Directories/Properties"
-        $azure_ad_directory_properties = Get-MonkeyAzurePortalObject @params
-        #Get Azure AD default directory properties
-        $params.Query = "Directory"
-        $azure_ad_default_directory_properties = Get-MonkeyAzurePortalObject @params
-        #Get Azure B2B directory properties
-        $params.Query = "Directories/B2BDirectoryProperties"
-        $azure_ad_b2b_directory_properties = Get-MonkeyAzurePortalObject @params
-        #Get Azure B2B directory policy
-        $params.Query = "B2B/b2bPolicy"
-        $azure_ad_b2b_directory_policies = Get-MonkeyAzurePortalObject @params
-    }
-    End{
-        #Return directory properties
-        if ($azure_ad_directory_properties){
-            $azure_ad_directory_properties.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.directory.properties')
-            [pscustomobject]$obj = @{
-                Data = $azure_ad_directory_properties
-            }
-            $returnData.aad_directory_properties = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD directory properties", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-        #Return default directory properties
-        if ($azure_ad_default_directory_properties){
-            $azure_ad_default_directory_properties.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.default.directory.properties')
-            [pscustomobject]$obj = @{
-                Data = $azure_ad_default_directory_properties
-            }
-            $returnData.aad_default_directory_props = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD default directory properties", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-        #Return b2b directory properties
-        if ($azure_ad_b2b_directory_properties){
-            $azure_ad_b2b_directory_properties.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.b2b.directory.properties')
-            [pscustomobject]$obj = @{
-                Data = $azure_ad_b2b_directory_properties
-            }
-            $returnData.aad_b2b_directory_properties = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD B2B properties", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-        #Return b2b directory policies
-        if ($azure_ad_b2b_directory_policies){
-            $azure_ad_b2b_directory_policies.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.b2b.directory.policies')
-            [pscustomobject]$obj = @{
-                Data = $azure_ad_b2b_directory_policies
-            }
-            $returnData.aad_b2b_directory_policies = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD B2B directory properties", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$Environment = $O365Object.Environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0027";
+			Provider = "AzureAD";
+			Title = "Plugin to get directory properties from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD Directory Properties";
+			PluginName = "Get-MonkeyADDirectoryProperty";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Azure Active Directory Auth
+		$AADAuth = $O365Object.auth_tokens.AzurePortal
+		#Query
+		$params = @{
+			Authentication = $AADAuth;
+			Query = $null;
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD directory properties",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePortalDirectoryProperties');
+		}
+		Write-Information @msg
+		#Get directory properties
+		$params.Query = "Directories/Properties"
+		$azure_ad_directory_properties = Get-MonkeyAzurePortalObject @params
+		#Get Azure AD default directory properties
+		$params.Query = "Directory"
+		$azure_ad_default_directory_properties = Get-MonkeyAzurePortalObject @params
+		#Get Azure B2B directory properties
+		$params.Query = "Directories/B2BDirectoryProperties"
+		$azure_ad_b2b_directory_properties = Get-MonkeyAzurePortalObject @params
+		#Get Azure B2B directory policy
+		$params.Query = "B2B/b2bPolicy"
+		$azure_ad_b2b_directory_policies = Get-MonkeyAzurePortalObject @params
+	}
+	end {
+		#Return directory properties
+		if ($azure_ad_directory_properties) {
+			$azure_ad_directory_properties.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.directory.properties')
+			[pscustomobject]$obj = @{
+				Data = $azure_ad_directory_properties;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_directory_properties = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD directory properties",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+		#Return default directory properties
+		if ($azure_ad_default_directory_properties) {
+			$azure_ad_default_directory_properties.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.default.directory.properties')
+			[pscustomobject]$obj = @{
+				Data = $azure_ad_default_directory_properties;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_default_directory_props = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD default directory properties",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+		#Return b2b directory properties
+		if ($azure_ad_b2b_directory_properties) {
+			$azure_ad_b2b_directory_properties.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.b2b.directory.properties')
+			[pscustomobject]$obj = @{
+				Data = $azure_ad_b2b_directory_properties;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_b2b_directory_properties = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD B2B properties",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+		#Return b2b directory policies
+		if ($azure_ad_b2b_directory_policies) {
+			$azure_ad_b2b_directory_policies.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.b2b.directory.policies')
+			[pscustomobject]$obj = @{
+				Data = $azure_ad_b2b_directory_policies;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_b2b_directory_policies = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD B2B directory properties",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

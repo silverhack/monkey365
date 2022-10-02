@@ -45,6 +45,10 @@ foreach($module in $Modules.GetEnumerator()){
 
 #$ScriptPath = $PSScriptRoot
 New-Variable -Name ScriptPath -Value $PSScriptRoot -Scope Script -Force
+#Get Azure plugins
+New-Variable -Name azure_plugins -Value (Get-MonkeySupportedService -Azure) -Scope Script -Force
+#Get Microsoft 365 plugins
+New-Variable -Name m365_plugins -Value (Get-MonkeySupportedService -M365) -Scope Script -Force
 
 #Import ADAL/MSAL MODULES
 Import-O365Lib

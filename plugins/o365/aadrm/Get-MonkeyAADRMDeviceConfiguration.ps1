@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAADRMDeviceConfiguration{
-    <#
+function Get-MonkeyAADRMDeviceConfiguration {
+<#
         .SYNOPSIS
 		Plugin to get information about AADRM Device config
 
@@ -37,100 +37,111 @@ Function Get-MonkeyAADRMDeviceConfiguration{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Get Access Token from AADRM
-        $access_token = $O365Object.auth_tokens.AADRM
-        #Get AADRM Url
-        $url = $O365Object.Environment.aadrm_service_locator
-        if($null -ne $access_token){
-            #Set Authorization Header
-            $AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
-            $requestHeader = @{"Authorization" = $AuthHeader}
-        }
-        #Create AADRM object
-        $aadrm_feature_status = New-Object -TypeName PSCustomObject
-    }
-    Process{
-        if($requestHeader -and $url){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Office 365 Rights Management: Device Configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMDeviceConfig');
-            }
-            Write-Information @msg
-            $url = ("{0}/DevicePlatforms" -f $url)
-            $params = @{
-                Url = $url;
-                Method = 'Get';
-                Content_Type = 'application/json; charset=utf-8';
-                Headers = $requestHeader;
-                disableSSLVerification = $true;
-            }
-            #call AADRM endpoint
-            $AADRM_Devices = Invoke-UrlRequest @params
-            #Construct psobject
-            foreach($device in $AADRM_Devices){
-                switch ($device.key) {
-                        0
-                        {
-                            $aadrm_feature_status | Add-Member -type NoteProperty -name Windows -value $device.value
-                        }
-                        1
-                        {
-                            $aadrm_feature_status | Add-Member -type NoteProperty -name WindowsStore -value $device.value
-                        }
-                        2
-                        {
-                            $aadrm_feature_status | Add-Member -type NoteProperty -name WindowsPhone -value $device.value
-                        }
-                        3
-                        {
-                            $aadrm_feature_status | Add-Member -type NoteProperty -name Mac -value $device.value
-                        }
-                        4
-                        {
-                            $aadrm_feature_status | Add-Member -type NoteProperty -name iOS -value $device.value
-                        }
-                        5
-                        {
-                            $aadrm_feature_status | Add-Member -type NoteProperty -name Android -value $device.value
-                        }
-                        6
-                        {
-                            $aadrm_feature_status | Add-Member -type NoteProperty -name Web -value $device.value
-                        }
-                        Default
-                        {
-                            $aadrm_feature_status | Add-Member -type NoteProperty -name Unknown -value $device.value -Force
-                        }
-                }
-            }
-        }
-    }
-    End{
-        if($aadrm_feature_status){
-            $aadrm_feature_status.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.DevicePlatform')
-            [pscustomobject]$obj = @{
-                Data = $aadrm_feature_status
-            }
-            $returnData.o365_aadrm_device_platform = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: Device Configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMDeviceEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Get Access Token from AADRM
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aadrm02";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about AADRM Device config";
+			Group = @("IRM");
+			ServiceName = "Azure Rights Management";
+			PluginName = "Get-MonkeyAADRMDeviceConfiguration";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$access_token = $O365Object.auth_tokens.AADRM
+		#Get AADRM Url
+		$url = $O365Object.Environment.aadrm_service_locator
+		if ($null -ne $access_token) {
+			#Set Authorization Header
+			$AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
+			$requestHeader = @{ "Authorization" = $AuthHeader }
+		}
+		#Create AADRM object
+		$aadrm_feature_status = New-Object -TypeName PSCustomObject
+	}
+	process {
+		if ($requestHeader -and $url) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Office 365 Rights Management: Device Configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMDeviceConfig');
+			}
+			Write-Information @msg
+			$url = ("{0}/DevicePlatforms" -f $url)
+			$params = @{
+				url = $url;
+				Method = 'Get';
+				Content_Type = 'application/json; charset=utf-8';
+				Headers = $requestHeader;
+				disableSSLVerification = $true;
+			}
+			#call AADRM endpoint
+			$AADRM_Devices = Invoke-UrlRequest @params
+			#Construct psobject
+			foreach ($device in $AADRM_Devices) {
+				switch ($device.key) {
+					0
+					{
+						$aadrm_feature_status | Add-Member -Type NoteProperty -Name Windows -Value $device.value
+					}
+					1
+					{
+						$aadrm_feature_status | Add-Member -Type NoteProperty -Name WindowsStore -Value $device.value
+					}
+					2
+					{
+						$aadrm_feature_status | Add-Member -Type NoteProperty -Name WindowsPhone -Value $device.value
+					}
+					3
+					{
+						$aadrm_feature_status | Add-Member -Type NoteProperty -Name Mac -Value $device.value
+					}
+					4
+					{
+						$aadrm_feature_status | Add-Member -Type NoteProperty -Name iOS -Value $device.value
+					}
+					5
+					{
+						$aadrm_feature_status | Add-Member -Type NoteProperty -Name Android -Value $device.value
+					}
+					6
+					{
+						$aadrm_feature_status | Add-Member -Type NoteProperty -Name Web -Value $device.value
+					}
+					Default
+					{
+						$aadrm_feature_status | Add-Member -Type NoteProperty -Name Unknown -Value $device.value -Force
+					}
+				}
+			}
+		}
+	}
+	end {
+		if ($aadrm_feature_status) {
+			$aadrm_feature_status.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.DevicePlatform')
+			[pscustomobject]$obj = @{
+				Data = $aadrm_feature_status;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_aadrm_device_platform = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: Device Configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMDeviceEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

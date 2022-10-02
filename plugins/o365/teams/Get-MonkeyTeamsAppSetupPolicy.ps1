@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyTeamsAppSetupPolicy{
-    <#
+function Get-MonkeyTeamsAppSetupPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about Teams application setup policies
 
@@ -37,56 +37,67 @@ Function Get-MonkeyTeamsAppSetupPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        #Getting environment
-        $Environment = $O365Object.Environment
-        #Get Access Token from Teams
-        $access_token = $O365Object.auth_tokens.Teams
-        $app_setup_policies= $null
-    }
-    Process{
-        if($null -ne $access_token){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft 365 Teams: Application setup policies", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsAppSettings');
-            }
-            Write-Information @msg
-            $params = @{
-                Authentication = $access_token;
-                InternalPath = 'PowerShell';
-                ObjectType = "TeamsAppSetupPolicy";
-                AdminDomain = 'common';
-                Environment = $Environment;
-                Method = "GET";
-            }
-            $app_setup_policies = Get-TeamsObject @params
-        }
-    }
-    End{
-        if($app_setup_policies){
-            $app_setup_policies.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Application.Setup.Policies')
-            [pscustomobject]$obj = @{
-                Data = $app_setup_policies
-            }
-            $returnData.o365_teams_app_setup_policies = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Application setup policies", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsAppSettingsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "teams02";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about Teams application setup policies";
+			Group = @("MicrosoftTeams");
+			ServiceName = "Microsoft Teams Application setup policies";
+			PluginName = "Get-MonkeyTeamsAppSetupPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Getting environment
+		$Environment = $O365Object.Environment
+		#Get Access Token from Teams
+		$access_token = $O365Object.auth_tokens.Teams
+		$app_setup_policies = $null
+	}
+	process {
+		if ($null -ne $access_token) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft 365 Teams: Application setup policies",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsAppSettings');
+			}
+			Write-Information @msg
+			$params = @{
+				Authentication = $access_token;
+				InternalPath = 'PowerShell';
+				ObjectType = "TeamsAppSetupPolicy";
+				AdminDomain = 'common';
+				Environment = $Environment;
+				Method = "GET";
+			}
+			$app_setup_policies = Get-TeamsObject @params
+		}
+	}
+	end {
+		if ($app_setup_policies) {
+			$app_setup_policies.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Application.Setup.Policies')
+			[pscustomobject]$obj = @{
+				Data = $app_setup_policies;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_teams_app_setup_policies = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Application setup policies",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsAppSettingsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

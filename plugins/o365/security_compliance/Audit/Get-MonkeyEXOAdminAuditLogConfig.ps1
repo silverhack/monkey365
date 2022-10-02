@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOAdminAuditLogConfig{
-    <#
+function Get-MonkeyEXOAdminAuditLogConfig {
+<#
         .SYNOPSIS
 		Plugin to get information about audit log config from Exchange Online
 
@@ -37,47 +37,58 @@ Function Get-MonkeyEXOAdminAuditLogConfig{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $O365_logConfig = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection -ComplianceCenter
-    }
-    Process{
-        if($null -ne $exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Security and Compliance Admin audit log config", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompLogConfigInfo');
-            }
-            Write-Information @msg
-            #Get O365 log config
-            $O365_logConfig = Get-AdminAuditLogConfig
-        }
-    }
-    End{
-        if($O365_logConfig){
-            $O365_logConfig.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.logConfig')
-            [pscustomobject]$obj = @{
-                Data = $O365_logConfig
-            }
-            $returnData.o365_secomp_log_config = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance Admin audit log config", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompLogConfigEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$O365_logConfig = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "purv003";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about audit log config from Exchange Online";
+			Group = @("PurView");
+			ServiceName = "Microsoft PurView Audit Log config";
+			PluginName = "Get-MonkeyEXOAdminAuditLogConfig";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection -ComplianceCenter
+	}
+	process {
+		if ($null -ne $exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance Admin audit log config",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompLogConfigInfo');
+			}
+			Write-Information @msg
+			#Get O365 log config
+			$O365_logConfig = Get-AdminAuditLogConfig
+		}
+	}
+	end {
+		if ($O365_logConfig) {
+			$O365_logConfig.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.logConfig')
+			[pscustomobject]$obj = @{
+				Data = $O365_logConfig;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_secomp_log_config = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance Admin audit log config",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompLogConfigEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

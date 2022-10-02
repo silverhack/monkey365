@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADDomainsConfiguration{
-    <#
+function Get-MonkeyADDomainsConfiguration {
+<#
         .SYNOPSIS
 		Plugin extract information about domain from Azure AD
 
@@ -37,63 +37,74 @@ Function Get-MonkeyADDomainsConfiguration{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Getting environment
-        $Environment = $O365Object.Environment
-        #Get Graph Authentication
-        $AADAuth = $O365Object.auth_tokens.Graph
-        #Get Config
-        $AADConfig = $O365Object.internal_config.azuread
-        $domains = $null
-    }
-    Process{
-        if($null -ne $Environment -and $null -ne $AADAuth){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD Domain Configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('AzureADDomainConfigurationInfo');
-            }
-            Write-Information @msg
-            $params = @{
-                Environment = $Environment;
-                Authentication = $AADAuth;
-                ObjectType = "domains";
-                APIVersion = $AADConfig.api_version
-            }
-            $domains = Get-MonkeyGraphObject @params
-            if($domains){
-                foreach ($domain in $domains){
-                    if($domain.supportedServices){
-                        $domain.supportedServices = (@($domain.supportedServices) -join ',')
-                    }
-                }
-            }
-        }
-    }
-    End{
-        if($null -ne $domains){
-            $domains.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.DomainConfiguration')
-            [pscustomobject]$obj = @{
-                Data = $domains
-            }
-            $returnData.Add('aad_domains', $obj)
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD Domain Configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureADDomainConfigurationEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Getting environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0007";
+			Provider = "AzureAD";
+			Title = "Plugin to get information about domain from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD Domain";
+			PluginName = "Get-MonkeyADDomainsConfiguration";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$Environment = $O365Object.Environment
+		#Get Graph Authentication
+		$AADAuth = $O365Object.auth_tokens.Graph
+		#Get Config
+		$AADConfig = $O365Object.internal_config.azuread
+		$domains = $null
+	}
+	process {
+		if ($null -ne $Environment -and $null -ne $AADAuth) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD Domain Configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('AzureADDomainConfigurationInfo');
+			}
+			Write-Information @msg
+			$params = @{
+				Environment = $Environment;
+				Authentication = $AADAuth;
+				ObjectType = "domains";
+				APIVersion = $AADConfig.api_version
+			}
+			$domains = Get-MonkeyGraphObject @params
+			if ($domains) {
+				foreach ($domain in $domains) {
+					if ($domain.supportedServices) {
+						$domain.supportedServices = (@($domain.supportedServices) -join ',')
+					}
+				}
+			}
+		}
+	}
+	end {
+		if ($null -ne $domains) {
+			$domains.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.DomainConfiguration')
+			[pscustomobject]$obj = @{
+				Data = $domains;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.Add('aad_domains',$obj)
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD Domain Configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureADDomainConfigurationEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

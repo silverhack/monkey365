@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOComplianceTag{
-    <#
+function Get-MonkeyEXOComplianceTag {
+<#
         .SYNOPSIS
 		Plugin to get information about compliance tags from Exchange Online
 
@@ -37,46 +37,57 @@ Function Get-MonkeyEXOComplianceTag{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $compliance_tags = $null;
-        $exo_session = Test-EXOConnection -ComplianceCenter
-    }
-    Process{
-        if($null -ne $exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Security and Compliance tags", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompTagsInfo');
-            }
-            Write-Information @msg
-            #Get Compliance tags
-            $compliance_tags = Get-ComplianceTag
-        }
-    }
-    End{
-        if($compliance_tags){
-            $compliance_tags.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.Tag')
-            [pscustomobject]$obj = @{
-                Data = $compliance_tags
-            }
-            $returnData.o365_secomp_compliance_tag = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance tags", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompTagsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$compliance_tags = $null;
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "purv005";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about compliance tags from Exchange Online";
+			Group = @("PurView");
+			ServiceName = "Microsoft PurView Compliance Tags";
+			PluginName = "Get-MonkeyEXOComplianceTag";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$exo_session = Test-EXOConnection -ComplianceCenter
+	}
+	process {
+		if ($null -ne $exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance tags",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompTagsInfo');
+			}
+			Write-Information @msg
+			#Get Compliance tags
+			$compliance_tags = Get-ComplianceTag
+		}
+	}
+	end {
+		if ($compliance_tags) {
+			$compliance_tags.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.Tag')
+			[pscustomobject]$obj = @{
+				Data = $compliance_tags;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_secomp_compliance_tag = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance tags",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompTagsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

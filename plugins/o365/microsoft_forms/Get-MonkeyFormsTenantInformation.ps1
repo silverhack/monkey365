@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyFormsTenantInformation{
-    <#
+function Get-MonkeyFormsTenantInformation {
+<#
         .SYNOPSIS
 		Plugin to get information about Microsoft Forms tenant settings
 
@@ -37,64 +37,75 @@ Function Get-MonkeyFormsTenantInformation{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $forms_tenant_settings = $null;
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft Forms. Tenant Settings", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('FormsTenantInfo');
-        }
-        if($null -ne $O365Object.auth_tokens.Forms){
-            $authHeader = @{
-                Authorization = $O365Object.auth_tokens.Forms.CreateAuthorizationHeader()
-            }
-            $url = ("{0}/formapi/api/GetFormsTenantSettings" -f $O365Object.Environment.Forms)
-            $params = @{
-                Url = $url;
-                Method = 'Get';
-                Content_Type = 'application/json';
-                Headers = $authHeader;
-            }
-            #call tenant settings
-            $forms_tenant_settings = Invoke-UrlRequest @params
-        }
-        else{
-            $msg = @{
-                MessageData = ("Unable to get tenant's information from Microsoft Forms");
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('FormsTenantInfoWarning');
-            }
-            Write-Warning @msg
-        }
-    }
-    End{
-        if($null -ne $forms_tenant_settings){
-            $forms_tenant_settings.PSObject.TypeNames.Insert(0,'Monkey365.Forms.TenantSettings')
-            [pscustomobject]$obj = @{
-                Data = $forms_tenant_settings
-            }
-            $returnData.o365_forms_tenant_settings = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Forms. Tenant settings", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('FormsTenantInfoEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$forms_tenant_settings = $null;
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "forms01";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about Microsoft Forms tenant settings";
+			Group = @("MicrosoftForms");
+			ServiceName = "Microsoft Forms Tenant Settings";
+			PluginName = "Get-MonkeyFormsTenantInformation";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft Forms. Tenant Settings",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('FormsTenantInfo');
+		}
+		if ($null -ne $O365Object.auth_tokens.Forms) {
+			$authHeader = @{
+				authorization = $O365Object.auth_tokens.Forms.CreateAuthorizationHeader()
+			}
+			$url = ("{0}/formapi/api/GetFormsTenantSettings" -f $O365Object.Environment.Forms)
+			$params = @{
+				url = $url;
+				Method = 'Get';
+				Content_Type = 'application/json';
+				Headers = $authHeader;
+			}
+			#call tenant settings
+			$forms_tenant_settings = Invoke-UrlRequest @params
+		}
+		else {
+			$msg = @{
+				MessageData = ("Unable to get tenant's information from Microsoft Forms");
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('FormsTenantInfoWarning');
+			}
+			Write-Warning @msg
+		}
+	}
+	end {
+		if ($null -ne $forms_tenant_settings) {
+			$forms_tenant_settings.PSObject.TypeNames.Insert(0,'Monkey365.Forms.TenantSettings')
+			[pscustomobject]$obj = @{
+				Data = $forms_tenant_settings;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_forms_tenant_settings = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Forms. Tenant settings",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('FormsTenantInfoEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

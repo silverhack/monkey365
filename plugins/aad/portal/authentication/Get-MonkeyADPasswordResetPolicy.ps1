@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADPasswordResetPolicy{
-    <#
+function Get-MonkeyADPasswordResetPolicy {
+<#
         .SYNOPSIS
 		Plugin to get password reset policy from Azure AD
 
@@ -37,52 +37,63 @@ Function Get-MonkeyADPasswordResetPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $AADAuth = $O365Object.auth_tokens.AzurePortal
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD password reset policy", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePortalSSPRPolicy');
-        }
-        Write-Information @msg
-        #Query
-        $params = @{
-            Authentication = $AADAuth;
-            Query = 'PasswordReset/PasswordResetPolicies';
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-        $ad_password_reset_policy = Get-MonkeyAzurePortalObject @params
-    }
-    End{
-        if ($ad_password_reset_policy){
-            $ad_password_reset_policy.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.SSPRPolicy')
-            [pscustomobject]$obj = @{
-                Data = $ad_password_reset_policy
-            }
-            $returnData.aad_password_reset_policy = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD password reset policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalSSPREmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$Environment = $O365Object.Environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0022";
+			Provider = "AzureAD";
+			Title = "Plugin to get password reset policy from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD Password Reset Policy";
+			PluginName = "Get-MonkeyADPasswordResetPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Azure Active Directory Auth
+		$AADAuth = $O365Object.auth_tokens.AzurePortal
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD password reset policy",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePortalSSPRPolicy');
+		}
+		Write-Information @msg
+		#Query
+		$params = @{
+			Authentication = $AADAuth;
+			Query = 'PasswordReset/PasswordResetPolicies';
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+		$ad_password_reset_policy = Get-MonkeyAzurePortalObject @params
+	}
+	end {
+		if ($ad_password_reset_policy) {
+			$ad_password_reset_policy.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.SSPRPolicy')
+			[pscustomobject]$obj = @{
+				Data = $ad_password_reset_policy;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_password_reset_policy = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD password reset policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalSSPREmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeySharePointOnlineTenantAdminInfo{
-    <#
+function Get-MonkeySharePointOnlineTenantAdminInfo {
+<#
         .SYNOPSIS
 		Plugin to get information about SPS Tenant information
 
@@ -37,55 +37,66 @@ Function Get-MonkeySharePointOnlineTenantAdminInfo{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $sps_tenant_admin_details = $null
-        #Get Access Token from AADRM
-        $sps_auth = $O365Object.auth_tokens.SharePointAdminOnline
-        #Check if user is sharepoint administrator
-        $isSharepointAdministrator = Test-IsUserSharepointAdministrator
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Sharepoint Online Tenant Admin Info", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('SPSTenantInfo');
-        }
-        Write-Information @msg
-        if($isSharepointAdministrator){
-            #body
-            $body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="334" ObjectPathId="333" /><Query Id="335" ObjectPathId="333"><Query SelectAllProperties="true"><Properties><Property Name="HideDefaultThemes" ScalarProperty="true" /></Properties></Query></Query></Actions><ObjectPaths><Constructor Id="333" TypeId="{268004ae-ef6b-4e9b-8425-127220d84719}" /></ObjectPaths></Request>'
-            $params = @{
-                Authentication = $sps_auth;
-                Data = $body_data;
-            }
-            #call SPS
-            $sps_tenant_admin_details = Invoke-MonkeySPSUrlRequest @params
-        }
-    }
-    End{
-        if($sps_tenant_admin_details){
-            $sps_tenant_admin_details.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.TenantDetails')
-            [pscustomobject]$obj = @{
-                Data = $sps_tenant_admin_details
-            }
-            $returnData.o365_spo_tenant_admin_details = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Tenant Admin details", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('SPSTenantDetailsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$sps_tenant_admin_details = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "sps0008";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about SPS Tenant information";
+			Group = @("SharepointOnline");
+			ServiceName = "SharePoint Online Tenant Admin information";
+			PluginName = "Get-MonkeySharePointOnlineTenantAdminInfo";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Access Token from AADRM
+		$sps_auth = $O365Object.auth_tokens.SharePointAdminOnline
+		#Check if user is sharepoint administrator
+		$isSharepointAdministrator = Test-IsUserSharepointAdministrator
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Sharepoint Online Tenant Admin Info",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('SPSTenantInfo');
+		}
+		Write-Information @msg
+		if ($isSharepointAdministrator) {
+			#body
+			$body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="334" ObjectPathId="333" /><Query Id="335" ObjectPathId="333"><Query SelectAllProperties="true"><Properties><Property Name="HideDefaultThemes" ScalarProperty="true" /></Properties></Query></Query></Actions><ObjectPaths><Constructor Id="333" TypeId="{268004ae-ef6b-4e9b-8425-127220d84719}" /></ObjectPaths></Request>'
+			$params = @{
+				Authentication = $sps_auth;
+				Data = $body_data;
+			}
+			#call SPS
+			$sps_tenant_admin_details = Invoke-MonkeySPSUrlRequest @params
+		}
+	}
+	end {
+		if ($sps_tenant_admin_details) {
+			$sps_tenant_admin_details.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.TenantDetails')
+			[pscustomobject]$obj = @{
+				Data = $sps_tenant_admin_details;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_spo_tenant_admin_details = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Tenant Admin details",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('SPSTenantDetailsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

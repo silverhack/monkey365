@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAZSecurityBaseline{
-    <#
+function Get-MonkeyAZSecurityBaseline {
+<#
         .SYNOPSIS
 		Plugin to get about Security Baseline from Azure
 
@@ -37,104 +37,115 @@ Function Get-MonkeyAZSecurityBaseline{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure RM Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #get Config
-        $AzureSecStatus = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureSecurityStatuses"} | Select-Object -ExpandProperty resource
-        #Get VMs
-        $vms_v2 = $O365Object.all_resources | Where-Object {$_.type -like 'Microsoft.Compute/virtualMachines'}
-        $classic_vms = $O365Object.all_resources | Where-Object {$_.type -like 'Microsoft.ClassicCompute/virtualMachines'}
-        if(-NOT $vms_v2 -and -NOT $classic_vms){continue}
-        #create synchronized array
-        $AllSecBaseline = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
-        #Generate vars
-        $vars = @{
-            "O365Object"=$O365Object;
-            "WriteLog"=$WriteLog;
-            'Verbosity' = $Verbosity;
-            'InformationAction' = $InformationAction;
-            "AllSecBaseline"=$AllSecBaseline;
-        }
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure security baseline", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureSecurityBaselineInfo');
-        }
-        Write-Information @msg
-        #Get all security statuses
-        $params = @{
-            Authentication = $rm_auth;
-            Provider = $AzureSecStatus.provider;
-            ObjectType = "securityStatuses";
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-            APIVersion = $AzureSecStatus.api_version;
-        }
-        $all_status = Get-MonkeyRMObject @params
-        $all_vm_status = $all_status | Where-Object {$_.properties.type -like '*VirtualMachine'}
-        #Set array
-        $all_vms = @()
-        foreach($vm in $vms_v2){
-            $vm_rm = $all_vm_status | Where-Object {$_.name -eq $vm.name}
-            if($vm_rm){
-                $all_vms+=$vm_rm
-            }
-        }
-        foreach($vm in $classic_vms){
-            $classic = $all_vm_status | Where-Object {$_.name -eq $vm.name}
-            if($classic){
-                $all_vms+=$classic
-            }
-        }
-        #Get primary object
-        if($all_vms){
-            $param = @{
-                ScriptBlock = {Get-AzVmSecurityBaseline -vm $_};
-                ImportCommands = $O365Object.LibUtils;
-                ImportVariables = $vars;
-                ImportModules = $O365Object.runspaces_modules;
-                StartUpScripts = $O365Object.runspace_init;
-                ThrowOnRunspaceOpenError = $true;
-                Debug = $O365Object.VerboseOptions.Debug;
-                Verbose = $O365Object.VerboseOptions.Verbose;
-                Throttle = $O365Object.nestedRunspaceMaxThreads;
-                MaxQueue = $O365Object.MaxQueue;
-                BatchSleep = $O365Object.BatchSleep;
-                BatchSize = $O365Object.BatchSize;
-            }
-            $all_vms | Invoke-MonkeyJob @param
-        }
-    }
-    End{
-        if($AllSecBaseline){
-            $AllSecBaseline.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SecurityBaseline')
-            [pscustomobject]$obj = @{
-                Data = $AllSecBaseline
-            }
-            $returnData.az_vm_security_baseline = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Baseline", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureSecBaselineEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00025";
+			Provider = "Azure";
+			Title = "Plugin to get information about Azure VM Security Baseline";
+			Group = @("VirtualMachines","SecurityBaseline","DefenderForCloud");
+			ServiceName = "Azure VM Security Baseline";
+			PluginName = "Get-MonkeyAZSecurityBaseline";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure RM Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#get Config
+		$AzureSecStatus = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureSecurityStatuses" } | Select-Object -ExpandProperty resource
+		#Get VMs
+		$vms_v2 = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.Compute/virtualMachines' }
+		$classic_vms = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.ClassicCompute/virtualMachines' }
+		if (-not $vms_v2 -and -not $classic_vms) { continue }
+		#create synchronized array
+		$AllSecBaseline = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
+		#Generate vars
+		$vars = @{
+			"O365Object" = $O365Object;
+			"WriteLog" = $WriteLog;
+			'Verbosity' = $Verbosity;
+			'InformationAction' = $InformationAction;
+			"AllSecBaseline" = $AllSecBaseline;
+		}
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure security baseline",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureSecurityBaselineInfo');
+		}
+		Write-Information @msg
+		#Get all security statuses
+		$params = @{
+			Authentication = $rm_auth;
+			Provider = $AzureSecStatus.Provider;
+			ObjectType = "securityStatuses";
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+			APIVersion = $AzureSecStatus.api_version;
+		}
+		$all_status = Get-MonkeyRMObject @params
+		$all_vm_status = $all_status | Where-Object { $_.Properties.type -like '*VirtualMachine' }
+		#Set array
+		$all_vms = @()
+		foreach ($vm in $vms_v2) {
+			$vm_rm = $all_vm_status | Where-Object { $_.Name -eq $vm.Name }
+			if ($vm_rm) {
+				$all_vms += $vm_rm
+			}
+		}
+		foreach ($vm in $classic_vms) {
+			$classic = $all_vm_status | Where-Object { $_.Name -eq $vm.Name }
+			if ($classic) {
+				$all_vms += $classic
+			}
+		}
+		#Get primary object
+		if ($all_vms) {
+			$param = @{
+				ScriptBlock = { Get-AzVmSecurityBaseline -vm $_ };
+				ImportCommands = $O365Object.LibUtils;
+				ImportVariables = $vars;
+				ImportModules = $O365Object.runspaces_modules;
+				StartUpScripts = $O365Object.runspace_init;
+				ThrowOnRunspaceOpenError = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				Throttle = $O365Object.nestedRunspaceMaxThreads;
+				MaxQueue = $O365Object.MaxQueue;
+				BatchSleep = $O365Object.BatchSleep;
+				BatchSize = $O365Object.BatchSize;
+			}
+			$all_vms | Invoke-MonkeyJob @param
+		}
+	}
+	end {
+		if ($AllSecBaseline) {
+			$AllSecBaseline.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SecurityBaseline')
+			[pscustomobject]$obj = @{
+				Data = $AllSecBaseline;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_vm_security_baseline = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Baseline",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureSecBaselineEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

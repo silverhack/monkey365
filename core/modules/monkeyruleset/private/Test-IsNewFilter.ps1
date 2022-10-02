@@ -38,12 +38,9 @@ function Test-IsNewFilter{
         [parameter(Mandatory=$true, HelpMessage="Conditions")]
         [object]$conditions
     )
-    $new_filter = $false
-    foreach($condition in $conditions){
-        if($condition -is [System.String]){
-            $new_filter = $True
-        }
-        else{
+    $new_filter = $true
+    foreach($elem in $condition){
+        if($elem -is [System.Array]){
             $new_filter = $false
         }
     }

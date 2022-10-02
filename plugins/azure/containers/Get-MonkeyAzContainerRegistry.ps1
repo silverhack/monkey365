@@ -14,8 +14,8 @@
 
 
 
-Function Get-MonkeyAzContainerRegistry{
-    <#
+function Get-MonkeyAzContainerRegistry {
+<#
         .SYNOPSIS
 		Plugin to get Azure Container registry
         https://docs.microsoft.com/en-us/rest/api/containerregistry
@@ -40,80 +40,91 @@ Function Get-MonkeyAzContainerRegistry{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get Config
-        $cntRegistryAPI = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureContainerRegistry"} | Select-Object -ExpandProperty resource
-        #Get container registries
-        $container_registries = $O365Object.all_resources | Where-Object {$_.type -eq 'Microsoft.ContainerRegistry/registries'}
-        if(-NOT $container_registries){continue}
-        $all_container_registries = @();
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Container Registries", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureContainerInfo');
-        }
-        Write-Information @msg
-        #Get all containers registries
-        if($container_registries){
-            foreach($container_registry in $container_registries){
-                $URI = ("{0}{1}?api-version={2}" `
-                        -f $O365Object.Environment.ResourceManager,$container_registry.id,$cntRegistryAPI.api_version)
-                #launch request
-                $params = @{
-                    Authentication = $rm_auth;
-                    OwnQuery = $URI;
-                    Environment = $Environment;
-                    ContentType = 'application/json';
-                    Method = "GET";
-                }
-                $my_container_registry = Get-MonkeyRMObject @params
-                if($my_container_registry){
-                    #Get Network properties
-                    if(-NOT $my_container_registry.properties.NetworkRuleSet){
-                        $my_container_registry | Add-Member -type NoteProperty -name allowAccessFromAllNetworks -value $true
-                    }
-                    else{
-                        $my_container_registry | Add-Member -type NoteProperty -name allowAccessFromAllNetworks -value $false
-                    }
-                    #Add container registries to array
-                    $all_container_registries += $my_container_registry
-                }
-            }
-        }
-    }
-    End{
-        if($all_container_registries){
-            $all_container_registries.PSObject.TypeNames.Insert(0,'Monkey365.Azure.ContainerRegistries')
-            [pscustomobject]$obj = @{
-                Data = $all_container_registries
-            }
-            $returnData.az_container_registries = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Container registry", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureContainersEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Import Localized data
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00008";
+			Provider = "Azure";
+			Title = "Plugin to get Azure Container registry";
+			Group = @("Containers");
+			ServiceName = "Azure Container Registry";
+			PluginName = "Get-MonkeyAzContainerRegistry";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$LocalizedDataParams = $O365Object.LocalizedDataParams
+		Import-LocalizedData @LocalizedDataParams;
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure Active Directory Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get Config
+		$cntRegistryAPI = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureContainerRegistry" } | Select-Object -ExpandProperty resource
+		#Get container registries
+		$container_registries = $O365Object.all_resources | Where-Object { $_.type -eq 'Microsoft.ContainerRegistry/registries' }
+		if (-not $container_registries) { continue }
+		$all_container_registries = @();
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure Container Registries",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureContainerInfo');
+		}
+		Write-Information @msg
+		#Get all containers registries
+		if ($container_registries) {
+			foreach ($container_registry in $container_registries) {
+				$URI = ("{0}{1}?api-version={2}" `
+ 						-f $O365Object.Environment.ResourceManager,$container_registry.id,$cntRegistryAPI.api_version)
+				#launch request
+				$params = @{
+					Authentication = $rm_auth;
+					OwnQuery = $URI;
+					Environment = $Environment;
+					ContentType = 'application/json';
+					Method = "GET";
+				}
+				$my_container_registry = Get-MonkeyRMObject @params
+				if ($my_container_registry) {
+					#Get Network properties
+					if (-not $my_container_registry.Properties.NetworkRuleSet) {
+						$my_container_registry | Add-Member -Type NoteProperty -Name allowAccessFromAllNetworks -Value $true
+					}
+					else {
+						$my_container_registry | Add-Member -Type NoteProperty -Name allowAccessFromAllNetworks -Value $false
+					}
+					#Add container registries to array
+					$all_container_registries += $my_container_registry
+				}
+			}
+		}
+	}
+	end {
+		if ($all_container_registries) {
+			$all_container_registries.PSObject.TypeNames.Insert(0,'Monkey365.Azure.ContainerRegistries')
+			[pscustomobject]$obj = @{
+				Data = $all_container_registries;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_container_registries = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Container registry",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureContainersEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

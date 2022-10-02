@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAzSecCenterPolicyForSubscription{
-    <#
+function Get-MonkeyAzSecCenterPolicyForSubscription {
+<#
         .SYNOPSIS
 		Plugin to get information about policies applied to subscription
 
@@ -37,60 +37,68 @@ Function Get-MonkeyAzSecCenterPolicyForSubscription{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Security Portal Auth
-        $SecPortalAuth = $O365Object.auth_tokens.SecurityPortal
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Subscription Policies", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureSecPoliciesInfo');
-        }
-        Write-Information @msg
-        #Get Subscription ID
-        $subscriptionID = $O365Object.current_subscription.subscriptionId
-        #Construct URI
-        $URI = ("{0}Policy/getPreventionPolicy?subscriptionIdOrMgName={1}&isMg=false" -f $O365Object.Environment.Security, $subscriptionID)
-        $params = @{
-            Environment = $Environment;
-            Authentication = $SecPortalAuth;
-            OwnQuery = $URI;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-        $azure_subscription_policies = Get-MonkeyRMObject @params
-    }
-    End{
-        if($azure_subscription_policies -is [System.Object]){
-            $azure_subscription_policies.PSObject.TypeNames.Insert(0,'Monkey365.Azure.subscription.policies')
-            [pscustomobject]$obj = @{
-                Data = $azure_subscription_policies
-            }
-            $returnData.az_subscription_policies = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Subscription Policies", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureKeySubscriptionPoliciesEmptyResponse');
-            }
-            Write-Warning @msg
-        }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00036";
+			Provider = "Azure";
+			Title = "Plugin to get information about subscription policies";
+			Group = @("DefenderForCloud");
+			ServiceName = "Azure Subscription policies";
+			PluginName = "Get-MonkeyAzSecCenterPolicyForSubscription";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Security Portal Auth
+		$SecPortalAuth = $O365Object.auth_tokens.SecurityPortal
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure Subscription Policies",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureSecPoliciesInfo');
+		}
+		Write-Information @msg
+		#Get Subscription ID
+		$subscriptionID = $O365Object.current_subscription.subscriptionId
+		#Construct URI
+		$URI = ("{0}Policy/getPreventionPolicy?subscriptionIdOrMgName={1}&isMg=false" -f $O365Object.Environment.Security,$subscriptionID)
+		$params = @{
+			Environment = $Environment;
+			Authentication = $SecPortalAuth;
+			OwnQuery = $URI;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+		$azure_subscription_policies = Get-MonkeyRMObject @params
+	}
+	end {
+		if ($azure_subscription_policies -is [System.Object]) {
+			$azure_subscription_policies.PSObject.TypeNames.Insert(0,'Monkey365.Azure.subscription.policies')
+			[pscustomobject]$obj = @{
+				Data = $azure_subscription_policies;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_subscription_policies = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Subscription Policies",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureKeySubscriptionPoliciesEmptyResponse');
+			}
+			Write-Warning @msg
+		}
 
-    }
+	}
 }

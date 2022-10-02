@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOMailBoxRetentionPolicy{
-    <#
+function Get-MonkeyEXOMailBoxRetentionPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about mailbox retention policies in Exchange Online
 
@@ -37,46 +37,57 @@ Function Get-MonkeyEXOMailBoxRetentionPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $retentionpolicy = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online mailbox retention policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoMailboxRetentionInfo');
-            }
-            Write-Information @msg
-            $retentionpolicy = Get-ExoMonkeyRetentionPolicy
-        }
-    }
-    End{
-        if($null -ne $retentionpolicy){
-            $retentionpolicy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.retentionpolicy')
-            [pscustomobject]$obj = @{
-                Data = $retentionpolicy
-            }
-            $returnData.o365_exo_mbox_retention_policy = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online mailbox retention policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoMailboxRetentionPolicyEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$retentionpolicy = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0021";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about mailbox retention policies in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online mailbox retention policies";
+			PluginName = "Get-MonkeyEXOMailBoxRetentionPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online mailbox retention policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoMailboxRetentionInfo');
+			}
+			Write-Information @msg
+			$retentionpolicy = Get-ExoMonkeyRetentionPolicy
+		}
+	}
+	end {
+		if ($null -ne $retentionpolicy) {
+			$retentionpolicy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.retentionpolicy')
+			[pscustomobject]$obj = @{
+				Data = $retentionpolicy;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_mbox_retention_policy = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online mailbox retention policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoMailboxRetentionPolicyEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

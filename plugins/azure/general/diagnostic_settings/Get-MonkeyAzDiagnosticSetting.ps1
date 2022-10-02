@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAzDiagnosticSetting{
-    <#
+function Get-MonkeyAzDiagnosticSetting {
+<#
         .SYNOPSIS
 		Plugin to get diagnostic settings for each resource in Azure
 
@@ -37,92 +37,104 @@ Function Get-MonkeyAzDiagnosticSetting{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        $all_diag_settings = @()
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Diagnostic settings", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureDiagSettingsInfo');
-        }
-        Write-Information @msg
-        foreach($resource in $O365Object.all_resources){
-            $params = @{
-                objectId = $resource.id;
-                resource = "providers/microsoft.insights/diagnosticSettings";
-                api_version = "2017-05-01-preview";
-            }
-            $diag_settings = Get-MonkeyRmObjectById @params
-            if($diag_settings){
-                $resource | Add-Member -type NoteProperty -name diagnostic_settings -value $diag_settings
-            }
-            else{
-                $resource | Add-Member -type NoteProperty -name diagnostic_settings -value $null
-            }
-            $all_diag_settings+=$resource
-        }
-        #Check if diagnostic settings captures appropriate categories
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Diagnostic settings global configuration", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureDiagGlobalSettingsInfo');
-        }
-        Write-Information @msg
-        $uri = ('/subscriptions/{0}' -f $O365Object.current_subscription.subscriptionId)
-        $params = @{
-            objectId = $uri;
-            resource = "providers/microsoft.insights/diagnosticSettings";
-            api_version = "2017-05-01-preview";
-        }
-        $diag_global_settings = Get-MonkeyRmObjectById @params
-    }
-    End{
-        if($all_diag_settings){
-            $all_diag_settings.PSObject.TypeNames.Insert(0,'Monkey365.Azure.DiagnosticSettings')
-            [pscustomobject]$obj = @{
-                Data = $all_diag_settings
-            }
-            $returnData.az_diagnostic_settings = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Diagnostic Settings", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureDiagSettingsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-        if($diag_global_settings){
-            $diag_global_settings.PSObject.TypeNames.Insert(0,'Monkey365.Azure.DiagnosticSettingsGlobalConfig')
-            [pscustomobject]$obj = @{
-                Data = $diag_global_settings
-            }
-            $returnData.az_diagnostic_settings_config = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Diagnostic Settings global configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureDiagSettingsGlobalEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00018";
+			Provider = "Azure";
+			Title = "Plugin to get diagnostic settings for Azure resources";
+			Group = @("DiagnosticSettings","General");
+			ServiceName = "Azure Diagnostic Settings";
+			PluginName = "Get-MonkeyAzDiagnosticSetting";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Import Localized data
+		$LocalizedDataParams = $O365Object.LocalizedDataParams
+		Import-LocalizedData @LocalizedDataParams;
+		$all_diag_settings = @()
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Diagnostic settings",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureDiagSettingsInfo');
+		}
+		Write-Information @msg
+		foreach ($resource in $O365Object.all_resources) {
+			$params = @{
+				objectId = $resource.id;
+				resource = "providers/microsoft.insights/diagnosticSettings";
+				api_version = "2017-05-01-preview";
+			}
+			$diag_settings = Get-MonkeyRmObjectById @params
+			if ($diag_settings) {
+				$resource | Add-Member -Type NoteProperty -Name diagnostic_settings -Value $diag_settings
+			}
+			else {
+				$resource | Add-Member -Type NoteProperty -Name diagnostic_settings -Value $null
+			}
+			$all_diag_settings += $resource
+		}
+		#Check if diagnostic settings captures appropriate categories
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Diagnostic settings global configuration",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureDiagGlobalSettingsInfo');
+		}
+		Write-Information @msg
+		$uri = ('/subscriptions/{0}' -f $O365Object.current_subscription.subscriptionId)
+		$params = @{
+			objectId = $uri;
+			resource = "providers/microsoft.insights/diagnosticSettings";
+			api_version = "2017-05-01-preview";
+		}
+		$diag_global_settings = Get-MonkeyRmObjectById @params
+	}
+	end {
+		if ($all_diag_settings) {
+			$all_diag_settings.PSObject.TypeNames.Insert(0,'Monkey365.Azure.DiagnosticSettings')
+			[pscustomobject]$obj = @{
+				Data = $all_diag_settings;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_diagnostic_settings = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Diagnostic Settings",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureDiagSettingsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+		if ($diag_global_settings) {
+			$diag_global_settings.PSObject.TypeNames.Insert(0,'Monkey365.Azure.DiagnosticSettingsGlobalConfig')
+			[pscustomobject]$obj = @{
+				Data = $diag_global_settings;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_diagnostic_settings_config = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Diagnostic Settings global configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureDiagSettingsGlobalEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

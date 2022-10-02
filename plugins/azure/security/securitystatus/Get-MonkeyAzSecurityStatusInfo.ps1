@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAzSecurityStatusInfo{
-    <#
+function Get-MonkeyAzSecurityStatusInfo {
+<#
         .SYNOPSIS
 		Plugin to get information about Security Statuses from Azure
 
@@ -37,73 +37,81 @@ Function Get-MonkeyAzSecurityStatusInfo{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure RM Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get config
-        $AzureSecStatus = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureSecurityStatuses"} | Select-Object -ExpandProperty resource
-        #Get resource groups
-        $resource_groups = $O365Object.ResourceGroups
-        #set array
-        $security_statuses = @()
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Security Status", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureSecStatusInfo');
-        }
-        Write-Information @msg
-        #Get all Security Status
-        $params = @{
-            Authentication = $rm_auth;
-            Provider = $AzureSecStatus.provider;
-            ObjectType = "securityStatuses";
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-            APIVersion = $AzureSecStatus.api_version;
-        }
-        $AllStatus = Get-MonkeyRMObject @params
-        #iterate over all resource_groups
-        foreach($resource_group in $resource_groups){
-            $matched = $AllStatus | Where-Object {$_.id -like ("{0}*" -f $resource_group.id)}
-            if($matched){
-                #Add to array
-                $security_statuses+=$matched
-            }
-        }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00038";
+			Provider = "Azure";
+			Title = "Plugin to get information about Security Statuses from Azure";
+			Group = @("Subscription","DefenderForCloud");
+			ServiceName = "Azure Security Statuses";
+			PluginName = "Get-MonkeyAzSecurityStatusInfo";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure RM Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get config
+		$AzureSecStatus = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureSecurityStatuses" } | Select-Object -ExpandProperty resource
+		#Get resource groups
+		$resource_groups = $O365Object.ResourceGroups
+		#set array
+		$security_statuses = @()
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure Security Status",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureSecStatusInfo');
+		}
+		Write-Information @msg
+		#Get all Security Status
+		$params = @{
+			Authentication = $rm_auth;
+			Provider = $AzureSecStatus.Provider;
+			ObjectType = "securityStatuses";
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+			APIVersion = $AzureSecStatus.api_version;
+		}
+		$AllStatus = Get-MonkeyRMObject @params
+		#iterate over all resource_groups
+		foreach ($resource_group in $resource_groups) {
+			$matched = $AllStatus | Where-Object { $_.id -like ("{0}*" -f $resource_group.id) }
+			if ($matched) {
+				#Add to array
+				$security_statuses += $matched
+			}
+		}
 
-    }
-    End{
-        if($security_statuses){
-            $security_statuses.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SecurityStatus')
-            [pscustomobject]$obj = @{
-                Data = $security_statuses
-            }
-            $returnData.az_security_status = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Status", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureKeySecStatusEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	}
+	end {
+		if ($security_statuses) {
+			$security_statuses.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SecurityStatus')
+			[pscustomobject]$obj = @{
+				Data = $security_statuses;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_security_status = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Status",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureKeySecStatusEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

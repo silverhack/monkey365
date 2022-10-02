@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOOrgConfig{
-    <#
+function Get-MonkeyEXOOrgConfig {
+<#
         .SYNOPSIS
 		Plugin to get information about organisation config in Exchange Online
 
@@ -37,46 +37,57 @@ Function Get-MonkeyEXOOrgConfig{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $exo_org_config = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online organisation configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoOrgConfigInfo');
-            }
-            Write-Information @msg
-            $exo_org_config = Get-ExoMonkeyOrganizationConfig
-        }
-    }
-    End{
-        if($null -ne $exo_org_config){
-            $exo_org_config.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.OrganisationConfig')
-            [pscustomobject]$obj = @{
-                Data = $exo_org_config
-            }
-            $returnData.o365_exo_org_config = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online organisation configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoOrgConfigEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$exo_org_config = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0025";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about organisation config in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online organisation config";
+			PluginName = "Get-MonkeyEXOOrgConfig";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online organisation configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoOrgConfigInfo');
+			}
+			Write-Information @msg
+			$exo_org_config = Get-ExoMonkeyOrganizationConfig
+		}
+	}
+	end {
+		if ($null -ne $exo_org_config) {
+			$exo_org_config.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.OrganisationConfig')
+			[pscustomobject]$obj = @{
+				Data = $exo_org_config;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_org_config = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online organisation configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoOrgConfigEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

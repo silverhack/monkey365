@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADFeatureEnabled{
-    <#
+function Get-MonkeyADFeatureEnabled {
+<#
         .SYNOPSIS
 		Plugin to extract information about existing features enabled in Azure AAD
 
@@ -37,101 +37,112 @@ Function Get-MonkeyADFeatureEnabled{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $features = $null
-        #Excluded auth
-        $ExcludedAuths = @("certificate_credentials","client_credentials")
-        #Getting Environment
-        $Environment = $O365Object.Environment
-        #Get Graph Authentication
-        $AADAuth = $O365Object.auth_tokens.Graph
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD Features", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureGraphADFeatures');
-        }
-        Write-Information @msg
-        $allowed_features = @(
-            'AllowEmailVerifiedUsers',
-            'AllowInvitations',
-            'AllowMemberUsersToInviteOthersAsMembers',
-            'AllowUsersToChangeTheirDisplayName',
-            'B2CFeature',
-            'BlockAllTenantAuth',
-            'ConsentedForMigrationToPublicCloud',
-            'EnableExchangeDualWrite',
-            'EnableHiddenMembership',
-            'EnableSharedEmailDomainApis',
-            'EnableWindowsLegacyCredentials',
-            'EnableWindowsSupplementalCredentials',
-            'ElevatedGuestsAccessEnabled',
-            'ExchangeDualWriteUsersV1',
-            'GuestsCanInviteOthersEnabled',
-            'InvitationsEnabled',
-            'LargeScaleTenant',
-            'TestTenant',
-            'USGovTenant',
-            'DisableOnPremisesWindowsLegacyCredentialsSync',
-            'DisableOnPremisesWindowsSupplementalCredentialsSync',
-            'RestrictPublicNetworkAccess',
-            'AutoApproveSameTenantRequests',
-            'RedirectPpeUsersToMsaInt'
-        )
-        if($ExcludedAuths -contains $O365Object.AuthType){
-            Write-Warning ("This request is not allowed with {0} authentication flow" -f $O365Object.AuthType)
-        }
-    }
-    Process{
-        $features = @{}
-        $OwnQuery = ("{0}/myorganization/isDirectoryFeatureEnabled?api-version=1.61-internal" -f $Environment.Graph)
-        if($null -ne $Environment -and $null -ne $AADAuth){
-            foreach($feature in $allowed_features){
-                $postData = @{
-                    directoryFeature = $feature
-                } | ConvertTo-Json
-                $params = @{
-                    Authentication = $AADAuth;
-                    OwnQuery = $OwnQuery;
-                    Data = $postData;
-                    Environment = $Environment;
-                    ContentType = 'application/json';
-                    Method = "POST";
-                    returnRawResponse = $true;
-                }
-                $returned_feature = Get-MonkeyGraphObject @params
-                if($null -ne $returned_feature -and $returned_feature.psobject.Properties.name.Contains('value')){
-                    $features.Add($feature,$returned_feature.Value)
-                }
-                #Close response
-                $returned_feature.Close()
-                $returned_feature.Dispose()
-            }
-        }
-    }
-    End{
-        if($null -ne $features){
-            $features.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.FeatureInfo')
-            [pscustomobject]$obj = @{
-                Data = $features
-            }
-            $returnData.aad_enabled_features = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD Features", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureADFeaturesEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$features = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0004";
+			Provider = "AzureAD";
+			Title = "Plugin to extract information about existing features enabled in Azure AAD";
+			Group = @("AzureAD");
+			ServiceName = "Azure AD Features";
+			PluginName = "Get-MonkeyADFeatureEnabled";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Excluded auth
+		$ExcludedAuths = @("certificate_credentials","client_credentials")
+		#Getting Environment
+		$Environment = $O365Object.Environment
+		#Get Graph Authentication
+		$AADAuth = $O365Object.auth_tokens.Graph
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD Features",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureGraphADFeatures');
+		}
+		Write-Information @msg
+		$allowed_features = @(
+			'AllowEmailVerifiedUsers',
+			'AllowInvitations',
+			'AllowMemberUsersToInviteOthersAsMembers',
+			'AllowUsersToChangeTheirDisplayName',
+			'B2CFeature',
+			'BlockAllTenantAuth',
+			'ConsentedForMigrationToPublicCloud',
+			'EnableExchangeDualWrite',
+			'EnableHiddenMembership',
+			'EnableSharedEmailDomainApis',
+			'EnableWindowsLegacyCredentials',
+			'EnableWindowsSupplementalCredentials',
+			'ElevatedGuestsAccessEnabled',
+			'ExchangeDualWriteUsersV1',
+			'GuestsCanInviteOthersEnabled',
+			'InvitationsEnabled',
+			'LargeScaleTenant',
+			'TestTenant',
+			'USGovTenant',
+			'DisableOnPremisesWindowsLegacyCredentialsSync',
+			'DisableOnPremisesWindowsSupplementalCredentialsSync',
+			'RestrictPublicNetworkAccess',
+			'AutoApproveSameTenantRequests',
+			'RedirectPpeUsersToMsaInt'
+		)
+		if ($ExcludedAuths -contains $O365Object.AuthType) {
+			Write-Warning ("This request is not allowed with {0} authentication flow" -f $O365Object.AuthType)
+		}
+	}
+	process {
+		$features = @{}
+		$OwnQuery = ("{0}/myorganization/isDirectoryFeatureEnabled?api-version=1.61-internal" -f $Environment.Graph)
+		if ($null -ne $Environment -and $null -ne $AADAuth) {
+			foreach ($feature in $allowed_features) {
+				$postData = @{
+					directoryFeature = $feature
+				} | ConvertTo-Json
+				$params = @{
+					Authentication = $AADAuth;
+					OwnQuery = $OwnQuery;
+					Data = $postData;
+					Environment = $Environment;
+					ContentType = 'application/json';
+					Method = "POST";
+					returnRawResponse = $true;
+				}
+				$returned_feature = Get-MonkeyGraphObject @params
+				if ($null -ne $returned_feature -and $returned_feature.PSObject.Properties.Name.Contains('value')) {
+					$features.Add($feature,$returned_feature.value)
+				}
+				#Close response
+				$returned_feature.Close()
+				$returned_feature.Dispose()
+			}
+		}
+	}
+	end {
+		if ($null -ne $features) {
+			$features.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.FeatureInfo')
+			[pscustomobject]$obj = @{
+				Data = $features;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_enabled_features = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD Features",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureADFeaturesEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

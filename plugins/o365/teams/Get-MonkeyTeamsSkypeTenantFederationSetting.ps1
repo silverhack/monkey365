@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyTeamsSkypeTenantFederationSetting{
-    <#
+function Get-MonkeyTeamsSkypeTenantFederationSetting {
+<#
         .SYNOPSIS
 		Plugin to get information about Teams Tenant federation settings (Skype)
 
@@ -37,62 +37,73 @@ Function Get-MonkeyTeamsSkypeTenantFederationSetting{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        #Getting environment
-        $Environment = $O365Object.Environment
-        #Get Access Token from Teams
-        $access_token = $O365Object.auth_tokens.Teams
-        $fed_settings= $null
-    }
-    Process{
-        if($null -ne $access_token){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft 365 Teams: Skype tenant federation settings", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsTenantFederationSettings');
-            }
-            Write-Information @msg
-            if($null -ne $O365Object.Tenant.MyDomain.id){
-                $domain = $O365Object.Tenant.MyDomain.id
-            }
-            else{
-                $domain = 'common'
-            }
-            $params = @{
-                Authentication = $access_token;
-                InternalPath = 'SkypePolicy';
-                ObjectType = "configurations/TenantFederationSettings";
-                AdminDomain = $domain;
-                Environment = $Environment;
-                Method = "GET";
-            }
-            $fed_settings = Get-TeamsObject @params
-        }
-    }
-    End{
-        if($fed_settings){
-            $fed_settings.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Skype.FederationSettings')
-            [pscustomobject]$obj = @{
-                Data = $fed_settings
-            }
-            $returnData.o365_teams_skype_federation_settings = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Skype tenant federation settings", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsTenantFederationSettingsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "teams10";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about Teams Tenant federation settings (Skype)";
+			Group = @("MicrosoftTeams");
+			ServiceName = "Microsoft Teams Skype Tenant Federation Settings";
+			PluginName = "Get-MonkeyTeamsSkypeTenantFederationSetting";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Getting environment
+		$Environment = $O365Object.Environment
+		#Get Access Token from Teams
+		$access_token = $O365Object.auth_tokens.Teams
+		$fed_settings = $null
+	}
+	process {
+		if ($null -ne $access_token) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft 365 Teams: Skype tenant federation settings",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsTenantFederationSettings');
+			}
+			Write-Information @msg
+			if ($null -ne $O365Object.Tenant.MyDomain.id) {
+				$domain = $O365Object.Tenant.MyDomain.id
+			}
+			else {
+				$domain = 'common'
+			}
+			$params = @{
+				Authentication = $access_token;
+				InternalPath = 'SkypePolicy';
+				ObjectType = "configurations/TenantFederationSettings";
+				AdminDomain = $domain;
+				Environment = $Environment;
+				Method = "GET";
+			}
+			$fed_settings = Get-TeamsObject @params
+		}
+	}
+	end {
+		if ($fed_settings) {
+			$fed_settings.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Skype.FederationSettings')
+			[pscustomobject]$obj = @{
+				Data = $fed_settings;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_teams_skype_federation_settings = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Skype tenant federation settings",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsTenantFederationSettingsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

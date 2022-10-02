@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADRoamingInfo{
-    <#
+function Get-MonkeyADRoamingInfo {
+<#
         .SYNOPSIS
 		Plugin to get roaming properties from Azure AD
 
@@ -37,52 +37,63 @@ Function Get-MonkeyADRoamingInfo{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $AADAuth = $O365Object.auth_tokens.AzurePortal
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD Roaming properties", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePortalRoamingInfo');
-        }
-        Write-Information @msg
-        #Get Roaming Info
-        $params = @{
-            Authentication = $AADAuth;
-            Query = "RoamingSettings";
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-        $ad_roaming_properties = Get-MonkeyAzurePortalObject @params
-    }
-    End{
-        if ($ad_roaming_properties){
-            $ad_roaming_properties.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.roaming.properties')
-            [pscustomobject]$obj = @{
-                Data = $ad_roaming_properties
-            }
-            $returnData.aad_roaming_properties = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD Roaming properties", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalRoamingEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$Environment = $O365Object.Environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0034";
+			Provider = "AzureAD";
+			Title = "Plugin to get roaming properties from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD Roaming properties";
+			PluginName = "Get-MonkeyADRoamingInfo";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Azure Active Directory Auth
+		$AADAuth = $O365Object.auth_tokens.AzurePortal
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD Roaming properties",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePortalRoamingInfo');
+		}
+		Write-Information @msg
+		#Get Roaming Info
+		$params = @{
+			Authentication = $AADAuth;
+			Query = "RoamingSettings";
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+		$ad_roaming_properties = Get-MonkeyAzurePortalObject @params
+	}
+	end {
+		if ($ad_roaming_properties) {
+			$ad_roaming_properties.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.roaming.properties')
+			[pscustomobject]$obj = @{
+				Data = $ad_roaming_properties;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_roaming_properties = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD Roaming properties",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalRoamingEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

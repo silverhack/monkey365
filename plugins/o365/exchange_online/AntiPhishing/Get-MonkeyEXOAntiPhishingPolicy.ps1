@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOAntiPhishingPolicy{
-    <#
+function Get-MonkeyEXOAntiPhishingPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about antiphishing policy from Exchange Online
 
@@ -37,47 +37,58 @@ Function Get-MonkeyEXOAntiPhishingPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $PhishPolicy = $null;
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($null -ne $exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online AntiPhishing policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoAntiPhishPolicyInfo');
-            }
-            Write-Information @msg
-            #Enumerate Phishing Policy
-            $PhishPolicy = Get-AntiPhishingInfo
-        }
-    }
-    End{
-        if($PhishPolicy){
-            $PhishPolicy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.PhishPolicy')
-            [pscustomobject]$obj = @{
-                Data = $PhishPolicy
-            }
-            $returnData.o365_exo_anti_phishing_info = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online AntiPhishing policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoAntiPhishPolicyEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$PhishPolicy = $null;
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0002";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about antiphishing policy from Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online Phishing Info";
+			PluginName = "Get-MonkeyEXOAntiPhishingPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($null -ne $exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online AntiPhishing policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoAntiPhishPolicyInfo');
+			}
+			Write-Information @msg
+			#Enumerate Phishing Policy
+			$PhishPolicy = Get-AntiPhishingInfo
+		}
+	}
+	end {
+		if ($PhishPolicy) {
+			$PhishPolicy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.PhishPolicy')
+			[pscustomobject]$obj = @{
+				Data = $PhishPolicy;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_anti_phishing_info = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online AntiPhishing policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoAntiPhishPolicyEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

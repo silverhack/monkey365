@@ -55,6 +55,8 @@ Function Invoke-AzureADScanner{
                 $O365Object.userPermissions = $user_permissions
             }
         }
+        #Get Azure AD plugins
+        $azure_plugins = $O365Object.Plugins | Select-Object -ExpandProperty File
         #Get Execution Info
         $O365Object.executionInfo = Get-ExecutionInfo
         #Invoke new scan
@@ -67,7 +69,7 @@ Function Invoke-AzureADScanner{
                 'returnData' = $Script:returnData;
             }
             $params = @{
-                ImportPlugins = $O365Object.Plugins;
+                ImportPlugins = $azure_plugins;
                 ImportVariables = $vars;
                 ImportCommands = $O365Object.libutils;
                 ImportModules = $O365Object.runspaces_modules;

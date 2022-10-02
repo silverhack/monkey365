@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAADRMConfig{
-    <#
+function Get-MonkeyAADRMConfig {
+<#
         .SYNOPSIS
 		Plugin to get information about AADRM config
 
@@ -37,61 +37,72 @@ Function Get-MonkeyAADRMConfig{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Get Access Token from AADRM
-        $access_token = $O365Object.auth_tokens.AADRM
-        #Get AADRM Url
-        $url = $O365Object.Environment.aadrm_service_locator
-        if($null -ne $access_token){
-            #Set Authorization Header
-            $AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
-            $requestHeader = @{"Authorization" = $AuthHeader}
-        }
-    }
-    Process{
-        if($requestHeader -and $url){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Office 365 Rights Management: Configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMConfig');
-            }
-            Write-Information @msg
-            $url = ("{0}/Configuration" -f $url)
-            $params = @{
-                Url = $url;
-                Method = 'Get';
-                Content_Type = 'application/json; charset=utf-8';
-                Headers = $requestHeader;
-                disableSSLVerification = $true;
-            }
-            #call AADRM endpoint
-            $aadrm_config = Invoke-UrlRequest @params
-        }
-    }
-    End{
-        if($aadrm_config){
-            $aadrm_config.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.Config')
-            [pscustomobject]$obj = @{
-                Data = $aadrm_config
-            }
-            $returnData.o365_aadrm_config = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: Configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMConfigEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Get Access Token from AADRM
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aadrm01";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about AADRM config";
+			Group = @("IRM");
+			ServiceName = "Azure Rights Management";
+			PluginName = "Get-MonkeyAADRMConfig";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$access_token = $O365Object.auth_tokens.AADRM
+		#Get AADRM Url
+		$url = $O365Object.Environment.aadrm_service_locator
+		if ($null -ne $access_token) {
+			#Set Authorization Header
+			$AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
+			$requestHeader = @{ "Authorization" = $AuthHeader }
+		}
+	}
+	process {
+		if ($requestHeader -and $url) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Office 365 Rights Management: Configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMConfig');
+			}
+			Write-Information @msg
+			$url = ("{0}/Configuration" -f $url)
+			$params = @{
+				url = $url;
+				Method = 'Get';
+				Content_Type = 'application/json; charset=utf-8';
+				Headers = $requestHeader;
+				disableSSLVerification = $true;
+			}
+			#call AADRM endpoint
+			$aadrm_config = Invoke-UrlRequest @params
+		}
+	}
+	end {
+		if ($aadrm_config) {
+			$aadrm_config.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.Config')
+			[pscustomobject]$obj = @{
+				Data = $aadrm_config;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_aadrm_config = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: Configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMConfigEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

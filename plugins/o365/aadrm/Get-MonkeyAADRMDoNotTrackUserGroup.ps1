@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAADRMDoNotTrackUserGroup{
-    <#
+function Get-MonkeyAADRMDoNotTrackUserGroup {
+<#
         .SYNOPSIS
 		Plugin to get information about AADRM doNotTrack
 
@@ -37,70 +37,81 @@ Function Get-MonkeyAADRMDoNotTrackUserGroup{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Get Access Token from AADRM
-        $access_token = $O365Object.auth_tokens.AADRM
-        #Get AADRM Url
-        $url = $O365Object.Environment.aadrm_service_locator
-        if($null -ne $access_token){
-            #Set Authorization Header
-            $AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
-            $requestHeader = @{"Authorization" = $AuthHeader}
-        }
-        #Create AADRM object
-        $aadrm_feature_status = New-Object -TypeName PSCustomObject
-    }
-    Process{
-        if($requestHeader -and $url){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Office 365 Rights Management: DoNotTrack feature", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMDoNotTrackConfig');
-            }
-            Write-Information @msg
-            $url = ("{0}/DoNotTrackUserGroup" -f $url)
-            $params = @{
-                Url = $url;
-                Method = 'Get';
-                Content_Type = 'application/json; charset=utf-8';
-                Headers = $requestHeader;
-                disableSSLVerification = $true;
-            }
-            #call AADRM endpoint
-            $grp_not_track = Invoke-UrlRequest @params
-            if([string]::IsNullOrEmpty($grp_not_track)){
-                $aadrm_feature_status | Add-Member -type NoteProperty -name status -value "NotConfigured"
-            }
-            else{
-                $aadrm_feature_status | Add-Member -type NoteProperty -name status -value $grp_not_track
-            }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Get Access Token from AADRM
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aadrm04";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about AADRM doNotTrack";
+			Group = @("IRM");
+			ServiceName = "Azure Rights Management";
+			PluginName = "Get-MonkeyAADRMDoNotTrackUserGroup";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$access_token = $O365Object.auth_tokens.AADRM
+		#Get AADRM Url
+		$url = $O365Object.Environment.aadrm_service_locator
+		if ($null -ne $access_token) {
+			#Set Authorization Header
+			$AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
+			$requestHeader = @{ "Authorization" = $AuthHeader }
+		}
+		#Create AADRM object
+		$aadrm_feature_status = New-Object -TypeName PSCustomObject
+	}
+	process {
+		if ($requestHeader -and $url) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Office 365 Rights Management: DoNotTrack feature",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMDoNotTrackConfig');
+			}
+			Write-Information @msg
+			$url = ("{0}/DoNotTrackUserGroup" -f $url)
+			$params = @{
+				url = $url;
+				Method = 'Get';
+				Content_Type = 'application/json; charset=utf-8';
+				Headers = $requestHeader;
+				disableSSLVerification = $true;
+			}
+			#call AADRM endpoint
+			$grp_not_track = Invoke-UrlRequest @params
+			if ([string]::IsNullOrEmpty($grp_not_track)) {
+				$aadrm_feature_status | Add-Member -Type NoteProperty -Name status -Value "NotConfigured"
+			}
+			else {
+				$aadrm_feature_status | Add-Member -Type NoteProperty -Name status -Value $grp_not_track
+			}
 
-        }
-    }
-    End{
-        if($aadrm_feature_status){
-            $aadrm_feature_status.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.AADRMDoNotTrack')
-            [pscustomobject]$obj = @{
-                Data = $aadrm_feature_status
-            }
-            $returnData.o365_aadrm_donot_track = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: DoNotTrack feature", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMDoNotTrackEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+		}
+	}
+	end {
+		if ($aadrm_feature_status) {
+			$aadrm_feature_status.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.AADRMDoNotTrack')
+			[pscustomobject]$obj = @{
+				Data = $aadrm_feature_status;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_aadrm_donot_track = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: DoNotTrack feature",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMDoNotTrackEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

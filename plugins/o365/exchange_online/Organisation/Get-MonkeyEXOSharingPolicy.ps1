@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOSharingPolicy{
-    <#
+function Get-MonkeyEXOSharingPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about sharing policy in Exchange Online
 
@@ -37,46 +37,57 @@ Function Get-MonkeyEXOSharingPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $exo_sharing_policy = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online sharing policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoSharingPolicyInfo');
-            }
-            Write-Information @msg
-            $exo_sharing_policy = Get-ExoMonkeySharingPolicy
-        }
-    }
-    End{
-        if($null -ne $exo_sharing_policy){
-            $exo_sharing_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.SharingPolicy')
-            [pscustomobject]$obj = @{
-                Data = $exo_sharing_policy
-            }
-            $returnData.o365_exo_sharing_policy = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online sharing policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoSharingPolicyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$exo_sharing_policy = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0028";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about sharing policy in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online Sharing Policy";
+			PluginName = "Get-MonkeyEXOSharingPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online sharing policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoSharingPolicyInfo');
+			}
+			Write-Information @msg
+			$exo_sharing_policy = Get-ExoMonkeySharingPolicy
+		}
+	}
+	end {
+		if ($null -ne $exo_sharing_policy) {
+			$exo_sharing_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.SharingPolicy')
+			[pscustomobject]$obj = @{
+				Data = $exo_sharing_policy;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_sharing_policy = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online sharing policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoSharingPolicyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

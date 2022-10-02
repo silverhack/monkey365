@@ -49,8 +49,8 @@ Function Get-RulesFromDataset{
         $all_json_rules = @()
         $all_files = @()
         $ruleset_ = (Get-Content $rulefile -Raw) | ConvertFrom-Json
-        if($null -ne $ruleset_.psobject.Properties.Item('partials')){
-            foreach($element in $ruleset_.partials.GetEnumerator()){
+        if($null -ne $ruleset_.psobject.Properties.Item('extends')){
+            foreach($element in $ruleset_.extends.GetEnumerator()){
                 $msg = @{
                     MessageData = ("Getting rules from {0}" -f $element)
                     callStack = (Get-PSCallStack | Select-Object -First 1);

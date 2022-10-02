@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyLegacyO365CompanyInformation{
-    <#
+function Get-MonkeyLegacyO365CompanyInformation {
+<#
         .SYNOPSIS
 		Plugin to get information about company information using legacy O365 API
 
@@ -37,43 +37,54 @@ Function Get-MonkeyLegacyO365CompanyInformation{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        #Begin Block
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Begin Block
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aadl001";
+			Provider = "AzureAD";
+			Title = "Plugin to get information about company information using legacy O365 API";
+			Group = @("LegacyO365API");
+			ServiceName = "Azure AD Company";
+			PluginName = "Get-MonkeyLegacyO365CompanyInformation";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
 
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Company information", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('LegacyCompanyInfo');
-        }
-        Write-Information @msg
-        $company_information = Get-MonkeyMsolCompanyInformation
-    }
-    End{
-        if($company_information){
-            $company_information.PSObject.TypeNames.Insert(0,'Monkey365.Legacy.CompanyInformation')
-            [pscustomobject]$obj = @{
-                Data = $company_information
-            }
-            $returnData.o365_company_information = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Company information", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('LegacyCompanyInformationEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Company information",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('LegacyCompanyInfo');
+		}
+		Write-Information @msg
+		$company_information = Get-MonkeyMsolCompanyInformation
+	}
+	end {
+		if ($company_information) {
+			$company_information.PSObject.TypeNames.Insert(0,'Monkey365.Legacy.CompanyInformation')
+			[pscustomobject]$obj = @{
+				Data = $company_information;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_company_information = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Company information",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('LegacyCompanyInformationEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

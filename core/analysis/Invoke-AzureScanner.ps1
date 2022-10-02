@@ -34,24 +34,26 @@ Function Invoke-AzureScanner{
             https://github.com/silverhack/monkey365
     #>
 
-    if($null -ne $O365Object.subscriptions){
+    if($null -ne $O365Object.subscriptions -and $null -ne $O365Object.Plugins){
         #Set count to Zero
         $count = 0;
-        foreach($subscription in $O365Object.subscriptions){
+        #Get Azure plugins
+        $azure_plugins = $O365Object.Plugins | Select-Object -ExpandProperty File
+        foreach($azSubscription in $O365Object.subscriptions){
             $msg = @{
-                MessageData = ($message.SubscriptionWorkingMessage -f $subscription.displayName);
+                MessageData = ($message.SubscriptionWorkingMessage -f $azSubscription.displayName);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'info';
                 InformationAction = $InformationAction;
                 Tags = @('AzureSubscriptionScanner');
             }
             Write-Information @msg
-            #set script vars
-            Set-Variable subscription -Value $subscription -Scope Script -Force
-            Set-Variable tenant -Value $subscription.Tenant -Scope Script -Force
-            Set-Variable tenantID -Value $subscription.TenantID -Scope Script -Force
             #Add current subscription to O365Object
-            $O365Object.current_subscription = $subscription
+            $O365Object.current_subscription = Resolve-AzureSubscription -subscription $azSubscription
+            #set script vars
+            Set-Variable subscription -Value $O365Object.current_subscription -Scope Script -Force
+            Set-Variable tenant -Value $O365Object.current_subscription.Tenant -Scope Script -Force
+            Set-Variable tenantID -Value $O365Object.current_subscription.TenantID -Scope Script -Force
             #Update authentication objects
             Update-MonkeyAuthObject -authObjects $Script:o365_connections -Force
             $O365Object.userPermissions = Get-MonkeyRBACMember -CurrentUser
@@ -60,7 +62,7 @@ Function Invoke-AzureScanner{
             #Get resources and resource groups
             if($null -ne $Script:o365_connections.ResourceManager -AND $null -ne $Script:subscription.SubscriptionId){
                 $msg = @{
-                    MessageData = ($message.SubscriptionResourcesMessage -f $subscription.displayName);
+                    MessageData = ($message.SubscriptionResourcesMessage -f $Script:subscription.displayName);
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'info';
                     InformationAction = $InformationAction;
@@ -83,6 +85,8 @@ Function Invoke-AzureScanner{
                 $all_resources = Get-MonkeyAzResource -resourceGroupNames $rg_names
                 if($all_resources){
                     $O365Object.all_resources = $all_resources
+                    #Check if should skip resources from being scanned
+                    Skip-MonkeyAzResource
                 }
             }
             #Check if should remove AAD plugins
@@ -118,9 +122,10 @@ Function Invoke-AzureScanner{
                 if($null -ne $new_aad_object){
                     Set-Variable ReturnData -Value $new_aad_object -Scope Script -Force
                     #remove Azure AD plugins
-                    $Plugins = $O365Object.Plugins | Where-Object {$_.FullName -notlike "*aad/graph*" -or $_.FullName -notlike "*aad/portal*"}
+                    $Plugins = $O365Object.Plugins | Where-Object {$_.File.FullName -notlike "*aad/graph*" -or $_.File.FullName -notlike "*aad/portal*"} | Select-Object -ExpandProperty File
                     if($Plugins){
-                        $O365Object.Plugins = $Plugins
+                        #$O365Object.Plugins = $Plugins
+                        $azure_plugins = $Plugins
                     }
                 }
                 else{
@@ -179,7 +184,7 @@ Function Invoke-AzureScanner{
 
             #Invoke new scan
             $params = @{
-                ImportPlugins = $O365Object.Plugins;
+                ImportPlugins = $azure_plugins;
                 ImportVariables = $vars;
                 ImportCommands = $O365Object.libutils;
                 ImportModules = $O365Object.runspaces_modules;

@@ -33,17 +33,24 @@ Function Test-isValidRule{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
     Param (
         [parameter(Mandatory=$true, HelpMessage="Rule object")]
         [Object]$Rule
     )
     $isvalid = $false;
     #Rule valid keys
-    $skeleton = @('issue_name','description','rationale','references', `
-                  'path','display_path','conditions', `
-                  'id_suffix')
-
+    $skeleton = @(
+        'issue_name',
+        'description',
+        'rationale',
+        'references',
+        'path',
+        'display_path',
+        'conditions',
+        'id_suffix'
+    )
     try{
         foreach ($key in $skeleton){
             if ($null -ne $Rule.psobject.Properties.Item($key)){

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOAttachmentPolicy{
-    <#
+function Get-MonkeyEXOAttachmentPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about safe attachment policy in Exchange Online
 
@@ -37,67 +37,78 @@ Function Get-MonkeyEXOAttachmentPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $attachment_policy = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($null -ne $exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online safe attachment policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoSafeAttachmentPolicyInfo');
-            }
-            Write-Information @msg
-            if($O365Object.ATPEnabled){
-                #Enumerate Safe attachment Policy
-                $attachment_policy = Get-SafeAttachmentInfo
-                if($null -eq $attachment_policy){
-                    $attachment_policy = @{
-                        isEnabled = $false
-                    }
-                }
-            }
-            else{
-                $msg = @{
-                    MessageData = ($message.O365ATPNotDetected -f $O365Object.Tenant.CompanyInfo.displayName);
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'warning';
-                    InformationAction = $InformationAction;
-                    Tags = @('ExoATPPolicyWarning');
-                }
-                Write-Information @msg
-                #Set to null
-                $attachment_policy = $null;
-                break
-            }
-        }
-    }
-    End{
-        if($attachment_policy){
-            $attachment_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.AttachmentPolicy')
-            [pscustomobject]$obj = @{
-                Data = $attachment_policy
-            }
-            $returnData.o365_exo_safe_attachment_info = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online safe attachment policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoSafeAttachmentPolicyEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$attachment_policy = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0006";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about safe attachment policy in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online Safe Attachment Policies";
+			PluginName = "Get-MonkeyEXOAttachmentPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($null -ne $exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online safe attachment policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoSafeAttachmentPolicyInfo');
+			}
+			Write-Information @msg
+			if ($O365Object.ATPEnabled) {
+				#Enumerate Safe attachment Policy
+				$attachment_policy = Get-SafeAttachmentInfo
+				if ($null -eq $attachment_policy) {
+					$attachment_policy = @{
+						isEnabled = $false
+					}
+				}
+			}
+			else {
+				$msg = @{
+					MessageData = ($message.O365ATPNotDetected -f $O365Object.Tenant.CompanyInfo.displayName);
+					callStack = (Get-PSCallStack | Select-Object -First 1);
+					logLevel = 'warning';
+					InformationAction = $InformationAction;
+					Tags = @('ExoATPPolicyWarning');
+				}
+				Write-Information @msg
+				#Set to null
+				$attachment_policy = $null;
+				break
+			}
+		}
+	}
+	end {
+		if ($attachment_policy) {
+			$attachment_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.AttachmentPolicy')
+			[pscustomobject]$obj = @{
+				Data = $attachment_policy;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_safe_attachment_info = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online safe attachment policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoSafeAttachmentPolicyEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

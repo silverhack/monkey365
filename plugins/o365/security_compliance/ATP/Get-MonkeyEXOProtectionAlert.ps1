@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOProtectionAlert{
-    <#
+function Get-MonkeyEXOProtectionAlert {
+<#
         .SYNOPSIS
 		Plugin to get information about protection alert in Exchange Online
 
@@ -37,46 +37,57 @@ Function Get-MonkeyEXOProtectionAlert{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $exo_protection_alert = $null
-        #Check if already connected to Exchange Online Compliance Center
-        $exo_session = Test-EXOConnection -ComplianceCenter
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Security and Compliance protection alert", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompProtectionAlertInfo');
-            }
-            Write-Information @msg
-            $exo_protection_alert = Get-ProtectionAlert
-        }
-    }
-    End{
-        if($null -ne $exo_protection_alert){
-            $exo_protection_alert.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.ProtectionAlert')
-            [pscustomobject]$obj = @{
-                Data = $exo_protection_alert
-            }
-            $returnData.o365_secomp_protection_alert = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online protection alert", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompProtectionAlertResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$exo_protection_alert = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "purv002";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about protection alert in Exchange Online";
+			Group = @("PurView");
+			ServiceName = "PurView Protection Alert";
+			PluginName = "Get-MonkeyEXOProtectionAlert";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online Compliance Center
+		$exo_session = Test-EXOConnection -ComplianceCenter
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance protection alert",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompProtectionAlertInfo');
+			}
+			Write-Information @msg
+			$exo_protection_alert = Get-ProtectionAlert
+		}
+	}
+	end {
+		if ($null -ne $exo_protection_alert) {
+			$exo_protection_alert.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.ProtectionAlert')
+			[pscustomobject]$obj = @{
+				Data = $exo_protection_alert;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_secomp_protection_alert = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online protection alert",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompProtectionAlertResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

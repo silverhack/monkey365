@@ -33,8 +33,9 @@
     "conditions":  [
                        "and",
                        [
-                           "email",
-                           "eq"
+                           "email.Length",
+                           "eq",
+						   0
                        ]
                    ],
     "id_suffix":  "security_contact_mail_disabled"

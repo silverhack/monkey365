@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAADRMMaxUseLicense{
-    <#
+function Get-MonkeyAADRMMaxUseLicense {
+<#
         .SYNOPSIS
 		Plugin to get information about maximum validity time for licenses in AADRM
 
@@ -37,69 +37,80 @@ Function Get-MonkeyAADRMMaxUseLicense{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Get Access Token from AADRM
-        $access_token = $O365Object.auth_tokens.AADRM
-        #Get AADRM Url
-        $url = $O365Object.Environment.aadrm_service_locator
-        if($null -ne $access_token){
-            #Set Authorization Header
-            $AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
-            $requestHeader = @{"Authorization" = $AuthHeader}
-        }
-    }
-    Process{
-        if($requestHeader -and $url){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Office 365 Rights Management: max use license validity status", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMMaxUseLicenseConfig');
-            }
-            Write-Information @msg
-            $url = ("{0}/MaxUseLicenseValidityTime" -f $url)
-            $params = @{
-                Url = $url;
-                Method = 'Get';
-                Content_Type = 'application/json; charset=utf-8';
-                Headers = $requestHeader;
-                disableSSLVerification = $true;
-            }
-            #call AADRM endpoint
-            $AADRM_License = Invoke-UrlRequest @params
-            if($AADRM_License){
-                #Create AADRM object
-                $aadrm_feature_status = New-Object -TypeName PSCustomObject
-                $aadrm_feature_status | Add-Member -type NoteProperty -name validity -value $AADRM_License
-            }
-            else{
-                $aadrm_feature_status = $null
-            }
-        }
-    }
-    End{
-        if($null -ne $aadrm_feature_status){
-            $aadrm_feature_status.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.License.Validity')
-            [pscustomobject]$obj = @{
-                Data = $aadrm_feature_status
-            }
-            $returnData.o365_aadrm_license_validity = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: max use license validity status", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMMaxUseLicenseEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Get Access Token from AADRM
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aadrm05";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about maximum validity time for licenses in AADRM";
+			Group = @("IRM");
+			ServiceName = "Azure Rights Management";
+			PluginName = "Get-MonkeyAADRMMaxUseLicense";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$access_token = $O365Object.auth_tokens.AADRM
+		#Get AADRM Url
+		$url = $O365Object.Environment.aadrm_service_locator
+		if ($null -ne $access_token) {
+			#Set Authorization Header
+			$AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
+			$requestHeader = @{ "Authorization" = $AuthHeader }
+		}
+	}
+	process {
+		if ($requestHeader -and $url) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Office 365 Rights Management: max use license validity status",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMMaxUseLicenseConfig');
+			}
+			Write-Information @msg
+			$url = ("{0}/MaxUseLicenseValidityTime" -f $url)
+			$params = @{
+				url = $url;
+				Method = 'Get';
+				Content_Type = 'application/json; charset=utf-8';
+				Headers = $requestHeader;
+				disableSSLVerification = $true;
+			}
+			#call AADRM endpoint
+			$AADRM_License = Invoke-UrlRequest @params
+			if ($AADRM_License) {
+				#Create AADRM object
+				$aadrm_feature_status = New-Object -TypeName PSCustomObject
+				$aadrm_feature_status | Add-Member -Type NoteProperty -Name validity -Value $AADRM_License
+			}
+			else {
+				$aadrm_feature_status = $null
+			}
+		}
+	}
+	end {
+		if ($null -ne $aadrm_feature_status) {
+			$aadrm_feature_status.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.License.Validity')
+			[pscustomobject]$obj = @{
+				Data = $aadrm_feature_status;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_aadrm_license_validity = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: max use license validity status",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMMaxUseLicenseEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

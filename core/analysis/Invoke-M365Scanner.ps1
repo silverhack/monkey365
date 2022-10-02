@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Invoke-O365Scanner{
+Function Invoke-M365Scanner{
     <#
         .SYNOPSIS
 
@@ -67,9 +67,9 @@ Function Invoke-O365Scanner{
                 'returnData' = $Script:returnData;
             }
         }
-        #Separate plugins to avoid Throttle in Exchange Online
-        $EXO_Plugins = $O365Object.Plugins | Where-Object {$_.DirectoryName -like "*exchange_online*" -or $_.DirectoryName -like "*security_compliance*"}
-        $M365_Rest_Plugins = $O365Object.Plugins | Where-Object {$_.DirectoryName -notlike "*exchange_online*" -and $_.DirectoryName -notlike "*security_compliance*"}
+        #Split plugins to avoid Throttle in Exchange Online
+        $EXO_Plugins = $O365Object.Plugins | Where-Object {$_.File.DirectoryName -like "*exchange_online*" -or $_.File.DirectoryName -like "*security_compliance*"} | Select-Object -ExpandProperty File
+        $M365_Rest_Plugins = $O365Object.Plugins | Where-Object {$_.File.DirectoryName -notlike "*exchange_online*" -and $_.File.DirectoryName -notlike "*security_compliance*"} | Select-Object -ExpandProperty File
         #Check if Exchange online plugins are present
         if(@($EXO_Plugins).Count -gt 0){
             $params = @{

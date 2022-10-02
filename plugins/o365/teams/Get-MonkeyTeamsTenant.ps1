@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyTeamsTenant{
-    <#
+function Get-MonkeyTeamsTenant {
+<#
         .SYNOPSIS
 		Plugin to get information about Teams tenant
 
@@ -37,55 +37,66 @@ Function Get-MonkeyTeamsTenant{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        #Getting environment
-        $Environment = $O365Object.Environment
-        #Get Access Token from Teams
-        $access_token = $O365Object.auth_tokens.Teams
-        $teams_tenant= $null
-    }
-    Process{
-        if($null -ne $access_token){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft 365 Teams: Tenant", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsTenantInfo');
-            }
-            Write-Information @msg
-            $params = @{
-                Authentication = $access_token;
-                InternalPath = 'TeamsTenant';
-                ObjectType = "tenants";
-                Environment = $Environment;
-                Method = "GET";
-            }
-            $teams_tenant = Get-TeamsObject @params
-        }
-    }
-    End{
-        if($teams_tenant){
-            $teams_tenant.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Tenant')
-            [pscustomobject]$obj = @{
-                Data = $teams_tenant
-            }
-            $returnData.o365_teams_tenant = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Tenant", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsTenantInfoEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "teams12";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about Teams tenant";
+			Group = @("MicrosoftTeams");
+			ServiceName = "Microsoft Teams Tenant settings";
+			PluginName = "Get-MonkeyTeamsTenant";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Getting environment
+		$Environment = $O365Object.Environment
+		#Get Access Token from Teams
+		$access_token = $O365Object.auth_tokens.Teams
+		$teams_tenant = $null
+	}
+	process {
+		if ($null -ne $access_token) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft 365 Teams: Tenant",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsTenantInfo');
+			}
+			Write-Information @msg
+			$params = @{
+				Authentication = $access_token;
+				InternalPath = 'TeamsTenant';
+				ObjectType = "tenants";
+				Environment = $Environment;
+				Method = "GET";
+			}
+			$teams_tenant = Get-TeamsObject @params
+		}
+	}
+	end {
+		if ($teams_tenant) {
+			$teams_tenant.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Tenant')
+			[pscustomobject]$obj = @{
+				Data = $teams_tenant;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_teams_tenant = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Tenant",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsTenantInfoEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

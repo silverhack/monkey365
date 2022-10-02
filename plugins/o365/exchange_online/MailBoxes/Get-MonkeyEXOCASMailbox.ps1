@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOCASMailbox{
-    <#
+function Get-MonkeyEXOCASMailbox {
+<#
         .SYNOPSIS
 		Plugin to get information about mailboxes in Exchange Online
 
@@ -37,55 +37,66 @@ Function Get-MonkeyEXOCASMailbox{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        #Getting environment
-        $Environment = $O365Object.Environment
-        #Get EXO authentication
-        $exo_auth = $O365Object.auth_tokens.ExchangeOnline
-        $cas_mailBoxes = $null;
-    }
-    Process{
-        if($null -ne $exo_auth){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online CAS (Client Access Settings) mailboxes", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoCASMailboxesInfo');
-            }
-            Write-Information @msg
-            #Get Mailboxes
-            $param = @{
-                Authentication = $exo_auth;
-                Environment = $Environment;
-                ObjectType = "CasMailbox";
-                extraParameters = "PropertySet=All";
-            }
-            $cas_mailBoxes = Get-PSExoAdminApiObject @param
-        }
-    }
-    End{
-        if($cas_mailBoxes){
-            $cas_mailBoxes.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.CASMailboxes')
-            [pscustomobject]$obj = @{
-                Data = $cas_mailBoxes
-            }
-            $returnData.o365_exo_cas_mailboxes = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online CAS (Client Access Settings) mailboxes", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoCASMailboxesEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Getting environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0020";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about mailboxes in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online Mailbox";
+			PluginName = "Get-MonkeyEXOCASMailbox";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$Environment = $O365Object.Environment
+		#Get EXO authentication
+		$exo_auth = $O365Object.auth_tokens.ExchangeOnline
+		$cas_mailBoxes = $null;
+	}
+	process {
+		if ($null -ne $exo_auth) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online CAS (Client Access Settings) mailboxes",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoCASMailboxesInfo');
+			}
+			Write-Information @msg
+			#Get Mailboxes
+			$param = @{
+				Authentication = $exo_auth;
+				Environment = $Environment;
+				ObjectType = "CasMailbox";
+				extraParameters = "PropertySet=All";
+			}
+			$cas_mailBoxes = Get-PSExoAdminApiObject @param
+		}
+	}
+	end {
+		if ($cas_mailBoxes) {
+			$cas_mailBoxes.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.CASMailboxes')
+			[pscustomobject]$obj = @{
+				Data = $cas_mailBoxes;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_cas_mailboxes = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online CAS (Client Access Settings) mailboxes",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoCASMailboxesEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

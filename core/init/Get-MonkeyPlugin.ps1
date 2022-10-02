@@ -15,9 +15,9 @@
 Function Get-MonkeyPlugin{
     <#
         .SYNOPSIS
-
+        Utility to work with internal plugins
         .DESCRIPTION
-
+        Utility to work with internal plugins
         .INPUTS
 
         .OUTPUTS
@@ -27,13 +27,14 @@ Function Get-MonkeyPlugin{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyPlugin
+            File Name	: Invoke-MonkeyPlugin
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
+    Param ()
     Begin{
         #Set excluded auth var
         $ExcludedAuths = @("certificate_credentials","client_credentials")
@@ -43,235 +44,71 @@ Function Get-MonkeyPlugin{
         else{
             $excluded = $false
         }
-        #Set array
-        $selected_plugins=@()
-        #O365 Plugins
-        $O365Plugins = @{
-            SharepointOnline = @(
-                '/plugins/o365/sharepoint_online/'
-            )
-            ExchangeOnline = @(
-                '/plugins/o365/exchange_online/'
-            )
-            PurView = @(
-                '/plugins/o365/security_compliance/'
-            )
-            EndpointManager = @(
-                '/plugins/o365/EndpointManager/'
-            )
-            IRM = @(
-                '/plugins/o365/aadrm/'
-            )
-            MicrosoftForms = @(
-                '/plugins/o365/microsoft_forms/'
-            )
-            MicrosoftTeams = @(
-                '/plugins/o365/teams/'
-            )
-        }
-        #Azure AD Plugins
-        $AzureADPlugins = @{
-            activedirectory = @(
-                '/plugins/aad/portal/'
-            )
-            graphad = @(
-                '/plugins/aad/graph/'
-            )
-            LegacyO365API = @(
-                '/plugins/o365/o365_legacy/'
-            )
-        }
-        #Azure Plugins
-        $AzurePlugins = @{
-            domainpolicies = @(
-                '/plugins/aad/graph/policies/'
-            )
-            databases = @(
-                '/plugins/azure/databases/',
-                '/plugins/azure/storageaccounts/',
-                '/plugins/azure/firewall/'
-            )
-            virtualmachines = @(
-                '/plugins/azure/virtualmachines/',
-                '/plugins/azure/classicvm/',
-                '/plugins/azure/security/patches/',
-                '/plugins/azure/security/baseline/'
-            )
-            securitycenter = @(
-                '/plugins/azure/security/patches/',
-                '/plugins/azure/security/securitystatus/',
-                '/plugins/azure/security/baseline/'
-            )
-            roleassignments = @(
-                '/plugins/azure/security/roleassignments/'
-            )
-            firewall = @(
-                '/plugins/azure/firewall/'
-            )
-            securitypolicies = @(
-                '/plugins/azure/security/securitypolicies/'
-            )
-            missingpatches = @(
-                '/plugins/azure/security/patches/'
-            )
-            securitybaseline = @(
-                '/plugins/azure/security/baseline/'
-            )
-            securitycontacts = @(
-                '/plugins/azure/security/securitycontacts/'
-            )
-            securityalerts = @(
-                '/plugins/azure/alerts/'
-            )
-            appservices = @(
-                '/plugins/azure/appservices/'
-            )
-            keyvaults = @(
-                '/plugins/azure/security/keyvaults/'
-            )
-            documentdb = @("
-                /plugins/azure/documentdb/"
-            )
-            storageaccounts = @("
-                /plugins/azure/storageaccounts/"
-            )
-            applicationgateway = @("
-                /plugins/azure/security/applicationgateway/"
-            )
-            custom = @("
-                /plugins/custom/"
-            )
-        }
+        #Set selected_plugins array
+        $selected_plugins = @()
+        #Get all plugin metadata
+        $all_plugin_metadata = Get-MetadataFromPlugin
+        $targeted_analysis = $O365Object.initParams.Analysis
     }
     Process{
-        try{
-            #Check if should load Azure AD plugins
-            if($O365Object.initParams.ContainsKey('IncludeAzureActiveDirectory') -and $O365Object.initParams.IncludeAzureActiveDirectory){
-                if([System.Convert]::ToBoolean($O365Object.internal_config.azuread.useAzurePortalAPI) -and $excluded -eq $false){
-                    $azure_ad_plugins = $AzureADPlugins.Item('activedirectory')
-                    $azure_ad_plugins += $AzureADPlugins.Item('LegacyO365API')
+        if($null -ne $all_plugin_metadata -and $null -ne $targeted_analysis){
+            foreach($element in $targeted_analysis.GetEnumerator()){
+                if($element -eq 'All'){
+                    $selected_plugins = $all_plugin_metadata | Where-Object {$_.Provider -eq $O365Object.Instance}
+                    break;
                 }
                 else{
-                    $azure_ad_plugins = $AzureADPlugins.Item('graphad')
-                }
-                if($azure_ad_plugins){
-                    foreach($element in $azure_ad_plugins){
-                        $p_path = ("{0}/{1}" -f $O365Object.Localpath, $element)
-                        $params = @{
-                            Path = $p_path;
-                            Recurse = $true;
-                            File = $true;
-                            Include = "*.ps1";
-                            ErrorAction = 'Ignore';
-                        }
-                        $selected_plugins+= Get-ChildItem @params
-                    }
-                }
-                #Check if dump users with internal Graph API
-                if([System.Convert]::ToBoolean($O365Object.internal_config.azuread.dumpAdUsersWithInternalGraphAPI) -and $excluded -eq $false){
-                    $selected_plugins = $selected_plugins | Where-Object {$_.FullName -notlike "*Get-MonkeyADUser*"}
-                    $u_path = ("{0}/{1}" -f $O365Object.Localpath, 'plugins/aad/graph/users/*.ps1')
-                    $az_ad_users_plugin = Get-ChildItem -Path $u_path -ErrorAction Ignore
-                    $selected_plugins+=$az_ad_users_plugin
-                }
-            }
-            if($null -ne $O365Object.Instance){
-                switch ($O365Object.Instance.ToLower()){
-                    'azure'{
-                        if($O365Object.initParams.Analysis.ToLower() -eq 'all'){
-                            $p_path = ("{0}/{1}" -f $O365Object.Localpath, "plugins/azure/")
-                            $params = @{
-                                Path = $p_path;
-                                Recurse = $true;
-                                File = $true;
-                                Include = "*.ps1";
-                                ErrorAction = 'Ignore';
-                            }
-                            $selected_plugins+= Get-ChildItem @params
-                        }
-                        else{
-                            foreach($plugin in $O365Object.initParams.Analysis.GetEnumerator()){
-                                if($AzurePlugins.ContainsKey($plugin)){
-                                    $pluginPaths = $AzurePlugins.Item($plugin)
-                                    foreach($element in $pluginPaths){
-                                        $p_path = ("{0}/{1}" -f $O365Object.Localpath, $element.Trim())
-                                        $params = @{
-                                            Path = $p_path;
-                                            Recurse = $true;
-                                            File = $true;
-                                            Include = "*.ps1";
-                                            ErrorAction = 'Ignore';
-                                        }
-                                        $selected_plugins+= Get-ChildItem @params
-                                    }
-                                }
-                                else{
-                                    Write-Warning ("Unable to find plugins for {0}" -f $plugin)
-                                }
-                            }
-                        }
-                        break;
-                    }
-                    'microsoft365'{
-                        if($O365Object.initParams.Analysis.ToLower().Contains('all')){
-                            $p_path = ("{0}/{1}" -f $O365Object.Localpath, "plugins/o365/")
-                            $params = @{
-                                Path = $p_path;
-                                Recurse = $true;
-                                File = $true;
-                                Include = "*.ps1";
-                                ErrorAction = 'Ignore';
-                            }
-                            $selected_plugins+= Get-ChildItem @params
-                        }
-                        else{
-                            foreach($plugin in $O365Object.initParams.Analysis.GetEnumerator()){
-                                if($O365Plugins.ContainsKey($plugin)){
-                                    $pluginPaths = $O365Plugins.Item($plugin)
-                                    foreach($element in $pluginPaths){
-                                        $p_path = ("{0}/{1}" -f $O365Object.Localpath, $element)
-                                        $params = @{
-                                            Path = $p_path;
-                                            Recurse = $true;
-                                            File = $true;
-                                            Include = "*.ps1";
-                                            ErrorAction = 'Ignore';
-                                        }
-                                        $selected_plugins+= Get-ChildItem @params
-                                    }
-                                }
-                                else{
-                                    $msg = @{
-                                        MessageData = ($message.UnableToGetPlugins -f $plugin);
-                                        functionName = (Get-PSCallStack | Select-Object -First 1);
-                                        logLevel = 'warning';
-                                        Tags = @('MonkeyPluginsLoadError');
-                                    }
-                                    Write-Warning @msg
-                                }
-                            }
-                        }
-                        break;
+                    $discovered_plugins = $all_plugin_metadata | Where-Object {$_.Provider -eq $O365Object.Instance -and $_.Group.Contains($element)}
+                    if($discovered_plugins){
+                        $selected_plugins+=$discovered_plugins
                     }
                 }
             }
         }
-        catch{
-            $msg = @{
-                Message = $_;
-                functionName = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'debug';
-                Tags = @('MonkeyPluginsLoadError');
+        #Check if should load AzureAD plugins
+        $discovered_plugins = $null
+        if($null -ne $all_plugin_metadata -and $O365Object.IncludeAAD -eq $true){
+            if([System.Convert]::ToBoolean($O365Object.internal_config.azuread.useAzurePortalAPI) -and $excluded -eq $false){
+                #Load AzureADPortal and LegacyO365API plugins
+                $discovered_plugins = $all_plugin_metadata | Where-Object {$_.Provider -eq "AzureAD" -and ($_.Group.Contains("AzureADPortal") -or $_.Group.Contains("LegacyO365API"))}
             }
-            Write-Verbose @msg
+            else{
+                #Load legacy Graph and MSGraph plugins
+                $discovered_plugins = $all_plugin_metadata | Where-Object {$_.Provider -eq "AzureAD" -and $_.Group.Contains("AzureAD")}
+            }
+            if($null -ne $discovered_plugins){
+                #Check if dump users with internal Graph API
+                if([System.Convert]::ToBoolean($O365Object.internal_config.azuread.dumpAdUsersWithInternalGraphAPI) -and $excluded -eq $false){
+                    #Remove users from selected plugins
+                    $discovered_plugins = $discovered_plugins | Where-Object {$_.PluginName -ne "Get-MonkeyADUser"}
+                    #Add graph users plugin
+                    $ad_users_plugin = $all_plugin_metadata | Where-Object {$_.Provider -eq "AzureAD" -and ($_.Group.Contains("AzureAD") -and $_.PluginName -eq "Get-MonkeyADUser")}
+                    if($ad_users_plugin){
+                        $discovered_plugins+=$ad_users_plugin
+                    }
+                }
+            }
+            #Add discovered plugins
+            if($null -ne $discovered_plugins){
+                $selected_plugins+=$discovered_plugins
+            }
         }
     }
     End{
-        if($selected_plugins){
-            return $selected_plugins
+        #Exclude plugins if present
+        if($null -ne $O365Object.excludePlugins){
+            $message = ("The following plugins will be excluded: {0}" -f [string]::join(",", $O365Object.excludePlugins))
+            $msg = @{
+                MessageData = $message;
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'warning';
+                InformationAction = $script:InformationAction;
+                Tags = @('ExcludeAzureResourceFromScanning');
+            }
+            #Write-Warning @msg
+            Write-Warning $message
+            $selected_plugins = $selected_plugins | Where-Object {$_.Id -notin $O365Object.excludePlugins}
         }
-        else{
-            return $null
-        }
+        return $selected_plugins | Sort-Object -Property Id -Unique
     }
 }

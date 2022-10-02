@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAzPricingTier{
-    <#
+function Get-MonkeyAzPricingTier {
+<#
         .SYNOPSIS
 		Plugin to get pricing tier from Azure
 
@@ -37,89 +37,101 @@ Function Get-MonkeyAzPricingTier{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get Config
-        $pricing_config = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azurePricings"} | Select-Object -ExpandProperty resource
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Pricing", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePricingInfo');
-        }
-        Write-Information @msg
-        #Get legacy pricing tier
-        $params = @{
-            Authentication = $rm_auth;
-            Provider = $pricing_config.provider;
-            ObjectType= 'pricings';
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-            APIVersion = $pricing_config.api_version;
-        }
-        $legacy_pricing_tier = Get-MonkeyRMObject @params
-        #Get new pricing tier
-        $params = @{
-            Authentication = $rm_auth;
-            Provider = $pricing_config.provider;
-            ObjectType= 'pricings';
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-            APIVersion = "2018-06-01";
-        }
-        $new_pricing_tier = Get-MonkeyRMObject @params
-    }
-    End{
-        if($new_pricing_tier){
-            $new_pricing_tier.PSObject.TypeNames.Insert(0,'Monkey365.Azure.PricingTier')
-            [pscustomobject]$obj = @{
-                Data = $new_pricing_tier
-            }
-            $returnData.az_pricing_tier = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Pricing tier", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePricingEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-        #Set Legacy
-        if($legacy_pricing_tier){
-            $legacy_pricing_tier.PSObject.TypeNames.Insert(0,'Monkey365.Azure.LegacyPricingTier')
-            [pscustomobject]$obj = @{
-                Data = $legacy_pricing_tier
-            }
-            $returnData.az_legacy_pricing_tier = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Pricing tier", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureLegacyPricingEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00022";
+			Provider = "Azure";
+			Title = "Plugin to get pricing tier from Azure";
+			Group = @("Subscription");
+			ServiceName = "Azure Pricing";
+			PluginName = "Get-MonkeyAzPricingTier";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Import Localized data
+		$LocalizedDataParams = $O365Object.LocalizedDataParams
+		Import-LocalizedData @LocalizedDataParams;
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure Active Directory Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get Config
+		$pricing_config = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azurePricings" } | Select-Object -ExpandProperty resource
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure Pricing",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePricingInfo');
+		}
+		Write-Information @msg
+		#Get legacy pricing tier
+		$params = @{
+			Authentication = $rm_auth;
+			Provider = $pricing_config.Provider;
+			ObjectType = 'pricings';
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+			APIVersion = $pricing_config.api_version;
+		}
+		$legacy_pricing_tier = Get-MonkeyRMObject @params
+		#Get new pricing tier
+		$params = @{
+			Authentication = $rm_auth;
+			Provider = $pricing_config.Provider;
+			ObjectType = 'pricings';
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+			APIVersion = "2018-06-01";
+		}
+		$new_pricing_tier = Get-MonkeyRMObject @params
+	}
+	end {
+		if ($new_pricing_tier) {
+			$new_pricing_tier.PSObject.TypeNames.Insert(0,'Monkey365.Azure.PricingTier')
+			[pscustomobject]$obj = @{
+				Data = $new_pricing_tier;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_pricing_tier = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Pricing tier",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePricingEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+		#Set Legacy
+		if ($legacy_pricing_tier) {
+			$legacy_pricing_tier.PSObject.TypeNames.Insert(0,'Monkey365.Azure.LegacyPricingTier')
+			[pscustomobject]$obj = @{
+				Data = $legacy_pricing_tier;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_legacy_pricing_tier = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Pricing tier",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureLegacyPricingEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

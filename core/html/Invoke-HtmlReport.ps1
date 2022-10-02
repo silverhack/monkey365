@@ -33,17 +33,17 @@ Function Invoke-HtmlReport{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignment", "", Scope="Function")]
     Param (
         [parameter(Mandatory=$True, ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
         [object]$outDir
     )
     Begin{
-        $charts = @()
+        #$charts = $dashboards = @()
         $tables = @()
-        $dashboards = @()
-        $chartPath = $dashboardPath = $tablePath = $monkeyData = $null;
+        #$chartPath = $dashboardPath = $null;
+        $tablePath = $monkeyData = $null;
         $htmlFile= $null;
         $outFile = $null;
         try{

@@ -83,7 +83,7 @@ function Build-Query{
         }
     }
     if($pass_nested_filter){
-        $pass_filter = ("{0} {1}" -f $first, $pass_nested_filter)
+        $pass_filter = ("({0}) {1}" -f $first, $pass_nested_filter)
         #Write-Host $pass_filter -ForegroundColor Yellow
         try{
             return [ScriptBlock]::Create($pass_filter)

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyLegacyO365DomainPasswordPolicy{
-    <#
+function Get-MonkeyLegacyO365DomainPasswordPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about domain password policy using legacy O365 API
 
@@ -37,42 +37,53 @@ Function Get-MonkeyLegacyO365DomainPasswordPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
 
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Domain password policy", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('LegacyDomainPasswordPolicyInfo');
-        }
-        Write-Information @msg
-        $domain_password_policy = Get-MonkeyMsolDomainPasswordPolicy
-    }
-    End{
-        if($domain_password_policy){
-            $domain_password_policy.PSObject.TypeNames.Insert(0,'Monkey365.Legacy.DomainPasswordPolicy')
-            [pscustomobject]$obj = @{
-                Data = $domain_password_policy
-            }
-            $returnData.o365_domain_password_policy = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Domain password policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('LegacyDomainPasswordPolicyEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aadl002";
+			Provider = "AzureAD";
+			Title = "Plugin to get information about domain password policy using legacy O365 API";
+			Group = @("LegacyO365API");
+			ServiceName = "Azure AD Domain Password Policy";
+			PluginName = "Get-MonkeyLegacyO365DomainPasswordPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Domain password policy",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('LegacyDomainPasswordPolicyInfo');
+		}
+		Write-Information @msg
+		$domain_password_policy = Get-MonkeyMsolDomainPasswordPolicy
+	}
+	end {
+		if ($domain_password_policy) {
+			$domain_password_policy.PSObject.TypeNames.Insert(0,'Monkey365.Legacy.DomainPasswordPolicy')
+			[pscustomobject]$obj = @{
+				Data = $domain_password_policy;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_domain_password_policy = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Domain password policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('LegacyDomainPasswordPolicyEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

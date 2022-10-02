@@ -61,10 +61,20 @@ function Wait-WebTask{
             }
             Write-Verbose @param
             #Get exception
-            $url = $webResponse = $null
+            $url = $null
             $StatusCode = "-1"
-            $webResponse = $_.Exception.InnerException.InnerException.Response
-            $errorMessage = $_.Exception.InnerException.InnerException.Message
+            try{
+                $webResponse = $_.Exception.InnerException.InnerException.Response
+            }
+            catch{
+                $webResponse = $null
+            }
+            try{
+                $errorMessage = $_.Exception.InnerException.InnerException.Message
+            }
+            catch{
+                $errorMessage = $_
+            }
             if($null -ne $webResponse){
                 try{
                     $Url = $webResponse.ResponseUri.OriginalString

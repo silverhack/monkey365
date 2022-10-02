@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyPurviewSupervisoryReviewPolicy{
-    <#
+function Get-MonkeyPurviewSupervisoryReviewPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about supervisory review policy in Microsoft Purview
 
@@ -37,67 +37,79 @@ Function Get-MonkeyPurviewSupervisoryReviewPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $supervisory_config = $supervisory_reports = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection -ComplianceCenter
-    }
-    Process{
-        if($null -ne $exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft Purview: Supervisory review policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompSupervisoryPolicyInfo');
-            }
-            Write-Information @msg
-            #Get O365 supervisory policy
-            $supervisory_config = Get-SupervisoryReviewPolicyV2
-            #Get O365 supervisory reports
-            $supervisory_reports = Get-SupervisoryReviewOverallProgressReport
-        }
-    }
-    End{
-        if($supervisory_config){
-            $supervisory_config.PSObject.TypeNames.Insert(0,'Monkey365.Purview.supervisoryPolicy')
-            [pscustomobject]$obj = @{
-                Data = $supervisory_config
-            }
-            $returnData.o365_secomp_supervisory_policy = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview: Supervisory review policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompSupervisoryPolicyEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-        #Return supervisory reports
-        if($supervisory_reports){
-            $supervisory_reports.PSObject.TypeNames.Insert(0,'Monkey365.Purview.supervisoryReports')
-            [pscustomobject]$obj = @{
-                Data = $supervisory_reports
-            }
-            $returnData.o365_secomp_supervisory_reports = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview: Supervisory reports", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'verbose';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompSupervisoryPolicyEmptyResponse');
-            }
-            Write-Verbose @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$supervisory_config = $supervisory_reports = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "purv004";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about supervisory review policy in Microsoft Purview";
+			Group = @("PurView");
+			ServiceName = "Microsoft PurView supervisory review policy";
+			PluginName = "Get-MonkeyPurviewSupervisoryReviewPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection -ComplianceCenter
+	}
+	process {
+		if ($null -ne $exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft Purview: Supervisory review policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompSupervisoryPolicyInfo');
+			}
+			Write-Information @msg
+			#Get O365 supervisory policy
+			$supervisory_config = Get-SupervisoryReviewPolicyV2
+			#Get O365 supervisory reports
+			$supervisory_reports = Get-SupervisoryReviewOverallProgressReport
+		}
+	}
+	end {
+		if ($supervisory_config) {
+			$supervisory_config.PSObject.TypeNames.Insert(0,'Monkey365.Purview.supervisoryPolicy')
+			[pscustomobject]$obj = @{
+				Data = $supervisory_config;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_secomp_supervisory_policy = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview: Supervisory review policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompSupervisoryPolicyEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+		#Return supervisory reports
+		if ($supervisory_reports) {
+			$supervisory_reports.PSObject.TypeNames.Insert(0,'Monkey365.Purview.supervisoryReports')
+			[pscustomobject]$obj = @{
+				Data = $supervisory_reports;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_secomp_supervisory_reports = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview: Supervisory reports",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'verbose';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompSupervisoryPolicyEmptyResponse');
+			}
+			Write-Verbose @msg
+		}
+	}
 }

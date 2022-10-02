@@ -116,6 +116,12 @@ Function Invoke-Monkey365{
         .PARAMETER ExportTo
 	        Export data driven to specific formats. Accepted values are CSV, JSON, XML, PRINT, EXCEL, HTML.
 
+        .PARAMETER ExcludedResources
+	        Exclude unwanted azure resources from being scanned
+        
+        .PARAMETER ExcludePlugin
+	        Exclude plugins from being executed
+
         .PARAMETER Threads
 	        Change the threads settings. By default, a large number of requests will be made with two threads
 
@@ -186,8 +192,10 @@ Function Invoke-Monkey365{
         $SaveProject,
 
         [Parameter(HelpMessage="Import Monkey 365 Job")]
-        [Switch]
-        $ImportJob,
+        [Switch]$ImportJob,
+
+        [Parameter(Mandatory=$false, HelpMessage="Plugins to exclude")]
+        [string[]]$ExcludePlugin,
 
         [parameter(Mandatory= $false, HelpMessage= "Export data to multiple formats")]
         [ValidateSet("CSV","JSON","CLIXML","PRINT","EXCEL", "HTML")]
@@ -294,6 +302,7 @@ Function Invoke-Monkey365{
     dynamicparam{
         # Set available instance class
         $instance_class = @{
+            <#
             Azure = 'DomainPolicies','Databases','VirtualMachines',
                     'SecurityAlerts', 'SecurityCenter',
                     'RoleAssignments', 'Firewall',
@@ -302,12 +311,15 @@ Function Invoke-Monkey365{
                     'SecurityPolicies', 'SecurityContacts',
                     'Custom', 'AppServices', 'DocumentDB',
                     'KeyVaults', 'All'
-            Microsoft365 = 'ExchangeOnline',
+            Office365 = 'ExchangeOnline',
                         'PurView',
                         'SharePointOnline',
                         'MicrosoftTeams',
                         'IRM',
                         'MicrosoftForms'
+            #>
+            Azure = $Script:azure_plugins
+            Microsoft365 = $Script:m365_plugins
         }
         # set a new dynamic parameter
         $paramDictionary = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameterDictionary
@@ -366,6 +378,18 @@ Function Invoke-Monkey365{
             $rg_type_dynParam = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter($rg_pname,
             [string[]], $attributeCollection)
             $paramDictionary.Add($rg_pname, $rg_type_dynParam)
+
+            #Create the -ExcludeResources File parameter
+            $attributeCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+            # define a new parameter attribute
+            $exclude_rsrc_attr_name = New-Object System.Management.Automation.ParameterAttribute
+            $exclude_rsrc_attr_name.Mandatory = $false
+            $attributeCollection.Add($exclude_rsrc_attr_name)
+
+            $rsrc_pname = 'ExcludedResources'
+            $rsrc_type_dynParam = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter($rsrc_pname,
+            [System.IO.FileInfo], $attributeCollection)
+            $paramDictionary.Add($rsrc_pname, $rsrc_type_dynParam)
         }
         # return the collection of dynamic parameters
         $paramDictionary
@@ -439,7 +463,7 @@ Function Invoke-Monkey365{
                     Invoke-AzureScanner
                 }
                 'microsoft365'{
-                    Invoke-O365Scanner
+                    Invoke-M365Scanner
                 }
                 'azuread'{
                     Invoke-AzureADScanner
@@ -474,5 +498,6 @@ Function Invoke-Monkey365{
         }
         #collect garbage
         [System.GC]::GetTotalMemory($true) | out-null
+        return $O365Object
     }
 }

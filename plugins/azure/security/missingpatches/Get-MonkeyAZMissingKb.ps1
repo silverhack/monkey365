@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAZMissingKb{
-    <#
+function Get-MonkeyAZMissingKb {
+<#
         .SYNOPSIS
 		Plugin to get information regarding missing patches from Azure
 
@@ -37,105 +37,116 @@ Function Get-MonkeyAZMissingKb{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure RM Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get Config
-        $AzureSecStatus = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureSecurityStatuses"} | Select-Object -ExpandProperty resource
-        #Get VMs
-        $vms_v2 = $O365Object.all_resources | Where-Object {$_.type -like 'Microsoft.Compute/virtualMachines'}
-        $classic_vms = $O365Object.all_resources | Where-Object {$_.type -like 'Microsoft.ClassicCompute/virtualMachines'}
-        if(-NOT $vms_v2 -and -NOT $classic_vms){continue}
-        #create synchronized array
-        $AllMissingPatches = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
-        #Generate vars
-        $vars = @{
-            "O365Object"=$O365Object;
-            "WriteLog"=$WriteLog;
-            'Verbosity' = $Verbosity;
-            'InformationAction' = $InformationAction;
-            "AllMissingPatches"=$AllMissingPatches;
-        }
-    }
-    Process{
-        if($null -ne $vms_v2 -or $null -ne $classic_vms){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Missing Patches", $O365Object.current_subscription.DisplayName);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('AzureMissingPatchesInfo');
-            }
-            Write-Information @msg
-            #List all VMs
-            $params = @{
-                Authentication = $rm_auth;
-                Provider = $AzureSecStatus.provider;
-                ObjectType = "securityStatuses";
-                Environment = $Environment;
-                ContentType = 'application/json';
-                Method = "GET";
-                APIVersion = $AzureSecStatus.api_version;
-            }
-            $TmpStatus = Get-MonkeyRMObject @params
-            $all_vm_status = $TmpStatus | Where-Object {$_.properties.type -eq 'VirtualMachine' -or $_.properties.type -eq 'ClassicVirtualMachine'}
-            #Set array
-            $all_vms = @()
-            foreach($vm in $vms_v2){
-                $vm_rm = $all_vm_status | Where-Object {$_.name -eq $vm.name}
-                if($vm_rm){
-                    $all_vms+=$vm_rm
-                }
-            }
-            foreach($vm in $classic_vms){
-                $classic = $all_vm_status | Where-Object {$_.name -eq $vm.name}
-                if($classic){
-                    $all_vms+=$classic
-                }
-            }
-            if($all_vms){
-                $param = @{
-                    ScriptBlock = {Get-MonkeyAzMissingPatchesForVM -vm $_};
-                    ImportCommands = $O365Object.LibUtils;
-                    ImportVariables = $vars;
-                    ImportModules = $O365Object.runspaces_modules;
-                    StartUpScripts = $O365Object.runspace_init;
-                    ThrowOnRunspaceOpenError = $true;
-                    Debug = $O365Object.VerboseOptions.Debug;
-                    Verbose = $O365Object.VerboseOptions.Verbose;
-                    Throttle = $O365Object.nestedRunspaceMaxThreads;
-                    MaxQueue = $O365Object.MaxQueue;
-                    BatchSleep = $O365Object.BatchSleep;
-                    BatchSize = $O365Object.BatchSize;
-                }
-                $all_vms | Invoke-MonkeyJob @param
-            }
-        }
-    }
-    End{
-        if($AllMissingPatches){
-            $AllMissingPatches.PSObject.TypeNames.Insert(0,'Monkey365.Azure.MissingPatches')
-            [pscustomobject]$obj = @{
-                Data = $AllMissingPatches
-            }
-            $returnData.az_vm_missing_patches = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Missing patches", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureMissingPatchesEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00030";
+			Provider = "Azure";
+			Title = "Plugin to get information regarding missing patches from Azure";
+			Group = @("VirtualMachines","MissingPatches","DefenderForCloud");
+			ServiceName = "Azure VM Missing Patches";
+			PluginName = "Get-MonkeyAZMissingKb";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure RM Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get Config
+		$AzureSecStatus = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureSecurityStatuses" } | Select-Object -ExpandProperty resource
+		#Get VMs
+		$vms_v2 = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.Compute/virtualMachines' }
+		$classic_vms = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.ClassicCompute/virtualMachines' }
+		if (-not $vms_v2 -and -not $classic_vms) { continue }
+		#create synchronized array
+		$AllMissingPatches = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
+		#Generate vars
+		$vars = @{
+			"O365Object" = $O365Object;
+			"WriteLog" = $WriteLog;
+			'Verbosity' = $Verbosity;
+			'InformationAction' = $InformationAction;
+			"AllMissingPatches" = $AllMissingPatches;
+		}
+	}
+	process {
+		if ($null -ne $vms_v2 -or $null -ne $classic_vms) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure Missing Patches",$O365Object.current_subscription.displayName);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('AzureMissingPatchesInfo');
+			}
+			Write-Information @msg
+			#List all VMs
+			$params = @{
+				Authentication = $rm_auth;
+				Provider = $AzureSecStatus.Provider;
+				ObjectType = "securityStatuses";
+				Environment = $Environment;
+				ContentType = 'application/json';
+				Method = "GET";
+				APIVersion = $AzureSecStatus.api_version;
+			}
+			$TmpStatus = Get-MonkeyRMObject @params
+			$all_vm_status = $TmpStatus | Where-Object { $_.Properties.type -eq 'VirtualMachine' -or $_.Properties.type -eq 'ClassicVirtualMachine' }
+			#Set array
+			$all_vms = @()
+			foreach ($vm in $vms_v2) {
+				$vm_rm = $all_vm_status | Where-Object { $_.Name -eq $vm.Name }
+				if ($vm_rm) {
+					$all_vms += $vm_rm
+				}
+			}
+			foreach ($vm in $classic_vms) {
+				$classic = $all_vm_status | Where-Object { $_.Name -eq $vm.Name }
+				if ($classic) {
+					$all_vms += $classic
+				}
+			}
+			if ($all_vms) {
+				$param = @{
+					ScriptBlock = { Get-MonkeyAzMissingPatchesForVM -vm $_ };
+					ImportCommands = $O365Object.LibUtils;
+					ImportVariables = $vars;
+					ImportModules = $O365Object.runspaces_modules;
+					StartUpScripts = $O365Object.runspace_init;
+					ThrowOnRunspaceOpenError = $true;
+					Debug = $O365Object.VerboseOptions.Debug;
+					Verbose = $O365Object.VerboseOptions.Verbose;
+					Throttle = $O365Object.nestedRunspaceMaxThreads;
+					MaxQueue = $O365Object.MaxQueue;
+					BatchSleep = $O365Object.BatchSleep;
+					BatchSize = $O365Object.BatchSize;
+				}
+				$all_vms | Invoke-MonkeyJob @param
+			}
+		}
+	}
+	end {
+		if ($AllMissingPatches) {
+			$AllMissingPatches.PSObject.TypeNames.Insert(0,'Monkey365.Azure.MissingPatches')
+			[pscustomobject]$obj = @{
+				Data = $AllMissingPatches;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_vm_missing_patches = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Missing patches",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureMissingPatchesEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

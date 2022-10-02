@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXODLPCompliancePolicy{
-    <#
+function Get-MonkeyEXODLPCompliancePolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about DLP compliance policies in Microsoft Exchange Online
 
@@ -37,51 +37,62 @@ Function Get-MonkeyEXODLPCompliancePolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $exo_compliance_dlp_policies = $null
-        #Check if already connected to Exchange Online Compliance Center
-        $exo_session = Test-EXOConnection -ComplianceCenter
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Security and Compliance DLP compliance policies", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompDLPInfo');
-            }
-            Write-Information @msg
-            $exo_compliance_dlp_policies = Get-DlpCompliancePolicy
-            if($null -eq $exo_compliance_dlp_policies){
-                $exo_compliance_dlp_policies = @{
-                    isEnabled = $false
-                }
-            }
-        }
-    }
-    End{
-        if($exo_compliance_dlp_policies){
-            $exo_compliance_dlp_policies.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.DLP.Compliance.Policy')
-            [pscustomobject]$obj = @{
-                Data = $exo_compliance_dlp_policies
-            }
-            $returnData.o365_secomp_dlp_compliance_policy = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance DLP compliance policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompDLPEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$exo_compliance_dlp_policies = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "purv009";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about DLP compliance policies in Microsoft Exchange Online";
+			Group = @("PurView");
+			ServiceName = "Microsoft PurView Compliance policies";
+			PluginName = "Get-MonkeyEXODLPCompliancePolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online Compliance Center
+		$exo_session = Test-EXOConnection -ComplianceCenter
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance DLP compliance policies",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompDLPInfo');
+			}
+			Write-Information @msg
+			$exo_compliance_dlp_policies = Get-DlpCompliancePolicy
+			if ($null -eq $exo_compliance_dlp_policies) {
+				$exo_compliance_dlp_policies = @{
+					isEnabled = $false
+				}
+			}
+		}
+	}
+	end {
+		if ($exo_compliance_dlp_policies) {
+			$exo_compliance_dlp_policies.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.DLP.Compliance.Policy')
+			[pscustomobject]$obj = @{
+				Data = $exo_compliance_dlp_policies;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_secomp_dlp_compliance_policy = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance DLP compliance policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompDLPEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyTeamsUser{
-    <#
+function Get-MonkeyTeamsUser {
+<#
         .SYNOPSIS
 		Plugin to get information about Teams users
 
@@ -37,56 +37,67 @@ Function Get-MonkeyTeamsUser{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        #Getting environment
-        $Environment = $O365Object.Environment
-        #Get Access Token from Teams
-        $access_token = $O365Object.auth_tokens.Teams
-        $teams_users= $null
-    }
-    Process{
-        if($null -ne $access_token){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft 365 Teams: Users", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsUsers');
-            }
-            Write-Information @msg
-            $params = @{
-                Authentication = $access_token;
-                InternalPath = 'TeamsUser';
-                ObjectType = "users";
-                pageSize = "20";
-                Environment = $Environment;
-                Method = "GET";
-            }
-            $teams_users = Get-TeamsObject @params
-        }
-    }
-    End{
-        if($teams_users){
-            $teams_users.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Users')
-            [pscustomobject]$obj = @{
-                Data = $teams_users
-            }
-            $returnData.o365_teams_users = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Users", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('TeamsUsersEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "teams13";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about Teams users";
+			Group = @("MicrosoftTeams");
+			ServiceName = "Microsoft Teams users";
+			PluginName = "Get-MonkeyTeamsUser";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Getting environment
+		$Environment = $O365Object.Environment
+		#Get Access Token from Teams
+		$access_token = $O365Object.auth_tokens.Teams
+		$teams_users = $null
+	}
+	process {
+		if ($null -ne $access_token) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft 365 Teams: Users",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsUsers');
+			}
+			Write-Information @msg
+			$params = @{
+				Authentication = $access_token;
+				InternalPath = 'TeamsUser';
+				ObjectType = "users";
+				pageSize = "20";
+				Environment = $Environment;
+				Method = "GET";
+			}
+			$teams_users = Get-TeamsObject @params
+		}
+	}
+	end {
+		if ($teams_users) {
+			$teams_users.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Users')
+			[pscustomobject]$obj = @{
+				Data = $teams_users;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_teams_users = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Users",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('TeamsUsersEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAzPostgreSQLDatabase{
-    <#
+function Get-MonkeyAzPostgreSQLDatabase {
+<#
         .SYNOPSIS
 		Plugin to get info about PostgreSQL Databases from Azure
 
@@ -37,228 +37,241 @@ Function Get-MonkeyAzPostgreSQLDatabase{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get Config
-        $AzurePostgreSQLConfig = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureForPostgreSQL"} | Select-Object -ExpandProperty resource
-        #Get PostgreSQL Servers
-        $DatabaseServers = $O365Object.all_resources | Where-Object {$_.type -like 'Microsoft.DBforPostgreSQL/servers'}
-        if(-NOT $DatabaseServers){continue}
-        #Set arrays
-        $AllPostgreSQLServers = @()
-        $AllPostgreSQLDatabases = @()
-        $AllPostgreSQLServerConfigurations = @()
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure PostgreSQL", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePostgreSQLInfo');
-        }
-        Write-Information @msg
-        if($DatabaseServers){
-            foreach($postgre_server in $DatabaseServers){
-                $msg = @{
-                    MessageData = ($message.AzureUnitResourceMessage -f $postgre_server.name, "PostgreSQL server");
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'info';
-                    InformationAction = $InformationAction;
-                    Tags = @('AzurePostgreSQLServerInfo');
-                }
-                Write-Information @msg
-                #Construct URI
-                $URI = ("{0}{1}?api-version={2}" `
-                        -f $O365Object.Environment.ResourceManager, `
-                            $postgre_server.id,$AzurePostgreSQLConfig.api_version)
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Import Localized data
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00010";
+			Provider = "Azure";
+			Title = "Plugin to get info about PostgreSQL Databases from Azure";
+			Group = @("Databases");
+			ServiceName = "Azure PostgreSQL";
+			PluginName = "Get-MonkeyAzPostgreSQLDatabase";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$LocalizedDataParams = $O365Object.LocalizedDataParams
+		Import-LocalizedData @LocalizedDataParams;
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure Active Directory Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get Config
+		$AzurePostgreSQLConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureForPostgreSQL" } | Select-Object -ExpandProperty resource
+		#Get PostgreSQL Servers
+		$DatabaseServers = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.DBforPostgreSQL/servers' }
+		if (-not $DatabaseServers) { continue }
+		#Set arrays
+		$AllPostgreSQLServers = @()
+		$AllPostgreSQLDatabases = @()
+		$AllPostgreSQLServerConfigurations = @()
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure PostgreSQL",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePostgreSQLInfo');
+		}
+		Write-Information @msg
+		if ($DatabaseServers) {
+			foreach ($postgre_server in $DatabaseServers) {
+				$msg = @{
+					MessageData = ($message.AzureUnitResourceMessage -f $postgre_server.Name,"PostgreSQL server");
+					callStack = (Get-PSCallStack | Select-Object -First 1);
+					logLevel = 'info';
+					InformationAction = $InformationAction;
+					Tags = @('AzurePostgreSQLServerInfo');
+				}
+				Write-Information @msg
+				#Construct URI
+				$URI = ("{0}{1}?api-version={2}" `
+ 						-f $O365Object.Environment.ResourceManager,`
+ 						$postgre_server.id,$AzurePostgreSQLConfig.api_version)
 
-                $params = @{
-                    Authentication = $rm_auth;
-                    OwnQuery = $URI;
-                    Environment = $Environment;
-                    ContentType = 'application/json';
-                    Method = "GET";
-                }
-                $server = Get-MonkeyRMObject @params
-                #Get database info
-                if($server.name -AND $server.id){
-                    $msg = @{
-                        MessageData = ($message.AzureDatabasesQueryMessage -f $server.name);
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'info';
-                        InformationAction = $InformationAction;
-                        Tags = @('AzurePostgreSQLDatabaseInfo');
-                    }
-                    Write-Information @msg
-                    $uri = ("{0}{1}/{2}?api-version={3}" -f $O365Object.Environment.ResourceManager, `
-                                                            ($server.id).subString(1), "databases", `
-                                                            $AzurePostgreSQLConfig.api_version)
+				$params = @{
+					Authentication = $rm_auth;
+					OwnQuery = $URI;
+					Environment = $Environment;
+					ContentType = 'application/json';
+					Method = "GET";
+				}
+				$server = Get-MonkeyRMObject @params
+				#Get database info
+				if ($server.Name -and $server.id) {
+					$msg = @{
+						MessageData = ($message.AzureDatabasesQueryMessage -f $server.Name);
+						callStack = (Get-PSCallStack | Select-Object -First 1);
+						logLevel = 'info';
+						InformationAction = $InformationAction;
+						Tags = @('AzurePostgreSQLDatabaseInfo');
+					}
+					Write-Information @msg
+					$uri = ("{0}{1}/{2}?api-version={3}" -f $O365Object.Environment.ResourceManager,`
+ 							($server.id).subString(1),"databases",`
+ 							$AzurePostgreSQLConfig.api_version)
 
-                    $params = @{
-                        Authentication = $rm_auth;
-                        OwnQuery = $URI;
-                        Environment = $Environment;
-                        ContentType = 'application/json';
-                        Method = "GET";
-                    }
-                    $Databases = Get-MonkeyRMObject @params
-                    #Get PostgreSQL server Configuration
-                    $uri = ("{0}{1}/{2}?api-version={3}" -f $O365Object.Environment.ResourceManager, `
-                                                            $server.id, `
-                                                            "configurations", `
-                                                            $AzurePostgreSQLConfig.api_version)
+					$params = @{
+						Authentication = $rm_auth;
+						OwnQuery = $URI;
+						Environment = $Environment;
+						ContentType = 'application/json';
+						Method = "GET";
+					}
+					$Databases = Get-MonkeyRMObject @params
+					#Get PostgreSQL server Configuration
+					$uri = ("{0}{1}/{2}?api-version={3}" -f $O365Object.Environment.ResourceManager,`
+ 							$server.id,`
+ 							"configurations",`
+ 							$AzurePostgreSQLConfig.api_version)
 
-                    $params = @{
-                        Authentication = $rm_auth;
-                        OwnQuery = $uri;
-                        Environment = $Environment;
-                        ContentType = 'application/json';
-                        Method = "GET";
-                    }
-                    $PostgreSQLServerConfiguration = Get-MonkeyRMObject @params
-                    #Get PostgreSQL Active Directory Admin configuration
-                    $uri = ("{0}{1}/{2}?api-version={3}" -f $O365Object.Environment.ResourceManager, `
-                                                            $server.id, `
-                                                            "administrators/activeDirectory", `
-                                                            $AzurePostgreSQLConfig.api_version)
+					$params = @{
+						Authentication = $rm_auth;
+						OwnQuery = $uri;
+						Environment = $Environment;
+						ContentType = 'application/json';
+						Method = "GET";
+					}
+					$PostgreSQLServerConfiguration = Get-MonkeyRMObject @params
+					#Get PostgreSQL Active Directory Admin configuration
+					$uri = ("{0}{1}/{2}?api-version={3}" -f $O365Object.Environment.ResourceManager,`
+ 							$server.id,`
+ 							"administrators/activeDirectory",`
+ 							$AzurePostgreSQLConfig.api_version)
 
-                    $params = @{
-                        Authentication = $rm_auth;
-                        OwnQuery = $uri;
-                        Environment = $Environment;
-                        ContentType = 'application/json';
-                        Method = "GET";
-                    }
-                    $PSQLServer_AD_Administrator = Get-MonkeyRMObject @params
-                    #Add Server to Array
-                    $AzurePostgreSqlServer = New-Object -TypeName PSCustomObject
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name serverName -value $server.name
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name Id -value $server.id
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name serverLocation -value $server.location
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name resourceGroupName -value $server.id.Split("/")[4]
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name fullyQualifiedDomainName -value $server.properties.fullyQualifiedDomainName
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name earliestRestoreDate -value $server.properties.earliestRestoreDate
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name sslEnforcement -value $server.properties.sslEnforcement
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name administratorLogin -value $server.properties.administratorLogin
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name userVisibleState -value $server.properties.userVisibleState
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name backupRetentionDays -value $server.properties.storageProfile.backupRetentionDays
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name geoRedundantBackup -value $server.properties.storageProfile.geoRedundantBackup
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name version -value $server.properties.version
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name properties -value $server.properties
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name rawObject -value $server
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name threatDetectionPolicy -value $ThreatDetectionPolicy.properties.state
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name threatDetectionPolicyDisabledAlerts -value $ThreatDetectionPolicy.properties.disabledAlerts
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name threatDetectionPolicyEmailAddresses -value $ThreatDetectionPolicy.properties.emailAddresses
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name threatDetectionPolicyEmailAccountAdmins -value $ThreatDetectionPolicy.properties.emailAccountAdmins
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name threatDetectionPolicyRetentionDays -value $ThreatDetectionPolicy.properties.retentionDays
-                    $AzurePostgreSqlServer | Add-Member -type NoteProperty -name tdpRawObject -value $ThreatDetectionPolicy
-                    if($PSQLServer_AD_Administrator){
-                        $AzurePostgreSqlServer | Add-Member -type NoteProperty -name isActiveDirectoryAdministratorEnabled -value $true
-                        $AzurePostgreSqlServer | Add-Member -type NoteProperty -name psqlserveradministratorType -value $PSQLServer_AD_Administrator.properties.administratorType
-                        $AzurePostgreSqlServer | Add-Member -type NoteProperty -name psqlserveradlogin -value $PSQLServer_AD_Administrator.properties.login
-                        $AzurePostgreSqlServer | Add-Member -type NoteProperty -name psqlserveradloginsid -value $PSQLServer_AD_Administrator.properties.sid
-                        $AzurePostgreSqlServer | Add-Member -type NoteProperty -name psqlserveradlogintenantid -value $PSQLServer_AD_Administrator.properties.tenantId
-                    }
-                    else{
-                        $AzurePostgreSqlServer | Add-Member -type NoteProperty -name isActiveDirectoryAdministratorEnabled -value $false
-                    }
-                    #Add to list
-                    $AllPostgreSQLServers+=$AzurePostgreSqlServer
-                    #Create object for each database found
-                    foreach ($sql in $Databases){
-                        $AzurePostgreSQLDatabase = New-Object -TypeName PSCustomObject
-                        $AzurePostgreSQLDatabase | Add-Member -type NoteProperty -name serverName -value $server.name
-                        $AzurePostgreSQLDatabase | Add-Member -type NoteProperty -name databaseCharset -value $server.properties.charset
-                        $AzurePostgreSQLDatabase | Add-Member -type NoteProperty -name resourceGroupName -value $server.id.Split("/")[4]
-                        $AzurePostgreSQLDatabase | Add-Member -type NoteProperty -name databaseName -value $sql.name
-                        $AzurePostgreSQLDatabase | Add-Member -type NoteProperty -name databaseCollation -value $sql.properties.collation
-                        $AzurePostgreSQLDatabase | Add-Member -type NoteProperty -name properties -value $sql.properties
-                        $AzurePostgreSQLDatabase | Add-Member -type NoteProperty -name rawObject -value $sql
-                        #Add to list
-                        $AllPostgreSQLDatabases+=$AzurePostgreSQLDatabase
-                    }
-                    #Create object for each server configuration found
-                    foreach ($SingleConfiguration in $PostgreSQLServerConfiguration){
-                        $AzurePostgreSQLServerConfiguration = New-Object -TypeName PSCustomObject
-                        $AzurePostgreSQLServerConfiguration | Add-Member -type NoteProperty -name serverName -value $server.name
-                        $AzurePostgreSQLServerConfiguration | Add-Member -type NoteProperty -name parameterName -value $SingleConfiguration.name
-                        $AzurePostgreSQLServerConfiguration | Add-Member -type NoteProperty -name parameterDescription -value $SingleConfiguration.properties.description
-                        $AzurePostgreSQLServerConfiguration | Add-Member -type NoteProperty -name parameterValue -value $SingleConfiguration.properties.value
-                        $AzurePostgreSQLServerConfiguration | Add-Member -type NoteProperty -name parameterDefaultValue -value $SingleConfiguration.properties.defaultValue
-                        $AzurePostgreSQLServerConfiguration | Add-Member -type NoteProperty -name properties -value $SingleConfiguration.properties
-                        $AzurePostgreSQLServerConfiguration | Add-Member -type NoteProperty -name rawObject -value $SingleConfiguration
-                        #Add to list
-                        $AllPostgreSQLServerConfigurations+=$AzurePostgreSQLServerConfiguration
-                    }
-                }
-            }
-        }
-    }
-    End{
-        if($AllPostgreSQLServers){
-            $AllPostgreSQLServers.PSObject.TypeNames.Insert(0,'Monkey365.Azure.AzurePostgreSQLServer')
-            [pscustomobject]$obj = @{
-                Data = $AllPostgreSQLServers
-            }
-            $returnData.az_postgresql_servers = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure PostgreSQL Server", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePostgreSQLEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-        if($AllPostgreSQLDatabases){
-            #Add Databases to list
-            $AllPostgreSQLDatabases.PSObject.TypeNames.Insert(0,'Monkey365.Azure.AzurePostgreSQLDatabases')
-            [pscustomobject]$obj = @{
-                Data = $AllPostgreSQLDatabases
-            }
-            $returnData.az_postgresql_databases = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure PostgreSQL Databases", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePostgreSQLEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-        if($AllPostgreSQLServerConfigurations){
-            #Add Server configuration to list
-            $AllPostgreSQLServerConfigurations.PSObject.TypeNames.Insert(0,'Monkey365.Azure.AzurePostgreSQLSingleConfiguration')
-            [pscustomobject]$obj = @{
-                Data = $AllPostgreSQLServerConfigurations
-            }
-            $returnData.az_postgresql_configuration = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure PostgreSQL Configurations", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePostgreSQLEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+					$params = @{
+						Authentication = $rm_auth;
+						OwnQuery = $uri;
+						Environment = $Environment;
+						ContentType = 'application/json';
+						Method = "GET";
+					}
+					$PSQLServer_AD_Administrator = Get-MonkeyRMObject @params
+					#Add Server to Array
+					$AzurePostgreSqlServer = New-Object -TypeName PSCustomObject
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name serverName -Value $server.Name
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name Id -Value $server.id
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name serverLocation -Value $server.location
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name resourceGroupName -Value $server.id.Split("/")[4]
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name fullyQualifiedDomainName -Value $server.Properties.fullyQualifiedDomainName
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name earliestRestoreDate -Value $server.Properties.earliestRestoreDate
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name sslEnforcement -Value $server.Properties.sslEnforcement
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name administratorLogin -Value $server.Properties.administratorLogin
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name userVisibleState -Value $server.Properties.userVisibleState
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name backupRetentionDays -Value $server.Properties.storageProfile.backupRetentionDays
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name geoRedundantBackup -Value $server.Properties.storageProfile.geoRedundantBackup
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name version -Value $server.Properties.version
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name properties -Value $server.Properties
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name rawObject -Value $server
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name threatDetectionPolicy -Value $ThreatDetectionPolicy.Properties.state
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name threatDetectionPolicyDisabledAlerts -Value $ThreatDetectionPolicy.Properties.disabledAlerts
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name threatDetectionPolicyEmailAddresses -Value $ThreatDetectionPolicy.Properties.emailAddresses
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name threatDetectionPolicyEmailAccountAdmins -Value $ThreatDetectionPolicy.Properties.emailAccountAdmins
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name threatDetectionPolicyRetentionDays -Value $ThreatDetectionPolicy.Properties.retentionDays
+					$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name tdpRawObject -Value $ThreatDetectionPolicy
+					if ($PSQLServer_AD_Administrator) {
+						$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name isActiveDirectoryAdministratorEnabled -Value $true
+						$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name psqlserveradministratorType -Value $PSQLServer_AD_Administrator.Properties.administratorType
+						$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name psqlserveradlogin -Value $PSQLServer_AD_Administrator.Properties.login
+						$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name psqlserveradloginsid -Value $PSQLServer_AD_Administrator.Properties.sid
+						$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name psqlserveradlogintenantid -Value $PSQLServer_AD_Administrator.Properties.TenantID
+					}
+					else {
+						$AzurePostgreSqlServer | Add-Member -Type NoteProperty -Name isActiveDirectoryAdministratorEnabled -Value $false
+					}
+					#Add to list
+					$AllPostgreSQLServers += $AzurePostgreSqlServer
+					#Create object for each database found
+					foreach ($sql in $Databases) {
+						$AzurePostgreSQLDatabase = New-Object -TypeName PSCustomObject
+						$AzurePostgreSQLDatabase | Add-Member -Type NoteProperty -Name serverName -Value $server.Name
+						$AzurePostgreSQLDatabase | Add-Member -Type NoteProperty -Name databaseCharset -Value $server.Properties.charset
+						$AzurePostgreSQLDatabase | Add-Member -Type NoteProperty -Name resourceGroupName -Value $server.id.Split("/")[4]
+						$AzurePostgreSQLDatabase | Add-Member -Type NoteProperty -Name databaseName -Value $sql.Name
+						$AzurePostgreSQLDatabase | Add-Member -Type NoteProperty -Name databaseCollation -Value $sql.Properties.collation
+						$AzurePostgreSQLDatabase | Add-Member -Type NoteProperty -Name properties -Value $sql.Properties
+						$AzurePostgreSQLDatabase | Add-Member -Type NoteProperty -Name rawObject -Value $sql
+						#Add to list
+						$AllPostgreSQLDatabases += $AzurePostgreSQLDatabase
+					}
+					#Create object for each server configuration found
+					foreach ($SingleConfiguration in $PostgreSQLServerConfiguration) {
+						$AzurePostgreSQLServerConfiguration = New-Object -TypeName PSCustomObject
+						$AzurePostgreSQLServerConfiguration | Add-Member -Type NoteProperty -Name serverName -Value $server.Name
+						$AzurePostgreSQLServerConfiguration | Add-Member -Type NoteProperty -Name parameterName -Value $SingleConfiguration.Name
+						$AzurePostgreSQLServerConfiguration | Add-Member -Type NoteProperty -Name parameterDescription -Value $SingleConfiguration.Properties.description
+						$AzurePostgreSQLServerConfiguration | Add-Member -Type NoteProperty -Name parameterValue -Value $SingleConfiguration.Properties.value
+						$AzurePostgreSQLServerConfiguration | Add-Member -Type NoteProperty -Name parameterDefaultValue -Value $SingleConfiguration.Properties.defaultValue
+						$AzurePostgreSQLServerConfiguration | Add-Member -Type NoteProperty -Name properties -Value $SingleConfiguration.Properties
+						$AzurePostgreSQLServerConfiguration | Add-Member -Type NoteProperty -Name rawObject -Value $SingleConfiguration
+						#Add to list
+						$AllPostgreSQLServerConfigurations += $AzurePostgreSQLServerConfiguration
+					}
+				}
+			}
+		}
+	}
+	end {
+		if ($AllPostgreSQLServers) {
+			$AllPostgreSQLServers.PSObject.TypeNames.Insert(0,'Monkey365.Azure.AzurePostgreSQLServer')
+			[pscustomobject]$obj = @{
+				Data = $AllPostgreSQLServers;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_postgresql_servers = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure PostgreSQL Server",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePostgreSQLEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+		if ($AllPostgreSQLDatabases) {
+			#Add Databases to list
+			$AllPostgreSQLDatabases.PSObject.TypeNames.Insert(0,'Monkey365.Azure.AzurePostgreSQLDatabases')
+			[pscustomobject]$obj = @{
+				Data = $AllPostgreSQLDatabases;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_postgresql_databases = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure PostgreSQL Databases",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePostgreSQLEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+		if ($AllPostgreSQLServerConfigurations) {
+			#Add Server configuration to list
+			$AllPostgreSQLServerConfigurations.PSObject.TypeNames.Insert(0,'Monkey365.Azure.AzurePostgreSQLSingleConfiguration')
+			[pscustomobject]$obj = @{
+				Data = $AllPostgreSQLServerConfigurations;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_postgresql_configuration = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure PostgreSQL Configurations",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePostgreSQLEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

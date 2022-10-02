@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADUserFeaturePreview{
-    <#
+function Get-MonkeyADUserFeaturePreview {
+<#
         .SYNOPSIS
 		Plugin to get user feature preview info from Azure AD
 
@@ -37,52 +37,63 @@ Function Get-MonkeyADUserFeaturePreview{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $AADAuth = $O365Object.auth_tokens.AzurePortal
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD user feature preview", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePortalUserFeatPreview');
-        }
-        Write-Information @msg
-        #Get Device Settings
-        $params = @{
-            Authentication = $AADAuth;
-            Query = 'Directories/FeatureSettingsProperties';
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-        $ad_user_feature_preview = Get-MonkeyAzurePortalObject @params
-    }
-    End{
-        if ($ad_user_feature_preview){
-            $ad_user_feature_preview.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.UserFeaturePreview')
-            [pscustomobject]$obj = @{
-                Data = $ad_user_feature_preview
-            }
-            $returnData.aad_user_feature_preview = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD user feature preview", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalUserFeatEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$Environment = $O365Object.Environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0036";
+			Provider = "AzureAD";
+			Title = "Plugin to get user feature preview info from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD User Feature Preview";
+			PluginName = "Get-MonkeyADUserFeaturePreview";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Azure Active Directory Auth
+		$AADAuth = $O365Object.auth_tokens.AzurePortal
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD user feature preview",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePortalUserFeatPreview');
+		}
+		Write-Information @msg
+		#Get Device Settings
+		$params = @{
+			Authentication = $AADAuth;
+			Query = 'Directories/FeatureSettingsProperties';
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+		$ad_user_feature_preview = Get-MonkeyAzurePortalObject @params
+	}
+	end {
+		if ($ad_user_feature_preview) {
+			$ad_user_feature_preview.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.UserFeaturePreview')
+			[pscustomobject]$obj = @{
+				Data = $ad_user_feature_preview;
+				Metadaa = $monkey_metadata;
+			}
+			$returnData.aad_user_feature_preview = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD user feature preview",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalUserFeatEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

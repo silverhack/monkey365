@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOActiveSyncOrgInfo{
-    <#
+function Get-MonkeyEXOActiveSyncOrgInfo {
+<#
         .SYNOPSIS
 		Plugin to get information about ActiveSync organisation settings from Exchange Online
 
@@ -37,47 +37,58 @@ Function Get-MonkeyEXOActiveSyncOrgInfo{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $active_sync_org_settings = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online ActiveSync organisation settings", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoActiveSyncInfo');
-            }
-            Write-Information @msg
-            #Get ActiveSync organisation settings
-            $active_sync_org_settings = Get-ExoMonkeyActiveSyncOrganizationSettings
-        }
-    }
-    End{
-        if($null -ne $active_sync_org_settings){
-            $active_sync_org_settings.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.ActiveSyncOrgSettings')
-            [pscustomobject]$obj = @{
-                Data = $active_sync_org_settings
-            }
-            $returnData.o365_exo_activesync_settings = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange ActiveSync organisation settings", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoActiveSyncEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$active_sync_org_settings = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0001";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about ActiveSync organisation settings from Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online";
+			PluginName = "Get-MonkeyEXOActiveSyncOrgInfo";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online ActiveSync organisation settings",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoActiveSyncInfo');
+			}
+			Write-Information @msg
+			#Get ActiveSync organisation settings
+			$active_sync_org_settings = Get-ExoMonkeyActiveSyncOrganizationSettings
+		}
+	}
+	end {
+		if ($null -ne $active_sync_org_settings) {
+			$active_sync_org_settings.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.ActiveSyncOrgSettings')
+			[pscustomobject]$obj = @{
+				Data = $active_sync_org_settings;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_activesync_settings = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange ActiveSync organisation settings",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoActiveSyncEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

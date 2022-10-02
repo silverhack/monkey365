@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADAuthorisationPolicy{
-    <#
+function Get-MonkeyADAuthorisationPolicy {
+<#
         .SYNOPSIS
 		Plugin to get password reset policy from Azure AD
 
@@ -37,43 +37,54 @@ Function Get-MonkeyADAuthorisationPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
 
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD authorisation policy", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('GraphAuthPolicy');
-        }
-        Write-Information @msg
-        #Query
-        $ad_auth_policy = Get-PSGraphAuthorizationPolicy @params
-    }
-    End{
-        if ($ad_auth_policy){
-            $ad_auth_policy.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.AuthorisationPolicy')
-            [pscustomobject]$obj = @{
-                Data = $ad_auth_policy
-            }
-            $returnData.aad_auth_policy = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD authorisation policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('GraphAuthPolicyEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0003";
+			Provider = "AzureAD";
+			Title = "Plugin to get password reset policy from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD SSPR";
+			PluginName = "Get-MonkeyADAuthorisationPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD authorisation policy",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('GraphAuthPolicy');
+		}
+		Write-Information @msg
+		#Query
+		$ad_auth_policy = Get-PSGraphAuthorizationPolicy @params
+	}
+	end {
+		if ($ad_auth_policy) {
+			$ad_auth_policy.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.AuthorisationPolicy')
+			[pscustomobject]$obj = @{
+				Data = $ad_auth_policy;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_auth_policy = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD authorisation policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('GraphAuthPolicyEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

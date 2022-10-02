@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOUsersMailbox{
-    <#
+function Get-MonkeyEXOUsersMailbox {
+<#
         .SYNOPSIS
 		Plugin to get information about mailboxes in Exchange Online
 
@@ -37,116 +37,129 @@ Function Get-MonkeyEXOUsersMailbox{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        #create array
-        $mailbox_permissions = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
-        #Getting environment
-        $Environment = $O365Object.Environment
-        #Get EXO authentication
-        $exo_auth = $O365Object.auth_tokens.ExchangeOnline
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online Mailboxes", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('ExoMailboxesInfo');
-        }
-        Write-Information @msg
-        #Get Mailboxes
-        $param = @{
-            Authentication = $exo_auth;
-            Environment = $Environment;
-            ObjectType = "Mailbox";
-            extraParameters = "PropertySet=All";
-        }
-        $mailBoxes = Get-PSExoAdminApiObject @param
-        if($mailboxes){
-            #Get mailbox Forwarding
-            $forwarding_mailboxes = $mailboxes | Select-Object UserPrincipalName,ForwardingSmtpAddress,DeliverToMailboxAndForward
-            #Getting mailbox permissions
-            #Generate vars
-            $vars = @{
-                "O365Object"=$O365Object;
-                "WriteLog"=$WriteLog;
-                'Verbosity' = $Verbosity;
-                'InformationAction' = $InformationAction;
-            }
-            $param = @{
-                ScriptBlock = {Get-PSExoMailBoxPermission -mailBox $_};
-                ImportCommands = $O365Object.LibUtils;
-                ImportVariables = $vars;
-                ImportModules = $O365Object.runspaces_modules;
-                StartUpScripts = $O365Object.runspace_init;
-                ThrowOnRunspaceOpenError = $true;
-                Debug = $O365Object.VerboseOptions.Debug;
-                Verbose = $O365Object.VerboseOptions.Verbose;
-                Throttle = $O365Object.nestedRunspaceMaxThreads;
-                MaxQueue = $O365Object.MaxQueue;
-                BatchSleep = $O365Object.BatchSleep;
-                BatchSize = $O365Object.BatchSize;
-            }
-            #Get objects
-            $mailbox_permissions = $mailboxes | Invoke-MonkeyJob @param
-        }
-    }
-    End{
-        if($mailboxes){
-            $mailboxes.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.Mailboxes')
-            [pscustomobject]$obj = @{
-                Data = $mailboxes
-            }
-            $returnData.o365_exo_mailboxes = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online mailboxes", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoMailboxesEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-        if($forwarding_mailboxes){
-            $forwarding_mailboxes.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.ForwardingMailboxes')
-            [pscustomobject]$obj = @{
-                Data = $forwarding_mailboxes
-            }
-            $returnData.o365_exo_mailbox_forwarding = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online mailbox forwarding", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoMailboxesEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-        if($mailbox_permissions){
-            $mailbox_permissions.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.MailboxPermissions')
-            [pscustomobject]$obj = @{
-                Data = $mailbox_permissions
-            }
-            $returnData.o365_exo_mailbox_permissions = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online mailbox permissions", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoMailboxesEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#create array
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0030";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about mailboxes in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online mailboxes";
+			PluginName = "Get-MonkeyEXOUsersMailbox";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$mailbox_permissions = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
+		#Getting environment
+		$Environment = $O365Object.Environment
+		#Get EXO authentication
+		$exo_auth = $O365Object.auth_tokens.ExchangeOnline
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online Mailboxes",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('ExoMailboxesInfo');
+		}
+		Write-Information @msg
+		#Get Mailboxes
+		$param = @{
+			Authentication = $exo_auth;
+			Environment = $Environment;
+			ObjectType = "Mailbox";
+			extraParameters = "PropertySet=All";
+		}
+		$mailBoxes = Get-PSExoAdminApiObject @param
+		if ($mailboxes) {
+			#Get mailbox Forwarding
+			$forwarding_mailboxes = $mailboxes | Select-Object UserPrincipalName,ForwardingSmtpAddress,DeliverToMailboxAndForward
+			#Getting mailbox permissions
+			#Generate vars
+			$vars = @{
+				"O365Object" = $O365Object;
+				"WriteLog" = $WriteLog;
+				'Verbosity' = $Verbosity;
+				'InformationAction' = $InformationAction;
+			}
+			$param = @{
+				ScriptBlock = { Get-PSExoMailBoxPermission -mailBox $_ };
+				ImportCommands = $O365Object.LibUtils;
+				ImportVariables = $vars;
+				ImportModules = $O365Object.runspaces_modules;
+				StartUpScripts = $O365Object.runspace_init;
+				ThrowOnRunspaceOpenError = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				Throttle = $O365Object.nestedRunspaceMaxThreads;
+				MaxQueue = $O365Object.MaxQueue;
+				BatchSleep = $O365Object.BatchSleep;
+				BatchSize = $O365Object.BatchSize;
+			}
+			#Get objects
+			$mailbox_permissions = $mailboxes | Invoke-MonkeyJob @param
+		}
+	}
+	end {
+		if ($mailboxes) {
+			$mailboxes.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.Mailboxes')
+			[pscustomobject]$obj = @{
+				Data = $mailboxes;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_mailboxes = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online mailboxes",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoMailboxesEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+		if ($forwarding_mailboxes) {
+			$forwarding_mailboxes.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.ForwardingMailboxes')
+			[pscustomobject]$obj = @{
+				Data = $forwarding_mailboxes;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_mailbox_forwarding = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online mailbox forwarding",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoMailboxesEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+		if ($mailbox_permissions) {
+			$mailbox_permissions.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.MailboxPermissions')
+			[pscustomobject]$obj = @{
+				Data = $mailbox_permissions;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_mailbox_permissions = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online mailbox permissions",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoMailboxesEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

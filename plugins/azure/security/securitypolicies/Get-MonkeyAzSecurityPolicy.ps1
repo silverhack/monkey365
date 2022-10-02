@@ -14,8 +14,8 @@
 
 
 
-Function Get-MonkeyAzSecurityPolicy{
-    <#
+function Get-MonkeyAzSecurityPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about Security Policies from Azure
         https://msdn.microsoft.com/en-us/library/azure/mt704061.aspx
@@ -40,60 +40,68 @@ Function Get-MonkeyAzSecurityPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure RM Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get config
-        $AzureSecPolicies = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureSecurityPolicies"} | Select-Object -ExpandProperty resource
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Security Policies", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureSecPoliciesInfo');
-        }
-        Write-Information @msg
-        #List All Security Policies
-        $params = @{
-            Authentication = $rm_auth;
-            Provider = $AzureSecPolicies.provider;
-            ObjectType = "policies";
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-            APIVersion = $AzureSecPolicies.api_version;
-        }
-        $SecPolicies = Get-MonkeyRMObject @params
-    }
-    End{
-        if($SecPolicies){
-            $SecPolicies.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SecurityPolicies')
-            [pscustomobject]$obj = @{
-                Data = $SecPolicies
-            }
-            $returnData.az_security_policies = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Policies", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureKeySecPoliciesEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00037";
+			Provider = "Azure";
+			Title = "Plugin to get information about Azure security policies";
+			Group = @("Subscription","DefenderForCloud");
+			ServiceName = "Azure Security policies";
+			PluginName = "Get-MonkeyAzSecurityPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure RM Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get config
+		$AzureSecPolicies = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureSecurityPolicies" } | Select-Object -ExpandProperty resource
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure Security Policies",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureSecPoliciesInfo');
+		}
+		Write-Information @msg
+		#List All Security Policies
+		$params = @{
+			Authentication = $rm_auth;
+			Provider = $AzureSecPolicies.Provider;
+			ObjectType = "policies";
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+			APIVersion = $AzureSecPolicies.api_version;
+		}
+		$SecPolicies = Get-MonkeyRMObject @params
+	}
+	end {
+		if ($SecPolicies) {
+			$SecPolicies.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SecurityPolicies')
+			[pscustomobject]$obj = @{
+				Data = $SecPolicies;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_security_policies = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Policies",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureKeySecPoliciesEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

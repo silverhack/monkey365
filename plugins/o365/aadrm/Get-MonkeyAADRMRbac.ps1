@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAADRMRbac{
-    <#
+function Get-MonkeyAADRMRbac {
+<#
         .SYNOPSIS
 		Plugin to get information about RBAC from AADRM
 
@@ -37,86 +37,97 @@ Function Get-MonkeyAADRMRbac{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Get Access Token from AADRM
-        $access_token = $O365Object.auth_tokens.AADRM
-        #Get AADRM Url
-        $url = $O365Object.Environment.aadrm_service_locator
-        if($null -ne $access_token){
-            #Set Authorization Header
-            $AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
-            $requestHeader = @{"Authorization" = $AuthHeader}
-        }
-        #Create AADRM object
-        $aadrm_rbac = New-Object -TypeName PSCustomObject
-    }
-    Process{
-        if($requestHeader -and $url){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Office 365 Rights Management: RBAC users", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMRBACStatus');
-            }
-            Write-Information @msg
-            $url_global = ("{0}/Administrators/Roles/GlobalAdministrator" -f $url)
-            $params = @{
-                Url = $url_global;
-                Method = 'Get';
-                Content_Type = 'application/json; charset=utf-8';
-                Headers = $requestHeader;
-                disableSSLVerification = $true;
-            }
-            #call AADRM endpoint
-            $AADRM_Global_Admins = Invoke-UrlRequest @params
-            if($AADRM_Global_Admins){
-                $aadrm_rbac | Add-Member -type NoteProperty -name Global_Admins -value $AADRM_Global_Admins
-            }
-            else{
-                $aadrm_rbac | Add-Member -type NoteProperty -name Global_Admins -value $false
-            }
-            #Get Connector admins
-            $url_connector = ("{0}/Administrators/Roles/ConnectorAdministrator" -f $url)
-            $params = @{
-                Url = $url_connector;
-                Method = 'Get';
-                Content_Type = 'application/json; charset=utf-8';
-                Headers = $requestHeader;
-                disableSSLVerification = $true;
-            }
-            #call AADRM endpoint
-            $AADRM_Connector_Admins = Invoke-UrlRequest @params
-            if($AADRM_Connector_Admins){
-                $aadrm_rbac | Add-Member -type NoteProperty -name Connector_Admins -value $AADRM_Connector_Admins
-            }
-            else{
-                $aadrm_rbac | Add-Member -type NoteProperty -name Connector_Admins -value $false
-            }
-        }
-    }
-    End{
-        if($aadrm_rbac){
-            $aadrm_rbac.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.RBAC')
-            [pscustomobject]$obj = @{
-                Data = $aadrm_rbac
-            }
-            $returnData.o365_aadrm_rbac = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: RBAC users", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMRBACEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Get Access Token from AADRM
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aadrm07";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about RBAC from AADRM";
+			Group = @("IRM");
+			ServiceName = "Azure Rights Management";
+			PluginName = "Get-MonkeyAADRMRbac";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$access_token = $O365Object.auth_tokens.AADRM
+		#Get AADRM Url
+		$url = $O365Object.Environment.aadrm_service_locator
+		if ($null -ne $access_token) {
+			#Set Authorization Header
+			$AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
+			$requestHeader = @{ "Authorization" = $AuthHeader }
+		}
+		#Create AADRM object
+		$aadrm_rbac = New-Object -TypeName PSCustomObject
+	}
+	process {
+		if ($requestHeader -and $url) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Office 365 Rights Management: RBAC users",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMRBACStatus');
+			}
+			Write-Information @msg
+			$url_global = ("{0}/Administrators/Roles/GlobalAdministrator" -f $url)
+			$params = @{
+				url = $url_global;
+				Method = 'Get';
+				Content_Type = 'application/json; charset=utf-8';
+				Headers = $requestHeader;
+				disableSSLVerification = $true;
+			}
+			#call AADRM endpoint
+			$AADRM_Global_Admins = Invoke-UrlRequest @params
+			if ($AADRM_Global_Admins) {
+				$aadrm_rbac | Add-Member -Type NoteProperty -Name Global_Admins -Value $AADRM_Global_Admins
+			}
+			else {
+				$aadrm_rbac | Add-Member -Type NoteProperty -Name Global_Admins -Value $false
+			}
+			#Get Connector admins
+			$url_connector = ("{0}/Administrators/Roles/ConnectorAdministrator" -f $url)
+			$params = @{
+				url = $url_connector;
+				Method = 'Get';
+				Content_Type = 'application/json; charset=utf-8';
+				Headers = $requestHeader;
+				disableSSLVerification = $true;
+			}
+			#call AADRM endpoint
+			$AADRM_Connector_Admins = Invoke-UrlRequest @params
+			if ($AADRM_Connector_Admins) {
+				$aadrm_rbac | Add-Member -Type NoteProperty -Name Connector_Admins -Value $AADRM_Connector_Admins
+			}
+			else {
+				$aadrm_rbac | Add-Member -Type NoteProperty -Name Connector_Admins -Value $false
+			}
+		}
+	}
+	end {
+		if ($aadrm_rbac) {
+			$aadrm_rbac.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.RBAC')
+			[pscustomobject]$obj = @{
+				Data = $aadrm_rbac;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_aadrm_rbac = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: RBAC users",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMRBACEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

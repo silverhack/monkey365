@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAzSecurityContact{
-    <#
+function Get-MonkeyAzSecurityContact {
+<#
         .SYNOPSIS
 		Azure plugin to get Security Contacts
 
@@ -37,76 +37,88 @@ Function Get-MonkeyAzSecurityContact{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure RM Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get config
-        $azureContactConfig = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureContacts"} | Select-Object -ExpandProperty resource
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Security Contacts", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureSecContactInfo');
-        }
-        Write-Information @msg
-        #List All Security Contacts
-        $params = @{
-            Authentication = $rm_auth;
-            Provider = $azureContactConfig.provider;
-            ObjectType = "securityContacts";
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-            APIVersion = $azureContactConfig.api_version;
-        }
-        $securityContacts = Get-MonkeyRMObject @params
-        #Create array
-        $allsecurityContacts = @()
-        foreach ($account in $securityContacts){
-            $Properties = $account | Select-Object @{Name='id';Expression={$account.id}},`
-                                    @{Name='rawObject';Expression={$account}},`
-                                    @{Name='name';Expression={$account.name}},`
-                                    @{Name='properties';Expression={$account.properties}},`
-                                    @{Name='email';Expression={$account.properties.email}},`
-                                    @{Name='phone';Expression={$account.properties.phone}},`
-                                    @{Name='alertNotifications';Expression={$account.properties.alertNotifications}},`
-                                    @{Name='alertsToAdmins';Expression={$account.properties.alertsToAdmins}}
-
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00035";
+			Provider = "Azure";
+			Title = "Plugin to get Security Contacts fron Azure";
+			Group = @("Subscription");
+			ServiceName = "Azure Security Contacts";
+			PluginName = "Get-MonkeyAzSecurityContact";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure RM Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get config
+		$azureContactConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureContacts" } | Select-Object -ExpandProperty resource
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure Security Contacts",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureSecContactInfo');
+		}
+		Write-Information @msg
+		#List All Security Contacts
+		$params = @{
+			Authentication = $rm_auth;
+			Provider = $azureContactConfig.Provider;
+			ObjectType = "securityContacts";
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+			APIVersion = $azureContactConfig.api_version;
+		}
+		$securityContacts = Get-MonkeyRMObject @params
+		#Create array
+		$allsecurityContacts = @()
+        foreach ($account in $securityContacts) {
+            $email_notification_dict = [ordered]@{
+                id = $account.id;
+                location = $account.id;
+                name = $account.name;
+                properties = $account.properties;
+                email = $account.Properties.emails;
+                phone = $account.Properties.phone;
+                alertNotifications = $account.Properties.alertNotifications;
+                notificationsByRole = $account.Properties.notificationsByRole;
+                rawObject = $account;
+            }
+            $email_notification_obj = New-Object -TypeName PSCustomObject -Property $email_notification_dict
             #Decorate object
-            $Properties.PSObject.TypeNames.Insert(0,'Monkey365.Azure.securityContact')
-            $allsecurityContacts+=$Properties
+			$email_notification_obj.PSObject.TypeNames.Insert(0,'Monkey365.Azure.securityContact')
+            #Add to array
+            $allsecurityContacts += $email_notification_obj
         }
-    }
-    End{
-        if($allsecurityContacts){
-            $allsecurityContacts.PSObject.TypeNames.Insert(0,'Monkey365.Azure.securityContacts')
-            [pscustomobject]$obj = @{
-                Data = $allsecurityContacts
-            }
-            $returnData.az_security_contacts = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Contacts", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureKeySecContactEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	}
+	end {
+		if ($allsecurityContacts) {
+			$allsecurityContacts.PSObject.TypeNames.Insert(0,'Monkey365.Azure.securityContacts')
+			[pscustomobject]$obj = @{
+				Data = $allsecurityContacts;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_security_contacts = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Contacts",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureKeySecContactEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

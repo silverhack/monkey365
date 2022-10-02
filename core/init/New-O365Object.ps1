@@ -191,6 +191,8 @@ Function New-O365Object{
             $tmp_object.WriteLog = $MyParams.WriteLog;
             $tmp_object.TenantId = $MyParams.TenantId;
             $tmp_object.exportTo = $MyParams.exportTo;
+            $tmp_object.excludePlugins = $MyParams.ExcludePlugin;
+            $tmp_object.excludedResources = $MyParams.ExcludedResources;
             #Calculate threads for nested runspaces
             [int]$value = ($MyParams.Threads / 2)
             if($value -eq 0){$value = 1}

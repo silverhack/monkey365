@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADPortalSecurityDefaultsConfiguration{
-    <#
+function Get-MonkeyADPortalSecurityDefaultsConfiguration {
+<#
         .SYNOPSIS
 		Plugin to get security defaults from Azure AD
 
@@ -37,52 +37,63 @@ Function Get-MonkeyADPortalSecurityDefaultsConfiguration{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $AADAuth = $O365Object.auth_tokens.AzurePortal
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD security defaults", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePortalCAPs');
-        }
-        Write-Information @msg
-        #Get Security Defaults
-        $params = @{
-            Authentication = $AADAuth;
-            Query = 'SecurityDefaults/GetSecurityDefaultStatus';
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-        $ad_security_defaults = Get-MonkeyAzurePortalObject @params
-    }
-    End{
-        if ($ad_security_defaults){
-            $ad_security_defaults.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.SecurityDefaults')
-            [pscustomobject]$obj = @{
-                Data = $ad_security_defaults
-            }
-            $returnData.aad_security_default_status = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD security defaults", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalSecurityDefaultsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$Environment = $O365Object.Environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0024";
+			Provider = "AzureAD";
+			Title = "Plugin to get security defaults from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD Security Defaults";
+			PluginName = "Get-MonkeyADPortalSecurityDefaultsConfiguration";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Azure Active Directory Auth
+		$AADAuth = $O365Object.auth_tokens.AzurePortal
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD security defaults",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePortalCAPs');
+		}
+		Write-Information @msg
+		#Get Security Defaults
+		$params = @{
+			Authentication = $AADAuth;
+			Query = 'SecurityDefaults/GetSecurityDefaultStatus';
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+		$ad_security_defaults = Get-MonkeyAzurePortalObject @params
+	}
+	end {
+		if ($ad_security_defaults) {
+			$ad_security_defaults.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.SecurityDefaults')
+			[pscustomobject]$obj = @{
+				Data = $ad_security_defaults;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_security_default_status = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD security defaults",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalSecurityDefaultsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXODKIMConfiguration{
-    <#
+function Get-MonkeyEXODKIMConfiguration {
+<#
         .SYNOPSIS
 		Plugin to get information about DKIM from Exchange Online
 
@@ -37,47 +37,58 @@ Function Get-MonkeyEXODKIMConfiguration{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $DKIM = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($null -ne $exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online DKIM signing configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoDKIMInfo');
-            }
-            Write-Information @msg
-            #Get DKIM
-            $DKIM = Get-ExoMonkeyDkimSigningConfig
-        }
-    }
-    End{
-        if($null -ne $DKIM){
-            $DKIM.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.DKIM')
-            [pscustomobject]$obj = @{
-                Data = $DKIM
-            }
-            $returnData.o365_exo_dkim_conf = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online DKIM signing configuration", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoDKIMEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$DKIM = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0019";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about DKIM from Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online DKIM information";
+			PluginName = "Get-MonkeyEXODKIMConfiguration";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($null -ne $exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online DKIM signing configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoDKIMInfo');
+			}
+			Write-Information @msg
+			#Get DKIM
+			$DKIM = Get-ExoMonkeyDkimSigningConfig
+		}
+	}
+	end {
+		if ($null -ne $DKIM) {
+			$DKIM.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.DKIM')
+			[pscustomobject]$obj = @{
+				Data = $DKIM;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_dkim_conf = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online DKIM signing configuration",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoDKIMEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

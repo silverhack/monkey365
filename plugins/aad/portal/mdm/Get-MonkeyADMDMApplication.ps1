@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADMDMApplication{
-    <#
+function Get-MonkeyADMDMApplication {
+<#
         .SYNOPSIS
 		Plugin to get MDM applications from Azure AD
 
@@ -37,52 +37,63 @@ Function Get-MonkeyADMDMApplication{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $AADAuth = $O365Object.auth_tokens.AzurePortal
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD MDM applications", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePortalMDMApplications');
-        }
-        Write-Information @msg
-        #Get MDM applications
-        $params = @{
-            Authentication = $AADAuth;
-            Query = "MdmApplications";
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-        $ad_mdm_applications = Get-MonkeyAzurePortalObject @params
-    }
-    End{
-        if ($ad_mdm_applications){
-            $ad_mdm_applications.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.mdm.applications')
-            [pscustomobject]$obj = @{
-                Data = $ad_mdm_applications
-            }
-            $returnData.aad_mdm_applications = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD MDM applications", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalMDMEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$Environment = $O365Object.Environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0032";
+			Provider = "AzureAD";
+			Title = "Plugin to get MDM configuration from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD MDM configuration";
+			PluginName = "Get-MonkeyADMDMApplication";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Azure Active Directory Auth
+		$AADAuth = $O365Object.auth_tokens.AzurePortal
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD MDM applications",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePortalMDMApplications');
+		}
+		Write-Information @msg
+		#Get MDM applications
+		$params = @{
+			Authentication = $AADAuth;
+			Query = "MdmApplications";
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+		$ad_mdm_applications = Get-MonkeyAzurePortalObject @params
+	}
+	end {
+		if ($ad_mdm_applications) {
+			$ad_mdm_applications.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.mdm.applications')
+			[pscustomobject]$obj = @{
+				Data = $ad_mdm_applications;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_mdm_applications = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD MDM applications",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalMDMEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

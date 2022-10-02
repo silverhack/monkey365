@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAzKubernetesInfo{
-    <#
+function Get-MonkeyAzKubernetesInfo {
+<#
         .SYNOPSIS
 		Azure plugin to get kubernetes info
 
@@ -37,71 +37,82 @@ Function Get-MonkeyAzKubernetesInfo{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get kubernetes resources
-        $kubernetes = $O365Object.all_resources | Where-Object {$_.type -like 'Microsoft.ContainerService/managedClusters'}
-        if(-NOT $kubernetes){continue}
-        $all_kubernetes = @();
-        #Get Config
-        $Kubernetes_Config = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureKubernetes"} | Select-Object -ExpandProperty resource
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Kubernetes", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureContainerInfo');
-        }
-        Write-Information @msg
-        foreach($kuber in $kubernetes){
-            $URI = ("{0}{1}?api-version={2}" `
-                    -f $O365Object.Environment.ResourceManager,$kuber.id, `
-                        $Kubernetes_Config.api_version)
-            #launch request
-            $params = @{
-                Authentication = $rm_auth;
-                OwnQuery = $URI;
-                Environment = $Environment;
-                ContentType = 'application/json';
-                Method = "GET";
-            }
-            $kuber_config = Get-MonkeyRMObject @params
-            if($kuber_config){
-                #Add kubernetes to array
-                $all_kubernetes += $kuber_config
-            }
-        }
-    }
-    End{
-        if($all_kubernetes){
-            $all_kubernetes.PSObject.TypeNames.Insert(0,'Monkey365.Azure.kubernetes')
-            [pscustomobject]$obj = @{
-                Data = $all_kubernetes
-            }
-            $returnData.az_kubernetes = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Kubernetes", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureKubernetesEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00019";
+			Provider = "Azure";
+			Title = "Azure plugin to get information from Azure Kubernetes";
+			Group = @("Kubernetes");
+			ServiceName = "Azure Kubernetes";
+			PluginName = "Get-MonkeyAzKubernetesInfo";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Import Localized data
+		$LocalizedDataParams = $O365Object.LocalizedDataParams
+		Import-LocalizedData @LocalizedDataParams;
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure Active Directory Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get kubernetes resources
+		$kubernetes = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.ContainerService/managedClusters' }
+		if (-not $kubernetes) { continue }
+		$all_kubernetes = @();
+		#Get Config
+		$Kubernetes_Config = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureKubernetes" } | Select-Object -ExpandProperty resource
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure Kubernetes",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureContainerInfo');
+		}
+		Write-Information @msg
+		foreach ($kuber in $kubernetes) {
+			$URI = ("{0}{1}?api-version={2}" `
+ 					-f $O365Object.Environment.ResourceManager,$kuber.id,`
+ 					$Kubernetes_Config.api_version)
+			#launch request
+			$params = @{
+				Authentication = $rm_auth;
+				OwnQuery = $URI;
+				Environment = $Environment;
+				ContentType = 'application/json';
+				Method = "GET";
+			}
+			$kuber_config = Get-MonkeyRMObject @params
+			if ($kuber_config) {
+				#Add kubernetes to array
+				$all_kubernetes += $kuber_config
+			}
+		}
+	}
+	end {
+		if ($all_kubernetes) {
+			$all_kubernetes.PSObject.TypeNames.Insert(0,'Monkey365.Azure.kubernetes')
+			[pscustomobject]$obj = @{
+				Data = $all_kubernetes;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_kubernetes = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Kubernetes",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureKubernetesEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

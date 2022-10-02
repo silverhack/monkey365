@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADPortalDeviceSetting{
-    <#
+function Get-MonkeyADPortalDeviceSetting {
+<#
         .SYNOPSIS
 		Plugin to get device settings from Azure AD
 
@@ -37,52 +37,63 @@ Function Get-MonkeyADPortalDeviceSetting{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $AADAuth = $O365Object.auth_tokens.AzurePortal
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD device settings", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePortalDevices');
-        }
-        Write-Information @msg
-        #Get Device Settings
-        $params = @{
-            Authentication = $AADAuth;
-            Query = 'DeviceSetting';
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-        $azure_ad_device_settings = Get-MonkeyAzurePortalObject @params
-    }
-    End{
-        if ($azure_ad_device_settings){
-            $azure_ad_device_settings.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.DeviceSettings')
-            [pscustomobject]$obj = @{
-                Data = $azure_ad_device_settings
-            }
-            $returnData.aad_device_settings = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD device settings", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalDevicesEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$Environment = $O365Object.Environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0026";
+			Provider = "AzureAD";
+			Title = "Plugin to get device settings from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD Device Settings";
+			PluginName = "Get-MonkeyADPortalDeviceSetting";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Azure Active Directory Auth
+		$AADAuth = $O365Object.auth_tokens.AzurePortal
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD device settings",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePortalDevices');
+		}
+		Write-Information @msg
+		#Get Device Settings
+		$params = @{
+			Authentication = $AADAuth;
+			Query = 'DeviceSetting';
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+		$azure_ad_device_settings = Get-MonkeyAzurePortalObject @params
+	}
+	end {
+		if ($azure_ad_device_settings) {
+			$azure_ad_device_settings.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.DeviceSettings')
+			[pscustomobject]$obj = @{
+				Data = $azure_ad_device_settings;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_device_settings = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD device settings",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalDevicesEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

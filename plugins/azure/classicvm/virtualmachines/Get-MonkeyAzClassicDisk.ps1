@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAzClassicDisk{
-    <#
+function Get-MonkeyAzClassicDisk {
+<#
         .SYNOPSIS
 		Plugin to get classic disks info from Azure
 
@@ -37,59 +37,70 @@ Function Get-MonkeyAzClassicDisk{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        $ClassicStorageConfig = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureClassicStorage"} | Select-Object -ExpandProperty resource
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure classic disks", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureClassicDisksInfo');
-        }
-        Write-Information @msg
-        #List All classic disks
-        $params = @{
-            Authentication = $rm_auth;
-            Provider = $ClassicStorageConfig.Provider;
-            ObjectType = 'disks';
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-            APIVersion = $ClassicStorageConfig.api_version;
-        }
-        $ClassicDisks = Get-MonkeyRMObject @params
-    }
-    End{
-        if($ClassicDisks){
-            $ClassicDisks.PSObject.TypeNames.Insert(0,'Monkey365.Azure.ClassicDisks')
-            [pscustomobject]$obj = @{
-                Data = $ClassicDisks
-            }
-            $returnData.az_classic_disks = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure classic disks", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureClassicDisksEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Import Localized data
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00004";
+			Provider = "Azure";
+			Title = "Plugin to get classic disks info from Azure";
+			Group = @("VirtualMachines");
+			ServiceName = "Azure Classic Disks";
+			PluginName = "Get-MonkeyAzClassicDisk";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$LocalizedDataParams = $O365Object.LocalizedDataParams
+		Import-LocalizedData @LocalizedDataParams;
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure Active Directory Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		$ClassicStorageConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureClassicStorage" } | Select-Object -ExpandProperty resource
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure classic disks",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureClassicDisksInfo');
+		}
+		Write-Information @msg
+		#List All classic disks
+		$params = @{
+			Authentication = $rm_auth;
+			Provider = $ClassicStorageConfig.Provider;
+			ObjectType = 'disks';
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+			APIVersion = $ClassicStorageConfig.api_version;
+		}
+		$ClassicDisks = Get-MonkeyRMObject @params
+	}
+	end {
+		if ($ClassicDisks) {
+			$ClassicDisks.PSObject.TypeNames.Insert(0,'Monkey365.Azure.ClassicDisks')
+			[pscustomobject]$obj = @{
+				Data = $ClassicDisks;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_classic_disks = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure classic disks",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureClassicDisksEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

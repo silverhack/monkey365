@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOActivityAlert{
-    <#
+function Get-MonkeyEXOActivityAlert {
+<#
         .SYNOPSIS
-		Plugin to get information about activity alerts from Security and Compliance
+		Plugin to get information about activity alerts from PurView
 
         .DESCRIPTION
-		Plugin to get information about activity alerts from Security and Compliance
+		Plugin to get information about activity alerts from PurView
 
         .INPUTS
 
@@ -37,46 +37,57 @@ Function Get-MonkeyEXOActivityAlert{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $activity_alerts = $null;
-        $exo_session = Test-EXOConnection -ComplianceCenter
-    }
-    Process{
-        if($null -ne $exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Security and Compliance activity alerts", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompActivityAlertsInfo');
-            }
-            Write-Information @msg
-            #Get activity alerts
-            $activity_alerts = Get-ActivityAlert
-        }
-    }
-    End{
-        if($activity_alerts){
-            $activity_alerts.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.ActivityAlerts')
-            [pscustomobject]$obj = @{
-                Data = $activity_alerts
-            }
-            $returnData.o365_secomp_activity_alerts = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance activity alerts", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('SecCompActivityAlertsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$activity_alerts = $null;
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "purv001";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about activity alerts from PurView";
+			Group = @("PurView");
+			ServiceName = "Microsoft PurView activity alerts";
+			PluginName = "Get-MonkeyEXOActivityAlert";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$exo_session = Test-EXOConnection -ComplianceCenter
+	}
+	process {
+		if ($null -ne $exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance activity alerts",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompActivityAlertsInfo');
+			}
+			Write-Information @msg
+			#Get activity alerts
+			$activity_alerts = Get-ActivityAlert
+		}
+	}
+	end {
+		if ($activity_alerts) {
+			$activity_alerts.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.ActivityAlerts')
+			[pscustomobject]$obj = @{
+				Data = $activity_alerts;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_secomp_activity_alerts = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance activity alerts",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('SecCompActivityAlertsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

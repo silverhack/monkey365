@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOSafeAttachmentRule{
-    <#
+function Get-MonkeyEXOSafeAttachmentRule {
+<#
         .SYNOPSIS
 		Plugin to get information about safe attachment rules in Exchange Online
 
@@ -37,46 +37,57 @@ Function Get-MonkeyEXOSafeAttachmentRule{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $exo_safe_attachment_rules = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online safe attachment rules", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoSafeAttachmentRulesInfo');
-            }
-            Write-Information @msg
-            $exo_safe_attachment_rules = Get-ExoMonkeySafeAttachmentRule
-        }
-    }
-    End{
-        if($null -ne $exo_safe_attachment_rules){
-            $exo_safe_attachment_rules.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.SafeAttachmentRules')
-            [pscustomobject]$obj = @{
-                Data = $exo_safe_attachment_rules
-            }
-            $returnData.o365_exo_safeattachment_rules = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online safe attachment rules", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoSafeAttachmentRulesResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$exo_safe_attachment_rules = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0007";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about safe attachment rules in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online Safe Attachment Rules";
+			PluginName = "Get-MonkeyEXOSafeAttachmentRule";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online safe attachment rules",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoSafeAttachmentRulesInfo');
+			}
+			Write-Information @msg
+			$exo_safe_attachment_rules = Get-ExoMonkeySafeAttachmentRule
+		}
+	}
+	end {
+		if ($null -ne $exo_safe_attachment_rules) {
+			$exo_safe_attachment_rules.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.SafeAttachmentRules')
+			[pscustomobject]$obj = @{
+				Data = $exo_safe_attachment_rules;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_safeattachment_rules = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online safe attachment rules",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoSafeAttachmentRulesResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeySharePointOnlineSitePermissionsInfo{
-    <#
+function Get-MonkeySharePointOnlineSitePermissionsInfo {
+<#
         .SYNOPSIS
 		Plugin to get information about O365 Sharepoint Online site permissions
 
@@ -37,15 +37,25 @@ Function Get-MonkeySharePointOnlineSitePermissionsInfo{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        #Set array
-        $all_perms = @()
-        <#
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Set array
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "sps0006";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about Sharepoint Online site permissions";
+			Group = @("SharepointOnline");
+			ServiceName = "SharePoint Online Site permissions";
+			PluginName = "Get-MonkeySharePointOnlineSitePermissionsInfo";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$all_perms = @()
+		<#
         $vars = @{
             O365Object = $O365Object;
             WriteLog = $WriteLog;
@@ -53,20 +63,20 @@ Function Get-MonkeySharePointOnlineSitePermissionsInfo{
             InformationAction = $InformationAction;
         }
         #>
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Sharepoint Online site permissions", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('SPSSitePermsInfo');
-        }
-        Write-Information @msg
-        #Get all webs for user
-        $allowed_sites = Get-MonkeySPSWebsForUser
-        #Getting external users for each site
-        <#
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Sharepoint Online site permissions",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('SPSSitePermsInfo');
+		}
+		Write-Information @msg
+		#Get all webs for user
+		$allowed_sites = Get-MonkeySPSWebsForUser
+		#Getting external users for each site
+		<#
         $param = @{
             ScriptBlock = {Get-MonkeyPSWebPermission -Web $_};
             ImportCommands = $O365Object.LibUtils;
@@ -88,27 +98,28 @@ Function Get-MonkeySharePointOnlineSitePermissionsInfo{
             }
         }
         #>
-        foreach($site in $allowed_sites){
-            $all_perms+=Get-MonkeyPSWebPermission -Web $site
-        }
-    }
-    End{
-        if($all_perms){
-            $all_perms.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Permissions')
-            [pscustomobject]$obj = @{
-                Data = $all_perms
-            }
-            $returnData.o365_spo_permissions = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online site permissions", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('SPSSitePermissionsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+		foreach ($site in $allowed_sites) {
+			$all_perms += Get-MonkeyPSWebPermission -Web $site
+		}
+	}
+	end {
+		if ($all_perms) {
+			$all_perms.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Permissions')
+			[pscustomobject]$obj = @{
+				Data = $all_perms;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_spo_permissions = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online site permissions",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('SPSSitePermissionsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

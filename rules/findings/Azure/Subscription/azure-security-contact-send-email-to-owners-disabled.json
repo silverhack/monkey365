@@ -33,13 +33,30 @@
     "conditions":  [
                        "or",
                        [
-                           "alertsToAdmins",
-                           "eq",
-                           "Off"
+                           "alertNotifications.state",
+                           "ne",
+                           "On"
                        ],
                        [
-                           "alertsToAdmins",
-                           "eq"
+                           "alertNotifications.minimalSeverity",
+                           "ne",
+                           "High"
+                       ],
+					   [
+                           "and",
+                           [
+                               "or",
+                               [
+                                   "notificationsByRole.state",
+                                   "ne",
+                                   "On"
+                               ],
+                               [
+                                   "notificationsByRole.roles",
+                                   "notcontains",
+                                   "Owner"
+                               ]
+                           ]
                        ]
                    ],
     "id_suffix":  "security_contact_email_to_owners_disabled"

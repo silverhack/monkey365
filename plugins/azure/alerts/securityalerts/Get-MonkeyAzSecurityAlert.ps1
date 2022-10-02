@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAzSecurityAlert{
-    <#
+function Get-MonkeyAzSecurityAlert {
+<#
         .SYNOPSIS
 		Plugin to extract Security alerts from Azure
 
@@ -37,68 +37,79 @@ Function Get-MonkeyAzSecurityAlert{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        $AzureAlerts = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureAlerts"} | Select-Object -ExpandProperty resource
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure alerts", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureAlerts');
-        }
-        Write-Information @msg
-        $params = @{
-            Authentication = $rm_auth;
-            Provider = $AzureAlerts.provider;
-            ObjectType = 'alerts';
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-            APIVersion = $AzureAlerts.api_version;
-        }
-        $all_alerts = Get-MonkeyRMObject @params
-        #Get primary object
-        $AllAlerts = @()
-        foreach($Alert in $all_alerts){
-            $Properties = $Alert.properties | Select-Object @{Name='AlertName';Expression={$Alert.name}},`
-                            vendorName, alertDisplayName, detectedTimeUtc, actionTaken,`
-                            reportedSeverity, compromisedEntity, reportedTimeUtc, @{Name='ThreatName';Expression={$Alert.properties.extendedProperties.name}},`
-                            @{Name='Path';Expression={$Alert.properties.extendedProperties.path}},@{Name='Category';Expression={$Alert.properties.extendedProperties.category}}
-            $Properties.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SecurityAlerts')
-            $AllAlerts+=$Properties
-        }
-    }
-    End{
-        if($AllAlerts){
-            $AllAlerts.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SecurityAlerts')
-            [pscustomobject]$obj = @{
-                Data = $AllAlerts
-            }
-            $returnData.aad_security_alerts = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure alerts", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureAlertsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Import Localized data
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00001";
+			Provider = "Azure";
+			Title = "Plugin to get Security alerts from Azure";
+			Group = @("SecurityAlerts");
+			ServiceName = "Azure AD Security Alerts";
+			PluginName = "Get-MonkeyAzSecurityAlert";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$LocalizedDataParams = $O365Object.LocalizedDataParams
+		Import-LocalizedData @LocalizedDataParams;
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure Active Directory Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		$AzureAlerts = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureAlerts" } | Select-Object -ExpandProperty resource
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure alerts",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureAlerts');
+		}
+		Write-Information @msg
+		$params = @{
+			Authentication = $rm_auth;
+			Provider = $AzureAlerts.Provider;
+			ObjectType = 'alerts';
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+			APIVersion = $AzureAlerts.api_version;
+		}
+		$all_alerts = Get-MonkeyRMObject @params
+		#Get primary object
+		$AllAlerts = @()
+		foreach ($Alert in $all_alerts) {
+			$Properties = $Alert.Properties | Select-Object @{ Name = 'AlertName'; Expression = { $Alert.Name } },`
+ 				vendorName,alertDisplayName,detectedTimeUtc,actionTaken,`
+ 				reportedSeverity,compromisedEntity,reportedTimeUtc,@{ Name = 'ThreatName'; Expression = { $Alert.Properties.extendedProperties.Name } },`
+ 				@{ Name = 'Path'; Expression = { $Alert.Properties.extendedProperties.path } },@{ Name = 'Category'; Expression = { $Alert.Properties.extendedProperties.category } }
+			$Properties.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SecurityAlerts')
+			$AllAlerts += $Properties
+		}
+	}
+	end {
+		if ($AllAlerts) {
+			$AllAlerts.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SecurityAlerts')
+			[pscustomobject]$obj = @{
+				Data = $AllAlerts;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_security_alerts = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure alerts",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureAlertsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOPhishFilterPolicy{
-    <#
+function Get-MonkeyEXOPhishFilterPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about Phish filter policy in Exchange Online
 
@@ -37,48 +37,59 @@ Function Get-MonkeyEXOPhishFilterPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $exo_phish_filter_policy = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Phish filter policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoPhishFilterPolicyInfo');
-            }
-            Write-Information @msg
-            #https://docs.microsoft.com/en-us/powershell/module/exchange/get-phishfilterpolicy?view=exchange-ps
-            # TODO This cmdlet is in the process of being deprecated
-            $exo_phish_filter_policy = Get-ExoMonkeyPhishFilterPolicy
-        }
-    }
-    End{
-        if($null -ne $exo_phish_filter_policy){
-            $exo_phish_filter_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.PhishFilterPolicy')
-            [pscustomobject]$obj = @{
-                Data = $exo_phish_filter_policy
-            }
-            $returnData.o365_exo_phish_filter_policy = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Phish filter policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoPhishFilterResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$exo_phish_filter_policy = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0003";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about Phish filter policy in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online Phishing Filter Policy";
+			PluginName = "Get-MonkeyEXOPhishFilterPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Phish filter policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoPhishFilterPolicyInfo');
+			}
+			Write-Information @msg
+			#https://docs.microsoft.com/en-us/powershell/module/exchange/get-phishfilterpolicy?view=exchange-ps
+			# TODO This cmdlet is in the process of being deprecated
+			$exo_phish_filter_policy = Get-ExoMonkeyPhishFilterPolicy
+		}
+	}
+	end {
+		if ($null -ne $exo_phish_filter_policy) {
+			$exo_phish_filter_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.PhishFilterPolicy')
+			[pscustomobject]$obj = @{
+				Data = $exo_phish_filter_policy;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_phish_filter_policy = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Phish filter policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoPhishFilterResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

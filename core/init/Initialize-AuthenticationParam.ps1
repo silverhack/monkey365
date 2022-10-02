@@ -54,13 +54,17 @@ Function Initialize-AuthenticationParam{
         )
         #parameters to skip in auth
         $skip=@(
-            'outDir','SaveProject','resourcegroups','IncludeAzureActiveDirectory',
+            'outDir','SaveProject','resourcegroups',
+            'IncludeAzureActiveDirectory',
             'Analysis','ExportTo','Threads','Instance',
             'ClearCache','WriteLog','cache_token_file',
-            'AuditorName', 'saveProject','ResolveTenantDomainName',
-            'reportType','profileName','ResolveTenantUserName',
-            'ClearCache','subscriptions','all_subscriptions','RuleSet',
-            'ImportJob'
+            'AuditorName', 'saveProject',
+            'ResolveTenantDomainName', 'reportType',
+            'profileName','ResolveTenantUserName',
+            'ClearCache','subscriptions',
+            'all_subscriptions','RuleSet',
+            'ImportJob','ExcludePlugin',
+            'ExcludedResources'
         )
         #Set isPublicApp var
         $isPublicApp = $true

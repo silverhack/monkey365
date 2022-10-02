@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyEXOAuthenticationPolicy{
-    <#
+function Get-MonkeyEXOAuthenticationPolicy {
+<#
         .SYNOPSIS
 		Plugin to get information about Auth policy in Exchange Online
 
@@ -37,48 +37,59 @@ Function Get-MonkeyEXOAuthenticationPolicy{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-        [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-        [String]$pluginId
-    )
-    Begin{
-        $auth_policy = $null
-        #Check if already connected to Exchange Online
-        $exo_session = Test-EXOConnection
-    }
-    Process{
-        if($null -ne $exo_session){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Exchange Online authentication policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('ExoAuthPolicyInfo');
-            }
-            Write-Information @msg
-            #Get authentication policy
-            #https://docs.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/disable-basic-authentication-in-exchange-online
-            $auth_policy = Get-ExoMonkeyAuthenticationPolicy
-        }
-    }
-    End{
-        if($null -ne $auth_policy){
-            $auth_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.AuthPolicy')
-            [pscustomobject]$obj = @{
-                Data = $auth_policy
-            }
-            $returnData.o365_exo_auth_policy = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online authentication policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExoAuthPolicyEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$auth_policy = $null
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "exo0008";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about Auth policy in Exchange Online";
+			Group = @("ExchangeOnline");
+			ServiceName = "Exchange Online Auth Policy";
+			PluginName = "Get-MonkeyEXOAuthenticationPolicy";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Check if already connected to Exchange Online
+		$exo_session = Test-EXOConnection
+	}
+	process {
+		if ($null -ne $exo_session) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online authentication policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('ExoAuthPolicyInfo');
+			}
+			Write-Information @msg
+			#Get authentication policy
+			#https://docs.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/disable-basic-authentication-in-exchange-online
+			$auth_policy = Get-ExoMonkeyAuthenticationPolicy
+		}
+	}
+	end {
+		if ($null -ne $auth_policy) {
+			$auth_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.AuthPolicy')
+			[pscustomobject]$obj = @{
+				Data = $auth_policy;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_exo_auth_policy = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online authentication policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('ExoAuthPolicyEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

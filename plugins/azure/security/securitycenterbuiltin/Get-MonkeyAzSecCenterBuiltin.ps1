@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAzSecCenterBuiltin{
-    <#
+function Get-MonkeyAzSecCenterBuiltin {
+<#
         .SYNOPSIS
 		Azure plugin to get Microsoft Defender for Cloud Builtin
 
@@ -37,68 +37,76 @@ Function Get-MonkeyAzSecCenterBuiltin{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure RM Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #get Config
-        $azure_auth_config = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureAuthorization"} | Select-Object -ExpandProperty resource
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Microsoft Defender for Cloud BuiltIn", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureSecCenterInfo');
-        }
-        Write-Information @msg
-        #List Microsoft Defender for Cloud Bulletin
-        $params = @{
-            Authentication = $rm_auth;
-            Provider = $azure_auth_config.provider;
-            ObjectType = "policyAssignments/SecurityCenterBuiltIn";
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-            APIVersion = "2019-01-01";
-        }
-        $security_center_builtin = Get-MonkeyRMObject @params
-        $acs_entries = @()
-        foreach ($acs_entry in $security_center_builtin.properties.parameters.psobject.Properties){
-            $Unit_Policy = New-Object -TypeName PSCustomObject
-            $Unit_Policy | Add-Member -type NoteProperty -name PolicyName -value $acs_entry.name.ToString()
-            $Unit_Policy | Add-Member -type NoteProperty -name Status -value $acs_entry.value.value.ToString()
-            $Unit_Policy.PSObject.TypeNames.Insert(0,'Monkey365.Azure.ACS_Policy')
-            $acs_entries+=$Unit_Policy
-        }
-    }
-    End{
-        if($acs_entries){
-            $acs_entries.PSObject.TypeNames.Insert(0,'Monkey365.Azure.securitycenter.acsbuiltin.parameters')
-            [pscustomobject]$obj = @{
-                Data = $acs_entries
-            }
-            $returnData.az_asc_builtin_policies = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Defender for Cloud BuiltIn", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureKeySecCenterEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00034";
+			Provider = "Azure";
+			Title = "Plugin to get Microsoft Defender for Cloud Builtin";
+			Group = @("DefenderForCloud");
+			ServiceName = "Azure AD Applications";
+			PluginName = "Get-MonkeyAzSecCenterBuiltin";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure RM Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#get Config
+		$azure_auth_config = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureAuthorization" } | Select-Object -ExpandProperty resource
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft Defender for Cloud BuiltIn",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureSecCenterInfo');
+		}
+		Write-Information @msg
+		#List Microsoft Defender for Cloud Bulletin
+		$params = @{
+			Authentication = $rm_auth;
+			Provider = $azure_auth_config.Provider;
+			ObjectType = "policyAssignments/SecurityCenterBuiltIn";
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+			APIVersion = "2019-01-01";
+		}
+		$security_center_builtin = Get-MonkeyRMObject @params
+		$acs_entries = @()
+		foreach ($acs_entry in $security_center_builtin.Properties.parameters.PSObject.Properties) {
+			$Unit_Policy = New-Object -TypeName PSCustomObject
+			$Unit_Policy | Add-Member -Type NoteProperty -Name PolicyName -Value $acs_entry.Name.ToString()
+			$Unit_Policy | Add-Member -Type NoteProperty -Name Status -Value $acs_entry.value.value.ToString()
+			$Unit_Policy.PSObject.TypeNames.Insert(0,'Monkey365.Azure.ACS_Policy')
+			$acs_entries += $Unit_Policy
+		}
+	}
+	end {
+		if ($acs_entries) {
+			$acs_entries.PSObject.TypeNames.Insert(0,'Monkey365.Azure.securitycenter.acsbuiltin.parameters')
+			[pscustomobject]$obj = @{
+				Data = $acs_entries;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_asc_builtin_policies = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Defender for Cloud BuiltIn",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureKeySecCenterEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

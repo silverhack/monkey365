@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAZSQLDatabaseFirewall{
-    <#
+function Get-MonkeyAZSQLDatabaseFirewall {
+<#
         .SYNOPSIS
 		Plugin to get Firewall Rules from each SQL Server from Azure
 
@@ -37,98 +37,109 @@ Function Get-MonkeyAZSQLDatabaseFirewall{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get Config
-        $AzureSQLConfigFW = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureForSQLFW"} | Select-Object -ExpandProperty resource
-        #Get Mysql Servers
-        $DatabaseServers = $O365Object.all_resources | Where-Object {$_.type -like 'Microsoft.Sql/servers'}
-        if(-NOT $DatabaseServers){continue}
-        #Set array
-        $AllFWRules = @()
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure SQL Database firewall", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureSQLFWInfo');
-        }
-        Write-Information @msg
-        if($DatabaseServers){
-            foreach($Server in $DatabaseServers){
-                if($Server.name -AND $Server.id){
-                    $msg = @{
-                        MessageData = ($message.AzureUnitResourceMessage -f $Server.name, "SQL Firewall rules");
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'info';
-                        InformationAction = $InformationAction;
-                        Tags = @('AzureSQLFWInfo');
-                    }
-                    Write-Information @msg
-                    $uri = ("{0}{1}/{2}?api-version={3}" -f $O365Object.Environment.ResourceManager, `
-                                                            $server.id, `
-                                                            "firewallrules", `
-                                                            $AzureSQLConfigFW.api_version)
-                    #Get database info
-                    $params = @{
-                        Authentication = $rm_auth;
-                        OwnQuery = $uri;
-                        Environment = $Environment;
-                        ContentType = 'application/json';
-                        Method = "GET";
-                    }
-                    $FWRules = Get-MonkeyRMObject @params
-                    if($FWRules.properties){
-                        foreach ($rule in $FWRules){
-                            $AzureDBFWRule = New-Object -TypeName PSCustomObject
-                            $AzureDBFWRule | Add-Member -type NoteProperty -name ServerName -value $server.name
-                            $AzureDBFWRule | Add-Member -type NoteProperty -name Location -value $server.location
-                            $AzureDBFWRule | Add-Member -type NoteProperty -name ResourceGroupName -value $server.id.Split("/")[4]
-                            $AzureDBFWRule | Add-Member -type NoteProperty -name RuleLocation -value $rule.location
-                            $AzureDBFWRule | Add-Member -type NoteProperty -name Kind -value $rule.kind
-                            $AzureDBFWRule | Add-Member -type NoteProperty -name RuleName -value $rule.name
-                            $AzureDBFWRule | Add-Member -type NoteProperty -name StartIpAddress -value $rule.properties.startIpAddress
-                            $AzureDBFWRule | Add-Member -type NoteProperty -name EndIpAddress -value $rule.properties.endIpAddress
-                            $AzureDBFWRule | Add-Member -type NoteProperty -name rawObject -value $rule
-                            #Decorate object and add to list
-                            $AzureDBFWRule.PSObject.TypeNames.Insert(0,'Monkey365.Azure.DatabaseFirewall')
-                            $AllFWRules+= $AzureDBFWRule
-                        }
-                    }
-                }
-            }
-        }
-    }
-    End{
-        if($AllFWRules){
-            $AllFWRules.PSObject.TypeNames.Insert(0,'Monkey365.Azure.DatabaseFirewall')
-            [pscustomobject]$obj = @{
-                Data = $AllFWRules
-            }
-            $returnData.az_sql_database_fw = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure SQL firewall rules", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureSQLFWEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00017";
+			Provider = "Azure";
+			Title = "Plugin to get Azure SQL firewall rules";
+			Group = @("Firewall","Databases");
+			ServiceName = "Azure SQL firewall rules";
+			PluginName = "Get-MonkeyAZSQLDatabaseFirewall";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Import Localized data
+		$LocalizedDataParams = $O365Object.LocalizedDataParams
+		Import-LocalizedData @LocalizedDataParams;
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure Active Directory Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get Config
+		$AzureSQLConfigFW = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureForSQLFW" } | Select-Object -ExpandProperty resource
+		#Get Mysql Servers
+		$DatabaseServers = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.Sql/servers' }
+		if (-not $DatabaseServers) { continue }
+		#Set array
+		$AllFWRules = @()
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure SQL Database firewall",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureSQLFWInfo');
+		}
+		Write-Information @msg
+		if ($DatabaseServers) {
+			foreach ($Server in $DatabaseServers) {
+				if ($Server.Name -and $Server.id) {
+					$msg = @{
+						MessageData = ($message.AzureUnitResourceMessage -f $Server.Name,"SQL Firewall rules");
+						callStack = (Get-PSCallStack | Select-Object -First 1);
+						logLevel = 'info';
+						InformationAction = $InformationAction;
+						Tags = @('AzureSQLFWInfo');
+					}
+					Write-Information @msg
+					$uri = ("{0}{1}/{2}?api-version={3}" -f $O365Object.Environment.ResourceManager,`
+ 							$server.id,`
+ 							"firewallrules",`
+ 							$AzureSQLConfigFW.api_version)
+					#Get database info
+					$params = @{
+						Authentication = $rm_auth;
+						OwnQuery = $uri;
+						Environment = $Environment;
+						ContentType = 'application/json';
+						Method = "GET";
+					}
+					$FWRules = Get-MonkeyRMObject @params
+					if ($FWRules.Properties) {
+						foreach ($rule in $FWRules) {
+							$AzureDBFWRule = New-Object -TypeName PSCustomObject
+							$AzureDBFWRule | Add-Member -Type NoteProperty -Name ServerName -Value $server.Name
+							$AzureDBFWRule | Add-Member -Type NoteProperty -Name Location -Value $server.location
+							$AzureDBFWRule | Add-Member -Type NoteProperty -Name ResourceGroupName -Value $server.id.Split("/")[4]
+							$AzureDBFWRule | Add-Member -Type NoteProperty -Name RuleLocation -Value $rule.location
+							$AzureDBFWRule | Add-Member -Type NoteProperty -Name Kind -Value $rule.kind
+							$AzureDBFWRule | Add-Member -Type NoteProperty -Name RuleName -Value $rule.Name
+							$AzureDBFWRule | Add-Member -Type NoteProperty -Name StartIpAddress -Value $rule.Properties.startIpAddress
+							$AzureDBFWRule | Add-Member -Type NoteProperty -Name EndIpAddress -Value $rule.Properties.endIpAddress
+							$AzureDBFWRule | Add-Member -Type NoteProperty -Name rawObject -Value $rule
+							#Decorate object and add to list
+							$AzureDBFWRule.PSObject.TypeNames.Insert(0,'Monkey365.Azure.DatabaseFirewall')
+							$AllFWRules += $AzureDBFWRule
+						}
+					}
+				}
+			}
+		}
+	}
+	end {
+		if ($AllFWRules) {
+			$AllFWRules.PSObject.TypeNames.Insert(0,'Monkey365.Azure.DatabaseFirewall')
+			[pscustomobject]$obj = @{
+				Data = $AllFWRules;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_sql_database_fw = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure SQL firewall rules",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureSQLFWEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

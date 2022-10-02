@@ -48,7 +48,8 @@ Function Initialize-MonkeyParameter{
             'Analysis','WriteLog','TenantId','ClientId',
             'IncludeAzureActiveDirectory','ImportJob',
             'SaveProject','ResolveTenantDomainName',
-            'ResolveTenantUserName'
+            'ResolveTenantUserName','ExcludePlugin',
+            'ExcludedResources'
         )
         #Set init params
         foreach ($param in $init_params){

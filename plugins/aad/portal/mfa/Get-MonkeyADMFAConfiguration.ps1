@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADMFAConfiguration{
-    <#
+function Get-MonkeyADMFAConfiguration {
+<#
         .SYNOPSIS
 		Plugin to get MFA properties from Azure AD
 
@@ -37,52 +37,63 @@ Function Get-MonkeyADMFAConfiguration{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $AADAuth = $O365Object.auth_tokens.AzurePortal
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD MFA settings", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePortalMFASettings');
-        }
-        Write-Information @msg
-        #Get MFA settings
-        $params = @{
-            Authentication = $AADAuth;
-            Query = "MultiFactorAuthentication/TenantModel";
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-        $ad_mfa_properties = Get-MonkeyAzurePortalObject @params
-    }
-    End{
-        if ($ad_mfa_properties){
-            $ad_mfa_properties.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.mfa.properties')
-            [pscustomobject]$obj = @{
-                Data = $ad_mfa_properties
-            }
-            $returnData.aad_mfa_settings = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD MFA settings", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalMFAEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$Environment = $O365Object.Environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0033";
+			Provider = "AzureAD";
+			Title = "Plugin to get MFA properties from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD MFA properties";
+			PluginName = "Get-MonkeyADMFAConfiguration";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Azure Active Directory Auth
+		$AADAuth = $O365Object.auth_tokens.AzurePortal
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD MFA settings",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePortalMFASettings');
+		}
+		Write-Information @msg
+		#Get MFA settings
+		$params = @{
+			Authentication = $AADAuth;
+			Query = "MultiFactorAuthentication/TenantModel";
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+		$ad_mfa_properties = Get-MonkeyAzurePortalObject @params
+	}
+	end {
+		if ($ad_mfa_properties) {
+			$ad_mfa_properties.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.mfa.properties')
+			[pscustomobject]$obj = @{
+				Data = $ad_mfa_properties;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_mfa_settings = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD MFA settings",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalMFAEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyADGroupConfiguration{
-    <#
+function Get-MonkeyADGroupConfiguration {
+<#
         .SYNOPSIS
 		Plugin to get group settings from Azure AD
 
@@ -37,52 +37,63 @@ Function Get-MonkeyADGroupConfiguration{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $AADAuth = $O365Object.auth_tokens.AzurePortal
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure AD group settings", $O365Object.TenantID);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzurePortalGroupSettings');
-        }
-        Write-Information @msg
-        #Get Device Settings
-        $params = @{
-            Authentication = $AADAuth;
-            Query = 'Directories/SsgmProperties';
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-        }
-        $azure_ad_group_settings = Get-MonkeyAzurePortalObject @params
-    }
-    End{
-        if ($azure_ad_group_settings){
-            $azure_ad_group_settings.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.GroupSettings')
-            [pscustomobject]$obj = @{
-                Data = $azure_ad_group_settings
-            }
-            $returnData.aad_group_settings = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD group settings", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzurePortalGroupEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		$Environment = $O365Object.Environment
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aad0029";
+			Provider = "AzureAD";
+			Title = "Plugin to get group settings from Azure AD";
+			Group = @("AzureADPortal");
+			ServiceName = "Azure AD Group settings";
+			PluginName = "Get-MonkeyADGroupConfiguration";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		#Get Azure Active Directory Auth
+		$AADAuth = $O365Object.auth_tokens.AzurePortal
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD group settings",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzurePortalGroupSettings');
+		}
+		Write-Information @msg
+		#Get Device Settings
+		$params = @{
+			Authentication = $AADAuth;
+			Query = 'Directories/SsgmProperties';
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+		}
+		$azure_ad_group_settings = Get-MonkeyAzurePortalObject @params
+	}
+	end {
+		if ($azure_ad_group_settings) {
+			$azure_ad_group_settings.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.GroupSettings')
+			[pscustomobject]$obj = @{
+				Data = $azure_ad_group_settings;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.aad_group_settings = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD group settings",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzurePortalGroupEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

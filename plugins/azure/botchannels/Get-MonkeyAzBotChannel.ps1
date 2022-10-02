@@ -15,8 +15,8 @@
 
 
 
-Function Get-MonkeyAzBotChannel{
-    <#
+function Get-MonkeyAzBotChannel {
+<#
         .SYNOPSIS
 		Azure Bots
         https://docs.microsoft.com/en-us/azure/bot-service/dotnet/bot-builder-dotnet-security?view=azure-bot-service-3.0
@@ -43,60 +43,71 @@ Function Get-MonkeyAzBotChannel{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
-        #Get Environment
-        $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Get Config
-        $AzureBot = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureBotServices"} | Select-Object -ExpandProperty resource
-    }
-    Process{
-        $msg = @{
-            MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Azure Bots", $O365Object.current_subscription.DisplayName);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('AzureBotsInfo');
-        }
-        Write-Information @msg
-        #List All Azure Bots
-        $params = @{
-            Authentication = $rm_auth;
-            Provider = $AzureBot.provider;
-            ObjectType= 'botServices';
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-            APIVersion = $AzureBot.api_version;
-        }
-        $azureBots = Get-MonkeyRMObject @params
-    }
-    End{
-        if($azureBots){
-            $azureBots.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Bots')
-            [pscustomobject]$obj = @{
-                Data = $azureBots
-            }
-            $returnData.az_bots = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Bots", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AzureBotsEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Import Localized data
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "az00003";
+			Provider = "Azure";
+			Title = "Plugin to get information from Azure Bots";
+			Group = @("BotChannels");
+			ServiceName = "Azure Bot channels";
+			PluginName = "Get-MonkeyAzBotChannel";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$LocalizedDataParams = $O365Object.LocalizedDataParams
+		Import-LocalizedData @LocalizedDataParams;
+		#Get Environment
+		$Environment = $O365Object.Environment
+		#Get Azure Active Directory Auth
+		$rm_auth = $O365Object.auth_tokens.ResourceManager
+		#Get Config
+		$AzureBot = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureBotServices" } | Select-Object -ExpandProperty resource
+	}
+	process {
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure Bots",$O365Object.current_subscription.displayName);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('AzureBotsInfo');
+		}
+		Write-Information @msg
+		#List All Azure Bots
+		$params = @{
+			Authentication = $rm_auth;
+			Provider = $AzureBot.Provider;
+			ObjectType = 'botServices';
+			Environment = $Environment;
+			ContentType = 'application/json';
+			Method = "GET";
+			APIVersion = $AzureBot.api_version;
+		}
+		$azureBots = Get-MonkeyRMObject @params
+	}
+	end {
+		if ($azureBots) {
+			$azureBots.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Bots')
+			[pscustomobject]$obj = @{
+				Data = $azureBots;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_bots = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Bots",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AzureBotsEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }

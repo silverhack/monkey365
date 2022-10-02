@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-Function Get-MonkeyAADRMOnboarding{
-    <#
+function Get-MonkeyAADRMOnboarding {
+<#
         .SYNOPSIS
 		Plugin to get information about onboarding in AADRM
 
@@ -37,61 +37,72 @@ Function Get-MonkeyAADRMOnboarding{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    Param (
-            [Parameter(Mandatory= $false, HelpMessage="Background Plugin ID")]
-            [String]$pluginId
-    )
-    Begin{
-        #Get Access Token from AADRM
-        $access_token = $O365Object.auth_tokens.AADRM
-        #Get AADRM Url
-        $url = $O365Object.Environment.aadrm_service_locator
-        if($null -ne $access_token){
-            #Set Authorization Header
-            $AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
-            $requestHeader = @{"Authorization" = $AuthHeader}
-        }
-    }
-    Process{
-        if($requestHeader -and $url){
-            $msg = @{
-                MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId, "Office 365 Rights Management: Onboarding control policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMOnboardingControlPolicy');
-            }
-            Write-Information @msg
-            $url = ("{0}/OnboardingControlPolicy" -f $url)
-            $params = @{
-                Url = $url;
-                Method = 'Get';
-                Content_Type = 'application/json; charset=utf-8';
-                Headers = $requestHeader;
-                disableSSLVerification = $true;
-            }
-            #call AADRM endpoint
-            $AADRM_Onboarding = Invoke-UrlRequest @params
-        }
-    }
-    End{
-        if($AADRM_Onboarding){
-            $AADRM_Onboarding.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.OnboardingControlPolicy')
-            [pscustomobject]$obj = @{
-                Data = $AADRM_Onboarding
-            }
-            $returnData.o365_aadrm_onboarding = $obj
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: Onboarding control policy", $O365Object.TenantID);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('AADRMOnboardingControlPolicyEmptyResponse');
-            }
-            Write-Warning @msg
-        }
-    }
+	[CmdletBinding()]
+	param(
+		[Parameter(Mandatory = $false,HelpMessage = "Background Plugin ID")]
+		[string]$pluginId
+	)
+	begin {
+		#Get Access Token from AADRM
+		#Plugin metadata
+		$monkey_metadata = @{
+			Id = "aadrm06";
+			Provider = "Microsoft365";
+			Title = "Plugin to get information about onboarding in AADRM";
+			Group = @("IRM");
+			ServiceName = "Azure Rights Management";
+			PluginName = "Get-MonkeyAADRMOnboarding";
+			Docs = "https://silverhack.github.io/monkey365/"
+		}
+		$access_token = $O365Object.auth_tokens.AADRM
+		#Get AADRM Url
+		$url = $O365Object.Environment.aadrm_service_locator
+		if ($null -ne $access_token) {
+			#Set Authorization Header
+			$AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
+			$requestHeader = @{ "Authorization" = $AuthHeader }
+		}
+	}
+	process {
+		if ($requestHeader -and $url) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Office 365 Rights Management: Onboarding control policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMOnboardingControlPolicy');
+			}
+			Write-Information @msg
+			$url = ("{0}/OnboardingControlPolicy" -f $url)
+			$params = @{
+				url = $url;
+				Method = 'Get';
+				Content_Type = 'application/json; charset=utf-8';
+				Headers = $requestHeader;
+				disableSSLVerification = $true;
+			}
+			#call AADRM endpoint
+			$AADRM_Onboarding = Invoke-UrlRequest @params
+		}
+	}
+	end {
+		if ($AADRM_Onboarding) {
+			$AADRM_Onboarding.PSObject.TypeNames.Insert(0,'Monkey365.AADRM.OnboardingControlPolicy')
+			[pscustomobject]$obj = @{
+				Data = $AADRM_Onboarding;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.o365_aadrm_onboarding = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: Onboarding control policy",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'warning';
+				InformationAction = $InformationAction;
+				Tags = @('AADRMOnboardingControlPolicyEmptyResponse');
+			}
+			Write-Warning @msg
+		}
+	}
 }
