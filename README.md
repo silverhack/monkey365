@@ -66,7 +66,7 @@ The following example will retrieve data and metadata from Azure AD and SharePoi
 
 ``` powershell
 $param = @{
-    Instance = 'Office365';
+    Instance = 'Microsoft365';
     Analysis = 'SharePointOnline';
     PromptBehavior = 'SelectAccount';
     IncludeAzureActiveDirectory = $true;
