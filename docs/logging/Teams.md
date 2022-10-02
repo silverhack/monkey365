@@ -2,9 +2,9 @@
 author: Juan Garrido
 ---
 
-# Slack logger
+# Teams logger
 
-The Slack plugin sends log events to a ```slack``` channel.
+The Teams plugin sends log events to a ```Teams``` channel.
 
 # Example
 
@@ -25,13 +25,10 @@ The Slack plugin sends log events to a ```slack``` channel.
         ],
         "loggers":[
             {
-                "name": "Slack",
-                "type": "Slack",
+                "name": "Teams",
+                "type": "Teams",
                 "configuration": {
-                    "webHook": "https://hooks.slack.com/services/00000000000/00000000000/00000000000000000",
-                    "icon_emoji": ":ghost:",
-                    "username": "monkey365",
-                    "channel": "#monkey365",
+                    "webHook": "https://tenantName.webhook.office.com/webhookb2/00000000000/00000000000/00000000000000000",
                     "onlyExceptions": true
                 }
             }
@@ -41,9 +38,6 @@ The Slack plugin sends log events to a ```slack``` channel.
 
 # Configuration
 * name - Channel name
-* type - Slack
-* webHook - your Slack WebHook <a href='https://api.slack.com/messaging/webhooks' target='_blank'>See the slack web api docs</a>
-* icon_emoji - the icon to use for the message
-* username - the username to display with the message
-* channel - the channel to send log messages
+* type - Teams
+* webHook - your Teams WebHook <a href='https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook' target='_blank'>See the Microsoft Teams docs</a>
 * onlyExceptions - Set to true in order to send only exceptions streams to Slack

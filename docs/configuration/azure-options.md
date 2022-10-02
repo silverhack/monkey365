@@ -57,3 +57,78 @@ $param = @{
 }
 $assets = Invoke-Monkey365 @param
 ```
+
+## Exclude azure resources from scans
+
+To ensure that all Azure resources are scanned, we recommend creating exclusions only when it is absolutely necessary. However, there are situations in which you may need to exclude an specific Azure resource, for example a Virtual Machine that is controlled by a third party integrations. 
+
+The ```-ExcludedResources``` option can be used to exclude unwanted azure resources from being scanned.
+
+``` powershell
+$param = @{
+    Instance = 'Azure';
+    Analysis = 'All';
+    PromptBehavior = 'SelectAccount';
+    all_subscriptions = $true;
+    TenantID = '00000000-0000-0000-0000-000000000000';
+	ExcludedResources = 'C:\temp\az_excluded_resources.json';
+    ExportTo = 'HTML';
+}
+Invoke-Monkey365 @param
+```
+
+This parameter only accepts a JSON file path. This JSON file must have the following structure:
+
+``` json
+{
+    "title": "Azure exclusion list",
+    "exclusions": [
+        {
+            "code": "Exclusion title",
+            "suppress": {
+                "pattern": "*mypattern*",
+                "justification": "Justification text"
+            }
+        }
+    ]
+}
+```
+
+Consider the following example of a JSON exclusion file to understand how to use the ```ExcludedResources``` feature:
+
+``` json
+{
+    "title": "Azure exclusion list",
+    "exclusions": [
+        {
+            "code": "Azure VMs",
+            "suppress": {
+                "pattern": "*excludedmachine*",
+                "justification": "Controlled by Third-Party integrations"
+            }
+        },
+		{
+            "code": "Azure Storage account",
+            "suppress": {
+                "pattern": "*excludedstorageaccount*",
+                "justification": "Controlled by Third-Party integrations"
+            }
+        },
+		{
+            "code": "Azure Resource Group",
+            "suppress": {
+                "pattern": "*resourceGroups/excludedrg*",
+                "justification": "Controlled by Third-Party integrations"
+            }
+        },
+		{
+            "code": "Azure Containers",
+            "suppress": {
+                "pattern": "*resourceGroups/Containers*",
+                "justification": "Controlled by Third-Party integrations"
+            }
+        }
+    ]
+}
+
+```

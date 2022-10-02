@@ -12,7 +12,7 @@ Select the Microsoft 365 resources used to gather data. Valid values are:
 | --------------- |:-------------|
 | ExchangeOnline | Retrieves information from Exchange Online |
 | SharePointOnline | Retrieves information from SharePoint Online, including lists, users, groups, orphaned users, etc.. |
-| PurView | Retrieves information from Microsoft Purview |
+| PurView | Retrieves information from Microsoft PurView |
 | MicrosoftTeams | Retrieves information from Microsoft Teams      |
 | IRM | Retrieves information regarding rights management in Microsoft 365      |
 | MicrosoftForms | Retrieves basic information from Microsoft Forms     |

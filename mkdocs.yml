@@ -64,6 +64,11 @@ nav:
       - Channels: logging/channels.md
       - File logger: logging/File.md
       - Slack logger: logging/Slack.md
+      - Teams logger: logging/Teams.md
+    - Security Checks:
+      - Overview: security_checks/overview.md
+      - Create a custom rule: security_checks/custom-rule.md
+      - Custom ruleset: security_checks/custom-ruleset.md
     - License and Contributing: license-contributing.md
     - Support: support.md
     - Disclaimer: disclaimer.md
@@ -72,6 +77,8 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/silverhack/monkey365
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/tr1ana
 
   local:
     social_preview: https://user-images.githubusercontent.com/5271640/178448433-2eb54eaa-ffc4-40b7-9b90-4a6021a2f609.png

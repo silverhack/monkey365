@@ -20,7 +20,7 @@ Get-Help Invoke-Monkey365 -Detailed
 This example retrieves information from Azure AD and SharePoint Online and then print results. If credentials are not supplied, Monkey365 will prompt for credentials.
 ``` powershell
 $param = @{
-    Instance = 'Microsoft365';
+    Instance = 'Office365';
     Analysis = 'SharePointOnline';
     PromptBehavior = 'SelectAccount';
     IncludeAzureActiveDirectory = $true;
@@ -62,7 +62,7 @@ $param = @{
     ClientId = '00000000-0000-0000-0000-000000000000';
     certificate = 'C:\monkey365\testapp.pfx';
     CertFilePassword = ("MySuperCertSecret" | ConvertTo-SecureString -AsPlainText -Force);
-    Instance = 'Microsoft365';
+    Instance = 'Office365';
     Analysis = 'SharePointOnline';
     subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
