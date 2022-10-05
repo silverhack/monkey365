@@ -20,7 +20,7 @@ It can be used to set the environment containing the Azure account. Valid values
 Specifies the cloud provider to use. Valid values are:
 
 * Azure
-* Office365
+* Microsoft365
 
  ```-TenantID```
 
