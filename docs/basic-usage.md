@@ -51,7 +51,7 @@ $param = @{
     Analysis = 'All';
     subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
-    ExportTo = 'CLIXML,EXCEL,CSV,JSON,HTML';
+    ExportTo = @("CLIXML","EXCEL","CSV","JSON","HTML");
 }
 $assets = Invoke-Monkey365 @param
 ```
@@ -66,7 +66,7 @@ $param = @{
     Analysis = 'SharePointOnline';
     subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
-    ExportTo = 'CLIXML,EXCEL,CSV,JSON,HTML';
+    ExportTo = @("CLIXML","EXCEL","CSV","JSON","HTML");
 }
 $assets = Invoke-Monkey365 @param
 ```
