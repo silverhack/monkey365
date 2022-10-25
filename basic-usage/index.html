@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://silverhack.github.io/monkey365/basic-usage/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.3.2">
+      <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.3.2">
     
     
       
@@ -1013,7 +1013,7 @@ $assets = Invoke-Monkey365 @param
     Analysis = 'All';
     subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
-    ExportTo = 'CLIXML,EXCEL,CSV,JSON,HTML';
+    ExportTo = @(&quot;CLIXML&quot;,&quot;EXCEL&quot;,&quot;CSV&quot;,&quot;JSON&quot;,&quot;HTML&quot;);
 }
 $assets = Invoke-Monkey365 @param
 </code></pre>
@@ -1026,7 +1026,7 @@ $assets = Invoke-Monkey365 @param
     Analysis = 'SharePointOnline';
     subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
-    ExportTo = 'CLIXML,EXCEL,CSV,JSON,HTML';
+    ExportTo = @(&quot;CLIXML&quot;,&quot;EXCEL&quot;,&quot;CSV&quot;,&quot;JSON&quot;,&quot;HTML&quot;);
 }
 $assets = Invoke-Monkey365 @param
 </code></pre>
