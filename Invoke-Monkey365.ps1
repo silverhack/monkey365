@@ -498,6 +498,5 @@ Function Invoke-Monkey365{
         }
         #collect garbage
         [System.GC]::GetTotalMemory($true) | out-null
-        return $O365Object
     }
 }

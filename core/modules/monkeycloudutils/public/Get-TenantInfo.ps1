@@ -48,6 +48,7 @@ Function Get-TenantInfo{
                 $Tenant = "/myOrganization"
             }
             $Authorization = $AuthObject.CreateAuthorizationHeader()
+            #$Tenant = ("{0}aaaa" -f $Tenant)
             $uri = ("https://graph.windows.net/{0}/{1}?api-version={2}" -f $Tenant, "tenantDetails", "1.6")
             $Tenants = Invoke-WebRequest $uri -Method Get -Headers @{Authorization=$Authorization};
             return (ConvertFrom-Json $Tenants.Content).value;
@@ -58,13 +59,17 @@ Function Get-TenantInfo{
         }
     }
     catch{
-        if($_.ErrorDetails.Message){
-            $detailed_message = ConvertFrom-Json $_.ErrorDetails.Message
-        }
-        #Write message
         Write-Warning -Message $_.Exception
-        Write-Verbose -Message $detailed_message.'odata.error'.code
-        Write-Verbose -Message $detailed_message.'odata.error'.message.value
         Write-Debug -Message $_
+        try{
+            if($null -ne $_.PsObject.Properties.Item('ErrorDetails') -and $null -ne $_.ErrorDetails.Psobject.Properties.Item('Message')){
+                $detailed_message = ConvertFrom-Json $_.ErrorDetails.Message
+                Write-Verbose -Message $detailed_message.'odata.error'.code
+                Write-Verbose -Message $detailed_message.'odata.error'.message.value
+            }
+        }
+        catch{
+            Write-Warning "Unable to get Tenant information"            
+        }
     }
 }
