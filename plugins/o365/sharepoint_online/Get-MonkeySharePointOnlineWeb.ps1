@@ -48,7 +48,7 @@ function Get-MonkeySharePointOnlineWeb {
 			Id = "sps0012";
 			Provider = "Microsoft365";
 			Title = "Plugin to get information about O365 Sharepoint Online site web";
-			Group = @("SharepointOnline");
+			Group = @("SharePointOnline");
 			ServiceName = "SharePoint Online Web";
 			PluginName = "Get-MonkeySharePointOnlineWeb";
 			Docs = "https://silverhack.github.io/monkey365/"

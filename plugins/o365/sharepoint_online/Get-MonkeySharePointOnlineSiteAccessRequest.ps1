@@ -48,7 +48,7 @@ function Get-MonkeySharePointOnlineSiteAccessRequest {
 			Id = "sps0004";
 			Provider = "Microsoft365";
 			Title = "Plugin to get information about SPS access requests";
-			Group = @("SharepointOnline");
+			Group = @("SharePointOnline");
 			ServiceName = "SharePoint Online Site access requests";
 			PluginName = "Get-MonkeySharePointOnlineSiteAccessRequest";
 			Docs = "https://silverhack.github.io/monkey365/"

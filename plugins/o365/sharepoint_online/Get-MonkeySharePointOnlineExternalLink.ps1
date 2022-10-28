@@ -48,7 +48,7 @@ function Get-MonkeySharePointOnlineExternalLink {
 			Id = "sps0001";
 			Provider = "Microsoft365";
 			Title = "Plugin to get information about O365 Sharepoint Online external links";
-			Group = @("SharepointOnline");
+			Group = @("SharePointOnline");
 			ServiceName = "SharePoint Online External links";
 			PluginName = "Get-MonkeySharePointOnlineExternalLink";
 			Docs = "https://silverhack.github.io/monkey365/"

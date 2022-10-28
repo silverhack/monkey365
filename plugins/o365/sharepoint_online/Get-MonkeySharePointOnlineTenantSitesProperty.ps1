@@ -48,7 +48,7 @@ function Get-MonkeySharePointOnlineTenantSitesProperty {
 			Id = "sps0010";
 			Provider = "Microsoft365";
 			Title = "Plugin to extract information about SharePoint Online Tenant site properties";
-			Group = @("SharepointOnline");
+			Group = @("SharePointOnline");
 			ServiceName = "SharePoint Online Tenant site properties";
 			PluginName = "Get-MonkeySharePointOnlineTenantSitesProperty";
 			Docs = "https://silverhack.github.io/monkey365/"

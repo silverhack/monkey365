@@ -49,7 +49,7 @@ function Get-MonkeySharePointOnlineTenantAdminInfo {
 			Id = "sps0008";
 			Provider = "Microsoft365";
 			Title = "Plugin to get information about SPS Tenant information";
-			Group = @("SharepointOnline");
+			Group = @("SharePointOnline");
 			ServiceName = "SharePoint Online Tenant Admin information";
 			PluginName = "Get-MonkeySharePointOnlineTenantAdminInfo";
 			Docs = "https://silverhack.github.io/monkey365/"

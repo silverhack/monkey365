@@ -122,5 +122,9 @@ Function Out-MonkeyData{
         }
     }
     End{
+        #Remove Report variable
+        if($null -ne (Get-Variable -Name Report -Scope Script -ErrorAction Ignore)){
+            Remove-Variable -Name Report -Scope Script -Force
+        }
     }
 }

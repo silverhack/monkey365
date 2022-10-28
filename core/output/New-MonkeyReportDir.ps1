@@ -44,7 +44,7 @@ Function New-MonkeyReportDir{
         if (!(Test-Path -Path $OutDir)){
             $tmpdir = New-Item -ItemType Directory -Path $OutDir
             $msg = @{
-                MessageData = ($message.ConvertObjectErrorMessage -f $tmpdir.FullName);
+                MessageData = ($message.NewFolderMessage -f $tmpdir.FullName);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'debug';
                 InformationAction = $InformationAction;

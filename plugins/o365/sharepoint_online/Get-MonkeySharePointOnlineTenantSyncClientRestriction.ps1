@@ -48,7 +48,7 @@ function Get-MonkeySharePointOnlineTenantSyncClientRestriction {
 			Id = "sps0011";
 			Provider = "Microsoft365";
 			Title = "Plugin to get information about SPS Tenant Sync Client Restriction";
-			Group = @("SharepointOnline");
+			Group = @("SharePointOnline");
 			ServiceName = "SharePoint Online Tenant Sync Client Restriction";
 			PluginName = "Get-MonkeySharePointOnlineTenantSyncClientRestriction";
 			Docs = "https://silverhack.github.io/monkey365/"

@@ -48,7 +48,7 @@ function Get-MonkeySharePointOnlineSiteCollectionAdmin {
 			Id = "sps0005";
 			Provider = "Microsoft365";
 			Title = "Plugin to get information about SPS site collection admins";
-			Group = @("SharepointOnline");
+			Group = @("SharePointOnline");
 			ServiceName = "SharePoint Online Site collection admins";
 			PluginName = "Get-MonkeySharePointOnlineSiteCollectionAdmin";
 			Docs = "https://silverhack.github.io/monkey365/"

@@ -49,7 +49,7 @@ function Get-MonkeySharePointOnlineSitesInfo {
 			Id = "sps0007";
 			Provider = "Microsoft365";
 			Title = "Plugin to get information about Sharepoint Online sites";
-			Group = @("SharepointOnline");
+			Group = @("SharePointOnline");
 			ServiceName = "SharePoint Online Sites";
 			PluginName = "Get-MonkeySharePointOnlineSitesInfo";
 			Docs = "https://silverhack.github.io/monkey365/"

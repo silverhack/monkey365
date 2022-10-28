@@ -48,7 +48,7 @@ function Get-MonkeySPSOrphanedUser {
 			Id = "sps0003";
 			Provider = "Microsoft365";
 			Title = "Plugin to get information about SPS orphaned users and groups";
-			Group = @("SharepointOnline");
+			Group = @("SharePointOnline");
 			ServiceName = "SharePoint Online orphaned objects";
 			PluginName = "Get-MonkeySPSOrphanedUser";
 			Docs = "https://silverhack.github.io/monkey365/"

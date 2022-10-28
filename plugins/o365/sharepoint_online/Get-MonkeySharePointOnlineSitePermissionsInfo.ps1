@@ -49,7 +49,7 @@ function Get-MonkeySharePointOnlineSitePermissionsInfo {
 			Id = "sps0006";
 			Provider = "Microsoft365";
 			Title = "Plugin to get information about Sharepoint Online site permissions";
-			Group = @("SharepointOnline");
+			Group = @("SharePointOnline");
 			ServiceName = "SharePoint Online Site permissions";
 			PluginName = "Get-MonkeySharePointOnlineSitePermissionsInfo";
 			Docs = "https://silverhack.github.io/monkey365/"

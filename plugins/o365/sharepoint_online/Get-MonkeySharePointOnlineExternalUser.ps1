@@ -48,7 +48,7 @@ function Get-MonkeySPSExternalUser {
 			Id = "sps0002";
 			Provider = "Microsoft365";
 			Title = "Plugin to get information about SPS external users";
-			Group = @("SharepointOnline");
+			Group = @("SharePointOnline");
 			ServiceName = "SharePoint Online external users";
 			PluginName = "Get-MonkeySPSExternalUser";
 			Docs = "https://silverhack.github.io/monkey365/"
