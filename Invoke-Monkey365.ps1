@@ -396,7 +396,7 @@ Function Invoke-Monkey365{
     }
     Begin{
         #Set Window name
-        $Host.UI.RawUI.WindowTitle = "Monkey 365 Security Scanner"
+        $Host.UI.RawUI.WindowTitle = "Monkey365 Security Scanner"
         #Start Time
         $starttimer = Get-Date
         #####Get Default parameters ########
