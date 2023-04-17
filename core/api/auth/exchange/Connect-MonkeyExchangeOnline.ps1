@@ -88,6 +88,8 @@ Function Connect-MonkeyExchangeOnline {
             $new_params.confidentialApp = $O365Object.msalapplication;
         }
         #Connect to Exchange Online
+        Write-Host ($new_params | Out-String)
+        Write-Host ($new_params.publicApp | Out-String)
         Get-MonkeyMSALPSSessionForExchangeOnline @new_params
 
     }

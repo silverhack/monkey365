@@ -34,7 +34,7 @@ It can be used to resolve the unique ID of the tenant name
 
 It can be used to resolve the Tenant ID for a specific user
 
-```-IncludeAzureActiveDirectory```
+```-IncludeAzureAD```
 
 It can be used to get information from Azure Active Directory
 

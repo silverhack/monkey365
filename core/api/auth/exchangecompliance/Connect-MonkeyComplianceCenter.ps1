@@ -88,6 +88,8 @@ Function Connect-MonkeyComplianceCenter {
             $new_params.confidentialApp = $O365Object.msalapplication;
         }
         #Connect to Exchange Online Compliance Center
+        Write-Host ($new_params | Out-String)
+        Write-Host ($new_params.publicApp | Out-String)
         Get-MonkeyMSALPSSessionForComplianceCenter @new_params
     }
 }
