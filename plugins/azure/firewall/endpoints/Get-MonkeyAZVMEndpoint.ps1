@@ -43,17 +43,23 @@ function Get-MonkeyAZVMEndpoint {
 		[string]$pluginId
 	)
 	begin {
-		#Import Localized data
 		#Plugin metadata
 		$monkey_metadata = @{
 			Id = "az00013";
 			Provider = "Azure";
+			Resource = "Firewall";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAZVMEndpoint";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get information about EndPoints from Azure";
 			Group = @("Firewall","VirtualMachines");
-			ServiceName = "Azure Endpoints";
-			PluginName = "Get-MonkeyAZVMEndpoint";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
+		#Import Localized data
 		$LocalizedDataParams = $O365Object.LocalizedDataParams
 		Import-LocalizedData @LocalizedDataParams;
 		#Get Environment
@@ -90,7 +96,7 @@ function Get-MonkeyAZVMEndpoint {
 				#Construct URI
 				$URI = ("{0}{1}?api-version={2}" `
  						-f $O365Object.Environment.ResourceManager,`
- 						$classic_vm.id,$AzureClassicVMConfig.api_version)
+ 						$classic_vm.Id,$AzureClassicVMConfig.api_version)
 				#launch request
 				$params = @{
 					Authentication = $rm_auth;
@@ -100,7 +106,7 @@ function Get-MonkeyAZVMEndpoint {
 					Method = "GET";
 				}
 				$vm = Get-MonkeyRMObject @params
-				if ($vm.id) {
+				if ($vm.Id) {
 					$endpoints = $vm.Properties.networkProfile.inputEndpoints
 					foreach ($Endpoint in $Endpoints) {
 						$new_classic_endpoint = New-Object -TypeName PSCustomObject
@@ -131,11 +137,16 @@ function Get-MonkeyAZVMEndpoint {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure classic vm endpoints",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureClassicVMEndpointEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

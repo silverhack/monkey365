@@ -34,39 +34,33 @@ Function Remove-MonkeyPsSession {
             https://github.com/silverhack/monkey365
     #>
 
-    [CmdletBinding(SupportsShouldProcess=$true,ConfirmImpact="Medium")]
-    Param (
-        [Parameter(Mandatory = $false, HelpMessage = 'Force without message')]
-        [switch]$Force
-    )
-    Begin{
-        if (-not $PSBoundParameters.ContainsKey('Confirm')) {
-            $ConfirmPreference = $PSCmdlet.SessionState.PSVariable.GetValue('ConfirmPreference')
-        }
-        if (-not $PSBoundParameters.ContainsKey('WhatIf')) {
-            $WhatIfPreference = $PSCmdlet.SessionState.PSVariable.GetValue('WhatIfPreference')
-        }
-    }
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+    [CmdletBinding()]
+    Param ()
     Process{
-        if ($Force -or $PSCmdlet.ShouldProcess("ShouldProcess?")){
-            $ConfirmPreference = 'None'
-            foreach($raw_sess in $o365_sessions.GetEnumerator()){
-                if($null -ne $raw_sess.Value -and $raw_sess.Value -is [System.Management.Automation.Runspaces.PSSession]){
-                    $sess = $raw_sess.Value
-                    $msg = @{
-                        MessageData = ($message.ClosingRemoteSession -f $sess.ComputerName);
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'debug';
-                        Tags = @('RemoteSessionClosingMessage');
-                    }
-                    Write-Debug @msg
-                    Remove-PSSession -Session $sess
+        $ConfirmPreference = 'None'
+        foreach($raw_sess in $O365Object.o365_sessions.GetEnumerator()){
+            if($null -ne $raw_sess.Value -and $raw_sess.Value -is [System.Management.Automation.Runspaces.PSSession]){
+                $sess = $raw_sess.Value
+                $msg = @{
+                    MessageData = ($message.ClosingRemoteSession -f $sess.ComputerName);
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'debug';
+                    Tags = @('RemoteSessionClosingMessage');
+                    Debug = $O365Object.Debug;
                 }
+                Write-Debug @msg
+                Remove-PSSession -Session $sess
             }
+        }
+        #Remove Microsoft.Exchange PSSessions
+        $sess = Get-PSSession | Where-Object {$_.ConfigurationName -eq 'Microsoft.Exchange'}
+        if($sess){
+            $sess | Remove-PSSession
         }
     }
     End{
         #Clear var
-        $o365_sessions.Clear()
+        $O365Object.o365_sessions.Clear()
     }
 }

@@ -30,13 +30,41 @@ Function Get-SharepointAdminUrl{
     (
         # Well Known Azure service
         [Parameter(Mandatory = $false, HelpMessage = 'Tenant details')]
-        [Object] $TenantDetails
+        [Object] $TenantDetails,
+
+        [Parameter(Mandatory = $false, HelpMessage = 'Environment')]
+        [String]$Environment = "AzurePublic"
     )
     try{
         if($null -ne $TenantDetails){
             $defaultDomain = $TenantDetails.verifiedDomains | Where-Object {$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.initial -eq $true}
             if($defaultDomain -is [pscustomobject]){
-                $sharePointAdminUrl = ("https://{0}-admin.sharepoint.com" -f $defaultDomain[0].name.split(".")[0])
+                switch ($Environment) {
+                    "AzurePublic"
+                    {
+                        $sharePointAdminUrl = ("https://{0}-admin.sharepoint.com" -f $defaultDomain[0].name.split(".")[0]);
+                        break
+                    }
+                    "AzureUSGovernment"
+                    {
+                        $sharePointAdminUrl = ("https://{0}-admin.sharepoint.us" -f $defaultDomain[0].name.split(".")[0]);
+                        break
+                    }
+                    "AzureGermany"
+                    {
+                        $sharePointAdminUrl = $sharePointAdminUrl = ("https://{0}-admin.sharepoint.de" -f $defaultDomain[0].name.split(".")[0]);
+                        break
+                    }
+                    "AzureChina"{
+                        $sharePointAdminUrl = $sharePointAdminUrl = ("https://{0}-admin.sharepoint.cn" -f $defaultDomain[0].name.split(".")[0]);
+                        break
+                    }
+                    "Default"
+                    {
+                        $sharePointAdminUrl = ("https://{0}-admin.sharepoint.com" -f $defaultDomain[0].name.split(".")[0]);
+                        break
+                    }
+                }
                 return $sharePointAdminUrl
             }
             else{

@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
-
 function Get-MonkeyAZStorageAccount {
 <#
         .SYNOPSIS
@@ -53,26 +50,25 @@ function Get-MonkeyAZStorageAccount {
 		$monkey_metadata = @{
 			Id = "az00040";
 			Provider = "Azure";
+			Resource = "StorageAccounts";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAZStorageAccount";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get information from Azure Storage account";
 			Group = @("StorageAccounts");
-			ServiceName = "Azure Storage account";
-			PluginName = "Get-MonkeyAZStorageAccount";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Get Environment
-		$Environment = $O365Object.Environment
-		#Get Azure RM Auth
-		$rm_auth = $O365Object.auth_tokens.ResourceManager
-		#Get Azure Storage Auth
-		$StorageAuth = $O365Object.auth_tokens.AzureStorage
 		#Get Config
-		$AzureStorageAccountConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureStorage" } | Select-Object -ExpandProperty resource
+		$strConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureStorage" } | Select-Object -ExpandProperty resource
 		#Get Storage accounts
 		$storage_accounts = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.Storage/storageAccounts' }
-		if (-not $storage_accounts) { continue }
-		#Set arrays
-		$AllStorageAccounts = @()
-		$AllStorageAccountsPublicBlobs = @()
+        if (-not $storage_accounts) { continue }
+		#Set array
+		$all_str_accounts = New-Object System.Collections.Generic.List[System.Object]
 	}
 	process {
 		$msg = @{
@@ -83,365 +79,157 @@ function Get-MonkeyAZStorageAccount {
 			Tags = @('AzureStorageAccountsInfo');
 		}
 		Write-Information @msg
-		#Get all alerts
-		$current_date = [datetime]::Now.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
-		$90_days = [datetime]::Now.AddDays(-89).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
-		$tmp_filter = ("eventTimestamp ge \'{0}\' and eventTimestamp le \'{1}\'" -f $90_days,$current_date)
-		$filter = [System.Text.RegularExpressions.Regex]::Unescape($tmp_filter)
-		$URI = ('{0}{1}/providers/microsoft.insights/eventtypes/management/values?api-Version={2}&$filter={3}' `
- 				-f $O365Object.Environment.ResourceManager,$O365Object.current_subscription.id,'2017-03-01-preview',$filter)
-
-		$params = @{
-			Authentication = $rm_auth;
-			OwnQuery = $URI;
-			Environment = $Environment;
-			ContentType = 'application/json';
-			Method = "GET";
-		}
-		$all_alerts = Get-MonkeyRMObject @params
-		if ($storage_accounts) {
-			foreach ($str_account in $storage_accounts) {
-				$msg = @{
-					MessageData = ($message.AzureUnitResourceMessage -f $str_account.Name,"Storage account");
-					callStack = (Get-PSCallStack | Select-Object -First 1);
-					logLevel = 'info';
-					InformationAction = $InformationAction;
-					Tags = @('AzureStorageAccountInfo');
-				}
-				Write-Information @msg
-				#Construct URI
-				$URI = ("{0}{1}?api-version={2}" `
- 						-f $O365Object.Environment.ResourceManager,`
- 						$str_account.id,$AzureStorageAccountConfig.api_version)
-
-				$params = @{
-					Authentication = $rm_auth;
-					OwnQuery = $URI;
-					Environment = $Environment;
-					ContentType = 'application/json';
-					Method = "GET";
-				}
-				$StorageAccount = Get-MonkeyRMObject @params
-				if ($StorageAccount.id) {
-					$msg = @{
-						MessageData = ($message.StorageAccountFoundMessage -f $StorageAccount.Name,$StorageAccount.location);
-						callStack = (Get-PSCallStack | Select-Object -First 1);
-						logLevel = 'verbose';
-						InformationAction = $InformationAction;
-						Tags = @('AzureStorageAccountInfo');
-					}
-					Write-Verbose @msg
-					#Get Key rotation info
-					$last_rotation_dates = $all_alerts | Where-Object { $_.resourceId -eq $StorageAccount.id -and $_.authorization.action -eq "Microsoft.Storage/storageAccounts/regenerateKey/action" -and $_.status.localizedValue -eq "Succeeded" } | Select-Object -ExpandProperty eventTimestamp
-					$last_rotated_date = $last_rotation_dates | Select-Object -First 1
-					#Iterate through properties
-					foreach ($properties in $StorageAccount.Properties) {
-						$StrAccount = New-Object -TypeName PSCustomObject
-						$StrAccount | Add-Member -Type NoteProperty -Name id -Value $StorageAccount.id
-						$StrAccount | Add-Member -Type NoteProperty -Name name -Value $StorageAccount.Name
-						$StrAccount | Add-Member -Type NoteProperty -Name location -Value $StorageAccount.location
-						$StrAccount | Add-Member -Type NoteProperty -Name tags -Value $StorageAccount.Tags
-						$StrAccount | Add-Member -Type NoteProperty -Name rawObject -Value $StorageAccount
-						$StrAccount | Add-Member -Type NoteProperty -Name properties -Value $properties
-						$StrAccount | Add-Member -Type NoteProperty -Name ResourceGroupName -Value $StorageAccount.id.Split("/")[4]
-						$StrAccount | Add-Member -Type NoteProperty -Name Kind -Value $StorageAccount.kind
-						$StrAccount | Add-Member -Type NoteProperty -Name SkuName -Value $StorageAccount.sku.Name
-						$StrAccount | Add-Member -Type NoteProperty -Name SkuTier -Value $StorageAccount.sku.tier
-						$StrAccount | Add-Member -Type NoteProperty -Name CreationTime -Value $properties.CreationTime
-						$StrAccount | Add-Member -Type NoteProperty -Name primaryLocation -Value $properties.primaryLocation
-						$StrAccount | Add-Member -Type NoteProperty -Name statusofPrimary -Value $properties.statusOfPrimary
-						$StrAccount | Add-Member -Type NoteProperty -Name supportsHttpsTrafficOnly -Value $properties.supportsHttpsTrafficOnly
-						$StrAccount | Add-Member -Type NoteProperty -Name blobEndpoint -Value $properties.primaryEndpoints.blob
-						$StrAccount | Add-Member -Type NoteProperty -Name queueEndpoint -Value $properties.primaryEndpoints.queue
-						$StrAccount | Add-Member -Type NoteProperty -Name tableEndpoint -Value $properties.primaryEndpoints.table
-						$StrAccount | Add-Member -Type NoteProperty -Name fileEndpoint -Value $properties.primaryEndpoints.file
-						$StrAccount | Add-Member -Type NoteProperty -Name webEndpoint -Value $properties.primaryEndpoints.web
-						$StrAccount | Add-Member -Type NoteProperty -Name dfsEndpoint -Value $properties.primaryEndpoints.dfs
-						#Translate Key rotation info
-						if ($last_rotation_dates.Count -ge 2) {
-							$StrAccount | Add-Member -Type NoteProperty -Name isKeyRotated -Value $true
-							$StrAccount | Add-Member -Type NoteProperty -Name lastRotatedKeys -Value $last_rotated_date
-						}
-						else {
-							$StrAccount | Add-Member -Type NoteProperty -Name isKeyRotated -Value $false
-							$StrAccount | Add-Member -Type NoteProperty -Name lastRotatedKeys -Value $null
-						}
-						#Check if using Own key
-						if ($properties.encryption.keyvaultproperties) {
-							$StrAccount | Add-Member -Type NoteProperty -Name keyvaulturi -Value $properties.encryption.keyvaultproperties.keyvaulturi
-							$StrAccount | Add-Member -Type NoteProperty -Name keyname -Value $properties.encryption.keyvaultproperties.keyname
-							$StrAccount | Add-Member -Type NoteProperty -Name keyversion -Value $properties.encryption.keyvaultproperties.keyversion
-							$StrAccount | Add-Member -Type NoteProperty -Name usingOwnKey -Value $true
-						}
-						else {
-							$StrAccount | Add-Member -Type NoteProperty -Name usingOwnKey -Value $false
-						}
-						#Getting storage service conf
-						$str_service_uri = ("https://{0}.blob.core.windows.net?restype=service&comp=properties" -f $StorageAccount.Name)
-						$params = @{
-							Authentication = $StorageAuth;
-							OwnQuery = $str_service_uri;
-							Environment = $Environment;
-							ContentType = 'application/json';
-							Headers = @{ 'x-ms-version' = '2020-08-04' }
-							Method = "GET";
-						}
-						[xml]$str_service_data = Get-MonkeyRMObject @params
-						if ($str_service_data) {
-							#Get logging properties
-							$str_logging = $str_service_data.StorageServiceProperties | Select-Object -ExpandProperty Logging
-							#Get deletion retention policy
-							$str_deleteRetentionPolicy = $str_service_data.StorageServiceProperties | Select-Object -ExpandProperty deleteRetentionPolicy
-							#Get CORS
-							$str_cors = $str_service_data.StorageServiceProperties | Select-Object -ExpandProperty Cors
-							#Add to storage account object
-							if ($str_cors) {
-								$StrAccount | Add-Member -Type NoteProperty -Name cors -Value $str_cors
-							}
-							if ($str_deleteRetentionPolicy) {
-								$StrAccount | Add-Member -Type NoteProperty -Name deleteRetentionPolicy -Value $str_deleteRetentionPolicy
-							}
-							#Add logging
-							if ($str_logging) {
-								$StrAccount | Add-Member -Type NoteProperty -Name logging -Value $str_logging
-							}
-						}
-						#Search for public blobs
-						#If no public blobs were returned the request will raise a HTTP/1.1 403 AuthorizationPermissionMismatch
-						$blob_container_uri = ("https://{0}.blob.core.windows.net?restype=container&comp=list" -f $StorageAccount.Name)
-						$params = @{
-							Authentication = $StorageAuth;
-							OwnQuery = $blob_container_uri;
-							Environment = $Environment;
-							ContentType = 'application/json';
-							Headers = @{ 'x-ms-version' = '2020-08-04' }
-							Method = "GET";
-						}
-						[xml]$blobs = Get-MonkeyRMObject @params
-						$all_blobs = $blobs.EnumerationResults.Containers.Container #| Where-Object {$_.Properties.PublicAccess}
-						if ($all_blobs) {
-							foreach ($public_container in $all_blobs) {
-								$container = New-Object -TypeName PSCustomObject
-								$container | Add-Member -Type NoteProperty -Name storageaccount -Value $StorageAccount.Name
-								$container | Add-Member -Type NoteProperty -Name containername -Value $public_container.Name
-								$container | Add-Member -Type NoteProperty -Name blobname -Value $public_container.Name
-								$container | Add-Member -Type NoteProperty -Name rawObject -Value $public_container
-								if ($public_container.Properties.publicaccess) {
-									$container | Add-Member -Type NoteProperty -Name publicaccess -Value $public_container.Properties.publicaccess
-								}
-								else {
-									$container | Add-Member -Type NoteProperty -Name publicaccess -Value "private"
-								}
-								#Add to array
-								$AllStorageAccountsPublicBlobs += $container
-							}
-						}
-						#Get Encryption Status
-						if ($properties.encryption.services.blob) {
-							$StrAccount | Add-Member -Type NoteProperty -Name isBlobEncrypted -Value $properties.encryption.services.blob.enabled
-							$StrAccount | Add-Member -Type NoteProperty -Name lastBlobEncryptionEnabledTime -Value $properties.encryption.services.blob.lastEnabledTime
-						}
-						if ($properties.encryption.services.file) {
-							$StrAccount | Add-Member -Type NoteProperty -Name isFileEncrypted -Value $properties.encryption.services.file.enabled
-							$StrAccount | Add-Member -Type NoteProperty -Name lastFileEnabledTime -Value $properties.encryption.services.file.lastEnabledTime
-						}
-						else {
-							$StrAccount | Add-Member -Type NoteProperty -Name isEncrypted -Value $false
-							$StrAccount | Add-Member -Type NoteProperty -Name lastEnabledTime -Value $false
-						}
-						#Get Network Configuration Status
-						if ($properties.networkAcls) {
-							$fwconf = $properties.networkAcls
-							if ($fwconf.bypass -eq 'AzureServices') {
-								$StrAccount | Add-Member -Type NoteProperty -Name AllowAzureServices -Value $true
-							}
-							else {
-								$StrAccount | Add-Member -Type NoteProperty -Name AllowAzureServices -Value $false
-							}
-							if (-not $fwconf.virtualNetworkRules -and -not $fwconf.ipRules -and $fwconf.defaultAction -eq 'Allow') {
-								$StrAccount | Add-Member -Type NoteProperty -Name AllowAccessFromAllNetworks -Value $true
-							}
-							else {
-								$StrAccount | Add-Member -Type NoteProperty -Name AllowAccessFromAllNetworks -Value $false
-							}
-						}
-						#Get Data protection for storage account
-						$uri = ("{0}{1}/{2}?api-version={3}" -f $O365Object.Environment.ResourceManager,$StorageAccount.id,"blobServices/default","2021-06-01")
-						$param = @{
-							Authentication = $rm_auth;
-							OwnQuery = $uri;
-							Environment = $Environment;
-							ContentType = 'application/json';
-							Headers = @{ 'x-ms-version' = '2020-08-04' }
-							Method = "GET";
-						}
-						$storage_data_protection = Get-MonkeyRMObject @param
-						if ($storage_data_protection) {
-							$StrAccount | Add-Member -Type NoteProperty -Name dataProtection -Value $storage_data_protection
-						}
-						#Get ATP for Storage Account
-						$uri = ("{0}{1}/{2}?api-version={3}" -f $O365Object.Environment.ResourceManager,$StorageAccount.id,"providers/Microsoft.Security/advancedThreatProtectionSettings/current","2017-08-01-preview")
-						$params = @{
-							Authentication = $rm_auth;
-							OwnQuery = $uri;
-							Environment = $Environment;
-							ContentType = 'application/json';
-							Headers = @{ 'x-ms-version' = '2020-08-04' }
-							Method = "GET";
-						}
-						$StrAccountATPInfo = Get-MonkeyRMObject @params
-						if ($StrAccountATPInfo) {
-							$StrAccount | Add-Member -Type NoteProperty -Name AdvancedProtectionEnabled -Value $StrAccountATPInfo.Properties.isEnabled
-							$StrAccount | Add-Member -Type NoteProperty -Name ATPRawObject -Value $StrAccountATPInfo
-						}
-						#Get Diagnostic data for storage account
-						$URI_keys = ("{0}{1}/listKeys?api-version={2}" -f $O365Object.Environment.ResourceManager,`
- 								$StorageAccount.id,
-							$AzureStorageAccountConfig.api_version)
-						$params = @{
-							Authentication = $rm_auth;
-							OwnQuery = $URI_keys;
-							Environment = $Environment;
-							ContentType = 'application/json';
-							Headers = @{ 'x-ms-version' = '2020-08-04' }
-							Method = "POST";
-						}
-						$strkeys = Get-MonkeyRMObject @params
-						#get key1
-						$key1 = $strkeys.keys | Where-Object { $_.keyname -eq 'key1' } | Select-Object -ExpandProperty value
-						if ($key1) {
-							$queueEndpoint = $properties.primaryEndpoints.queue
-							$blobEndpoint = $properties.primaryEndpoints.blob
-							$tableEndpoint = $properties.primaryEndpoints.table
-							$fileEndpoint = $properties.primaryEndpoints.file
-							#Get Shared Access Signature
-							$QueueSAS = Get-SASUri -HostName $queueEndpoint -accessKey $key1
-							if ($QueueSAS) {
-								#Get Queue diagnostig settings
-								$params = @{
-									url = $QueueSAS;
-									Method = "GET";
-									UserAgent = $O365Object.UserAgent;
-									Headers = @{ 'x-ms-version' = '2020-08-04' }
-								}
-								[xml]$QueueDiagSettings = Invoke-UrlRequest @params
-								if ($QueueDiagSettings) {
-									#Add to psobject
-									$StrAccount | Add-Member -Type NoteProperty -Name queueLogVersion -Value $QueueDiagSettings.StorageServiceProperties.Logging.version
-									$StrAccount | Add-Member -Type NoteProperty -Name queueLogReadEnabled -Value $QueueDiagSettings.StorageServiceProperties.Logging.Read
-									$StrAccount | Add-Member -Type NoteProperty -Name queueLogWriteEnabled -Value $QueueDiagSettings.StorageServiceProperties.Logging.Write
-									$StrAccount | Add-Member -Type NoteProperty -Name queueLogDeleteEnabled -Value $QueueDiagSettings.StorageServiceProperties.Logging.Delete
-									$StrAccount | Add-Member -Type NoteProperty -Name queueRetentionPolicyEnabled -Value $QueueDiagSettings.StorageServiceProperties.Logging.retentionPolicy.enabled
-									if ($QueueDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days) {
-										$StrAccount | Add-Member -Type NoteProperty -Name queueRetentionPolicyDays -Value $QueueDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days
-									}
-									else {
-										$StrAccount | Add-Member -Type NoteProperty -Name queueRetentionPolicyDays -Value $null
-									}
-								}
-							}
-							#Get Shared Access Signature
-							$tableSAS = Get-SASUri -HostName $tableEndpoint -accessKey $key1
-							if ($tableSAS) {
-								#Get Queue diagnostig settings
-								$params = @{
-									url = $tableSAS;
-									Method = "GET";
-									UserAgent = $O365Object.UserAgent;
-									Headers = @{ 'x-ms-version' = '2020-08-04' }
-								}
-								[xml]$TableDiagSettings = Invoke-UrlRequest @params
-								if ($TableDiagSettings) {
-									#Add to psobject
-									$StrAccount | Add-Member -Type NoteProperty -Name tableLogVersion -Value $TableDiagSettings.StorageServiceProperties.Logging.version
-									$StrAccount | Add-Member -Type NoteProperty -Name tableLogReadEnabled -Value $TableDiagSettings.StorageServiceProperties.Logging.Read
-									$StrAccount | Add-Member -Type NoteProperty -Name tableLogWriteEnabled -Value $TableDiagSettings.StorageServiceProperties.Logging.Write
-									$StrAccount | Add-Member -Type NoteProperty -Name tableLogDeleteEnabled -Value $TableDiagSettings.StorageServiceProperties.Logging.Delete
-									$StrAccount | Add-Member -Type NoteProperty -Name tableRetentionPolicyEnabled -Value $TableDiagSettings.StorageServiceProperties.Logging.retentionPolicy.enabled
-									if ($TableDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days) {
-										$StrAccount | Add-Member -Type NoteProperty -Name tableRetentionPolicyDays -Value $TableDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days
-									}
-									else {
-										$StrAccount | Add-Member -Type NoteProperty -Name tableRetentionPolicyDays -Value $null
-									}
-								}
-							}
-							#Get Shared Access Signature
-							$fileSAS = Get-SASUri -HostName $fileEndpoint -accessKey $key1
-							if ($fileSAS) {
-								#Get Queue diagnostig settings
-								$params = @{
-									url = $fileSAS;
-									Method = "GET";
-									UserAgent = $O365Object.UserAgent;
-									Headers = @{ 'x-ms-version' = '2020-08-04' }
-								}
-								[xml]$FileDiagSettings = Invoke-UrlRequest @params
-								if ($FileDiagSettings) {
-									#Add to psobject
-									$StrAccount | Add-Member -Type NoteProperty -Name fileHourMetricsVersion -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.version
-									$StrAccount | Add-Member -Type NoteProperty -Name fileHourMetricsEnabled -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.enabled
-									$StrAccount | Add-Member -Type NoteProperty -Name fileHourMetricsIncludeAPIs -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.IncludeAPIs
-									$StrAccount | Add-Member -Type NoteProperty -Name fileHourMetricsRetentionPolicyEnabled -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.retentionPolicy.enabled
-									if ($FileDiagSettings.StorageServiceProperties.HourMetrics.retentionPolicy.Days) {
-										$StrAccount | Add-Member -Type NoteProperty -Name fileHourMetricsRetentionPolicyDays -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.retentionPolicy.Days
-									}
-									else {
-										$StrAccount | Add-Member -Type NoteProperty -Name fileHourMetricsRetentionPolicyDays -Value $null
-									}
-									#Add to psobject
-									$StrAccount | Add-Member -Type NoteProperty -Name fileMinuteMetricsVersion -Value $FileDiagSettings.StorageServiceProperties.MinuteMetrics.version
-									$StrAccount | Add-Member -Type NoteProperty -Name fileMinuteMetricsEnabled -Value $FileDiagSettings.StorageServiceProperties.MinuteMetrics.enabled
-									$StrAccount | Add-Member -Type NoteProperty -Name fileMinuteMetricsRetentionPolicyEnabled -Value $FileDiagSettings.StorageServiceProperties.MinuteMetrics.retentionPolicy.enabled
-									if ($FileDiagSettings.StorageServiceProperties.MinuteMetrics.retentionPolicy.Days) {
-										$StrAccount | Add-Member -Type NoteProperty -Name fileMinuteMetricsRetentionPolicyDays -Value $FileDiagSettings.StorageServiceProperties.MinuteMetrics.retentionPolicy.Days
-									}
-									else {
-										$StrAccount | Add-Member -Type NoteProperty -Name fileMinuteMetricsRetentionPolicyDays -Value $null
-									}
-								}
-							}
-							#Get Shared Access Signature
-							$blobSAS = Get-SASUri -HostName $blobEndpoint -accessKey $key1
-							if ($blobSAS) {
-								#Get Blob diagnostig settings
-								$params = @{
-									url = $blobSAS;
-									Method = "GET";
-									UserAgent = $O365Object.UserAgent;
-									Headers = @{ 'x-ms-version' = '2020-08-04' }
-								}
-								[xml]$BlobDiagSettings = Invoke-UrlRequest @params
-								if ($BlobDiagSettings) {
-									#Add to psobject
-									$StrAccount | Add-Member -Type NoteProperty -Name blobLogVersion -Value $BlobDiagSettings.StorageServiceProperties.Logging.version
-									$StrAccount | Add-Member -Type NoteProperty -Name blobLogReadEnabled -Value $BlobDiagSettings.StorageServiceProperties.Logging.Read
-									$StrAccount | Add-Member -Type NoteProperty -Name blobLogWriteEnabled -Value $BlobDiagSettings.StorageServiceProperties.Logging.Write
-									$StrAccount | Add-Member -Type NoteProperty -Name blobLogDeleteEnabled -Value $BlobDiagSettings.StorageServiceProperties.Logging.Delete
-									$StrAccount | Add-Member -Type NoteProperty -Name blobRetentionPolicyEnabled -Value $BlobDiagSettings.StorageServiceProperties.Logging.retentionPolicy.enabled
-									if ($BlobDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days) {
-										$StrAccount | Add-Member -Type NoteProperty -Name blobRetentionPolicyDays -Value $BlobDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days
-									}
-									else {
-										$StrAccount | Add-Member -Type NoteProperty -Name blobRetentionPolicyDays -Value $null
-									}
-								}
-							}
-						}
-					}
-					#Decore Object
-					$StrAccount.PSObject.TypeNames.Insert(0,'Monkey365.Azure.StorageAccount')
-					#Add to Object
-					$AllStorageAccounts += $StrAccount
-				}
-			}
-		}
+        #Check storage accounts
+        if($null -ne $storage_accounts -and @($storage_accounts).Count -gt 0){
+            foreach($strAccount in @($storage_accounts)){
+                $strObject = $null;
+                try{
+                    $msg = @{
+				        MessageData = ($message.AzureUnitResourceMessage -f $strAccount.Name,"Storage account");
+				        callStack = (Get-PSCallStack | Select-Object -First 1);
+				        logLevel = 'info';
+				        InformationAction = $O365Object.InformationAction;
+				        Tags = @('AzureStorageAccountInfo');
+			        }
+			        Write-Information @msg
+                    $p = @{
+					    Id = $strAccount.Id;
+                        ApiVersion = $strConfig.api_version;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        InformationAction = $O365Object.InformationAction;
+				    }
+				    $strAccount = Get-MonkeyAzObjectById @p
+                    if($strAccount){
+                        #Get new Storage account Object
+                        $p = @{
+					        Id = $strAccount.Id;
+                            ApiVersion = $strConfig.api_version;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                            InformationAction = $O365Object.InformationAction;
+				        }
+                        $strObject = New-MonkeyStorageAccountObject -StrAccount $strAccount
+                    }
+                    if($null -ne $strObject){
+                        #Check if infrastructure encryption is enabled
+                        if($null -eq $strObject.properties.encryption.Psobject.Properties.Item('requireInfrastructureEncryption')){
+                            $strObject.requireInfrastructureEncryption = $false
+                        }
+                        else{
+                            $strObject.requireInfrastructureEncryption = $strObject.properties.encryption.requireInfrastructureEncryption
+                        }
+                        $today = Get-Date
+                        $date_key1 = Get-Date $strObject.properties.keyCreationTime.key1
+                        if(($today - $date_key1).TotalDays -lt 90){
+                            $strObject.keyRotation.key1.isRotated = $true
+                        }
+                        #set key1 last rotation
+                        $strObject.keyRotation.key1.lastRotationDate = $strObject.properties.keyCreationTime.key1
+                        $date_key2 = Get-Date $strObject.properties.keyCreationTime.key2
+                        if(($today - $date_key2).TotalDays -lt 90){
+                            $strObject.keyRotation.key2.isRotated = $true
+                        }
+                        #set key2 last rotation
+                        $strObject.keyRotation.key2.lastRotationDate = $strObject.properties.keyCreationTime.key2
+                        if($null -ne $strObject.Properties.encryption.Psobject.Properties.Item('keyvaultproperties') -and $strObject.properties.encryption.keyvaultproperties){
+                            $strObject.keyvaulturi = $strObject.Properties.encryption.keyvaultproperties.keyvaulturi
+                            $strObject.keyname = $strObject.Properties.encryption.keyvaultproperties.keyname
+                            $strObject.keyversion = $strObject.Properties.encryption.keyvaultproperties.keyversion
+                            $strObject.usingOwnKey = $true
+                        }
+                        #Get Storage account data protection
+                        $p = @{
+						    StorageAccount = $strObject;
+						    APIVersion = "2021-06-01";
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                            InformationAction = $O365Object.InformationAction;
+					    }
+                        $strObject = Get-MonkeyAzStorageAccountDataProtection @p
+                        #Get Storage account ATP settings
+                        $p = @{
+						    Resource = $strObject;
+						    APIVersion = "2017-08-01-preview";
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                            InformationAction = $O365Object.InformationAction;
+					    }
+                        $atp = Get-MonkeyAzAdvancedThreatProtection @p
+                        if($atp){
+                            $strObject.advancedProtectionEnabled = $atp.Properties.isEnabled
+                            $strObject.atpRawObject = $atp
+                        }
+                        #Get Diagnostic settings for file
+                        $p = @{
+						    StorageAccount = $strObject;
+						    Type = "file";
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                            InformationAction = $O365Object.InformationAction;
+					    }
+                        $strObject.diagnosticSettings.file = Get-MonkeyAzStorageAccountDiagnosticSetting @p
+                        #Get queue diagnostic settings
+                        $p = @{
+						    StorageAccount = $strObject;
+						    Type = "queue";
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                            InformationAction = $O365Object.InformationAction;
+					    }
+                        $strObject.diagnosticSettings.queue = Get-MonkeyAzStorageAccountDiagnosticSetting @p
+                        #Get blob diagnostic settings
+                        $p = @{
+						    StorageAccount = $strObject;
+						    Type = "blob";
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                            InformationAction = $O365Object.InformationAction;
+					    }
+                        $strObject.diagnosticSettings.blob = Get-MonkeyAzStorageAccountDiagnosticSetting @p
+                        #Get table diagnostic settings
+                        $p = @{
+						    StorageAccount = $strObject;
+						    Type = "table";
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                            InformationAction = $O365Object.InformationAction;
+					    }
+                        $strObject.diagnosticSettings.table = Get-MonkeyAzStorageAccountDiagnosticSetting @p
+                        #Find public blobs
+                        $p = @{
+						    StorageAccount = $strObject;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                            InformationAction = $O365Object.InformationAction;
+					    }
+                        $public = Find-MonkeyAzStoragePublicBlob @p
+                        if($public){
+                            $strObject.containers = $public
+                        }
+                        #Check if key reminders is set
+                        if($null -eq $strObject.properties.PsObject.Properties.Item('keyPolicy')){
+                            $kp = @{
+                                keyExpirationPeriodInDays = $null;
+                                enableAutoRotation = $null;
+                            }
+                            $strObject.properties | Add-Member -Type NoteProperty -Name keyPolicy -Value $kp
+                        }
+                        #Add to array
+                        [void]$all_str_accounts.Add($strObject)
+                    }
+                }
+                catch{
+                    Write-Error $_
+                }
+            }
+        }
 	}
 	end {
-		if ($AllStorageAccounts) {
-			$AllStorageAccounts.PSObject.TypeNames.Insert(0,'Monkey365.Azure.StorageAccounts')
+		if ($all_str_accounts) {
+			$all_str_accounts.PSObject.TypeNames.Insert(0,'Monkey365.Azure.StorageAccounts')
 			[pscustomobject]$obj = @{
-				Data = $AllStorageAccounts;
+				Data = $all_str_accounts;
 				Metadata = $monkey_metadata;
 			}
 			$returnData.az_storage_accounts = $obj
@@ -450,30 +238,16 @@ function Get-MonkeyAZStorageAccount {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Storage accounts",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureStorageAccountsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
-		}
-		if ($AllStorageAccountsPublicBlobs) {
-			#Add public blobs
-			$AllStorageAccountsPublicBlobs.PSObject.TypeNames.Insert(0,'Monkey365.Azure.StorageAccounts.PublicBlobs')
-			[pscustomobject]$obj = @{
-				Data = $AllStorageAccountsPublicBlobs;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.az_storage_public_blobs = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Storage Accounts Public blobs",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
-				Tags = @('AzureStorageAccountPublicBlobEmptyResponse');
-			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -33,15 +33,10 @@ Function Connect-MonkeyIntune {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory=$false, HelpMessage="parameters")]
         [Object]$parameters
     )
-    if($O365Object.isUsingAdalLib){
-        Get-AdalTokenForIntune @parameters
-    }
-    else{
-        Get-MSALTokenForIntune @parameters
-    }
+    Get-MSALTokenForIntune @parameters
 }

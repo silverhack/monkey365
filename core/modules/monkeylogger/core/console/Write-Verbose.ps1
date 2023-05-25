@@ -44,7 +44,7 @@ Function Write-Verbose {
         [System.Object]
         ${Message},
 
-        [Parameter(Position=1)]
+        [Parameter(Mandatory=$false, HelpMessage="Tags")]
         [string[]]
         ${Tags},
 

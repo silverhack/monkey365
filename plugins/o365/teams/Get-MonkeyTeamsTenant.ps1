@@ -47,10 +47,16 @@ function Get-MonkeyTeamsTenant {
 		$monkey_metadata = @{
 			Id = "teams12";
 			Provider = "Microsoft365";
+			Resource = "MicrosoftTeams";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyTeamsTenant";
+			ApiType = $null;
 			Title = "Plugin to get information about Teams tenant";
 			Group = @("MicrosoftTeams");
-			ServiceName = "Microsoft Teams Tenant settings";
-			PluginName = "Get-MonkeyTeamsTenant";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Getting environment
@@ -74,9 +80,11 @@ function Get-MonkeyTeamsTenant {
 				InternalPath = 'TeamsTenant';
 				ObjectType = "tenants";
 				Environment = $Environment;
-				Method = "GET";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
 			}
-			$teams_tenant = Get-TeamsObject @params
+			$teams_tenant = Get-MonkeyTeamsObject @params
 		}
 	}
 	end {
@@ -90,13 +98,18 @@ function Get-MonkeyTeamsTenant {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Tenant",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams= Tenant",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('TeamsTenantInfoEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

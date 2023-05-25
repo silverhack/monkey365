@@ -47,10 +47,16 @@ function Get-MonkeyTeamsSkypeTenantFederationSetting {
 		$monkey_metadata = @{
 			Id = "teams10";
 			Provider = "Microsoft365";
+			Resource = "MicrosoftTeams";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyTeamsSkypeTenantFederationSetting";
+			ApiType = $null;
 			Title = "Plugin to get information about Teams Tenant federation settings (Skype)";
 			Group = @("MicrosoftTeams");
-			ServiceName = "Microsoft Teams Skype Tenant Federation Settings";
-			PluginName = "Get-MonkeyTeamsSkypeTenantFederationSetting";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Getting environment
@@ -69,8 +75,8 @@ function Get-MonkeyTeamsSkypeTenantFederationSetting {
 				Tags = @('TeamsTenantFederationSettings');
 			}
 			Write-Information @msg
-			if ($null -ne $O365Object.Tenant.MyDomain.id) {
-				$domain = $O365Object.Tenant.MyDomain.id
+			if ($null -ne $O365Object.Tenant.MyDomain.Id) {
+				$domain = $O365Object.Tenant.MyDomain.Id
 			}
 			else {
 				$domain = 'common'
@@ -81,9 +87,11 @@ function Get-MonkeyTeamsSkypeTenantFederationSetting {
 				ObjectType = "configurations/TenantFederationSettings";
 				AdminDomain = $domain;
 				Environment = $Environment;
-				Method = "GET";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
 			}
-			$fed_settings = Get-TeamsObject @params
+			$fed_settings = Get-MonkeyTeamsObject @params
 		}
 	}
 	end {
@@ -97,13 +105,18 @@ function Get-MonkeyTeamsSkypeTenantFederationSetting {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Skype tenant federation settings",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams= Skype tenant federation settings",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('TeamsTenantFederationSettingsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -41,7 +41,7 @@ function ConvertTo-MonkeyObject{
     [OutputType([System.Collections.Hashtable])]
     Param (
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [object]$objects
+        [object]$Objects
 
         )
     Begin{
@@ -50,7 +50,7 @@ function ConvertTo-MonkeyObject{
     }
     Process{
         try{
-            foreach($object in $objects.GetEnumerator()){
+            foreach($object in $Objects.GetEnumerator()){
                 if($object -is [System.Collections.DictionaryEntry] -and $object.psobject.properties.name -contains "Name" -and $object.psobject.properties.name -contains "Value"){
                     $returnObject.Add($object.Name,$object.Value)
                 }

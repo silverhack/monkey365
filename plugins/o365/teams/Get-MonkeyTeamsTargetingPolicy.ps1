@@ -47,10 +47,16 @@ function Get-MonkeyTeamsTargetingPolicy {
 		$monkey_metadata = @{
 			Id = "teams11";
 			Provider = "Microsoft365";
+			Resource = "MicrosoftTeams";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyTeamsTargetingPolicy";
+			ApiType = $null;
 			Title = "Plugin to get information about Teams targeting policy";
 			Group = @("MicrosoftTeams");
-			ServiceName = "Microsoft Teams targeting policy";
-			PluginName = "Get-MonkeyTeamsTargetingPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Getting environment
@@ -65,19 +71,21 @@ function Get-MonkeyTeamsTargetingPolicy {
 				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft 365 Teams: Targeting policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $InformationAction;
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('TeamsTargetingPolicyInfo');
 			}
 			Write-Information @msg
 			$params = @{
 				Authentication = $access_token;
-				InternalPath = 'PowerShell';
-				ObjectType = "TeamsTargetingPolicy";
-				AdminDomain = 'common';
+				InternalPath = 'SkypePolicy';
+				ObjectType = "configurations";
+				ObjectId = 'TeamsTargetingPolicy';
 				Environment = $Environment;
-				Method = "GET";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
 			}
-			$targeting_policy = Get-TeamsObject @params
+			$targeting_policy = Get-MonkeyTeamsObject @params
 		}
 	}
 	end {
@@ -91,13 +99,18 @@ function Get-MonkeyTeamsTargetingPolicy {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Targeting policy",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams= Targeting policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('TeamsTargetingPolicyEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

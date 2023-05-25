@@ -47,26 +47,33 @@ function Get-MonkeySharePointOnlineWeb {
 		$monkey_metadata = @{
 			Id = "sps0012";
 			Provider = "Microsoft365";
+			Resource = "SharePointOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeySharePointOnlineWeb";
+			ApiType = $null;
 			Title = "Plugin to get information about O365 Sharepoint Online site web";
 			Group = @("SharePointOnline");
-			ServiceName = "SharePoint Online Web";
-			PluginName = "Get-MonkeySharePointOnlineWeb";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Set array
-		$all_webs = @()
+        if($null -eq $O365Object.spoWebs){
+            break
+        }
 	}
 	process {
 		$msg = @{
 			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Sharepoint Online webs",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
+			InformationAction = $O365Object.InformationAction;
 			Tags = @('SPSWebsInfo');
 		}
 		Write-Information @msg
 		#Get all webs for user
-		$all_webs = Get-MonkeySPSWebsForUser
+		$all_webs = $O365Object.spoWebs
 	}
 	end {
 		if ($all_webs) {
@@ -81,11 +88,16 @@ function Get-MonkeySharePointOnlineWeb {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online webs",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SPSWebsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

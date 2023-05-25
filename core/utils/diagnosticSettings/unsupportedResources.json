@@ -1,0 +1,130 @@
+{
+	"unsupportedDiagnosticSettings": [
+		{
+			"name": "OperationsManagement",
+			"resource": {
+			  "provider": "Microsoft.OperationsManagement"
+			}
+		},
+		{
+			"name": "Resources",
+			"resource": {
+			  "provider": "Microsoft.Resources"
+			}
+		},
+		{
+			"name": "Automation",
+			"resource": {
+			  "provider": "Microsoft.Automation/automationAccounts/runbooks"
+			}
+		},
+		{
+			"name": "VMExtensions",
+			"resource": {
+			  "provider": "Microsoft.Compute/virtualMachines/extensions"
+			}
+		},
+		{
+			"name": "VMDisks",
+			"resource": {
+			  "provider": "Microsoft.Compute/disks"
+			}
+		},
+		{
+			"name": "Insights",
+			"resource": {
+			  "provider": "microsoft.insights/actiongroups"
+			}
+		},
+		{
+			"name": "Insights",
+			"resource": {
+			  "provider": "microsoft.insights/components"
+			}
+		},
+		{
+			"name": "ManagedIdentity",
+			"resource": {
+			  "provider": "Microsoft.ManagedIdentity/userAssignedIdentities"
+			}
+		},
+		{
+			"name": "WAFPolicies",
+			"resource": {
+			  "provider": "Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies"
+			}
+		},
+		{
+			"name": "DDOSProtectionPlans",
+			"resource": {
+			  "provider": "Microsoft.Network/ddosProtectionPlans"
+			}
+		},
+		{
+			"name": "FrontDoorWAFPolicies",
+			"resource": {
+			  "provider": "Microsoft.Network/frontdoorWebApplicationFirewallPolicies"
+			}
+		},
+		{
+			"name": "FirewallPolicies",
+			"resource": {
+			  "provider": "Microsoft.Network/firewallPolicies"
+			}
+		},
+		{
+			"name": "RouteTables",
+			"resource": {
+			  "provider": "Microsoft.Network/routeTables"
+			}
+		},
+		{
+			"name": "IntegrationAccounts",
+			"resource": {
+			  "provider": "Microsoft.Logic/integrationAccounts"
+			}
+		},
+		{
+			"name": "WebConnections",
+			"resource": {
+			  "provider": "Microsoft.Web/connections"
+			}
+		},
+		{
+			"name": "TemplateSpecs",
+			"resource": {
+			  "provider": "Microsoft.Resources/templateSpecs"
+			}
+		},
+		{
+			"name": "TemplateSpecs",
+			"resource": {
+			  "provider": "Microsoft.Resources/templateSpecs/versions"
+			}
+		},
+		{
+			"name": "Workbooks",
+			"resource": {
+			  "provider": "microsoft.insights/workbooks"
+			}
+		},
+		{
+			"name": "Solutions",
+			"resource": {
+			  "provider": "microsoft.operationsmanagement/solutions"
+			}
+		},
+		{
+			"name": "SmartDetectorRules",
+			"resource": {
+			  "provider": "microsoft.alertsmanagement/smartdetectoralertrules"
+			}
+		},
+		{
+			"name": "NetworkWatcher",
+			"resource": {
+			  "provider": "microsoft.network/networkwatchers"
+			}
+		}
+	]
+}

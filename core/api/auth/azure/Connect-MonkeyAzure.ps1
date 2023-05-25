@@ -33,66 +33,77 @@ Function Connect-MonkeyAzure{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
-        [Parameter(Mandatory=$false, HelpMessage="parameters")]
+        [Parameter(Mandatory=$true, HelpMessage="parameters")]
         [Object]$parameters
     )
-    $azure_services = @{
-        ResourceManager = $O365Object.Environment.ResourceManager;
-        Graph = $O365Object.Environment.Graph;
-        ServiceManagement = $O365Object.Environment.Servicemanagement;
-        AzurePortal = Get-WellKnownAzureService -AzureService AzurePortal;
-        SecurityPortal = $O365Object.Environment.Servicemanagement;
-        AzureStorage = $O365Object.Environment.Storage;
-        AzureVault = $O365Object.Environment.Vaults;
-        MSGraph =$O365Object.Environment.Graphv2;
-        LogAnalytics = $O365Object.Environment.LogAnalytics;
+    Begin{
+        $azure_services = @{
+            ResourceManager = $O365Object.Environment.ResourceManager;
+            Graph = $O365Object.Environment.Graph;
+            ServiceManagement = $O365Object.Environment.Servicemanagement;
+            AzurePortal = Get-WellKnownAzureService -AzureService AzurePortal;
+            SecurityPortal = $O365Object.Environment.Servicemanagement;
+            AzureStorage = $O365Object.Environment.Storage;
+            AzureVault = $O365Object.Environment.Vaults;
+            MSGraph =$O365Object.Environment.Graphv2;
+            LogAnalytics = $O365Object.Environment.LogAnalytics;
+        }
     }
-    foreach($service in $azure_services.GetEnumerator()){
-        $msg = @{
-            MessageData = ("Authenticating to {0}" -f $service.Name);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $script:InformationAction;
-            Tags = @('AuthenticatingInfoMessage');
+    Process{
+        if($null -ne $O365Object.auth_tokens.ResourceManager){
+            $O365Object.subscriptions = Select-MonkeyAzureSubscription
         }
-        Write-Information @msg
-        $azure_service = $service.Name
-        #Get new parameters
-        $new_params = @{}
-        foreach ($param in $parameters.GetEnumerator()){
-            $new_params.add($param.Key, $param.Value)
-        }
-        #Add resource parameter
-        $new_params.Add('Resource',$service.Value)
-        try{
-            if($O365Object.isUsingAdalLib){
-                $auth_context = Get-MonkeyADALAuthenticationContext -TenantID $new_params.TenantId
-                if($null -eq $new_params.Item('AuthContext')){
-                    [ref]$null = $new_params.Add('AuthContext',$auth_context)
+    }
+    End{
+        if($null -ne $O365Object.subscriptions){
+            foreach($service in $azure_services.GetEnumerator()){
+                $msg = @{
+                    MessageData = ("Authenticating to {0}" -f $service.Name);
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('AuthenticatingInfoMessage');
                 }
-                else{
-                    $new_params.AuthContext = $auth_context
+                Write-Information @msg
+                $azure_service = $service.Name
+                #Get new parameters
+                $new_params = @{}
+                foreach ($param in $parameters.GetEnumerator()){
+                    $new_params.add($param.Key, $param.Value)
                 }
-                $Script:o365_connections.$($azure_service) = Get-AdalTokenForResource @new_params
+                #Add resource parameter
+                $new_params.Add('Resource',$service.Value)
+                try{
+                    $O365Object.auth_tokens.$($azure_service) = Get-MSALTokenForResource @new_params
+                    $msg = @{
+                        MessageData = ("Successfully connected to {0}" -f $service.Name);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'info';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('AuthSuccessInfoMessage');
+                    }
+                    Write-Information @msg
+                }
+                catch{
+                    Write-Warning ("Unable to get Token for {0}" -f $service.Name)
+                    if($O365Object.auth_tokens.ContainsKey($azure_service)){
+                        $O365Object.auth_tokens.$($azure_service) = $null
+                    }
+                    else{
+                        [ref]$null = $O365Object.auth_tokens.Add($azure_service,$null)
+                    }
+                    $msg = @{
+                        MessageData = $_;
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'verbose';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('TokenError');
+                    }
+                    Write-Verbose $_
+                }
             }
-            else{
-                $Script:o365_connections.$($azure_service) = Get-MSALTokenForResource @new_params
-            }
-            $msg = @{
-                MessageData = ("Successfully connected to {0}" -f $service.Name);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $O365Object.InformationAction;
-                Tags = @('AuthSuccessInfoMessage');
-            }
-            Write-Information @msg
-        }
-        catch{
-            Write-Warning ("Unable to get Token for {0}" -f $service.Name)
-            $Script:o365_connections.$($azure_service) = $null
-            Write-Verbose $_
         }
     }
 }

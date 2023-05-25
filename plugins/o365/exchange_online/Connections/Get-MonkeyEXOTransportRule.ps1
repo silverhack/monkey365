@@ -48,60 +48,91 @@ function Get-MonkeyEXOTransportRule {
 		$monkey_metadata = @{
 			Id = "exo0016";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOTransportRule";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about transport rules in Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Transport Rules";
-			PluginName = "Get-MonkeyEXOTransportRule";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
 		#Get Tenant info
 		$tenant_info = $O365Object.Tenant
 		#Get available domains for organisation
 		$org_domains = $tenant_info.Domains | Select-Object -ExpandProperty id
+        #Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
+        $p = @{
+            Authentication = $ExoAuth;
+            Environment = $Environment;
+            ResponseFormat = 'clixml';
+            Command = $null;
+            Method = "POST";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
 	}
 	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online transport rules",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoTransportRulesInfo');
-			}
-			Write-Information @msg
-			$exo_transport_rules = Get-ExoMonkeyTransportRule
-			if ($null -ne $exo_transport_rules) {
-				foreach ($transport_rule in $exo_transport_rules) {
-					#Check if own domain is already whitelisted in SenderDomain
-					$params = @{
-						ReferenceObject = $org_domains;
-						DifferenceObject = $transport_rule.SenderDomainIs;
-						IncludeEqual = $true;
-						ExcludeDifferent = $true;
-					}
-					$org_whitelisted_InsenderDomain = Compare-Object @params
-					#Check if own domain is already whitelisted in FromAddressContainsWords
-					$params = @{
-						ReferenceObject = $org_domains;
-						DifferenceObject = $transport_rule.FromAddressContainsWords;
-						IncludeEqual = $true;
-						ExcludeDifferent = $true;
-					}
-					$org_whitelisted_InFromAddress = Compare-Object @params
-					if ($org_whitelisted_InsenderDomain -or $org_whitelisted_InFromAddress) {
-						$transport_rule | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $true
-					}
-					else {
-						$transport_rule | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $false
-					}
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online transport rules",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('ExoTransportRulesInfo');
+		}
+		Write-Information @msg
+        $p.Command = 'Get-TransportRule'
+		$exo_transport_rules = Get-PSExoAdminApiObject @p
+		if ($null -ne $exo_transport_rules) {
+			foreach ($transport_rule in $exo_transport_rules) {
+				#Check if own domain is already whitelisted in SenderDomain
+				if ($null -eq $transport_rule.SenderDomainIs) {
+					#Set empty array
+					$sdi = @('')
+				}
+				else {
+					$sdi = $transport_rule.SenderDomainIs
+				}
+				$params = @{
+					ReferenceObject = $org_domains;
+					DifferenceObject = $sdi;
+					IncludeEqual = $true;
+					ExcludeDifferent = $true;
+				}
+				$org_whitelisted_InsenderDomain = Compare-Object @params
+				#Check if own domain is already whitelisted in FromAddressContainsWords
+				if ($null -eq $transport_rule.FromAddressContainsWords) {
+					#Set empty array
+					$facw = @('')
+				}
+				else {
+					$facw = $transport_rule.FromAddressContainsWords
+				}
+				$params = @{
+					ReferenceObject = $org_domains;
+					DifferenceObject = $facw;
+					IncludeEqual = $true;
+					ExcludeDifferent = $true;
+				}
+				$org_whitelisted_InFromAddress = Compare-Object @params
+				if ($org_whitelisted_InsenderDomain -or $org_whitelisted_InFromAddress) {
+					$transport_rule | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $true
+				}
+				else {
+					$transport_rule | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $false
 				}
 			}
-			if ($null -eq $exo_transport_rules) {
-				$exo_transport_rules = @{
-					isEnabled = $false
-				}
+		}
+		if ($null -eq $exo_transport_rules) {
+			$exo_transport_rules = @{
+				isEnabled = $false
 			}
 		}
 	}
@@ -118,11 +149,16 @@ function Get-MonkeyEXOTransportRule {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online transport rules",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoTransportRulesResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

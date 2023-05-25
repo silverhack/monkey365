@@ -48,10 +48,16 @@ function Get-MonkeyEXOSensitivityInfoType {
 		$monkey_metadata = @{
 			Id = "purv007";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about sensitive information types that are defined for organisation";
-			Group = @("PurView");
-			ServiceName = "Microsoft PurView Sensitivity Information Types";
+			Resource = "Purview";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyEXOSensitivityInfoType";
+			ApiType = $null;
+			Title = "Plugin to get information about sensitive information types that are defined for organisation";
+			Group = @("Purview");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Check if already connected to Exchange Online Compliance Center
@@ -83,11 +89,16 @@ function Get-MonkeyEXOSensitivityInfoType {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance Sensitivity Information Types",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompDLPSentivityInfoEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

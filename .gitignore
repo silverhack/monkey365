@@ -15,6 +15,9 @@ site/
 *.ps1.bak
 *_extra.json
 
+# Tests
+core/watcher/
+
 config/monkey_365_dev.config
 
 profiles/

@@ -48,17 +48,36 @@ function Get-MonkeyADDomainInfo {
 		$monkey_metadata = @{
 			Id = "aad0007";
 			Provider = "AzureAD";
+			Resource = "AzureAD";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADDomainInfo";
+			ApiType = "Graph";
 			Title = "Plugin to get information about domain from Azure AD";
 			Group = @("AzureAD");
-			ServiceName = "Azure AD Domain";
-			PluginName = "Get-MonkeyADDomainInfo";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		$Environment = $O365Object.Environment
 		#Get Graph Authentication
 		$AADAuth = $O365Object.auth_tokens.Graph
 		#Get Config
-		$AADConfig = $O365Object.internal_config.azuread
+        try{
+            $aadConf = $O365Object.internal_config.azuread.provider.graph
+        }
+        catch{
+            $msg = @{
+                MessageData = ($message.MonkeyInternalConfigError);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'verbose';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365ConfigError');
+            }
+            Write-Verbose @msg
+            break
+        }
 		$domains = $null
 	}
 	process {
@@ -67,7 +86,7 @@ function Get-MonkeyADDomainInfo {
 				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD Domain Information",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $InformationAction;
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureADDomainInfo');
 			}
 			Write-Information @msg
@@ -75,7 +94,10 @@ function Get-MonkeyADDomainInfo {
 				Environment = $Environment;
 				Authentication = $AADAuth;
 				ObjectType = "domains";
-				APIVersion = $AADConfig.api_version
+				APIVersion = $aadConf.api_version;
+                InformationAction = $O365Object.InformationAction;
+			    Verbose = $O365Object.Verbose;
+			    Debug = $O365Object.Debug;
 			}
 			$domains = Get-MonkeyGraphObject @params
 			if ($domains) {
@@ -100,11 +122,16 @@ function Get-MonkeyADDomainInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD Domain Info",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureADDomainEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

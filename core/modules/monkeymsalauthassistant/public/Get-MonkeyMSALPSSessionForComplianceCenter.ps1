@@ -122,6 +122,9 @@ Function Get-MonkeyMSALPSSessionForComplianceCenter {
         [Parameter(Mandatory=$false, HelpMessage="Force silent authentication")]
         [Switch]$Silent,
 
+        [Parameter(Mandatory=$false, HelpMessage="Force refresh token")]
+        [Switch]$ForceRefresh,
+
         [Parameter(Mandatory=$false, HelpMessage="Device code authentication")]
         [Switch]$DeviceCode
     )
@@ -189,7 +192,7 @@ Function Get-MonkeyMSALPSSessionForComplianceCenter {
                     $Ctoken = New-Object System.Management.Automation.PSCredential -ArgumentList $UPN, $Password
                 }
                 else{
-                    Write-Warning "Missing TenantName"
+                    Write-Warning "Missing Tenant name"
                     $Ctoken= $null
                 }
             }
@@ -236,6 +239,18 @@ Function Get-MonkeyMSALPSSessionForComplianceCenter {
                 Tags = @('MSALComplianceCenterAuth');
             }
             Write-Information @msg
+            #Add Expiration time
+            $ComplianceSession | Add-Member -type NoteProperty -name ExpiresOn_ -value ([System.DateTimeOffset]::Now.AddMinutes(60)) -Force
+            #Add renewable option
+            $ComplianceSession | Add-Member -type NoteProperty -name renewable -value $true -Force
+            #Add function to check for near expiration
+            $ComplianceSession | Add-Member -Type ScriptMethod -Name IsNearExpiry -Value {
+                return (($this.ExpiresOn_.UtcDateTime.AddMinutes(-5)) -le ((Get-Date).ToUniversalTime()))
+            }
+            #Add function to disable token renewal
+            $ComplianceSession | Add-Member -Type ScriptMethod -Name DisableRenew -Value {
+                $this.renewable = $false
+            }
             return $ComplianceSession
         }
         else{

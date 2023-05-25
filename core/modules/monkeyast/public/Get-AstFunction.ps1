@@ -48,6 +48,10 @@ Function Get-AstFunction{
     }
     Process{
         foreach($object in $objects){
+            if($object -is [System.Management.Automation.PSObject] -and $null -ne $object.Psobject.Properties.Item('FullName')){
+                #Convert to filesystemInfo
+                $object = [System.IO.fileinfo]::new($object)
+            }
             if($object -is [System.IO.FileSystemInfo]){
                 $ast = [System.Management.Automation.Language.Parser]::ParseFile(
                     $object.FullName,

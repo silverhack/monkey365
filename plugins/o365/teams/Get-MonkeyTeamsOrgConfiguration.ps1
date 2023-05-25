@@ -44,13 +44,19 @@ function Get-MonkeyTeamsOrgConfiguration {
 	)
 	begin {
 		#Plugin metadata
-		$monkey_metadata = @{
+        $monkey_metadata = @{
 			Id = "teams07";
 			Provider = "Microsoft365";
+			Resource = "MicrosoftTeams";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyTeamsOrgConfiguration";
+			ApiType = $null;
 			Title = "Plugin to get information about Teams organisation settings";
 			Group = @("MicrosoftTeams");
-			ServiceName = "Microsoft Teams organisation settings";
-			PluginName = "Get-MonkeyTeamsOrgConfiguration";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Getting environment
@@ -75,9 +81,11 @@ function Get-MonkeyTeamsOrgConfiguration {
 				ObjectType = "TeamsClientConfiguration";
 				AdminDomain = 'common';
 				Environment = $Environment;
-				Method = "GET";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
 			}
-			$organisationSettings = Get-TeamsObject @params
+			$organisationSettings = Get-MonkeyTeamsObject @params
 		}
 	}
 	end {
@@ -93,11 +101,12 @@ function Get-MonkeyTeamsOrgConfiguration {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Organisation settings",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
+				logLevel = 'verbose';
 				InformationAction = $InformationAction;
+                Verbose = $O365Object.Verbose;
 				Tags = @('TeamsOrgSettingsEmptyResponse');
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }

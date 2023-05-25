@@ -16,10 +16,10 @@
 function Get-MonkeyADFeatureEnabled {
 <#
         .SYNOPSIS
-		Plugin to extract information about existing features enabled in Azure AAD
+		Plugin to extract information about existing features enabled in Azure AD
 
         .DESCRIPTION
-		Plugin to extract information about existing features enabled in Azure AAD
+		Plugin to extract information about existing features enabled in Azure AD
 
         .INPUTS
 
@@ -48,10 +48,16 @@ function Get-MonkeyADFeatureEnabled {
 		$monkey_metadata = @{
 			Id = "aad0004";
 			Provider = "AzureAD";
-			Title = "Plugin to extract information about existing features enabled in Azure AAD";
-			Group = @("AzureAD");
-			ServiceName = "Azure AD Features";
+			Resource = "AzureAD";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyADFeatureEnabled";
+			ApiType = "Graph";
+			Title = "Plugin to extract information about existing features enabled in Azure AD";
+			Group = @("AzureAD");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Excluded auth
@@ -64,7 +70,7 @@ function Get-MonkeyADFeatureEnabled {
 			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD Features",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
+			InformationAction = $O365Object.InformationAction;
 			Tags = @('AzureGraphADFeatures');
 		}
 		Write-Information @msg
@@ -96,11 +102,27 @@ function Get-MonkeyADFeatureEnabled {
 		)
 		if ($ExcludedAuths -contains $O365Object.AuthType) {
 			Write-Warning ("This request is not allowed with {0} authentication flow" -f $O365Object.AuthType)
+            break
 		}
+        #Get Config
+        try{
+            $aadConf = $O365Object.internal_config.azuread.provider.graph
+        }
+        catch{
+            $msg = @{
+                MessageData = ($message.MonkeyInternalConfigError);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'verbose';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365ConfigError');
+            }
+            Write-Verbose @msg
+            break
+        }
 	}
 	process {
 		$features = @{}
-		$OwnQuery = ("{0}/myorganization/isDirectoryFeatureEnabled?api-version=1.61-internal" -f $Environment.Graph)
+		$OwnQuery = ("{0}/myorganization/isDirectoryFeatureEnabled?api-version={1}" -f $Environment.Graph, $aadConf.internal_api_version)
 		if ($null -ne $Environment -and $null -ne $AADAuth) {
 			foreach ($feature in $allowed_features) {
 				$postData = @{
@@ -114,14 +136,17 @@ function Get-MonkeyADFeatureEnabled {
 					ContentType = 'application/json';
 					Method = "POST";
 					returnRawResponse = $true;
+                    InformationAction = $O365Object.InformationAction;
+			        Verbose = $O365Object.Verbose;
+			        Debug = $O365Object.Debug;
 				}
 				$returned_feature = Get-MonkeyGraphObject @params
-				if ($null -ne $returned_feature -and $returned_feature.PSObject.Properties.Name.Contains('value')) {
+				if ($null -ne $returned_feature -and $null -ne $returned_feature.PSObject.Properties.Item('value')) {
 					$features.Add($feature,$returned_feature.value)
+					#Close response
+					$returned_feature.Close()
+					$returned_feature.Dispose()
 				}
-				#Close response
-				$returned_feature.Close()
-				$returned_feature.Dispose()
 			}
 		}
 	}
@@ -138,11 +163,16 @@ function Get-MonkeyADFeatureEnabled {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD Features",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureADFeaturesEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -46,17 +46,23 @@ function Get-MonkeyAzContainerRegistry {
 		[string]$pluginId
 	)
 	begin {
-		#Import Localized data
 		#Plugin metadata
 		$monkey_metadata = @{
 			Id = "az00008";
 			Provider = "Azure";
+			Resource = "Containers";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzContainerRegistry";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get Azure Container registry";
 			Group = @("Containers");
-			ServiceName = "Azure Container Registry";
-			PluginName = "Get-MonkeyAzContainerRegistry";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
+		#Import Localized data
 		$LocalizedDataParams = $O365Object.LocalizedDataParams
 		Import-LocalizedData @LocalizedDataParams;
 		#Get Environment
@@ -83,7 +89,7 @@ function Get-MonkeyAzContainerRegistry {
 		if ($container_registries) {
 			foreach ($container_registry in $container_registries) {
 				$URI = ("{0}{1}?api-version={2}" `
- 						-f $O365Object.Environment.ResourceManager,$container_registry.id,$cntRegistryAPI.api_version)
+ 						-f $O365Object.Environment.ResourceManager,$container_registry.Id,$cntRegistryAPI.api_version)
 				#launch request
 				$params = @{
 					Authentication = $rm_auth;
@@ -120,11 +126,16 @@ function Get-MonkeyAzContainerRegistry {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Container registry",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureContainersEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

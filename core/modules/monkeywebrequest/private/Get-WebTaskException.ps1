@@ -66,6 +66,9 @@ Function Get-WebTaskException{
                 $webResponse = $task_exception.InnerException.Response
             }
         }
+        elseif($null -ne $task_exception.Psobject.Properties.Item('InnerExceptions') -and $null -ne $task_exception.InnerExceptions){
+            $webResponse = $task_exception.InnerExceptions.Response
+        }
         else{
             $webResponse = $null
         }

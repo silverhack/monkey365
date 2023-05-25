@@ -48,10 +48,16 @@ function Get-MonkeyADMDMApplication {
 		$monkey_metadata = @{
 			Id = "aad0032";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADMDMApplication";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get MDM configuration from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD MDM configuration";
-			PluginName = "Get-MonkeyADMDMApplication";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Azure Active Directory Auth
@@ -73,6 +79,9 @@ function Get-MonkeyADMDMApplication {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$ad_mdm_applications = Get-MonkeyAzurePortalObject @params
 	}
@@ -89,11 +98,16 @@ function Get-MonkeyADMDMApplication {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD MDM applications",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalMDMEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

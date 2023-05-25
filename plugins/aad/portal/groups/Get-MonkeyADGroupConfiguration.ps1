@@ -48,10 +48,16 @@ function Get-MonkeyADGroupConfiguration {
 		$monkey_metadata = @{
 			Id = "aad0029";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADGroupConfiguration";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get group settings from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD Group settings";
-			PluginName = "Get-MonkeyADGroupConfiguration";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Azure Active Directory Auth
@@ -73,6 +79,9 @@ function Get-MonkeyADGroupConfiguration {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$azure_ad_group_settings = Get-MonkeyAzurePortalObject @params
 	}
@@ -89,11 +98,16 @@ function Get-MonkeyADGroupConfiguration {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD group settings",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalGroupEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

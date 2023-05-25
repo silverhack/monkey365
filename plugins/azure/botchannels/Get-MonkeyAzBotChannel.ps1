@@ -49,17 +49,23 @@ function Get-MonkeyAzBotChannel {
 		[string]$pluginId
 	)
 	begin {
-		#Import Localized data
 		#Plugin metadata
 		$monkey_metadata = @{
 			Id = "az00003";
 			Provider = "Azure";
+			Resource = "BotChannels";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzBotChannel";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get information from Azure Bots";
 			Group = @("BotChannels");
-			ServiceName = "Azure Bot channels";
-			PluginName = "Get-MonkeyAzBotChannel";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
+		#Import Localized data
 		$LocalizedDataParams = $O365Object.LocalizedDataParams
 		Import-LocalizedData @LocalizedDataParams;
 		#Get Environment
@@ -103,11 +109,16 @@ function Get-MonkeyAzBotChannel {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Bots",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureBotsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -33,9 +33,10 @@ Function Get-MonkeyRuleset{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
+    Param()
     Begin{
-        $ruleSet = $null;
+        $ruleSet = $rulesPath = $null;
         if($O365Object.Instance -or $O365Object.IncludeAAD -eq $true){
             if($null -ne $O365Object.initParams.ruleset){
                 $ruleSet = $O365Object.initParams.ruleset
@@ -55,7 +56,6 @@ Function Get-MonkeyRuleset{
         }
     }
     Process{
-        $rulesPath = $null;
         if($null -ne $ruleSet){
             $isRoot = [System.IO.Path]::IsPathRooted($ruleSet)
             if(-NOT $isRoot){

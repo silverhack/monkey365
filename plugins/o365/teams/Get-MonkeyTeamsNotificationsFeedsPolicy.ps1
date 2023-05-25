@@ -47,10 +47,16 @@ function Get-MonkeyTeamsNotificationsFeedsPolicy {
 		$monkey_metadata = @{
 			Id = "teams06";
 			Provider = "Microsoft365";
+			Resource = "MicrosoftTeams";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyTeamsNotificationsFeedsPolicy";
+			ApiType = $null;
 			Title = "Plugin to get information about notifications and feed policy in Teams";
 			Group = @("MicrosoftTeams");
-			ServiceName = "Microsoft Teams notification policies";
-			PluginName = "Get-MonkeyTeamsNotificationsFeedsPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Getting environment
@@ -65,19 +71,21 @@ function Get-MonkeyTeamsNotificationsFeedsPolicy {
 				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft 365 Teams: Notifications and feeds policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $InformationAction;
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('TeamsOrgSettings');
 			}
 			Write-Information @msg
 			$params = @{
 				Authentication = $access_token;
-				InternalPath = 'PowerShell';
-				ObjectType = "TeamsNotificationAndFeedsPolicy";
-				AdminDomain = 'common';
+				InternalPath = 'SkypePolicy';
+				ObjectType = "configurations";
+				ObjectId = 'TeamsNotificationAndFeedsPolicy';
 				Environment = $Environment;
-				Method = "GET";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
 			}
-			$notification_settings = Get-TeamsObject @params
+			$notification_settings = Get-MonkeyTeamsObject @params
 		}
 	}
 	end {
@@ -91,13 +99,18 @@ function Get-MonkeyTeamsNotificationsFeedsPolicy {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Notifications and feeds policy",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams= Notifications and feeds policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.Verbose;
 				Tags = @('TeamsOrgSettingsEmptyResponse');
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

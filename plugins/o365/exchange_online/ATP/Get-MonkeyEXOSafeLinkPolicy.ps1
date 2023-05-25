@@ -48,34 +48,36 @@ function Get-MonkeyEXOSafeLinkPolicy {
 		$monkey_metadata = @{
 			Id = "exo0005";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOSafeLinkPolicy";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about safe link policy in Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Safe Links Policy";
-			PluginName = "Get-MonkeyEXOSafeLinkPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
 	}
-	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online safe link policy",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoSafeLinkPolicyInfo');
-			}
-			Write-Information @msg
-			$exo_safe_link_policy = Get-SafeLinksInfo
-			if ($null -eq $exo_safe_link_policy) {
-				$exo_safe_link_policy = @{
-					isEnabled = $false
-				}
+	Process {
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online safe link policy",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('ExoSafeLinkPolicyInfo');
+		}
+		Write-Information @msg
+		$exo_safe_link_policy = Get-SafeLinksInfo
+		if ($null -eq $exo_safe_link_policy) {
+			$exo_safe_link_policy = @{
+				isEnabled = $false
 			}
 		}
 	}
-	end {
+	End {
 		if ($null -ne $exo_safe_link_policy) {
 			$exo_safe_link_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.SafeLinkPolicy')
 			[pscustomobject]$obj = @{
@@ -88,11 +90,16 @@ function Get-MonkeyEXOSafeLinkPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online safe link policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoSafeLinkPolicyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

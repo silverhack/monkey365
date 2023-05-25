@@ -76,26 +76,22 @@ NestedModules = @(
     'core/modules/monkeyexcel/monkeyexcel.psm1',
     'core/modules/psmarkdig/psmarkdig.psm1',
     'core/modules/monkeyruleset/monkeyruleset.psm1',
-    'core/modules/monkeyhtml/monkeyhtml.psm1'
+    'core/modules/monkeyhtml/monkeyhtml.psm1',
+    'core/modules/monkeycloudutils/monkeycloudutils.psm1'
 )
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
     'Invoke-Monkey365',
-    'Get-JobErrorRecord',
     'Get-MonkeyJobError',
+    'Get-MonkeyJobRS',
     'Get-MonkeyEnvironment',
     'Get-AstFunction',
-    'Get-CommandInfo',
-    'Get-CommandToExecute',
-    'Get-CommandMetadata',
-    'Get-NewScriptBlock',
-    'Get-ValueFromPipeline',
-    'Get-ElementFromAst',
     'Write-Information',
     'Write-Verbose',
     'Write-Error',
     'Write-Debug',
+    'Get-ActiveRunspacePool',
     'Convert-MarkDownToHtml',
     'Get-TenantInfo',
     'Get-WellKnownAzureService',
@@ -107,8 +103,7 @@ FunctionsToExport = @(
     'Get-MonkeyExoRedirectUri',
     'Get-DefaultTenantName',
     'Update-PsObject',
-    'Get-MonkeySubscriptionInfo',
-    'Clear-MonkeyADALTokenCache'
+    'Get-MonkeySubscriptionInfo'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

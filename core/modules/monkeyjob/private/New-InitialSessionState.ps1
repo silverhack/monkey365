@@ -76,7 +76,8 @@ Function New-InitialSessionState{
                     $all_scopes = [System.Management.Automation.ScopedItemOptions]::AllScope
                     foreach ($var in $ImportVariables.GetEnumerator()){
                         if($null -eq $var.Value){
-                            Write-Warning ("Null variable value found on {0}" -f $var.Name)
+                            Write-Verbose ("Null variable value found on {0}" -f $var.Name)
+                            continue
                         }
                         else{
                             $sessionstate.Variables.Add((New-Object -TypeName System.Management.Automation.Runspaces.SessionStateVariableEntry -ArgumentList $var.Name, $var.Value, $null))
@@ -123,9 +124,9 @@ Function New-InitialSessionState{
             if($ImportModules){
                 if($ImportModules -is [hashtable]){$ImportModules = $ImportModules.Values}
                 foreach($module in $ImportModules){
-                    Write-Verbose ("Importing module: {0}" -f $module)
-                    $moduleToImport = Resolve-Path -Path $module -ErrorAction SilentlyContinue
+                    $moduleToImport = Resolve-Path -Path $module -ErrorAction Ignore
                     if($null -ne $moduleToImport){
+                        Write-Verbose ("Importing module: {0}" -f $module)
                         $moduleToImport = $moduleToImport.Path.TrimEnd('\')
                         If (Test-Path -Path $moduleToImport -PathType Container){
                             #folder containing one or more scripts/modules
@@ -137,7 +138,14 @@ Function New-InitialSessionState{
                         }
                     }
                     else{
-                        [void]$sessionstate.ImportPSModule($module);
+                        #Check if file or module exists
+                        if (Test-Path -Path $module){
+                            Write-Verbose ("Importing module: {0}" -f $module)
+                            [void]$sessionstate.ImportPSModule($module);
+                        }
+                        else{
+                            Write-Warning ("{0} file or module does not exists" -f $module)
+                        }
                     }
                 }
             }
@@ -169,6 +177,7 @@ Function New-InitialSessionState{
                 foreach($scp in $StartUpScripts){
                     if (!(Test-Path -Path $scp)){
                         Write-Warning ("{0} file does not exists" -f $scp)
+                        continue
                     }
                     else{
                         [void]$sessionstate.StartupScripts.Add($scp)

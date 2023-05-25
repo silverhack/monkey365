@@ -166,7 +166,7 @@ Function Get-MSALTokenForSharePointOnline {
         }
         elseif($Admin){
             if($null -ne $Tenant){
-                $sharepointUrl = Get-SharePointAdminUrl -TenantDetails $Tenant
+                $sharepointUrl = Get-SharePointAdminUrl -TenantDetails $Tenant -Environment $Environment
             }
         }
         elseif($rootSite){
@@ -181,7 +181,7 @@ Function Get-MSALTokenForSharePointOnline {
         }
         else{
             #Connect to SharePoint Admin Url
-            $sharepointUrl = Get-SharePointAdminUrl -TenantDetails $Tenant
+            $sharepointUrl = Get-SharePointAdminUrl -TenantDetails $Tenant -Environment $Environment
         }
         #Set clientId
         if($null -ne $PublicApp -and $PublicApp -is [Microsoft.Identity.Client.PublicClientApplication]){

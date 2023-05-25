@@ -53,7 +53,13 @@ Function Get-JsonFromFile{
     try{
         if(@($files).Count -gt 0){
             foreach($f in $files){
-                $json_data = Get-Content -Raw -Path $f.FullName | ConvertFrom-Json -ErrorAction Ignore
+                try{
+                    $json_data = Get-Content -Raw -Path $f.FullName | ConvertFrom-Json -ErrorAction Ignore
+                }
+                catch{
+                    Write-Warning ("Error in {0}" -f $f.FullName)
+                    $json_data = $null
+                }
                 if($null -ne $json_data){
                     #Get NoteProperty
                     $raw_json = $json_data.psobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty'} -ErrorAction Ignore

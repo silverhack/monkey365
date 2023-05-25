@@ -48,16 +48,18 @@ function Get-MonkeySharePointOnlineTenantInfo {
 		$monkey_metadata = @{
 			Id = "sps0009";
 			Provider = "Microsoft365";
+			Resource = "SharePointOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeySharePointOnlineTenantInfo";
+			ApiType = $null;
 			Title = "Plugin to get information about SPS Tenant information";
 			Group = @("SharePointOnline");
-			ServiceName = "SharePoint Online Tenant information";
-			PluginName = "Get-MonkeySharePointOnlineTenantInfo";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Get Access Token from AADRM
-		$sps_auth = $O365Object.auth_tokens.SharePointOnline
-		#Check if user is sharepoint administrator
-		$isSharepointAdministrator = Test-IsUserSharepointAdministrator
 	}
 	process {
 		$msg = @{
@@ -68,16 +70,12 @@ function Get-MonkeySharePointOnlineTenantInfo {
 			Tags = @('SPSTenantInfo');
 		}
 		Write-Information @msg
-		if ($isSharepointAdministrator) {
-			#body
-			$body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="monkey 365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="71" ObjectPathId="70" /><Query Id="72" ObjectPathId="70"><Query SelectAllProperties="true"><Properties /></Query></Query></Actions><ObjectPaths><Constructor Id="70" TypeId="{e45fd516-a408-4ca4-b6dc-268e2f1f0f83}" /></ObjectPaths></Request>'
-			$params = @{
-				Authentication = $sps_auth;
-				Data = $body_data;
-			}
-			#call SPS
-			$sps_tenant_details = Invoke-MonkeySPSUrlRequest @params
-		}
+        $p = @{
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+        $sps_tenant_details = Get-MonkeyCSOMOffice365Tenant @p
 	}
 	end {
 		if ($sps_tenant_details) {
@@ -92,11 +90,16 @@ function Get-MonkeySharePointOnlineTenantInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Tenant Details",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.Verbose;
 				Tags = @('SPSTenantDetailsEmptyResponse');
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

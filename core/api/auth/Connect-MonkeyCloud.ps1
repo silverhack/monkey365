@@ -35,271 +35,179 @@ Function Connect-MonkeyCloud{
     #>
 
     [CmdletBinding()]
-    Param (
-        [parameter(Mandatory=$false, HelpMessage= "Silent authentication")]
-        [switch]$Silent
-    )
-    #Connect to Graph
-    $app_params = $O365Object.application_args
-    if($O365Object.isUsingAdalLib){
-        if($O365Object.application_args.ContainsKey('Silent') -and $O365Object.application_args.Silent){
-            #Add silent auth if not exists
-            if(-NOT $app_params.ContainsKey('Silent')){
-                #Add silent auth
-                [ref]$null = $app_params.Add('Silent',$true)
-            }
+    Param ()
+    $app_params = $null
+    #Using MSAL authentication
+    if($null -ne $O365Object.msalapplication -and $null -ne $O365Object.msal_application_args){
+        #Set new application args
+        $app_params = @{}
+        foreach($elem in $O365Object.msal_application_args.GetEnumerator()){
+            [void]$app_params.Add($elem.Key,$elem.Value)
         }
-        if($PSBoundParameters.ContainsKey('Silent') -and $Silent){
-            #Add silent auth
-            if(-NOT $app_params.ContainsKey('Silent')){
-                #Add silent auth
-                [ref]$null = $app_params.Add('Silent',$true)
-            }
-        }
-        #Connect to ResourceManager
-        $Script:o365_connections.ResourceManager = (Connect-MonkeyResourceManagement $app_params)
-        if($null -ne $Script:o365_connections.ResourceManager){
-            #Set TenantId if not exists
-            if(-NOT $app_params.ContainsKey('TenantId')){
-                [ref]$null = $app_params.Add('TenantId',$Script:o365_connections.ResourceManager.TenantId)
-            }
-            #remove devicecode
-            if($app_params.ContainsKey('DeviceCode')){
-                [ref]$null = $app_params.Remove('DeviceCode')
-            }
-            #Get authentication context
-            $O365Object.authContext = Get-MonkeyADALAuthenticationContext -TenantID $app_params.TenantId
-            #Add authContext to params
-            if(-NOT $app_params.ContainsKey('AuthContext')){
-                [ref]$null = $app_params.Add('AuthContext',$O365Object.authContext)
-            }
-            else{
-                $app_params.AuthContext = $O365Object.authContext
-            }
-            #Add silent auth
-            if(-NOT $app_params.ContainsKey('Silent')){
-                #Add silent auth
-                [ref]$null = $app_params.Add('Silent',$true)
-            }
-        }
-        else{
-            #Probably cancelled connection
-            return
-        }
-    }
-    else{
-        #Using MSAL authentication
-        if($null -ne $O365Object.msalapplication -and $null -ne $O365Object.msal_application_args){
-            $app_params = $O365Object.msal_application_args
-            if($O365Object.msalapplication.isPublicApp){
-                #Set parameters
+        if($O365Object.msalapplication.isPublicApp){
+            #Set parameters
+            if($app_params.ContainsKey('publicApp')){
+                #Remove and add public application
+                [ref]$null = $app_params.Remove('publicApp')
                 [ref]$null = $app_params.Add('publicApp',$O365Object.msalapplication);
-                if($O365Object.application_args.ContainsKey('Silent') -and $O365Object.application_args.Silent){
-                    #Add silent auth if not exists
-                    if(-NOT $app_params.ContainsKey('Silent')){
-                        #Add silent auth
-                        [ref]$null = $app_params.Add('Silent',$true)
-                    }
-                }
             }
             else{
-                #Confidential App
-                [ref]$null = $app_params.Add('confidentialApp',$O365Object.msalapplication);
+                [ref]$null = $app_params.Add('publicApp',$O365Object.msalapplication);
             }
-            #Remove ClientId
-            if($app_params.ContainsKey('ClientId')){
-                [ref]$null = $app_params.Remove('ClientId')
-            }
-            $Script:o365_connections.ResourceManager = (Connect-MonkeyResourceManagement $app_params)
-            if($null -ne $Script:o365_connections.ResourceManager){
-                #remove devicecode
-                if($app_params.ContainsKey('DeviceCode')){
-                    [ref]$null = $app_params.Remove('DeviceCode')
-                }
+            if($O365Object.application_args.ContainsKey('Silent') -and $O365Object.application_args.Silent){
+                #Add silent auth if not exists
                 if(-NOT $app_params.ContainsKey('Silent')){
                     #Add silent auth
                     [ref]$null = $app_params.Add('Silent',$true)
                 }
             }
-            else{
-                #Probably cancelled connection
-                return
-            }
+        }
+        else{
+            #Confidential App
+            [ref]$null = $app_params.Add('confidentialApp',$O365Object.msalapplication);
+        }
+        #Remove ClientId
+        if($app_params.ContainsKey('ClientId')){
+            [ref]$null = $app_params.Remove('ClientId')
         }
     }
+    if($null -ne $app_params){
+        #Connect to Microsoft Graph
+        $O365Object.auth_tokens.Graph = (Connect-MonkeyGraph $app_params)
+    }
+    if($null -ne $O365Object.auth_tokens.Graph){
+        #Get Tenant Origin
+        $p = @{
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+        $O365Object.tenantOrigin = Get-MonkeyGraphAADTenantDetail @p
+        #Remove device code if exists
+        if($app_params.ContainsKey('DeviceCode')){
+            [ref]$null = $app_params.Remove('DeviceCode')
+        }
+        if(-NOT $app_params.ContainsKey('Silent')){
+            #Add silent auth
+            [ref]$null = $app_params.Add('Silent',$true)
+        }
+        #Connect to Resource management
+        $O365Object.auth_tokens.ResourceManager = (Connect-MonkeyResourceManagement $app_params)
+    }
+    else{
+        #Probably cancelled connection
+        return
+    }
     #Check if connected
-    if($null -ne $Script:o365_connections.ResourceManager){
+    if($null -ne $O365Object.auth_tokens.ResourceManager){
         $msg = @{
-            MessageData = $message.SuccessfullyConnected;
+            MessageData = ($message.SuccessfullyConnectedTo -f "Resource Manager");
             callStack = (Get-PSCallStack | Select-Object -First 1);
             logLevel = 'info';
-            InformationAction = $script:InformationAction;
+            InformationAction = $O365Object.InformationAction;
             Tags = @('SuccessFullyConnected');
         }
         Write-Information @msg
-        #Set O365 connection to True
-        $Script:OnlineServices.O365 = $True
+        #Add authentication args to O365Object
+        $auth_param = @{}
+        foreach($p in $app_params.GetEnumerator()){
+            [void]$auth_param.Add($p.Key,$p.Value);
+        }
+        $O365Object.authentication_args = $auth_param
     }
     #Select tenant
-    if($Script:OnlineServices.O365 -eq $true -and $null -eq $O365Object.TenantId){
+    if($null -eq $O365Object.TenantId -and $null -ne $O365Object.auth_tokens.ResourceManager){
         $reconnect = Select-MonkeyTenant
         if($null -ne $reconnect){
             #If reconnect is true, then a new tenant was selected by the user
             if($reconnect){
-                Connect-MonkeyCloud -Silent
+                Connect-MonkeyCloud
+                return
             }
             else{
                 #Probably cancelled connection
                 return
             }
         }
-        #if($null -ne $reconnect -and ($reconnect -eq $true -or $reconnect -eq $false)){return}
     }
-    #Get token from MS Graph
-    $Script:o365_connections.Graph = (Connect-MonkeyGraph $app_params)
-    #Connect to MSGraph
-    $Script:o365_connections.MSGraph = (Connect-MonkeyMSGraph $app_params)
-    #Connect to Azure Portal
-    $Script:o365_connections.AzurePortal = (Connect-MonkeyAzurePortal $app_params)
-    #Get Tenant Information
-    $O365Object.auth_tokens = $Script:o365_connections
-    $O365Object.Tenant = Get-TenantInformation
+    if($null -ne $O365Object.auth_tokens.ResourceManager -and $null -ne $O365Object.auth_tokens.Graph){
+        #Connect to MSGraph
+        $O365Object.auth_tokens.MSGraph = (Connect-MonkeyMSGraph $app_params)
+        #Connect to Azure Portal
+        $O365Object.auth_tokens.AzurePortal = (Connect-MonkeyAzurePortal $app_params)
+        #Connect to PIM
+        $O365Object.auth_tokens.MSPIM = (Connect-MonkeyPIM $app_params)
+        #Get Tenant Information
+        $O365Object.Tenant = Get-TenantInformation
+    }
+    #Set Azure AD connections to True if connection is present
+    if($null -ne $O365Object.auth_tokens.MSGraph -and $null -ne $O365Object.auth_tokens.Graph){
+        $O365Object.onlineServices.AzureAD = $True
+    }
     #Check if Azure services is selected
     if($O365Object.initParams.Instance -eq "Azure"){
-        #Reconnect to Azure Resource Management
-        $Script:o365_connections.ResourceManager = (Connect-MonkeyResourceManagement $app_params)
-        if($null -ne $Script:o365_connections.ResourceManager){
-            $O365Object.subscriptions = Select-MonkeyAzureSubscription
-        }
-        if($null -ne $O365Object.subscriptions){
-            #Reconnect to all Azure services
-            #$param.TenantId = $O365Object.TenantId
-            #Connect to Azure
-            Connect-MonkeyAzure -parameters $app_params
+        Connect-MonkeyAzure -parameters $app_params
+        #Set Azure connections to True if connection and subscription are present
+        if($null -ne $O365Object.auth_tokens.ResourceManager -and $null -ne $O365Object.auth_tokens.Graph -and $null -ne $O365Object.auth_tokens.MSGraph -and $null -ne $O365Object.subscriptions){
+            $O365Object.onlineServices.Azure = $True
         }
         else{
-            #Probably cancelled operation or user is not assigned to any subscriptions
+            #Probably cancelled operation or user is not assigned to any subscription
             return
         }
     }
     #Check if Microsoft 365 is selected
     elseif($O365Object.initParams.Instance -eq "Microsoft365"){
-        $count = 0
-        foreach ($service in $O365Object.initParams.Analysis){
-            switch ($service.ToLower()) {
-                { @("exchangeonline", "purview") -contains $_ }{
-                    if($count -eq 0){
-                        $Script:o365_sessions.ExchangeOnline = (Connect-MonkeyExchangeOnline -parameters $app_params)
-                        if($null -ne $Script:o365_sessions.ExchangeOnline){
-                            $Script:o365_connections.ExchangeOnline = (Get-TokenForEXO -parameters $app_params)
-                        }
-                        if($null -ne $Script:o365_sessions.ExchangeOnline -and $null -ne $Script:o365_connections.ExchangeOnline){
-                            $Script:OnlineServices.EXO = $True
-                        }
-                        #Connect to Compliance Center
-                        $Script:o365_sessions.ComplianceCenter = (Connect-MonkeyComplianceCenter -parameters $app_params)
-                        #Add resource for ComplianceCenter
-                        if($null -ne $Script:o365_sessions.ComplianceCenter){
-                            $Script:o365_connections.ComplianceCenter = (Get-TokenForEXO -parameters $app_params)
-                        }
-                        if($null -ne $Script:o365_sessions.ComplianceCenter -and $null -ne $Script:o365_connections.ComplianceCenter){
-                            $Script:OnlineServices.Compliance = $True
-                        }
-                    }
-                    $count+=1
-                }
-                'sharepointonline'{
-                    #Connect to root site
-                    $sps_params = $app_params.Clone()
-                    $sps_params.Add('rootSite',$true);
-                    $Script:o365_connections.SharePointOnline = (Connect-MonkeySharepointOnline -parameters $sps_params)
-                    #Connect to the admin site
-                    $sps_params = $app_params.Clone()
-                    $sps_params.Add('Admin',$true);
-                    $Script:o365_connections.SharePointAdminOnline = (Connect-MonkeySharepointOnline -parameters $sps_params)
-                    #Connects to OneDrive site
-                    $sps_params = $app_params.Clone()
-                    $sps_params.Add('oneDrive',$true);
-                    $Script:o365_connections.OneDrive = (Connect-MonkeySharepointOnline -parameters $sps_params)
-                    if($null -ne $Script:o365_connections.SharePointOnline){
-                        $Script:OnlineServices.SPS = $True
-                    }
-                }
-                'microsoftteams'{
-                    $Script:o365_connections.Teams = (Connect-MonkeyTeamsForOffice -parameters $app_params)
-                    if($null -ne $Script:o365_connections.Teams){
-                        $Script:OnlineServices.Teams = $True
-                    }
-                }
-                'microsoftforms'{
-                    $Script:o365_connections.Forms = (Connect-MonkeyFormsForOffice -parameters $app_params)
-                    if($null -ne $Script:o365_connections.Forms){
-                        $Script:OnlineServices.Forms = $True
-                    }
-                }
-                'irm'{
-                    $Script:o365_connections.AADRM = (Connect-MonkeyAADRM -parameters $app_params)
-                    if($null -ne $Script:o365_connections.AADRM){
-                        #Get Service locator url
-                        $service_locator = Get-AADRMServiceLocatorUrl
-                        #set internal object
-                        $O365Object.Environment.Add('aadrm_service_locator',$service_locator)
-                        $Script:OnlineServices.AADRM = $True
-                    }
-                }
-                'intune'{
-                    $Script:o365_connections.Intune = (Connect-MonkeyIntune -parameters $app_params)
-                    if($null -ne $Script:o365_connections.Intune){
-                        $Script:OnlineServices.Intune = $True
-                    }
-                }
-            }
-        }
+        Connect-MonkeyM365 -parameters $app_params
     }
     #Update object
-    $O365Object.AuthType = $Script:o365_connections.Values.GetEnumerator() | Select-Object -ExpandProperty AuthType -Unique -ErrorAction Ignore
-    $O365Object.o365_sessions = $Script:o365_sessions
-    $O365Object.OnlineServices = $Script:OnlineServices
-    #$O365Object.userPrincipalName = $Script:userPrincipalName
-    if($O365Object.initParams.Instance -eq "Microsoft365"){
-        $O365Object.ATPEnabled = Get-O365ATPLicense
-    }
-    $O365Object.Licensing = Get-O365LicenseSKU
+    $O365Object.AuthType = $O365Object.auth_tokens.Values.GetEnumerator() | Select-Object -ExpandProperty AuthType -Unique -ErrorAction Ignore
+    #Get licensing information
+    $O365Object.Licensing = Get-MonkeySKUInfo
+    #Get actual userId
     $O365Object.userId = Get-MonkeyAzUserId
+    #Get AzureAd Licensing
+    $O365Object.AADLicense = Get-M365AADLicense
     #Get Plugins
     $O365Object.Plugins = Get-MonkeyPlugin
-    <#
-    #Check if EXO connected
-    if($Script:OnlineServices.EXO -eq $true -and $null -ne $Script:o365_connections.ExchangeOnline){
-        #Get a new PsSession
-        $psSession = $null
-        $tenantName = $O365Object.Tenant.MyDomain.Id
-        $p = @{
-            Authentication = $Script:o365_connections.ExchangeOnline;
-            userPrincipalName = ("MonkeyUser@{0}" -f $tenantName);
-            resource = $O365Object.Environment.ExchangeOnline;
+    #Get Azure AD permissions
+    if($O365Object.isConfidentialApp){
+        $user_permissions = Get-MonkeyMSGraphServicePrincipalDirectoryRole -principalId $O365Object.clientApplicationId
+        if($user_permissions){
+            $O365Object.aadPermissions = $user_permissions
         }
-        $psSession = New-O365PsSession @p
-        if($null -ne $psSession){
-            $progresspreference_backup = $progresspreference;
-            $progresspreference='SilentlyContinue'
-            $p = @{
-                Session = $psSession;
-                DisableNameChecking = $true;
-                AllowClobber= $true;
-            }
-            [ref]$null = Import-PSSession @p
-            #Return original progress preference
-            $progresspreference = $progresspreference_backup;
-        }
-        $O365Object.SafeLinksInfo = Get-SafeLinksInfo
-        $O365Object.SafeAttachmentsInfo = Get-SafeAttachmentInfo
-        $O365Object.MalwareFilterInfo = Get-MalwareFilterInfo
-        $O365Object.AntiPhishingInfo = Get-AntiPhishInfo
-        $O365Object.HostedContentFilterInfo = Get-HostedContentFilterInfo
-        #Sleep and remove pssession
-        Start-Sleep -Milliseconds 10
-        Remove-PSSession -Session $psSession
     }
-    #>
+    else{
+        $user_permissions = Get-MonkeyMSGraphUserDirectoryRole -UserId $O365Object.userId
+        if($user_permissions){
+            $O365Object.aadPermissions = $user_permissions
+        }
+    }
+    #Check if user can request MFA for users
+    #Check Global Admin permissions
+    $ga = Test-MonkeyAADIAM -RoleTemplateId 62e90394-69f5-4237-9190-012177145e10
+    #Check Authentication administrator permissions
+    $aa = Test-MonkeyAADIAM -RoleTemplateId c4e39bd9-1100-46d3-8c65-fb160da0071f
+    if($ga){
+        $O365Object.canRequestMFAForUsers = $true
+    }
+    elseif($aa){
+        $O365Object.canRequestMFAForUsers = $true
+    }
+    else{
+        $O365Object.canRequestMFAForUsers = $false
+    }
 }
+
+<#
+if($null -ne $O365Object.o365_sessions){
+    $O365Object.o365_sessions.GetEnumerator() | % {if($null -ne $_.value){Remove-PSSession $_.value}}
+}
+$O365Object.exo_msal_application = $null;
+$O365Object.application_args = $null;
+$O365Object.Tenant = $null;
+$O365Object.TenantId = $null;
+$O365Object.msal_application_args = $null;
+Initialize-AuthenticationParam
+$app = Connect-MonkeyCloud
+#>

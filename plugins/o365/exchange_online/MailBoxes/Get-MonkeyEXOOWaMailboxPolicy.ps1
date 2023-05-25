@@ -48,27 +48,43 @@ function Get-MonkeyEXOOWAMailboxPolicy {
 		$monkey_metadata = @{
 			Id = "exo0022";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOOWAMailboxPolicy";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about OWA mailbox policy in Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online OWA mailbox policy";
-			PluginName = "Get-MonkeyEXOOWAMailboxPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+		#Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online OWA Mailbox Policy",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoOWAMailboxPolicyInfo');
-			}
-			Write-Information @msg
-			$exo_owa_mailbox_policy = Get-ExoMonkeyOwaMailboxPolicy
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online OWA Mailbox Policy",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('ExoOWAMailboxPolicyInfo');
 		}
+		Write-Information @msg
+        $p = @{
+            Authentication = $ExoAuth;
+            Environment = $Environment;
+            ResponseFormat = 'clixml';
+            Command = 'Get-OwaMailboxPolicy';
+            Method = "POST";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+		$exo_owa_mailbox_policy = Get-PSExoAdminApiObject @p
 	}
 	end {
 		if ($null -ne $exo_owa_mailbox_policy) {
@@ -83,11 +99,16 @@ function Get-MonkeyEXOOWAMailboxPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online hosted OWA Mailbox policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoOWAMailboxResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

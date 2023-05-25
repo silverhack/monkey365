@@ -18,12 +18,12 @@
             "translate": {
                 "serverName": "Server Name",
                 "parameterName": "Parameter Name",
-                "parameterDescription": "Parameter description",
-                "parameterValue": "Parameter value",
-                "parameterDefaultValue": "Parameter default value"
+                "parameterDescription": "Description",
+                "parameterValue": "value",
+                "parameterDefaultValue": "Default value"
             },
             "table": "asList",
-            "emphasis": ["Parameter value",
+            "emphasis": ["value",
                          "Parameter Name"]
         }
     ],
@@ -32,12 +32,12 @@
             "translate": {
                 "serverName": "Server Name",
                 "parameterName": "Parameter Name",
-                "parameterDescription": "Parameter description",
-                "parameterValue": "Parameter value",
-                "parameterDefaultValue": "Parameter default value"
+                "parameterDescription": "Description",
+                "parameterValue": "value",
+                "parameterDefaultValue": "Default value"
             },
             "table": "asList",
-            "emphasis": ["Parameter value",
+            "emphasis": ["value",
                          "Parameter Name"]
         }
     ],
@@ -46,12 +46,12 @@
             "translate": {
                 "serverName": "Server Name",
                 "parameterName": "Parameter Name",
-                "parameterDescription": "Parameter description",
-                "parameterValue": "Parameter value",
-                "parameterDefaultValue": "Parameter default value"
+                "parameterDescription": "Description",
+                "parameterValue": "value",
+                "parameterDefaultValue": "Default value"
             },
             "table": "asList",
-            "emphasis": ["Parameter value",
+            "emphasis": ["value",
                          "Parameter Name"]
         }
     ],
@@ -60,12 +60,12 @@
             "translate": {
                 "serverName": "Server Name",
                 "parameterName": "Parameter Name",
-                "parameterDescription": "Parameter description",
-                "parameterValue": "Parameter value",
-                "parameterDefaultValue": "Parameter default value"
+                "parameterDescription": "Description",
+                "parameterValue": "value",
+                "parameterDefaultValue": "Default value"
             },
             "table": "asList",
-            "emphasis": ["Parameter value",
+            "emphasis": ["value",
                          "Parameter Name"]
         }
     ],
@@ -74,12 +74,26 @@
             "translate": {
                 "serverName": "Server Name",
                 "parameterName": "Parameter Name",
-                "parameterDescription": "Parameter description",
-                "parameterValue": "Parameter value",
-                "parameterDefaultValue": "Parameter default value"
+                "parameterDescription": "Description",
+                "parameterValue": "value",
+                "parameterDefaultValue": "Default value"
             },
             "table": "asList",
-            "emphasis": ["Parameter value",
+            "emphasis": ["value",
+                         "Parameter Name"]
+        }
+    ],
+	"postgresql_conn_throttling_disabled": [
+        {
+            "translate": {
+                "serverName": "Server Name",
+                "parameterName": "Parameter Name",
+                "parameterDescription": "Description",
+                "parameterValue": "value",
+                "parameterDefaultValue": "Default value"
+            },
+            "table": "asList",
+            "emphasis": ["value",
                          "Parameter Name"]
         }
     ]

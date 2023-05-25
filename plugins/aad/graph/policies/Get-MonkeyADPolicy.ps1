@@ -51,27 +51,50 @@ function Get-MonkeyADPolicy {
 		$monkey_metadata = @{
 			Id = "aad0008";
 			Provider = "AzureAD";
+			Resource = "AzureAD";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADPolicy";
+			ApiType = "Graph";
 			Title = "Plugin to get policies from Azure AD";
 			Group = @("AzureAD");
-			ServiceName = "Azure AD Policies";
-			PluginName = "Get-MonkeyADPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Azure Active Directory Auth
 		$AADAuth = $O365Object.auth_tokens.Graph
-		$api_version = $O365Object.internal_config.azuread.api_version
-		#Check auth requestor
-		if ($O365Object.isConfidentialApp -eq $false) {
-			#Probably interactive user. Can use internal graph api
-			$api_version = '1.6-internal'
+		#Get Config
+        try{
+            $aadConf = $O365Object.internal_config.azuread.provider.graph
+        }
+        catch{
+            $msg = @{
+                MessageData = ($message.MonkeyInternalConfigError);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'verbose';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365ConfigError');
+            }
+            Write-Verbose @msg
+            break
+        }
+        #Excluded auth
+		$ExcludedAuths = @("certificate_credentials","client_credentials")
+        if ($ExcludedAuths -contains $O365Object.AuthType) {
+			$api_version = $aadConf.api_version
 		}
+        else{
+            $api_version = $aadConf.internal_api_version
+        }
 	}
 	process {
 		$msg = @{
 			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD policies",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
+			InformationAction = $O365Object.InformationAction;
 			Tags = @('AzureGraphPolicies');
 		}
 		Write-Information @msg
@@ -85,23 +108,11 @@ function Get-MonkeyADPolicy {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$all_policies = Get-MonkeyGraphObject @params
-		#Convert definition and key credentials
-		if ($all_policies) {
-			foreach ($policy in $all_policies) {
-				if ($policy.definition) {
-					$policy.definition = (@($policy.definition) -join ',')
-				}
-				if ($policy.keyCredentials) {
-					$policy.keyCredentials = (@($policy.keyCredentials) -join ',')
-				}
-				if ($policy.policyDetail) {
-					$details = $policy.policyDetail[0] | ConvertFrom-Json
-					$policy.policyDetail = $details
-				}
-			}
-		}
 	}
 	end {
 		if ($all_policies) {
@@ -116,11 +127,16 @@ function Get-MonkeyADPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD Policies",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureGraphPoliciesEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

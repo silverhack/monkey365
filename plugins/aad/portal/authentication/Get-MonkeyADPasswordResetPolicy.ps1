@@ -48,10 +48,16 @@ function Get-MonkeyADPasswordResetPolicy {
 		$monkey_metadata = @{
 			Id = "aad0022";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADPasswordResetPolicy";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get password reset policy from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD Password Reset Policy";
-			PluginName = "Get-MonkeyADPasswordResetPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Azure Active Directory Auth
@@ -73,6 +79,9 @@ function Get-MonkeyADPasswordResetPolicy {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$ad_password_reset_policy = Get-MonkeyAzurePortalObject @params
 	}
@@ -89,11 +98,16 @@ function Get-MonkeyADPasswordResetPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD password reset policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalSSPREmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

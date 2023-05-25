@@ -1,0 +1,31 @@
+{
+    "dashboard_name":  "PostgreSQL Server",
+    "menu_name":  "Databases",
+    "issue_name":  "Enable SSL connection on PostgreSQL Servers",
+    "description":  "SSL connectivity helps to provide a new layer of security, by connecting database server to client applications using Secure Sockets Layer (SSL). Enforcing SSL connections between database server and client applications helps protect against \"man in the middle\" attacks by encrypting the data stream between the server and application.",
+    "rationale":  null,
+    "impact":  null,
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/postgresql/howto-configure-server-parameters-using-portal#prerequisites"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "4.3"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_postgresql_servers",
+    "display_path":  "az_postgresql_servers",
+    "conditions":  [
+                       "and",
+                       [
+                           "properties.sslEnforcement",
+                           "eq",
+                           "Disabled"
+                       ]
+                   ],
+    "id_suffix":  "postgresql_enforcessl_disabled"
+}

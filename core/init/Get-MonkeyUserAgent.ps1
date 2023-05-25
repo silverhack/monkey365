@@ -37,14 +37,14 @@ Function Get-MonkeyUserAgent{
     [CmdletBinding()]
     Param()
     #Check if O365Object exists
-    if($null -ne (Get-Variable -Name O365Object -ErrorAction Ignore)){
+    if($null -ne (Get-Variable -Name O365Object -Scope Script -ErrorAction Ignore)){
         #Set UserAgent
         if(![System.String]::IsNullOrEmpty($O365Object.internal_config.httpSettings.userAgent)){
             $userAgent = $O365Object.internal_config.httpSettings.userAgent
         }
         else{
             $monkey_version = $O365Object.internal_config.version.Monkey365Version
-            $userAgent = ("Monkey365 {0} ({1}) {1}" -f $monkey_version, `
+            $userAgent = ("Monkey365 {0} ({1}) {2}" -f $monkey_version, `
                                                 [System.Environment]::OSVersion.Platform.ToString(), `
                                                 [System.Environment]::OSVersion.VersionString.ToString())
         }

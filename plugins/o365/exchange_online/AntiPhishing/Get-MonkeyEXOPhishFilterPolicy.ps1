@@ -48,31 +48,47 @@ function Get-MonkeyEXOPhishFilterPolicy {
 		$monkey_metadata = @{
 			Id = "exo0003";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOPhishFilterPolicy";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about Phish filter policy in Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Phishing Filter Policy";
-			PluginName = "Get-MonkeyEXOPhishFilterPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+        #Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
-	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Phish filter policy",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoPhishFilterPolicyInfo');
-			}
-			Write-Information @msg
-			#https://docs.microsoft.com/en-us/powershell/module/exchange/get-phishfilterpolicy?view=exchange-ps
-			# TODO This cmdlet is in the process of being deprecated
-			$exo_phish_filter_policy = Get-ExoMonkeyPhishFilterPolicy
+	Process {
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Phish filter policy",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('ExoPhishFilterPolicyInfo');
 		}
+		Write-Information @msg
+		#https://docs.microsoft.com/en-us/powershell/module/exchange/get-phishfilterpolicy?view=exchange-ps
+		# TODO This cmdlet is in the process of being deprecated
+        $p = @{
+            Authentication = $ExoAuth;
+            Environment = $Environment;
+            ResponseFormat = 'clixml';
+            Command = 'Get-SpoofMailReport';
+            Method = "POST";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+		$exo_phish_filter_policy = Get-PSExoAdminApiObject @p
 	}
-	end {
+	End {
 		if ($null -ne $exo_phish_filter_policy) {
 			$exo_phish_filter_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.PhishFilterPolicy')
 			[pscustomobject]$obj = @{
@@ -85,11 +101,16 @@ function Get-MonkeyEXOPhishFilterPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Phish filter policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoPhishFilterResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -47,10 +47,16 @@ function Get-MonkeyAzSecurityStatusInfo {
 		$monkey_metadata = @{
 			Id = "az00038";
 			Provider = "Azure";
+			Resource = "Subscription";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzSecurityStatusInfo";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get information about Security Statuses from Azure";
 			Group = @("Subscription","DefenderForCloud");
-			ServiceName = "Azure Security Statuses";
-			PluginName = "Get-MonkeyAzSecurityStatusInfo";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Environment
@@ -60,7 +66,7 @@ function Get-MonkeyAzSecurityStatusInfo {
 		#Get config
 		$AzureSecStatus = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureSecurityStatuses" } | Select-Object -ExpandProperty resource
 		#Get resource groups
-		$resource_groups = $O365Object.ResourceGroups
+		$resource_groups = $O365Object.resourcegroups
 		#set array
 		$security_statuses = @()
 	}
@@ -86,7 +92,7 @@ function Get-MonkeyAzSecurityStatusInfo {
 		$AllStatus = Get-MonkeyRMObject @params
 		#iterate over all resource_groups
 		foreach ($resource_group in $resource_groups) {
-			$matched = $AllStatus | Where-Object { $_.id -like ("{0}*" -f $resource_group.id) }
+			$matched = $AllStatus | Where-Object { $_.Id -like ("{0}*" -f $resource_group.Id) }
 			if ($matched) {
 				#Add to array
 				$security_statuses += $matched
@@ -107,11 +113,16 @@ function Get-MonkeyAzSecurityStatusInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Status",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureKeySecStatusEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

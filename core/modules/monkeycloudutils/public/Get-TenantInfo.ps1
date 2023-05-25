@@ -43,13 +43,12 @@ Function Get-TenantInfo{
         [object]$AuthObject
      )
      try{
-        if(Test-IsValidAudience -token $AuthObject.AccessToken -audience "graph.windows.net"){
+        if($AuthObject.resource -like "*graph.windows*"){
             if([string]::IsNullOrEmpty($Tenant) -or $Tenant -eq [System.Guid]::Empty){
                 $Tenant = "/myOrganization"
             }
             $Authorization = $AuthObject.CreateAuthorizationHeader()
-            #$Tenant = ("{0}aaaa" -f $Tenant)
-            $uri = ("https://graph.windows.net/{0}/{1}?api-version={2}" -f $Tenant, "tenantDetails", "1.6")
+            $uri = ("{0}/{1}/tenantDetails?api-version=1.6" -f $AuthObject.resource, $Tenant)
             $Tenants = Invoke-WebRequest $uri -Method Get -Headers @{Authorization=$Authorization};
             return (ConvertFrom-Json $Tenants.Content).value;
         }
@@ -69,7 +68,7 @@ Function Get-TenantInfo{
             }
         }
         catch{
-            Write-Warning "Unable to get Tenant information"            
+            Write-Warning "Unable to get Tenant information"
         }
     }
 }

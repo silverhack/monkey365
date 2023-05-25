@@ -33,7 +33,7 @@ function Get-NewIDSuffix{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
         [parameter(Mandatory=$true, HelpMessage="Suffix")]
         [string]$suffix

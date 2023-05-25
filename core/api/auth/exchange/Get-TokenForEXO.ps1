@@ -33,7 +33,7 @@ Function Get-TokenForEXO {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory=$false, HelpMessage="parameters")]
         [Object]$parameters
@@ -45,63 +45,37 @@ Function Get-TokenForEXO {
     foreach ($param in $parameters.GetEnumerator()){
         $new_params.add($param.Key, $param.Value)
     }
-    if($O365Object.isUsingAdalLib){
-        #Add Exo resource parameter
-        $new_params.Add('Resource',$AzureEnvironment.Outlook)
-        #Check if confidential App
-        if($O365Object.isConfidentialApp -eq $false){
-            $new_params.Add('ClientId',(Get-WellKnownAzureService -AzureService ExchangeOnlineV2))
-            if($PSEdition -eq "Desktop"){
-                $new_params.Add('RedirectUri',(Get-MonkeyExoRedirectUri -Environment $new_params.Environment))
+    #Check if confidential App
+    if($O365Object.isConfidentialApp -eq $false){
+        if($null -eq $O365Object.exo_msal_application -or ($O365Object.exo_msal_application -isnot [Microsoft.Identity.Client.PublicClientApplication])){
+            #Create a new msal client application
+            $client_app = @{}
+            foreach ($param in $O365Object.application_args.GetEnumerator()){
+                $client_app.add($param.Key, $param.Value)
             }
-        }
-        #Get token with new params
-        Get-AdalTokenForResource @new_params
-    }
-    else{
-        #Check if confidential App
-        if($O365Object.isConfidentialApp -eq $false){
-            if($null -eq $O365Object.exo_msal_application){
-                #Public App
-                $app2 = $O365Object.msal_application_args.Clone()
-                #Add clientId and RedirectUri
-                $app2.ClientId = (Get-WellKnownAzureService -AzureService ExchangeOnlineV2)
-                if($PSEdition -eq "Desktop"){
-                    $app2.RedirectUri = (Get-MonkeyExoRedirectUri -Environment $MyParams.Environment)
-                }
-                try{
-                    $exo_app = New-MonkeyMsalApplication @app2
-                    if($null -ne $exo_app){
-                        $O365Object.exo_msal_application = $exo_app
-                        $new_params.publicApp = $O365Object.exo_msal_application
-                    }
-                }
-                catch{
-                    $msg = @{
-                        MessageData = "Unable to connect to Exchange Online";
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'error';
-                        InformationAction = $script:InformationAction;
-                        Tags = @('ExchangeOnlineConnectionError');
-                    }
-                    Write-Error @msg
-                    $msg.MessageData = $_
-                    Write-Error @msg
-                    $exo_app = $null
-                    return
-                }
+            $p = @{
+                app_params = $client_app;
+                Environment = $O365Object.initParams.Environment;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+                InformationAction = $O365Object.InformationAction;
             }
-            else{
+            $exo_app = New-MsalApplicationForExo @p
+            if($null -ne $exo_app){
+                $O365Object.exo_msal_application = $exo_app
                 $new_params.publicApp = $O365Object.exo_msal_application
             }
         }
         else{
-            $O365Object.exo_msal_application = $O365Object.msalapplication
-            $new_params.confidentialApp = $O365Object.msalapplication;
+            $new_params.publicApp = $O365Object.exo_msal_application
         }
-        #Add Exo resource parameter
-        $new_params.Add('Resource',$AzureEnvironment.Outlook)
-        #Get token with new params
-        Get-MSALTokenForResource @new_params
     }
+    else{
+        $O365Object.exo_msal_application = $O365Object.msalapplication
+        $new_params.confidentialApp = $O365Object.msalapplication;
+    }
+    #Add Exo resource parameter
+    $new_params.Add('Resource',$AzureEnvironment.Outlook)
+    #Get token with new params
+    Get-MSALTokenForResource @new_params
 }

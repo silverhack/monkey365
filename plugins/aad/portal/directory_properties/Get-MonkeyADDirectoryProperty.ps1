@@ -48,10 +48,16 @@ function Get-MonkeyADDirectoryProperty {
 		$monkey_metadata = @{
 			Id = "aad0027";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADDirectoryProperty";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get directory properties from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD Directory Properties";
-			PluginName = "Get-MonkeyADDirectoryProperty";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Azure Active Directory Auth
@@ -63,6 +69,9 @@ function Get-MonkeyADDirectoryProperty {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 	}
 	process {
@@ -101,11 +110,12 @@ function Get-MonkeyADDirectoryProperty {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD directory properties",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		#Return default directory properties
 		if ($azure_ad_default_directory_properties) {
@@ -120,11 +130,12 @@ function Get-MonkeyADDirectoryProperty {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD default directory properties",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		#Return b2b directory properties
 		if ($azure_ad_b2b_directory_properties) {
@@ -139,11 +150,12 @@ function Get-MonkeyADDirectoryProperty {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD B2B properties",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		#Return b2b directory policies
 		if ($azure_ad_b2b_directory_policies) {
@@ -158,11 +170,16 @@ function Get-MonkeyADDirectoryProperty {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD B2B directory properties",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

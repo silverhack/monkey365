@@ -36,10 +36,10 @@ Function Get-TenantsForUser{
 
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory=$false, HelpMessage="Authentication Object")]
+        [Parameter(Mandatory=$true, HelpMessage="Authentication Object")]
         [object]$AuthObject,
 
-        [Parameter(Mandatory=$false, HelpMessage="Endpoint")]
+        [Parameter(Mandatory=$true, HelpMessage="Endpoint")]
         [String]$Endpoint,
 
         [Parameter(Mandatory=$false, HelpMessage="Tenant Id")]
@@ -61,11 +61,11 @@ Function Get-TenantsForUser{
                     "x-ms-version" = "2014-10-01";
                     "Authorization" = $Authorization
                 }
-                $uri = "{0}/tenants?api-version=2020-01-01" -f $Endpoint
+                $uri = "{0}/tenants?api-version=2022-09-01" -f $Endpoint
                 $Tenants = Invoke-RestMethod -Uri $uri -Method Get -Headers $requestHeader -ContentType 'application/json'
                 if(![string]::IsNullOrEmpty($TenantId) -and $TenantId -ne [System.Guid]::Empty.Guid){
                     Write-Information -MessageData ("Getting information for TenantId {0}"-f $TenantId)
-                    $Tenants = $Tenants.Value | Where-Object {$_.tenantid -eq $TenantID} | Select-Object *
+                    $Tenants = $Tenants.Value | Where-Object {$_.tenantId -eq $TenantID} | Select-Object *
                     return $Tenants
                 }
                 else{

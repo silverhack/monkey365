@@ -1,0 +1,49 @@
+{
+    "dashboard_name":  "SQL Server",
+    "menu_name":  "Databases",
+    "issue_name":  "SQL Server Audit Retention should be configured to be greater than 90 days",
+    "description":  "The SQL Server Audit feature lets administrators to create server audits, which can contain server audit specifications for server level events, and database audit specifications for database level events. Audited events can be written to the event logs or to audit files.",
+    "rationale":  "Audit Logs can be used to check for anomalies and give insight into suspected breaches or misuse of information and access.",
+    "impact":  null,
+    "remediation":  '
+					###### From Azure Console
+					1. Go to `SQL servers`.
+					2. For each server instance
+					3. Click on `Auditing`
+					4. Select `Storage Details`
+					5. Set `Retention (days)` setting greater than `90 days`
+					6. Select `OK`
+					7. Select `Save`
+	',
+    "references":  [
+                       "https://docs.microsoft.com/en-us/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions?view=sql-server-2017"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "4.1.3"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_sql_servers",
+    "display_path":  "az_sql_servers",
+    "conditions":  [
+                       "or",
+					   [
+                           "auditing.retentionDays",
+                           "eq"
+					   ],
+                       [
+                           "auditing.retentionDays",
+                           "le",
+                           "90"
+                       ],
+					   [
+                           "auditing.retentionDays",
+                           "eq",
+                           "-1"
+					   ]
+	],
+    "id_suffix":  "sql_server_audit_retention"
+}

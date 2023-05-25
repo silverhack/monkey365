@@ -1026,6 +1026,7 @@
 					"Create Policy Assignment",
 					"Microsoft.Authorization/policyAssignments/write",
 					"True",
+					"1.4.0",
 					"5.2.1",
 					"Monitoring for create policy assignment events gives insight into changes done in \"azure policy - assignments\" and may reduce the time it takes to detect unsolicited changes."
 				],
@@ -1037,6 +1038,7 @@
 					"Delete Policy Assignment",
 					"Microsoft.Authorization/policyAssignments/delete",
 					"True",
+					"1.4.0",
 					"5.2.2",
 					"Monitoring for delete policy assignment events gives insight into changes done in \"azure policy - assignments\" and may reduce the time it takes to detect unsolicited changes."
 				],
@@ -1048,6 +1050,7 @@
 					"Create or Update Network Security Group",
 					"Microsoft.Network/networkSecurityGroups/write",
 					"True",
+					"1.4.0",
 					"5.2.3",
 					"Monitoring for \"Create\" or \"Update Network Security Group\" events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
@@ -1059,6 +1062,7 @@
 					"Delete Network Security Group",
 					"Microsoft.Network/networkSecurityGroups/delete",
 					"True",
+					"1.4.0",
 					"5.2.4",
 					"Monitoring for \"Delete Network Security Group\" events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
@@ -1070,6 +1074,7 @@
 					"Create or Update Network Security Group Rule",
 					"Microsoft.Network/networkSecurityGroups/securityRules/write",
 					"True",
+					"1.4.0",
 					"5.2.5",
 					"Monitoring for Create or Update \"Network Security Group\" Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
@@ -1081,6 +1086,7 @@
 					"Delete Network Security Group Rule",
 					"Microsoft.Network/networkSecurityGroups/securityRules/delete",
 					"True",
+					"1.4.0",
 					"5.2.6",
 					"Monitoring for Delete Network Security Group Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
@@ -1092,6 +1098,7 @@
 					"Create or Update Security Solution",
 					"Microsoft.Security/securitySolutions/write",
 					"True",
+					"1.4.0",
 					"5.2.7",
 					"Monitoring for Create or Update Security Solution events gives insight into changes to the active security solutions and may reduce the time it takes to detect suspicious activity."
 				],
@@ -1103,6 +1110,7 @@
 					"Delete Security Solution",
 					"Microsoft.Security/securitySolutions/delete",
 					"True",
+					"1.4.0",
 					"5.2.8",
 					"Monitoring for Delete Security Solution events gives insight into changes to the active security solutions and may reduce the time it takes to detect suspicious activity."
 				],
@@ -1114,6 +1122,7 @@
 					"Create or Update or Delete SQL Server Firewall Rule",
 					"Microsoft.Sql/servers/firewallRules/write",
 					"True",
+					"1.4.0",
 					"5.2.9",
 					"Monitoring for Create or Update or Delete SQL Server Firewall Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
@@ -1127,6 +1136,7 @@
 					"Create Policy Assignment",
 					"Microsoft.Authorization/policyAssignments/write",
 					"",
+					"1.4.0",
 					"5.2.1",
 					"Monitoring for create policy assignment events gives insight into changes done in 'azure policy - assignments' and may reduce the time it takes to detect unsolicited changes.",
 					"monkey365 rule"
@@ -1139,6 +1149,7 @@
 					"Create or Update Network Security Group",
 					"Microsoft.Network/networkSecurityGroups/write",
 					"",
+					"1.4.0",
 					"5.2.2",
 					"Monitoring for 'Create' or 'Update Network Security Group' events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
 					"monkey365 rule"
@@ -1151,6 +1162,7 @@
 					"Create or Update Network Security Group Rule",
 					"Microsoft.Network/networkSecurityGroups/securityRules/write",
 					"",
+					"1.4.0",
 					"5.2.4",
 					"Monitoring for Create or Update Network Security Group Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
 					"monkey365 rule"
@@ -1163,6 +1175,7 @@
 					"Delete Network Security Group Rule",
 					"Microsoft.Network/networkSecurityGroups/securityRules/delete",
 					"",
+					"1.4.0",
 					"5.2.5",
 					"Monitoring for Delete Network Security Group Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
 					"monkey365 rule"
@@ -1175,6 +1188,7 @@
 					"Delete Network Security Group",
 					"Microsoft.Network/networkSecurityGroups/delete",
 					"",
+					"1.4.0",
 					"5.2.3",
 					"Monitoring for 'Delete Network Security Group' events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
 					"monkey365 rule"
@@ -1187,6 +1201,7 @@
 					"Create or Update Security Solution",
 					"Microsoft.Security/securitySolutions/write",
 					"",
+					"1.4.0",
 					"5.2.6",
 					"Monitoring for Create or Update Security Solution events gives insight into changes to the active security solutions and may reduce the time it takes to detect suspicious activity.",
 					"monkey365 rule"
@@ -1199,6 +1214,7 @@
 					"Delete Security Solution",
 					"Microsoft.Security/securitySolutions/delete",
 					"",
+					"1.4.0",
 					"5.2.7",
 					"Monitoring for Delete Security Solution events gives insight into changes to the active security solutions and may reduce the time it takes to detect suspicious activity.",
 					"monkey365 rule"
@@ -1211,6 +1227,7 @@
 					"Create or Update or Delete SQL Server Firewall Rule",
 					"Microsoft.Sql/servers/firewallRules/write",
 					"",
+					"1.4.0",
 					"5.2.8",
 					"Monitoring for Create or Update or Delete SQL Server Firewall Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
 					"monkey365 rule"
@@ -1223,6 +1240,7 @@
 					"Update Security Policy",
 					"Microsoft.Security/policies/write",
 					"",
+					"1.4.0",
 					"5.2.9",
 					"Monitoring for Update Security Policy events gives insight into changes to security policy and may reduce the time it takes to detect suspicious activity.",
 					"monkey365 rule"
@@ -1258,6 +1276,7 @@
 					"3389",
 					"Disable RDP access on network security groups from the Internet.",
 					"The potential security problem with using RDP over the Internet is that attackers can use various brute force techniques to gain access to Azure Virtual Machines. Once the attackers gain access, they can use a virtual machine as a launch point for compromising other machines on an Azure Virtual Network or even attack networked devices outside of Azure",
+					"1.4.0",
 					"6.1",
 					""
 				],
@@ -1271,6 +1290,7 @@
 					"Disable FTP access on network security groups from the Internet.",
 					"The potential security problem with using FTP over the Internet is that attackers can use various brute force techniques to gain access to Azure Virtual Machines. Once the attackers gain access, they can use a virtual machine as a launch point for compromising other machines on the Azure Virtual Network or even attack networked devices outside of Azure",
 					"",
+					"",
 					"monkey365 rule"
 				],
 				"enabled": true,
@@ -1282,6 +1302,7 @@
 					"22",
 					"Disable SSH access on network security groups from the Internet.",
 					"The potential security problem with using SSH over the Internet is that attackers can use various brute force techniques to gain access to Azure Virtual Machines. Once the attackers gain access, they can use a virtual machine as a launch point for compromising other machines on the Azure Virtual Network or even attack networked devices outside of Azure",
+					"1.4.0",
 					"6.2",
 					""
 				],
@@ -1295,6 +1316,7 @@
 					"Disable Telnet access on network security groups from the Internet.",
 					"The potential security problem with using TELNET over the Internet is that attackers can use various brute force techniques to gain access to Azure Virtual Machines. Once the attackers gain access, they can use a virtual machine as a launch point for compromising other machines on the Azure Virtual Network or even attack networked devices outside of Azure",
 					"",
+					"",
 					"monkey365 rule"
 				],
 				"enabled": true,
@@ -1306,6 +1328,7 @@
 					"1433",
 					"Disable SQL access on network security groups from the Internet.",
 					"The potential security problem with using SQL over the Internet is that attackers can use various brute force techniques to gain access to Azure Virtual Machines. Once the attackers gain access, they can use a virtual machine as a launch point for compromising other machines on the Azure Virtual Network or even attack networked devices outside of Azure",
+					"",
 					"",
 					"monkey365 rule"
 				],
@@ -1320,6 +1343,7 @@
 					"0.0.0.0",
 					"255.255.255.255",
 					"A custom rule was set up with StartIp of 0.0.0.0 and EndIP of 255.255.255.255 allowing access from ANY IP over the Internet",
+					"1.4.0",
 					"6.3"
 				],
 				"enabled": true,
@@ -1331,6 +1355,7 @@
 					"0.0.0.0",
 					"0.0.0.0",
 					"By default, for a SQL server, a Firewall exists with StartIp of 0.0.0.0 and EndIP of 0.0.0.0 allowing access to all the Azure services",
+					"1.4.0",
 					"6.3"
 				],
 				"enabled": true,
@@ -1370,6 +1395,7 @@
 					"53",
 					"Disable DNS access on network security groups from the Internet.",
 					"The potential security problem with broadly exposing UDP services over the Internet is that attackers can use DDoS amplification techniques to reflect spoofed UDP traffic from Azure Virtual Machines. The most common types of these attacks use exposed DNS, NTP, SSDP, SNMP, CLDAP and other UDP-based services as amplification source for disrupting services of other machines on the Azure Virtual Network or even attack networked devices outside of Azure.",
+					"1.4.0",
 					"6.6",
 					""
 				],
@@ -1382,6 +1408,7 @@
 					"123",
 					"Disable NTP access on network security groups from the Internet.",
 					"The potential security problem with broadly exposing UDP services over the Internet is that attackers can use DDoS amplification techniques to reflect spoofed UDP traffic from Azure Virtual Machines. The most common types of these attacks use exposed DNS, NTP, SSDP, SNMP, CLDAP and other UDP-based services as amplification source for disrupting services of other machines on the Azure Virtual Network or even attack networked devices outside of Azure.",
+					"1.4.0",
 					"6.6",
 					""
 				],
@@ -1394,6 +1421,7 @@
 					"161",
 					"Disable SNMP access on network security groups from the Internet.",
 					"The potential security problem with broadly exposing UDP services over the Internet is that attackers can use DDoS amplification techniques to reflect spoofed UDP traffic from Azure Virtual Machines. The most common types of these attacks use exposed DNS, NTP, SSDP, SNMP, CLDAP and other UDP-based services as amplification source for disrupting services of other machines on the Azure Virtual Network or even attack networked devices outside of Azure.",
+					"1.4.0",
 					"6.6",
 					""
 				],
@@ -1406,6 +1434,7 @@
 					"389",
 					"Disable LDAP access on network security groups from the Internet.",
 					"The potential security problem with broadly exposing UDP services over the Internet is that attackers can use DDoS amplification techniques to reflect spoofed UDP traffic from Azure Virtual Machines. The most common types of these attacks use exposed DNS, NTP, SSDP, SNMP, CLDAP and other UDP-based services as amplification source for disrupting services of other machines on the Azure Virtual Network or even attack networked devices outside of Azure.",
+					"1.4.0",
 					"6.6",
 					""
 				],
@@ -1418,6 +1447,7 @@
 					"1900",
 					"Disable UPnP/SSDP access on network security groups from the Internet.",
 					"The potential security problem with broadly exposing UDP services over the Internet is that attackers can use DDoS amplification techniques to reflect spoofed UDP traffic from Azure Virtual Machines. The most common types of these attacks use exposed DNS, NTP, SSDP, SNMP, CLDAP and other UDP-based services as amplification source for disrupting services of other machines on the Azure Virtual Network or even attack networked devices outside of Azure.",
+					"1.4.0",
 					"6.6",
 					""
 				],

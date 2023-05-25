@@ -59,7 +59,7 @@ Function Convert-IssuesToHtmlCards{
         #Get detailed issues
         foreach($issue in $resource.Group){
             if($issue.level -ne 'Good'){
-                $data = Update-TableData -issue $issue
+                $data = $issue | New-PsHtmlObject
                 if($data){
                     if($data.table -eq 'asList'){
                         $params = @{

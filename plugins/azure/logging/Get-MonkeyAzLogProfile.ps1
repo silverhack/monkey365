@@ -43,17 +43,23 @@ function Get-MonkeyAzLogProfile {
 		[string]$pluginId
 	)
 	begin {
-		#Get Environment
 		#Plugin metadata
 		$monkey_metadata = @{
 			Id = "az00021";
 			Provider = "Azure";
+			Resource = "LogProfile";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzLogProfile";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get log profile from Azure";
 			Group = @("LogProfile","General");
-			ServiceName = "Azure Log profile";
-			PluginName = "Get-MonkeyAzLogProfile";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
+		#Get Environment
 		$Environment = $O365Object.Environment
 		#Get Azure Active Directory Auth
 		$rm_auth = $O365Object.auth_tokens.ResourceManager
@@ -71,7 +77,7 @@ function Get-MonkeyAzLogProfile {
 		Write-Information @msg
 		#Get All locations
 		$URI = ("{0}{1}/locations?api-Version={2}" `
- 				-f $O365Object.Environment.ResourceManager,$O365Object.current_subscription.id,'2016-06-01')
+ 				-f $O365Object.Environment.ResourceManager,$O365Object.current_subscription.Id,'2016-06-01')
 		$params = @{
 			Authentication = $rm_auth;
 			OwnQuery = $URI;
@@ -91,7 +97,7 @@ function Get-MonkeyAzLogProfile {
 			APIVersion = $azure_log_config.api_version;
 		}
 		$Azure_Log_Profile = Get-MonkeyRMObject @params
-		if ($Azure_Log_Profile.id) {
+		if ($Azure_Log_Profile.Id) {
 			#Check if storage account is using Own key
 			if ($Azure_Log_Profile.Properties.storageAccountId) {
 				$strId = $Azure_Log_Profile.Properties.storageAccountId
@@ -145,11 +151,16 @@ function Get-MonkeyAzLogProfile {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Log profile",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureLogProfileEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

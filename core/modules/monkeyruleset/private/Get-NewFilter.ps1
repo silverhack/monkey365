@@ -57,9 +57,14 @@ Function Get-NewFilter{
         elseif($converted_value -is [Boolean]){
             $tmp_filter = ('$_.{0} -{1} ${2}' -f $element_to_check, $verb, $converted_value)
         }
+        elseif($null -eq $converted_value){
+            $tmp_filter = ('$null -{0} $_.{1}' -f $verb, $element_to_check)
+        }
+        <#
         elseif([string]::IsNullOrEmpty($converted_value)){
             $tmp_filter = ('$_.{0} -{1} $null' -f $element_to_check, $verb)
         }
+        #>
         elseif($converted_value -is [System.Array]){
             #$tmp_filter = ('$_.{0} -{1} ("{2}")' -f $element_to_check, $verb,(@($converted_value) -join ','))
             $tmp_filter = ('$_.{0} -{1} ({2})' -f $element_to_check, $verb,('"' + ($converted_value -join -join '","')+ '"'))

@@ -28,7 +28,7 @@ Function Format-PsObject {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory = $True, Position = 0, ValueFromPipeline)]
+        [Parameter(Mandatory=$true, ParameterSetName='InputObject', position=0, ValueFromPipeline=$true, HelpMessage="Object")]
         [AllowEmptyString()]
         [AllowNull()]
         $InputObject
@@ -37,116 +37,90 @@ Function Format-PsObject {
         #Refs
         $out = $null
     }
-    Process {
+    Process{
         ##Return null if the InputObject is null or is an empty string
-        If ($Null -eq $InputObject) {
-            Return "NotSet"
-        }
-        If ($InputObject -is [String] -and $InputObject -eq [String]::Empty){
+        If ($null -eq $InputObject) {
             return "NotSet"
         }
+        elseIf ($InputObject -is [String] -and $InputObject -eq [String]::Empty){
+            return "NotSet"
+        }
+        #Check if dictionary
+        If(([System.Collections.IDictionary]).IsAssignableFrom($InputObject.GetType())){
+            ## Iterate over all properties and convert it to a new PsObject
+            $objHashTable = [ordered]@{}
+            $keys = $InputObject.Keys;
+            ForEach($key in $keys){
+                Try{
+                    $objHashTable[$key] = Format-PsObject $InputObject[$key]
+                }
+                Catch{
+                    Write-Verbose ("The error was: {0}" -f $_)
+                }
+            }
+            #Convert to PsObject and return object
+            $new_object = [pscustomobject]$objHashTable
+            #return object
+            return $new_object
+        }
         ## Iterate over all child objects in cases in which InputObject is an array
-        If ($InputObject -is [System.Collections.IEnumerable] -and $InputObject -isnot [string]) {
+        ElseIf ($InputObject -is [System.Collections.IEnumerable] -and $InputObject -isnot [string]){
             $collection = @(
-                ForEach ($object in $InputObject) {
-                    Format-PsObject -InputObject $object
+                foreach ($object in $InputObject){
+                    Format-PsObject $object
                 }
             )
-            ## Return the array but don't enumerate it
-            Write-Output -NoEnumerate -InputObject $collection
+            Write-Output $collection -NoEnumerate
         }
         ElseIf ($InputObject.GetType() -eq [System.Management.Automation.PSCustomObject] -or $InputObject.GetType() -eq [System.Management.Automation.PSObject]) {
             ## Iterate over all properties and convert it to a new PsObject
-            $hash = [ordered]@{ }
+            $objHashTable = [ordered]@{}
             ForEach ($property in $InputObject.PSObject.Properties){
                 try{
-                    if($null -eq $property.Value){
-                        $hash[$property.Name] = "NotSet"
-                    }
-                    elseif($property.Value -is [String] -and $property.Value -eq [String]::Empty){
-                        $hash[$property.Name] = "NotSet"
-                    }
-                    elseif($property.Value -is [System.Collections.IEnumerable]){
-                        $hash[$property.Name] = Format-PsObject -InputObject $property.Value
-                    }
-                    elseif($property.Value.GetType() -eq [System.Management.Automation.PSCustomObject] -or $property.Value.GetType() -eq [System.Management.Automation.PSObject]){
-                        $hash[$property.Name] = Format-PsObject -InputObject $property.Value
-                    }
-                    elseIf([bool]::TryParse($property.Value, [ref]$out)){
-                        if($property.Value.ToString().ToLower() -eq "true"){
-                            $hash[$property.Name] = "Enabled"
-                        }
-                        elseif($property.Value.ToString().ToLower() -eq "false"){
-                            $hash[$property.Name] = "Disabled"
-                        }
-                    }
-                    elseIf($null -ne ([string]$property.Value -as [System.URI]) -and $null -ne ([string]$property.Value -as [System.URI]).AbsoluteURI){
-                        $uri = $property.Value.ToString() -as [System.URI]
-                        $hash[$property.Name] = ("{0}://{1}{2}{3}" -f $uri.Scheme,$uri.DnsSafeHost,$uri.AbsolutePath,[uri]::EscapeDataString($uri.Query))
-                    }
-                    elseif($property.Value -is [System.String]){
-                        $hash[$property.Name] = [System.Security.SecurityElement]::Escape($property.Value)
-                    }
-                    else{
-                        $hash[$property.Name] = $property.Value
-                    }
+                    $objHashTable[$property.Name] = Format-PsObject $property.Value
                 }
                 catch{
-                    Write-Verbose ("Unable to format {0}" -f $property.Name)
-                    if($null -ne $property.Value){
-                        Write-Verbose ("ObjectType is {0}" -f $property.Value.GetType())
-                    }
-                    elseif($property.Value -is [System.Collections.IEnumerable]){
-                        Write-Verbose ("Object is enumerable")
+                    if($null -ne $property){
+                        Write-Verbose ("Unable to format {0}" -f $property.Name)
                     }
                     else{
-                        Write-Verbose ("Null object detected for {0}" -f $property.Name)
+                        Write-Verbose "Null property found"
                     }
                     Write-Verbose ("The error was: {0}" -f $_)
-                    If($property.Value -is [System.Collections.IEnumerable]){
-                        $collection = @(
-                            ForEach ($object in $property.Value) {
-                                Format-PsObject -InputObject $object
-                            }
-                        )
-                        $hash[$property.Name] = $collection
-                    }
                 }
             }
-            $new_object = [pscustomobject]$hash
-            Write-Output $new_object
+            #Convert to PsObject and return object
+            $new_object = [pscustomobject]$objHashTable
+            #return object
+            return $new_object
         }
-        Else {
-            ##Object isn't an array, hashtable, collection, etc... Cast object
+        Else {##Object isn't an array, hashtable, collection, etc... Cast object
             try{
-                If ($Null -eq $InputObject) {
-                    "NotSet"
-                }
-                If ($InputObject -is [String] -and $InputObject -eq [String]::Empty){
-                    "NotSet"
-                }
-                elseIf([bool]::TryParse($InputObject, [ref]$out)){
+                If([bool]::TryParse($InputObject, [ref]$out)){
                     if($InputObject.ToString().ToLower() -eq "true"){
-                        "Enabled"
+                        return "Enabled"
                     }
                     elseif($InputObject.ToString().ToLower() -eq "false"){
-                        "Disabled"
+                        return "Disabled"
                     }
                 }
-                elseif($null -ne ($InputObject.ToString() -as [System.URI]) -and $null -ne ($InputObject.ToString() -as [System.URI]).AbsoluteURI){
+                Elseif($null -ne ($InputObject.ToString() -as [System.URI]) -and $null -ne ($InputObject.ToString() -as [System.URI]).AbsoluteURI){
                     $uri = $InputObject.ToString() -as [System.URI]
-                    ("{0}://{1}{2}{3}" -f $uri.Scheme,$uri.DnsSafeHost,$uri.AbsolutePath,[uri]::EscapeDataString($uri.Query))
+                    return ("{0}://{1}{2}{3}" -f $uri.Scheme,$uri.DnsSafeHost,$uri.AbsolutePath,[uri]::EscapeDataString($uri.Query))
                 }
-                elseif($InputObject -is [string]){
-                    [System.Security.SecurityElement]::Escape($InputObject)
+                Elseif($InputObject -is [string]){
+                    return [System.Security.SecurityElement]::Escape($InputObject)
                 }
                 else{
-                    $InputObject
+                    return $InputObject
                 }
             }
             catch{
                 Write-Verbose $_
             }
         }
+    }
+    End{
+        #Nothing to do here
     }
 }

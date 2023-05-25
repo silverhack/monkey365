@@ -47,10 +47,16 @@ function Get-MonkeyAZDocumentDBAccount {
 		$monkey_metadata = @{
 			Id = "az00012";
 			Provider = "Azure";
+			Resource = "Databases";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAZDocumentDBAccount";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get information about Azure DocumentDB";
 			Group = @("Databases");
-			ServiceName = "Azure DocumentDB";
-			PluginName = "Get-MonkeyAZDocumentDBAccount";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Import Localized data
@@ -90,7 +96,7 @@ function Get-MonkeyAZDocumentDBAccount {
 				#Construct URI
 				$URI = ("{0}{1}?api-version={2}" `
  						-f $O365Object.Environment.ResourceManager,`
- 						$my_document_db.id,$AzureDocumentDB.api_version)
+ 						$my_document_db.Id,$AzureDocumentDB.api_version)
 				#launch request
 				$params = @{
 					Authentication = $rm_auth;
@@ -100,7 +106,7 @@ function Get-MonkeyAZDocumentDBAccount {
 					Method = "GET";
 				}
 				$document_db = Get-MonkeyRMObject @params
-				if ($document_db.id) {
+				if ($document_db.Id) {
 					$msg = @{
 						MessageData = ($message.AzureDatabasesQueryMessage -f $document_db.Name);
 						callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -111,7 +117,7 @@ function Get-MonkeyAZDocumentDBAccount {
 					Write-Information @msg
 					#get SQL Databases info
 					$URI = ('{0}{1}/sqlDatabases?api-version={2}' -f $O365Object.Environment.ResourceManager,`
- 							$my_document_db.id,`
+ 							$my_document_db.Id,`
  							$AzureDocumentDB.api_version)
 					#Perform Query
 					$params = @{
@@ -126,7 +132,7 @@ function Get-MonkeyAZDocumentDBAccount {
 						foreach ($database in $sql_databases) {
 							#Get containers info
 							$URI = ('{0}{1}/containers?api-version={2}' -f $O365Object.Environment.ResourceManager,`
- 									$database.id,`
+ 									$database.Id,`
  									$AzureDocumentDB.api_version)
 							#Launch Query
 							$params = @{
@@ -146,7 +152,7 @@ function Get-MonkeyAZDocumentDBAccount {
 					$document_db | Add-Member -Type NoteProperty -Name sql_databases -Value $sql_databases
 					#List keys for documentdb account
 					$URI = ('{0}{1}/listKeys?api-version={2}' -f $O365Object.Environment.ResourceManager,`
- 							$document_db.id,`
+ 							$document_db.Id,`
  							$AzureDocumentDB.api_version)
 					#Perform Query
 					$params = @{
@@ -180,11 +186,16 @@ function Get-MonkeyAZDocumentDBAccount {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure DocumentDB",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureDocumentDBEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -48,10 +48,16 @@ function Get-MonkeyAADRMMaxUseLicense {
 		$monkey_metadata = @{
 			Id = "aadrm05";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about maximum validity time for licenses in AADRM";
-			Group = @("IRM");
-			ServiceName = "Azure Rights Management";
+			Resource = "IRM";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyAADRMMaxUseLicense";
+			ApiType = $null;
+			Title = "Plugin to get information about maximum validity time for licenses in AADRM";
+			Group = @("Purview","ExchangeOnline");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		$access_token = $O365Object.auth_tokens.AADRM
@@ -75,7 +81,7 @@ function Get-MonkeyAADRMMaxUseLicense {
 			Write-Information @msg
 			$url = ("{0}/MaxUseLicenseValidityTime" -f $url)
 			$params = @{
-				url = $url;
+				Url = $url;
 				Method = 'Get';
 				Content_Type = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
@@ -104,13 +110,18 @@ function Get-MonkeyAADRMMaxUseLicense {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: max use license validity status",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management= max use license validity status",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AADRMMaxUseLicenseEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

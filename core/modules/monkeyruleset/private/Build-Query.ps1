@@ -76,7 +76,7 @@ function Build-Query{
         else{
             #Potentially nested filter
             $first = (@($new_filter) -join (' -{0} ' -f $first_verb))
-            $nested_filter = Get-NestedFilter -condition $condition
+            $nested_filter = Get-NestedFilter -condition $condition -conditions_path $conditions_path
             if($nested_filter){
                 $pass_nested_filter += $nested_filter
             }

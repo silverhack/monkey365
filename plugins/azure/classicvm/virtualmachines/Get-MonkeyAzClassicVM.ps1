@@ -43,17 +43,23 @@ function Get-MonkeyAzClassicVM {
 		[string]$pluginId
 	)
 	begin {
-		#Import Localized data
 		#Plugin metadata
 		$monkey_metadata = @{
 			Id = "az00005";
 			Provider = "Azure";
+			Resource = "VirtualMachines";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzClassicVM";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get classic VMs from Azure";
 			Group = @("VirtualMachines");
-			ServiceName = "Azure Classic VM";
-			PluginName = "Get-MonkeyAzClassicVM";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
+		#Import Localized data
 		$LocalizedDataParams = $O365Object.LocalizedDataParams
 		Import-LocalizedData @LocalizedDataParams;
 		#Get Environment
@@ -90,7 +96,7 @@ function Get-MonkeyAzClassicVM {
 				#Construct URI
 				$URI = ("{0}{1}?api-version={2}" `
  						-f $O365Object.Environment.ResourceManager,`
- 						$classic_vm.id,$AzureClassicVMConfig.api_version)
+ 						$classic_vm.Id,$AzureClassicVMConfig.api_version)
 				#launch request
 				$params = @{
 					Authentication = $rm_auth;
@@ -100,7 +106,7 @@ function Get-MonkeyAzClassicVM {
 					Method = "GET";
 				}
 				$vm = Get-MonkeyRMObject @params
-				if ($vm.id) {
+				if ($vm.Id) {
 					#Check for antimalware
 					$av = $vm | Where-Object { $_.Properties.extensions.Extension -match "IaaSAntimalware" -and $_.Properties.storageProfile.operatingSystemDisk.operatingSystem -eq "Windows" }
 					if ($av) {
@@ -110,7 +116,7 @@ function Get-MonkeyAzClassicVM {
 						$vm | Add-Member -Type NoteProperty -Name antimalwareAgent -Value $false
 					}
 					#Check for installed agent
-					$agent = $vm | Where-Object { $_.Properties.extensions.Extension -match "MicrosoftMonitoringAgent" -or $_.resources.id -match "OmsAgentForLinux" }
+					$agent = $vm | Where-Object { $_.Properties.extensions.Extension -match "MicrosoftMonitoringAgent" -or $_.resources.Id -match "OmsAgentForLinux" }
 					if ($agent) {
 						$vm | Add-Member -Type NoteProperty -Name vmagentinstalled -Value $true
 					}
@@ -118,7 +124,7 @@ function Get-MonkeyAzClassicVM {
 						$vm | Add-Member -Type NoteProperty -Name vmagentinstalled -Value $false
 					}
 					#Check for diagnostic agent
-					$agent = $vm | Where-Object { $_.Properties.extensions.Extension -match "IaaSDiagnostics" -or $_.resources.id -match "OmsAgentForLinux" }
+					$agent = $vm | Where-Object { $_.Properties.extensions.Extension -match "IaaSDiagnostics" -or $_.resources.Id -match "OmsAgentForLinux" }
 					if ($agent) {
 						$vm | Add-Member -Type NoteProperty -Name diagnosticagentinstalled -Value $true
 					}
@@ -146,11 +152,16 @@ function Get-MonkeyAzClassicVM {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure virtual machine",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureClassicVMEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

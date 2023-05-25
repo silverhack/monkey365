@@ -43,21 +43,41 @@ function Get-MonkeyADApplication {
 		[string]$pluginId
 	)
 	begin {
-		$AADConfig = $O365Object.internal_config.azuread
 		#Plugin metadata
 		$monkey_metadata = @{
 			Id = "aad0001";
 			Provider = "AzureAD";
+			Resource = "AzureAD";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADApplication";
+			ApiType = "Graph";
 			Title = "Plugin to get azure apps from Azure AD";
 			Group = @("AzureAD");
-			ServiceName = "Azure AD Applications";
-			PluginName = "Get-MonkeyADApplication";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Environment
 		$Environment = $O365Object.Environment
 		#Get Azure Active Directory Auth
 		$AADAuth = $O365Object.auth_tokens.Graph
+        #Get Config
+        try{
+            $aadConf = $O365Object.internal_config.azuread.provider.graph
+        }
+        catch{
+            $msg = @{
+                MessageData = ($message.MonkeyInternalConfigError);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'verbose';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365ConfigError');
+            }
+            Write-Verbose @msg
+            break
+        }
 		$all_role_assignments = @()
 		$all_apps = @()
 		$user_consent_apps = @()
@@ -78,7 +98,10 @@ function Get-MonkeyADApplication {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
-			APIVersion = $AADConfig.api_version;
+			APIVersion = $aadConf.api_version;
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$all_applications = Get-MonkeyGraphObject @params
 		if ($all_applications) {
@@ -127,7 +150,10 @@ function Get-MonkeyADApplication {
 					Environment = $Environment;
 					ContentType = 'application/json';
 					Method = "GET";
-					APIVersion = $AADConfig.api_version;
+					APIVersion = $aadConf.api_version;
+                    InformationAction = $O365Object.InformationAction;
+			        Verbose = $O365Object.Verbose;
+			        Debug = $O365Object.Debug;
 				}
 				$owners = Get-MonkeyGraphObject @params
 				if ($owners) {
@@ -144,7 +170,10 @@ function Get-MonkeyADApplication {
 					Environment = $Environment;
 					ContentType = 'application/json';
 					Method = "GET";
-					APIVersion = $AADConfig.api_version;
+					APIVersion = $aadConf.api_version;
+                    InformationAction = $O365Object.InformationAction;
+			        Verbose = $O365Object.Verbose;
+			        Debug = $O365Object.Debug;
 				}
 				$app_assigned_roles = Get-MonkeyGraphObject @params
 				if ($null -ne $app_assigned_roles) {
@@ -159,14 +188,17 @@ function Get-MonkeyADApplication {
 								Environment = $Environment;
 								ContentType = 'application/json';
 								Method = "GET";
-								APIVersion = $AADConfig.api_version;
+								APIVersion = $aadConf.api_version;
+                                InformationAction = $O365Object.InformationAction;
+			                    Verbose = $O365Object.Verbose;
+			                    Debug = $O365Object.Debug;
 							}
 							$raw_app = Get-MonkeyGraphObject @params
 							if ($null -ne $raw_app) {
 								$all_apps += $raw_app
 								#Get permission ID
 								if ($raw_app.appRoles) {
-									$permission = $raw_app.appRoles | Where-Object { $_.id -eq $app_role.id }
+									$permission = $raw_app.appRoles | Where-Object { $_.Id -eq $app_role.Id }
 								}
 								else {
 									$permission = $null
@@ -185,11 +217,11 @@ function Get-MonkeyADApplication {
 										ResourceDisplayName = $app_role.ResourceDisplayName;
 										ClientPrincipalId = $app_role.principalId;
 										ResourceObjectId = $app_role.resourceId;
-										RoleId = $app_role.id;
+										RoleId = $app_role.Id;
 										RoleDisplayName = $permission.displayName;
 										RoleDescription = $permission.description;
 										Permission = $permission.value;
-										PermissionId = $permission.id;
+										PermissionId = $permission.Id;
 										isEnabled = $permission.isEnabled;
 										PermissionTypes = $permission.allowedMemberTypes;
 									}
@@ -202,7 +234,7 @@ function Get-MonkeyADApplication {
 									if ($null -ne $app_role_perm) {
 										$new_app_role | Add-Member -Type NoteProperty -Name AdminConsentDescription -Value $app_role_perm.adminConsentDescription
 										$new_app_role | Add-Member -Type NoteProperty -Name AdminConsentDisplayName -Value $app_role_perm.adminConsentDisplayName
-										$new_app_role | Add-Member -Type NoteProperty -Name ConsentId -Value $app_role_perm.id
+										$new_app_role | Add-Member -Type NoteProperty -Name ConsentId -Value $app_role_perm.Id
 										$new_app_role | Add-Member -Type NoteProperty -Name ConsentType -Value $app_role_perm.type
 										$new_app_role | Add-Member -Type NoteProperty -Name ConsentEnabled -Value $app_role_perm.isEnabled
 										$new_app_role | Add-Member -Type NoteProperty -Name UserConsentDescription -Value $app_role_perm.userConsentDescription
@@ -237,13 +269,16 @@ function Get-MonkeyADApplication {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
-			APIVersion = $AADConfig.api_version;
+			APIVersion = $aadConf.api_version;
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$oauth_grants = Get-MonkeyGraphObject @params
 		if ($oauth_grants) {
 			foreach ($grant in $oauth_grants) {
 				if ($grant.principalId) {
-					$object = Get-MonkeyADObjectByObjectId -ObjectId $grant.principalId
+					$object = Get-MonkeyGraphAADObjectById -ObjectId $grant.principalId
 				}
 				else {
 					$object = $null
@@ -278,7 +313,10 @@ function Get-MonkeyADApplication {
 						Environment = $Environment;
 						ContentType = 'application/json';
 						Method = "GET";
-						APIVersion = $AADConfig.api_version;
+						APIVersion = $aadConf.api_version;
+                        InformationAction = $O365Object.InformationAction;
+			            Verbose = $O365Object.Verbose;
+			            Debug = $O365Object.Debug;
 					}
 					$raw_app = Get-MonkeyGraphObject @params
 					$objectType = ("servicePrincipals/{0}" -f $grant.resourceId)
@@ -288,7 +326,10 @@ function Get-MonkeyADApplication {
 						Environment = $Environment;
 						ContentType = 'application/json';
 						Method = "GET";
-						APIVersion = $AADConfig.api_version;
+						APIVersion = $aadConf.api_version;
+                        InformationAction = $O365Object.InformationAction;
+			            Verbose = $O365Object.Verbose;
+			            Debug = $O365Object.Debug;
 					}
 					$resource_app = Get-MonkeyGraphObject @params
 					if ($raw_app -and $resource_app -and $grant.Scope) {
@@ -326,11 +367,12 @@ function Get-MonkeyADApplication {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Applications",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureGraphApplicationsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		if ($all_role_assignments) {
 			$all_role_assignments.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.app_role_assignments')
@@ -344,11 +386,12 @@ function Get-MonkeyADApplication {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Applications Role Assignments",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureGraphAppRBACEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		#Add user consented apps
 		if ($user_consent_apps) {
@@ -363,11 +406,16 @@ function Get-MonkeyADApplication {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "User consented applications",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureGraphAppUserConsentEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

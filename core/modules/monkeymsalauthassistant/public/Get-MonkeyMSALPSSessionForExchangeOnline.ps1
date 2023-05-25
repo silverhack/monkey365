@@ -122,6 +122,9 @@ Function Get-MonkeyMSALPSSessionForExchangeOnline {
         [Parameter(Mandatory=$false, HelpMessage="Force silent authentication")]
         [Switch]$Silent,
 
+        [Parameter(Mandatory=$false, HelpMessage="Force refresh token")]
+        [Switch]$ForceRefresh,
+
         [Parameter(Mandatory=$false, HelpMessage="Device code authentication")]
         [Switch]$DeviceCode
     )
@@ -233,6 +236,18 @@ Function Get-MonkeyMSALPSSessionForExchangeOnline {
                 InformationAction = $informationAction;
             }
             Write-Information @msg
+            #Add Expiration time
+            $EXOSession | Add-Member -type NoteProperty -name ExpiresOn_ -value ([System.DateTimeOffset]::Now.AddMinutes(60)) -Force
+            #Add renewable option
+            $EXOSession | Add-Member -type NoteProperty -name renewable -value $true -Force
+            #Add function to check for near expiration
+            $EXOSession | Add-Member -Type ScriptMethod -Name IsNearExpiry -Value {
+                return (($this.ExpiresOn_.UtcDateTime.AddMinutes(-5)) -le ((Get-Date).ToUniversalTime()))
+            }
+            #Add function to disable token renewal
+            $EXOSession | Add-Member -Type ScriptMethod -Name DisableRenew -Value {
+                $this.renewable = $false
+            }
             return $EXOSession
         }
         else{

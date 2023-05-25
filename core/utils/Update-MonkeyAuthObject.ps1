@@ -33,62 +33,43 @@ Function Update-MonkeyAuthObject{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
-    [CmdletBinding(SupportsShouldProcess=$true,ConfirmImpact="Medium")]
-    Param (
-        [Parameter(Mandatory = $false, HelpMessage = 'Authentication Objects')]
-        [object]$authObjects,
-
-        [Parameter(Mandatory = $false, HelpMessage = 'Force without message')]
-        [switch]$Force
-    )
-    Begin{
-        if (-not $PSBoundParameters.ContainsKey('Confirm')) {
-            $ConfirmPreference = $PSCmdlet.SessionState.PSVariable.GetValue('ConfirmPreference')
-        }
-        if (-not $PSBoundParameters.ContainsKey('WhatIf')) {
-            $WhatIfPreference = $PSCmdlet.SessionState.PSVariable.GetValue('WhatIfPreference')
-        }
-    }
-    Process{
-        if ($Force -or $PSCmdlet.ShouldProcess("ShouldProcess?")){
-            try{
-                foreach($auth in $authObjects.GetEnumerator()){
-                    if($null -ne $auth.Value -and $null -ne $auth.Value.psobject.Properties.Item('AccessToken')){
-                        $auth.Value | Add-Member -type NoteProperty -name SubscriptionId -value $script:Subscription.subscriptionId -Force
-                    }
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+    [CmdletBinding()]
+    Param ()
+    try{
+        foreach($auth in $O365Object.auth_tokens.GetEnumerator()){
+            if($null -ne $auth.Value -and $null -ne $auth.Value.psobject.Properties.Item('AccessToken')){
+                if($null -ne (Get-Variable -Name Subscription -Scope Script -ErrorAction Ignore) -and $null -ne $Script:Subscription){
+                    $auth.Value | Add-Member -type NoteProperty -name SubscriptionId -value $script:Subscription.subscriptionId -Force
                 }
-            }
-            catch{
-                $msg = @{
-                    MessageData = $message.AuthObjectErrorMessage;
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'warning';
-                    InformationAction = $InformationAction;
-                    Tags = @('AzureSubscriptionError');
-                }
-                Write-Warning @msg
-                $msg = @{
-                    MessageData = $_;
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'error';
-                    InformationAction = $InformationAction;
-                    Tags = @('AzureSubscriptionError');
-                }
-                Write-Error @msg
-                #Debug error
-                $msg = @{
-                    MessageData = $_.Exception.StackTrace;
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'debug';
-                    InformationAction = $InformationAction;
-                    Tags = @('AzureSubscriptionError');
-                }
-                Write-Debug @msg
             }
         }
     }
-    End{
-        #Nothing to do here
+    catch{
+        $msg = @{
+            MessageData = $message.AuthObjectErrorMessage;
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'warning';
+            InformationAction = $InformationAction;
+            Tags = @('AzureSubscriptionError');
+        }
+        Write-Warning @msg
+        $msg = @{
+            MessageData = $_;
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'error';
+            InformationAction = $InformationAction;
+            Tags = @('AzureSubscriptionError');
+        }
+        Write-Error @msg
+        #Debug error
+        $msg = @{
+            MessageData = $_.Exception.StackTrace;
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'debug';
+            InformationAction = $InformationAction;
+            Tags = @('AzureSubscriptionError');
+        }
+        Write-Debug @msg
     }
 }

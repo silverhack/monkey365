@@ -33,7 +33,7 @@ Function Get-MonkeyServiceManagementObject{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [cmdletbinding()]
     Param (
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
         [Object]$Authentication,
@@ -48,6 +48,17 @@ Function Get-MonkeyServiceManagementObject{
         [String]$ObjectType
     )
     Begin{
+        $Verbose = $Debug = $False;
+        $InformationAction = 'SilentlyContinue'
+        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+            $Verbose = $True
+        }
+        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $Debug = $True
+        }
+        if($PSBoundParameters.ContainsKey('InformationAction')){
+            $InformationAction = $PSBoundParameters['InformationAction']
+        }
         if($null -eq $Authentication){
             Write-Warning -Message ($message.NullAuthenticationDetected -f "Service management API")
             return
@@ -75,7 +86,10 @@ Function Get-MonkeyServiceManagementObject{
                 Headers = $requestHeader;
                 Method = 'Get';
                 Content_Type = $ContentType;
-                UserAgent = $O365Object.UserAgent
+                UserAgent = $O365Object.UserAgent;
+                Verbose = $Verbose;
+                Debug = $Debug;
+                InformationAction = $InformationAction;
             }
             $AllObjects = Invoke-UrlRequest @param
             ####close all the connections made to the host####

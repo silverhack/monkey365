@@ -11,17 +11,16 @@ Select the Azure resources used to gather data. Valid values are:
 | Resource        | Value         |
 | --------------- |:-------------|
 | Databases       | Retrieves information from Azure databases, such as Azure SQL, Azure PostgreSQL or MariaDB |
-| virtualmachines | Retrieves information from Azure virtual machines |
+| VirtualMachines | Retrieves information from Azure virtual machines |
 | SecurityAlerts | Retrieves information from security alers      |
 | StorageAccounts | Retrieves information from storage accounts      |
-| SecurityBaseline | Retrieves information from virtual machine's security baseline      |
-| MissingPatches | Retrieves information from potentially virtual machine's missing patches      |
 | SecurityPolicies | Retrieves information from security policy      |
 | AppServices | Retrieves information from App Services      |
-| KeyVaults | Retrieves information from Azure KeyVaults      |
-| roleassignments | Retrieves information from Azure RBAC      |
-| SecurityContacts | Retrieves information from Security Contacts      |
+| KeyVault | Retrieves information from Azure KeyVaults      |
+| RoleAssignment | Retrieves information from Azure RBAC      |
 | All | Retrieves all metadata from Azure subscription      |
+
+Currently, you can use tab completion in Monkey365 to complete `Analysis`, `Instance` and `PromptBehavior` names. You can autocomplete by pressing the `[TAB]` and the option will fill in. If more than one option is available, you can press `[TAB]` twice to display the next possible choice.
 
 ## Subscriptions
 

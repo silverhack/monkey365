@@ -47,10 +47,16 @@ function Get-MonkeyTeamsAppPermissionPolicy {
 		$monkey_metadata = @{
 			Id = "teams01";
 			Provider = "Microsoft365";
+			Resource = "MicrosoftTeams";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyTeamsAppPermissionPolicy";
+			ApiType = $null;
 			Title = "Plugin to get information about Teams application permission policy";
 			Group = @("MicrosoftTeams");
-			ServiceName = "Microsoft Teams Application permission policy";
-			PluginName = "Get-MonkeyTeamsAppPermissionPolicy";
+            Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Getting environment
@@ -74,9 +80,11 @@ function Get-MonkeyTeamsAppPermissionPolicy {
 				InternalPath = 'SkypePolicy';
 				ObjectType = "configurations/TeamsAppPermissionPolicy";
 				Environment = $Environment;
-				Method = "GET";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
 			}
-			$app_policies = Get-TeamsObject @params
+			$app_policies = Get-MonkeyTeamsObject @params
 		}
 	}
 	end {
@@ -90,13 +98,18 @@ function Get-MonkeyTeamsAppPermissionPolicy {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Skype application policies",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams= Skype application policies",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('TeamsAppPolicyEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -33,15 +33,10 @@ Function Connect-MonkeyAzurePortal {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory=$false, HelpMessage="parameters")]
         [Object]$parameters
     )
-    if($O365Object.isUsingAdalLib){
-        Get-AdalTokenForAzurePortal @parameters
-    }
-    else{
-        Get-MSalTokenForAzurePortal @parameters
-    }
+    Get-MSalTokenForAzurePortal @parameters
 }

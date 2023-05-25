@@ -37,8 +37,23 @@ Function Get-MetadataFromPlugin{
     [OutputType([System.Object[]])]
     Param()
     Begin{
+        $localPath = $null
+        if($null -ne (Get-Variable -Name O365Object -ErrorAction Ignore)){
+            if($null -ne $O365Object.Localpath){
+                $localPath = $O365Object.Localpath;
+            }
+            else{
+                $localPath = $MyInvocation.MyCommand.Path
+            }
+        }
+        elseif($null -ne (Get-Variable -Name ScriptPath -ErrorAction Ignore)){
+            $localPath = $ScriptPath;
+        }
+        if($null -eq $localPath){
+            break
+        }
         $monkey_plugins = @()
-        $p_path = ("{0}/plugins" -f $ScriptPath)
+        $p_path = ("{0}/plugins" -f $localPath)
         $params = @{
             Path = $p_path;
             Recurse = $true;
@@ -62,10 +77,31 @@ Function Get-MetadataFromPlugin{
                     if($implemented_interfaces -and "System.Collections.IDictionary" -in $implemented_interfaces -and $monkey_var.Operator -eq "Equals"){
                         $new_dict = [System.Collections.Generic.Dictionary[[string],[object]]]::new()
                         foreach ($entry in $monkey_var.Right.Expression.KeyValuePairs) {
-                            if($entry.Item2.Extent.Text.StartsWith('@')){
+                            if($entry.Item2.Extent.Text.StartsWith('@(')){
                                 #Convert literal string into an array of elements
                                 $new_array = $entry.Item2.Extent.Text.Replace('@(','').Replace(')','').Replace('"','').Split(',')
                                 $new_dict.Add($entry.Item1.Value,[array]$new_array)
+                            }
+                            elseif($entry.Item2.Extent.Text.StartsWith('@{')){
+                                #Convert literal string into a hashtable of elements
+                                $parsed_dict = $entry.Item2.Extent.Text.Replace('@{','').Replace('}','').Replace('"','').Split(';')
+                                if($parsed_dict){
+                                    $new_hashTable = [ordered]@{}
+                                    foreach($elem in $parsed_dict){
+                                        $v = $elem.Split('=').Trim()[1].Replace('"','').Replace("'",'')
+                                        If($v -eq '$true'){
+                                            $value = $true;
+                                        }
+                                        elseif($v -eq '$false'){
+                                            $value = $false;
+                                        }
+                                        else{
+                                            $value = $elem.Split('=').Trim()[1]
+                                        }
+                                        [void]$new_hashTable.Add($elem.Split('=').Trim()[0],$value)
+                                    }
+                                    $new_dict.Add($entry.Item1.Value,$new_hashTable)
+                                }
                             }
                             else{
                                 $new_dict.Add($entry.Item1.Value,$entry.Item2.Extent.Text.Trim('"').ToString())

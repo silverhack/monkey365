@@ -1,0 +1,43 @@
+{
+    "dashboard_name":  "Azure Log Profile",
+    "menu_name":  "Subscription",
+    "issue_name":  "Ensure the storage account containing the container with activity logs is encrypted using own key",
+    "description":  "The storage account with the activity log export container is configured to use BYOK (Use Your Own Key).",
+    "rationale":  "Configuring the storage account with the activity log export container to use BYOK (Use Your Own Key) provides additional confidentiality controls on log data as a given user must have read permission on the corresponding storage account and must be granted decrypt permission by the CMK.",
+    "impact":  null,
+    "remediation":  '
+					###### From Azure Console
+					1. Go to `Activity log`
+					2. Select `Export`
+					3. Select `Subscription`
+					4. In section `Storage Account`, note the name of the Storage account
+					5. Close the `Export Audit Logs` blade. Close the `Monitor - Activity Log` blade.
+					6. In right column, Click service `Storage Accounts` to access Storage account blade
+					7. Click on the storage account name noted in step 4. This will open blade specific to that storage account
+					8. In Section `settings` click `Encryption`. It will show `Storage service encryption` configuration pane.
+					9. Ensure `Use your own key` is checked and `Key URI` is set.
+
+	',
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-logs-overview"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "5.1.4"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_log_profile",
+    "display_path":  "az_log_profile",
+    "conditions":  [
+                       "and",
+                       [
+                           "storageAccountUsingOwnKey",
+                           "eq",
+                           "false"
+                       ]
+                   ],
+    "id_suffix":  "azure_log_profile_storage_byok_disabled"
+}

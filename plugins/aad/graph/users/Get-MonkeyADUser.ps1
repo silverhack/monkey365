@@ -48,84 +48,39 @@ function Get-MonkeyADUser {
 		$monkey_metadata = @{
 			Id = "aad0009";
 			Provider = "AzureAD";
+			Resource = "AzureAD";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADUser";
+			ApiType = "Graph";
 			Title = "Plugin to get users from Azure AD";
 			Group = @("AzureAD");
-			ServiceName = "Azure AD Users";
-			PluginName = "Get-MonkeyADUser";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 	}
 	process {
-		#create array
-		$all_users = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
-		$AADConfig = $O365Object.internal_config.azuread
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"users",$O365Object.TenantID);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Azure AD users",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
-			Tags = @('AzureGraphUsers');
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('AzureADGraphUsers');
 		}
 		Write-Information @msg
-		$Environment = $O365Object.Environment
-		#Get Azure Active Directory Auth
-		$AADAuth = $O365Object.auth_tokens.Graph
-		$api_version = $O365Object.internal_config.azuread.api_version
-		#check if internal version is needed
-		if ([System.Convert]::ToBoolean($O365Object.internal_config.azuread.dumpAdUsersWithInternalGraphAPI) -and $O365Object.isConfidentialApp -eq $false) {
-			$api_version = '1.6-internal'
-			$msg = @{
-				MessageData = ($message.GraphAPISwitchMessage);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('AzureGraphUsersAPISwitch');
-			}
-			Write-Information @msg
+		#Get all users
+		$p = @{
+			InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
-		#Get users
-		$params = @{
-			Authentication = $AADAuth;
-			ObjectType = "users";
-			Environment = $Environment;
-			ContentType = 'application/json';
-			Method = "GET";
-			APIVersion = $api_version;
-		}
-		$tmp_users = Get-MonkeyGraphObject @params
-		if ($tmp_users) {
-			if ([System.Convert]::ToBoolean($AADConfig.GetUserDetails)) {
-				#Generate vars
-				$vars = @{
-					"O365Object" = $O365Object;
-					"WriteLog" = $WriteLog;
-					'Verbosity' = $Verbosity;
-					'InformationAction' = $InformationAction;
-					"all_users" = $all_users;
-				}
-				$param = @{
-					ScriptBlock = { Get-AADDetailedUser -user $_ };
-					ImportCommands = $O365Object.LibUtils;
-					ImportVariables = $vars;
-					ImportModules = $O365Object.runspaces_modules;
-					StartUpScripts = $O365Object.runspace_init;
-					ThrowOnRunspaceOpenError = $true;
-					Debug = $O365Object.VerboseOptions.Debug;
-					Verbose = $O365Object.VerboseOptions.Verbose;
-					Throttle = $O365Object.nestedRunspaceMaxThreads;
-					MaxQueue = $O365Object.MaxQueue;
-					BatchSleep = $O365Object.BatchSleep;
-					BatchSize = $O365Object.BatchSize;
-				}
-				$all_users = $tmp_users | Invoke-MonkeyJob @param
-			}
-			else {
-				$all_users = $tmp_users;
-			}
-		}
+		$all_users = Get-MonkeyGraphAADUser @p
 	}
 	end {
 		if ($all_users) {
+			$all_users.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.Users')
 			[pscustomobject]$obj = @{
 				Data = $all_users;
 				Metadata = $monkey_metadata;
@@ -134,13 +89,18 @@ function Get-MonkeyADUser {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Users",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD users",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
-				Tags = @('AzureGraphUsersEmptyResponse');
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;;
+				Tags = @('AzureADGraphUsersEmptyResponse')
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -47,10 +47,16 @@ function Get-MonkeyAzSecCenterPolicyForSubscription {
 		$monkey_metadata = @{
 			Id = "az00036";
 			Provider = "Azure";
+			Resource = "DefenderForCloud";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzSecCenterPolicyForSubscription";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get information about subscription policies";
 			Group = @("DefenderForCloud");
-			ServiceName = "Azure Subscription policies";
-			PluginName = "Get-MonkeyAzSecCenterPolicyForSubscription";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Environment
@@ -93,12 +99,16 @@ function Get-MonkeyAzSecCenterPolicyForSubscription {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Subscription Policies",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureKeySubscriptionPoliciesEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
-
 	}
 }
+
+
+
+

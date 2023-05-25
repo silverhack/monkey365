@@ -72,10 +72,10 @@ Function Initialize-File {
                         MessageData = ("Log file {0} already exists on {1}" -f $filename, [System.IO.Path]::GetDirectoryName($fullPath))
                         InformationAction = $script:monkeyloggerinfoAction
                         callStack = (Get-PSCallStack | Select-Object -First 1);
-                        ForeGroundColor = "Yellow"
+                        logLevel = 'verbose';
                         tags = @('MonkeyLogAlreadyExists')
                     }
-                    Write-Warning @msg
+                    Write-Verbose @msg
                     $Configuration.Filename = $fullPath
                     $pass = $true
                 }
@@ -100,7 +100,7 @@ Function Initialize-File {
                     MessageData = ("Unable to create log file in {0}" -f [System.IO.Path]::GetDirectoryName($fullPath))
                     InformationAction = $script:monkeyloggerinfoAction
                     callStack = (Get-PSCallStack | Select-Object -First 1);
-                    ForeGroundColor = "Yellow"
+                    logLevel = 'Warning';
                     tags = @('MonkeyLog')
                 }
                 Write-Warning @msg
@@ -114,7 +114,7 @@ Function Initialize-File {
                     MessageData = $_
                     InformationAction = $script:monkeyloggerinfoAction
                     callStack = (Get-PSCallStack | Select-Object -First 1);
-                    ForeGroundColor = "Red"
+                    logLevel = 'Error';
                     tags = @('MonkeyLog')
                 }
                 Write-Error @msg

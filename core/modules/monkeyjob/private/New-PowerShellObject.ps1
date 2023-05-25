@@ -33,54 +33,63 @@ Function New-PowerShellObject{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
-    [cmdletbinding(SupportsShouldProcess = $True,DefaultParameterSetName='Job',ConfirmImpact="Medium")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [OutputType([System.Management.Automation.PowerShell])]
     Param (
-            [Parameter(Mandatory=$True,position=0,ParameterSetName='Job')]
-            [Object]$Job,
+        [Parameter(Mandatory=$True,position=0, ParameterSetName='ScriptBlock')]
+        [System.Management.Automation.ScriptBlock]$ScriptBlock,
 
-            [Parameter(Mandatory=$False)]
-            [System.Management.Automation.Runspaces.RunspacePool]$runspacepool
+        [Parameter(Mandatory=$True,position=1,ParameterSetName='Command')]
+        [String]$Command,
+
+        [Parameter(Mandatory=$false,position=2, ValueFromPipeline=$true)]
+        [Object]$InputObject,
+
+        [Parameter(Mandatory=$False, position=3,HelpMessage="RunspacePool")]
+        [System.Management.Automation.Runspaces.RunspacePool]$RunspacePool,
+
+        [Parameter(Mandatory=$false,position=4,HelpMessage="arguments")]
+        [Object] $Arguments
     )
     Process{
-        if (-not $PSBoundParameters.ContainsKey('Confirm')) {
-            $ConfirmPreference = $PSCmdlet.SessionState.PSVariable.GetValue('ConfirmPreference')
-        }
-        if (-not $PSBoundParameters.ContainsKey('WhatIf')) {
-            $WhatIfPreference = $PSCmdlet.SessionState.PSVariable.GetValue('WhatIfPreference')
-        }
-        if ($PSCmdlet.ShouldProcess("ShouldProcess?")){
-            Try{
-                $params = Get-ParamsUsed -Job $Job
-                if($null -ne $params){
-                    $Powershell = [powershell]::Create()
-                    #Import script or command
-                    if($null -ne $Job.scriptToImport){
-                        [void]$Powershell.AddScript($Job.scriptToImport)
+        try{
+            $Pipeline = [System.Management.Automation.PowerShell]::Create()
+            if($RunspacePool){
+                $Pipeline.RunspacePool = $RunspacePool
+            }
+            #Add scriptblock
+            if($PSCmdlet.ParameterSetName -eq 'ScriptBlock'){
+                [void]$Pipeline.AddScript($ScriptBlock,$True)
+            }
+            elseif($PSCmdlet.ParameterSetName -eq 'Command'){
+                [void]$Pipeline.AddCommand($Command)
+            }
+            #Add inputobject if any
+            if($PSBoundParameters.ContainsKey('InputObject') -and $null -ne $PSBoundParameters['InputObject']){
+                [void]$Pipeline.AddArgument($InputObject)
+            }
+            #Add arguments
+            if($PSBoundParameters.ContainsKey('Arguments')){
+                Foreach($arg in $PSBoundParameters['Arguments']) {
+                    If ($arg -is [Object[]]) {
+                        Foreach($arg_ in $arg) {
+                            [void]$Pipeline.AddArgument($arg_)
+                        }
                     }
-                    else{
-                        [void]$Powershell.AddCommand($Job.command)
+                    elseif($arg -is [System.Collections.Specialized.OrderedDictionary] -or $arg -is [System.Collections.Hashtable]){
+                        [void]$Pipeline.AddParameters($arg)
                     }
-                    #Import params if any
-                    foreach($item in $params.GetEnumerator()){
-		                [void]$Powershell.AddParameter($item.Key,$item.value)
+                    Else {
+                        [void]$Pipeline.AddArgument($arg)
                     }
-                    #Check if runspacepool
-		            if($runspacepool){
-                        $PowerShell.RunspacePool = $runspacepool
-                    }
-                    #Return powershell object
-                    return $Powershell
-                }
-                else{
-                    return $null
                 }
             }
-            Catch{
-                Write-Error $_
-                return $null
-            }
+            New-Variable -Name Pipeline -Value $Pipeline -Scope Global -Force
+            #return object
+            return $Pipeline
+        }
+        catch{
+            Write-Error $_
         }
     }
 }

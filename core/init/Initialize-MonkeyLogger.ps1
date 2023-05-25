@@ -35,11 +35,14 @@ Function Initialize-MonkeyLogger{
     #>
 
     [CmdletBinding()]
-    Param()
+    Param(
+        [Parameter(Mandatory=$false, HelpMessage="Initial path")]
+        [String]$InitialPath
+    )
     $loggers = @()
-    if($null -eq (Get-Variable -Name O365Object -ErrorAction Ignore)){
+    if($null -eq (Get-Variable -Name O365Object -Scope Script -ErrorAction Ignore)){
         #Create a new O365 object
-        $O365Object = New-O365Object
+        New-O365Object
     }
     #Check if write Log
     if($O365Object.WriteLog){
@@ -63,7 +66,8 @@ Function Initialize-MonkeyLogger{
     #Start logging
     if($loggers){
         $l_param = @{
-            loggers = $loggers;
+            Loggers = $loggers;
+            InitialPath = $InitialPath;
             informationAction = $O365Object.InformationAction;
             Verbose = $O365Object.VerboseOptions.verbose;
             Debug = $O365Object.VerboseOptions.debug;
@@ -72,7 +76,8 @@ Function Initialize-MonkeyLogger{
     }
     else{
         $l_param = @{
-            informationAction = $O365Object.InformationAction;
+            InitialPath = $InitialPath;
+            InformationAction = $O365Object.InformationAction;
             Verbose = $O365Object.VerboseOptions.verbose;
             Debug = $O365Object.VerboseOptions.debug;
         }

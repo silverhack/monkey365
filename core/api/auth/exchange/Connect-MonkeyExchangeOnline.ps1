@@ -33,64 +33,63 @@ Function Connect-MonkeyExchangeOnline {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
-        [Parameter(Mandatory=$false, HelpMessage="parameters")]
+        [Parameter(Mandatory=$true, HelpMessage="parameters")]
         [Object]$parameters
     )
-    if($O365Object.isUsingAdalLib){
-        Get-MonkeyAdalPSSessionForExchangeOnline @parameters
+    #Set new params
+    $new_params = @{}
+    foreach ($param in $parameters.GetEnumerator()){
+        $new_params.add($param.Key, $param.Value)
     }
-    else{
-        #Set new params
-        $new_params = @{}
-        foreach ($param in $parameters.GetEnumerator()){
-            $new_params.add($param.Key, $param.Value)
-        }
-        #Check if confidential App
-        if($O365Object.isConfidentialApp -eq $false){
-            if($null -eq $O365Object.exo_msal_application){
-                #Create a new msal client application
-                $client_app = $O365Object.application_args.Clone()
-                #Add clientId and RedirectUri
-                $client_app.ClientId = (Get-WellKnownAzureService -AzureService ExchangeOnlineV2)
-                if($PSEdition -eq "Desktop"){
-                    $client_app.RedirectUri = (Get-MonkeyExoRedirectUri -Environment $O365Object.initParams.Environment)
-                }
-                try{
-                    $exo_app = New-MonkeyMsalApplication @client_app
-                    if($null -ne $exo_app){
-                        $O365Object.exo_msal_application = $exo_app
-                        $new_params.publicApp = $O365Object.exo_msal_application
-                    }
-                }
-                catch{
-                    $msg = @{
-                        MessageData = "Unable to connect to Exchange Online";
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'error';
-                        InformationAction = $script:InformationAction;
-                        Tags = @('ExchangeOnlineConnectionError');
-                    }
-                    Write-Error @msg
-                    $msg.MessageData = $_
-                    Write-Error @msg
-                    $exo_app = $null
-                    return
-                }
+    #Check if confidential App
+    if($O365Object.isConfidentialApp -eq $false){
+        if($null -eq $O365Object.exo_msal_application -or ($O365Object.exo_msal_application -isnot [Microsoft.Identity.Client.PublicClientApplication])){
+            #Create a new msal client application
+            $client_app = @{}
+            foreach ($param in $O365Object.application_args.GetEnumerator()){
+                $client_app.add($param.Key, $param.Value)
+            }
+            $p = @{
+                app_params = $client_app;
+                Environment = $O365Object.initParams.Environment;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+                InformationAction = $O365Object.InformationAction;
+            }
+            $exo_app = New-MsalApplicationForExo @p
+            if($null -ne $exo_app){
+                $O365Object.exo_msal_application = $exo_app
+                $new_params.publicApp = $O365Object.exo_msal_application
             }
             else{
-                $new_params.publicApp = $O365Object.exo_msal_application
+                $msg = @{
+                    MessageData = "Unable to get MSAL application for Exchange Online";
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'Warning';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('ExchangeOnlineApplicationError');
+                }
+                Write-Warning @msg
             }
         }
         else{
-            $O365Object.exo_msal_application = $O365Object.msalapplication
-            $new_params.confidentialApp = $O365Object.msalapplication;
+            $new_params.publicApp = $O365Object.exo_msal_application
         }
+<<<<<<< HEAD
         #Connect to Exchange Online
         Write-Host ($new_params | Out-String)
         Write-Host ($new_params.publicApp | Out-String)
         Get-MonkeyMSALPSSessionForExchangeOnline @new_params
 
+=======
+>>>>>>> develop
     }
+    else{
+        $O365Object.exo_msal_application = $O365Object.msalapplication
+        $new_params.confidentialApp = $O365Object.msalapplication;
+    }
+    #Connect to Exchange Online
+    Get-MonkeyMSALPSSessionForExchangeOnline @new_params
 }

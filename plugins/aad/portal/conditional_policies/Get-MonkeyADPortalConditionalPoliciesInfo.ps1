@@ -48,10 +48,16 @@ function Get-MonkeyADPortalConditionalPoliciesInfo {
 		$monkey_metadata = @{
 			Id = "aad0023";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADPortalConditionalPoliciesInfo";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get conditional policies from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD Conditional Policies";
-			PluginName = "Get-MonkeyADPortalConditionalPoliciesInfo";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Azure Active Directory Auth
@@ -73,6 +79,9 @@ function Get-MonkeyADPortalConditionalPoliciesInfo {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$ad_conditional_policies = Get-MonkeyAzurePortalObject @params
 		if ($ad_conditional_policies) {
@@ -83,6 +92,9 @@ function Get-MonkeyADPortalConditionalPoliciesInfo {
 					Environment = $Environment;
 					ContentType = 'application/json';
 					Method = "GET";
+                    InformationAction = $O365Object.InformationAction;
+			        Verbose = $O365Object.Verbose;
+			        Debug = $O365Object.Debug;
 				}
 				$raw_policy = Get-MonkeyAzurePortalObject @params
 				if ($raw_policy) {
@@ -107,11 +119,16 @@ function Get-MonkeyADPortalConditionalPoliciesInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD conditional policies",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalCAPsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

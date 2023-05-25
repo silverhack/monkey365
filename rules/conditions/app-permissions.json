@@ -2,32 +2,37 @@
     "conditions":[
          [ "or",   
             [ "and",
-                ["Permission", "eq", "Application.ReadWrite.All"],
-                ["ConsentType", "eq", "Admin"]
+                ["ClaimValue", "eq", "Application.ReadWrite.All"]
             ]
          ],
          [ "or",   
             [ "and",
-                ["Permission", "eq", "Directory.ReadWrite.All"],
-                ["ConsentType", "eq", "Admin"]
+                ["ClaimValue", "eq", "Directory.ReadWrite.All"]
             ]
          ],
          [ "or",   
             [ "and",
-                ["Permission", "eq", "Domain.ReadWrite.All"],
-                ["ConsentType", "eq", "Admin"]
+                ["ClaimValue", "eq", "Domain.ReadWrite.All"]
             ]
          ],
          [ "or",   
             [ "and",
-                ["Permission", "eq", "Member.Read.Hidden"],
-                ["ConsentType", "eq", "Admin"]
+                ["ClaimValue", "eq", "Member.Read.Hidden"]
             ]
          ],
          [ "or",   
             [ "and",
-                ["Permission", "eq", "User.ReadWrite.All"],
-                ["ConsentType", "eq", "Admin"]
+                ["ClaimValue", "eq", "User.ReadWrite.All"]
+            ]
+         ],
+		 [ "or",   
+            [ "and",
+                ["ClaimValue", "eq", "AppRoleAssignment.ReadWrite.All"]
+            ]
+         ],
+		 [ "or",   
+            [ "and",
+                ["ClaimValue", "eq", "RoleManagement.ReadWrite.Directory"]
             ]
          ]
       ]

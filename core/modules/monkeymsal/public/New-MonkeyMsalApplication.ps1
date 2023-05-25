@@ -33,7 +33,7 @@ function New-MonkeyMsalApplication{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [CmdletBinding()]
     param
@@ -77,11 +77,16 @@ function New-MonkeyMsalApplication{
         [string] $Instance
     )
     Begin{
-        if (-not $PSBoundParameters.ContainsKey('Verbose')) {
-            $verbose = $false
+        $Verbose = $Debug = $False;
+        $InformationAction = 'SilentlyContinue'
+        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+            $Verbose = $True
         }
-        else{
-            $verbose = $true
+        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $Debug = $True
+        }
+        if($PSBoundParameters.ContainsKey('InformationAction')){
+            $InformationAction = $PSBoundParameters['InformationAction']
         }
         #Set clientId
         if($PSBoundParameters.ContainsKey('clientId') -and $PSBoundParameters.clientId){

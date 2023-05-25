@@ -47,10 +47,16 @@ function Get-MonkeyAZApplicationGateway {
 		$monkey_metadata = @{
 			Id = "az00023";
 			Provider = "Azure";
+			Resource = "ApplicationGateway";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAZApplicationGateway";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get information from Azure Application Gateway";
 			Group = @("ApplicationGateway");
-			ServiceName = "Azure Application Gateway";
-			PluginName = "Get-MonkeyAZApplicationGateway";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Import Localized data
@@ -80,7 +86,7 @@ function Get-MonkeyAZApplicationGateway {
 		if ($app_gateways) {
 			foreach ($app_gtw in $app_gateways) {
 				$msg = @{
-					MessageData = ($message.AzureUnitResourceMessage -f $app_gtw.id,"application gateway");
+					MessageData = ($message.AzureUnitResourceMessage -f $app_gtw.Id,"application gateway");
 					callStack = (Get-PSCallStack | Select-Object -First 1);
 					logLevel = 'info';
 					InformationAction = $InformationAction;
@@ -88,7 +94,7 @@ function Get-MonkeyAZApplicationGateway {
 				}
 				Write-Information @msg
 				$URI = ("{0}{1}?api-version={2}" `
- 						-f $O365Object.Environment.ResourceManager,$app_gtw.id,`
+ 						-f $O365Object.Environment.ResourceManager,$app_gtw.Id,`
  						$AzureAPPGTWConfig.api_version)
 
 				$params = @{
@@ -118,11 +124,16 @@ function Get-MonkeyAZApplicationGateway {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure application gateway",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureAppGatewayEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

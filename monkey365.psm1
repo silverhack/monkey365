@@ -13,33 +13,38 @@ Import-LocalizedData @LocalizedDataParams;
 $Modules = @{
     utils = '/core/utils/'
     azure_api = '/core/api/azure/'
+    azure_ad_api = '/core/api/azuread/'
     init = '/core/init/'
+    tenant = '/core/tenant/'
+    subscription = '/core/subscription/'
     runspaces = '/core/tasks/'
     auth = '/core/api/auth/'
     analysis = '/core/analysis/'
     office = '/core/office/'
     html = '/core/html/'
-    o365_api = '/core/api/o365/'
+    o365_api = '/core/api/m365/'
     watcher = '/core/watcher/'
     output = '/core/output/'
     import = '/core/import/'
 }
 #Import modules
 foreach($module in $Modules.GetEnumerator()){
-    $metadata = [System.IO.File]::GetAttributes(("{0}{1}" -f $PSScriptRoot, $module.value))
-    if($metadata -band [System.IO.FileAttributes]::Directory){
-        $all_files = Get-ChildItem -Recurse -Path ("{0}{1}" -f $PSScriptRoot, $module.value) -File -Include "*.ps1" -ErrorAction SilentlyContinue
-        if($null -ne $all_files){
-            foreach ($mod in $all_files){
-                Write-Verbose ("Loading {0} module" -f $mod.FullName)
-                . $mod.FullName
+    if (Test-Path -Path ("{0}{1}" -f $PSScriptRoot, $module.value)){
+        $metadata = [System.IO.File]::GetAttributes(("{0}{1}" -f $PSScriptRoot, $module.value))
+        if($metadata -band [System.IO.FileAttributes]::Directory){
+            $all_files = Get-ChildItem -Recurse -Path ("{0}{1}" -f $PSScriptRoot, $module.value) -File -Include "*.ps1" -ErrorAction SilentlyContinue
+            if($null -ne $all_files){
+                foreach ($mod in $all_files){
+                    Write-Verbose ("Loading {0} module" -f $mod.FullName)
+                    . $mod.FullName
+                }
             }
         }
-    }
-    else{
-        Write-Verbose ("Loading {0} module" -f $module.Name)
-        $tmp_module = ("{0}{1}" -f $PSScriptRoot, $module.value)
-        . $tmp_module.ToString()
+        else{
+            Write-Verbose ("Loading {0} module" -f $module.Name)
+            $tmp_module = ("{0}{1}" -f $PSScriptRoot, $module.value)
+            . $tmp_module.ToString()
+        }
     }
 }
 

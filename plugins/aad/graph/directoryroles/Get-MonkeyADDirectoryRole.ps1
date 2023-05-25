@@ -46,31 +46,44 @@ function Get-MonkeyADDirectoryRole {
 		[string]$pluginId
 	)
 	begin {
-		$tmp_users = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
 		#Plugin metadata
-		$monkey_metadata = @{
+        $monkey_metadata = @{
 			Id = "aad0005";
 			Provider = "AzureAD";
+			Resource = "AzureAD";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADDirectoryRole";
+			ApiType = "Graph";
 			Title = "Plugin to get Directoryroles from Azure AD";
 			Group = @("AzureAD");
-			ServiceName = "Azure AD Directory Role";
-			PluginName = "Get-MonkeyADDirectoryRole";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		$all_users = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
-		$AADConfig = $O365Object.internal_config.azuread
 		$Environment = $O365Object.Environment
 		#Get Azure Active Directory Auth
 		$AADAuth = $O365Object.auth_tokens.Graph
 		$TmpDirectoryRoles = @()
-		#Generate vars
-		$vars = @{
-			"O365Object" = $O365Object;
-			"WriteLog" = $WriteLog;
-			'Verbosity' = $Verbosity;
-			'InformationAction' = $InformationAction;
-			"all_users" = $tmp_users;
-		}
+		#Get vars
+        $vars = $O365Object.runspace_vars
+        #Get Config
+        try{
+            $aadConf = $O365Object.internal_config.azuread.provider.graph
+        }
+        catch{
+            $msg = @{
+                MessageData = ($message.MonkeyInternalConfigError);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'verbose';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365ConfigError');
+            }
+            Write-Verbose @msg
+            break
+        }
 	}
 	process {
 		$msg = @{
@@ -88,7 +101,10 @@ function Get-MonkeyADDirectoryRole {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
-			APIVersion = $AADConfig.api_version;
+			APIVersion = $aadConf.api_version;
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$directory_roles = Get-MonkeyGraphObject @params
 		if ($directory_roles) {
@@ -110,7 +126,10 @@ function Get-MonkeyADDirectoryRole {
 					Environment = $Environment;
 					ContentType = 'application/json';
 					Method = "GET";
-					APIVersion = $AADConfig.api_version;
+					APIVersion = $aadConf.api_version;
+                    InformationAction = $O365Object.InformationAction;
+			        Verbose = $O365Object.Verbose;
+			        Debug = $O365Object.Debug;
 				}
 				$users_count = Get-MonkeyGraphLinkedObject @params -GetLinks
 				if ($users_count.url) {
@@ -130,13 +149,16 @@ function Get-MonkeyADDirectoryRole {
 					Environment = $Environment;
 					ContentType = 'application/json';
 					Method = "GET";
-					APIVersion = $AADConfig.api_version;
+					APIVersion = $aadConf.api_version;
+                    InformationAction = $O365Object.InformationAction;
+			        Verbose = $O365Object.Verbose;
+			        Debug = $O365Object.Debug;
 				}
 				$Users = Get-MonkeyGraphLinkedObject @params
 				#Add to Array
 				if ($Users) {
 					$param = @{
-						ScriptBlock = { Get-AADDetailedUser -user $_ };
+						ScriptBlock = { Get-MonkeyGraphAADUser -UserId $_.ObjectId };
 						ImportCommands = $O365Object.LibUtils;
 						ImportVariables = $vars;
 						ImportModules = $O365Object.runspaces_modules;
@@ -157,20 +179,6 @@ function Get-MonkeyADDirectoryRole {
 							[void]$all_users.Add($_)
 						}
 					}
-					<#
-                    if($tmp_users){
-                        $tmp_users |ForEach-Object {$_ | Add-Member -type NoteProperty -name MemberOf -Value $dr.displayName -Force}
-                        #$tmp_users = $tmp_users | Select-Object $AADConfig.DirectoryRolesFilter
-                        $tmp_users = $tmp_users | Where-Object {$null -ne $_.objectId}
-                        $DirectoryRolesUsers+=$tmp_users
-                    }
-                    #>
-					#Set new array
-					#$vars.all_users = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
-					#$Users |ForEach-Object {$_ | Add-Member -type NoteProperty -name MemberOf -Value $dr.displayName}
-					#$Users = $Users | Select-Object $AADConfig.DirectoryRolesFilter
-					#$Users = $Users | Where-Object {$null -ne $_.objectId}
-					#$DirectoryRolesUsers+=$Users
 				}
 			}
 		}
@@ -188,28 +196,31 @@ function Get-MonkeyADDirectoryRole {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Directory roles",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = 'verbose';
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureGraphUsersEmptyResponse');
+                Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		if ($all_users) {
+            $all_users.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.RoleAssignment')
 			[pscustomobject]$obj = @{
 				Data = $all_users;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.aad_directory_user_roles = $obj
+			$returnData.aad_role_assignment = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Directory user roles",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD role assignment",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = 'verbose';
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureGraphUsersEmptyResponse');
+                Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }

@@ -43,26 +43,52 @@ function Get-MonkeySharePointOnlineSitePermissionsInfo {
 		[string]$pluginId
 	)
 	begin {
-		#Set array
 		#Plugin metadata
 		$monkey_metadata = @{
 			Id = "sps0006";
 			Provider = "Microsoft365";
+			Resource = "SharePointOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeySharePointOnlineSitePermissionsInfo";
+			ApiType = $null;
 			Title = "Plugin to get information about Sharepoint Online site permissions";
 			Group = @("SharePointOnline");
-			ServiceName = "SharePoint Online Site permissions";
-			PluginName = "Get-MonkeySharePointOnlineSitePermissionsInfo";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		$all_perms = @()
-		<#
-        $vars = @{
-            O365Object = $O365Object;
-            WriteLog = $WriteLog;
-            Verbosity = $Verbosity;
-            InformationAction = $InformationAction;
+        try{
+            $scanFolders = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.ScanFolders)
+            $scanFiles = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.ScanFiles)
+            $inheritedForSite = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Permissions.Site.IncludeInheritedPermissions)
+            $inheritedForList = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Permissions.Lists.IncludeInheritedPermissions)
+            $inheritedForFolder = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Permissions.Folders.IncludeInheritedPermissions)
+            $inheritedForItem = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Permissions.Items.IncludeInheritedPermissions)
         }
-        #>
+        catch{
+            $msg = @{
+                MessageData = ($message.MonkeyInternalConfigError);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'verbose';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365ConfigError');
+            }
+            Write-Verbose @msg
+            #Set to false
+            $scanFolders = $false
+            $scanFiles = $false
+            $inheritedForSite = $false
+            $inheritedForList = $false
+            $inheritedForFolder = $false
+            $inheritedForItem = $false
+        }
+		if($null -eq $O365Object.spoWebs){
+            break;
+        }
+        #Set generic list
+        $all_perms = New-Object System.Collections.Generic.List[System.Object]
 	}
 	process {
 		$msg = @{
@@ -73,34 +99,25 @@ function Get-MonkeySharePointOnlineSitePermissionsInfo {
 			Tags = @('SPSSitePermsInfo');
 		}
 		Write-Information @msg
-		#Get all webs for user
-		$allowed_sites = Get-MonkeySPSWebsForUser
-		#Getting external users for each site
-		<#
-        $param = @{
-            ScriptBlock = {Get-MonkeyPSWebPermission -Web $_};
-            ImportCommands = $O365Object.LibUtils;
-            ImportVariables = $vars;
-            ImportModules = $O365Object.runspaces_modules;
-            StartUpScripts = $O365Object.runspace_init;
-            StartUpScripts = $O365Object.runspace_init;
-            ThrowOnRunspaceOpenError = $true;
-            Debug = $O365Object.VerboseOptions.Debug;
-            Verbose = $O365Object.VerboseOptions.Verbose;
-            Throttle = $O365Object.nestedRunspaceMaxThreads;
-            MaxQueue = $O365Object.MaxQueue;
-            BatchSleep = $O365Object.BatchSleep;
-            BatchSize = $O365Object.BatchSize;
-        }
-        $allowed_sites | Invoke-MonkeyJob @param | ForEach-Object {
-            if($_){
-                $all_perms+=$_
+        foreach($Web in $O365Object.spoWebs){
+            $p = [ordered]@{
+                Authentication = $O365Object.auth_tokens.SharePointOnline;
+                Web = $web;
+                ScanFiles = $scanFiles;
+                ScanFolders = $scanFolders;
+                SiteInheritedPermission = $inheritedForSite;
+                ListInheritedPermission = $inheritedForList;
+                FolderInheritedPermission = $inheritedForFolder;
+                FileInheritedPermission = $inheritedForItem;
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $perms = Invoke-MonkeyCSOMSitePermission @p
+            if($perms){
+                [void]$all_perms.Add($perms)
             }
         }
-        #>
-		foreach ($site in $allowed_sites) {
-			$all_perms += Get-MonkeyPSWebPermission -Web $site
-		}
 	}
 	end {
 		if ($all_perms) {
@@ -115,11 +132,16 @@ function Get-MonkeySharePointOnlineSitePermissionsInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online site permissions",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.Verbose;
 				Tags = @('SPSSitePermissionsEmptyResponse');
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

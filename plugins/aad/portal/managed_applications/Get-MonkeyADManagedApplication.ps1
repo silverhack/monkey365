@@ -48,13 +48,18 @@ function Get-MonkeyADManagedApplication {
 		$monkey_metadata = @{
 			Id = "aad0030";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADManagedApplication";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get managed applications from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD Managed applications";
-			PluginName = "Get-MonkeyADManagedApplication";
+			Tags = @{
+				"enabled" = $false
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		$AADConfig = $O365Object.internal_config.azuread
 		$Environment = $O365Object.Environment
 		#Get Azure Active Directory Auth
 		$AADAuth = $O365Object.auth_tokens.AzurePortal
@@ -62,13 +67,22 @@ function Get-MonkeyADManagedApplication {
 		$managed_apps = New-Object System.Collections.Generic.List[System.Object]
 		$managed_apps_permissions = New-Object System.Collections.Generic.List[System.Object]
 		$app_by_principalIds = New-Object System.Collections.Generic.List[System.Object]
-		#Generate vars
-		$vars = @{
-			"O365Object" = $O365Object;
-			"WriteLog" = $WriteLog;
-			'Verbosity' = $Verbosity;
-			'InformationAction' = $InformationAction;
-		}
+		#Get vars
+        $vars = $O365Object.runspace_vars
+        try{
+            $aadConf = $O365Object.internal_config.azuread.provider.portal
+        }
+        catch{
+            $msg = @{
+                MessageData = ($message.MonkeyInternalConfigError);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'verbose';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365ConfigError');
+            }
+            Write-Verbose @msg
+            break
+        }
 	}
 	process {
 		$msg = @{
@@ -90,18 +104,22 @@ function Get-MonkeyADManagedApplication {
 				ContentType = 'application/json';
 				Method = "POST";
 				PostData = $post_data;
+                InformationAction = $O365Object.InformationAction;
+			    Verbose = $O365Object.Verbose;
+			    Debug = $O365Object.Debug;
 			}
 			$azure_ad_managed_applications = Get-MonkeyAzurePortalObject @params
 		}
 		catch {
 			Write-Error $_
 			Write-Error "Unable to get managed applications from Azure AD"
+            break
 		}
 		if ($null -ne $azure_ad_managed_applications) {
 			try {
 				$param = @{
-					ScriptBlock = { Get-MonkeyADManagedAppProperty -managed_app $_ };
-					ImportCommands = $O365Object.LibUtils;
+					ScriptBlock = { Get-MonkeyAADPortalManagedAppProperty -managed_app $_ };
+					ImportCommands = $O365Object.libutils;
 					ImportVariables = $vars;
 					ImportModules = $O365Object.runspaces_modules;
 					StartUpScripts = $O365Object.runspace_init;
@@ -118,6 +136,7 @@ function Get-MonkeyADManagedApplication {
 			catch {
 				Write-Error $_
 				Write-Error "Unable to get properties from managed applications from Azure AD"
+                break
 			}
 		}
 		#Get Permissions for each application
@@ -129,9 +148,9 @@ function Get-MonkeyADManagedApplication {
 						$new_app_permission = $managed_app | Select-Object objectId,appId,displayName,appDisplayName
 						$new_app_permission | Add-Member NoteProperty -Name resourceName -Value $permission.resourceName
 						$new_app_permission | Add-Member NoteProperty -Name resourceAppId -Value $permission.resourceAppId
-						$new_app_permission | Add-Member NoteProperty -Name permissionType -Value $permission.permissionType
-						$new_app_permission | Add-Member NoteProperty -Name permissionDisplayName -Value $permission.permissionDisplayName
-						$new_app_permission | Add-Member NoteProperty -Name permissionDescription -Value $permission.permissionDescription
+						$new_app_permission | Add-Member NoteProperty -Name permissionType -Value $permission.PermissionType
+						$new_app_permission | Add-Member NoteProperty -Name permissionDisplayName -Value $permission.PermissionDisplayName
+						$new_app_permission | Add-Member NoteProperty -Name permissionDescription -Value $permission.PermissionDescription
 						$new_app_permission | Add-Member NoteProperty -Name permissionId -Value $permission.PermissionId
 						$new_app_permission | Add-Member NoteProperty -Name consentType -Value $permission.ConsentType
 						$new_app_permission | Add-Member NoteProperty -Name roleOrScopeClaim -Value $permission.roleOrScopeClaim
@@ -147,9 +166,9 @@ function Get-MonkeyADManagedApplication {
 						$new_app_permission = $managed_app | Select-Object objectId,appId,displayName,appDisplayName
 						$new_app_permission | Add-Member NoteProperty -Name resourceName -Value $permission.resourceName
 						$new_app_permission | Add-Member NoteProperty -Name resourceAppId -Value $permission.resourceAppId
-						$new_app_permission | Add-Member NoteProperty -Name permissionType -Value $permission.permissionType
-						$new_app_permission | Add-Member NoteProperty -Name permissionDisplayName -Value $permission.permissionDisplayName
-						$new_app_permission | Add-Member NoteProperty -Name permissionDescription -Value $permission.permissionDescription
+						$new_app_permission | Add-Member NoteProperty -Name permissionType -Value $permission.PermissionType
+						$new_app_permission | Add-Member NoteProperty -Name permissionDisplayName -Value $permission.PermissionDisplayName
+						$new_app_permission | Add-Member NoteProperty -Name permissionDescription -Value $permission.PermissionDescription
 						$new_app_permission | Add-Member NoteProperty -Name permissionId -Value $permission.PermissionId
 						$new_app_permission | Add-Member NoteProperty -Name consentType -Value $permission.ConsentType
 						$new_app_permission | Add-Member NoteProperty -Name roleOrScopeClaim -Value $permission.roleOrScopeClaim
@@ -160,14 +179,14 @@ function Get-MonkeyADManagedApplication {
 				}
 			}
 		}
-		if ([System.Convert]::ToBoolean($AADConfig.GetManagedApplicationsByPrincipalId)) {
+		if ([System.Convert]::ToBoolean($aadConf.GetManagedApplicationsByPrincipalId)) {
 			#Get managed applications permissions by principalIds
 			$principalIds_managed_applications = $managed_apps_permissions | Where-Object { $_.ConsentType -eq "User" } -ErrorAction Ignore
 			if ($null -ne $principalIds_managed_applications) {
 				try {
 					$param = @{
-						ScriptBlock = { Get-MonkeyADManagedAppByPrincipalID -user_managed_app $_ };
-						ImportCommands = $O365Object.LibUtils;
+						ScriptBlock = { Get-MonkeyAADPortalManagedAppByPrincipalID -user_managed_app $_ };
+						ImportCommands = $O365Object.libutils;
 						ImportVariables = $vars;
 						ImportModules = $O365Object.runspaces_modules;
 						StartUpScripts = $O365Object.runspace_init;
@@ -205,11 +224,12 @@ function Get-MonkeyADManagedApplication {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD managed applications",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalManagedAppEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		#Return managed apps permissions properties
 		if ($managed_apps_permissions) {
@@ -224,11 +244,12 @@ function Get-MonkeyADManagedApplication {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD managed app permissions",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalManagedAppEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		#Return managed apps permissions by principalId
 		if ($app_by_principalIds) {
@@ -243,11 +264,16 @@ function Get-MonkeyADManagedApplication {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD managed app user permissions",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalManagedAppEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

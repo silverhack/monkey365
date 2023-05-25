@@ -47,36 +47,38 @@ function Get-MonkeySharePointOnlineTenantSyncClientRestriction {
 		$monkey_metadata = @{
 			Id = "sps0011";
 			Provider = "Microsoft365";
+			Resource = "SharePointOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeySharePointOnlineTenantSyncClientRestriction";
+			ApiType = $null;
 			Title = "Plugin to get information about SPS Tenant Sync Client Restriction";
 			Group = @("SharePointOnline");
-			ServiceName = "SharePoint Online Tenant Sync Client Restriction";
-			PluginName = "Get-MonkeySharePointOnlineTenantSyncClientRestriction";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Get Access Token from SPO
-		$sps_auth = $O365Object.auth_tokens.SharePointAdminOnline
-		#Check if user is sharepoint administrator
-		$isSharepointAdministrator = Test-IsUserSharepointAdministrator
+        #Set null
+        $sps_tenant_sync_info = $null
 	}
 	process {
-		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Sharepoint Online Tenant Sync Client restriction",$O365Object.TenantID);
-			callStack = (Get-PSCallStack | Select-Object -First 1);
-			logLevel = 'info';
-			InformationAction = $InformationAction;
-			Tags = @('SPSTenantSyncInfo');
-		}
-		Write-Information @msg
-		if ($isSharepointAdministrator) {
-			#body
-			$body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="4" ObjectPathId="3" /><Query Id="5" ObjectPathId="3"><Query SelectAllProperties="true"><Properties><Property Name="IsUnmanagedSyncClientForTenantRestricted" ScalarProperty="true" /><Property Name="AllowedDomainListForSyncClient" ScalarProperty="true" /><Property Name="BlockMacSync" ScalarProperty="true" /><Property Name="ExcludedFileExtensionsForSyncClient" ScalarProperty="false" /><Property Name="OptOutOfGrooveBlock" ScalarProperty="true" /><Property Name="OptOutOfGrooveSoftBlock" ScalarProperty="true" /><Property Name="DisableReportProblemDialog" ScalarProperty="true" /></Properties></Query></Query></Actions><ObjectPaths><Constructor Id="3" TypeId="{268004ae-ef6b-4e9b-8425-127220d84719}" /></ObjectPaths></Request>'
-			$params = @{
-				Authentication = $sps_auth;
-				Data = $body_data;
-			}
-			#call SPS
-			$sps_tenant_sync_info = Invoke-MonkeySPSUrlRequest @params
-		}
+        if($O365Object.isSharePointAdministrator){
+		    $msg = @{
+			    MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Sharepoint Online Tenant Sync Client restriction",$O365Object.TenantID);
+			    callStack = (Get-PSCallStack | Select-Object -First 1);
+			    logLevel = 'info';
+			    InformationAction = $O365Object.InformationAction;
+			    Tags = @('SPSTenantSyncInfo');
+		    }
+		    Write-Information @msg
+            $p = @{
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $sps_tenant_sync_info = Get-MonkeyCSOMTenantSyncClientRestriction @p
+        }
 	}
 	end {
 		if ($sps_tenant_sync_info) {
@@ -91,11 +93,16 @@ function Get-MonkeySharePointOnlineTenantSyncClientRestriction {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Tenant Sync Client Restriction",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.Verbose;
 				Tags = @('SPSTenantSyncEmptyResponse');
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

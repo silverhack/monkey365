@@ -48,10 +48,16 @@ function Get-MonkeyAADRMTemplate {
 		$monkey_metadata = @{
 			Id = "aadrm11";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about AADRM templates";
-			Group = @("IRM");
-			ServiceName = "Azure Rights Management";
+			Resource = "IRM";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyAADRMTemplate";
+			ApiType = $null;
+			Title = "Plugin to get information about AADRM templates";
+			Group = @("Purview","ExchangeOnline");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		$access_token = $O365Object.auth_tokens.AADRM
@@ -75,7 +81,7 @@ function Get-MonkeyAADRMTemplate {
 			Write-Information @msg
 			$url = ("{0}/Templates" -f $url)
 			$params = @{
-				url = $url;
+				Url = $url;
 				Method = 'Get';
 				Content_Type = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
@@ -96,13 +102,18 @@ function Get-MonkeyAADRMTemplate {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: Templates",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management= Templates",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AADRMTemplatesEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

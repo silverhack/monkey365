@@ -48,28 +48,44 @@ function Get-MonkeyEXODevicePolicy {
 		$monkey_metadata = @{
 			Id = "exo0017";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXODevicePolicy";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about device policy From Microsoft Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Device Policy";
-			PluginName = "Get-MonkeyEXODevicePolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+        #Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online device policy",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoDevicePolicyInfo');
-			}
-			Write-Information @msg
-			#Get device policies
-			$device_policy = Get-ExoMonkeyDevicePolicy
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online device policy",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('ExoDevicePolicyInfo');
 		}
+		Write-Information @msg
+		#Get device policies
+        $p = @{
+            Authentication = $ExoAuth;
+            Environment = $Environment;
+            ResponseFormat = 'clixml';
+            Command = 'Get-DevicePolicy';
+            Method = "POST";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+		$device_policy = Get-PSExoAdminApiObject @p
 	}
 	end {
 		if ($device_policy) {
@@ -84,11 +100,16 @@ function Get-MonkeyEXODevicePolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online device policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoDevicePolicyEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

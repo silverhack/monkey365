@@ -41,7 +41,10 @@ Function New-Logger{
     [CmdletBinding()]
     Param (
         [parameter(ValueFromPipelineByPropertyName=$true, Mandatory= $false, HelpMessage= "Loggers")]
-        [Array]$loggers=@()
+        [Array]$Loggers=@(),
+
+        [parameter(Mandatory= $false, HelpMessage= "Initial path")]
+        [String]$InitialPath
     )
     Begin{
         #Check informationAction
@@ -76,8 +79,10 @@ Function New-Logger{
           Verbose = $verbosity.Verbose
           Debug = $verbosity.Debug
           DebugPreference = $DebugPreference
-          loggers = $loggers
+          loggers = $Loggers
           enabled_loggers = $null
+          rootPath = $null;
+          initialPath = $InitialPath
         }
         #Set informationAction, debug and verbose variables
         New-Variable -Name monkeyloggerinfoAction -Scope Script -Value $PSBoundParameters.informationAction -Force
@@ -88,8 +93,10 @@ Function New-Logger{
         $current_path = Split-Path -Parent $PSCommandPath
         $directoryInfo = [System.IO.FileInfo]::new($current_path)
         $scriptPath = $directoryInfo.Directory.Parent.FullName
+        $rootPath = $directoryInfo.Directory.Parent.Parent.Parent.Parent
         #Set path
         $logger.path = $scriptPath
+        $logger.rootPath = $rootPath
         #Load configuration
         $logger | Add-Member -Type ScriptMethod -Name loadConf -Value {
             #reset callers array
@@ -144,9 +151,12 @@ Function New-Logger{
                         }
                     }
                     if($new_logger.configuration -and $null -ne $validate_function){
-                        $status = Invoke-Command -ScriptBlock $validate_function -ArgumentList $new_logger.configuration
-                        if($status -eq $false){
-                            continue;
+                        $config = Initialize-Configuration -Configuration $new_logger.configuration
+                        if($null -ne $config){
+                            $status = Invoke-Command -ScriptBlock $validate_function -ArgumentList $config
+                            if($status -eq $false){
+                                continue;
+                            }
                         }
                     }
                     $internal_func = $this.Callers | Where-Object {$_.name -eq $new_logger.type} | Select-Object -ExpandProperty function
@@ -187,7 +197,7 @@ Function New-Logger{
             }
             #Initialize vars
             if($null -eq (Get-Variable -Name LogQueue -ErrorAction Ignore)){
-                New-Variable -Name LogQueue -Scope Script `
+                New-Variable -Name LogQueue -Scope Global `
                                 -Value ([System.Collections.Concurrent.BlockingCollection[System.Management.Automation.InformationRecord]]::new(100)) -Force
             }
             New-Variable -Name MonkeyLogRunspace -Scope Script -Option ReadOnly `
@@ -211,6 +221,10 @@ Function New-Logger{
             $Script:MonkeyLogRunspace.Runspace.SessionStateProxy.SetVariable('Debug', $this.Debug)
             $Script:MonkeyLogRunspace.Runspace.SessionStateProxy.SetVariable('Verbose', $this.Verbose)
             $Script:MonkeyLogRunspace.Runspace.SessionStateProxy.SetVariable('InformationAction', $this.informationAction)
+            #Set location
+            if($PSBoundParameters.ContainsKey('InitialPath') -and $PSBoundParameters['InitialPath']){
+                $Script:MonkeyLogRunspace.Runspace.SessionStateProxy.Path.SetLocation($InitialPath);
+            }
             # Add the functions into the runspace
             $this.func_definitions | ForEach-Object {
                 [void]$Script:MonkeyLogRunspace.Runspace.SessionStateProxy.InvokeProvider.Item.Set(
@@ -346,10 +360,11 @@ Function New-Logger{
             [void] $Script:MonkeyLogRunspace.Powershell.EndInvoke($Script:MonkeyLogRunspace.Handle)
             [void] $Script:MonkeyLogRunspace.Powershell.Dispose()
             #Closing runspace
-            [void] $Script:MonkeyLogRunspace.Runspace.Close()
+            #[void] $Script:MonkeyLogRunspace.Runspace.Close()
             [void] $Script:MonkeyLogRunspace.Runspace.Dispose()
             #Remove environment variables
-            Remove-Variable -Scope Script -Force -Name LogQueue -ErrorAction SilentlyContinue
+            #Remove-Variable -Scope Script -Force -Name LogQueue -ErrorAction SilentlyContinue
+            Remove-Variable -Scope Global -Force -Name LogQueue -ErrorAction SilentlyContinue
             Remove-Variable -Scope Script -Force -Name MonkeyLogRunspace -ErrorAction SilentlyContinue
             Remove-Variable -Scope Script -Force -Name _handle -ErrorAction SilentlyContinue
             Remove-Variable -Scope Script -Force -Name enabled_loggers -ErrorAction SilentlyContinue

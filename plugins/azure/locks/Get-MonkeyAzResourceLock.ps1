@@ -47,23 +47,22 @@ function Get-MonkeyAzResourceLock {
 		$monkey_metadata = @{
 			Id = "az00020";
 			Provider = "Azure";
+			Resource = "ResourceLocks";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzResourceLock";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get resource locks from Azure";
 			Group = @("ResourceLocks","General");
-			ServiceName = "Azure Locks";
-			PluginName = "Get-MonkeyAzResourceLock";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Import Localized data
-		$LocalizedDataParams = $O365Object.LocalizedDataParams
-		Import-LocalizedData @LocalizedDataParams;
-		#Get Environment
-		$Environment = $O365Object.Environment
-		#Get Azure Active Directory Auth
-		$rm_auth = $O365Object.auth_tokens.ResourceManager
 		#Get Config
 		$locks_config = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureLocks" } | Select-Object -ExpandProperty resource
 		#Set array
-		$all_locks = @()
+		$all_locks = New-Object System.Collections.Generic.List[System.Object]
 	}
 	process {
 		$msg = @{
@@ -85,29 +84,38 @@ function Get-MonkeyAzResourceLock {
 				}
 				Write-Verbose @msg
 				#Get lock
-				$URI = ("{0}{1}/providers/Microsoft.Authorization/locks?api-version={2}" `
- 						-f $O365Object.Environment.ResourceManager,`
- 						$resource.id,$locks_config.api_version)
-
-				$params = @{
-					Authentication = $rm_auth;
-					OwnQuery = $URI;
-					Environment = $Environment;
-					ContentType = 'application/json';
+                $p = @{
+					Id = $resource.Id;
+					Resource = "providers/Microsoft.Authorization/locks";
+					ApiVersion = $locks_config.api_version;
 					Method = "GET";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.Verbose;
+                    Debug = $O365Object.debug;
 				}
-				$resource_lock_info = Get-MonkeyRMObject @params
+				$resource_lock_info = Get-MonkeyAzObjectById @p
 				if ($null -ne $resource_lock_info) {
 					$lock_info = [pscustomobject]@{
-						id = $resource.id;
+						Id = $resource.Id;
 						Name = $resource.Name;
-						sku = $resource.sku;
+						SKU = $resource.SKU;
 						kind = $resource.kind;
 						location = $resource.location;
 						locks = $resource_lock_info;
 					}
-					$all_locks += $lock_info
+					[void]$all_locks.Add($lock_info);
 				}
+                else{
+                    $lock_info = [pscustomobject]@{
+						Id = $resource.Id;
+						Name = $resource.Name;
+						SKU = $resource.SKU;
+						kind = $resource.kind;
+						location = $resource.location;
+						locks = $null;
+					}
+					[void]$all_locks.Add($lock_info);
+                }
 			}
 		}
 	}
@@ -124,11 +132,16 @@ function Get-MonkeyAzResourceLock {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Locks",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureLocksEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

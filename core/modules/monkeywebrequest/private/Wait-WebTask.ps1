@@ -54,59 +54,12 @@ function Wait-WebTask{
         }
         catch{
             $param = @{
-                Message = $_.Exception.Message;
+                Task = $_;
                 Verbose = $Verbose;
                 Debug = $Debug;
                 InformationAction = $InformationAction;
             }
-            Write-Verbose @param
-            #Get exception
-            $url = $null
-            $StatusCode = "-1"
-            try{
-                $webResponse = $_.Exception.InnerException.InnerException.Response
-            }
-            catch{
-                $webResponse = $null
-            }
-            try{
-                $errorMessage = $_.Exception.InnerException.InnerException.Message
-            }
-            catch{
-                $errorMessage = $_
-            }
-            if($null -ne $webResponse){
-                try{
-                    $Url = $webResponse.ResponseUri.OriginalString
-                }
-                catch{
-                    $Url = $null
-                }
-                try{
-                    $StatusCode = ($webResponse.StatusCode.value__ ).ToString().Trim();
-                }
-                catch{
-                    $StatusCode = "-1"
-                }
-            }
-            if($null -ne $Url){
-                #Send message to errorRecord
-                $exception = [exception]::new(("{0} {1}" -f $Url, $errorMessage))
-                $error_record = [System.Management.Automation.ErrorRecord]::new(
-                    $exception,
-                    $StatusCode,
-                    [System.Management.Automation.ErrorCategory]::InvalidResult,
-                    $null
-                )
-                $param = @{
-                    Message = $error_record;
-                    Verbose = $Verbose;
-                    Debug = $Debug;
-                    InformationAction = $InformationAction;
-                }
-                Write-Verbose @param
-            }
-            Get-WebTaskException -Task $_
+            Get-WebTaskException @param
         }
     }
 }

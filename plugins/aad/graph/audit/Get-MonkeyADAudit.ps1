@@ -43,21 +43,28 @@ function Get-MonkeyADAudit {
 		[string]$pluginId
 	)
 	begin {
-		$AADConfig = $O365Object.internal_config.azuread
 		#Plugin metadata
 		$monkey_metadata = @{
 			Id = "aad0002";
 			Provider = "AzureAD";
+			Resource = "AzureAD";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADAudit";
+			ApiType = "Graph";
 			Title = "Plugin to extract audit logs from Azure AD";
 			Group = @("AzureAD");
-			ServiceName = "Azure AD Audit";
-			PluginName = "Get-MonkeyADAudit";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Environment
 		$Environment = $O365Object.Environment
 		#Get Azure Active Directory Auth
 		$AADAuth = $O365Object.auth_tokens.Graph
+        #Set array
+        $formatted_events = @()
 	}
 	process {
 		$msg = @{
@@ -69,48 +76,55 @@ function Get-MonkeyADAudit {
 		}
 		Write-Information @msg
 		try {
-			$DaysAgo = "{0:s}" -f (Get-Date).AddDays($AADConfig.AuditLogDaysAgo) + "Z"
+            $enabled = [System.Convert]::ToBoolean($O365Object.internal_config.azuread.auditLog.enabled)
+			$DaysAgo = "{0:s}" -f (Get-Date).AddDays($O365Object.internal_config.azuread.auditLog.AuditLogDaysAgo) + "Z"
 		}
 		catch {
+            $enabled = $false
 			$DaysAgo = -15
 		}
-		$Query = '&$filter=activityDate gt {0}' -f $DaysAgo
-		#Get audit log
-		$params = @{
-			Authentication = $AADAuth;
-			ObjectType = 'activities/audit';
-			Query = $Query
-			Environment = $Environment;
-			ContentType = 'application/json';
-			Method = "GET";
-			APIVersion = "beta";
-		}
-		#Get Audit Logs from Azure AAD
-		$all_events = Get-MonkeyGraphObject @params
-		$formatted_events = @()
-		if ($all_events) {
-			$msg = @{
-				MessageData = ($message.MonkeyResponseCountMessage -f $all_events.Count);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('AzureGraphAuditLogCount');
-			}
-			Write-Information @msg
-			#Iterate over all events
-			foreach ($entry in $all_events) {
-				$entry.actor = $entry.actor.userPrincipalName
-				$entry | Add-Member -Type NoteProperty -Name targetResourceType -Value $entry.targets.targetResourceType
-				$entry | Add-Member -Type NoteProperty -Name targetobjectId -Value $entry.targets.objectId
-				$entry | Add-Member -Type NoteProperty -Name targetName -Value $entry.targets.Name
-				$entry | Add-Member -Type NoteProperty -Name targetUserPrincipalName -Value $entry.targets.userPrincipalName
-				$Changes = $entry.targets.modifiedProperties
-				$entry | Add-Member -Type NoteProperty -Name ChangeAttribute -Value (@($Changes.Name) -join ',')
-				$entry | Add-Member -Type NoteProperty -Name OldValue -Value (@($Changes.oldvalue) -join ',')
-				$entry | Add-Member -Type NoteProperty -Name NewValue -Value (@($Changes.newvalue) -join ',')
-				$formatted_events += $entry
-			}
-		}
+		$Query = 'activityDate gt {0}' -f $DaysAgo
+        if($enabled){
+		    #Get audit log
+		    $params = @{
+			    Authentication = $AADAuth;
+			    ObjectType = 'activities/audit';
+			    Filter = $Query
+			    Environment = $Environment;
+			    ContentType = 'application/json';
+			    Method = "GET";
+			    APIVersion = "beta";
+                InformationAction = $O365Object.InformationAction;
+			    Verbose = $O365Object.Verbose;
+			    Debug = $O365Object.Debug;
+		    }
+		    #Get Audit Logs from Azure AAD
+		    $all_events = Get-MonkeyGraphObject @params
+		    #format events
+		    if ($all_events) {
+			    $msg = @{
+				    MessageData = ($message.MonkeyResponseCountMessage -f $all_events.Count);
+				    callStack = (Get-PSCallStack | Select-Object -First 1);
+				    logLevel = 'info';
+				    InformationAction = $InformationAction;
+				    Tags = @('AzureGraphAuditLogCount');
+			    }
+			    Write-Information @msg
+			    #Iterate over all events
+			    foreach ($entry in $all_events) {
+				    $entry.actor = $entry.actor.userPrincipalName
+				    $entry | Add-Member -Type NoteProperty -Name targetResourceType -Value $entry.targets.targetResourceType
+				    $entry | Add-Member -Type NoteProperty -Name targetobjectId -Value $entry.targets.objectId
+				    $entry | Add-Member -Type NoteProperty -Name targetName -Value $entry.targets.Name
+				    $entry | Add-Member -Type NoteProperty -Name targetUserPrincipalName -Value $entry.targets.userPrincipalName
+				    $Changes = $entry.targets.modifiedProperties
+				    $entry | Add-Member -Type NoteProperty -Name ChangeAttribute -Value (@($Changes.Name) -join ',')
+				    $entry | Add-Member -Type NoteProperty -Name OldValue -Value (@($Changes.oldvalue) -join ',')
+				    $entry | Add-Member -Type NoteProperty -Name NewValue -Value (@($Changes.newvalue) -join ',')
+				    $formatted_events += $entry
+			    }
+		    }
+        }
 	}
 	end {
 		if ($formatted_events) {
@@ -126,11 +140,16 @@ function Get-MonkeyADAudit {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Audit Log",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureGraphUsersEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

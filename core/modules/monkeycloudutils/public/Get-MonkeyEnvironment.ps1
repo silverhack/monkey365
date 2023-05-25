@@ -19,13 +19,13 @@ Function Get-MonkeyEnvironment{
     <#
         .SYNOPSIS
 		Get endpoints
-Same as command Get-AzureRmEnvironment
-https://docs.microsoft.com/en-us/graph/deployments
+        Same as command Get-AzureRmEnvironment
+        https://docs.microsoft.com/en-us/graph/deployments
 
         .DESCRIPTION
 		Get endpoints
-Same as command Get-AzureRmEnvironment
-https://docs.microsoft.com/en-us/graph/deployments
+        Same as command Get-AzureRmEnvironment
+        https://docs.microsoft.com/en-us/graph/deployments
 
         .INPUTS
 
@@ -73,6 +73,12 @@ https://docs.microsoft.com/en-us/graph/deployments
                 LegacyO365API = 'https://provisioningapi.microsoftonline.com/provisioningwebservice.svc';
                 Teams = 'https://api.interfaces.records.teams.microsoft.com';
                 AzurePortal = 'https://portal.azure.com';
+                PIM = 'https://api.azrbac.mspim.azure.com';
+                PowerBI = 'https://analysis.windows.net/powerbi/api';
+                PowerBIAPI = 'https://api.powerbi.com';
+                OfficePortal = 'https://portal.office.com';
+                OfficeAdminPortal = 'https://admin.microsoft.com';
+                MSPIM = 'https://api.azrbac.mspim.azure.com';
             }
         }
         'AzureChina'
@@ -98,13 +104,19 @@ https://docs.microsoft.com/en-us/graph/deployments
                 LegacyO365API = 'https://provisioningapi.microsoftonline.com/provisioningwebservice.svc';
                 Teams = 'https://api.interfaces.records.teams.microsoft.com';
                 AzurePortal = 'https://portal.azure.cn';
+                PIM = 'https://api.azrbac.mspim.azure.com';
+                PowerBI = 'https://analysis.chinacloudapi.cn/powerbi/api';
+                PowerBIAPI = 'https://api.powerbi.cn';
+                OfficePortal = 'https://portal.office.com';
+                OfficeAdminPortal = 'https://admin.microsoft.com';
+                MSPIM = 'https://api.azrbac.mspim.azure.com';
             }
         }
         'AzureUSGovernment'
         {
             [pscustomobject]$MonkeyEndpoints = @{
                 Login = "https://login-us.microsoftonline.com";
-                Graph = "https://graph.windows.net";
+                Graph = "https://graph.microsoftazure.us";
                 Graphv2 = "https://graph.microsoft.us/";
                 ResourceManager = "https://management.usgovcloudapi.net/";
                 Outlook = "https://outlook.office365.us/";
@@ -123,6 +135,12 @@ https://docs.microsoft.com/en-us/graph/deployments
                 LegacyO365API = 'https://provisioningapi.microsoftonline.com/provisioningwebservice.svc';
                 Teams = 'https://api.interfaces.records.teams.microsoft.com';
                 AzurePortal = 'https://portal.azure.us';
+                PIM = 'https://api.azrbac.mspim.azure.com';
+                PowerBI = 'https://analysis.usgovcloudapi.net/powerbi/api';
+                PowerBIAPI = 'https://api.powerbigov.us';
+                OfficePortal = 'https://portal.office365.us';
+                OfficeAdminPortal = 'https://admin.microsoft.com';
+                MSPIM = 'https://api.azrbac.mspim.azure.com';
             }
         }
         'AzureGermany'
@@ -148,6 +166,12 @@ https://docs.microsoft.com/en-us/graph/deployments
                 LegacyO365API = 'https://provisioningapi.microsoftonline.com/provisioningwebservice.svc';
                 Teams = 'https://api.interfaces.records.teams.microsoft.com';
                 AzurePortal = 'https://portal.microsoftazure.de';
+                PIM = 'https://api.azrbac.mspim.azure.com';
+                PowerBI = 'https://analysis.cloudapi.de/powerbi/api';
+                PowerBIAPI = 'https://api.powerbi.de';
+                OfficePortal = 'https://portal.office.com';
+                OfficeAdminPortal = 'https://admin.microsoft.com';
+                MSPIM = 'https://api.azrbac.mspim.azure.com';
             }
         }
         'Default'

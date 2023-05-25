@@ -47,143 +47,92 @@ function Get-MonkeySharePointOnlineExternalLink {
 		$monkey_metadata = @{
 			Id = "sps0001";
 			Provider = "Microsoft365";
+			Resource = "SharePointOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeySharePointOnlineExternalLink";
+			ApiType = $null;
 			Title = "Plugin to get information about O365 Sharepoint Online external links";
 			Group = @("SharePointOnline");
-			ServiceName = "SharePoint Online External links";
-			PluginName = "Get-MonkeySharePointOnlineExternalLink";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Get Access Token for Sharepoint
-		$sps_auth = $O365Object.auth_tokens.SharePointOnline
-		#Set array
-		$all_external_links = @()
+        if($null -eq $O365Object.spoWebs){
+            break;
+        }
+        #Get config
+        try{
+            $FilterList = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.SharingLinks.Include)
+        }
+        catch{
+            $msg = @{
+                MessageData = ($message.MonkeyInternalConfigError);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'verbose';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365ConfigError');
+            }
+            Write-Verbose @msg
+            #Filter to documents
+            $FilterList = "Documents"
+        }
+        #Set generic list
+        $all_sharing_links = New-Object System.Collections.Generic.List[System.Object]
+        #Get auth
+        $sps_auth = $O365Object.auth_tokens.SharePointOnline
 	}
 	process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"SharePoint Online external links",$O365Object.TenantID);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"SharePoint Online sharing links",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
-			Tags = @('SPSExernalLinks');
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('SPSSharingLinkInfo');
 		}
 		Write-Information @msg
-		#Get all webs for user
-		$allowed_sites = Get-MonkeySPSWebsForUser
-		#Getting external users for each site
-		foreach ($web in $allowed_sites) {
-			#Getting all lists
-			$msg = @{
-				MessageData = ($message.SPSGetListsForWeb -f $web.url);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('SPSExternalUsersInfo');
-			}
-			Write-Information @msg
-			$param = @{
-				Authentication = $sps_auth;
-				clientObject = $web;
-				Properties = 'Lists';
-				executeQuery = $true;
-				endpoint = $web.url;
-			}
-			$all_lists = Get-MonkeySPSProperty @param
-			if ($all_lists) {
-				$documentLibrary = $all_lists.Lists | Where-Object { $_.Title -eq 'Documents' }
-				if ($documentLibrary) {
-					#Get All items
-					$param = @{
-						Authentication = $sps_auth;
-						endpoint = $web.url;
-						list = $documentLibrary;
-					}
-					$items = Get-MonkeySPSListItem @param
-					if ($items) {
-						foreach ($item in $items) {
-							#Get RoleAssignments
-							$param = @{
-								clientObject = $item;
-								Properties = "HasUniqueRoleAssignments";
-								Authentication = $sps_auth;
-								endpoint = $web.url;
-								executeQuery = $True;
-							}
-							$permissions = Get-MonkeySPSProperty @param
-							if ($permissions.HasUniqueRoleAssignments) {
-								#Get sharing info
-								$item_id = Find-ID -String $item.UniqueId
-								$msg = @{
-									MessageData = ($message.SPSGetSharingInfoForItem -f $item_id);
-									callStack = (Get-PSCallStack | Select-Object -First 1);
-									logLevel = 'verbose';
-									InformationAction = $InformationAction;
-									Tags = @('SPSExternalSharingInfo');
-								}
-								Write-Verbose @msg
-								$param = @{
-									Authentication = $sps_auth;
-									endpoint = $web.url;
-									object_id = $item._ObjectIdentity_;
-								}
-								$sharingInfo = Get-MonkeyPSSharingInfo @param
-								foreach ($sharedLink in $sharingInfo.SharingLinks) {
-									if ($sharedLink.url) {
-										if ($sharedLink.IsEditLink) {
-											$linkAccess = "Edit"
-										}
-										elseif ($sharedLink.IsReviewLink) {
-											$linkAccess = "Review"
-										}
-										else {
-											$linkAccess = "ViewOnly"
-										}
-										#Set shared link info
-										$all_external_links += New-Object PSObject -Property $([ordered]@{
-												Site = $web.url;
-												FileID = $item.UniqueId
-												Name = $item.FileLeafRef
-												FileSystemObjectType = [FileSystemObjectType]$item.FileSystemObjectType
-												RelativeURL = $item.FileRef
-												CreatedByEmail = $item.Author.email
-												createdOn = $item.created
-												Modified = $item.Modified
-												ModifiedByEmail = $item.Editor.email
-												SharedLink = $sharedLink.url
-												SharedLinkAccess = $linkAccess
-												RequiresPassword = $sharedLink.RequiresPassword
-												BlocksDownload = $sharedLink.BlocksDownload
-												SharedLinkType = [SharingLinkKind]$sharedLink.LinkKind
-												AllowsAnonymousAccess = $sharedLink.AllowsAnonymousAccess
-												IsActive = $sharedLink.IsActive
-												rawSharingInfoObject = $sharingInfo
-											})
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+        foreach ($web in $O365Object.spoWebs){
+            $p = @{
+                Web = $web;
+                Authentication = $sps_auth;
+                ListNames = $FilterList;
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $sharing_links = Get-MonkeyCSOMExternalLink @p
+            if($sharing_links){
+                foreach($link in @($sharing_links)){
+                    #Add to list
+                    [void]$all_sharing_links.Add($link)
+                }
+            }
+        }
 	}
 	end {
-		if ($all_external_links) {
-			$all_external_links.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.ExternalLinks')
+		if ($all_sharing_links) {
+			$all_sharing_links.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.SharingLinks')
 			[pscustomobject]$obj = @{
-				Data = $all_external_links;
+				Data = $all_sharing_links;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.o365_spo_external_links = $obj
+			$returnData.o365_spo_sharing_links = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "SharePoint Online external links",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "SharePoint Online sharing links",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
-				Tags = @('SPSExternalLinksEmptyResponse');
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+				Tags = @('SPSSharingLinkEmptyResponse');
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -56,9 +56,17 @@ Function Get-MonkeySubscriptionInfo{
                 "x-ms-version" = "2014-10-01";
                 "Authorization" = $Authorization
             }
-            $uri = "{0}/subscriptions?api-version=2016-06-01" -f $Endpoint
+            $Server = [System.Uri]::new($Endpoint)
+            $uri = [System.Uri]::new($Server,"/subscriptions?api-version=2022-09-01")
+            $final_uri = $uri.ToString()
             try{
-                $subs = Invoke-RestMethod -Uri $uri -Method Get -Headers $requestHeader -ContentType 'application/json'
+                $p = @{
+                    Uri = $final_uri;
+                    Method = "Get";
+                    Headers = $requestHeader;
+                    ContentType = 'application/json'
+                }
+                $subs = Invoke-RestMethod @p
                 if($subs.Value){
                     return $subs.Value
                 }

@@ -287,5 +287,160 @@
 				"showModalButton":"True"
 			}
         }
+    ],
+	"aad_sspr_disabled": [
+        {
+            "translate": {
+                "enablementType": "Enablement Type",
+                "emailOptionEnabled": "Email",
+                "mobilePhoneOptionEnabled": "Mobile Phone",
+				"officePhoneOptionEnabled": "Office Phone",
+				"securityQuestionsOptionEnabled": "Security questions",
+				"mobileAppNotificationEnabled": "Mobile app notification",
+				"mobileAppCodeEnabled": "Mobile app code"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"aad_users_can_register_apps_enabled": [
+        {
+            "translate": {
+				"displayName": "Display Name",
+				"description": "Description",
+                "TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateApps": "Allowed to Create apps",
+                "blockMsolPowerShell": "Block Msol PowerShell"
+            },
+            "emphasis": ["Allowed to Create apps"],
+            "table": "asList"
+        }
+    ],
+	"aad_linkedin_sync_enabled": [
+        {
+            "translate": {
+				"displayName": "Display Name",
+				"userCanRegisterApps": "User can register apps",
+                "enableLinkedInAppFamily": "Linkedin Sync enabled"
+            },
+            "emphasis": ["Linkedin Sync enabled"],
+            "table": "asList"
+        }
+    ],
+	"aad_users_with_mfa_disabled": [
+        {
+            "translate": {
+                "userPrincipalName": "User Principal Name",
+                "objectType": "Object Type",
+                "userType": "User Type",
+				"mfaenabled": "MFA enabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"limit":"5000",
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"False"
+			}
+        }
+    ],
+	"aad_privileged_users_with_mfa_disabled": [
+        {
+            "translate": {
+                "userPrincipalName": "User Principal Name",
+                "objectType": "Object Type",
+                "userType": "User Type",
+				"mfaenabled": "MFA enabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"limit":"5000",
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"False"
+			}
+        }
+    ],
+	"aad_only_one_global_admin": [
+        {
+            "translate": {
+                "userPrincipalName": "User Principal Name",
+                "objectType": "Object Type",
+                "userType": "User Type",
+				"mfaenabled": "MFA enabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"aad_excessive_global_admins": [
+        {
+            "translate": {
+                "userPrincipalName": "User Principal Name",
+                "objectType": "Object Type",
+                "userType": "User Type",
+				"mfaenabled": "MFA enabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"aad_pim_high_level_active_assignment": [
+        {
+            "translate": {
+				"subject.principalName": "Principal Name",
+                "subject.displayName": "Display Name",
+                "subject.type": "Object Type",
+                "roleDefinition.displayName": "Role Name",
+				"assignmentState": "State"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"aad_service_principal_global_admin": [
+        {
+            "translate": {
+                "displayName": "Display Name",
+                "objectType": "Object Type",
+                "accountEnabled": "Account Enabled",
+                "homePage": "Home Page",
+                "MemberOf": "Member Of"
+            },
+            "table": "Normal"
+        }
     ]
 }

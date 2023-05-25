@@ -48,28 +48,44 @@ function Get-MonkeyEXODKIMConfiguration {
 		$monkey_metadata = @{
 			Id = "exo0019";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXODKIMConfiguration";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about DKIM from Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online DKIM information";
-			PluginName = "Get-MonkeyEXODKIMConfiguration";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+        #Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
-		if ($null -ne $exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online DKIM signing configuration",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoDKIMInfo');
-			}
-			Write-Information @msg
-			#Get DKIM
-			$DKIM = Get-ExoMonkeyDkimSigningConfig
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online DKIM signing configuration",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('ExoDKIMInfo');
 		}
+		Write-Information @msg
+		#Get DKIM
+        $p = @{
+            Authentication = $ExoAuth;
+            Environment = $Environment;
+            ResponseFormat = 'clixml';
+            Command = 'Get-DkimSigningConfig';
+            Method = "POST";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+		$DKIM = Get-PSExoAdminApiObject @p
 	}
 	end {
 		if ($null -ne $DKIM) {
@@ -84,11 +100,16 @@ function Get-MonkeyEXODKIMConfiguration {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online DKIM signing configuration",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoDKIMEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

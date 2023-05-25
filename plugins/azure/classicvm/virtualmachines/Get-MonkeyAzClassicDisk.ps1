@@ -43,17 +43,23 @@ function Get-MonkeyAzClassicDisk {
 		[string]$pluginId
 	)
 	begin {
-		#Import Localized data
 		#Plugin metadata
 		$monkey_metadata = @{
 			Id = "az00004";
 			Provider = "Azure";
+			Resource = "VirtualMachines";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzClassicDisk";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get classic disks info from Azure";
 			Group = @("VirtualMachines");
-			ServiceName = "Azure Classic Disks";
-			PluginName = "Get-MonkeyAzClassicDisk";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
+		#Import Localized data
 		$LocalizedDataParams = $O365Object.LocalizedDataParams
 		Import-LocalizedData @LocalizedDataParams;
 		#Get Environment
@@ -96,11 +102,16 @@ function Get-MonkeyAzClassicDisk {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure classic disks",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureClassicDisksEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

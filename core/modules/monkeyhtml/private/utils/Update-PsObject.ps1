@@ -60,20 +60,44 @@ Function Update-PsObject{
                   Set-StrictMode -Version 1
                   $obj = $this
                   foreach ($prop in $propPath -split '\.') {
-                      # See if the property spec has an index (e.g., 'foo[3]')
-                      if ($prop -match '(.+?)\[(.+?)\]$') {
-                          $obj = $obj.($Matches.1)[$Matches.2]
-                      }
-                      else{
-                          $obj = $obj.$prop;
-                      }
+                    # See if the property spec has an index (e.g., 'foo[3]')
+                    if ($prop -match '(.+?)\[(.+?)\]$') {
+                        if($null -ne $obj.($Matches.1)){
+                            #Check if PsMethod
+                            if(($obj.($Matches.1)).Gettype().FullName -eq 'System.Management.Automation.PSMethod'){
+                                $obj = $obj | Select-Object -ExpandProperty ($Matches.1) -ErrorAction Ignore
+                                if($null -ne $obj){
+                                    $obj = $obj[$Matches.2]
+                                }
+                            }
+                            else{
+                                $obj = $obj.($Matches.1)[$Matches.2]
+                            }
+                        }
+                    }
+                    else{
+                        if($null -ne ($obj.$prop)){
+                            if(($obj.$prop).Gettype().FullName -eq 'System.Management.Automation.PSMethod'){
+                                #Check if Invoke is present
+                                if($null -ne (Get-Member -inputobject $obj.$prop -name "Invoke" -Membertype Method)){
+                                    $obj = $obj | Select-Object -ExpandProperty $prop -ErrorAction Ignore
+                                }
+                            }
+                            else{
+                                $obj = $obj.$prop;
+                            }
+                        }
+                        else{
+                            $obj = $null;
+                        }
+                    }
                   }
                   # Output: If the value is an array, output it as a single object
                   if ($null -ne $obj -and @($obj).Count -gt 1) {
-                      , $obj
+                    , $obj
                   }
                   else {
-                      $obj
+                    $obj
                   }
               } -Force -ErrorAction SilentlyContinue
           }

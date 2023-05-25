@@ -48,28 +48,44 @@ function Get-MonkeyEXOActiveSyncOrgInfo {
 		$monkey_metadata = @{
 			Id = "exo0001";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOActiveSyncOrgInfo";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about ActiveSync organisation settings from Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online";
-			PluginName = "Get-MonkeyEXOActiveSyncOrgInfo";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+        #Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online ActiveSync organisation settings",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoActiveSyncInfo');
-			}
-			Write-Information @msg
-			#Get ActiveSync organisation settings
-			$active_sync_org_settings = Get-ExoMonkeyActiveSyncOrganizationSettings
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online ActiveSync organisation settings",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('ExoActiveSyncInfo');
 		}
+		Write-Information @msg
+		#Get ActiveSync organisation settings
+        $p = @{
+            Authentication = $ExoAuth;
+            Environment = $Environment;
+            ResponseFormat = 'clixml';
+            Command = 'Get-ActiveSyncOrganizationSettings';
+            Method = "POST";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+		$active_sync_org_settings = Get-PSExoAdminApiObject @p
 	}
 	end {
 		if ($null -ne $active_sync_org_settings) {
@@ -84,11 +100,16 @@ function Get-MonkeyEXOActiveSyncOrgInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange ActiveSync organisation settings",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoActiveSyncEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

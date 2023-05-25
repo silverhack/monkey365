@@ -47,10 +47,16 @@ function Get-MonkeyAzKubernetesInfo {
 		$monkey_metadata = @{
 			Id = "az00019";
 			Provider = "Azure";
+			Resource = "Kubernetes";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzKubernetesInfo";
+			ApiType = "resourceManagement";
 			Title = "Azure plugin to get information from Azure Kubernetes";
 			Group = @("Kubernetes");
-			ServiceName = "Azure Kubernetes";
-			PluginName = "Get-MonkeyAzKubernetesInfo";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Import Localized data
@@ -78,7 +84,7 @@ function Get-MonkeyAzKubernetesInfo {
 		Write-Information @msg
 		foreach ($kuber in $kubernetes) {
 			$URI = ("{0}{1}?api-version={2}" `
- 					-f $O365Object.Environment.ResourceManager,$kuber.id,`
+ 					-f $O365Object.Environment.ResourceManager,$kuber.Id,`
  					$Kubernetes_Config.api_version)
 			#launch request
 			$params = @{
@@ -108,11 +114,16 @@ function Get-MonkeyAzKubernetesInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Kubernetes",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureKubernetesEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

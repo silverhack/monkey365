@@ -16,7 +16,11 @@ Function Get-MonkeyAzUserId{
     <#
         .SYNOPSIS
 
+        Get User Id from Access Token
+
         .DESCRIPTION
+
+        Get User Id from Access Token
 
         .INPUTS
 
@@ -35,22 +39,14 @@ Function Get-MonkeyAzUserId{
     #>
     [CmdletBinding()]
     Param()
+    $UserObjectId = $null
     if($O365Object.isConfidentialApp){
-        $UserObjectId = ""
+        $UserObjectId = [String]::Empty
     }
     else{
-        if($null -ne ($Script:o365_connections.ResourceManager.PsObject.Properties.Item('UserInfo'))){
+        if($null -ne $O365Object.auth_tokens.ResourceManager.PsObject.Properties.Item('UniqueId')){
             try{
-                $UserObjectId = @($Script:o365_connections.ResourceManager.UserInfo.UniqueId)
-            }
-            catch{
-                Write-Warning -Message ("Unable to get userId")
-                $UserObjectId = $null
-            }
-        }
-        elseif($null -ne ($Script:o365_connections.ResourceManager.PsObject.Properties.Item('UniqueId'))){
-            try{
-                $UserObjectId = $Script:o365_connections.ResourceManager.UniqueId
+                $UserObjectId = $O365Object.auth_tokens.ResourceManager.UniqueId
             }
             catch{
                 Write-Warning -Message ("Unable to get userId")

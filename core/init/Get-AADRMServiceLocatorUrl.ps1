@@ -33,10 +33,11 @@ Function Get-AADRMServiceLocatorUrl{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
+    Param()
     try{
-        if($Script:o365_connections.AADRM){
-            $access_token = $Script:o365_connections.AADRM
+        if($O365Object.auth_tokens.AADRM){
+            $access_token = $O365Object.auth_tokens.AADRM
             #Set Authorization Header
             $AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
             $requestHeader = @{"Authorization" = $AuthHeader}
@@ -54,9 +55,11 @@ Function Get-AADRMServiceLocatorUrl{
             #Get service locator url
             if($null -ne $xml_response){
                 $ns = @{ns="http://microsoft.com/DRM/ServiceLocatorService"}
-                $response = Select-Xml -Xml $xml_response -XPath '//ns:ServiceLocationResponse' -Namespace $ns
-                $service_locator = $response.Node.Url
-                return $service_locator
+                $response = Select-Xml -Xml $xml_response -XPath '//ns:ServiceLocationResponse' -Namespace $ns -ErrorAction Ignore
+                if($null -ne $response -and $null -ne ($response.PsObject.Properties.Item('Node'))){
+                    $service_locator = $response.Node.Url
+                    return $service_locator
+                }
             }
         }
         else{

@@ -47,10 +47,16 @@ function Get-MonkeyAZAutoProvisioning {
 		$monkey_metadata = @{
 			Id = "az00024";
 			Provider = "Azure";
+			Resource = "VirtualMachines";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAZAutoProvisioning";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get information about auto provisioning";
 			Group = @("VirtualMachines");
-			ServiceName = "Azure auto-provisioning";
-			PluginName = "Get-MonkeyAZAutoProvisioning";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Import Localized data
@@ -102,11 +108,16 @@ function Get-MonkeyAZAutoProvisioning {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure autoprovisioning status",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureAutoProvisioningEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

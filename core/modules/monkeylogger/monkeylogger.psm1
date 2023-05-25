@@ -27,7 +27,10 @@ Function Start-Logger{
     [cmdletbinding()]
     param(
         [Parameter(Mandatory=$false, HelpMessage="loggers")]
-        [Array]$loggers
+        [Array]$loggers,
+
+        [parameter(Mandatory= $false, HelpMessage= "Initial path")]
+        [String]$InitialPath
     )
     New-Logger @PSBoundParameters
 }
@@ -39,6 +42,8 @@ Function Stop-Logger{
         [Parameter(Mandatory=$false, HelpMessage="Force stop")]
         [Switch]$force
     )
+    #Wait messages
+    Wait-MonkeyLogger
     if($null -ne (Get-Variable -Name logger -ErrorAction Ignore)){
         if($logger.is_enabled){
             Write-Verbose "Stopping logger"

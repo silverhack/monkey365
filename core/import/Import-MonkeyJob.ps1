@@ -39,12 +39,12 @@ Function Import-MonkeyJob{
         $O365Object.Instance = $null
         $selected_job = $null;
         $raw_data = $null;
-        if (!(Test-Path -Path $MyParams.outDir)){
-            Write-Warning ("{0} does not exists" -f $MyParams.outDir)
+        $allJobs = @()
+        if (!(Test-Path -Path $MyParams.OutDir)){
+            Write-Warning ("{0} does not exists" -f $MyParams.OutDir)
             return
         }
-        $all_jobs_metadata = Get-ChildItem -Path $MyParams.outDir -Recurse | Where-Object {$_.Name -eq "monkey365.json"}
-        $allJobs = @()
+        $all_jobs_metadata = Get-ChildItem -Path $MyParams.OutDir -Recurse | Where-Object {$_.Name -eq "monkey365.json"}
         foreach($report in $all_jobs_metadata){
             $allJobs+= (Get-Content $report.FullName -Raw) | ConvertFrom-Json
         }

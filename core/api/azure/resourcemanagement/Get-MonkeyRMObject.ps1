@@ -15,8 +15,10 @@
 Function Get-MonkeyRMObject{
     <#
         .SYNOPSIS
+        Get objects from Azure subscription
 
         .DESCRIPTION
+        Get objects from Azure subscription
 
         .INPUTS
 
@@ -33,9 +35,7 @@ Function Get-MonkeyRMObject{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
-    [cmdletbinding()]
+    [CmdletBinding()]
     Param (
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
         [Object]$Authentication,
@@ -54,6 +54,18 @@ Function Get-MonkeyRMObject{
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
         [String]$ObjectId,
+
+        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [String]$Filter,
+
+        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [String[]]$Expand,
+
+        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [String[]]$Select,
+
+        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [String]$Top,
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
         [String]$Query,
@@ -78,40 +90,136 @@ Function Get-MonkeyRMObject{
         [String]$APIVersion
     )
     Begin{
+        $final_uri = $null;
+        $Verbose = $Debug = $False;
+        $InformationAction = 'SilentlyContinue'
+        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+            $Verbose = $True
+        }
+        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $Debug = $True
+        }
+        if($PSBoundParameters.ContainsKey('InformationAction')){
+            $InformationAction = $PSBoundParameters['InformationAction']
+        }
         if($null -eq $Authentication){
-             Write-Warning -Message ($message.NullAuthenticationDetected -f "Resource Management API")
-             return
+             Write-Warning -Message ($message.NullAuthenticationDetected -f "Azure Resource Management API")
+             break
         }
         #Get Authorization Header
-        #$AuthHeader = $Authentication.Result.CreateAuthorizationHeader()
-        $AuthHeader = $Authentication.CreateAuthorizationHeader()
-        if($Provider -and $ResourceGroup){
-            $URI = '{0}/subscriptions/{1}/resourceGroups/{2}/providers/{3}/{4}?api-version={5}{6}' `
-                   -f $Environment.ResourceManager, $Authentication.subscriptionId,`
-                      $ResourceGroup, $Provider, $ObjectType.Trim(), $APIVersion, $Query
-        }
-        elseif($Provider -and -NOT $ResourceGroup){
-            $URI = '{0}/subscriptions/{1}/providers/{2}/{3}?api-version={4}{5}' `
-                   -f $Environment.ResourceManager, $Authentication.subscriptionId,`
-                      $Provider, $ObjectType.Trim(), $APIVersion, $Query
-        }
-        elseif($OwnQuery){
-            $URI = $OwnQuery
-        }
-        elseif($ObjectId){
-            $URI = '{0}/{1}?api-version={2}{3}' -f $Environment.ResourceManager, `
-                                                       $ObjectId.Trim(), `
-                                                       $APIVersion, $Query
+        $methods = $Authentication | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
+        if($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
+            $AuthHeader = $Authentication.CreateAuthorizationHeader()
         }
         else{
-            $URI = '{0}/subscriptions/{1}/{2}?api-version={3}{4}' -f $Environment.ResourceManager, `
-                                                                     $Authentication.subscriptionId, `
-                                                                     $ObjectType.Trim(), `
-                                                                     $APIVersion, $Query
+            $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
+        }
+        #set rm uri
+        if($null -ne $Authentication.Psobject.Properties.Item('subscriptionId')){
+            $base_uri = ("subscriptions/{0}" -f $Authentication.subscriptionId)
+        }
+        else{
+            $base_uri = [String]::Empty
+        }
+        #Set filter
+        $my_filter = ('?api-version={0}' -f $APIVersion)
+        #Check if query
+        if($Query){
+            if($null -ne $my_filter){
+                $my_filter = ('{0}{1}' -f $my_filter, $Query)
+            }
+            else{
+                $my_filter = ('?{0}' -f $Query)
+            }
+        }
+        #add Expand
+        if($Expand){
+            if($null -ne $my_filter){
+                $my_filter = ('{0}&$expand={1}' -f $my_filter, (@($Expand) -join ','))
+            }
+            else{
+                $my_filter = ('?$expand={0}' -f (@($Expand) -join ','))
+            }
+        }
+        #add Filter
+        if($Filter){
+            if($null -ne $my_filter){
+                if($Filter.Contains(' ')){
+                    $my_filter = ('{0}&$filter={1}' -f $my_filter, [uri]::EscapeDataString($Filter))
+                }
+                else{
+                    $my_filter = ('{0}&$filter={1}' -f $my_filter, $Filter)
+                }
+            }
+            else{
+                if($Filter.Contains(' ')){
+                    $my_filter = ('?$filter={0}' -f [uri]::EscapeDataString($Filter))
+                }
+                else{
+                    $my_filter = ('?$filter={0}' -f $Filter)
+                }
+            }
+        }
+        #add select
+        if($Select){
+            if($null -ne $my_filter){
+                $my_filter = ('{0}&$select={1}' -f $my_filter, (@($Select) -join ','))
+            }
+            else{
+                $my_filter = ('?$select={0}' -f (@($Select) -join ','))
+            }
+        }
+        #add top
+        if($Top){
+            if($null -ne $my_filter){
+                $my_filter = ('{0}&$top={1}' -f $my_filter, $Top)
+            }
+            else{
+                $my_filter = ('?$top={0}' -f $Top)
+            }
+        }
+        #Add provider and resource group
+        if($ResourceGroup){
+            $base_uri = ("{0}/resourceGroups/{1}" -f $base_uri,$ResourceGroup)
+        }
+        if($Provider -and $ObjectType){
+            $base_uri = ("{0}/providers/{1}/{2}" -f $base_uri,$Provider, $ObjectType.Trim())
+        }
+        if($ObjectId){
+            if(-NOT $ResourceGroup -and -NOT $Provider){
+                #Probably direct object reference
+                $base_uri = ("{0}" -f $ObjectId)
+            }
+            elseif($ObjectId -like '*subscriptions*' -and ($Provider -and $ObjectType)){
+                $base_uri = ("{0}/providers/{1}/{2}" -f $ObjectId,$Provider,$ObjectType.Trim())
+            }
+            else{
+                $base_uri = ("{0}/{1}" -f $base_uri,$ObjectId)
+            }
+        }
+        if(-NOT $ResourceGroup -and -NOT $Provider -and $ObjectType){
+            $base_uri = ("{0}/{1}" -f $base_uri,$ObjectType.Trim())
+        }
+        #Remove double slashes
+        $base_uri = [regex]::Replace($base_uri,"/+","/")
+        #Add filter
+        if($my_filter){
+            $base_uri = ("{0}{1}" -f $base_uri,$my_filter)
+        }
+        #Construct URL
+        if($Environment){
+            $Server = ("{0}" -f $Environment.ResourceManager.Replace('https://',''))
+            $final_uri = ("{0}{1}" -f $Server,$base_uri)
+            $final_uri = [regex]::Replace($final_uri,"/+","/")
+            $final_uri = ("https://{0}" -f $final_uri.ToString())
+        }
+        #Check if own query
+        if($OwnQuery){
+            $final_uri = $OwnQuery
         }
     }
     Process{
-        if($URI){
+        if($final_uri -and $AuthHeader){
             $requestHeader = @{"Authorization" = $AuthHeader}
             if($Headers){
                 foreach($header in $Headers.GetEnumerator()){
@@ -120,78 +228,100 @@ Function Get-MonkeyRMObject{
             }
         }
         #Perform query
-        $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($URI)
+        $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($final_uri)
         $ServicePoint.ConnectionLimit = 1000;
-        $AllObjects = @()
         try{
             switch ($Method) {
-                    'GET'
-                    {
-                        $param = @{
-                            Url = $URI;
+                'GET'
+                {
+                    $p = @{
+                        Url = $final_uri;
+                        Headers = $requestHeader;
+                        Method = $Method;
+                        Content_Type = "application/json";
+                        UserAgent = $O365Object.UserAgent;
+                        Verbose = $Verbose;
+                        Debug = $Debug;
+                        InformationAction = $InformationAction;
+                    }
+                    $return_objects = Invoke-UrlRequest @p
+                }
+                'POST'
+                {
+                    if($Data){
+                        $p = @{
+                            Url = $final_uri;
                             Headers = $requestHeader;
                             Method = $Method;
-                            Content_Type = "application/json";
-                            UserAgent = $O365Object.UserAgent
+                            Content_Type = $ContentType;
+                            Data = $Data;
+                            UserAgent = $O365Object.UserAgent;
+                            Verbose = $Verbose;
+                            Debug = $Debug;
+                            InformationAction = $InformationAction;
                         }
-                        $Objects = Invoke-UrlRequest @param
                     }
-                    'POST'
-                    {
-                        if($Data){
-                            $param = @{
-                                Url = $URI;
-                                Headers = $requestHeader;
-                                Method = $Method;
-                                Content_Type = $ContentType;
-                                Data = $Data;
-                                UserAgent = $O365Object.UserAgent
-                            }
+                    else{
+                        $p = @{
+                            Url = $final_uri;
+                            Headers = $requestHeader;
+                            Method = $Method;
+                            Content_Type = $ContentType;
+                            UserAgent = $O365Object.UserAgent;
+                            Verbose = $Verbose;
+                            Debug = $Debug;
+                            InformationAction = $InformationAction;
                         }
-                        else{
-                            $param = @{
-                                Url = $URI;
-                                Headers = $requestHeader;
-                                Method = $Method;
-                                Content_Type = $ContentType;
-                                UserAgent = $O365Object.UserAgent
-                            }
-                        }
-                        #Launch request
-                        $Objects = Invoke-UrlRequest @param
                     }
+                    #send request
+                    $return_objects = Invoke-UrlRequest @p
+                }
             }
-            if($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -gt 0){
-                $AllObjects+= $Objects.value
+            if($null -ne $return_objects -and $null -ne $return_objects.PSObject.Properties.Item('value') -and $return_objects.value.Count -gt 0){
+                #return Value
+                $return_objects.value
             }
-            elseif($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -eq 0){
+            elseif($null -ne $return_objects -and $null -ne $return_objects.PSObject.Properties.Item('value') -and $return_objects.value.Count -eq 0){
                 #empty response
-                return $Objects.value
+                $return_objects.value
             }
             else{
-                $AllObjects+= $Objects
+                $return_objects
             }
-            #Search for paging objects
-            if ($null -ne $Objects.PSObject.Properties.Item('odata.nextLink')){
-                $nextLink = $Objects.'odata.nextLink'
-                while ($null -ne $nextLink -and $nextLink.IndexOf('token=') -gt 0){
-                    $nextLink = $nextLink.Substring($nextLink.IndexOf('token=') + 6)
-                    #Construct URI
-                    $URI = '{0}/subscriptions/{1}/{2}?api-version={3}&$top=999&$skiptoken={4}'`
-                           -f $Environment.ResourceManager, `
-                              $Authentication.subscriptionId, `
-                              $ObjectType.Trim(), `
-                              $APIVersion, $nextLink
+            #Check for paging objects
+            if($null -ne $return_objects.PSObject.Properties.Item('odata.nextLink')){
+                $nextLink = $return_objects.'odata.nextLink'
+            }
+            elseif($null -ne $return_objects.PSObject.Properties.Item('nextLink')){
+                $nextLink = $return_objects.nextLink
+            }
+            else{
+                $nextLink = $null;
+            }
+            if ($null -ne $nextLink){
+                while ($null -ne $nextLink){
                     #Go to nextPage
-                    $param = @{
-                        Url = $URI;
+                    $p = @{
+                        Url = $nextLink;
                         Method = "Get";
                         Headers = $requestHeader;
                         UserAgent = $O365Object.UserAgent;
+                        Verbose = $Verbose;
+                        Debug = $Debug;
+                        InformationAction = $InformationAction;
                     }
-                    $NextPage = Invoke-UrlRequest @param
-                    $AllObjects+= $NextPage.value
-                    $nextLink = $nextPage.'odata.nextLink'
+                    $NextPage = Invoke-UrlRequest @p
+                    if($null -ne $NextPage.PSObject.Properties.Item('odata.nextLink')){
+                        $nextLink = $nextPage.'odata.nextLink'
+                    }
+                    elseif($null -ne $NextPage.PSObject.Properties.Item('nextLink')){
+                        $nextLink = $NextPage.nextLink
+                    }
+                    else{
+                        $nextLink = $null
+                    }
+                    #return object
+                    $NextPage.value
                 }
             }
             ####close all the connections made to the host####
@@ -204,8 +334,7 @@ Function Get-MonkeyRMObject{
         }
     }
     End{
-        if($AllObjects){
-            return $AllObjects
-        }
+        ####close all the connections made to the host####
+        [void]$ServicePoint.CloseConnectionGroup("")
     }
 }

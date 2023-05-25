@@ -47,10 +47,16 @@ function Get-MonkeyAzSecurityContact {
 		$monkey_metadata = @{
 			Id = "az00035";
 			Provider = "Azure";
+			Resource = "Subscription";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzSecurityContact";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get Security Contacts fron Azure";
 			Group = @("Subscription");
-			ServiceName = "Azure Security Contacts";
-			PluginName = "Get-MonkeyAzSecurityContact";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Environment
@@ -82,24 +88,24 @@ function Get-MonkeyAzSecurityContact {
 		$securityContacts = Get-MonkeyRMObject @params
 		#Create array
 		$allsecurityContacts = @()
-        foreach ($account in $securityContacts) {
-            $email_notification_dict = [ordered]@{
-                id = $account.id;
-                location = $account.id;
-                name = $account.name;
-                properties = $account.properties;
-                email = $account.Properties.emails;
-                phone = $account.Properties.phone;
-                alertNotifications = $account.Properties.alertNotifications;
-                notificationsByRole = $account.Properties.notificationsByRole;
-                rawObject = $account;
-            }
-            $email_notification_obj = New-Object -TypeName PSCustomObject -Property $email_notification_dict
-            #Decorate object
+		foreach ($account in $securityContacts) {
+			$email_notification_dict = [ordered]@{
+				Id = $account.Id;
+				location = $account.Id;
+				Name = $account.Name;
+				Properties = $account.Properties;
+				email = $account.Properties.emails;
+				phone = $account.Properties.phone;
+				alertNotifications = $account.Properties.alertNotifications;
+				notificationsByRole = $account.Properties.notificationsByRole;
+				rawObject = $account;
+			}
+			$email_notification_obj = New-Object -TypeName PSCustomObject -Property $email_notification_dict
+			#Decorate object
 			$email_notification_obj.PSObject.TypeNames.Insert(0,'Monkey365.Azure.securityContact')
-            #Add to array
-            $allsecurityContacts += $email_notification_obj
-        }
+			#Add to array
+			$allsecurityContacts += $email_notification_obj
+		}
 	}
 	end {
 		if ($allsecurityContacts) {
@@ -114,11 +120,16 @@ function Get-MonkeyAzSecurityContact {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Contacts",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureKeySecContactEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

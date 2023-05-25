@@ -48,10 +48,16 @@ function Get-MonkeyEXOLabelPolicy {
 		$monkey_metadata = @{
 			Id = "purv006";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about label policies from Exchange Online";
-			Group = @("PurView");
-			ServiceName = "Microsoft PurView Label policy";
+			Resource = "Purview";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyEXOLabelPolicy";
+			ApiType = $null;
+			Title = "Plugin to get information about label policies from Exchange Online";
+			Group = @("Purview");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Check if already connected to Exchange Online Compliance Center
@@ -83,11 +89,16 @@ function Get-MonkeyEXOLabelPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance label policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompLabelPolicyEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -2,6 +2,10 @@
     "conditions":[
           "or",
           ["displayName", "imatch", "Demo"],
-          ["displayName", "imatch", "test"]
+          ["displayName", "imatch", "test"],
+		  ["displayName", "imatch", "trial"],
+		  ["displayName", "imatch", "proof"],
+		  ["displayName", "imatch", "evaluation"],
+		  ["displayName", "imatch", "experiment"]
       ]
 }

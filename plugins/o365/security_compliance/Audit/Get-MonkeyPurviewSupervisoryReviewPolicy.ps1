@@ -48,10 +48,16 @@ function Get-MonkeyPurviewSupervisoryReviewPolicy {
 		$monkey_metadata = @{
 			Id = "purv004";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about supervisory review policy in Microsoft Purview";
-			Group = @("PurView");
-			ServiceName = "Microsoft PurView supervisory review policy";
+			Resource = "Purview";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyPurviewSupervisoryReviewPolicy";
+			ApiType = $null;
+			Title = "Plugin to get information about supervisory review policy in Microsoft Purview";
+			Group = @("Purview");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Check if already connected to Exchange Online
@@ -84,13 +90,14 @@ function Get-MonkeyPurviewSupervisoryReviewPolicy {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview: Supervisory review policy",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview= Supervisory review policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompSupervisoryPolicyEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		#Return supervisory reports
 		if ($supervisory_reports) {
@@ -103,13 +110,18 @@ function Get-MonkeyPurviewSupervisoryReviewPolicy {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview: Supervisory reports",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview= Supervisory reports",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'verbose';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompSupervisoryPolicyEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

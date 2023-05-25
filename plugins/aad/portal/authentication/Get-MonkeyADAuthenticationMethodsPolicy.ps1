@@ -48,14 +48,29 @@ function Get-MonkeyADAuthenticationMethodsPolicy {
 		$monkey_metadata = @{
 			Id = "aad0020";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADAuthenticationMethodsPolicy";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get Authentication method policies from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD Auth Methods";
-			PluginName = "Get-MonkeyADAuthenticationMethodsPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Azure Active Directory Auth
 		$AADAuth = $O365Object.auth_tokens.AzurePortal
+		<#
+            Type 8 == Microsoft Authenticator
+            Type 6 == FIDO2
+            Type 5 == SMS Preview
+            Type 9 == Temporary access pass
+
+            state:0 == enabled
+            state:1 == disabled
+        #>
 	}
 	process {
 		$msg = @{
@@ -73,6 +88,9 @@ function Get-MonkeyADAuthenticationMethodsPolicy {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$ad_authentication_policy = Get-MonkeyAzurePortalObject @params
 	}
@@ -89,11 +107,16 @@ function Get-MonkeyADAuthenticationMethodsPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD authentication policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalAuthPolicyEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

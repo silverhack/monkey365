@@ -33,15 +33,10 @@ Function Connect-MonkeyTeamsForOffice {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory=$false, HelpMessage="parameters")]
         [Object]$parameters
     )
-    if($O365Object.isUsingAdalLib){
-        Get-AdalTokenForTeams @parameters
-    }
-    else{
-        Get-MSALTokenForTeams @parameters
-    }
+    Get-MSALTokenForTeams @parameters
 }

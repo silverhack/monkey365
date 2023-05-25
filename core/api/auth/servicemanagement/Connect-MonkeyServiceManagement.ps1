@@ -33,15 +33,10 @@ Function Connect-MonkeyServiceManagement {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory=$false, HelpMessage="parameters")]
         [Object]$parameters
     )
-    if($O365Object.isUsingAdalLib){
-        Get-AdalTokenForServiceManagement @parameters
-    }
-    else{
-        Get-MSALTokenForServiceManagement @parameters
-    }
+    Get-MSALTokenForServiceManagement @parameters
 }
