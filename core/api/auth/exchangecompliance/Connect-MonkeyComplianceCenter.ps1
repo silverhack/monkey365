@@ -77,13 +77,6 @@ Function Connect-MonkeyComplianceCenter {
         else{
             $new_params.publicApp = $O365Object.exo_msal_application
         }
-<<<<<<< HEAD
-        #Connect to Exchange Online Compliance Center
-        Write-Host ($new_params | Out-String)
-        Write-Host ($new_params.publicApp | Out-String)
-        Get-MonkeyMSALPSSessionForComplianceCenter @new_params
-=======
->>>>>>> develop
     }
     else{
         $O365Object.exo_msal_application = $O365Object.msalapplication

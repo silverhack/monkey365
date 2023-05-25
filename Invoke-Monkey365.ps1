@@ -491,5 +491,6 @@ Function Invoke-Monkey365{
         Stop-Logger
         #collect garbage
         [System.GC]::GetTotalMemory($true) | out-null
+        return $O365Object
     }
 }

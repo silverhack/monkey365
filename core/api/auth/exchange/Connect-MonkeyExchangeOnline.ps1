@@ -77,14 +77,6 @@ Function Connect-MonkeyExchangeOnline {
         else{
             $new_params.publicApp = $O365Object.exo_msal_application
         }
-<<<<<<< HEAD
-        #Connect to Exchange Online
-        Write-Host ($new_params | Out-String)
-        Write-Host ($new_params.publicApp | Out-String)
-        Get-MonkeyMSALPSSessionForExchangeOnline @new_params
-
-=======
->>>>>>> develop
     }
     else{
         $O365Object.exo_msal_application = $O365Object.msalapplication

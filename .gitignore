@@ -11,15 +11,16 @@ __azurite_db_queue_extent__.json
 
 site/
 *.csv
-*.bak
+*bak
 *.ps1.bak
 *_extra.json
 
-# Tests
-core/watcher/
-
 config/monkey_365_dev.config
 
+#Tests
+core/watcher/
+
+# Profiles
 profiles/
 
 **/development/
