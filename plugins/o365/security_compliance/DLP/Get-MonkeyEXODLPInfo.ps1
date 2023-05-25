@@ -48,10 +48,16 @@ function Get-MonkeyEXODLPInfo {
 		$monkey_metadata = @{
 			Id = "purv010";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about DLP compliance policies in Microsoft Exchange Online";
-			Group = @("PurView");
-			ServiceName = "Microsoft PurView Compliance review";
+			Resource = "Purview";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyEXODLPInfo";
+			ApiType = $null;
+			Title = "Plugin to get information about DLP compliance policies in Microsoft Exchange Online";
+			Group = @("Purview");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Check if already connected to Exchange Online Compliance Center
@@ -68,13 +74,8 @@ function Get-MonkeyEXODLPInfo {
 			}
 			Write-Information @msg
 			$exo_compliance_dlp_policies = Get-DataLossPreventionInfo
-			if ($null -eq $exo_compliance_dlp_policies) {
-				$exo_compliance_dlp_policies = @{
-					isEnabled = $false
-				}
-			}
-			if ($null -ne $exo_compliance_dlp_policies) {
-				$msg = @{
+            if ($null -ne $exo_compliance_dlp_policies) {
+                $msg = @{
 					MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance DLP analysis",$O365Object.TenantID);
 					callStack = (Get-PSCallStack | Select-Object -First 1);
 					logLevel = 'info';
@@ -84,6 +85,11 @@ function Get-MonkeyEXODLPInfo {
 				Write-Information @msg
 				#Get DLP validations
 				$dlp_validations = Invoke-DLPValidation -dlp_objects $exo_compliance_dlp_policies
+            }
+			else{
+				$exo_compliance_dlp_policies = @{
+					isEnabled = $false
+				}
 			}
 		}
 	}
@@ -100,11 +106,12 @@ function Get-MonkeyEXODLPInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance DLP compliance information",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompDLPEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		#Add DLP validations
 		if ($null -ne $dlp_validations) {
@@ -119,11 +126,16 @@ function Get-MonkeyEXODLPInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance DLP analysis",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompDLPEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

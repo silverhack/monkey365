@@ -1,11 +1,50 @@
 {
+	"storage_accounts_infra_encryption_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "location": "Location",
+                "ResourceGroupName": "ResourceGroupName",
+				"requireInfrastructureEncryption": "Infrastructure Encryption"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"storage_accounts_rotation_reminder_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "location": "Location",
+                "ResourceGroupName": "ResourceGroupName",
+				"properties.keyPolicy.keyExpirationPeriodInDays": "Reminder in Days"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
 	"storage_accounts_missing_key_rotation": [
         {
             "translate": {
                 "name": "Name",
                 "location": "Location",
                 "ResourceGroupName": "ResourceGroupName",
-				"isKeyRotated": "Key Rotated"
+				"keyRotation.key1.isRotated": "Key1 Rotated",
+				"keyRotation.key2.isRotated": "Key2 Rotated"
             },
             "table": "Normal",
 			"actions":{
@@ -23,9 +62,9 @@
             "translate": {
                 "name": "Name",
                 "ResourceGroupName": "ResourceGroupName",
-				"queueLogReadEnabled": "Queue Log Read Enabled",
-				"queueLogWriteEnabled": "Queue Log Write Rotated",
-				"queueLogDeleteEnabled": "Queue Log Delete Rotated"
+				"diagnosticSettings.queue.logging.read": "Read Enabled",
+				"diagnosticSettings.queue.logging.write": "Write Enabled",
+				"diagnosticSettings.queue.logging.delete": "Delete Enabled"
             },
             "table": "Normal",
 			"actions":{
@@ -81,9 +120,9 @@
             "translate": {
                 "name": "Name",
                 "ResourceGroupName": "ResourceGroupName",
-				"blobLogReadEnabled": "Blob Log Read Enabled",
-				"blobLogWriteEnabled": "Blob Log Write Rotated",
-				"blobLogDeleteEnabled": "Blob Log Delete Rotated"
+				"diagnosticSettings.blob.logging.read": "Read Enabled",
+				"diagnosticSettings.blob.logging.write": "Write Enabled",
+				"diagnosticSettings.blob.logging.delete": "Delete Enabled"
             },
             "table": "Normal",
 			"actions":{
@@ -101,9 +140,9 @@
             "translate": {
                 "name": "Name",
                 "ResourceGroupName": "ResourceGroupName",
-				"tableLogReadEnabled": "Table Log Read Enabled",
-				"tableLogWriteEnabled": "Table Log Write Rotated",
-				"tableLogDeleteEnabled": "Table Log Delete Rotated"
+				"diagnosticSettings.blob.logging.read": "Read Enabled",
+				"diagnosticSettings.blob.logging.write": "Write Enabled",
+				"diagnosticSettings.blob.logging.delete": "Delete Enabled"
             },
             "table": "Normal",
 			"actions":{
@@ -124,7 +163,15 @@
                 "location": "Location",
                 "supportsHttpsTrafficOnly": "Https Only"
             },
-            "table": "Normal"
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ],
     "storage_accounts_all_networks": [
@@ -135,7 +182,15 @@
                 "location": "Location",
                 "AllowAccessFromAllNetworks": "Allow Access from all networks"
             },
-            "table": "Normal"
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ],
     "storage_accounts_encryptblob_disabled": [
@@ -146,7 +201,15 @@
                 "location": "Location",
                 "isBlobEncrypted": "Blob encrypted"
             },
-            "table": "Normal"
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ],
     "storage_accounts_protection_disabled": [
@@ -157,7 +220,15 @@
                 "location": "Location",
                 "AdvancedProtectionEnabled": "Advanced Protection enabled"
             },
-            "table": "Normal"
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ],
     "storage_accounts_filencrypt_disabled": [
@@ -168,7 +239,15 @@
                 "location": "Location",
                 "isFileEncrypted": "File encryption enabled"
             },
-            "table": "Normal"
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ],
     "storage_accounts_trusted_ms_services_bypass": [
@@ -179,18 +258,53 @@
                 "location": "Location",
                 "AllowAzureServices": "Allow Azure services"
             },
-            "table": "Normal"
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ],
     "storage_accounts_anonymous_access_enabled": [
         {
             "translate": {
-                "storageaccountname": "Storage account Name",
-                "blobname": "Blob name",
-                "publicaccess": "Public Access"
+                "name": "Name",
+                "location": "Location",
+                "ResourceGroupName": "ResourceGroupName",
+                "properties.allowBlobPublicAccess": "Public Access"
             },
-            "table": "asList",
-            "emphasis": ["Public Access"]
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"storage_accounts_minimum_tls_version_disabled": [
+        {
+            "translate": {
+                "name": "Name",
+                "location": "Location",
+                "ResourceGroupName": "ResourceGroupName",
+                "properties.minimumTlsVersion": "TLS version"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["properties"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ]
 }

@@ -5,6 +5,7 @@
     SerializationError               = Could not serialize {0}: {1}
     GzipOutputInfoMessage            = File was saved successfully on {0}
     GzipOutputMessage                = Compressing and saving file to {0}
+    CliXmlOutputMessage              = Exporting CliXml file to {0}
     DirectoryAlreadyExists           = Directory {0} already exists
     JsonFilesNotFound                = No valid Json files were found on {0}
     InvalidJsonErrorMessage          = Invalid Json detected on {0}

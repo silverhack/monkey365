@@ -48,26 +48,80 @@ function Get-MonkeySharePointOnlineSitesInfo {
 		$monkey_metadata = @{
 			Id = "sps0007";
 			Provider = "Microsoft365";
+			Resource = "SharePointOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeySharePointOnlineSitesInfo";
+			ApiType = $null;
 			Title = "Plugin to get information about Sharepoint Online sites";
 			Group = @("SharePointOnline");
-			ServiceName = "SharePoint Online Sites";
-			PluginName = "Get-MonkeySharePointOnlineSitesInfo";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
+        if($null -eq $O365Object.spoWebs){
+            break
+        }
+        #Get config
+        try{
+            $scanSites = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.ScanSites)
+        }
+        catch{
+            $msg = @{
+                MessageData = ($message.MonkeyInternalConfigError);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'verbose';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365ConfigError');
+            }
+            Write-Verbose @msg
+            #Set scanSites to false
+            $scanSites = $false
+        }
+        #set generic list
+        $all_sites = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
 	}
 	process {
 		$msg = @{
 			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Sharepoint Online Sites",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
+			InformationAction = $O365Object.InformationAction;
 			Tags = @('SPSSitesInfo');
 		}
 		Write-Information @msg
-		#Get all webs for user
-		$all_sites = Get-MonkeySPSSitesForUser
+        if($null -ne $O365Object.spoWebs){
+            $p = @{
+                Webs = $O365Object.spoWebs;
+                ScanSites = $scanSites;
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $sites = Get-MonkeyCSOMSitesForUser @p
+        }
+        else{
+            $p = @{
+                ScanSites = $scanSites;
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $sites = Get-MonkeyCSOMSitesForUser @p
+        }
+		if($sites){
+            foreach($site in @($sites)){
+                #Check if exists
+                $match = $all_sites | Where-Object {$_.Url -eq $site.Url}
+                if(-NOT $match){
+                    #Add to list
+                    [void]$all_sites.Add($site)
+                }
+            }
+        }
 	}
-	end {
+	End {
 		if ($all_sites) {
 			$all_sites.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Sites')
 			[pscustomobject]$obj = @{
@@ -80,11 +134,16 @@ function Get-MonkeySharePointOnlineSitesInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Sites",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.Verbose;
 				Tags = @('SPSSitesEmptyResponse');
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

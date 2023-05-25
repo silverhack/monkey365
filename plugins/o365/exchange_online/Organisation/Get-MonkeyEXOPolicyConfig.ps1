@@ -48,27 +48,43 @@ function Get-MonkeyEXOPolicyConfig {
 		$monkey_metadata = @{
 			Id = "exo0026";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOPolicyConfig";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about policy config in Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Policy config";
-			PluginName = "Get-MonkeyEXOPolicyConfig";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+		#Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online policy config",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoPolicyConfigInfo');
-			}
-			Write-Information @msg
-			$exo_policy_config = Get-ExoMonkeyPolicyConfig
+		$msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online policy config",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('ExoPolicyConfigInfo');
 		}
+		Write-Information @msg
+        $p = @{
+            Authentication = $ExoAuth;
+            Environment = $Environment;
+            ResponseFormat = 'clixml';
+            Command = 'Get-PolicyConfig';
+            Method = "POST";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+		$exo_policy_config = Get-PSExoAdminApiObject @p
 	}
 	end {
 		if ($null -ne $exo_policy_config) {
@@ -83,11 +99,16 @@ function Get-MonkeyEXOPolicyConfig {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online policy config",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoPolicyConfigResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

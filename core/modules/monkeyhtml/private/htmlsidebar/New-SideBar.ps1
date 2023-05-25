@@ -140,8 +140,9 @@ function New-SideBar{
             $li = $unit_li.clone()
             #Create I element
             $i = $sidebar.CreateElement("i")
-            [void]$i.SetAttribute('class','bi bi-box-arrow-down-right nav-icon')
-            #[void]$img.SetAttribute('src','assets/inc-azicons/Identity/10221-icon-service-Azure-Active-Directory.svg')
+            $icon = ("{0} nav-icon" -f (Get-FabricIcon -Icon $item))
+            [void]$i.SetAttribute('class',$icon)
+            #[void]$i.SetAttribute('class','bi bi-box-arrow-down-right nav-icon')
 
             #Create a href and append i element
             $random_item = ("menu_{0}" -f ([System.Guid]::NewGuid().Guid.Replace('-','')))

@@ -48,10 +48,16 @@ function Get-MonkeyADPortalSecurityDefaultsConfiguration {
 		$monkey_metadata = @{
 			Id = "aad0024";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADPortalSecurityDefaultsConfiguration";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get security defaults from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD Security Defaults";
-			PluginName = "Get-MonkeyADPortalSecurityDefaultsConfiguration";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Azure Active Directory Auth
@@ -73,6 +79,9 @@ function Get-MonkeyADPortalSecurityDefaultsConfiguration {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$ad_security_defaults = Get-MonkeyAzurePortalObject @params
 	}
@@ -89,11 +98,16 @@ function Get-MonkeyADPortalSecurityDefaultsConfiguration {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD security defaults",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalSecurityDefaultsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

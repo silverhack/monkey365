@@ -2,15 +2,41 @@
 	"mysql_enforcessl_disabled": [
         {
             "translate": {
-                "serverName": "Server Name",
-                "serverLocation": "Location",
+                "name": "Name",
+                "location": "Location",
                 "resourceGroupName": "Resource group name",
-                "fullyQualifiedDomainName": "FQDN",
-                "sslEnforcement": "SSL Enforcement",
-                "version": "MySQL version"
+                "fqdn": "FQDN",
+                "properties.sslEnforcement": "SSL Enforcement",
+                "properties.version": "MySQL version"
             },
             "table": "asList",
             "emphasis": ["SSL Enforcement"]
+        }
+    ],
+	"mysql_log_connections_disabled": [
+        {
+            "translate": {
+                "serverName": "Name",
+                "parameterName": "Parameter Name",
+                "parameterDescription": "Description",
+                "parameterValue": "value",
+                "parameterDefaultValue": "Default value"
+            },
+            "table": "asList",
+            "emphasis": ["Value"]
+        }
+    ],
+	"mysql_audit_log_disabled": [
+        {
+            "translate": {
+                "serverName": "Name",
+                "parameterName": "Parameter Name",
+                "parameterDescription": "Description",
+                "parameterValue": "value",
+                "parameterDefaultValue": "Default value"
+            },
+            "table": "asList",
+            "emphasis": ["Value"]
         }
     ]
 }

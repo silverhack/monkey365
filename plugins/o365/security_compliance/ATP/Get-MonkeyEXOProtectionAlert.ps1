@@ -48,10 +48,16 @@ function Get-MonkeyEXOProtectionAlert {
 		$monkey_metadata = @{
 			Id = "purv002";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about protection alert in Exchange Online";
-			Group = @("PurView");
-			ServiceName = "PurView Protection Alert";
+			Resource = "Purview";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyEXOProtectionAlert";
+			ApiType = $null;
+			Title = "Plugin to get information about protection alert in Exchange Online";
+			Group = @("Purview");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Check if already connected to Exchange Online Compliance Center
@@ -83,11 +89,16 @@ function Get-MonkeyEXOProtectionAlert {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online protection alert",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompProtectionAlertResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

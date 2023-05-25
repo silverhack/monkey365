@@ -1,5 +1,5 @@
 {
-	"aad_privileged_users_with_mfa_disabled": [
+	"az_privileged_users_with_mfa_disabled": [
         {
             "translate": {
 				"userPrincipalName": "UserPrincipalName",
@@ -19,7 +19,7 @@
 			}
         }
     ],
-	"aad_users_with_mfa_disabled": [
+	"az_privileged_users_with_mfa_disabled": [
         {
             "translate": {
 				"userPrincipalName": "UserPrincipalName",
@@ -38,18 +38,7 @@
 			}
         }
     ],
-	"aad_excessive_company_admins": [
-        {
-            "translate": {
-                "displayName": "Display Name",
-                "objectType": "Object Type",
-                "accountEnabled": "Account Enabled",
-                "MemberOf": "Member Of"
-            },
-            "table": "Normal"
-        }
-    ],
-    "aad_excessive_owners": [
+    "az_excessive_owners": [
         {
             "translate": {
                 "displayName": "Display Name",
@@ -60,29 +49,7 @@
             "table": "Normal"
         }
     ],
-    "aad_only_one_company_admin": [
-        {
-            "translate": {
-                "displayName": "Display Name",
-                "objectType": "Object Type",
-                "accountEnabled": "Account Enabled",
-                "MemberOf": "Member Of"
-            },
-            "table": "Normal"
-        }
-    ],
-    "aad_subscription_only_one_owner": [
-        {
-            "translate": {
-                "displayName": "Display Name",
-                "objectType": "Object Type",
-                "roleName": "Role Name",
-                "roleDescription": "Role Description"
-            },
-            "table": "Normal"
-        }
-    ],
-    "aad_owners_with_mfa_disabled": [
+    "az_owners_with_mfa_disabled": [
         {
             "translate": {
                 "displayName": "Display Name",
@@ -93,31 +60,7 @@
             "table": "Normal"
         }
     ],
-    "aad_company_admins_with_mfa_disabled": [
-        {
-            "translate": {
-                "displayName": "Display Name",
-                "objectType": "Object Type",
-                "accountEnabled": "Account Enabled",
-                "MemberOf": "Member Of",
-                "mfaenabled": "MFA"
-            },
-            "table": "Normal"
-        }
-    ],
-    "aad_service_principal_company_admin": [
-        {
-            "translate": {
-                "displayName": "Display Name",
-                "objectType": "Object Type",
-                "accountEnabled": "Account Enabled",
-                "homePage": "Home Page",
-                "MemberOf": "Member Of"
-            },
-            "table": "Normal"
-        }
-    ],
-    "aad_service_principal_owners": [
+    "az_service_principal_owners": [
         {
             "translate": {
                 "displayName": "Display Name",

@@ -47,10 +47,16 @@ function Get-MonkeyTeamsAppSetupPolicy {
 		$monkey_metadata = @{
 			Id = "teams02";
 			Provider = "Microsoft365";
+			Resource = "MicrosoftTeams";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyTeamsAppSetupPolicy";
+			ApiType = $null;
 			Title = "Plugin to get information about Teams application setup policies";
 			Group = @("MicrosoftTeams");
-			ServiceName = "Microsoft Teams Application setup policies";
-			PluginName = "Get-MonkeyTeamsAppSetupPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Getting environment
@@ -75,9 +81,11 @@ function Get-MonkeyTeamsAppSetupPolicy {
 				ObjectType = "TeamsAppSetupPolicy";
 				AdminDomain = 'common';
 				Environment = $Environment;
-				Method = "GET";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
 			}
-			$app_setup_policies = Get-TeamsObject @params
+			$app_setup_policies = Get-MonkeyTeamsObject @params
 		}
 	}
 	end {
@@ -91,13 +99,18 @@ function Get-MonkeyTeamsAppSetupPolicy {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Application setup policies",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams= Application setup policies",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('TeamsAppSettingsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

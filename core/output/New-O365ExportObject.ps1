@@ -49,11 +49,11 @@ Function New-O365ExportObject{
             Tenant = $O365Object.Tenant;
             TenantID = $O365Object.Tenant.tenantId;
             Localpath = $O365Object.Localpath;
-            Output = $Script:ReturnData;
+            Output = $Script:returnData;
             Plugins = $O365Object.Plugins;
             Instance = $O365Object.Instance;
             IncludeAAD = $O365Object.IncludeAAD;
-            user_permissions = $O365Object.userPermissions;
+            aadpermissions = $O365Object.aadPermissions;
             execution_info = $O365Object.executionInfo;
             all_resources = $O365Object.all_resources;
         }
@@ -73,6 +73,7 @@ Function New-O365ExportObject{
             MessageData = $_;
             callStack = (Get-PSCallStack | Select-Object -First 1);
             logLevel = 'debug';
+            Debug = $O365Object.debug;
             Tags = @('MonkeyObjectError');
         }
         Write-Debug @msg

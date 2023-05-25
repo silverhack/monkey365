@@ -47,10 +47,16 @@ function Get-MonkeyAZNetworkWatcher {
 		$monkey_metadata = @{
 			Id = "az00031";
 			Provider = "Azure";
+			Resource = "NetworkWatcher";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAZNetworkWatcher";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get information from Azure Network Watcher";
 			Group = @("NetworkWatcher");
-			ServiceName = "Azure Network Watcher";
-			PluginName = "Get-MonkeyAZNetworkWatcher";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Environment
@@ -75,7 +81,7 @@ function Get-MonkeyAZNetworkWatcher {
 		Write-Information @msg
 		#Get All locations
 		$URI = ("{0}{1}/locations?api-Version={2}" `
- 				-f $O365Object.Environment.ResourceManager,$O365Object.current_subscription.id,'2016-06-01')
+ 				-f $O365Object.Environment.ResourceManager,$O365Object.current_subscription.Id,'2016-06-01')
 		$params = @{
 			Authentication = $rm_auth;
 			OwnQuery = $URI;
@@ -109,7 +115,7 @@ function Get-MonkeyAZNetworkWatcher {
 						#Get flow log
 						$POSTDATA = @{ "TargetResourceId" = $network; } | ConvertTo-Json | ForEach-Object { [System.Text.RegularExpressions.Regex]::Unescape($_) }
 						$URI = ("{0}{1}/queryFlowLogStatus?api-Version={2}" `
- 								-f $O365Object.Environment.ResourceManager,$nw.id,'2018-11-01')
+ 								-f $O365Object.Environment.ResourceManager,$nw.Id,'2018-11-01')
 
 						$params = @{
 							Authentication = $rm_auth;
@@ -124,8 +130,8 @@ function Get-MonkeyAZNetworkWatcher {
 							$network_flow = New-Object -TypeName PSCustomObject
 							$network_flow | Add-Member -Type NoteProperty -Name target_resource_id -Value $flow_log_cnf.targetResourceId
 							$network_flow | Add-Member -Type NoteProperty -Name storageId -Value $flow_log_cnf.Properties.storageId
-							$network_flow | Add-Member -Type NoteProperty -Name enabled -Value $flow_log_cnf.Properties.enabled
-							$network_flow | Add-Member -Type NoteProperty -Name retentionPolicyEnabled -Value $flow_log_cnf.Properties.retentionPolicy.enabled
+							$network_flow | Add-Member -Type NoteProperty -Name enabled -Value $flow_log_cnf.Properties.Enabled
+							$network_flow | Add-Member -Type NoteProperty -Name retentionPolicyEnabled -Value $flow_log_cnf.Properties.retentionPolicy.Enabled
 							$network_flow | Add-Member -Type NoteProperty -Name retentionPolicyDays -Value $flow_log_cnf.Properties.retentionPolicy.Days
 							$network_flow | Add-Member -Type NoteProperty -Name rawObject -Value $flow_log_cnf
 							#Add to array
@@ -151,11 +157,12 @@ function Get-MonkeyAZNetworkWatcher {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Network Watcher",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureKeyNetworkWatcherEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		#Add network flows
 		if ($all_nsg_flows) {
@@ -170,11 +177,16 @@ function Get-MonkeyAZNetworkWatcher {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Network Watcher Flow Logs",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureKeyNetworkWatcherFLEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

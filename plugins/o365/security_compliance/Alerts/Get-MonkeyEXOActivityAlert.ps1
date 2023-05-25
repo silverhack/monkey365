@@ -48,10 +48,16 @@ function Get-MonkeyEXOActivityAlert {
 		$monkey_metadata = @{
 			Id = "purv001";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about activity alerts from PurView";
-			Group = @("PurView");
-			ServiceName = "Microsoft PurView activity alerts";
+			Resource = "Purview";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyEXOActivityAlert";
+			ApiType = $null;
+			Title = "Plugin to get information about activity alerts from PurView";
+			Group = @("Purview");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		$exo_session = Test-EXOConnection -ComplianceCenter
@@ -83,11 +89,16 @@ function Get-MonkeyEXOActivityAlert {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance activity alerts",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompActivityAlertsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

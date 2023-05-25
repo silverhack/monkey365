@@ -33,15 +33,10 @@ Function Connect-MonkeyFormsForOffice {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory=$false, HelpMessage="parameters")]
         [Object]$parameters
     )
-    if($O365Object.isUsingAdalLib){
-        Get-AdalTokenForForms @parameters
-    }
-    else{
-        Get-MSALTokenForForms @parameters
-    }
+    Get-MSALTokenForForms @parameters
 }

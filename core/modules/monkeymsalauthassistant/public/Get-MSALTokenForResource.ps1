@@ -33,7 +33,7 @@ Function Get-MSALTokenForResource{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "", Scope="Function")]
     [CmdletBinding()]
     Param (
@@ -146,24 +146,35 @@ Function Get-MSALTokenForResource{
         [Parameter(Mandatory=$false, HelpMessage="Force silent authentication")]
         [Switch]$Silent,
 
+        [Parameter(Mandatory=$false, HelpMessage="Force refresh token")]
+        [Switch]$ForceRefresh,
+
         [Parameter(Mandatory=$false, ParameterSetName = 'Implicit-PublicApplication')]
         [Parameter(Mandatory=$false, ParameterSetName = 'Implicit', HelpMessage="Device code authentication")]
         [Switch]$DeviceCode
     )
     Process{
-        #Get InformationAction
-        if($PSBoundParameters.ContainsKey('InformationAction')){
-            $informationAction = $PSBoundParameters.informationAction
+        $Verbose = $Debug = $False;
+        $InformationAction = 'SilentlyContinue'
+        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+            $Verbose = $True
         }
-        else{
-            $informationAction = "SilentlyContinue"
+        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $Debug = $True
+        }
+        if($PSBoundParameters.ContainsKey('InformationAction')){
+            $InformationAction = $PSBoundParameters['InformationAction']
         }
         $isPublicApp = Confirm-IfMSALPublicApp -parameters $PSBoundParameters
-        $internal_params = $PSBoundParameters
+        $internal_params = @{}
+        foreach ($param in $PSBoundParameters.GetEnumerator()){
+            $internal_params.add($param.Key, $param.Value)
+        }
         if($isPublicApp -eq $false -or $ConfidentialApp){
             #Remove common params
             $internal_params = Remove-MSALPublicParam -parameters $internal_params
         }
+        #Get access token
         $access_token = Get-MonkeyMSALToken @internal_params;
         if($null -ne $access_token -and $access_token -is [Microsoft.Identity.Client.AuthenticationResult]){
             #Write message

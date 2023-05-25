@@ -47,10 +47,16 @@ function Get-MonkeyAZClassicStorageAccount {
 		$monkey_metadata = @{
 			Id = "az00039";
 			Provider = "Azure";
+			Resource = "StorageAccounts";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAZClassicStorageAccount";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get Azure classic storage account infomration";
 			Group = @("StorageAccounts");
-			ServiceName = "Azure Classic storage account";
-			PluginName = "Get-MonkeyAZClassicStorageAccount";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Environment
@@ -78,7 +84,7 @@ function Get-MonkeyAZClassicStorageAccount {
 			#Get info for each storage account
 			foreach ($str in $storageAccounts) {
 				$URI = ("{0}{1}?api-version={2}" `
- 						-f $O365Object.Environment.ResourceManager,$str.id,`
+ 						-f $O365Object.Environment.ResourceManager,$str.Id,`
  						$classicStorageConfig.api_version)
 				#Launch query
 				$params = @{
@@ -91,7 +97,7 @@ function Get-MonkeyAZClassicStorageAccount {
 				$storageAccount = Get-MonkeyRMObject @params
 				#Get Data
 				$new_str_account = New-Object -TypeName PSCustomObject
-				$new_str_account | Add-Member -Type NoteProperty -Name id -Value $str.id
+				$new_str_account | Add-Member -Type NoteProperty -Name id -Value $str.Id
 				$new_str_account | Add-Member -Type NoteProperty -Name name -Value $str.Name
 				$new_str_account | Add-Member -Type NoteProperty -Name location -Value $str.location
 				$new_str_account | Add-Member -Type NoteProperty -Name properties -Value $str.Properties
@@ -114,10 +120,10 @@ function Get-MonkeyAZClassicStorageAccount {
 				$new_str_account | Add-Member -Type NoteProperty -Name fileEndpoint -Value $file
 				$new_str_account | Add-Member -Type NoteProperty -Name blobEndpoind -Value $blob
 				#End endpoints
-				$new_str_account | Add-Member -Type NoteProperty -Name status -Value $storageAccount.Properties.status
+				$new_str_account | Add-Member -Type NoteProperty -Name status -Value $storageAccount.Properties.Status
 				#Get Storage account keys
 				$URI = ("{0}{1}/listKeys?api-version={2}" `
- 						-f $O365Object.Environment.ResourceManager,$str.id,`
+ 						-f $O365Object.Environment.ResourceManager,$str.Id,`
  						$classicStorageConfig.api_version)
 				$params = @{
 					Authentication = $sm_auth;
@@ -134,20 +140,20 @@ function Get-MonkeyAZClassicStorageAccount {
 					if ($QueueSAS) {
 						#Get Queue diagnostig settings
 						$params = @{
-							url = $QueueSAS;
+							Url = $QueueSAS;
 							Method = "GET";
 							UserAgent = $O365Object.UserAgent;
 						}
 						[xml]$QueueDiagSettings = Invoke-UrlRequest @params
 						if ($QueueDiagSettings) {
 							#Add to psobject
-							$new_str_account | Add-Member -Type NoteProperty -Name queueLogVersion -Value $QueueDiagSettings.StorageServiceProperties.Logging.version
-							$new_str_account | Add-Member -Type NoteProperty -Name queueLogReadEnabled -Value $QueueDiagSettings.StorageServiceProperties.Logging.Read
-							$new_str_account | Add-Member -Type NoteProperty -Name queueLogWriteEnabled -Value $QueueDiagSettings.StorageServiceProperties.Logging.Write
-							$new_str_account | Add-Member -Type NoteProperty -Name queueLogDeleteEnabled -Value $QueueDiagSettings.StorageServiceProperties.Logging.Delete
-							$new_str_account | Add-Member -Type NoteProperty -Name queueRetentionPolicyEnabled -Value $QueueDiagSettings.StorageServiceProperties.Logging.retentionPolicy.enabled
-							if ($QueueDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days) {
-								$new_str_account | Add-Member -Type NoteProperty -Name queueRetentionPolicyDays -Value $QueueDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days
+							$new_str_account | Add-Member -Type NoteProperty -Name queueLogVersion -Value $QueueDiagSettings.StorageServiceProperties.logging.Version
+							$new_str_account | Add-Member -Type NoteProperty -Name queueLogReadEnabled -Value $QueueDiagSettings.StorageServiceProperties.logging.Read
+							$new_str_account | Add-Member -Type NoteProperty -Name queueLogWriteEnabled -Value $QueueDiagSettings.StorageServiceProperties.logging.Write
+							$new_str_account | Add-Member -Type NoteProperty -Name queueLogDeleteEnabled -Value $QueueDiagSettings.StorageServiceProperties.logging.Delete
+							$new_str_account | Add-Member -Type NoteProperty -Name queueRetentionPolicyEnabled -Value $QueueDiagSettings.StorageServiceProperties.logging.retentionPolicy.Enabled
+							if ($QueueDiagSettings.StorageServiceProperties.logging.retentionPolicy.Days) {
+								$new_str_account | Add-Member -Type NoteProperty -Name queueRetentionPolicyDays -Value $QueueDiagSettings.StorageServiceProperties.logging.retentionPolicy.Days
 							}
 							else {
 								$new_str_account | Add-Member -Type NoteProperty -Name queueRetentionPolicyDays -Value $null
@@ -159,20 +165,20 @@ function Get-MonkeyAZClassicStorageAccount {
 					if ($tableSAS) {
 						#Get Queue diagnostig settings
 						$params = @{
-							url = $tableSAS;
+							Url = $tableSAS;
 							Method = "GET";
 							UserAgent = $O365Object.UserAgent;
 						}
 						[xml]$TableDiagSettings = Invoke-UrlRequest @params
 						if ($TableDiagSettings) {
 							#Add to psobject
-							$new_str_account | Add-Member -Type NoteProperty -Name tableLogVersion -Value $TableDiagSettings.StorageServiceProperties.Logging.version
-							$new_str_account | Add-Member -Type NoteProperty -Name tableLogReadEnabled -Value $TableDiagSettings.StorageServiceProperties.Logging.Read
-							$new_str_account | Add-Member -Type NoteProperty -Name tableLogWriteEnabled -Value $TableDiagSettings.StorageServiceProperties.Logging.Write
-							$new_str_account | Add-Member -Type NoteProperty -Name tableLogDeleteEnabled -Value $TableDiagSettings.StorageServiceProperties.Logging.Delete
-							$new_str_account | Add-Member -Type NoteProperty -Name tableRetentionPolicyEnabled -Value $TableDiagSettings.StorageServiceProperties.Logging.retentionPolicy.enabled
-							if ($TableDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days) {
-								$new_str_account | Add-Member -Type NoteProperty -Name tableRetentionPolicyDays -Value $TableDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days
+							$new_str_account | Add-Member -Type NoteProperty -Name tableLogVersion -Value $TableDiagSettings.StorageServiceProperties.logging.Version
+							$new_str_account | Add-Member -Type NoteProperty -Name tableLogReadEnabled -Value $TableDiagSettings.StorageServiceProperties.logging.Read
+							$new_str_account | Add-Member -Type NoteProperty -Name tableLogWriteEnabled -Value $TableDiagSettings.StorageServiceProperties.logging.Write
+							$new_str_account | Add-Member -Type NoteProperty -Name tableLogDeleteEnabled -Value $TableDiagSettings.StorageServiceProperties.logging.Delete
+							$new_str_account | Add-Member -Type NoteProperty -Name tableRetentionPolicyEnabled -Value $TableDiagSettings.StorageServiceProperties.logging.retentionPolicy.Enabled
+							if ($TableDiagSettings.StorageServiceProperties.logging.retentionPolicy.Days) {
+								$new_str_account | Add-Member -Type NoteProperty -Name tableRetentionPolicyDays -Value $TableDiagSettings.StorageServiceProperties.logging.retentionPolicy.Days
 							}
 							else {
 								$new_str_account | Add-Member -Type NoteProperty -Name tableRetentionPolicyDays -Value $null
@@ -185,17 +191,17 @@ function Get-MonkeyAZClassicStorageAccount {
 					if ($fileSAS) {
 						#Get Queue diagnostig settings
 						$params = @{
-							url = $fileSAS;
+							Url = $fileSAS;
 							Method = "GET";
 							UserAgent = $O365Object.UserAgent;
 						}
 						[xml]$FileDiagSettings = Invoke-UrlRequest @params
 						if ($FileDiagSettings) {
 							#Add to psobject
-							$new_str_account | Add-Member -Type NoteProperty -Name fileHourMetricsVersion -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.version
-							$new_str_account | Add-Member -Type NoteProperty -Name fileHourMetricsEnabled -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.enabled
+							$new_str_account | Add-Member -Type NoteProperty -Name fileHourMetricsVersion -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.Version
+							$new_str_account | Add-Member -Type NoteProperty -Name fileHourMetricsEnabled -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.Enabled
 							$new_str_account | Add-Member -Type NoteProperty -Name fileHourMetricsIncludeAPIs -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.IncludeAPIs
-							$new_str_account | Add-Member -Type NoteProperty -Name fileHourMetricsRetentionPolicyEnabled -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.retentionPolicy.enabled
+							$new_str_account | Add-Member -Type NoteProperty -Name fileHourMetricsRetentionPolicyEnabled -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.retentionPolicy.Enabled
 							if ($FileDiagSettings.StorageServiceProperties.HourMetrics.retentionPolicy.Days) {
 								$new_str_account | Add-Member -Type NoteProperty -Name fileHourMetricsRetentionPolicyDays -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.retentionPolicy.Days
 							}
@@ -203,9 +209,9 @@ function Get-MonkeyAZClassicStorageAccount {
 								$new_str_account | Add-Member -Type NoteProperty -Name fileHourMetricsRetentionPolicyDays -Value $null
 							}
 							#Add to psobject
-							$new_str_account | Add-Member -Type NoteProperty -Name fileMinuteMetricsVersion -Value $FileDiagSettings.StorageServiceProperties.MinuteMetrics.version
-							$new_str_account | Add-Member -Type NoteProperty -Name fileMinuteMetricsEnabled -Value $FileDiagSettings.StorageServiceProperties.MinuteMetrics.enabled
-							$new_str_account | Add-Member -Type NoteProperty -Name fileMinuteMetricsRetentionPolicyEnabled -Value $FileDiagSettings.StorageServiceProperties.MinuteMetrics.retentionPolicy.enabled
+							$new_str_account | Add-Member -Type NoteProperty -Name fileMinuteMetricsVersion -Value $FileDiagSettings.StorageServiceProperties.MinuteMetrics.Version
+							$new_str_account | Add-Member -Type NoteProperty -Name fileMinuteMetricsEnabled -Value $FileDiagSettings.StorageServiceProperties.MinuteMetrics.Enabled
+							$new_str_account | Add-Member -Type NoteProperty -Name fileMinuteMetricsRetentionPolicyEnabled -Value $FileDiagSettings.StorageServiceProperties.MinuteMetrics.retentionPolicy.Enabled
 							if ($FileDiagSettings.StorageServiceProperties.MinuteMetrics.retentionPolicy.Days) {
 								$new_str_account | Add-Member -Type NoteProperty -Name fileMinuteMetricsRetentionPolicyDays -Value $FileDiagSettings.StorageServiceProperties.MinuteMetrics.retentionPolicy.Days
 							}
@@ -220,20 +226,20 @@ function Get-MonkeyAZClassicStorageAccount {
 					if ($blobSAS) {
 						#Get Blob diagnostig settings
 						$params = @{
-							url = $blobSAS;
+							Url = $blobSAS;
 							Method = "GET";
 							UserAgent = $O365Object.UserAgent;
 						}
 						[xml]$BlobDiagSettings = Invoke-UrlRequest @params
 						if ($BlobDiagSettings) {
 							#Add to psobject
-							$new_str_account | Add-Member -Type NoteProperty -Name blobLogVersion -Value $BlobDiagSettings.StorageServiceProperties.Logging.version
-							$new_str_account | Add-Member -Type NoteProperty -Name blobLogReadEnabled -Value $BlobDiagSettings.StorageServiceProperties.Logging.Read
-							$new_str_account | Add-Member -Type NoteProperty -Name blobLogWriteEnabled -Value $BlobDiagSettings.StorageServiceProperties.Logging.Write
-							$new_str_account | Add-Member -Type NoteProperty -Name blobLogDeleteEnabled -Value $BlobDiagSettings.StorageServiceProperties.Logging.Delete
-							$new_str_account | Add-Member -Type NoteProperty -Name blobRetentionPolicyEnabled -Value $BlobDiagSettings.StorageServiceProperties.Logging.retentionPolicy.enabled
-							if ($BlobDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days) {
-								$new_str_account | Add-Member -Type NoteProperty -Name blobRetentionPolicyDays -Value $BlobDiagSettings.StorageServiceProperties.Logging.retentionPolicy.Days
+							$new_str_account | Add-Member -Type NoteProperty -Name blobLogVersion -Value $BlobDiagSettings.StorageServiceProperties.logging.Version
+							$new_str_account | Add-Member -Type NoteProperty -Name blobLogReadEnabled -Value $BlobDiagSettings.StorageServiceProperties.logging.Read
+							$new_str_account | Add-Member -Type NoteProperty -Name blobLogWriteEnabled -Value $BlobDiagSettings.StorageServiceProperties.logging.Write
+							$new_str_account | Add-Member -Type NoteProperty -Name blobLogDeleteEnabled -Value $BlobDiagSettings.StorageServiceProperties.logging.Delete
+							$new_str_account | Add-Member -Type NoteProperty -Name blobRetentionPolicyEnabled -Value $BlobDiagSettings.StorageServiceProperties.logging.retentionPolicy.Enabled
+							if ($BlobDiagSettings.StorageServiceProperties.logging.retentionPolicy.Days) {
+								$new_str_account | Add-Member -Type NoteProperty -Name blobRetentionPolicyDays -Value $BlobDiagSettings.StorageServiceProperties.logging.retentionPolicy.Days
 							}
 							else {
 								$new_str_account | Add-Member -Type NoteProperty -Name blobRetentionPolicyDays -Value $null
@@ -270,11 +276,16 @@ function Get-MonkeyAZClassicStorageAccount {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Classic storage accounts",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureClassicStorageAccountEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

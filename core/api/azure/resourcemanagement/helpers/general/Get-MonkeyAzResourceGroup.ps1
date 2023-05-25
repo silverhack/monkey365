@@ -33,17 +33,30 @@ Function Get-MonkeyAzResourceGroup{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [cmdletbinding()]
     Param (
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [String[]]$resourceGroupNames
-        )
+        [String[]]$ResourceGroupNames
+    )
     Begin{
-        $all_resource_groups = @()
+        $all_resource_groups = New-Object System.Collections.Generic.List[System.Object]
+        #Get API version
+        $apiDetails = $O365Object.internal_config.resourceManager | Where-Object {$_.Name -eq 'resourceGroup'} | Select-Object -ExpandProperty resource -ErrorAction Ignore
+        if($null -eq $apiDetails){
+            $msg = @{
+                MessageData = ($message.MonkeyInternalConfigError);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'verbose';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365ConfigError');
+            }
+            Write-Verbose @msg
+            break
+        }
     }
     Process{
-        if($null -ne $resourceGroupNames -and $resourceGroupNames.Count -gt 0){
-            foreach($rg in $resourceGroupNames.GetEnumerator()){
+        if($null -ne $ResourceGroupNames -and $ResourceGroupNames.Count -gt 0){
+            foreach($rg in $ResourceGroupNames.GetEnumerator()){
                 #Get Resource Group
                 $objectType = ("resourcegroups/{0}" -f $rg)
                 $params = @{
@@ -52,11 +65,14 @@ Function Get-MonkeyAzResourceGroup{
                     Environment = $O365Object.Environment;
                     ContentType = 'application/json';
                     Method = "GET";
-                    APIVersion = "2019-10-01";
+                    APIVersion = $apiDetails.api_version;
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
                 }
                 $resource_group = Get-MonkeyRMObject @params
                 if($resource_group){
-                    $all_resource_groups +=$resource_group
+                    [void]$all_resource_groups.Add($resource_group)
                 }
                 else{
                     $msg = @{
@@ -77,11 +93,14 @@ Function Get-MonkeyAzResourceGroup{
                 Environment = $O365Object.Environment;
                 ContentType = 'application/json';
                 Method = "GET";
-                APIVersion = "2019-10-01";
+                APIVersion = $apiDetails.api_version;
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
             }
             $resource_group = Get-MonkeyRMObject @params
             if($resource_group){
-                $all_resource_groups +=$resource_group
+                [void]$all_resource_groups.Add($resource_group)
             }
         }
     }

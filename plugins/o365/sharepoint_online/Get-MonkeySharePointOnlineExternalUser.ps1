@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-function Get-MonkeySPSExternalUser {
+function Get-MonkeySharePointOnlineExternalUser {
 <#
         .SYNOPSIS
 		Plugin to get information about SPS external users
@@ -30,7 +30,7 @@ function Get-MonkeySPSExternalUser {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeySPSExternalUser
+            File Name	: Get-MonkeySharePointOnlineExternalUser
             Version     : 1.0
 
         .LINK
@@ -47,73 +47,54 @@ function Get-MonkeySPSExternalUser {
 		$monkey_metadata = @{
 			Id = "sps0002";
 			Provider = "Microsoft365";
+			Resource = "SharePointOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeySharePointOnlineExternalUser";
+			ApiType = $null;
 			Title = "Plugin to get information about SPS external users";
 			Group = @("SharePointOnline");
-			ServiceName = "SharePoint Online external users";
-			PluginName = "Get-MonkeySPSExternalUser";
+			Tags = @{
+			    "enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Get Access Token for SharePoint admin
-		$sps_admin_auth = $O365Object.auth_tokens.SharePointAdminOnline
-		#Check if user is sharePoint administrator
-		$isSharepointAdministrator = Test-IsUserSharepointAdministrator
-		#Set new array
-		$sps_external_users = @()
+        if($null -eq $O365Object.spoWebs){
+            break
+        }
+        #set generic list
+        $all_external_users = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
 	}
-	process {
-		if ($isSharepointAdministrator) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"SharePoint Online external users",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('SPSExternalUsersInfo');
-			}
-			Write-Information @msg
-			#Get all webs for user
-			$allowed_sites = Get-MonkeySPSWebsForUser
-			#Getting external users for each site
-			foreach ($site in $allowed_sites) {
-				$msg = @{
-					MessageData = ($message.SPSCheckSiteForExternalUsers -f $site.url);
-					callStack = (Get-PSCallStack | Select-Object -First 1);
-					logLevel = 'info';
-					InformationAction = $InformationAction;
-					Tags = @('SPSExternalUsersInfo');
-				}
-				Write-Information @msg
-				#body
-				$body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="Monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="320" ObjectPathId="319" /><Query Id="321" ObjectPathId="319"><Query SelectAllProperties="false"><Properties><Property Name="TotalUserCount" ScalarProperty="true" /><Property Name="UserCollectionPosition" ScalarProperty="true" /><Property Name="ExternalUserCollection"><Query SelectAllProperties="false"><Properties /></Query><ChildItemQuery SelectAllProperties="false"><Properties><Property Name="DisplayName" ScalarProperty="true" /><Property Name="InvitedAs" ScalarProperty="true" /><Property Name="UniqueId" ScalarProperty="true" /><Property Name="AcceptedAs" ScalarProperty="true" /><Property Name="WhenCreated" ScalarProperty="true" /><Property Name="InvitedBy" ScalarProperty="true" /></Properties></ChildItemQuery></Property></Properties></Query></Query></Actions><ObjectPaths><Method Id="319" ParentId="316" Name="GetExternalUsersForSite"><Parameters><Parameter Type="String">${site}</Parameter><Parameter Type="Int32">${position}</Parameter><Parameter Type="Int32">50</Parameter><Parameter Type="Null" /><Parameter Type="Enum">0</Parameter></Parameters></Method><Constructor Id="316" TypeId="{e45fd516-a408-4ca4-b6dc-268e2f1f0f83}" /></ObjectPaths></Request>' -replace '\${site}',$site.url -replace '\${position}',0
-				#Set object metadata
-				$objectMetadata = @{
-					CheckValue = 1;
-					isEqualTo = 320;
-					GetValue = 4;
-				}
-				$param = @{
-					Authentication = $sps_admin_auth;
-					Content_Type = 'application/json; charset=utf-8';
-					Data = $body_data;
-					objectMetadata = $objectMetadata;
-				}
-				#call SPS
-				$raw_data = Invoke-MonkeySPSDefaultUrlRequest @param
-				if ([bool]($raw_data.PSObject.Properties.Name -match "ExternalUserCollection")) {
-					$users = $raw_data.ExternalUserCollection._Child_Items_
-					foreach ($user in $users) {
-						$user | Add-Member NoteProperty -Name SiteUrl -Value $site.url
-						$user | Add-Member NoteProperty -Name Site -Value $site
-					}
-					$sps_external_users += $raw_data.ExternalUserCollection._Child_Items_
-				}
-			}
+	Process {
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"SharePoint Online external users",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('SPSExternalUsersInfo');
 		}
+		Write-Information @msg
+        foreach($web in $O365Object.spoWebs){
+            $p = @{
+                Web = $web;
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $ext_users = Get-MonkeyCSOMExternalUser @p
+            if($ext_users){
+                #Add to list
+                foreach($ext_user in $ext_users){
+                    [void]$all_external_users.Add($ext_user)
+                }
+            }
+        }
 	}
-	end {
-		if ($sps_external_users) {
-			$sps_external_users.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Tenant.Externalusers')
+	End {
+		if ($all_external_users) {
+			$all_external_users.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Tenant.Externalusers')
 			[pscustomobject]$obj = @{
-				Data = $sps_external_users;
+				Data = $all_external_users;
 				Metadata = $monkey_metadata;
 			}
 			$returnData.o365_spo_external_users = $obj
@@ -122,11 +103,16 @@ function Get-MonkeySPSExternalUser {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online External Users",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.Verbose;
 				Tags = @('SPSExternalUsersEmptyResponse');
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

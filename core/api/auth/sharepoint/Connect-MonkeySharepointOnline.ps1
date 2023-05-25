@@ -33,48 +33,11 @@ Function Connect-MonkeySharepointOnline {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory=$false, HelpMessage="parameters")]
         [Object]$parameters
     )
-    if($O365Object.isUsingAdalLib){
-        Get-AdalTokenForSharepointOnline @parameters
-    }
-    else{
-        <#
-        There is a problem with MSAL, the SharePoint Online application and the localhost replyUrl. Using the classic powershell app instead
-        #Set new params
-        $new_params = @{}
-        foreach ($param in $parameters.GetEnumerator()){
-            $new_params.add($param.Key, $param.Value)
-        }
-        #Check if confidential App
-        if($O365Object.isConfidentialApp -eq $false){
-            if($null -eq $O365Object.sps_msal_application){
-                #Public App
-                $app2 = $O365Object.msal_application_args.Clone()
-                #Add clientId and RedirectUri
-                $app2.ClientId = (Get-WellKnownAzureService -AzureService SharePointOnline)
-                if($PSEdition -eq "Desktop"){
-                    $app2.RedirectUri = "https://oauth.spops.microsoft.com/"
-                }
-                $sps_app = New-MonkeyMsalApplication @app2
-                if($null -ne $sps_app){
-                    $O365Object.sps_msal_application = $sps_app
-                }
-                $new_params.publicApp = $O365Object.sps_msal_application
-            }
-            else{
-                $new_params.publicApp = $O365Object.sps_msal_application
-            }
-        }
-        else{
-            $O365Object.sps_msal_application = $O365Object.msalapplication
-            $new_params.confidentialApp = $O365Object.msalapplication;
-        }
-        #>
-        #Connect to Sharepoint Online
-        Get-MSALTokenForSharepointOnline @parameters
-    }
+    #Connect to Sharepoint Online
+    Get-MSALTokenForSharepointOnline @parameters
 }

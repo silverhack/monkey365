@@ -48,27 +48,43 @@ function Get-MonkeyEXOOutboundConnector {
 		$monkey_metadata = @{
 			Id = "exo0013";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOOutboundConnector";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about outbound connector in Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Outbound Connector";
-			PluginName = "Get-MonkeyEXOOutboundConnector";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+        #Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online outbound connector",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoOutboundConnectorInfo');
-			}
-			Write-Information @msg
-			$exo_outbound_connector = Get-ExoMonkeyOutboundConnector
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online outbound connector",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('ExoOutboundConnectorInfo');
 		}
+		Write-Information @msg
+        $p = @{
+            Authentication = $ExoAuth;
+            Environment = $Environment;
+            ResponseFormat = 'clixml';
+            Command = 'Get-OutboundConnector';
+            Method = "POST";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+		$exo_outbound_connector = Get-PSExoAdminApiObject @p
 	}
 	end {
 		if ($null -ne $exo_outbound_connector) {
@@ -83,11 +99,16 @@ function Get-MonkeyEXOOutboundConnector {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online outbound connector",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoOutboundConnectorEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

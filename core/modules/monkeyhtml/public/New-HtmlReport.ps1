@@ -89,7 +89,7 @@ Function New-HtmlReport{
             Set-Variable -Name dashboards -Value $dashboardData -Scope script
         }
         if($null -ne $tableData -and $tableData.Count -gt 0){
-            Set-Variable -Name dtables -Value $tableData -Scope script
+            Set-Variable -Name dtables -Value $tableData -Scope Script
         }
         if($null -ne $chartData -and $chartData.Count -gt 0){
             Set-Variable -Name dcharts -Value $chartData -Scope script
@@ -334,10 +334,10 @@ Function New-HtmlReport{
         Remove-Variable -Name user_info -ErrorAction Ignore
         Remove-Variable -Name data -ErrorAction Ignore
         Remove-Variable -Name exec_info -ErrorAction Ignore
-        Remove-Variable -Name dtables -ErrorAction Ignore
         Remove-Variable -Name dcharts -ErrorAction Ignore
         Remove-Variable -Name dashboards -ErrorAction Ignore
         Remove-Variable -Name environment -ErrorAction Ignore
         Remove-Variable -Name tenant -ErrorAction Ignore
+        Remove-Variable -Name dtables -ErrorAction Ignore
     }
 }

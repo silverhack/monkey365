@@ -48,10 +48,16 @@ function Get-MonkeyADTenantInfo {
 		$monkey_metadata = @{
 			Id = "aad0035";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADTenantInfo";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get tenant info from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD Tenant information";
-			PluginName = "Get-MonkeyADTenantInfo";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		$Environment = $O365Object.Environment
@@ -74,6 +80,9 @@ function Get-MonkeyADTenantInfo {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		#Get tenant info
 		$ad_tenant_info = Get-MonkeyAzurePortalObject @params
@@ -91,11 +100,16 @@ function Get-MonkeyADTenantInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD Tenant Info",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalTenantEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

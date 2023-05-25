@@ -46,17 +46,23 @@ function Get-MonkeyAzCognitiveService {
 		[string]$pluginId
 	)
 	begin {
-		#Import Localized data
 		#Plugin metadata
 		$monkey_metadata = @{
 			Id = "az00006";
 			Provider = "Azure";
+			Resource = "CognitiveServices";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzCognitiveService";
+			ApiType = "resourceManagement";
 			Title = "Azure Cognitive Service";
 			Group = @("CognitiveServices");
-			ServiceName = "Azure Cognitive Service";
-			PluginName = "Get-MonkeyAzCognitiveService";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
+		#Import Localized data
 		$LocalizedDataParams = $O365Object.LocalizedDataParams
 		Import-LocalizedData @LocalizedDataParams;
 		#Get Environment
@@ -83,7 +89,7 @@ function Get-MonkeyAzCognitiveService {
 		if ($cognitive_services) {
 			foreach ($cognitive_service in $cognitive_services) {
 				$URI = ("{0}{1}?api-version={2}" `
- 						-f $O365Object.Environment.ResourceManager,$cognitive_service.id,`
+ 						-f $O365Object.Environment.ResourceManager,$cognitive_service.Id,`
  						$CognitiveAPI.api_version)
 				$params = @{
 					Authentication = $rm_auth;
@@ -120,11 +126,16 @@ function Get-MonkeyAzCognitiveService {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Cognitive Services",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureCognitiveEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

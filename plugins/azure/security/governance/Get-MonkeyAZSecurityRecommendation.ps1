@@ -47,10 +47,16 @@ function Get-MonkeyAZSecurityRecommendation {
 		$monkey_metadata = @{
 			Id = "az00026";
 			Provider = "Azure";
+			Resource = "Subscription";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAZSecurityRecommendation";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get security recommendations from Azure";
 			Group = @("Subscription","DefenderForCloud");
-			ServiceName = "Azure Security Recommendations";
-			PluginName = "Get-MonkeyAZSecurityRecommendation";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Import Localized data
@@ -74,7 +80,7 @@ function Get-MonkeyAZSecurityRecommendation {
 		Write-Information @msg
 		#Get security recommendations
 		$URI = ("{0}{1}/providers/Microsoft.Advisor/recommendations?api-Version={2}" `
- 				-f $O365Object.Environment.ResourceManager,$O365Object.current_subscription.id,$AzureAdvisorConfig.api_version)
+ 				-f $O365Object.Environment.ResourceManager,$O365Object.current_subscription.Id,$AzureAdvisorConfig.api_version)
 		$params = @{
 			Authentication = $rm_auth;
 			OwnQuery = $URI;
@@ -97,11 +103,16 @@ function Get-MonkeyAZSecurityRecommendation {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Recommendations",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureSecRecommendationsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

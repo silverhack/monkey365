@@ -47,10 +47,16 @@ function Get-MonkeyAZDisk {
 		$monkey_metadata = @{
 			Id = "az00041";
 			Provider = "Azure";
+			Resource = "VirtualMachines";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAZDisk";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get managed disk information from Azure";
 			Group = @("VirtualMachines");
-			ServiceName = "Azure managed disk";
-			PluginName = "Get-MonkeyAZDisk";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Environment
@@ -88,7 +94,7 @@ function Get-MonkeyAZDisk {
 				#Construct URI
 				$URI = ("{0}{1}?api-version={2}" `
  						-f $O365Object.Environment.ResourceManager,`
- 						$disk.id,$AzureDiskConfig.api_version)
+ 						$disk.Id,$AzureDiskConfig.api_version)
 
 				$params = @{
 					Authentication = $rm_auth;
@@ -98,13 +104,13 @@ function Get-MonkeyAZDisk {
 					Method = "GET";
 				}
 				$managed_disk = Get-MonkeyRMObject @params
-				if ($managed_disk.id) {
+				if ($managed_disk.Id) {
 					$new_disk = New-Object -TypeName PSCustomObject
-					$new_disk | Add-Member -Type NoteProperty -Name id -Value $managed_disk.id
+					$new_disk | Add-Member -Type NoteProperty -Name id -Value $managed_disk.Id
 					$new_disk | Add-Member -Type NoteProperty -Name name -Value $managed_disk.Name
 					$new_disk | Add-Member -Type NoteProperty -Name location -Value $managed_disk.location
-					$new_disk | Add-Member -Type NoteProperty -Name skuname -Value $managed_disk.sku.Name
-					$new_disk | Add-Member -Type NoteProperty -Name skutier -Value $managed_disk.sku.tier
+					$new_disk | Add-Member -Type NoteProperty -Name skuname -Value $managed_disk.SKU.Name
+					$new_disk | Add-Member -Type NoteProperty -Name skutier -Value $managed_disk.SKU.tier
 					$new_disk | Add-Member -Type NoteProperty -Name ostype -Value $managed_disk.Properties.osType
 					$new_disk | Add-Member -Type NoteProperty -Name disksize -Value $managed_disk.Properties.diskSizeGB
 					$new_disk | Add-Member -Type NoteProperty -Name timecreated -Value $managed_disk.Properties.timeCreated
@@ -116,7 +122,7 @@ function Get-MonkeyAZDisk {
 					$new_disk | Add-Member -Type NoteProperty -Name rawObject -Value $managed_disk
 					#Get OS disk Encryption status
 					if ($null -ne $managed_disk.Properties.PSObject.Properties.Item('encryptionSettingsCollection')) {
-						if ($managed_disk.Properties.encryptionSettingsCollection.enabled -eq $true) {
+						if ($managed_disk.Properties.encryptionSettingsCollection.Enabled -eq $true) {
 							$new_disk | Add-Member -Type NoteProperty -Name os_disk_encryption -Value "Enabled"
 						}
 						else {
@@ -147,11 +153,16 @@ function Get-MonkeyAZDisk {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Disks",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureDiskEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

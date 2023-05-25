@@ -61,13 +61,13 @@ Function Invoke-Monkey365{
 	            Author		: Juan Garrido
                 Twitter		: @tr1ana
                 File Name	: Invoke-Monkey365.ps1
-                Version     : 0.9-beta
+                Version     : 0.8.5-beta
 
             .LINK
                 https://github.com/silverhack/monkey365
 
         .EXAMPLE
-	        $assets = Invoke-Monkey365 -ExportTo PRINT -PromptBehavior SelectAccount -IncludeAzureActiveDirectory -Instance Microsoft365 -Analysis SharePointOnline
+	        $assets = Invoke-Monkey365 -ExportTo PRINT -PromptBehavior SelectAccount -IncludeAzureAD -Instance Microsoft365 -Analysis SharePointOnline
 
             This example retrieves information of both Azure AD and SharePoint Online and print results. If credentials are not supplied, Monkey365 will prompt for credentials.
 
@@ -109,8 +109,6 @@ Function Invoke-Monkey365{
             SecurityCenter               Get information about Microsoft Defender for Cloud
             RoleAssignments              Retrieves information about RBAC Users and Groups
             StorageAccounts              Retrieves information about storage accounts deployed on Classic mode and resource manager
-            MissingPatches               Retrieves information about missing patches by using the new Azure Log Analytics query language.
-            SecurityBaseline             Retrieves information about missing security baseline policies by using the new Azure Log Analytics query language.
             All                          Extract all information about an Azure subscription
 
         .PARAMETER ExportTo
@@ -118,7 +116,7 @@ Function Invoke-Monkey365{
 
         .PARAMETER ExcludedResources
 	        Exclude unwanted azure resources from being scanned
-        
+
         .PARAMETER ExcludePlugin
 	        Exclude plugins from being executed
 
@@ -185,7 +183,7 @@ Function Invoke-Monkey365{
 
         [Parameter(Mandatory=$false, HelpMessage="Clear token cache")]
         [Switch]
-        $IncludeAzureActiveDirectory,
+        $IncludeAzureAD,
 
         [Parameter(HelpMessage="Save entire project")]
         [Switch]
@@ -302,22 +300,6 @@ Function Invoke-Monkey365{
     dynamicparam{
         # Set available instance class
         $instance_class = @{
-            <#
-            Azure = 'DomainPolicies','Databases','VirtualMachines',
-                    'SecurityAlerts', 'SecurityCenter',
-                    'RoleAssignments', 'Firewall',
-                    'StorageAccounts', 'SecurityBaseline',
-                    'MissingPatches', 'Web Application Firewall',
-                    'SecurityPolicies', 'SecurityContacts',
-                    'Custom', 'AppServices', 'DocumentDB',
-                    'KeyVaults', 'All'
-            Office365 = 'ExchangeOnline',
-                        'PurView',
-                        'SharePointOnline',
-                        'MicrosoftTeams',
-                        'IRM',
-                        'MicrosoftForms'
-            #>
             Azure = $Script:azure_plugins
             Microsoft365 = $Script:m365_plugins
         }
@@ -343,40 +325,40 @@ Function Invoke-Monkey365{
         }
         #Add parameters for Azure instance
         if($null -ne (Get-Variable -Name Instance -ErrorAction Ignore) -and $Instance -eq 'Azure'){
-            #Create the -all_subscriptions switch parameter
+            #Create the -AllSubscriptions switch parameter
             $attributeCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
             # define a new parameter attribute
             $all_sbs_attr_name = New-Object System.Management.Automation.ParameterAttribute
             $all_sbs_attr_name.Mandatory = $false
             $attributeCollection.Add($all_sbs_attr_name)
 
-            $sbs_pname = 'all_subscriptions'
+            $sbs_pname = 'AllSubscriptions'
             $analysis_type_dynParam = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter($sbs_pname,
             [switch], $attributeCollection)
             $paramDictionary.Add($sbs_pname, $analysis_type_dynParam)
 
-            #Create the -subscriptions string parameter
+            #Create the -Subscriptions string parameter
             $attributeCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
             # define a new parameter attribute
             $sbs_attr_name = New-Object System.Management.Automation.ParameterAttribute
             $sbs_attr_name.Mandatory = $false
             $attributeCollection.Add($sbs_attr_name)
 
-            $sbs_pname = 'subscriptions'
+            $sbs_pname = 'Subscriptions'
             $analysis_type_dynParam = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter($sbs_pname,
             [string], $attributeCollection)
             $paramDictionary.Add($sbs_pname, $analysis_type_dynParam)
 
-            #Create the -resourcegroups string parameter
+            #Create the -ResourceGroups string parameter
             $attributeCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
             # define a new parameter attribute
             $rg_attr_name = New-Object System.Management.Automation.ParameterAttribute
             $rg_attr_name.Mandatory = $false
             $attributeCollection.Add($rg_attr_name)
 
-            $rg_pname = 'resourcegroups'
+            $rg_pname = 'ResourceGroups'
             $rg_type_dynParam = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter($rg_pname,
-            [string[]], $attributeCollection)
+            [String[]], $attributeCollection)
             $paramDictionary.Add($rg_pname, $rg_type_dynParam)
 
             #Create the -ExcludeResources File parameter
@@ -391,12 +373,25 @@ Function Invoke-Monkey365{
             [System.IO.FileInfo], $attributeCollection)
             $paramDictionary.Add($rsrc_pname, $rsrc_type_dynParam)
         }
+        #Add parameters for Microsoft365 instance
+        if($null -ne (Get-Variable -Name Instance -ErrorAction Ignore) -and $Instance -eq 'Microsoft365'){
+            #Create the -ScanSites string parameter
+            $attributeCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+            # define a new parameter attribute
+            $rg_attr_name = New-Object System.Management.Automation.ParameterAttribute
+            $rg_attr_name.Mandatory = $false
+            $attributeCollection.Add($rg_attr_name)
+            $rg_pname = 'ScanSites'
+            $rg_type_dynParam = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter($rg_pname,
+            [string[]], $attributeCollection)
+            $paramDictionary.Add($rg_pname, $rg_type_dynParam)
+        }
         # return the collection of dynamic parameters
         $paramDictionary
     }
     Begin{
         #Set Window name
-        $Host.UI.RawUI.WindowTitle = "Monkey365 Security Scanner"
+        $Host.UI.RawUI.WindowTitle = "Monkey 365 Security Scanner"
         #Start Time
         $starttimer = Get-Date
         #####Get Default parameters ########
@@ -406,7 +401,7 @@ Function Invoke-Monkey365{
         ################### End Validate parameters #####################
         Initialize-MonkeyVar -MyParams $MyParams
         #Create O365 object
-        $O365Object = New-O365Object
+        New-O365Object
         #Set timer
         $O365Object.startDate = $starttimer
         Update-PsObject
@@ -437,11 +432,6 @@ Function Invoke-Monkey365{
             Get-PublicTenantInformation -Username $ResolveTenantUserName
             return
         }
-
-        #Check if using Adal Lib
-        if($null -ne (Get-Variable -Name isUsingAdalLib -ErrorAction Ignore)){
-            $O365Object.isUsingAdalLib = $Script:isUsingAdalLib
-        }
         #Check if import job
         if($PSBoundParameters.ContainsKey('ImportJob') -and $PSBoundParameters.ImportJob){
             Import-MonkeyJob
@@ -453,11 +443,9 @@ Function Invoke-Monkey365{
         Initialize-AuthenticationParam
         #Connect
         Connect-MonkeyCloud
-        #Start Watcher
-        Watch-AccessToken -Interval 50
     }
     Process{
-        if($null -ne $O365Object.Instance){
+        if(($PSBoundParameters.ContainsKey('ImportJob') -and $null -eq $PSBoundParameters['ImportJob']) -and $null -ne $O365Object.Instance){
             switch ($O365Object.Instance.ToLower()){
                 'azure'{
                     Invoke-AzureScanner
@@ -475,8 +463,6 @@ Function Invoke-Monkey365{
         }
     }
     End{
-        #Stop Watcher
-        Watch-AccessToken -Stop
         #Stop timer
         $stoptimer = Get-Date
         $elapsedTime =  [math]::round(($stoptimer - $starttimer).TotalMinutes , 2)
@@ -490,12 +476,19 @@ Function Invoke-Monkey365{
         Write-Information @msg
         #Stopping sessions
         Remove-MonkeyPsSession
+        #Clean runspaces
+        if($null -ne $O365Object.monkey_runspacePool -and $O365Object.monkey_runspacePool -is [System.Management.Automation.Runspaces.RunspacePool]){
+            $O365Object.monkey_runspacePool.Dispose()
+        }
+        #Start Watcher
+        if($null -ne (Get-Command -Name "Watch-AccessToken" -ErrorAction ignore)){
+            Watch-AccessToken -Stop
+        }
+        #Stop timer
+        $O365Object.Timer.stop()
+        $O365Object.Timer.dispose()
         #Stop loggers
         Stop-Logger
-        #Clear Cache
-        if($O365Object.isUsingAdalLib){
-            Clear-MonkeyADALTokenCache
-        }
         #collect garbage
         [System.GC]::GetTotalMemory($true) | out-null
     }

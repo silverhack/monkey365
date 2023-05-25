@@ -48,13 +48,28 @@ function New-HorizontalNavBar{
         #Set Picture
         $img = $navbar.SelectSingleNode('//img[contains(@class,"avatar")]')
         if($img){
-            [void]$img.SetAttribute('alt',$user_info.permissions.displayName)
-            [void]$img.SetAttribute('src',$user_info.userpic)
+            try{
+                [void]$img.SetAttribute('alt',$user_info.permissions.displayName)
+            }
+            catch{
+                Write-Verbose $_
+            }
+            try{
+                [void]$img.SetAttribute('src',$user_info.userpic)
+            }
+            catch{
+                Write-Verbose $_
+            }
         }
         #Set username
         $span = $navbar.SelectSingleNode('//span[contains(@id,"username")]')
         if($span){
-            $span.InnerText = $user_info.permissions.displayName
+            try{
+                $span.InnerText = $user_info.permissions.displayName
+            }
+            catch{
+                Write-Verbose $_
+            }
         }
         #Set execution details
         $exec = $navbar.SelectSingleNode('//a[text() = "Execution Details"]')

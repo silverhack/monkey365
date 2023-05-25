@@ -36,29 +36,59 @@ Function Get-MonkeyPlugin{
     [CmdletBinding()]
     Param ()
     Begin{
-        #Set excluded auth var
-        $ExcludedAuths = @("certificate_credentials","client_credentials")
-        if($ExcludedAuths -contains $O365Object.AuthType){
-            $excluded = $true
-        }
-        else{
-            $excluded = $false
-        }
-        #Set selected_plugins array
+        #Set arrays
         $selected_plugins = @()
+        $available_plugins = @()
         #Get all plugin metadata
-        $all_plugin_metadata = Get-MetadataFromPlugin
+        try{
+            $all_plugin_metadata = Get-MetadataFromPlugin
+            #Remove disabled plugins
+            $all_plugin_metadata = $all_plugin_metadata | Where-Object {$null -ne $_.Tags -and $null -ne $_.Tags.Item('enabled') -and $_.Tags.Item('enabled') -eq $true}
+        }
+        catch{
+            $errorMessage = @{
+                Message      = $_.Exception.Message
+                Category     = [System.Management.Automation.ErrorCategory]::InvalidData
+                ErrorId      = 'Monkey365PluginError'
+            }
+            $msg = @{
+                MessageData = $errorMessage;
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'error';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365PluginError');
+            }
+            Write-Error @msg
+            $all_plugin_metadata = @()
+        }
         $targeted_analysis = $O365Object.initParams.Analysis
+        #Remove plugins for services that are not available
+        foreach($service in $O365Object.onlineServices.GetEnumerator()){
+            if($service.Value -eq $true){
+                $_plugins = $all_plugin_metadata | Where-Object {$_.Group.Contains($service.Name) -or $_.Provider -eq $service.Name}
+                if($_plugins){
+                    $available_plugins+=$_plugins
+                }
+            }
+        }
+        try{
+            $useMsGraph = [System.Convert]::ToBoolean($O365Object.internal_config.azuread.useMsGraph)
+            $useAADOldAPIForUsers = [System.Convert]::ToBoolean($O365Object.internal_config.azuread.provider.graph.getUsersWithAADInternalAPI)
+        }
+        catch{
+            $useMsGraph = $true;
+            $useAADOldAPIForUsers = $false;
+        }
     }
     Process{
-        if($null -ne $all_plugin_metadata -and $null -ne $targeted_analysis){
+        if($available_plugins.Count -gt 0 -and $null -ne $targeted_analysis){
             foreach($element in $targeted_analysis.GetEnumerator()){
                 if($element -eq 'All'){
-                    $selected_plugins = $all_plugin_metadata | Where-Object {$_.Provider -eq $O365Object.Instance}
+                    $selected_plugins = $available_plugins | Where-Object {$_.Provider -eq $O365Object.Instance}
                     break;
                 }
                 else{
-                    $discovered_plugins = $all_plugin_metadata | Where-Object {$_.Provider -eq $O365Object.Instance -and $_.Group.Contains($element)}
+                    $discovered_plugins = $available_plugins | Where-Object {$_.Provider -eq $O365Object.Instance -and $_.Group.Contains($element)}
                     if($discovered_plugins){
                         $selected_plugins+=$discovered_plugins
                     }
@@ -67,26 +97,47 @@ Function Get-MonkeyPlugin{
         }
         #Check if should load AzureAD plugins
         $discovered_plugins = $null
-        if($null -ne $all_plugin_metadata -and $O365Object.IncludeAAD -eq $true){
-            if([System.Convert]::ToBoolean($O365Object.internal_config.azuread.useAzurePortalAPI) -and $excluded -eq $false){
-                #Load AzureADPortal and LegacyO365API plugins
-                $discovered_plugins = $all_plugin_metadata | Where-Object {$_.Provider -eq "AzureAD" -and ($_.Group.Contains("AzureADPortal") -or $_.Group.Contains("LegacyO365API"))}
+        if($available_plugins.Count -gt 0 -and $O365Object.IncludeAAD -eq $true){
+            if($O365Object.isConfidentialApp -eq $true){
+                #Load MSGraph plugins
+                $discovered_plugins = $available_plugins | Where-Object {$_.Provider -eq "AzureAD" -and $_.ApiType -eq 'MSGraph'}
+                #Add PIM plugins
+                $PIM_plugins = $available_plugins | Where-Object {$_.Provider -eq "AzureAD" -and ($_.ApiType -eq 'PIM')}
+                if($PIM_plugins){
+                    $discovered_plugins+=$PIM_plugins
+                }
             }
-            else{
-                #Load legacy Graph and MSGraph plugins
-                $discovered_plugins = $all_plugin_metadata | Where-Object {$_.Provider -eq "AzureAD" -and $_.Group.Contains("AzureAD")}
+            elseif($useMsGraph -eq $false -and $O365Object.isConfidentialApp -eq $false){
+                #Load Old Graph plugins and Azure AD internal API plugins
+                $discovered_plugins = $available_plugins | Where-Object {$_.Provider -eq "AzureAD" -and ($_.ApiType -eq 'Graph' -or $_.ApiType -eq 'AzureADPortal')}
             }
-            if($null -ne $discovered_plugins){
-                #Check if dump users with internal Graph API
-                if([System.Convert]::ToBoolean($O365Object.internal_config.azuread.dumpAdUsersWithInternalGraphAPI) -and $excluded -eq $false){
-                    #Remove users from selected plugins
-                    $discovered_plugins = $discovered_plugins | Where-Object {$_.PluginName -ne "Get-MonkeyADUser"}
+            elseif($useMsGraph -and $O365Object.isConfidentialApp -eq $false){
+                #Load MS Graph plugins and Azure AD internal API plugins
+                $discovered_plugins = $available_plugins | Where-Object {$_.Provider -eq "AzureAD" -and ($_.ApiType -eq 'MSGraph' -or $_.ApiType -eq 'AzureADPortal')}
+                #Check if should load old AAD plugin for users
+                if($useAADOldAPIForUsers){
+                    #Remove MSGraph user plugin
+                    $discovered_plugins = $discovered_plugins | Where-Object {$_.PluginName -ne "Get-MonkeyAADUser"}
                     #Add graph users plugin
-                    $ad_users_plugin = $all_plugin_metadata | Where-Object {$_.Provider -eq "AzureAD" -and ($_.Group.Contains("AzureAD") -and $_.PluginName -eq "Get-MonkeyADUser")}
+                    $ad_users_plugin = $available_plugins | Where-Object {$_.Provider -eq "AzureAD" -and ($_.ApiType -eq 'Graph' -and $_.PluginName -eq "Get-MonkeyADUser")}
                     if($ad_users_plugin){
                         $discovered_plugins+=$ad_users_plugin
                     }
                 }
+                #Add graph ad policy plugin
+                $ad_policy_plugin = $available_plugins | Where-Object {$_.Provider -eq "AzureAD" -and ($_.ApiType -eq 'Graph' -and $_.PluginName -eq "Get-MonkeyADPolicy")}
+                if($ad_policy_plugin){
+                    $discovered_plugins+=$ad_policy_plugin
+                }
+                #Add PIM plugins
+                $PIM_plugins = $available_plugins | Where-Object {$_.Provider -eq "AzureAD" -and $_.ApiType -eq 'PIM'}
+                if($PIM_plugins){
+                    $discovered_plugins+=$PIM_plugins
+                }
+            }
+            else{
+                #Load MSGraph plugins
+                $discovered_plugins = $available_plugins | Where-Object {$_.Provider -eq "AzureAD" -and $_.ApiType -eq 'MSGraph'}
             }
             #Add discovered plugins
             if($null -ne $discovered_plugins){
@@ -102,11 +153,11 @@ Function Get-MonkeyPlugin{
                 MessageData = $message;
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'warning';
-                InformationAction = $script:InformationAction;
+                InformationAction = $O365Object.InformationAction;
                 Tags = @('ExcludeAzureResourceFromScanning');
             }
             #Write-Warning @msg
-            Write-Warning $message
+            Write-Warning $msg
             $selected_plugins = $selected_plugins | Where-Object {$_.Id -notin $O365Object.excludePlugins}
         }
         return $selected_plugins | Sort-Object -Property Id -Unique

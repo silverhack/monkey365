@@ -6,4 +6,6 @@
     SPSAdminUrlErrorMessage     = Unable to get Sharepoint Admin Url
     InvalidAudienceError        = Unable to get {0}. Invalid audience
     TenantDNSErrorMessage       = Unable to get DNS tenant name
+    MSALApplicationError        = Unable to create MSAL application for {0}
+    RedirectUriError            = Unable to get redirectUri for {0}
 '@

@@ -33,7 +33,8 @@ Function Get-LyncDomain{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
+    Param()
     Begin{
         $lyncDiscoverUrl = $null;
         if($Script:Tenant){
@@ -53,8 +54,14 @@ Function Get-LyncDomain{
         }
         if($null -ne $lyncDiscoverUrl){
             $uri = ("{0}?Domain={1}" -f $lyncDiscoverUrl, $defaultDomain[0].name)
-            $domain_metadata = Invoke-UrlRequest -Url $uri `
-                                              -Method Get
+            $p = @{
+                Url = $uri;
+                Method = "Get";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $domain_metadata = Invoke-UrlRequest @p
         }
         else{
             $msg = @{
@@ -69,14 +76,26 @@ Function Get-LyncDomain{
     Process{
         if($domain_metadata){
             [pscustomobject]$domain = $domain_metadata
-            $root = Invoke-UrlRequest -Url $domain._links.redirect.href `
-                                   -Method Get
+            $p = @{
+                Url = $domain._links.redirect.href;
+                Method = "Get";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $root = Invoke-UrlRequest @p
             if($root){
                 $originalUrl = New-Object System.Uri $root._links.self.href
                 $newURI = ("https://{0}{1}/domain{2}" -f $originalUrl.Host, $originalUrl.AbsolutePath, $originalUrl.Query)
-                $last_step = Invoke-UrlRequest -Url $newURI `
-                                            -Method Get `
-                                            -Encoding "application/vnd.microsoft.rtc.autodiscover+xml;v=1"
+                $p = @{
+                    Url = $newURI;
+                    Method = "Get";
+                    Encoding = 'application/vnd.microsoft.rtc.autodiscover+xml;v=1';
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                $last_step = Invoke-UrlRequest @p
                 $xml_data = [xml]$last_step
             }
         }

@@ -47,10 +47,16 @@ function Get-MonkeyAZSecCenterConfig {
 		$monkey_metadata = @{
 			Id = "az00033";
 			Provider = "Azure";
+			Resource = "DefenderForCloud";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAZSecCenterConfig";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get settings from Microsoft Defender for Cloud";
 			Group = @("DefenderForCloud");
-			ServiceName = "Azure Microsoft Defender for Cloud";
-			PluginName = "Get-MonkeyAZSecCenterConfig";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Environment
@@ -70,7 +76,7 @@ function Get-MonkeyAZSecCenterConfig {
 		}
 		Write-Information @msg
 		$URI = ("{0}{1}/providers/microsoft.Security/Settings?api-Version={2}" `
- 				-f $O365Object.Environment.ResourceManager,$O365Object.current_subscription.id,$AzureSecCenterConfig.api_version)
+ 				-f $O365Object.Environment.ResourceManager,$O365Object.current_subscription.Id,$AzureSecCenterConfig.api_version)
 
 		$params = @{
 			Authentication = $rm_auth;
@@ -94,11 +100,16 @@ function Get-MonkeyAZSecCenterConfig {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Defender for Cloud",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureSecCenterEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

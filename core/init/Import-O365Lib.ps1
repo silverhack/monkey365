@@ -36,86 +36,24 @@ Function Import-O365Lib{
 
     [CmdletBinding()]
     Param()
-    if($null -eq (Get-Variable -Name O365Object -ErrorAction Ignore)){
+    if($null -eq (Get-Variable -Name O365Object -Scope Script -ErrorAction Ignore)){
         #Create a new O365 object
-        $O365Object = New-O365Object
+        New-O365Object
     }
-    if([System.Convert]::ToBoolean($O365Object.internal_config.azuread.usemsalAuth)){
-        try{
-            #Import MSAL MODULES
-            foreach($mod in $O365Object.msal_modules){
-                $tmp_module = ("{0}/{1}" -f $O365Object.Localpath, $mod)
-                Import-Module $tmp_module.ToString() -Force -Scope Global
-            }
-            #Set variable
-            $O365Object.isUsingAdalLib = $false
-        }
-        catch{
-            $msg = @{
-                MessageData = $_
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                Tags = @('UnableToLoadMSAL');
-            }
-            Write-Warning @msg
+    try{
+        #Import MSAL MODULES
+        foreach($mod in $O365Object.msal_modules){
+            $tmp_module = ("{0}/{1}" -f $O365Object.Localpath, $mod)
+            Import-Module $tmp_module.ToString() -Force -Scope Global
         }
     }
-    else{
-        if ($PSEdition -eq 'Core'){
-            try{
-                $msg = @{
-                    MessageData = ($message.AdalUnsupportedOSErrorMessage -f [System.Environment]::OSVersion.VersionString);
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'warning';
-                    Tags = @('MSALUnsupportedOS');
-                }
-                Write-Warning @msg
-                #Write message
-                $msg = @{
-                    MessageData = $message.MSALGenericLibraryLoadMessage;
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'info';
-                    Tags = @('MSALAuthenticationLibrary');
-                }
-                Write-Information @msg
-                #Import MSAL MODULES
-                foreach($mod in $O365Object.msal_modules){
-                    $tmp_module = ("{0}/{1}" -f $O365Object.Localpath, $mod)
-                    Import-Module $tmp_module.ToString() -Force -Scope Global
-                }
-                #Set variable
-                $O365Object.isUsingAdalLib = $false
-            }
-            catch{
-                $msg = @{
-                    MessageData = $_
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'warning';
-                    Tags = @('UnableToLoadMSAL');
-                }
-                Write-Warning @msg
-            }
+    catch{
+        $msg = @{
+            MessageData = $_
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'warning';
+            Tags = @('UnableToLoadMSAL');
         }
-        else{
-            try{
-                #Import ADAL MODULES
-                foreach($mod in $O365Object.adal_modules){
-                    $tmp_module = ("{0}/{1}" -f $O365Object.Localpath, $mod)
-                    Import-Module $tmp_module.ToString() -Force -Scope Global
-                }
-                #Set variable
-                $O365Object.isUsingAdalLib = $true
-                Set-Variable isUsingAdalLib -Value $true -Scope Script -Force
-            }
-            catch{
-                $msg = @{
-                    MessageData = $_
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'warning';
-                    Tags = @('UnableToLoadMSAL');
-                }
-                Write-Warning @msg
-            }
-        }
+        Write-Warning @msg
     }
 }

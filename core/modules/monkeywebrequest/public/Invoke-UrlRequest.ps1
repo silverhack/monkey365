@@ -125,7 +125,8 @@ Function Invoke-UrlRequest{
         }
         #Set TimeSpan
         if (!$Timeout){
-            $Timeout = [timespan]::Zero
+            #$Timeout = [timespan]::Zero
+            $Timeout = [Timespan]::FromMinutes(2);
         }
         #Check if should disable SSL
         if($PSBoundParameters.ContainsKey('disableSSLVerification')){
@@ -146,6 +147,8 @@ Function Invoke-UrlRequest{
             $request.Method = $Method
             #Add keepalive
             $request.KeepAlive = $true
+            #Add TimeOut
+            $request.TimeOut = $TimeOut.TotalMilliseconds;
             #Add Headers
             if($Headers){
                 foreach($element in $headers.GetEnumerator()){

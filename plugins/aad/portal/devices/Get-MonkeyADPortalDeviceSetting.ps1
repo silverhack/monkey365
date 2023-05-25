@@ -48,10 +48,16 @@ function Get-MonkeyADPortalDeviceSetting {
 		$monkey_metadata = @{
 			Id = "aad0026";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADPortalDeviceSetting";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get device settings from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD Device Settings";
-			PluginName = "Get-MonkeyADPortalDeviceSetting";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Azure Active Directory Auth
@@ -73,6 +79,9 @@ function Get-MonkeyADPortalDeviceSetting {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$azure_ad_device_settings = Get-MonkeyAzurePortalObject @params
 	}
@@ -89,11 +98,16 @@ function Get-MonkeyADPortalDeviceSetting {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD device settings",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalDevicesEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

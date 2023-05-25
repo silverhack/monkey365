@@ -48,10 +48,16 @@ function Get-MonkeyAADRMDeviceConfiguration {
 		$monkey_metadata = @{
 			Id = "aadrm02";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about AADRM Device config";
-			Group = @("IRM");
-			ServiceName = "Azure Rights Management";
+			Resource = "IRM";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyAADRMDeviceConfiguration";
+			ApiType = $null;
+			Title = "Plugin to get information about AADRM Device config";
+			Group = @("Purview","ExchangeOnline");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		$access_token = $O365Object.auth_tokens.AADRM
@@ -77,7 +83,7 @@ function Get-MonkeyAADRMDeviceConfiguration {
 			Write-Information @msg
 			$url = ("{0}/DevicePlatforms" -f $url)
 			$params = @{
-				url = $url;
+				Url = $url;
 				Method = 'Get';
 				Content_Type = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
@@ -87,7 +93,7 @@ function Get-MonkeyAADRMDeviceConfiguration {
 			$AADRM_Devices = Invoke-UrlRequest @params
 			#Construct psobject
 			foreach ($device in $AADRM_Devices) {
-				switch ($device.key) {
+				switch ($device.Key) {
 					0
 					{
 						$aadrm_feature_status | Add-Member -Type NoteProperty -Name Windows -Value $device.value
@@ -135,13 +141,18 @@ function Get-MonkeyAADRMDeviceConfiguration {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: Device Configuration",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management= Device Configuration",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AADRMDeviceEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

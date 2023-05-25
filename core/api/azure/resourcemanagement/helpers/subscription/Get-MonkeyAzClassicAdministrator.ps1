@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Get-MonkeyAzClassicAdministrator{
+Function Get-MonkeyAzClassicAdministrator {
     <#
         .SYNOPSIS
-        Get classic administrators from Azure subscription
+		Get classic administrators from Azure
 
         .DESCRIPTION
-        Get classic administrators from Azure subscription
+		Get classic administrators from Azure
 
         .INPUTS
 
@@ -35,19 +35,20 @@ Function Get-MonkeyAzClassicAdministrator{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
-    [CmdletBinding()]
-    Param ()
+	[CmdletBinding()]
+	Param ()
     Begin{
-        $AzureAuthConfig = $O365Object.internal_config.resourceManager | Where-Object {$_.name -eq "azureAuthorization"} | Select-Object -ExpandProperty resource
-        #Get auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
-        #Set null
-        $classic_administrators = $null
+        $all_classic_admins = New-Object System.Collections.Generic.List[System.Object]
+        $classicAdmins = $null
+        $Environment = $O365Object.Environment
+        #Get resource management Auth
+        $rmAuth = $O365Object.auth_tokens.ResourceManager
+        #Get Azure config
+        $azureApiAuthConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureAuthorization" } | Select-Object -ExpandProperty resource
     }
     Process{
         try{
-            if($null -ne $rm_auth -and $null -ne $O365Object.current_subscription){
+            if($null -ne $rmAuth -and $null -ne $O365Object.current_subscription){
                 $msg = @{
                     MessageData = ($message.ClassicAdminsInfoMessage -f $O365Object.current_subscription.subscriptionId);
                     callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -56,17 +57,19 @@ Function Get-MonkeyAzClassicAdministrator{
                     Tags = @('AzureRbacInfo');
                 }
                 Write-Information @msg
-                #Get Classic Administrators
-                $params = @{
-                    Authentication = $rm_auth;
-                    Provider = $AzureAuthConfig.provider;
-                    ObjectType = "classicAdministrators";
-                    Environment = $O365Object.Environment;
-                    ContentType = 'application/json';
-                    Method = "GET";
-                    APIVersion = $AzureAuthConfig.api_version;
-                }
-                $classic_administrators = Get-MonkeyRMObject @params
+                $p = @{
+		            Authentication = $rmAuth;
+			        Provider = $azureApiAuthConfig.Provider;
+			        ObjectType = "classicAdministrators";
+			        Environment = $Environment;
+			        ContentType = 'application/json';
+			        Method = "GET";
+			        APIVersion = $azureApiAuthConfig.api_version;
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+		        }
+		        $classicAdmins = Get-MonkeyRMObject @p
             }
             else{
                 $msg = @{
@@ -77,6 +80,7 @@ Function Get-MonkeyAzClassicAdministrator{
                     Tags = @('AzureClassicAdminWarning');
                 }
                 Write-Warning @msg
+                break
             }
         }
         catch{
@@ -91,16 +95,36 @@ Function Get-MonkeyAzClassicAdministrator{
             $msg = @{
                 MessageData = ($_.Exception.StackTrace);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'error';
+                logLevel = 'debug';
                 InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
                 Tags = @('AzureClassicAdminDebugError');
             }
             Write-Debug @msg
         }
     }
     End{
-        if($null -ne $classic_administrators){
-            return $classic_administrators
+        if($null -ne $classicAdmins){
+            foreach ($classic_admin in $classicAdmins) {
+			    $roles = $classic_admin.Properties.role.Split(";")
+			    foreach ($role in $roles) {
+				    #Create custom object
+				    $classic_admin_obj = [hashtable]@{
+					    emailAddress = $classic_admin.Properties.emailAddress
+					    role = $role
+					    rawObject = $classic_admin
+				    }
+                    #Create new PsObject
+                    $classic_admin_obj = New-Object -TypeName PsObject -Property $classic_admin_obj
+				    #Decorate object and add to list
+				    $classic_admin_obj.PSObject.TypeNames.Insert(0,'Monkey365.Azure.ClassicAdministrators')
+                    #Add to array
+				    [void]$all_classic_admins.Add($classic_admin_obj)
+			    }
+		    }
         }
+        #Return classic admin obj
+        return $all_classic_admins
     }
 }

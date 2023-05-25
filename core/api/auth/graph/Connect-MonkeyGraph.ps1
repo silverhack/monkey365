@@ -33,15 +33,10 @@ Function Connect-MonkeyGraph {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory=$false, HelpMessage="parameters")]
         [Object]$parameters
     )
-    if($O365Object.isUsingAdalLib){
-        Get-AdalTokenForGraph @parameters
-    }
-    else{
-        Get-MSALTokenForGraph @parameters
-    }
+    Get-MSALTokenForGraph @parameters
 }

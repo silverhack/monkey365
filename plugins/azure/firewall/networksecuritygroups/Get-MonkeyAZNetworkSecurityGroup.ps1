@@ -47,10 +47,16 @@ function Get-MonkeyAZNetworkSecurityGroup {
 		$monkey_metadata = @{
 			Id = "az00015";
 			Provider = "Azure";
-			Title = "Plugin to get Network Security Rules from Azure";
-			Group = @("Firewall","NSG");
-			ServiceName = "Azure NSG";
+			Resource = "Firewall";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyAZNetworkSecurityGroup";
+			ApiType = "resourceManagement";
+			Title = "Plugin to get Network Security Rules from Azure";
+			Group = @("Firewall","NetworkSecurityGroup");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Import Localized data
@@ -89,7 +95,7 @@ function Get-MonkeyAZNetworkSecurityGroup {
 				Write-Information @msg
 				#construct URI
 				$URI = ("{0}{1}?api-version={2}" `
- 						-f $O365Object.Environment.ResourceManager,$my_nsg.id,$AzureNSGConfig.api_version)
+ 						-f $O365Object.Environment.ResourceManager,$my_nsg.Id,$AzureNSGConfig.api_version)
 				#launch request
 				$params = @{
 					Authentication = $rm_auth;
@@ -113,11 +119,11 @@ function Get-MonkeyAZNetworkSecurityGroup {
 						$SecurityRule = New-Object -TypeName PSCustomObject
 						$SecurityRule | Add-Member -Type NoteProperty -Name name -Value $nsg.Name
 						$SecurityRule | Add-Member -Type NoteProperty -Name location -Value $nsg.location
-						$SecurityRule | Add-Member -Type NoteProperty -Name ResourceGroupName -Value $nsg.id.Split("/")[4]
+						$SecurityRule | Add-Member -Type NoteProperty -Name ResourceGroupName -Value $nsg.Id.Split("/")[4]
 						#Getting interfaces names
 						$AllInterfaces = @()
 						foreach ($interface in $nsg.Properties.networkinterfaces) {
-							$Ifacename = $interface.id.Split("/")[8]
+							$Ifacename = $interface.Id.Split("/")[8]
 							$AllInterfaces += $Ifacename
 						}
 						if ($AllInterfaces) {
@@ -146,11 +152,11 @@ function Get-MonkeyAZNetworkSecurityGroup {
 						$DefaultSecurityRule = New-Object -TypeName PSCustomObject
 						$DefaultSecurityRule | Add-Member -Type NoteProperty -Name name -Value $nsg.Name
 						$DefaultSecurityRule | Add-Member -Type NoteProperty -Name location -Value $nsg.location
-						$DefaultSecurityRule | Add-Member -Type NoteProperty -Name ResourceGroupName -Value $nsg.id.Split("/")[4]
+						$DefaultSecurityRule | Add-Member -Type NoteProperty -Name ResourceGroupName -Value $nsg.Id.Split("/")[4]
 						#Getting interfaces names
 						$AllInterfaces = @()
 						foreach ($interface in $nsg.Properties.networkinterfaces) {
-							$Ifacename = $interface.id.Split("/")[8]
+							$Ifacename = $interface.Id.Split("/")[8]
 							$AllInterfaces += $Ifacename
 						}
 						if ($AllInterfaces) {
@@ -187,11 +193,16 @@ function Get-MonkeyAZNetworkSecurityGroup {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Network Security Rules",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureNSGEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

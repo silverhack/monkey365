@@ -43,7 +43,16 @@ Function New-O365Object{
     try{
         #api Path
         $api_fnc= @()
-        $paths = @('core/api/azure','core/api/o365','core/utils','core/init')
+        $paths = @(
+            'core/api/azure',
+            'core/api/azuread',
+            'core/api/m365',
+            'core/utils',
+            'core/init',
+            'core/tenant',
+            'core/subscription',
+            'core/watcher'
+        )
         foreach($_path in $paths){
             $api_path = ("{0}/{1}" -f $ScriptPath,$_path)
             $p = @{
@@ -67,18 +76,13 @@ Function New-O365Object{
         #msal modules
         $msal_modules = @(
             'core/modules/monkeycloudutils',
-            'core/modules/monkeymsal'
+            'core/modules/monkeymsal',
             'core/modules/monkeymsalauthassistant'
-        )
-        #adal modules
-        $adal_modules = @(
-            'core/modules/monkeycloudutils',
-            'core/modules/monkeyadal',
-            'core/modules/monkeyadalauthassistant'
         )
         #watcher modules
         $watcher_module = @(
-            'core/watcher'
+            'core/watcher',
+            'core/init'
         )
         #Runspace init
         $runspace_init = @(
@@ -94,7 +98,9 @@ Function New-O365Object{
             ('{0}/core/modules/monkeylogger' -f $ScriptPath),
             ('{0}/core/modules/monkeyast' -f $ScriptPath),
             ('{0}/core/modules/monkeyjob' -f $ScriptPath),
-            ('{0}/core/api/o365/SharePointOnline/helpers/common/enum.ps1' -f $ScriptPath)
+            ('{0}/core/modules/monkeyutils' -f $ScriptPath),
+            ('{0}/core/modules/monkeycloudutils' -f $ScriptPath),
+            ('{0}/core/api/m365/SharePointOnline/utils/enum.ps1' -f $ScriptPath)
         )
         #JSON config
         $json_path = ("{0}/config/monkey_365.config" -f $ScriptPath)
@@ -108,59 +114,104 @@ Function New-O365Object{
             throw ("{0} dlp file does not exists" -f $json_path)
         }
         $internal_dlp_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
+        #Get User Properties
+        $json_path = ("{0}/core/utils/properties/monkeyuserprop.json" -f $ScriptPath)
+        if (!(Test-Path -Path $json_path)){
+            throw ("{0} user properties file does not exists" -f $json_path)
+        }
+        $user_prop_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
+        #Get diag settings unsupported resources
+        $json_path = ("{0}/core/utils/diagnosticSettings/unsupportedResources.json" -f $ScriptPath)
+        if (!(Test-Path -Path $json_path)){
+            throw ("{0} diagnostic settings file does not exists" -f $json_path)
+        }
+        $diag_settings_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
         #Create and return a new PsObject
         $tmp_object = [ordered]@{
             Environment = $null;
             internal_modules = $internal_modules;
             msal_modules = $msal_modules;
-            adal_modules = $adal_modules;
             watcher = $watcher_module;
             runspaces_modules = $runspaces_modules;
             runspace_init = $runspace_init;
             exo_runspace_init = $exo_runspace_init;
+            runspace_vars = $null;
             libutils = $api_fnc;
-            OnlineServices = $null;
+            onlineServices = $null;
             Localpath =  $ScriptPath;
-            auth_tokens = $null;
+            InitialPath = (Get-Location -PSProvider FileSystem).ProviderPath;
+            auth_tokens = [hashtable]::Synchronized(@{
+                Graph = $null;
+                Intune = $null;
+                ExchangeOnline = $null;
+                ResourceManager = $null;
+                ServiceManagement = $null;
+                SecurityPortal = $null;
+                AzureVault = $null;
+                LogAnalytics = $null;
+                AzureStorage = $null;
+                ComplianceCenter = $null;
+                AzurePortal = $null;
+                Yammer = $null;
+                Forms = $null;
+                Lync= $null;
+                SharePointAdminOnline = $null;
+                SharePointOnline = $null;
+                OneDrive = $null;
+                AADRM = $null;
+                MSGraph = $null;
+                Teams = $null;
+                PowerBI = $null;
+                M365Admin = $null;
+                MSPIM = $null;
+            });
             userPrincipalName = $null;
             userId = $null;
             orgRegions = $null;
             Tenant = $null;
+            tenantOrigin = $null;
             Plugins = $null;
             ATPEnabled = $null;
+            AADLicense = $null;
             Licensing = $null;
             LogPath = $null;
-            exo_session_start_time = $null;
-            compliance_session_start_time = $null;
             exo_msal_application = $null;
             sps_msal_application = $null;
             authContext = $null;
             msalapplication = $null;
-            adal_credentials = $null;
-            adal_application = $null;
             application_args = $null;
             msal_application_args = $null;
             msal_client_app_args = $null;
-            o365_sessions = $null;
+            authentication_args = $null;
+            o365_sessions = [hashtable]::Synchronized(@{
+                ExchangeOnline = $null;
+                ComplianceCenter = $null;
+                Lync = $null;
+                AADRM = $null;
+            });
             isConfidentialApp = $null;
-            isUsingAdalLib = $null;
+            isSharePointAdministrator = $null;
+            spoWebs = $null;
             InformationAction= $null;
             VerboseOptions = $null;
             AuthType = $null;
             WriteLog = $null;
             userAgent = $null;
+            userProperties = $user_prop_json;
             subscriptions = $null;
             current_subscription = $null;
-            userPermissions = $null;
+            aadPermissions = $null;
+            azPermissions = $null;
+            canRequestMFAForUsers = $null;
             all_resources = $null;
             ResourceGroups = $null;
             internal_config = $internal_config_json;
             dlp = $internal_dlp_json;
-            AuthResponses = $null;
             executionInfo = $null;
             startDate = $null;
             exo_runspacePool = $null;
             monkey_runspacePool = $null;
+            monkey_m365RunspacePool = $null;
             threads= $null;
             SaveProject= $null;
             Instance= $null;
@@ -176,14 +227,17 @@ Function New-O365Object{
             BatchSize = $internal_config_json.performance.BatchSize;
             MaxQueue = $internal_config_json.performance.nestedRunspaces.MaxQueue;
             nestedRunspaceMaxThreads = $null;
+            PowerBIBackendUri = $null;
+            Timer = $null;
+            diag_settings_unsupported_resources = $diag_settings_json;
         }
         #Check if Myparams is present
         if($null -ne (Get-Variable -Name MyParams -ErrorAction Ignore)){
-            $tmp_object.outDir = $MyParams.outDir;
+            $tmp_object.OutDir = $MyParams.OutDir;
             $tmp_object.threads = $MyParams.Threads;
             $tmp_object.SaveProject = $MyParams.SaveProject;
             $tmp_object.Instance = $MyParams.Instance;
-            $tmp_object.IncludeAAD = $MyParams.IncludeAzureActiveDirectory;
+            $tmp_object.IncludeAAD = $MyParams.IncludeAzureAD;
             $tmp_object.verbose = $MyParams.verbose;
             $tmp_object.debug = $MyParams.debug;
             $tmp_object.initParams = $MyParams;
@@ -212,11 +266,22 @@ Function New-O365Object{
             New-Variable -Name InformationAction -Scope Script -Value ($InformationAction) -Force
             $tmp_object.InformationAction = $InformationAction;
         }
+        #Check if OnlineServices is present
+        if($null -ne (Get-Variable -Name OnlineServices -ErrorAction Ignore)){
+            $tmp_object.onlineServices = $OnlineServices;
+        }
         $MyO365Object = New-Object -TypeName PSCustomObject -Property $tmp_object
         #update User Agent
         $MyO365Object.userAgent = Get-MonkeyUserAgent
-        #Return object
-        return $MyO365Object
+        #Add timer
+        $Timer = [Timers.Timer]::new()
+        $Timer.AutoReset = $true;
+        $TimeSpan = New-TimeSpan -Minutes 5
+        $Timer.Interval = $TimeSpan.TotalMilliseconds
+        $Timer.Enabled = $True
+        $MyO365Object.Timer = $Timer
+        #Create Object
+        New-Variable -Name O365Object -Value $MyO365Object -Scope Script -Force
     }
     catch{
         throw ("{0}: {1}" -f "Unable to create new object",$_.Exception.Message)

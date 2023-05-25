@@ -33,13 +33,13 @@ function Test-IsNewFilter{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [cmdletbinding()]
     Param (
         [parameter(Mandatory=$true, HelpMessage="Conditions")]
         [object]$conditions
     )
     $new_filter = $true
-    foreach($elem in $condition){
+    foreach($elem in $conditions){
         if($elem -is [System.Array]){
             $new_filter = $false
         }

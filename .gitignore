@@ -15,9 +15,14 @@ site/
 *.ps1.bak
 *_extra.json
 
+# Tests
+core/watcher/
+
 config/monkey_365_dev.config
 
 profiles/
+
+**/development/
 
 rules/findings/extra/*
 rules/rulesets/monkey_azure_1.0.json

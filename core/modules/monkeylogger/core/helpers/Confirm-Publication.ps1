@@ -44,7 +44,7 @@ Function Confirm-Publication {
         [object] $Configuration
     )
     try{
-        $publish = $true
+        $publish = $false
         #Check Log Level
         if($null -eq $Log.Level -or [String]::IsNullOrEmpty($Log.Level)){
             $LogLevel = 'info'
@@ -52,44 +52,42 @@ Function Confirm-Publication {
         else{
             $LogLevel = $Log.Level.ToString().ToLower();
         }
-        if($Configuration.psobject.properties.Item('onlyExceptions')){
-            if($Configuration.onlyExceptions -eq $true){
-                if($Log.MessageData -is [exception] -or $Log.MessageData -is [System.AggregateException] -or $Log.MessageData -is [System.Management.Automation.ErrorRecord]){
-                    return $true
-                }
-                else{
-                    return $false
-                }
+        if($Configuration.onlyExceptions -eq $true){
+            if($Log.MessageData -is [exception] -or $Log.MessageData -is [System.AggregateException] -or $Log.MessageData -is [System.Management.Automation.ErrorRecord]){
+                return $true
+            }
+            else{
+                return $false
             }
         }
-        if($null -ne ($Configuration.psobject.properties.Item('includeDebug')) -and $Configuration.includeDebug -eq $false){
+        if($Configuration.includeDebug -eq $true){
             if($LogLevel -eq "debug"){
-                $publish = $false
+                $publish = $true
             }
         }
-        if($null -ne ($Configuration.psobject.properties.Item('includeError')) -and $Configuration.includeError -eq $false){
+        if($Configuration.includeError -eq $true){
             if($LogLevel -eq "error" -or $Log.MessageData -is [System.Management.Automation.ErrorRecord]){
-                $publish = $false
+                $publish = $true
             }
         }
-        if($null -ne ($Configuration.psobject.properties.Item('includeInfo')) -and $Configuration.includeInfo -eq $false){
+        if($Configuration.includeInfo -eq $true){
             if($LogLevel -eq "info"){
-                $publish = $false
+                $publish = $true
             }
         }
-        if($null -ne ($Configuration.psobject.properties.Item('includeVerbose')) -and $Configuration.includeVerbose -eq $false){
+        if($Configuration.includeVerbose -eq $true){
             if($LogLevel -eq "verbose"){
-                $publish = $false
+                $publish = $true
             }
         }
-        if($null -ne ($Configuration.psobject.properties.Item('includeWarning')) -and $Configuration.includeWarning -eq $false){
+        if($Configuration.includeWarning -eq $true){
             if($LogLevel -eq "warning"){
-                $publish = $false
+                $publish = $true
             }
         }
-        if($null -ne ($Configuration.psobject.properties.Item('includeExceptions')) -and $Configuration.includeExceptions -eq $false){
+        if($Configuration.includeExceptions -eq $true){
             if($Log.MessageData -is [System.Management.Automation.ErrorRecord] -or $Log.MessageData -is [System.AggregateException] -or $Log.MessageData -is [exception]){
-                $publish = $false
+                $publish = $true
             }
         }
         return $publish

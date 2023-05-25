@@ -47,10 +47,16 @@ function Get-MonkeyTeamsGuestMessagingConfiguration {
 		$monkey_metadata = @{
 			Id = "teams05";
 			Provider = "Microsoft365";
+			Resource = "MicrosoftTeams";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyTeamsGuestMessagingConfiguration";
+			ApiType = $null;
 			Title = "Plugin to get information about Teams guest messaging configuration";
 			Group = @("MicrosoftTeams");
-			ServiceName = "Microsoft Teams Guest messaging configuration";
-			PluginName = "Get-MonkeyTeamsGuestMessagingConfiguration";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Getting environment
@@ -71,13 +77,15 @@ function Get-MonkeyTeamsGuestMessagingConfiguration {
 			Write-Information @msg
 			$params = @{
 				Authentication = $access_token;
-				InternalPath = 'PowerShell';
-				ObjectType = "TeamsGuestMessagingConfiguration";
-				AdminDomain = 'common';
+				InternalPath = 'SkypePolicy';
+				ObjectType = "configurations";
+				ObjectId = 'TeamsGuestMessagingConfiguration';
 				Environment = $Environment;
-				Method = "GET";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
 			}
-			$guest_mess_conf = Get-TeamsObject @params
+			$guest_mess_conf = Get-MonkeyTeamsObject @params
 		}
 	}
 	end {
@@ -91,13 +99,18 @@ function Get-MonkeyTeamsGuestMessagingConfiguration {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Guest messaging configuration",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams= Guest messaging configuration",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('TeamsGuestMessagingEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

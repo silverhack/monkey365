@@ -48,28 +48,30 @@ function Get-MonkeyEXOAntiPhishingPolicy {
 		$monkey_metadata = @{
 			Id = "exo0002";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOAntiPhishingPolicy";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about antiphishing policy from Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Phishing Info";
-			PluginName = "Get-MonkeyEXOAntiPhishingPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
 	}
 	process {
-		if ($null -ne $exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online AntiPhishing policy",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoAntiPhishPolicyInfo');
-			}
-			Write-Information @msg
-			#Enumerate Phishing Policy
-			$PhishPolicy = Get-AntiPhishingInfo
-		}
+		$msg = @{
+		    MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online AntiPhishing policy",$O365Object.TenantID);
+		    callStack = (Get-PSCallStack | Select-Object -First 1);
+		    logLevel = 'info';
+		    InformationAction = $O365Object.InformationAction;
+		    Tags = @('ExoAntiPhishPolicyInfo');
+	    }
+	    Write-Information @msg
+	    #Enumerate Phishing Policy
+	    $PhishPolicy = Get-AntiPhishingInfo
 	}
 	end {
 		if ($PhishPolicy) {
@@ -84,11 +86,16 @@ function Get-MonkeyEXOAntiPhishingPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online AntiPhishing policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoAntiPhishPolicyEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

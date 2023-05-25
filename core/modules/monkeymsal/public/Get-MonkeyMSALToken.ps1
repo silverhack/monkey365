@@ -33,7 +33,7 @@ Function Get-MonkeyMSALToken{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
     [CmdletBinding(DefaultParameterSetName = 'Implicit')]
     [OutputType([Microsoft.Identity.Client.AuthenticationResult])]
     Param (
@@ -145,26 +145,52 @@ Function Get-MonkeyMSALToken{
         [Parameter(Mandatory=$false, HelpMessage="Force silent authentication")]
         [Switch]$Silent,
 
+        [Parameter(Mandatory=$false, HelpMessage="Force refresh token")]
+        [Switch]$ForceRefresh,
+
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
         [Parameter(Mandatory=$false, ParameterSetName = 'Implicit', HelpMessage="Device code authentication")]
-        [Switch]$DeviceCode
+        [Switch]$DeviceCode,
+
+        [Parameter(Mandatory=$false, HelpMessage="scopes")]
+        [array]$Scopes
     )
-    #Get Verbose info
-    if (-not $PSBoundParameters.ContainsKey('Verbose')) {
-        $verbose = $false
+    $Verbose = $False;
+    $Debug = $False;
+    $InformationAction = 'SilentlyContinue'
+    if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+        $Verbose = $True
     }
-    else{
-        $verbose = $true
+    if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+        $Debug = $True
     }
-    #Set AuthType
+    if($PSBoundParameters.ContainsKey('InformationAction')){
+        $InformationAction = $PSBoundParameters['InformationAction']
+    }
+    #Set AuthType and authContext
     $AuthType = 'Interactive'
     $authContext = $null
     #Setting scopes
-    if($Resource -match '/$'){
-        [string[]]$scope = ("{0}.default" -f $Resource)
+    if ($PSBoundParameters.ContainsKey('Scopes')){
+        if($Resource -match '/$'){
+            foreach($scp in $Scopes){
+                [string[]]$scope += ("{0}{1}" -f $Resource,$scp)
+            }
+        }
+        else{
+            foreach($scp in $Scopes){
+                [string[]]$scope += ("{0}/{1}" -f $Resource,$scp)
+            }
+        }
     }
     else{
-        [string[]]$scope = ("{0}/.default" -f $Resource)
+        if($Resource -match '/$'){
+            [string[]]$scope = ("{0}.default" -f $Resource)
+        }
+        else{
+            [string[]]$scope = ("{0}/.default" -f $Resource)
+            #[string[]]$scope = ("{0}/user_impersonation" -f $Resource)
+        }
     }
     $extra_params=@(
         'Resource',
@@ -222,8 +248,11 @@ Function Get-MonkeyMSALToken{
         if($PromptBehavior -eq "Auto"){
             $Prompt = "SelectAccount"
         }
-        elseif($ForceAuth -or $PromptBehavior -eq "Always" -or $PromptBehavior -eq "RefreshSession"){
+        elseif($ForceAuth -or $PromptBehavior -eq "Always"){
             $Prompt = "ForceLogin"
+        }
+        elseif($PromptBehavior -eq "RefreshSession"){
+            $Prompt = $null;
         }
         else{
             $Prompt = $PromptBehavior
@@ -250,18 +279,19 @@ Function Get-MonkeyMSALToken{
                     $authContext = $app.AcquireTokenSilent($scope, $Account)
                 }
                 else{
-                    Write-Warning ($script:messages.AccountWasNotFound);
+                    Write-Verbose ($script:messages.AccountWasNotFound);
                     [ref]$null = $PSBoundParameters.Remove('Silent')
                     Get-MonkeyMSALToken @PSBoundParameters
                 }
             }
-            if ($PSBoundParameters.ContainsKey('ForceRefresh') -and $ForceRefresh.IsPresent){
+            If($PromptBehavior -eq "RefreshSession" -or ($PSBoundParameters.ContainsKey('ForceRefresh') -and $ForceRefresh.IsPresent)){
                 $p = @{
-                    MessageData = ($script:messages.RefreshingToken);
+                    Message = ($script:messages.RefreshingToken);
                     Verbose = $verbose;
                 }
                 Write-Verbose @p
-                [void] $authContext.WithForceRefresh($ForceRefresh)
+                #Force refresh
+                [void]$authContext.WithForceRefresh($ForceRefresh)
             }
         }
         else{
@@ -269,21 +299,11 @@ Function Get-MonkeyMSALToken{
             [IntPtr] $ParentWindow = [System.Diagnostics.Process]::GetCurrentProcess().MainWindowHandle
             if ($ParentWindow) { [void] $authContext.WithParentActivityOrWindow($ParentWindow) }
             if ($Prompt){
-                if($Prompt.ToLower() -eq 'never'){
-                    $Prompt = 'NoPrompt'
-                }
-                elseif($Prompt.ToLower() -eq 'always'){
-                    $Prompt = 'ForceLogin'
-                }
-                elseif($Prompt.ToLower() -eq 'auto'){
-                    $Prompt = 'SelectAccount'
-                }
-                elseif($Prompt.ToLower() -eq 'refreshsession'){
-                    $Prompt = 'ForceLogin'
-                }
                 [void] $authContext.WithPrompt([Microsoft.Identity.Client.Prompt]::$Prompt)
             }
-            if ($PSBoundParameters.ContainsKey('UseEmbeddedWebView')) { [void] $authContext.WithUseEmbeddedWebView($UseEmbeddedWebView) }
+            If($PSBoundParameters.ContainsKey('UseEmbeddedWebView')){
+                [void]$authContext.WithUseEmbeddedWebView($UseEmbeddedWebView)
+            }
         }
     }
     else{
@@ -299,8 +319,8 @@ Function Get-MonkeyMSALToken{
         }
         else{
             $authContext = $app.AcquireTokenForClient($scope)
-            if ($PSBoundParameters.ContainsKey('ForceRefresh')){
-                [void] $authContext.WithForceRefresh($ForceRefresh)
+            if ($PSBoundParameters.ContainsKey('ForceRefresh') -and $ForceRefresh.IsPresent){
+                [void]$authContext.WithForceRefresh($ForceRefresh)
             }
         }
     }
@@ -321,6 +341,7 @@ Function Get-MonkeyMSALToken{
             $new_token | Add-Member -type NoteProperty -name AuthType -value $AuthType -Force
             $new_token | Add-Member -type NoteProperty -name resource -value $Resource -Force
             $new_token | Add-Member -type NoteProperty -name clientId -value $app.ClientId -Force
+            $new_token | Add-Member -type NoteProperty -name renewable -value $true -Force
             #Add TenantId
             if('TenantId' -in $new_token.psobject.properties.Name -and $null -eq $new_token.TenantId){
                 if($TenantId){
@@ -333,6 +354,14 @@ Function Get-MonkeyMSALToken{
                     $tid = $null
                 }
                 $new_token | Add-Member -type NoteProperty -name TenantId -value $tid -Force
+            }
+            #Add function to check for near expiration
+            $new_token | Add-Member -Type ScriptMethod -Name IsNearExpiry -Value {
+                return ($this.ExpiresOn.UtcDateTime.AddMinutes(-15) -lt [System.Datetime]::UtcNow)
+            }
+            #Add function to disable token renewal
+            $new_token | Add-Member -Type ScriptMethod -Name DisableRenew -Value {
+                $this.renewable = $false
             }
             #return new token
             return $new_token

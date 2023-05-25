@@ -98,5 +98,65 @@
             "table": "asList",
             "emphasis": ["Pricing Tier"]
         }
+    ],
+	"azure_defender_missing_cosmodb_protection": [
+        {
+            "translate": {
+                "name": "Resource Name",
+                "properties.pricingTier": "Pricing Tier"
+            },
+            "table": "asList",
+            "emphasis": ["Pricing Tier"]
+        }
+    ],
+	"azure_defender_missing_dns_protection": [
+        {
+            "translate": {
+                "name": "Resource Name",
+                "properties.pricingTier": "Pricing Tier"
+            },
+            "table": "asList",
+            "emphasis": ["Pricing Tier"]
+        }
+    ],
+	"azure_defender_missing_iot_protection": [
+        {
+            "translate": {
+                "name": "Resource Name",
+                "properties.pricingTier": "Pricing Tier"
+            },
+            "table": "asList",
+            "emphasis": ["Pricing Tier"]
+        }
+    ],
+	"azure_defender_missing_osrd_protection": [
+        {
+            "translate": {
+                "name": "Resource Name",
+                "properties.pricingTier": "Pricing Tier"
+            },
+            "table": "asList",
+            "emphasis": ["Pricing Tier"]
+        }
+    ],
+	"azure_defender_missing_arm_protection": [
+        {
+            "translate": {
+                "name": "Resource Name",
+                "properties.pricingTier": "Pricing Tier"
+            },
+            "table": "asList",
+            "emphasis": ["Pricing Tier"]
+        }
+    ],
+	"azure_defender_missing_sql_database_protection": [
+        {
+            "translate": {
+                "name": "Resource Name",
+                "properties.pricingTier": "Pricing Tier"
+            },
+            "table": "asList",
+            "emphasis": ["Pricing Tier"]
+        }
     ]
 }

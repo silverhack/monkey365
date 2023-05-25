@@ -77,7 +77,8 @@ Function Write-Teams {
                 #Set verbose
                 $param.MessageData = $_.Exception.Message
                 Write-Verbose @param
-                $WebHook = $null
+                $WebHook = $null;
+                $json_body= $null;
             }
         }
         else{

@@ -47,10 +47,16 @@ function Get-MonkeyAzPricingTier {
 		$monkey_metadata = @{
 			Id = "az00022";
 			Provider = "Azure";
+			Resource = "Subscription";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzPricingTier";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get pricing tier from Azure";
 			Group = @("Subscription");
-			ServiceName = "Azure Pricing";
-			PluginName = "Get-MonkeyAzPricingTier";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Import Localized data
@@ -108,11 +114,12 @@ function Get-MonkeyAzPricingTier {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Pricing tier",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePricingEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 		#Set Legacy
 		if ($legacy_pricing_tier) {
@@ -127,11 +134,16 @@ function Get-MonkeyAzPricingTier {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Pricing tier",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureLegacyPricingEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

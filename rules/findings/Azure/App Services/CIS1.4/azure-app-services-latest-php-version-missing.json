@@ -1,0 +1,57 @@
+{
+    "dashboard_name":  "App Services",
+    "menu_name":  "Hosted Services",
+    "issue_name":  "Ensure that \u0027PHP version\u0027 is the latest, if used to run the web app",
+    "description":  "Periodically newer versions are released for PHP software either due to security flaws or to include additional functionality. Using the latest PHP version for web apps is recommended in order to take advantage of security fixes, if any, and/or additional functionalities of the newer version.",
+    "rationale":  "Newer versions may contain security enhancements and additional functionality. Using the latest software version is recommended in order to take advantage of enhancements and new capabilities. With each software installation, organizations need to determine if a given update meets their requirements and also verify the compatibility and support provided for any additional software against the update revision that is selected.",
+    "impact":  null,
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "9.6"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_app_services",
+    "display_path":  "az_app_services",
+    "conditions":  [
+                       "and",
+                       [
+                           "kind",
+                           "ne",
+                           "functionapp"
+                       ],
+					   [
+						   "appConfig.properties.phpVersion.Length",
+						   "ne",
+						   "0"
+					   ],
+					   [
+						   "appConfig.properties.linuxFxVersion.Length",
+						   "ne",
+						   "0"
+					   ],
+                       [
+                           "and",
+                           [
+                               "or",
+                               [
+                                   "appConfig.properties.phpVersion",
+                                   "ne",
+                                   "7.4"
+                               ],
+                               [
+                                   "appConfig.properties.linuxFxVersion",
+                                   "notlike",
+                                   "PHP*7.4*"
+                               ]
+                           ]
+                       ]
+                   ],
+    "id_suffix":  "app_service_latest_php_missing"
+}

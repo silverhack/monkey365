@@ -48,10 +48,16 @@ function Get-MonkeyADUserFeaturePreview {
 		$monkey_metadata = @{
 			Id = "aad0036";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADUserFeaturePreview";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get user feature preview info from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD User Feature Preview";
-			PluginName = "Get-MonkeyADUserFeaturePreview";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Azure Active Directory Auth
@@ -73,6 +79,9 @@ function Get-MonkeyADUserFeaturePreview {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$ad_user_feature_preview = Get-MonkeyAzurePortalObject @params
 	}
@@ -81,7 +90,7 @@ function Get-MonkeyADUserFeaturePreview {
 			$ad_user_feature_preview.PSObject.TypeNames.Insert(0,'Monkey365.AzureAD.UserFeaturePreview')
 			[pscustomobject]$obj = @{
 				Data = $ad_user_feature_preview;
-				Metadaa = $monkey_metadata;
+				Metadata = $monkey_metadata;
 			}
 			$returnData.aad_user_feature_preview = $obj
 		}
@@ -89,11 +98,16 @@ function Get-MonkeyADUserFeaturePreview {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD user feature preview",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalUserFeatEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

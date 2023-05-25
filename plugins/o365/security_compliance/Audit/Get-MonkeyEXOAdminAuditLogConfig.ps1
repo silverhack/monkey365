@@ -48,10 +48,16 @@ function Get-MonkeyEXOAdminAuditLogConfig {
 		$monkey_metadata = @{
 			Id = "purv003";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about audit log config from Exchange Online";
-			Group = @("PurView");
-			ServiceName = "Microsoft PurView Audit Log config";
+			Resource = "Purview";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyEXOAdminAuditLogConfig";
+			ApiType = $null;
+			Title = "Plugin to get information about audit log config from Exchange Online";
+			Group = @("Purview");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Check if already connected to Exchange Online
@@ -84,11 +90,16 @@ function Get-MonkeyEXOAdminAuditLogConfig {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance Admin audit log config",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompLogConfigEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -132,7 +132,7 @@ Function Export-MonkeyData{
         }
         "HTML"
         {
-            Invoke-HtmlReport -outDir $OutDir
+            Invoke-HtmlReport -OutDir $OutDir
         }
         "PRINT"
         {

@@ -48,10 +48,16 @@ function Get-MonkeyLegacyO365CompanyInformation {
 		$monkey_metadata = @{
 			Id = "aadl001";
 			Provider = "AzureAD";
+			Resource = "LegacyO365API";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyLegacyO365CompanyInformation";
+			ApiType = "LegacyO365API";
 			Title = "Plugin to get information about company information using legacy O365 API";
 			Group = @("LegacyO365API");
-			ServiceName = "Azure AD Company";
-			PluginName = "Get-MonkeyLegacyO365CompanyInformation";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 
@@ -80,11 +86,16 @@ function Get-MonkeyLegacyO365CompanyInformation {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Company information",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('LegacyCompanyInformationEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

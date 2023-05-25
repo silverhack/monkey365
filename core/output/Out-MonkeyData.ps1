@@ -42,7 +42,7 @@ Function Out-MonkeyData{
     Begin{
         #Prepare data and export entire job to a file
         if($MyParams.saveProject -and $MonkeyExportObject.Output.psobject.Properties.GetEnumerator().moveNext()){
-            $ReportPath = New-MonkeyReportDir -OutDir $O365Object.outDir
+            $ReportPath = New-MonkeyReportDir -OutDir $O365Object.OutDir
             if($ReportPath){
 	            Set-Variable -Name Report -Value $ReportPath -Scope Script
                 $out_folder = ('{0}/MonkeyJob' -f $ReportPath)
@@ -72,7 +72,7 @@ Function Out-MonkeyData{
                         Instance = $MonkeyExportObject.Instance;
                         IncludeAAD = $includeAAD;
                         jobFolder = $Script:Report;
-                        date = (Get-Date).ToUniversalTime().ToString();
+                        date = (Get-Date).ToUniversalTime().ToString("yyyy/MM/dd HH:mm:ss");
                     }
                     #Out to file
                     ConvertTo-Json -InputObject $metadata | `
@@ -95,7 +95,7 @@ Function Out-MonkeyData{
             $shouldExport = Compare-Object @params
             if($shouldExport -and $MonkeyExportObject.Output.psobject.Properties.GetEnumerator().moveNext()){
                 if ($null -eq (Get-Variable 'Report' -Scope Script -ErrorAction 'Ignore')){
-                    $ReportPath = New-MonkeyReportDir -OutDir $O365Object.outDir
+                    $ReportPath = New-MonkeyReportDir -OutDir $O365Object.OutDir
 		            if($ReportPath){
 	                    Set-Variable -Name Report -Value $ReportPath -Scope Script
                     }

@@ -40,7 +40,7 @@ Function Copy-psObject{
     [CmdletBinding()]
     Param (
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [Object]$object
+        [Object]$Object
     )
     Process{
         try{

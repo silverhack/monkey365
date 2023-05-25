@@ -48,53 +48,55 @@ function Get-MonkeyEXOHostedContentFilterPolicy {
 		$monkey_metadata = @{
 			Id = "exo0010";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOHostedContentFilterPolicy";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about hosted content filter policy in Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Content Filter Policy";
-			PluginName = "Get-MonkeyEXOHostedContentFilterPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange
-		$exo_session = Test-EXOConnection
 		#Get Tenant info
 		$tenant_info = $O365Object.Tenant
 		#Get available domains for organisation
 		$org_domains = $tenant_info.Domains | Select-Object -ExpandProperty id
 	}
 	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online Hosted content filter policy",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoHostedContentInfo');
-			}
-			Write-Information @msg
-			$hosted_content_filter = Get-HostedContentFilterInfo
-			if ($null -ne $hosted_content_filter) {
-				foreach ($content_filter in $hosted_content_filter.GetEnumerator()) {
-					$AllowedSenderDomains = $content_filter.Policy.AllowedSenderDomains
-					if ($AllowedSenderDomains.Count -gt 0) {
-						$all_domains = $AllowedSenderDomains | Select-Object -ExpandProperty Domain
-						$params = @{
-							ReferenceObject = $org_domains;
-							DifferenceObject = $all_domains;
-							IncludeEqual = $true;
-							ExcludeDifferent = $true;
-						}
-						$org_whitelisted = Compare-Object @params
-						#Check if own domain is already whitelisted
-						if ($org_whitelisted) {
-							$content_filter | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $true
-						}
-						else {
-							$content_filter | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $false
-						}
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online Hosted content filter policy",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('ExoHostedContentInfo');
+		}
+		Write-Information @msg
+		$hosted_content_filter = Get-HostedContentFilterInfo
+		if ($null -ne $hosted_content_filter) {
+			foreach ($content_filter in @($hosted_content_filter)) {
+				$AllowedSenderDomains = $content_filter.Policy.AllowedSenderDomains
+				if ($AllowedSenderDomains.Count -gt 0) {
+					$all_domains = $AllowedSenderDomains | Select-Object -ExpandProperty Domain
+					$params = @{
+						ReferenceObject = $org_domains;
+						DifferenceObject = $all_domains;
+						IncludeEqual = $true;
+						ExcludeDifferent = $true;
+					}
+					$org_whitelisted = Compare-Object @params
+					#Check if own domain is already whitelisted
+					if ($org_whitelisted) {
+						$content_filter | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $true
 					}
 					else {
 						$content_filter | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $false
 					}
+				}
+				else {
+					$content_filter | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $false
 				}
 			}
 		}
@@ -112,11 +114,16 @@ function Get-MonkeyEXOHostedContentFilterPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online Hosted content filter policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoHostedContentEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

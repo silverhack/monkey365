@@ -48,10 +48,16 @@ function Get-MonkeyAADRMOnboarding {
 		$monkey_metadata = @{
 			Id = "aadrm06";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about onboarding in AADRM";
-			Group = @("IRM");
-			ServiceName = "Azure Rights Management";
+			Resource = "IRM";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyAADRMOnboarding";
+			ApiType = $null;
+			Title = "Plugin to get information about onboarding in AADRM";
+			Group = @("Purview","ExchangeOnline");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		$access_token = $O365Object.auth_tokens.AADRM
@@ -75,7 +81,7 @@ function Get-MonkeyAADRMOnboarding {
 			Write-Information @msg
 			$url = ("{0}/OnboardingControlPolicy" -f $url)
 			$params = @{
-				url = $url;
+				Url = $url;
 				Method = 'Get';
 				Content_Type = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
@@ -96,13 +102,18 @@ function Get-MonkeyAADRMOnboarding {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management: Onboarding control policy",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management= Onboarding control policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AADRMOnboardingControlPolicyEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

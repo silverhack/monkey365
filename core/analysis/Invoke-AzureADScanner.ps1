@@ -33,7 +33,22 @@ Function Invoke-AzureADScanner{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
+    Param()
+    #Set vars
+    $aad_plugins = $null
+    #Set synchronized hashtable
+    Set-Variable returnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
+    #Get Azure AD plugins
+    if($null -ne $O365Object.Plugins){
+        $aad_plugins = $O365Object.Plugins.Where({$_.Provider -eq "AzureAD"}) | Select-Object -ExpandProperty File -ErrorAction Ignore
+    }
+    #Set runspacePool for nested queries
+    $p = @{
+        Provider = "Azure";
+        Throttle = $O365Object.threads;
+    }
+    $O365Object.monkey_runspacePool = New-MonkeyRunsPacePool @p
     if($null -ne $O365Object.TenantId -and $O365Object.Plugins){
         #Add current subscription to O365Object
         $new_subscription = [ordered]@{
@@ -42,34 +57,20 @@ Function Invoke-AzureADScanner{
             subscriptionId = $O365Object.Tenant.TenantId
         }
         $O365Object.current_subscription = $new_subscription
-        #Check for permissions
-        if($O365Object.isConfidentialApp){
-            $user_permissions = Get-PSGraphServicePrincipalDirectoryRole -principalId $O365Object.clientApplicationId
-            if($user_permissions){
-                $O365Object.userPermissions = $user_permissions
-            }
-        }
-        else{
-            $user_permissions = Get-PSGraphUserDirectoryRole -user_id $O365Object.userId
-            if($user_permissions){
-                $O365Object.userPermissions = $user_permissions
-            }
-        }
-        #Get Azure AD plugins
-        $azure_plugins = $O365Object.Plugins | Select-Object -ExpandProperty File
         #Get Execution Info
         $O365Object.executionInfo = Get-ExecutionInfo
         #Invoke new scan
-        if(@($O365Object.Plugins).Count -gt 0){
+        if(@($aad_plugins).Count -gt 0){
+            #Set vars
             $vars = @{
-                'O365Object' = $O365Object;
-                'WriteLog' = $WriteLog;
-                'Verbosity' = $Verbosity;
-                'InformationAction' = $InformationAction;
-                'returnData' = $Script:returnData;
+                O365Object = $O365Object;
+                WriteLog = $O365Object.WriteLog;
+                Verbosity = $Verbosity;
+                InformationAction = $O365Object.InformationAction;
+                returnData = $Script:returnData;
             }
-            $params = @{
-                ImportPlugins = $azure_plugins;
+            $p = @{
+                ImportPlugins = $aad_plugins;
                 ImportVariables = $vars;
                 ImportCommands = $O365Object.libutils;
                 ImportModules = $O365Object.runspaces_modules;
@@ -81,10 +82,17 @@ Function Invoke-AzureADScanner{
                 Debug = $O365Object.VerboseOptions.Debug;
                 Verbose = $O365Object.VerboseOptions.Verbose;
             }
-            Invoke-MonkeyRunspace @params
+            Invoke-MonkeyRunspace @p
             $MonkeyExportObject = New-O365ExportObject
             #Prepare Output
             Out-MonkeyData -MonkeyExportObject $MonkeyExportObject
         }
+    }
+    #Cleaning Runspace
+    if($null -ne $O365Object.monkey_runspacePool -and $O365Object.monkey_runspacePool -is [System.Management.Automation.Runspaces.RunspacePool]){
+        $O365Object.monkey_runspacePool.Close()
+        $O365Object.monkey_runspacePool.Dispose()
+        #Perform garbage collection
+        [gc]::Collect()
     }
 }

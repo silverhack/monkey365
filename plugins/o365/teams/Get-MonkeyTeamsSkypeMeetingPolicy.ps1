@@ -47,10 +47,16 @@ function Get-MonkeyTeamsSkypeMeetingPolicy {
 		$monkey_metadata = @{
 			Id = "teams09";
 			Provider = "Microsoft365";
+			Resource = "MicrosoftTeams";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyTeamsSkypeMeetingPolicy";
+			ApiType = $null;
 			Title = "Plugin to get information about Teams meeting policies (Skype)";
 			Group = @("MicrosoftTeams");
-			ServiceName = "Microsoft Teams Skype meeting policies";
-			PluginName = "Get-MonkeyTeamsSkypeMeetingPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Getting environment
@@ -74,9 +80,11 @@ function Get-MonkeyTeamsSkypeMeetingPolicy {
 				InternalPath = 'SkypePolicy';
 				ObjectType = "configurations/TeamsMeetingPolicy";
 				Environment = $Environment;
-				Method = "GET";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
 			}
-			$meeting_policies = Get-TeamsObject @params
+			$meeting_policies = Get-MonkeyTeamsObject @params
 		}
 	}
 	end {
@@ -90,13 +98,18 @@ function Get-MonkeyTeamsSkypeMeetingPolicy {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Skype meeting policies",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams= Skype meeting policies",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('TeamsSkypeMeetingPoliciesEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -48,10 +48,16 @@ function Get-MonkeyEXOComplianceTag {
 		$monkey_metadata = @{
 			Id = "purv005";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about compliance tags from Exchange Online";
-			Group = @("PurView");
-			ServiceName = "Microsoft PurView Compliance Tags";
+			Resource = "Purview";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyEXOComplianceTag";
+			ApiType = $null;
+			Title = "Plugin to get information about compliance tags from Exchange Online";
+			Group = @("Purview");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		$exo_session = Test-EXOConnection -ComplianceCenter
@@ -83,11 +89,16 @@ function Get-MonkeyEXOComplianceTag {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance tags",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompTagsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

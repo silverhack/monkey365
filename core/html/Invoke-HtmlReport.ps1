@@ -34,18 +34,16 @@ Function Invoke-HtmlReport{
             https://github.com/silverhack/monkey365
     #>
     [CmdletBinding()]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignment", "", Scope="Function")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
     Param (
         [parameter(Mandatory=$True, ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [object]$outDir
+        [object]$OutDir
     )
     Begin{
         #$charts = $dashboards = @()
         $tables = @()
         #$chartPath = $dashboardPath = $null;
-        $tablePath = $monkeyData = $null;
-        $htmlFile= $null;
-        $outFile = $null;
+        $tablePath = $monkeyData = $htmlFile = $outFile = $null;
         try{
             $monkey_version = $O365Object.internal_config.version.Monkey365Version
         }

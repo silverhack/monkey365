@@ -50,7 +50,7 @@ Function Get-SASUri{
         [String]$comp = 'properties',
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [String]$accessKey,
+        [String]$AccessKey,
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
         [String]$signedPermission="rwdlacup", #all
@@ -114,7 +114,7 @@ Function Get-SASUri{
         #Get signature
         $encodedSignatureString = [text.encoding]::UTF8.GetBytes($signatureString)
         $hmacsha = New-Object System.Security.Cryptography.HMACSHA256
-        $hmacsha.key = [Convert]::FromBase64String($accessKey)
+        $hmacsha.key = [Convert]::FromBase64String($AccessKey)
         $signature = $hmacsha.ComputeHash($encodedSignatureString)
 
         $signature = [Convert]::ToBase64String($signature)

@@ -48,27 +48,43 @@ function Get-MonkeyEXOHostedContentFilterRule {
 		$monkey_metadata = @{
 			Id = "exo0011";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOHostedContentFilterRule";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about hosted content filter rules in Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Hosted Content Filter Rules";
-			PluginName = "Get-MonkeyEXOHostedContentFilterRule";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+        #Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online Hosted content filter rule",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoHostedContentInfo');
-			}
-			Write-Information @msg
-			$hosted_content_rule = Get-ExoMonkeyHostedContentFilterRule
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online Hosted content filter rule",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('ExoHostedContentInfo');
 		}
+		Write-Information @msg
+        $p = @{
+            Authentication = $ExoAuth;
+            Environment = $Environment;
+            ResponseFormat = 'clixml';
+            Command = 'Get-HostedContentFilterRule';
+            Method = "POST";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+		$hosted_content_rule = Get-PSExoAdminApiObject @p
 	}
 	end {
 		if ($null -ne $hosted_content_rule) {
@@ -83,11 +99,16 @@ function Get-MonkeyEXOHostedContentFilterRule {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online Hosted content filter rule",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoHostedContentEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

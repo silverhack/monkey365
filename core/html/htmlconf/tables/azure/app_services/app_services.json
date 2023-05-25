@@ -8,9 +8,9 @@
                 "properties.defaultHostName": "HostName",
                 "properties.httpsOnly": "Https Only",
                 "identity.principalId": "Principal ID",
-                "configuration.properties.ftpsState": "SSL FTP",
-                "configuration.properties.minTlsVersion": "TLS Version",
-                "configuration.properties.siteAuthSettings.Enabled": "Site Auth Enabled"
+                "appConfig.properties.ftpsState": "SSL FTP",
+                "appConfig.properties.minTlsVersion": "TLS Version",
+                "appConfig.properties.siteAuthSettings.Enabled": "Site Auth Enabled"
             },
             "table": "asList",
             "emphasis": ["Principal ID"]
@@ -24,9 +24,9 @@
                 "location": "Location",
                 "properties.defaultHostName": "HostName",
                 "properties.httpsOnly": "Https Only",
-                "configuration.properties.ftpsState": "SSL FTP",
-                "configuration.properties.minTlsVersion": "TLS Version",
-                "configuration.properties.siteAuthSettings.Enabled": "Site Auth Enabled"
+                "appConfig.properties.ftpsState": "SSL FTP",
+                "appConfig.properties.minTlsVersion": "TLS Version",
+                "appConfig.properties.siteAuthSettings.Enabled": "Site Auth Enabled"
             },
             "table": "asList",
             "emphasis": ["Site Auth Enabled"]
@@ -40,8 +40,8 @@
                 "location": "Location",
                 "properties.defaultHostName": "HostName",
                 "properties.httpsOnly": "Https Only",
-                "configuration.properties.ftpsState": "SSL FTP",
-                "configuration.properties.minTlsVersion": "TLS Version",
+                "appConfig.properties.ftpsState": "SSL FTP",
+                "appConfig.properties.minTlsVersion": "TLS Version",
                 "properties.clientCertEnabled": "Client certificate enabled"
             },
             "table": "asList",
@@ -56,8 +56,8 @@
                 "location": "Location",
                 "properties.defaultHostName": "HostName",
                 "properties.httpsOnly": "Https Only",
-                "configuration.properties.ftpsState": "SSL FTP",
-                "configuration.properties.minTlsVersion": "TLS Version"
+                "appConfig.properties.ftpsState": "SSL FTP",
+                "appConfig.properties.minTlsVersion": "TLS Version"
             },
             "table": "asList",
             "emphasis": ["Https Only"]
@@ -71,8 +71,8 @@
                 "location": "Location",
                 "properties.defaultHostName": "HostName",
                 "properties.httpsOnly": "Https Only",
-                "configuration.properties.ftpsState": "SSL FTP",
-                "configuration.properties.minTlsVersion": "TLS Version"
+                "appConfig.properties.ftpsState": "SSL FTP",
+                "appConfig.properties.minTlsVersion": "TLS Version"
             },
             "table": "asList",
             "emphasis": ["TLS Version"]
@@ -86,10 +86,18 @@
                 "location": "Location",
                 "properties.defaultHostName": "HostName",
                 "properties.httpsOnly": "Https Only",
-                "configuration.properties.minTlsVersion": "TLS Version",
-				"configuration.properties.javaVersion": "Java Version"
+                "appConfig.properties.minTlsVersion": "TLS Version",
+				"appConfig.properties.javaVersion": "Java Version"
             },
-            "table": "Normal"
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ],
 	"app_service_latest_php_missing": [
@@ -100,11 +108,19 @@
                 "location": "Location",
                 "properties.defaultHostName": "HostName",
                 "properties.httpsOnly": "Https Only",
-                "configuration.properties.minTlsVersion": "TLS Version",
-				"configuration.properties.linuxFxVersion": "FX Version",
-				"configuration.properties.phpVersion": "PHP Version"
+                "appConfig.properties.minTlsVersion": "TLS Version",
+				"appConfig.properties.linuxFxVersion": "FX Version",
+				"appConfig.properties.phpVersion": "PHP Version"
             },
-            "table": "Normal"
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ],
 	"app_service_latest_python_missing": [
@@ -115,11 +131,19 @@
                 "location": "Location",
                 "properties.defaultHostName": "HostName",
                 "properties.httpsOnly": "Https Only",
-                "configuration.properties.minTlsVersion": "TLS Version",
-				"configuration.properties.linuxFxVersion": "FX Version",
-				"configuration.properties.pythonVersion": "Python Version"
+                "appConfig.properties.minTlsVersion": "TLS Version",
+				"appConfig.properties.linuxFxVersion": "FX Version",
+				"appConfig.properties.pythonVersion": "Python Version"
             },
-            "table": "Normal"
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ],
 	"app_service_http20_disabled": [
@@ -130,10 +154,59 @@
                 "location": "Location",
                 "properties.defaultHostName": "HostName",
                 "properties.httpsOnly": "Https Only",
-                "configuration.properties.minTlsVersion": "TLS Version",
-				"configuration.properties.http20Enabled": "HTTP 2.0 Enabled"
+                "appConfig.properties.minTlsVersion": "TLS Version",
+				"appConfig.properties.http20Enabled": "HTTP 2.0 Enabled"
             },
-            "table": "Normal"
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"app_service_login_disabled": [
+        {
+            "translate": {
+                "name": "Application Name",
+                "kind": "Kind",
+                "location": "Location",
+                "properties.defaultHostName": "HostName",
+                "diagnosticSettings.enabled": "Diagnostic Settings Enabled",
+                "diagnosticSettings.properties.logs.category": "Log Category"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"app_service_ftp_allowed": [
+        {
+            "translate": {
+                "name": "Application Name",
+                "kind": "Kind",
+                "location": "Location",
+                "properties.defaultHostName": "HostName",
+                "appConfig.properties.ftpsState": "FTPS State"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ]
 }

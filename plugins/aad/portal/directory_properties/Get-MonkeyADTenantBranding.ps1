@@ -48,10 +48,16 @@ function Get-MonkeyADTenantBranding {
 		$monkey_metadata = @{
 			Id = "aad0028";
 			Provider = "AzureAD";
+			Resource = "AzureADPortal";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyADTenantBranding";
+			ApiType = "AzureADPortal";
 			Title = "Plugin to get tenant branding configuration from Azure AD";
 			Group = @("AzureADPortal");
-			ServiceName = "Azure AD Tenant Branding";
-			PluginName = "Get-MonkeyADTenantBranding";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		$Environment = $O365Object.Environment
@@ -74,6 +80,9 @@ function Get-MonkeyADTenantBranding {
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";
+            InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
 		$aad_company_branding = Get-MonkeyAzurePortalObject @params
 	}
@@ -91,11 +100,16 @@ function Get-MonkeyADTenantBranding {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure AD Company branding",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzurePortalEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

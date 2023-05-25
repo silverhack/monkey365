@@ -47,10 +47,16 @@ function Get-MonkeyAzSecCenterBuiltin {
 		$monkey_metadata = @{
 			Id = "az00034";
 			Provider = "Azure";
+			Resource = "DefenderForCloud";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzSecCenterBuiltin";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get Microsoft Defender for Cloud Builtin";
 			Group = @("DefenderForCloud");
-			ServiceName = "Azure AD Applications";
-			PluginName = "Get-MonkeyAzSecCenterBuiltin";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Environment
@@ -102,11 +108,16 @@ function Get-MonkeyAzSecCenterBuiltin {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Defender for Cloud BuiltIn",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureKeySecCenterEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

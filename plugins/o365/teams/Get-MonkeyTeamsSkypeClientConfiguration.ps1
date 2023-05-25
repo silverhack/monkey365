@@ -47,10 +47,16 @@ function Get-MonkeyTeamsSkypeClientConfiguration {
 		$monkey_metadata = @{
 			Id = "teams08";
 			Provider = "Microsoft365";
+			Resource = "MicrosoftTeams";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyTeamsSkypeClientConfiguration";
+			ApiType = $null;
 			Title = "Plugin to get information about Teams client configuration (Skype)";
 			Group = @("MicrosoftTeams");
-			ServiceName = "Microsoft Teams client configuration";
-			PluginName = "Get-MonkeyTeamsSkypeClientConfiguration";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Getting environment
@@ -65,7 +71,7 @@ function Get-MonkeyTeamsSkypeClientConfiguration {
 				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft 365 Teams: Skype client configuration",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $InformationAction;
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('TeamsClientSettings');
 			}
 			Write-Information @msg
@@ -74,9 +80,11 @@ function Get-MonkeyTeamsSkypeClientConfiguration {
 				InternalPath = 'SkypePolicy';
 				ObjectType = "configurations/TeamsClientConfiguration";
 				Environment = $Environment;
-				Method = "GET";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
 			}
-			$client_conf = Get-TeamsObject @params
+			$client_conf = Get-MonkeyTeamsObject @params
 		}
 	}
 	end {
@@ -90,13 +98,18 @@ function Get-MonkeyTeamsSkypeClientConfiguration {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams: Skype client configuration",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams= Skype client configuration",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.Verbose;
 				Tags = @('TeamsSkypeClientConfEmptyResponse');
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

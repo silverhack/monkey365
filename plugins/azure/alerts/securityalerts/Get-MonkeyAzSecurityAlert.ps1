@@ -43,19 +43,22 @@ function Get-MonkeyAzSecurityAlert {
 		[string]$pluginId
 	)
 	begin {
-		#Import Localized data
 		#Plugin metadata
 		$monkey_metadata = @{
 			Id = "az00001";
 			Provider = "Azure";
+			Resource = "SecurityAlerts";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAzSecurityAlert";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get Security alerts from Azure";
 			Group = @("SecurityAlerts");
-			ServiceName = "Azure AD Security Alerts";
-			PluginName = "Get-MonkeyAzSecurityAlert";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		$LocalizedDataParams = $O365Object.LocalizedDataParams
-		Import-LocalizedData @LocalizedDataParams;
 		#Get Environment
 		$Environment = $O365Object.Environment
 		#Get Azure Active Directory Auth
@@ -87,7 +90,7 @@ function Get-MonkeyAzSecurityAlert {
 			$Properties = $Alert.Properties | Select-Object @{ Name = 'AlertName'; Expression = { $Alert.Name } },`
  				vendorName,alertDisplayName,detectedTimeUtc,actionTaken,`
  				reportedSeverity,compromisedEntity,reportedTimeUtc,@{ Name = 'ThreatName'; Expression = { $Alert.Properties.extendedProperties.Name } },`
- 				@{ Name = 'Path'; Expression = { $Alert.Properties.extendedProperties.path } },@{ Name = 'Category'; Expression = { $Alert.Properties.extendedProperties.category } }
+ 				@{ Name = 'Path'; Expression = { $Alert.Properties.extendedProperties.path } },@{ Name = 'Category'; Expression = { $Alert.Properties.extendedProperties.Category } }
 			$Properties.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SecurityAlerts')
 			$AllAlerts += $Properties
 		}
@@ -105,11 +108,16 @@ function Get-MonkeyAzSecurityAlert {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure alerts",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureAlertsEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -1,25 +1,12 @@
 {
-	"azure_key_vault_keys_notexpire": [
-        {
-            "translate": {
-                "id": "KeyVault Id",
-                "enabled": "Enabled",
-                "created": "Creation time",
-                "updated": "Updated",
-                "expires": "Expires"
-            },
-            "table": "asList",
-            "emphasis": ["Expires"]
-        }
-    ],
     "azure_key_vault_keys_notexpire": [
         {
             "translate": {
-                "id": "KeyVault Id",
-                "enabled": "Enabled",
-                "created": "Creation time",
-                "updated": "Updated",
-                "expires": "Expires"
+                "name": "KeyVault",
+                "objects.keys.attributes.enabled": "Enabled",
+                "objects.keys.attributes.created": "Creation time",
+                "objects.keys.attributes.updated": "Updated",
+                "objects.keys.attributes.exp": "Expires"
             },
             "table": "asList",
             "emphasis": ["Expires"]
@@ -28,11 +15,11 @@
     "azure_key_vault_secrets_notexpire": [
         {
             "translate": {
-                "id": "KeyVault Id",
-                "enabled": "Enabled",
-                "created": "Creation time",
-                "updated": "Updated",
-                "expires": "Expires"
+                "name": "KeyVault",
+                "objects.secrets.attributes.enabled": "Enabled",
+                "objects.secrets.attributes.created": "Creation time",
+                "objects.secrets.attributes.updated": "Updated",
+                "objects.secrets.attributes.exp": "Expires"
             },
             "table": "asList",
             "emphasis": ["Expires"]
@@ -43,8 +30,8 @@
             "translate": {
                 "name": "KeyVault Name",
                 "location": "Location",
-                "vaultUri": "KeyVault URI",
-                "loggingEnabled": "Logging Enabled"
+                "properties.vaultUri": "URI",
+                "diagnosticSettings.enabled": "Logging Enabled"
             },
             "table": "asList",
             "emphasis": ["Logging Enabled"]
@@ -53,11 +40,11 @@
     "azure_key_vault_recoverable_disabled": [
         {
             "translate": {
-                "name": "KeyVault Name",
+                "name": "Name",
                 "location": "Location",
-                "vaultUri": "KeyVault URI",
-                "enableSoftDelete": "SoftDelete Enabled",
-                "enablePurgeProtection": "Purge Protection Enabled"
+                "properties.vaultUri": "URI",
+                "properties.enableSoftDelete": "SoftDelete Enabled",
+                "properties.enablePurgeProtection": "Purge Protection Enabled"
             },
             "table": "asList",
             "emphasis": ["SoftDelete Enabled",

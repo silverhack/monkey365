@@ -45,18 +45,18 @@ Function Initialize-MonkeyVar{
     #Initialize Monkey 365 returnData synchronized variable
     Set-Variable returnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
     #Set OnlineServices
-    $onlineServices = @{
-        EXO = $false;
-        Compliance = $false;
-        O365 = $false;
-        AADRM = $false;
-        Teams = $false;
-        SPS = $false;
-        Intune = $false;
-        Azure = $false;
-        Forms = $false
+    if($null -ne (Get-Variable -Name m365_plugins -ErrorAction Ignore)){
+        $onlineServices = @{}
+        #Add Azure and AzureAD
+        [ref]$null = $onlineServices.Add('Azure',$false)
+        [ref]$null = $onlineServices.Add('AzureAD',$false)
+        #Iterate over all Microsoft 365 services
+        foreach($service in $m365_plugins.GetEnumerator()){
+            [ref]$null = $onlineServices.Add($service,$false)
+        }
+        #Add script var
+        Set-Variable OnlineServices -Value $onlineServices -Scope Script -Force
     }
-    Set-Variable OnlineServices -Value $onlineServices -Scope Script -Force
     #Set Connections var
     $connections = [hashtable]::Synchronized(@{
         Graph = $null;
@@ -79,16 +79,19 @@ Function Initialize-MonkeyVar{
         AADRM = $null;
         MSGraph = $null;
         Teams = $null;
+        PowerBI = $null;
+        M365Admin = $null;
+        MSPIM = $null;
     });
     #Set connections variable
     Set-Variable o365_connections -Value $connections -Scope Script -Force
-
-    $o365_sessions = @{
-        ExchangeOnline = $false;
-        ComplianceCenter = $false;
-        Lync = $false;
-        AADRM = $false;
-    }
+    #Set sessions variable
+    $o365_sessions = [hashtable]::Synchronized(@{
+        ExchangeOnline = $null;
+        ComplianceCenter = $null;
+        Lync = $null;
+        AADRM = $null;
+    });
     #Set sessions variable
     Set-Variable o365_sessions -Value $o365_sessions -Scope Script -Force
     ################### VERBOSE OPTIONS #######################

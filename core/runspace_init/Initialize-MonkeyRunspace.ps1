@@ -15,22 +15,17 @@
 [CmdletBinding()]
 param ()
 $isO365Object = Get-Variable -Name O365Object -ErrorAction Ignore
-$isLoggerPresent = Get-Command -Name Initialize-MonkeyLogger -ErrorAction Ignore
-if($null -ne $isO365Object -and $null -ne $isLoggerPresent){
-    $msg = @{
-        MessageData = "Importing Logger within runspace";
-        callStack = (Get-PSCallStack | Select-Object -First 1);
-        logLevel = 'info';
-        InformationAction = $O365Object.InformationAction;
-        Tags = @('InitializeMonkeyLogger');
-    }
-    Write-Information @msg
-    #Initialize logger
-    Initialize-MonkeyLogger
+if($null -ne $isO365Object){
+    #Set Monkey365 current location
+    Set-Location -Path $O365Object.InitialPath;
     #Import Localized data
     $LocalizedDataParams = $O365Object.LocalizedDataParams
     if($null -ne $LocalizedDataParams){
         Import-LocalizedData @LocalizedDataParams;
+    }
+    #Start Watcher
+    if($null -ne (Get-Command -Name "Watch-AccessToken" -ErrorAction ignore)){
+        Watch-AccessToken -Timer $O365Object.Timer
     }
     #set the default connection limit
     [System.Net.ServicePointManager]::DefaultConnectionLimit = 1024;

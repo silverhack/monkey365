@@ -48,10 +48,16 @@ function Get-MonkeyFormsUserInfo {
 		$monkey_metadata = @{
 			Id = "forms02";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about current user in Microsoft Forms";
-			Group = @("MicrosoftForms");
-			ServiceName = "Microsoft Forms user info";
+			Resource = "MicrosoftForms";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeyFormsUserInfo";
+			ApiType = $null;
+			Title = "Plugin to get information about current user in Microsoft Forms";
+			Group = @("Microsoft365");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 	}
@@ -65,11 +71,11 @@ function Get-MonkeyFormsUserInfo {
 		}
 		if ($null -ne $O365Object.auth_tokens.Forms) {
 			$authHeader = @{
-				authorization = $O365Object.auth_tokens.Forms.CreateAuthorizationHeader()
+				Authorization = $O365Object.auth_tokens.Forms.CreateAuthorizationHeader()
 			}
 			$url = ("{0}/formapi/api/userInfo" -f $O365Object.Environment.Forms)
 			$params = @{
-				url = $url;
+				Url = $url;
 				Method = 'Get';
 				Content_Type = 'application/json';
 				Headers = $authHeader;
@@ -91,11 +97,16 @@ function Get-MonkeyFormsUserInfo {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Forms. Current user info",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('FormsCurrentUserEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

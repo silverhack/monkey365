@@ -48,14 +48,22 @@ function Get-MonkeyEXOSharingPolicy {
 		$monkey_metadata = @{
 			Id = "exo0028";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOSharingPolicy";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about sharing policy in Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Sharing Policy";
-			PluginName = "Get-MonkeyEXOSharingPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+		#Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
 		if ($exo_session) {
@@ -67,7 +75,17 @@ function Get-MonkeyEXOSharingPolicy {
 				Tags = @('ExoSharingPolicyInfo');
 			}
 			Write-Information @msg
-			$exo_sharing_policy = Get-ExoMonkeySharingPolicy
+            $p = @{
+                Authentication = $ExoAuth;
+                Environment = $Environment;
+                ResponseFormat = 'clixml';
+                Command = 'Get-SharingPolicy';
+                Method = "POST";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+		    $exo_sharing_policy = Get-PSExoAdminApiObject @p
 		}
 	}
 	end {
@@ -83,11 +101,16 @@ function Get-MonkeyEXOSharingPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online sharing policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoSharingPolicyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

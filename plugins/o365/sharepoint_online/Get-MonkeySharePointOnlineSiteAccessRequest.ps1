@@ -47,90 +47,58 @@ function Get-MonkeySharePointOnlineSiteAccessRequest {
 		$monkey_metadata = @{
 			Id = "sps0004";
 			Provider = "Microsoft365";
+			Resource = "SharePointOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeySharePointOnlineSiteAccessRequest";
+			ApiType = $null;
 			Title = "Plugin to get information about SPS access requests";
 			Group = @("SharePointOnline");
-			ServiceName = "SharePoint Online Site access requests";
-			PluginName = "Get-MonkeySharePointOnlineSiteAccessRequest";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
+        if($null -eq $O365Object.spoWebs){
+            break
+        }
 		#Get Access Token from SPO
 		$sps_auth = $O365Object.auth_tokens.SharePointOnline
-		$all_access_requests = @()
+        #set generic list
+        $all_external_access = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
 	}
 	process {
 		$msg = @{
 			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Sharepoint Online site access requests",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
+			InformationAction = $O365Object.InformationAction;
 			Tags = @('SPSAccessRequestsInfo');
 		}
-		Write-Information @msg
-		#Get all webs for user
-		$allowed_sites = Get-MonkeySPSWebsForUser
-		foreach ($site in $allowed_sites) {
-			#Getting Lists from Web
-			$msg = @{
-				MessageData = ($message.SPSGetListsForWeb -f $site.url);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('SPSExternalUsersInfo');
-			}
-			Write-Information @msg
-			$param = @{
-				Authentication = $sps_auth;
-				clientObject = $site;
-				Properties = 'Lists';
-				executeQuery = $true;
-				endpoint = $site.url;
-			}
-			$all_lists = Get-MonkeySPSProperty @param
-			if ($null -ne $all_lists) {
-				$access_requests_lists = $all_lists.Lists | Where-Object { $_.Title -eq 'Access Requests' }
-				if ($null -ne $access_requests_lists) {
-					foreach ($access_requests_list in $access_requests_lists) {
-						#Getting access requests
-						$msg = @{
-							MessageData = ($message.SPSCheckSiteAccessRequests -f $site.url);
-							callStack = (Get-PSCallStack | Select-Object -First 1);
-							logLevel = 'verbose';
-							InformationAction = $InformationAction;
-							Tags = @('SPSAccessRequestInfo');
-						}
-						Write-Verbose @msg
-						$param = @{
-							Authentication = $sps_auth;
-							list = $access_requests_list;
-							endpoint = $site.url;
-						}
-						$list = Get-MonkeySPSListItem @param
-						if ($null -ne $list) {
-							foreach ($access in $list) {
-								$all_access_requests += New-Object PSObject -Property ([Ordered]@{
-										Title = $access.Title
-										RequestedObjectUrl = $access.RequestedObjectUrl.url
-										RequestedObjectTitle = $access.RequestedObjectTitle
-										RequestedBy = $access.RequestedBy
-										RequestedFor = $access.RequestedFor
-										RequestDate = $access.RequestDate
-										Expires = $access.Expires
-										status = [ChangeRequestStatus]$access.status
-										permissionType = $access.permissionType
-										IsInvitation = $access.IsInvitation
-									})
-							}
-						}
-					}
-				}
-			}
-		}
+        Write-Information @msg
+        foreach($web in $O365Object.spoWebs){
+            $p = @{
+                Web = $web;
+                Authentication = $sps_auth;
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $site_access = Get-MonkeyCSOMSiteAccessRequest @p
+            if($site_access){
+                #Add to list
+                foreach($sa in $site_access){
+                    [void]$all_external_access.Add($sa)
+                }
+            }
+        }
+
 	}
 	end {
-		if ($all_access_requests) {
-			$all_access_requests.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Site.AccessRequests')
+		if ($all_external_access) {
+			$all_external_access.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Site.AccessRequests')
 			[pscustomobject]$obj = @{
-				Data = $all_access_requests;
+				Data = $all_external_access;
 				Metadata = $monkey_metadata;
 			}
 			$returnData.o365_spo_site_access_requests = $obj
@@ -139,11 +107,16 @@ function Get-MonkeySharePointOnlineSiteAccessRequest {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Site access requests",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.Verbose;
 				Tags = @('SPSAccessRequestEmptyResponse');
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

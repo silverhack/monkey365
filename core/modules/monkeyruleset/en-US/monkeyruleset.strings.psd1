@@ -15,4 +15,5 @@
     UpdatingComlianceMessage         = Updating compliance for {0} rule
     FailedQueryMessage               = The "{0}" query failed to complete its execution on "{1}" rule
     UnitItemNotFound                 = Removing rules for "{0}" as it was not found on dataset
+    FalsePositiveDetected            = Potentially false positive detected on "{0}"
 '@

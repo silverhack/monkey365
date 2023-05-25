@@ -48,45 +48,62 @@ function Get-MonkeyEXOATPPolicy {
 		$monkey_metadata = @{
 			Id = "exo0004";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOATPPolicy";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about ATP policy from Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online ATP Policy";
-			PluginName = "Get-MonkeyEXOATPPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+        #Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
+
 	}
-	process {
-		if ($null -ne $exo_session) {
+	Process {
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online ATP policy",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('ExoATPPolicyInfo');
+		}
+		Write-Information @msg
+		if ($O365Object.ATPEnabled -eq $true) {
+			#Get APT Policy
+            $p = @{
+                Authentication = $ExoAuth;
+                Environment = $Environment;
+                ResponseFormat = 'clixml';
+                Command = 'Get-AtpPolicyForO365';
+                Method = "POST";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+			$atp_policy = Get-PSExoAdminApiObject @p
+		}
+		else {
 			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online ATP policy",$O365Object.TenantID);
+				MessageData = ($message.O365ATPNotDetected -f $O365Object.Tenant.CompanyInfo.displayName);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
+				logLevel = 'warning';
 				InformationAction = $InformationAction;
-				Tags = @('ExoATPPolicyInfo');
+				Tags = @('ExoATPPolicyWarning');
 			}
 			Write-Information @msg
-			if ($O365Object.ATPEnabled -eq $true) {
-				#Get APT Policy
-				$atp_policy = Get-ExoMonkeyAtpPolicyForO365
-			}
-			else {
-				$msg = @{
-					MessageData = ($message.O365ATPNotDetected -f $O365Object.Tenant.CompanyInfo.displayName);
-					callStack = (Get-PSCallStack | Select-Object -First 1);
-					logLevel = 'warning';
-					InformationAction = $InformationAction;
-					Tags = @('ExoATPPolicyWarning');
-				}
-				Write-Information @msg
-				#Set atpPolicy to null
-				$atp_policy = $null
-				break
-			}
+			#Set atpPolicy to null
+			$atp_policy = $null
+			break
 		}
 	}
-	end {
+	End {
 		if ($atp_policy) {
 			$atp_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.atp_policy')
 			[pscustomobject]$obj = @{
@@ -99,11 +116,16 @@ function Get-MonkeyEXOATPPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online ATP policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoAtpPolicyEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

@@ -48,10 +48,16 @@ function Get-MonkeySeCompRoleManagement {
 		$monkey_metadata = @{
 			Id = "purv011";
 			Provider = "Microsoft365";
-			Title = "Plugin to get information about management roles in Exchange Online Security \u0026 Compliance";
-			Group = @("PurView");
-			ServiceName = "Microsoft PurView RBAC";
+			Resource = "Purview";
+			ResourceType = $null;
+			resourceName = $null;
 			PluginName = "Get-MonkeySeCompRoleManagement";
+			ApiType = $null;
+			Title = "Plugin to get information about management roles in Exchange Online Security \\& Compliance";
+			Group = @("Purview");
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		$exo_auth = $O365Object.auth_tokens.ComplianceCenter
@@ -76,15 +82,10 @@ function Get-MonkeySeCompRoleManagement {
 			#Getting members
 			if ($secomp_role_groups) {
 				#Set new vars
-				$vars = @{
-					"O365Object" = $O365Object;
-					"WriteLog" = $WriteLog;
-					'Verbosity' = $Verbosity;
-					'InformationAction' = $InformationAction;
-				}
+				$vars = $O365Object.runspace_vars
 				$param = @{
-					ScriptBlock = { Get-PSExoUser -user $_.user -AuthenticationObject $_.AuthenticationObject };
-					ImportCommands = $O365Object.LibUtils;
+					Command = "Get-PSExoUser";
+					ImportCommands = $O365Object.libutils;
 					ImportVariables = $vars;
 					ImportModules = $O365Object.runspaces_modules;
 					StartUpScripts = $O365Object.runspace_init;
@@ -97,16 +98,16 @@ function Get-MonkeySeCompRoleManagement {
 					BatchSize = $O365Object.BatchSize;
 				}
 				foreach ($role_group in $secomp_role_groups) {
-					if ($role_group.Members.Count -gt 0) {
+					if ($role_group.members.Count -gt 0) {
 						#Clone values
-						$members = $role_group.Members.Clone()
+						$members = $role_group.members.Clone()
 						#Clear members
-						$role_group.Members.Clear()
+						$role_group.members.Clear()
 						#Get objects
 						foreach ($member in $members) {
-							$obj = @{ user = $member; AuthenticationObject = $exo_auth } | Invoke-MonkeyJob @param
+							$obj = Invoke-MonkeyJob @param -Arguments @{User = $member;AuthenticationObject = $exo_auth}
 							if ($obj) {
-								[void]$role_group.Members.Add($obj)
+								[void]$role_group.members.Add($obj)
 							}
 							else {
 								$msg = @{
@@ -120,7 +121,7 @@ function Get-MonkeySeCompRoleManagement {
 								#Potentially group detected
 								$group_object = Get-Group -Identity $member -ErrorAction Ignore
 								if ($null -ne $group_object) {
-									[void]$role_group.Members.Add($group_object)
+									[void]$role_group.members.Add($group_object)
 								}
 								else {
 									$msg = @{
@@ -136,7 +137,7 @@ function Get-MonkeySeCompRoleManagement {
 										displayName = $member;
 										ObjectCategory = $null;
 									}
-									[void]$role_group.Members.Add($unknownPsObject);
+									[void]$role_group.members.Add($unknownPsObject);
 								}
 							}
 						}
@@ -158,21 +159,27 @@ function Get-MonkeySeCompRoleManagement {
 			$msg = @{
 				MessageData = ("EXO groups for PurView disabled in configuration file for {0}",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'debug';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompRoleManagementDisabled');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Debug @msg
+			Write-Verbose @msg
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security & Compliance role management",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security \\u0026 Compliance role management",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompRoleManagementEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

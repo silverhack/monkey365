@@ -47,10 +47,16 @@ function Get-MonkeyAZRMVM {
 		$monkey_metadata = @{
 			Id = "az00042";
 			Provider = "Azure";
+			Resource = "VirtualMachines";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyAZRMVM";
+			ApiType = "resourceManagement";
 			Title = "Plugin to get information about Azure VM";
 			Group = @("VirtualMachines");
-			ServiceName = "Azure virtual machine";
-			PluginName = "Get-MonkeyAZRMVM";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 		#Get Environment
@@ -89,7 +95,7 @@ function Get-MonkeyAZRMVM {
 				#Construct URI
 				$URI = ('{0}{1}?api-version={2}&$expand=instanceView' `
  						-f $O365Object.Environment.ResourceManager,`
- 						$rmvm.id,$AzureVMConfig.api_version)
+ 						$rmvm.Id,$AzureVMConfig.api_version)
 				#launch request
 				$params = @{
 					Authentication = $rm_auth;
@@ -99,9 +105,9 @@ function Get-MonkeyAZRMVM {
 					Method = "GET";
 				}
 				$vm = Get-MonkeyRMObject @params
-				if ($vm.id) {
+				if ($vm.Id) {
 					#Check for antimalware
-					$av = $vm | Where-Object { $_.resources.id -match "IaaSAntimalware" -and $_.Properties.storageProfile.osDisk.osType -eq "Windows" }
+					$av = $vm | Where-Object { $_.resources.Id -match "IaaSAntimalware" -and $_.Properties.storageProfile.osDisk.osType -eq "Windows" }
 					if ($av) {
 						$vm | Add-Member -Type NoteProperty -Name antimalwareAgent -Value $true
 					}
@@ -109,7 +115,7 @@ function Get-MonkeyAZRMVM {
 						$vm | Add-Member -Type NoteProperty -Name antimalwareAgent -Value $false
 					}
 					#Check for installed agent
-					$agent = $vm | Where-Object { $_.resources.id -match "MicrosoftMonitoringAgent" -or $_.resources.id -match "OmsAgentForLinux" }
+					$agent = $vm | Where-Object { $_.resources.Id -match "MicrosoftMonitoringAgent" -or $_.resources.Id -match "OmsAgentForLinux" }
 					if ($agent) {
 						$vm | Add-Member -Type NoteProperty -Name vmagentinstalled -Value $true
 					}
@@ -121,7 +127,7 @@ function Get-MonkeyAZRMVM {
 					if ($osDiskName) {
 						$diskEncryption = $vm.Properties.instanceView.disks | Where-Object { $_.Name -eq $osDiskName } | Select-Object -ExpandProperty encryptionSettings -ErrorAction Ignore
 						if ($null -ne $diskEncryption) {
-							if ($diskEncryption.enabled -eq $true) {
+							if ($diskEncryption.Enabled -eq $true) {
 								$vm | Add-Member -Type NoteProperty -Name os_disk_encryption -Value "Enabled"
 							}
 							else {
@@ -140,7 +146,7 @@ function Get-MonkeyAZRMVM {
 							#Get os disk info
 							$URI = ("{0}{1}?api-version={2}" `
  									-f $O365Object.Environment.ResourceManager,`
- 									$osDisk.managedDisk.id,$AzureDiskConfig.api_version)
+ 									$osDisk.managedDisk.Id,$AzureDiskConfig.api_version)
 
 							$params = @{
 								Authentication = $rm_auth;
@@ -198,7 +204,7 @@ function Get-MonkeyAZRMVM {
 								$data_disks_info | Add-Member -Type NoteProperty -Name name -Value $dd_name
 								$diskEncryption = $vm.Properties.instanceView.disks | Where-Object { $_.Name -eq $dd_name } | Select-Object -ExpandProperty encryptionSettings -ErrorAction Ignore
 								if ($null -ne $diskEncryption) {
-									if ($diskEncryption.enabled -eq $true) {
+									if ($diskEncryption.Enabled -eq $true) {
 										$data_disks_info | Add-Member -Type NoteProperty -Name disk_encryption -Value "Enabled"
 									}
 									else {
@@ -214,7 +220,7 @@ function Get-MonkeyAZRMVM {
 									#Get managed disk info
 									$URI = ("{0}{1}?api-version={2}" `
  											-f $O365Object.Environment.ResourceManager,`
- 											$data_disk.managedDisk.id,$AzureDiskConfig.api_version)
+ 											$data_disk.managedDisk.Id,$AzureDiskConfig.api_version)
 
 									$params = @{
 										Authentication = $rm_auth;
@@ -265,7 +271,7 @@ function Get-MonkeyAZRMVM {
 					#Set Data disk encryption
 					$vm | Add-Member -Type NoteProperty -Name data_disks -Value $all_data_disks
 					#Get network interfaces
-					$NetworkInterface = $vm.Properties.networkProfile.networkinterfaces.id
+					$NetworkInterface = $vm.Properties.networkProfile.networkinterfaces.Id
 					if ($NetworkInterface) {
 						$URI = ('{0}{1}?api-version={2}' -f $O365Object.Environment.ResourceManager,$NetworkInterface,'2016-03-30')
 						#Perform Query
@@ -282,7 +288,7 @@ function Get-MonkeyAZRMVM {
 							$vm | Add-Member -Type NoteProperty -Name LocalIPAddress -Value $Result.Properties.ipConfigurations.Properties.privateIPAddress
 							$vm | Add-Member -Type NoteProperty -Name MACAddress -Value $Result.Properties.macAddress
 							$vm | Add-Member -Type NoteProperty -Name IPForwardingEnabled -Value $Result.Properties.enableIPForwarding
-							$PublicIPEndPoint = $Result.Properties.ipConfigurations.Properties.publicIpAddress.id
+							$PublicIPEndPoint = $Result.Properties.ipConfigurations.Properties.publicIpAddress.Id
 							if ($PublicIPEndPoint) {
 								$URI = ('{0}{1}?api-version={2}' -f $O365Object.Environment.ResourceManager,$PublicIPEndPoint,'2016-12-01')
 								$params = @{
@@ -319,11 +325,16 @@ function Get-MonkeyAZRMVM {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Virtual machines",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureVMEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

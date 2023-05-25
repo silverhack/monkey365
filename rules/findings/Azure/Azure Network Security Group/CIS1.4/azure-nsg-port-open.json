@@ -1,0 +1,50 @@
+{
+    "arg_names": [ "Network protocol name", "Port number", "description", "rationale", "compliance_version", "compliance_reference","additional_reference" ],
+	"dashboard_name":  "Network Security Groups",
+    "menu_name":  "Network",
+    "issue_name":  "_ARG_0_ port open to all",
+    "description":  "_ARG_2_",
+    "rationale":  "_ARG_3_",
+    "impact":  null,
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/virtual-network/security-overview"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "_ARG_4_",
+                           "reference":  "_ARG_5_"
+                       },
+                       [
+                           "_ARG_6_"
+                       ]
+	],
+    "tags":  null,
+    "path":  "az_nsg_rules",
+    "display_path":  "az_nsg_rules",
+    "conditions":  [
+                       "and",
+                       [
+                           "_INCLUDE_(conditions/allow-tcp.json)",
+                           "",
+                           ""
+                       ],
+					   [
+                           "_INCLUDE_(conditions/allow-udp.json)",
+                           "",
+                           ""
+                       ],
+                       [
+                           "_INCLUDE_(conditions/exposed-to-the-internet.json)",
+                           "",
+                           ""
+                       ],
+                       [
+                           "DestinationPortRange",
+                           "eq",
+                           "_ARG_1_"
+                       ]
+                   ],
+    "id_suffix":  "azure_nsg_security_port_open_all"
+}

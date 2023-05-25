@@ -93,6 +93,7 @@ Function Invoke-RuleCheck{
                             #Get subelements
                             $elements = $elements.GetPropertyByPath($rule.display_path)
                         }
+                        #Write-Host $rule.query -ForegroundColor Green
                         $matched_elements = $elements | Where-Object $rule.query -ErrorAction Ignore;
                     }
                     catch{
@@ -128,12 +129,15 @@ Function Invoke-RuleCheck{
                     if($rule.psobject.properties.Name.Contains('shouldExist')){
                         if($rule.shouldExist.ToString().ToLower() -eq "true"){
                             if($null -eq $matched_elements){
-                                if($rule.psobject.properties.Name.Contains('returnObject')){
+                                if($rule.psobject.properties.Name.Contains('returnObject') -and $null -ne $rule.returnObject){
                                     $new_monkey_object = New-Object -TypeName PSCustomObject
                                     foreach($element in $rule.returnObject.psobject.properties){
                                         $new_monkey_object | Add-Member -Type NoteProperty -name $element.Name -value $element.Value
                                     }
                                     $matched_elements = $new_monkey_object
+                                }
+                                elseif($rule.psobject.properties.Name.Contains('returnObject') -and $null -eq $rule.returnObject){
+                                    $matched_elements = $elements
                                 }
                                 elseif($null -ne $rule.psobject.properties.Item('showAll')){
                                     if($rule.showAll.ToString().ToLower() -eq "true"){
@@ -142,7 +146,8 @@ Function Invoke-RuleCheck{
                                 }
                             }
                             else{
-                                continue
+                                #Set matched element to null
+                                $matched_elements= $null;
                             }
                         }
                     }

@@ -33,7 +33,7 @@ Function Get-MonkeySPSTokenForSite{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory=$false, HelpMessage="parameters")]
         [Object]$parameters,
@@ -59,47 +59,32 @@ Function Get-MonkeySPSTokenForSite{
     foreach ($param in $parameters.GetEnumerator()){
         $new_params.add($param.Key, $param.Value)
     }
-    if($O365Object.isUsingAdalLib){
-        #Add Exo resource parameter
-        $new_params.Add('Resource',$resource)
-        #Check if confidential App
-        if($O365Object.isConfidentialApp -eq $false){
-            $new_params.Add('ClientId',(Get-WellKnownAzureService -AzureService SharePointOnline))
+    #Check if confidential App
+    if($O365Object.isConfidentialApp -eq $false){
+        if($null -eq $O365Object.sps_msal_application){
+            #Public App
+            $app2 = $O365Object.msal_application_args.Clone()
+            #Add clientId and RedirectUri
+            $app2.ClientId = (Get-WellKnownAzureService -AzureService SharePointOnline)
             if($PSEdition -eq "Desktop"){
-                $new_params.Add('RedirectUri',"https://oauth.spops.microsoft.com/")
+                $app2.RedirectUri = "https://oauth.spops.microsoft.com/"
             }
-        }
-        #Get token with new params
-        Get-AdalTokenForResource @new_params
-    }
-    else{
-        #Check if confidential App
-        if($O365Object.isConfidentialApp -eq $false){
-            if($null -eq $O365Object.sps_msal_application){
-                #Public App
-                $app2 = $O365Object.msal_application_args.Clone()
-                #Add clientId and RedirectUri
-                $app2.ClientId = (Get-WellKnownAzureService -AzureService SharePointOnline)
-                if($PSEdition -eq "Desktop"){
-                    $app2.RedirectUri = "https://oauth.spops.microsoft.com/"
-                }
-                $sps_app = New-MonkeyMsalApplication @app2
-                if($null -ne $sps_app){
-                    $O365Object.sps_msal_application = $sps_app
-                }
-                $new_params.publicApp = $O365Object.sps_msal_application
+            $sps_app = New-MonkeyMsalApplication @app2
+            if($null -ne $sps_app){
+                $O365Object.sps_msal_application = $sps_app
             }
-            else{
-                $new_params.publicApp = $O365Object.sps_msal_application
-            }
+            $new_params.publicApp = $O365Object.sps_msal_application
         }
         else{
-            $O365Object.sps_msal_application = $O365Object.msalapplication
-            $new_params.confidentialApp = $O365Object.msalapplication;
+            $new_params.publicApp = $O365Object.sps_msal_application
         }
-        #Add Exo resource parameter
-        $new_params.Add('Resource',$resource)
-        #Get token with new params
-        Get-MSALTokenForResource @new_params
     }
+    else{
+        $O365Object.sps_msal_application = $O365Object.msalapplication
+        $new_params.confidentialApp = $O365Object.msalapplication;
+    }
+    #Add Exo resource parameter
+    $new_params.Add('Resource',$resource)
+    #Get token with new params
+    Get-MSALTokenForResource @new_params
 }

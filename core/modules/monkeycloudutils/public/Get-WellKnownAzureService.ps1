@@ -42,6 +42,8 @@ Function Get-WellKnownAzureService{
         [String] $AzureService
     )
     [psobject]$AzureResources = @{
+        MicrosoftGraph = '14d82eec-204b-4c2f-b7e8-296a70dab67e';
+        AzureCli = '04b07795-8ddb-461a-bbee-02f9e1bf7b46';
         AzurePortal = '74658136-14ec-4630-ad9b-26e160ff0fc6';
         AzurePowerShell = '1950a258-227b-4e31-a9cf-717495945fc2';
         GlobalPowerShell = '1b730954-1685-4b74-9bfd-dac224a7b894';
@@ -63,6 +65,8 @@ Function Get-WellKnownAzureService{
         Sway = '905fcf26-4eb7-48a0-9ff0-8dcc7194b5ba';
         SwayClientId = 'bafcc1aa-3301-49be-a9bc-aa9b8e04c342';
         MicrosoftForms = 'c9a559d2-7aab-4f13-a6ed-e7e9c52aec87';
+        OfficeHome = '4765445b-32c6-49b0-83e6-1d93765276ca';
+        MSPIM = '01fc33a7-78ba-4d2f-a4b7-768e336e890e';
     }
     #Check if resource exists
     if($AzureResources.ContainsKey($AzureService)){

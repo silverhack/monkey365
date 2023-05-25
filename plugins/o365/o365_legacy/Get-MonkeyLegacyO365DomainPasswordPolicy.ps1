@@ -48,10 +48,16 @@ function Get-MonkeyLegacyO365DomainPasswordPolicy {
 		$monkey_metadata = @{
 			Id = "aadl002";
 			Provider = "AzureAD";
+			Resource = "LegacyO365API";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyLegacyO365DomainPasswordPolicy";
+			ApiType = "LegacyO365API";
 			Title = "Plugin to get information about domain password policy using legacy O365 API";
 			Group = @("LegacyO365API");
-			ServiceName = "Azure AD Domain Password Policy";
-			PluginName = "Get-MonkeyLegacyO365DomainPasswordPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
 	}
@@ -79,11 +85,16 @@ function Get-MonkeyLegacyO365DomainPasswordPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Domain password policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('LegacyDomainPasswordPolicyEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

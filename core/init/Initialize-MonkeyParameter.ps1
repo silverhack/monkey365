@@ -46,7 +46,7 @@ Function Initialize-MonkeyParameter{
             'auditorName','threads','PromptBehavior',
             'Environment','Instance', 'ruleset','ExportTo',
             'Analysis','WriteLog','TenantId','ClientId',
-            'IncludeAzureActiveDirectory','ImportJob',
+            'IncludeAzureAD','ImportJob',
             'SaveProject','ResolveTenantDomainName',
             'ResolveTenantUserName','ExcludePlugin',
             'ExcludedResources'
@@ -58,8 +58,8 @@ Function Initialize-MonkeyParameter{
             }
         }
         #Set Output Dir
-        if($false -eq $MyParams.ContainsKey('outDir')){
-            $MyParams.outDir = ("{0}/monkey-reports" -f $ScriptPath)
+        if($false -eq $MyParams.ContainsKey('OutDir')){
+            $MyParams.OutDir = ("{0}/monkey-reports" -f $ScriptPath)
         }
         #Set Environment
         if($null -eq $MyParams.Environment){
@@ -78,7 +78,7 @@ Function Initialize-MonkeyParameter{
             $MyParams.auditorName = $auditorName
         }
         #TODO Set instance
-        if($null -eq $MyParams.Instance -and $null -ne $MyParams.IncludeAzureActiveDirectory){
+        if($null -eq $MyParams.Instance -and $null -ne $MyParams.IncludeAzureAD){
             $MyParams.Instance = 'AzureAD'
         }
         #Set Verbose and Debug options

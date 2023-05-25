@@ -82,6 +82,19 @@
                 ]
             }
         ],
+		"aad-password-hash-sync-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "1.4.0",
+                        "reference": "1.1.7"
+                    }
+                ]
+            }
+        ],
         "aad-sign-in-policy-all_users_disabled.json": [
             {
                 "enabled": true,
@@ -130,6 +143,22 @@
                         "name": "CIS Microsoft 365 Foundations",
                         "version": "1.4.0",
                         "reference": "1.1.9"
+                    }
+                ]
+            }
+        ],
+		"aad-iam-privileged-users-active-assignment.json": [
+            {
+                "args": [
+                    "conditions/aad-m365-pim-privileged-roles.json"
+                ],
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "1.4.0",
+                        "reference": "1.1.10"
                     }
                 ]
             }

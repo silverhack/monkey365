@@ -68,7 +68,7 @@ Function Skip-MonkeyAzResource{
                     $suppress = $exclusion.suppress
                     if($suppress.PsObject.Properties.Item('pattern') -and $suppress.PsObject.Properties.Item('justification')){
                         $all_exclusions+=$exclusion
-                    } 
+                    }
                 }
             }
         }
@@ -78,9 +78,9 @@ Function Skip-MonkeyAzResource{
         if($all_exclusions.Count -gt 0){
             foreach($exclusion in $all_exclusions){
                 $pattern = $exclusion.suppress.pattern
-                $matches = $O365Object.all_resources | Where-Object {$_.Id -like $pattern}
-                if($matches){
-                    $message = ("Excluding {0} Azure resource(s) with pattern {1}. The following justification was included: {2}" -f @($matches).Count, $exclusion.suppress.pattern, $exclusion.suppress.justification)
+                $match = $O365Object.all_resources | Where-Object {$_.Id -like $pattern}
+                if($match){
+                    $message = ("Excluding {0} Azure resource(s) with pattern {1}. The following justification was included: {2}" -f @($match).Count, $exclusion.suppress.pattern, $exclusion.suppress.justification)
                     $msg = @{
                         MessageData = $message;
                         callStack = (Get-PSCallStack | Select-Object -First 1);

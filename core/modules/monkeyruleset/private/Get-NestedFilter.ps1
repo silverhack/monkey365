@@ -36,7 +36,10 @@ Function Get-NestedFilter{
 
     Param (
         [parameter(Mandatory=$true, HelpMessage="Condition")]
-        [object]$condition
+        [object]$condition,
+
+        [parameter(Mandatory=$false, HelpMessage="Conditions directory path")]
+        [string]$conditions_path
     )
     try{
         #create array
@@ -61,6 +64,12 @@ Function Get-NestedFilter{
                         element_to_check = $new_condition[0];
                         verb = $new_condition[1];
                         value = $new_condition[2];
+                    }
+                    if($prepare_filter.element_to_check.Contains("_INCLUDE_") -and $conditions_path){
+                        $include = Resolve-Include -include_file $prepare_filter.element_to_check `
+                                                   -conditions_path $conditions_path
+                        $nested_filter+=$include
+                        continue;
                     }
                     $filter = Get-NewFilter @prepare_filter
                     $nested_filter+=$filter

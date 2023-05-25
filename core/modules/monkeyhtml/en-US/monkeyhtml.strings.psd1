@@ -18,6 +18,7 @@
     unknownDashboardElement        = Format {0} is not yet supported
     unableToCreateTag              = Unable to create {0} Tag element
     unableToCreateTable            = Unable to create table
+    unableToCreateGoToLink         = Unable to create GoToLink html element
     unableToProcessInputObject     = Unable to process object for {0}
     insertChartsIntoElement        = Adding charts to {0} element
     unableTocreateElement          = Unable to create html element for {0}

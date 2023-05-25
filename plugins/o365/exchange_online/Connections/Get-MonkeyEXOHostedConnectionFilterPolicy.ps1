@@ -48,27 +48,43 @@ function Get-MonkeyEXOHostedConnectionFilterPolicy {
 		$monkey_metadata = @{
 			Id = "exo0009";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOHostedConnectionFilterPolicy";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about hosted connection filter policy in Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Hosted Connection Filter";
-			PluginName = "Get-MonkeyEXOHostedConnectionFilterPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+        #Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online Hosted connection filter policy",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoHostedConnectionInfo');
-			}
-			Write-Information @msg
-			$hosted_conn_filter = Get-ExoMonkeyHostedConnectionFilterPolicy
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online Hosted connection filter policy",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $InformationAction;
+			Tags = @('ExoHostedConnectionInfo');
 		}
+		Write-Information @msg
+        $p = @{
+            Authentication = $ExoAuth;
+            Environment = $Environment;
+            ResponseFormat = 'clixml';
+            Command = 'Get-HostedConnectionFilterPolicy';
+            Method = "POST";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+		$hosted_conn_filter = Get-PSExoAdminApiObject @p
 	}
 	end {
 		if ($null -ne $hosted_conn_filter) {
@@ -83,11 +99,16 @@ function Get-MonkeyEXOHostedConnectionFilterPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online hosted connection filter policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoHostedConnectionEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+

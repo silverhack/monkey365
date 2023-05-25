@@ -68,13 +68,21 @@ Function New-RunspacePool{
         [Parameter(HelpMessage="Startup scripts (*ps1 files) to execute")]
         [System.Object[]]$StartUpScripts,
 
-        [Parameter(HelpMessage="Maximum number of concurrent threads")]
+        [Parameter(HelpMessage="Minimum number of runspaces")]
+        [ValidateRange(1,65535)]
+        [int32]$MinThrottle = 1,
+
+        [Parameter(HelpMessage="Maximum number of runspaces")]
         [ValidateRange(1,65535)]
         [int32]$Throttle = 10,
 
         [Parameter(HelpMessage="ApartmentState of the thread")]
         [ValidateSet("STA","MTA")]
         [String]$ApartmentState = "STA",
+
+        [Parameter(HelpMessage="Thread Option")]
+        [ValidateSet("Default","UseNewThread","ReuseThread","UseCurrentThread")]
+        [String]$ThreadOption = "Default",
 
         [Parameter(Mandatory=$False, HelpMessage='Cleanup interval')]
         [int]$Cleanup = 2,
@@ -104,23 +112,26 @@ Function New-RunspacePool{
         #Create runspacePool
         if($null -ne $sessionstate -and $sessionstate -is [System.Management.Automation.Runspaces.InitialSessionState]){
             try{
-                $runspacepool = [runspacefactory]::CreateRunspacePool(1, $Throttle, $sessionstate, $Host)
+                $runspacepool = [runspacefactory]::CreateRunspacePool($MinThrottle, $Throttle, $sessionstate, $Host)
                 #Set state (STA/MTA)
                 $runspacepool.ApartmentState = [System.Threading.ApartmentState]::$ApartmentState
                 #Set options
-                $runspacepool.ThreadOptions = "ReuseThread"
+                $runspacepool.ThreadOptions = [System.Management.Automation.Runspaces.PSThreadOptions]::$ThreadOption
                 #Set cleanup interval
                 $runspacepool.CleanupInterval = $Cleanup * [timespan]::TicksPerMinute
+                #Set min runspaces
+                [void]$runspacepool.SetMinRunspaces($MinThrottle)
                 #Set max runspaces
                 [void]$runspacepool.SetMaxRunspaces($Throttle)
             }
             catch{
-                Write-Warning "Unable to create RunspacePool"
+                Write-Warning $script:messages.RunspaceCreationError
+                Write-Verbose $_
                 $runspacepool = $null
             }
         }
         else{
-            Write-Warning "Unable to create initial session state"
+            Write-Warning $script:messages.ISSCreationError
             $runspacepool = $null
         }
     }

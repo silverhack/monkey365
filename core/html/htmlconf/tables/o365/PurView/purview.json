@@ -159,5 +159,23 @@
 				"showModalButton":"True"
 			}
 		}
+	],
+	"o365_exo_auditing_disabled": [
+		{
+			"translate": {
+				"AdminAuditLogEnabled": "Audit Log",
+				"UnifiedAuditLogIngestionEnabled": "Unified ingestion",
+				"AdminAuditLogMailbox": "Mailbox auditing"
+			},
+			"table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["Policy"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+		}
 	]
 }

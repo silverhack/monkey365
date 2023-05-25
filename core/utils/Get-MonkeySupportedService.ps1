@@ -27,7 +27,7 @@ Function Get-MonkeySupportedService{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeySupportedServices
+            File Name	: Get-MonkeySupportedService
             Version     : 1.0
 
         .LINK
@@ -49,16 +49,18 @@ Function Get-MonkeySupportedService{
         if($null -ne $all_plugin_metadata -and $Azure.IsPresent){
             #Get all supported services based on Azure plugins
             $unsorted_az_plugins = $all_plugin_metadata | Where-Object {$_.Provider -eq 'Azure'}
-            $unsorted_az_plugins | Select-Object -ExpandProperty Group | ForEach-Object {$selected_plugins+=$_.Split(',')}
-            $selected_plugins = $selected_plugins | Sort-Object -Unique
-            $selected_plugins+="All"
+            $selected_plugins = $unsorted_az_plugins | Select-Object -ExpandProperty Group | Sort-Object -Unique
+            #$unsorted_az_plugins | Select-Object -ExpandProperty Group | ForEach-Object {$selected_plugins+=$_.Split(',')}
+            $selected_plugins =, "All" + $selected_plugins
             $selected_plugins = $selected_plugins -replace '"', ""
         }
         elseif($null -ne $all_plugin_metadata -and $M365.IsPresent){
             #Get all supported services based on Microsoft 365 plugins
             $unsorted_az_plugins = $all_plugin_metadata | Where-Object {$_.Provider -eq 'Microsoft365'}
-            $unsorted_az_plugins | Select-Object -ExpandProperty Group | ForEach-Object {$selected_plugins+=$_.Split(',')}
-            $selected_plugins = $selected_plugins | Sort-Object -Unique
+            #$selected_plugins = $unsorted_az_plugins | Group-Object -Property Resource | Select-Object -ExpandProperty Name
+            #$unsorted_az_plugins | Select-Object -ExpandProperty Group | ForEach-Object {$selected_plugins+=$_.Split(',')}
+            #$selected_plugins = $selected_plugins | Sort-Object -Unique
+            $selected_plugins = $unsorted_az_plugins | Select-Object -ExpandProperty Group | Sort-Object -Unique
             $selected_plugins = $selected_plugins -replace '"', ""
         }
     }

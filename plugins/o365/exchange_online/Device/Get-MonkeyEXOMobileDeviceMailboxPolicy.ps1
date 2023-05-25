@@ -48,27 +48,43 @@ function Get-MonkeyEXOMobileDeviceMailboxPolicy {
 		$monkey_metadata = @{
 			Id = "exo0018";
 			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
+			ResourceType = $null;
+			resourceName = $null;
+			PluginName = "Get-MonkeyEXOMobileDeviceMailboxPolicy";
+			ApiType = "ExoApi";
 			Title = "Plugin to get information about mobile device mailbox in Exchange Online";
 			Group = @("ExchangeOnline");
-			ServiceName = "Exchange Online Mobile Device Mailbox Policy";
-			PluginName = "Get-MonkeyEXOMobileDeviceMailboxPolicy";
+			Tags = @{
+				"enabled" = $true
+			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online
-		$exo_session = Test-EXOConnection
+        #Get instance
+        $Environment = $O365Object.Environment
+        #Get Exchange Online Auth token
+        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
-		if ($exo_session) {
-			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online mobile device mailbox policy",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('ExoMobileDeviceMailboxInfo');
-			}
-			Write-Information @msg
-			$mobile_device_mailbox_policy = Get-ExoMonkeyMobileDeviceMailboxPolicy
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Exchange Online mobile device mailbox policy",$O365Object.TenantID);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'info';
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('ExoMobileDeviceMailboxInfo');
 		}
+		Write-Information @msg
+        $p = @{
+            Authentication = $ExoAuth;
+            Environment = $Environment;
+            ResponseFormat = 'clixml';
+            Command = 'Get-MobileDeviceMailboxPolicy';
+            Method = "POST";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+		$mobile_device_mailbox_policy = Get-PSExoAdminApiObject @p
 	}
 	end {
 		if ($null -ne $mobile_device_mailbox_policy) {
@@ -83,11 +99,16 @@ function Get-MonkeyEXOMobileDeviceMailboxPolicy {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online mobile device mailbox policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('ExoMobileDeviceMailboxEmptyResponse');
+				Verbose = $O365Object.Verbose;
 			}
-			Write-Warning @msg
+			Write-Verbose @msg
 		}
 	}
 }
+
+
+
+
