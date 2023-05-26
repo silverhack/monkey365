@@ -116,9 +116,6 @@ Function Write-Debug {
                 $PSBoundParameters.Add('Debug',$false);
                 $informationAction = $DebugPreference
             }
-            else{
-                $DebugPreference = 'Continue'
-            }
             #Check if Debug variable is present
             if($null -ne (Get-Variable -Name Debug -ErrorAction Ignore)){
                 #override default option
