@@ -1,13 +1,15 @@
 {
     "dashboard_name":  "PostgreSQL Configuration",
     "menu_name":  "Database Configuration",
-    "issue_name":  "Enable log_disconnections on PostgreSQL Servers",
-    "description":  "Enabling log_disconnections helps PostgreSQL Database to Logs end of a session, including duration, which in turn generates query and error logs. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
-    "rationale":  null,
+    "issue_name":  "Ensure server parameter 'log_disconnections' is set to 'ON' for PostgreSQL Database Server",
+    "description":  "Enable `log_disconnections` on PostgreSQL Servers.",
+    "rationale":  "Enabling `log_disconnections` helps PostgreSQL Database to `Logs end of a session`, including duration, which in turn generates query and error logs. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
     "impact":  null,
     "remediation":  null,
     "references":  [
-                       "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
+                       "https://learn.microsoft.com/en-us/azure/postgresql/single-server/how-to-configure-server-parameters-using-portal",
+					   "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver",
+					   "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
                    ],
     "compliance":  [
                        {
