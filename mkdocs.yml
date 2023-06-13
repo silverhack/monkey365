@@ -45,7 +45,6 @@ nav:
     - Overview:
       - Installation: install-instructions.md
       - Permissions: permissions.md
-      - Authentication: authentication.md
       - Basic Usage: basic-usage.md
     - Configuration:
       - General Options: configuration/general-options.md
@@ -53,6 +52,12 @@ nav:
       - Microsoft365 Options: configuration/microsoft365-options.md
       - Configuration File: configuration/configuration-file.md
       - Handle Rate Limit: configuration/rate-limit.md
+    - Authentication:
+      - Overview: authentication/overview.md
+      - Web Browser Interactive: authentication/interactive.md
+      - Device Code: authentication/devicecode.md
+      - Service Principal: authentication/sp.md
+      - Resource Owner Password Credential: authentication/ropc.md
     - Docker:
       - Overview: docker/docker.md
     - Export Data:

@@ -4,7 +4,7 @@ author: Juan Garrido
 
 This section covers the supported options to help customize and automate scans for Azure environments. General options include:
 
- ```--Analysis```
+ ```-Analysis```
 
 Select the Azure resources used to gather data. Valid values are:
 
@@ -29,7 +29,7 @@ By default, Monkey365 will show the subscriptions to which the provided identity
 ![](../assets/images/subscription.png)
 
 
-The ```-subscriptions``` option can be used to scan a number of subscriptions in one execution.
+The ```-Subscriptions``` option can be used to scan a number of subscriptions in one execution.
 
 ``` powershell
 $param = @{
@@ -43,14 +43,14 @@ $param = @{
 $assets = Invoke-Monkey365 @param
 ```
 
-The ```-all_subscriptions``` option can be used to scan all the subscriptions.
+The ```-AllSubscriptions``` option can be used to scan all the subscriptions.
 
 ``` powershell
 $param = @{
     Instance = 'Azure';
     Analysis = 'All';
     PromptBehavior = 'SelectAccount';
-    all_subscriptions = $true;
+    AllSubscriptions = $true;
     TenantID = '00000000-0000-0000-0000-000000000000';
     ExportTo = 'PRINT';
 }
@@ -68,7 +68,7 @@ $param = @{
     Instance = 'Azure';
     Analysis = 'All';
     PromptBehavior = 'SelectAccount';
-    all_subscriptions = $true;
+    AllSubscriptions = $true;
     TenantID = '00000000-0000-0000-0000-000000000000';
 	ExcludedResources = 'C:\temp\az_excluded_resources.json';
     ExportTo = 'HTML';

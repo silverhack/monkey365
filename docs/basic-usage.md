@@ -35,7 +35,7 @@ $param = @{
     Instance = 'Azure';
     Analysis = 'All';
     PromptBehavior = 'SelectAccount';
-    subscriptions = '00000000-0000-0000-0000-000000000000';
+    Subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
     ExportTo = 'PRINT';
 }
@@ -49,7 +49,7 @@ $param = @{
     ClientSecret = ("MySuperClientSecret" | ConvertTo-SecureString -AsPlainText -Force)
     Instance = 'Azure';
     Analysis = 'All';
-    subscriptions = '00000000-0000-0000-0000-000000000000';
+    Subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
     ExportTo = @("CLIXML","EXCEL","CSV","JSON","HTML");
 }
@@ -64,7 +64,7 @@ $param = @{
     CertFilePassword = ("MySuperCertSecret" | ConvertTo-SecureString -AsPlainText -Force);
     Instance = 'Microsoft365';
     Analysis = 'SharePointOnline';
-    subscriptions = '00000000-0000-0000-0000-000000000000';
+    Subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
     ExportTo = @("CLIXML","EXCEL","CSV","JSON","HTML");
 }

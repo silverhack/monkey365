@@ -332,6 +332,10 @@ Function Invoke-Monkey365{
             $all_sbs_attr_name.Mandatory = $false
             $attributeCollection.Add($all_sbs_attr_name)
 
+            #Create alias for -AllSubscriptions switch param
+            $allsbs_alias = New-Object System.Management.Automation.AliasAttribute -ArgumentList 'all_subscriptions'
+            $attributeCollection.Add($allsbs_alias)
+
             $sbs_pname = 'AllSubscriptions'
             $analysis_type_dynParam = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter($sbs_pname,
             [switch], $attributeCollection)

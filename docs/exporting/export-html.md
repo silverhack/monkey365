@@ -13,7 +13,7 @@ $param = @{
     Instance = 'Azure';
     Analysis = 'All';
     PromptBehavior = 'SelectAccount';
-    all_subscriptions = $true;
+    AllSubscriptions = $true;
     TenantID = '00000000-0000-0000-0000-000000000000';
     ExportTo = 'HTML';
 }
