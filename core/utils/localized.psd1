@@ -1,5 +1,7 @@
 ﻿# en-US
 ConvertFrom-StringData @'
+GraphV2ErrorMessage              = Identity was not granted permissions to access Microsoft Graph
+AzureADTenantNameError           = Unable to get Tenant name
 MonkeyObjectCreationFailed       = Unable to create {0} object
 AcquireLockMessage               = Thread {0} is requesting lock
 AcquireLockInfoMessage           = Thread {0} lock successfully requested
@@ -130,6 +132,7 @@ UnableToGetSubsites              = Unable to get sub-sites for {0}
 UnableToProcessQuery             = Unable to process query on {0}
 SPSDetailedErrorMessage          = {0}
 SPSAdminErrorMessage             = User {0} does not have permission to access SharePoint Online
+SPSConfidentialAppErrorMessage   = Confidential application with application secret is not allowed to access SharePoint Online
 SPSCheckSiteForExternalUsers     = Searching for external users on {0}
 SPSCheckSiteForOrphanedObjects   = Searching for orphaned objects on {0}
 SPSCheckSiteAccessRequests       = Getting site access requests of site: {0}

@@ -60,7 +60,23 @@ Function Select-MonkeyAzureSubscription{
             }
             $sub | Add-Member -type NoteProperty -name TenantID -value $O365Object.TenantId -Force
             if($null -ne $O365Object.Tenant){
-                $sub | Add-Member -type NoteProperty -name TenantName -value $O365Object.Tenant.TenantName -Force
+                if($null -ne $O365Object.Tenant.Psobject.Properties.Item('TenantName')){
+                    $sub | Add-Member -type NoteProperty -name TenantName -value $O365Object.Tenant.TenantName -Force
+                }
+                elseif($null -ne $O365Object.Tenant.Psobject.Properties.Item('displayName')){
+                    $sub | Add-Member -type NoteProperty -name TenantName -value $O365Object.Tenant.displayName -Force
+                }
+                else{
+                    $msg = @{
+                        MessageData = ($message.AzureADTenantNameError);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('AzureADTenantNameNotFound');
+                    }
+                    Write-Warning @msg
+                    $sub | Add-Member -type NoteProperty -name TenantName -value $null -Force
+                }
                 $sub | Add-Member -type NoteProperty -name Tenant -value $O365Object.Tenant -Force
             }
             $AllSubscriptions+=$sub

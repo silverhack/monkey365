@@ -160,10 +160,22 @@ Function Invoke-AzureScanner{
                 if($null -ne (Get-Variable -Name aadReturnData -Scope Script -ErrorAction Ignore)){
                     $Script:returnData = Join-HashTable -HashTable $returnData -JoinHashTable $aadReturnData
                 }
-                #Get Monkey Object with all data to export
-                $MonkeyExportObject = New-O365ExportObject
-                #Prepare Output
-                Out-MonkeyData -MonkeyExportObject $MonkeyExportObject
+                if($Script:returnData.Count -gt 0){
+                    #Get Monkey Object with all data to export
+                    $MonkeyExportObject = New-O365ExportObject
+                    #Prepare Output
+                    Out-MonkeyData -MonkeyExportObject $MonkeyExportObject
+                }
+                else{
+                    $msg = @{
+                        MessageData = "There is no data to export";
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('AzureSubscriptionScanner');
+                    }
+                    Write-Warning @msg
+                }
                 #Reset Report var
                 if($null -ne (Get-Variable -Name Report -Scope Script -ErrorAction Ignore)){
                     Remove-Variable -Name Report -Scope Script -Force

@@ -51,10 +51,34 @@ Function Invoke-AzureADScanner{
     $O365Object.monkey_runspacePool = New-MonkeyRunsPacePool @p
     if($null -ne $O365Object.TenantId -and $O365Object.Plugins){
         #Add current subscription to O365Object
+        if($null -ne $O365Object.Tenant){
+            $TenantObject = $O365Object.Tenant
+            $displayName = $O365Object.Tenant.TenantName;
+            $subscriptionId = $O365Object.Tenant.TenantId;
+        }
+        else{
+            $msg = @{
+                MessageData = ($Script:message.O365TenantInfoError);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'warning';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365TenantError');
+            }
+            Write-Warning @msg
+            if($null -ne $O365Object.auth_tokens.Graph){
+                $displayName = $O365Object.auth_tokens.Graph.TenantId;
+                $subscriptionId = $O365Object.auth_tokens.Graph.TenantId;
+            }
+            else{
+                $displayName = $null;
+                $subscriptionId = $null;
+            }
+            $TenantObject = $null;
+        }
         $new_subscription = [ordered]@{
-            Tenant = $O365Object.Tenant
-            DisplayName = $O365Object.Tenant.TenantName
-            subscriptionId = $O365Object.Tenant.TenantId
+            Tenant = $TenantObject;
+            DisplayName = $displayName;
+            subscriptionId = $subscriptionId;
         }
         $O365Object.current_subscription = $new_subscription
         #Get Execution Info
@@ -83,9 +107,21 @@ Function Invoke-AzureADScanner{
                 Verbose = $O365Object.VerboseOptions.Verbose;
             }
             Invoke-MonkeyRunspace @p
-            $MonkeyExportObject = New-O365ExportObject
-            #Prepare Output
-            Out-MonkeyData -MonkeyExportObject $MonkeyExportObject
+            if($Script:returnData.Count -gt 0){
+                $MonkeyExportObject = New-O365ExportObject
+                #Prepare Output
+                Out-MonkeyData -MonkeyExportObject $MonkeyExportObject
+            }
+            else{
+                $msg = @{
+                    MessageData = "There is no data to export";
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'warning';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('AzureSubscriptionScanner');
+                }
+                Write-Warning @msg
+            }
         }
     }
     #Cleaning Runspace

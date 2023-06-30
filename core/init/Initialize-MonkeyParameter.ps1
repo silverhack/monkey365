@@ -67,15 +67,15 @@ Function Initialize-MonkeyParameter{
         }
         #Set Prompt
         if($null -eq $MyParams.PromptBehavior){
-            $MyParams.PromptBehavior = $PromptBehavior
+            $MyParams.PromptBehavior = 'Auto'
         }
         #Add threads to params if not exists
         if($null -eq $MyParams.Threads){
-            $MyParams.threads = $Threads
+            $MyParams.threads = 2
         }
         #Add auditorName if not exists
         if($null -eq $MyParams.auditorName){
-            $MyParams.auditorName = $auditorName
+            $MyParams.auditorName = $env:USERNAME
         }
         #TODO Set instance
         if($null -eq $MyParams.Instance -and $null -ne $MyParams.IncludeAzureAD){
@@ -100,7 +100,7 @@ Function Initialize-MonkeyParameter{
             try{
                 [securestring]$pass = ConvertTo-SecureString $env:MONKEY_ENV_MONKEY_PASSWORD -AsPlainText -Force
                 [pscredential]$InputObject = New-Object System.Management.Automation.PSCredential ($env:MONKEY_ENV_MONKEY_USER, $pass)
-                $MyParams.user_credentials = $InputObject
+                $MyParams.UserCredentials = $InputObject
             }
             catch{
                 Write-Error $_

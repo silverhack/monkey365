@@ -62,11 +62,17 @@ Function Out-MonkeyData{
                     else{
                         $includeAAD = $false
                     }
+                    if($null -ne $MonkeyExportObject.Tenant -and $null -ne $MonkeyExportObject.Tenant.Psobject.Properties.Item('TenantName')){
+                        $tname = $O365Object.Tenant.TenantName;
+                    }
+                    else{
+                        $tname = $null;
+                    }
                     $metadata = [ordered]@{
                         projectId = [System.Guid]::NewGuid().Guid;
                         subscriptionName = $subscriptionName;
                         tenantID = $MonkeyExportObject.TenantID;
-                        tenantName = $MonkeyExportObject.Tenant.TenantName;
+                        tenantName = $tname;
                         subscriptionId = $MonkeyExportObject.Subscription.subscriptionId;
                         raw_data = $out_file;
                         Instance = $MonkeyExportObject.Instance;

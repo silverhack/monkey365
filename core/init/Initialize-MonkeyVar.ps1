@@ -96,14 +96,14 @@ Function Initialize-MonkeyVar{
     Set-Variable o365_sessions -Value $o365_sessions -Scope Script -Force
     ################### VERBOSE OPTIONS #######################
     #Check verbose options
-    if($MyParams.Verbose){
+    if($MyParams.ContainsKey('Verbose') -and $MyParams.Verbose -eq $true){
         $VerboseOptions=@{Verbose=$true}
     }
     else{
         $VerboseOptions=@{Verbose=$false}
     }
     #Check Debug options
-    if($MyParams.Debug){
+    if($MyParams.ContainsKey('Debug') -and $MyParams.Debug -eq $true){
         $VerboseOptions.Add("Debug",$true)
     }
     else{
@@ -114,7 +114,7 @@ Function Initialize-MonkeyVar{
     Set-Variable Verbosity -Value $VerboseOptions -Scope Script -Force
     ######################## END VERBOSE OPTIONS #############################
     ################### LOG, CONSOLE OPTIONS #######################
-    if($null -ne $MyParams.informationAction){
+    if($MyParams.ContainsKey('informationAction')){
         Set-Variable InformationAction -Value $MyParams.informationAction -Scope Script -Force
     }
     else{

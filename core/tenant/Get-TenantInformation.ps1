@@ -35,7 +35,7 @@ Function Get-TenantInformation{
     #>
     [CmdletBinding()]
     Param()
-    if($O365Object.auth_tokens.Graph -and $O365Object.auth_tokens.MSGraph -and $O365Object.TenantId){
+    if($O365Object.auth_tokens.MSGraph -and $O365Object.TenantId){
         try{
             #Write message
             $msg = @{
@@ -55,17 +55,17 @@ Function Get-TenantInformation{
                 MyDomain = $null;
             }
             #Get Auth from old graph
-            $aad_auth = $O365Object.auth_tokens.Graph
+            $msgraph_auth = $O365Object.auth_tokens.MSGraph
             #Get tenant details
-            $Tenant = Get-MonkeyGraphAADTenantDetail -TenantId $O365Object.TenantId
+            $Tenant = Get-MonkeyMSGraphOrganization -TenantId $O365Object.TenantId
             if($Tenant){
                 #Set Tenant info var
                 Set-Variable Tenant -Value $Tenant -Scope Script -Force
                 if($O365Object.isConfidentialApp){
                     #Set Userprincipalname var
-                    if($aad_auth.psobject.Properties.Item('clientId')){
-                        Set-Variable userPrincipalName -Value $aad_auth.clientId.ToString() -Scope Script -Force
-                        $O365Object.userPrincipalName = $aad_auth.clientId.ToString()
+                    if($msgraph_auth.psobject.Properties.Item('clientId')){
+                        Set-Variable userPrincipalName -Value $msgraph_auth.clientId.ToString() -Scope Script -Force
+                        $O365Object.userPrincipalName = $msgraph_auth.clientId.ToString()
                     }
                     else{
                         $msg = @{
@@ -81,17 +81,17 @@ Function Get-TenantInformation{
                 }
                 else{
                     #Set Userprincipalname var
-                    if($aad_auth.psobject.Properties.Item('UserInfo')){
-                        $O365Object.userPrincipalName = $aad_auth.UserInfo.DisplayableId.ToString()
-                        Set-Variable userPrincipalName -Value $aad_auth.UserInfo.DisplayableId.ToString() -Scope Script -Force
+                    if($msgraph_auth.psobject.Properties.Item('UserInfo')){
+                        $O365Object.userPrincipalName = $msgraph_auth.UserInfo.DisplayableId.ToString()
+                        Set-Variable userPrincipalName -Value $msgraph_auth.UserInfo.DisplayableId.ToString() -Scope Script -Force
                     }
-                    elseif($aad_auth.psobject.Properties.Item('userPrincipalName')){
-                        $O365Object.userPrincipalName = $aad_auth.userPrincipalName
-                        Set-Variable userPrincipalName -Value $aad_auth.userPrincipalName -Scope Script -Force
+                    elseif($msgraph_auth.psobject.Properties.Item('userPrincipalName')){
+                        $O365Object.userPrincipalName = $msgraph_auth.userPrincipalName
+                        Set-Variable userPrincipalName -Value $msgraph_auth.userPrincipalName -Scope Script -Force
                     }
-                    elseif($aad_auth.psobject.Properties.Item('Account')){
-                        $O365Object.userPrincipalName = $aad_auth.Account.Username
-                        Set-Variable userPrincipalName -Value $aad_auth.Account.Username -Scope Script -Force
+                    elseif($msgraph_auth.psobject.Properties.Item('Account')){
+                        $O365Object.userPrincipalName = $msgraph_auth.Account.Username
+                        Set-Variable userPrincipalName -Value $msgraph_auth.Account.Username -Scope Script -Force
                     }
                     else{
                         $msg = @{
@@ -108,7 +108,7 @@ Function Get-TenantInformation{
                 #Set properties
                 $tenantInfo.TenantName = $Tenant.displayName
                 $tenantInfo.CompanyInfo = $Tenant
-                $tenantInfo.TenantId = $Tenant.objectId
+                $tenantInfo.TenantId = $Tenant.Id
             }
             #Get subscribed SKUs
             $SKus = Get-MonkeyMSGraphSuscribedSku

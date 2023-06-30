@@ -41,13 +41,24 @@ Function New-O365ExportObject{
     [CmdletBinding()]
     Param ()
     try{
+        if($null -ne $O365Object.Tenant -and $null -ne $O365Object.Tenant.Psobject.Properties.Item('tenantId')){
+            $tid = $O365Object.Tenant.tenantId;
+        }
+        else{
+            if($null -ne $O365Object.auth_tokens.Graph){
+                $tid = $O365Object.auth_tokens.Graph.TenantId;
+            }
+            else{
+                $tid = $null;
+            }
+        }
         #Create and return a new PsObject
         $tmp_object = @{
             Environment = $O365Object.Environment;
             StartDate = $starttimer.ToLocalTime();;
             Subscription = $O365Object.current_subscription;
             Tenant = $O365Object.Tenant;
-            TenantID = $O365Object.Tenant.tenantId;
+            TenantID = $tid;
             Localpath = $O365Object.Localpath;
             Output = $Script:returnData;
             Plugins = $O365Object.Plugins;

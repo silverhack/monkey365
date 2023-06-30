@@ -42,8 +42,8 @@ Function Initialize-AuthenticationParam{
             'certificate_credentials',
             'ClientSecret',
             'Certificate',
-            'certfilepassword',
-            'client_credentials'
+            'CertFilePassword',
+            'ClientCredentials'
         )
         #Public Implicit Params
         $publicParams=@(
@@ -51,7 +51,7 @@ Function Initialize-AuthenticationParam{
             'DeviceCode',
             'PromptBehavior',
             'ForceAuth',
-            'user_credentials'
+            'UserCredentials'
         )
         #parameters to skip in auth
         $skip=@(

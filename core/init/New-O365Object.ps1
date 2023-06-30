@@ -203,6 +203,8 @@ Function New-O365Object{
             aadPermissions = $null;
             azPermissions = $null;
             canRequestMFAForUsers = $null;
+            canRequestUsersFromMsGraph = $null;
+            canRequestGroupsFromMsGraph = $null;
             all_resources = $null;
             ResourceGroups = $null;
             internal_config = $internal_config_json;
@@ -229,6 +231,7 @@ Function New-O365Object{
             nestedRunspaceMaxThreads = $null;
             PowerBIBackendUri = $null;
             Timer = $null;
+            me = $null;
             diag_settings_unsupported_resources = $diag_settings_json;
         }
         #Check if Myparams is present
