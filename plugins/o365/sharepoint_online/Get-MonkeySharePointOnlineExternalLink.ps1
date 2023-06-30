@@ -51,7 +51,7 @@ function Get-MonkeySharePointOnlineExternalLink {
 			ResourceType = $null;
 			resourceName = $null;
 			PluginName = "Get-MonkeySharePointOnlineExternalLink";
-			ApiType = $null;
+			ApiType = "CSOM";
 			Title = "Plugin to get information about O365 Sharepoint Online external links";
 			Group = @("SharePointOnline");
 			Tags = @{

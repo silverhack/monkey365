@@ -77,12 +77,10 @@ function Get-MonkeyEXOHostedContentFilterPolicy {
 		$hosted_content_filter = Get-HostedContentFilterInfo
 		if ($null -ne $hosted_content_filter) {
 			foreach ($content_filter in @($hosted_content_filter)) {
-				$AllowedSenderDomains = $content_filter.Policy.AllowedSenderDomains
-				if ($AllowedSenderDomains.Count -gt 0) {
-					$all_domains = $AllowedSenderDomains | Select-Object -ExpandProperty Domain
-					$params = @{
+                if ($content_filter.Policy.AllowedSenderDomains.Count -gt 0) {
+                    $params = @{
 						ReferenceObject = $org_domains;
-						DifferenceObject = $all_domains;
+						DifferenceObject = $content_filter.Policy.AllowedSenderDomains;
 						IncludeEqual = $true;
 						ExcludeDifferent = $true;
 					}

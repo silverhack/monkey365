@@ -72,7 +72,6 @@ NestedModules = @(
     'core/modules/monkeylogger/monkeylogger.psm1',
     'core/modules/monkeyast/monkeyast.psm1',
     'core/modules/monkeyjob/monkeyjob.psm1',
-    'core/modules/psmarkdig/psmarkdig.psm1',
     'core/modules/monkeyexcel/monkeyexcel.psm1',
     'core/modules/psmarkdig/psmarkdig.psm1',
     'core/modules/monkeyruleset/monkeyruleset.psm1',

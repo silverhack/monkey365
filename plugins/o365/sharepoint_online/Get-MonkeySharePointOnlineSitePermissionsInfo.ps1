@@ -51,7 +51,7 @@ function Get-MonkeySharePointOnlineSitePermissionsInfo {
 			ResourceType = $null;
 			resourceName = $null;
 			PluginName = "Get-MonkeySharePointOnlineSitePermissionsInfo";
-			ApiType = $null;
+			ApiType = "CSOM";
 			Title = "Plugin to get information about Sharepoint Online site permissions";
 			Group = @("SharePointOnline");
 			Tags = @{

@@ -51,7 +51,7 @@ function Get-MonkeySharePointOnlineSitesProperty {
 			ResourceType = $null;
 			resourceName = $null;
 			PluginName = "Get-MonkeySharePointOnlineTenantSitesProperty";
-			ApiType = $null;
+			ApiType = "CSOM";
 			Title = "Plugin to extract information about SharePoint Online Tenant site properties";
 			Group = @("SharePointOnline");
 			Tags = @{

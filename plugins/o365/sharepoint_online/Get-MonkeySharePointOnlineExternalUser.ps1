@@ -51,7 +51,7 @@ function Get-MonkeySharePointOnlineExternalUser {
 			ResourceType = $null;
 			resourceName = $null;
 			PluginName = "Get-MonkeySharePointOnlineExternalUser";
-			ApiType = $null;
+			ApiType = "CSOM";
 			Title = "Plugin to get information about SPS external users";
 			Group = @("SharePointOnline");
 			Tags = @{

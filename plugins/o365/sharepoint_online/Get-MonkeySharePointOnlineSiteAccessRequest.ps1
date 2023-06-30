@@ -51,7 +51,7 @@ function Get-MonkeySharePointOnlineSiteAccessRequest {
 			ResourceType = $null;
 			resourceName = $null;
 			PluginName = "Get-MonkeySharePointOnlineSiteAccessRequest";
-			ApiType = $null;
+			ApiType = "CSOM";
 			Title = "Plugin to get information about SPS access requests";
 			Group = @("SharePointOnline");
 			Tags = @{

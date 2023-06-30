@@ -51,7 +51,7 @@ function Get-MonkeySharePointOnlineTenantSyncClientRestriction {
 			ResourceType = $null;
 			resourceName = $null;
 			PluginName = "Get-MonkeySharePointOnlineTenantSyncClientRestriction";
-			ApiType = $null;
+			ApiType = "CSOM";
 			Title = "Plugin to get information about SPS Tenant Sync Client Restriction";
 			Group = @("SharePointOnline");
 			Tags = @{

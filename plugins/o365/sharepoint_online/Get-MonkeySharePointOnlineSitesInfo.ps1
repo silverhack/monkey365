@@ -52,7 +52,7 @@ function Get-MonkeySharePointOnlineSitesInfo {
 			ResourceType = $null;
 			resourceName = $null;
 			PluginName = "Get-MonkeySharePointOnlineSitesInfo";
-			ApiType = $null;
+			ApiType = "CSOM";
 			Title = "Plugin to get information about Sharepoint Online sites";
 			Group = @("SharePointOnline");
 			Tags = @{

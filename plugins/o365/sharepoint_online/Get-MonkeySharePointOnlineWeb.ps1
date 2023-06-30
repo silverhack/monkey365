@@ -51,7 +51,7 @@ function Get-MonkeySharePointOnlineWeb {
 			ResourceType = $null;
 			resourceName = $null;
 			PluginName = "Get-MonkeySharePointOnlineWeb";
-			ApiType = $null;
+			ApiType = "CSOM";
 			Title = "Plugin to get information about O365 Sharepoint Online site web";
 			Group = @("SharePointOnline");
 			Tags = @{

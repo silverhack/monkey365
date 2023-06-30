@@ -51,7 +51,7 @@ function Get-MonkeySharePointOnlineSiteCollectionAdmin {
 			ResourceType = $null;
 			resourceName = $null;
 			PluginName = "Get-MonkeySharePointOnlineSiteCollectionAdmin";
-			ApiType = $null;
+			ApiType = "CSOM";
 			Title = "Plugin to get information about SPS site collection admins";
 			Group = @("SharePointOnline");
 			Tags = @{

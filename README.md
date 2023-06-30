@@ -21,7 +21,7 @@ Monkey365 is a plugin-based PowerShell module that can be used to review the sec
 
 You can either download the latest zip by clicking [this link](https://github.com/silverhack/monkey365/archive/refs/heads/main.zip) or download Monkey365 by cloning the [repository](https://github.com/silverhack/monkey365.git):
 
-Once downloaded, you must extract the file and extract the files to a suitable directory. Once you have unzipped the zip file, you can use the PowerShell V3 Unblock-File cmdlet to unblock files:
+Once downloaded, you must extract the files to a suitable directory. Once you have unzipped the zip file, you can use the PowerShell V3 Unblock-File cmdlet to unblock files:
 
 ``` powershell
 Get-ChildItem -Recurse c:\monkey365 | Unblock-File

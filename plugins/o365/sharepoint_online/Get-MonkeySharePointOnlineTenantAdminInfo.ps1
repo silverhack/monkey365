@@ -52,7 +52,7 @@ function Get-MonkeySharePointOnlineTenantAdminInfo {
 			ResourceType = $null;
 			resourceName = $null;
 			PluginName = "Get-MonkeySharePointOnlineTenantAdminInfo";
-			ApiType = $null;
+			ApiType = "CSOM";
 			Title = "Plugin to get information about SPS Tenant information";
 			Group = @("SharePointOnline");
 			Tags = @{

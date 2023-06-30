@@ -126,7 +126,7 @@ Function Invoke-Monkey365{
         .PARAMETER ForceAuth
 	        Force Monkey365 to Authenticate. Only valid for legacy user & password authentication
 
-        .PARAMETER user_credentials
+        .PARAMETER UserCredentials
 	        pscredential of the user requesting the token
 
         .PARAMETER ClearCache
@@ -160,7 +160,8 @@ Function Invoke-Monkey365{
     Param (
         # pscredential of the user requesting the token
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
-        [System.Management.Automation.PSCredential] $user_credentials,
+        [Alias('user_credentials')]
+        [System.Management.Automation.PSCredential] $UserCredentials,
 
         [parameter(Mandatory= $false, ParameterSetName = 'Implicit', HelpMessage= "User for access to the O365 services")]
         [String]$UserPrincipalName,
@@ -251,7 +252,8 @@ Function Invoke-Monkey365{
 
         # Secure secret of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
-        [System.Management.Automation.PSCredential] $client_credentials,
+        [Alias('client_credentials')]
+        [System.Management.Automation.PSCredential] $ClientCredentials,
 
         # Client assertion certificate of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]
@@ -273,7 +275,7 @@ Function Invoke-Monkey365{
             }
             return $true
         })]
-        [System.IO.FileInfo]$certificate,
+        [System.IO.FileInfo]$Certificate,
 
         # Secure password of the certificate
         [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Please specify the certificate password')]
@@ -495,5 +497,6 @@ Function Invoke-Monkey365{
         Stop-Logger
         #collect garbage
         [System.GC]::GetTotalMemory($true) | out-null
+        return $O365Object
     }
 }

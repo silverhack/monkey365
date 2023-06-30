@@ -51,7 +51,7 @@ function Get-MonkeySharePointOnlineOrphanedUser {
 			ResourceType = $null;
 			resourceName = $null;
 			PluginName = "Get-MonkeySharePointOnlineOrphanedUser";
-			ApiType = $null;
+			ApiType = "CSOM";
 			Title = "Plugin to get information about SharePoint Online orphaned users and groups";
 			Group = @("SharePointOnline");
 			Tags = @{
