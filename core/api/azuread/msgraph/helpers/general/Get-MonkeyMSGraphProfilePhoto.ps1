@@ -45,6 +45,9 @@ Function Get-MonkeyMSGraphProfilePhoto {
         [Parameter(Mandatory=$True, ParameterSetName = 'ServicePrincipalId', ValueFromPipeline = $True)]
         [String]$ServicePrincipalId,
 
+        [Parameter(Mandatory=$True, ParameterSetName = 'ApplicationId', ValueFromPipeline = $True)]
+        [String]$ApplicationId,
+
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
         [ValidateSet("48x48","64x64","96x96","120x120","240x240","360x360","432x432","504x504","648x648")]
         [String]$Size = "48x48",
@@ -101,20 +104,41 @@ Function Get-MonkeyMSGraphProfilePhoto {
                     InformationAction = $O365Object.InformationAction;
                     Verbose = $O365Object.verbose;
                     Debug = $O365Object.debug;
+                    GetBytes = $True;
                 }
                 $profilePhoto = Invoke-UrlRequest @p
             }
         }
+        elseif($PSCmdlet.ParameterSetName -eq 'ApplicationId'){
+            $p = @{
+                Filter = ("appId eq '{0}'" -f $ApplicationId);
+                Select = 'info';
+                APIVersion = $APIVersion;
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $appInfo = Get-MonkeyMSGraphAADServicePrincipal @p
+            if($null -ne $appInfo){
+                #Get picture
+                $logoUrl = $appInfo.info | Select-Object -ExpandProperty logoUrl -ErrorAction Ignore
+                if($null -ne $logoUrl){
+                #Get profile Photo
+                    $p = @{
+                        Url = $logoUrl;
+                        Content_Type = 'image/jpg';
+                        Method = "GET";
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        GetBytes = $True;
+                    }
+                    $profilePhoto = Invoke-UrlRequest @p
+                }
+            }
+        }
     }
     End{
-        #return data
-        if($null -ne $profilePhoto){
-            #Get Base64
-            $bytes = [System.Text.Encoding]::UTF8.GetBytes($profilePhoto);
-            #Create memoryStream
-            $ms = [System.IO.MemoryStream]::new($bytes)
-            #return B64
-            [System.Convert]::ToBase64String($ms.ToArray())
-        }
+        return [Convert]::ToBase64String($profilePhoto)
     }
 }

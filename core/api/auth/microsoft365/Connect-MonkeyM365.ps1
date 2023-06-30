@@ -47,7 +47,16 @@ Function Connect-MonkeyM365{
                 #$O365Object.o365_sessions.ExchangeOnline = (Connect-MonkeyExchangeOnline -parameters $parameters)
                 $O365Object.auth_tokens.ExchangeOnline = (Get-TokenForEXO -parameters $parameters)
                 if($null -ne $O365Object.auth_tokens.ExchangeOnline){
-                    $O365Object.onlineServices.$($service) = $True
+                    #Get ExchangeOnline module file
+                    $p = @{
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                    }
+                    $moduleFile = Get-PSExoModuleFile @p
+                    if($moduleFile){
+                        $O365Object.onlineServices.$($service) = $True
+                    }
                 }
             }
             #Connect to Microsoft Purview
@@ -63,6 +72,20 @@ Function Connect-MonkeyM365{
             }
             #Connect to SharePoint Online
             'sharepointonline'{
+                if($O365Object.AuthType.ToLower() -eq 'client_credentials'){
+                    $msg = @{
+                        MessageData = ($message.SPSConfidentialAppErrorMessage);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('Monkey365ConfidentialAppSPOError');
+                    }
+                    Write-Warning @msg
+                    #Set sharepoint admin flag
+                    $O365Object.isSharePointAdministrator = $false
+                    $O365Object.onlineServices.$($service) = $false
+                    continue;
+                }
                 #Set new application args
                 $sps_params = @{}
                 foreach($elem in $parameters.GetEnumerator()){
@@ -158,15 +181,15 @@ Function Connect-MonkeyM365{
                     $O365Object.onlineServices.$($service) = $True
                 }
             }
-            #Connect to Microsoft Forms
-            'microsoftforms'{
+            #Connect to Microsoft365
+            'microsoft365'{
+                #Connect to Microsoft Forms
                 $O365Object.auth_tokens.Forms = (Connect-MonkeyFormsForOffice -parameters $parameters)
                 if($null -ne $O365Object.auth_tokens.Forms){
                     $O365Object.onlineServices.$($service) = $True
                 }
-            }
-            #Connect to Microsoft Rights Management Services
-            'irm'{
+                Start-Sleep -Milliseconds 10
+                #Connect to Microsoft Rights Management Services
                 $O365Object.auth_tokens.AADRM = (Connect-MonkeyAADRM -parameters $parameters)
                 if($null -ne $O365Object.auth_tokens.AADRM){
                     #Get Service locator url
@@ -180,6 +203,12 @@ Function Connect-MonkeyM365{
                     }
                     $O365Object.onlineServices.$($service) = $True
                 }
+                Start-Sleep -Milliseconds 10
+                #Connect to Admin blade
+                $O365Object.auth_tokens.M365Admin = (Connect-MonkeyM365AdminPortal -parameters $parameters)
+                if($null -ne $O365Object.auth_tokens.M365Admin){
+                    $O365Object.onlineServices.$($service) = $True
+                }
             }
             #Connect to PowerBI
             'powerbi'{
@@ -188,13 +217,6 @@ Function Connect-MonkeyM365{
                     $O365Object.onlineServices.$($service) = $True
                     #Get Backend URI
                     $O365Object.PowerBIBackendUri = Get-MonkeyPowerBIBackendUri
-                }
-            }
-            #Connect to Admin blade
-            'MicrosoftAdmin'{
-                $O365Object.auth_tokens.M365Admin = (Connect-MonkeyM365AdminPortal -parameters $parameters)
-                if($null -ne $O365Object.auth_tokens.M365Admin){
-                    $O365Object.onlineServices.$($service) = $True
                 }
             }
             #Connect to Microsoft Intune

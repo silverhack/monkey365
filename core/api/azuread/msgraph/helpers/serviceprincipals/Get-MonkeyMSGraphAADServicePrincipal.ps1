@@ -50,6 +50,9 @@ Function Get-MonkeyMSGraphAADServicePrincipal {
         [Parameter(Mandatory=$false, ValueFromPipeline = $True)]
         [String]$Filter,
 
+        [parameter(Mandatory=$false, ValueFromPipeline = $True)]
+        [String[]]$Select,
+
         [Parameter(Mandatory=$false, ValueFromPipeline = $True)]
         [Switch]$Count,
 
@@ -86,6 +89,7 @@ Function Get-MonkeyMSGraphAADServicePrincipal {
                 ContentType = 'application/json';
                 Method = "GET";
                 Filter = $Filter;
+                Select = $Select;
                 Expand = $Expand;
                 Count = $Count;
                 APIVersion = $APIVersion;
@@ -111,6 +115,7 @@ Function Get-MonkeyMSGraphAADServicePrincipal {
                 ContentType = 'application/json';
                 Method = "GET";
                 Filter = $Filter;
+                Select = $Select;
                 Expand = $Expand;
                 Count = $Count;
                 APIVersion = $APIVersion;

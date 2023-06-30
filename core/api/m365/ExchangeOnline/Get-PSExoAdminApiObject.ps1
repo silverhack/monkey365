@@ -67,7 +67,14 @@ Function Get-PSExoAdminApiObject{
         [String]$ContentType = "application/json;odata.metadata=minimal",
 
         [parameter(ValueFromPipeline = $True,HelpMessage="Post Data")]
-        [Object]$Data
+        [Object]$Data,
+
+        [Parameter(Mandatory=$false, HelpMessage="Remove odata header")]
+        [Switch]$RemoveOdataHeader,
+
+        [parameter(Mandatory=$false, HelpMessage="API version")]
+        [ValidateSet("v1.0","beta")]
+        [String]$APIVersion = "beta"
     )
     Begin{
         $extra_params = $null
@@ -99,14 +106,14 @@ Function Get-PSExoAdminApiObject{
         }
         if($ObjectType){
             #Construct URI
-            $URI = 'adminapi/beta/{0}/{1}' -f $Authentication.TenantId, $ObjectType
+            $URI = 'adminapi/{0}/{1}/{2}' -f $APIVersion, $Authentication.TenantId, $ObjectType
         }
         ElseIf($OwnQuery){
             $URI = $OwnQuery
         }
         ElseIf($Command){
             #Construct URI
-            $URI = 'adminapi/beta/{0}/InvokeCommand' -f $Authentication.TenantId
+            $URI = 'adminapi/{0}/{1}/InvokeCommand' -f $APIVersion, $Authentication.TenantId
         }
         Else{
             break
@@ -121,6 +128,10 @@ Function Get-PSExoAdminApiObject{
             "client-request-id" = $SessionID
             "Prefer" = 'odata.maxpagesize=1000;'
             "Authorization" = $AuthHeader
+        }
+        if($PSBoundParameters.ContainsKey('RemoveOdataHeader') -and $PSBoundParameters.RemoveOdataHeader.IsPresent){
+            #Remove Prefer header
+            [void]$requestHeader.Remove('Prefer')
         }
         if($Command){
             #Add response format

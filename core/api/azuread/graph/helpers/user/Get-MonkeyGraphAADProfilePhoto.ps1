@@ -35,7 +35,6 @@ Function Get-MonkeyGraphAADProfilePhoto {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
     [cmdletbinding()]
     [OutputType([System.String])]
     Param (
@@ -47,6 +46,8 @@ Function Get-MonkeyGraphAADProfilePhoto {
         $Environment = $O365Object.Environment
         #Get Azure Active Directory Auth
         $AADAuth = $O365Object.auth_tokens.Graph
+        #Set null
+        $profilePhoto = $null
         #Get Config
         try{
             $aadConf = $O365Object.internal_config.azuread.provider.graph
@@ -62,8 +63,6 @@ Function Get-MonkeyGraphAADProfilePhoto {
             Write-Verbose @msg
             break
         }
-        #Set null
-        $profilePhoto = $null
     }
     Process{
         $ObjectId = ('{0}/thumbnailPhoto' -f $UserId)

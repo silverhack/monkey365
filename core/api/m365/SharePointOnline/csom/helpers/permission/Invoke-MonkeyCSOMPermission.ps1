@@ -174,27 +174,32 @@ Function Invoke-MonkeyCSOMPermission{
                             #Get UPN
                             try{
                                 $userMember = $uniquerole.Member
-                                $upn = $uniquerole.Member.LoginName.Split('|')[2]
-                                $p = @{
-                                    UserPrincipalName = $upn;
-                                    BypassMFACheck = $True;
-                                    APIVersion = 'beta';
-                                    InformationAction = $O365Object.InformationAction;
-                                    Verbose = $O365Object.verbose;
-                                    Debug = $O365Object.debug;
+                                if($O365Object.canRequestUsersFromMsGraph){
+                                    $upn = $uniquerole.Member.LoginName.Split('|')[2]
+                                    $p = @{
+                                        UserPrincipalName = $upn;
+                                        BypassMFACheck = $True;
+                                        APIVersion = 'beta';
+                                        InformationAction = $O365Object.InformationAction;
+                                        Verbose = $O365Object.verbose;
+                                        Debug = $O365Object.debug;
+                                    }
+                                    $User = Get-MonkeyMSGraphUser @p
+                                    #Populate metadata
+                                    foreach($elem in $userMember.PsObject.Properties){
+                                        if($elem.Name -eq 'UserPrincipalName'){
+                                            continue;
+                                        }
+                                        if($elem.Name -eq 'Id'){
+                                            $User | Add-Member NoteProperty -name spoId -value $elem.Value -Force
+                                        }
+                                        else{
+                                            $User | Add-Member NoteProperty -name $elem.Name -value $elem.Value -Force
+                                        }
+                                    }
                                 }
-                                $User = Get-MonkeyMSGraphUser @p
-                                #Populate metadata
-                                foreach($elem in $userMember.PsObject.Properties){
-                                    if($elem.Name -eq 'UserPrincipalName'){
-                                        continue;
-                                    }
-                                    if($elem.Name -eq 'Id'){
-                                        $User | Add-Member NoteProperty -name spoId -value $elem.Value -Force
-                                    }
-                                    else{
-                                        $User | Add-Member NoteProperty -name $elem.Name -value $elem.Value -Force
-                                    }
+                                else{
+                                    $User = $userMember
                                 }
                                 $GroupUsers = $User;
                             }

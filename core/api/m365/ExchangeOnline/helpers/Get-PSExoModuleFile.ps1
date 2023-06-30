@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Connect-MonkeySharepointOnline {
+Function Get-PSExoModuleFile{
     <#
         .SYNOPSIS
 
@@ -27,17 +27,38 @@ Function Connect-MonkeySharepointOnline {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Connect-MonkeySharepointOnline
+            File Name	: Get-PSExoModuleFile
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-    [CmdletBinding()]
-    Param (
-        [Parameter(Mandatory=$true, HelpMessage="parameters")]
-        [Object]$parameters
-    )
-    #Connect to Sharepoint Online
-    Get-MSALTokenForSharepointOnline @parameters
+    [cmdletbinding()]
+    Param ()
+    try{
+        #Get environment
+        $Environment = $O365Object.Environment
+        #Get Auth token
+        $exoAuth = $O365Object.auth_tokens.ExchangeOnline
+        #Get Module file
+        $param = @{
+            Authentication = $exoAuth;
+            Environment = $Environment;
+            ObjectType = 'EXOModuleFile';
+            ExtraParameters = "Version=3.5.0";
+            Method = "GET";
+            RemoveOdataHeader = $true;
+            APIVersion = 'v1.0';
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+        $moduleFile = Get-PSExoAdminApiObject @param
+        if($moduleFile){
+            return $moduleFile
+        }
+    }
+    catch{
+        Write-Verbose $_
+    }
 }

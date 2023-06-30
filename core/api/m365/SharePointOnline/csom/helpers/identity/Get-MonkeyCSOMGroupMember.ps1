@@ -80,54 +80,66 @@ Function Get-MonkeyCSOMGroupMember{
                 if($null -ne $GroupId -and $GroupId.Length -gt 37 -and $GroupId.Substring(36, 2) -eq "_o"){
                     $GroupId = $GroupId.Split('_')[0]
                     #Get group owners
-                    $p = @{
-                        GroupId = $GroupId;
-                        Expand = 'Owners';
-                        InformationAction = $O365Object.InformationAction;
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
+                    if($O365Object.canRequestGroupsFromMsGraph){
+                        $p = @{
+                            GroupId = $GroupId;
+                            Expand = 'Owners';
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                        }
+                        $Group = Get-MonkeyMSGraphGroup @p
+                        if($null -ne $Group){
+                            $obj | Add-Member NoteProperty -name Members -value $Group.owners
+                        }
                     }
-                    $Group = Get-MonkeyMSGraphGroup @p
-                    if($null -ne $Group){
-                        $obj | Add-Member NoteProperty -name Members -value $Group.owners
+                    else{
+                        $obj | Add-Member NoteProperty -name Members -value $null
                     }
                 }
                 elseIf ($null -ne $GroupId -and $obj.PrincipalType -eq 4 -and ($obj.LoginName -like '*federateddirectoryclaimprovider*')){
                     #Get group members
-                    $p = @{
-                        GroupId = $GroupId;
-                        Expand = 'members';
-                        InformationAction = $O365Object.InformationAction;
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
+                    if($O365Object.canRequestGroupsFromMsGraph){
+                        $p = @{
+                            GroupId = $GroupId;
+                            Expand = 'members';
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                        }
+                        $Group = Get-MonkeyMSGraphGroup @p
+                        if($null -ne $Group){
+                            $obj | Add-Member NoteProperty -name Members -value $Group.members
+                        }
                     }
-                    $Group = Get-MonkeyMSGraphGroup @p
-                    if($null -ne $Group){
-                        $obj | Add-Member NoteProperty -name Members -value $Group.members
+                    else{
+                        $obj | Add-Member NoteProperty -name Members -value $null
                     }
                 }
                 elseIf ($null -ne $GroupId -and $obj.PrincipalType -eq 1){
                     #User detected
-                    $p = @{
-                        UserPrincipalName = $GroupId;
-                        BypassMFACheck = $True;
-                        APIVersion = 'beta';
-                        InformationAction = $O365Object.InformationAction;
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
-                    }
-                    $User = Get-MonkeyMSGraphUser @p
-                    if($null -ne $User){
-                        #Populate metadata
-                        foreach($elem in $User.PsObject.Properties){
-                            if($elem.Name -eq 'UserPrincipalName'){
-                                continue;
-                            }
-                            if($elem.Name -eq 'Id'){
-                                $obj | Add-Member NoteProperty -name spoId -value $elem.Value -Force
-                            }
-                            else{
-                                $obj | Add-Member NoteProperty -name $elem.Name -value $elem.Value -Force
+                    if($O365Object.canRequestUsersFromMsGraph){
+                        $p = @{
+                            UserPrincipalName = $GroupId;
+                            BypassMFACheck = $True;
+                            APIVersion = 'beta';
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                        }
+                        $User = Get-MonkeyMSGraphUser @p
+                        if($null -ne $User){
+                            #Populate metadata
+                            foreach($elem in $User.PsObject.Properties){
+                                if($elem.Name -eq 'UserPrincipalName'){
+                                    continue;
+                                }
+                                if($elem.Name -eq 'Id'){
+                                    $obj | Add-Member NoteProperty -name spoId -value $elem.Value -Force
+                                }
+                                else{
+                                    $obj | Add-Member NoteProperty -name $elem.Name -value $elem.Value -Force
+                                }
                             }
                         }
                     }

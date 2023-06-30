@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Get-MonkeyMSGraphGroup {
+Function Get-MonkeyMSGraphOrganization {
     <#
         .SYNOPSIS
-		Get Azure AD group
+		Get the properties and relationships of the currently authenticated organization
 
         .DESCRIPTION
-		Get Azure AD group
+		Get the properties and relationships of the currently authenticated organization
 
         .INPUTS
 
@@ -29,37 +29,19 @@ Function Get-MonkeyMSGraphGroup {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyMSGraphGroup
+            File Name	: Get-MonkeyMSGraphOrganization
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
 
-	[CmdletBinding(DefaultParameterSetName = 'All')]
+	[CmdletBinding()]
 	Param (
-        [Parameter(Mandatory=$false, ParameterSetName = 'GroupId', ValueFromPipeline = $True)]
-        [String]$GroupId,
+        [Parameter(Mandatory=$false, ParameterSetName = 'TenantId', ValueFromPipeline = $True)]
+        [String]$TenantId,
 
-        [Parameter(Mandatory=$false, ParameterSetName = 'GroupName', ValueFromPipeline = $True)]
-        [String]$GroupName,
-
-        [Parameter(Mandatory=$false)]
-        [String]$Expand,
-
-        [Parameter(Mandatory=$false)]
-        [String]$Filter,
-
-        [Parameter(Mandatory=$false)]
-        [String[]]$Select,
-
-        [parameter(Mandatory=$false)]
-        [String]$Top,
-
-        [Parameter(Mandatory=$false)]
-        [Switch]$Count,
-
-        [parameter(Mandatory = $false)]
+        [parameter(Mandatory=$false, HelpMessage="API version")]
         [ValidateSet("v1.0","beta")]
         [String]$APIVersion = "v1.0"
     )
@@ -69,64 +51,42 @@ Function Get-MonkeyMSGraphGroup {
         $graphAuth = $O365Object.auth_tokens.MSGraph
     }
     Process{
-        if($PSCmdlet.ParameterSetName -eq 'GroupId'){
+        if($PSCmdlet.ParameterSetName -eq 'TenantId'){
             $params = @{
                 Authentication = $graphAuth;
-                ObjectType = 'groups';
-                ObjectId = $GroupId;
+                ObjectType = 'organization';
+                ObjectId = $TenantId;
                 Environment = $Environment;
                 ContentType = 'application/json';
-                Select = $Select;
-                Expand = $Expand;
                 Method = "GET";
                 APIVersion = $APIVersion;
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $group = Get-MonkeyMSGraphObject @params
-        }
-        elseif($PSCmdlet.ParameterSetName -eq 'GroupName'){
-            #Set filter
-            $filter = ("startswith(displayName,'{0}')" -f $GroupName)
-            $params = @{
-                Authentication = $graphAuth;
-                ObjectType = 'groups';
-                Filter = $filter;
-                Environment = $Environment;
-                ContentType = 'application/json';
-                Expand = $Expand;
-                Select = $Select;
-                Method = "GET";
-                APIVersion = $APIVersion;
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-            }
-            $group = Get-MonkeyMSGraphObject @params
+            $organization = Get-MonkeyMSGraphObject @params
         }
         else{
             $params = @{
                 Authentication = $graphAuth;
-                ObjectType = 'groups';
+                ObjectType = 'organization';
                 Environment = $Environment;
                 ContentType = 'application/json';
                 Method = "GET";
-                Expand = $Expand;
-                Filter = $Filter;
-                Select = $Select;
-                Top = $Top;
-                Count = $Count;
                 APIVersion = $APIVersion;
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $group = Get-MonkeyMSGraphObject @params
+            $organization = Get-MonkeyMSGraphObject @params
         }
         #return data
-        if($group){
-            return $group
+        if($organization){
+            #Add objectId legacy property
+            $organization | Add-Member -type NoteProperty -name objectId -value $organization.id -Force
+            #Add tenantName legacy property
+            $organization | Add-Member -type NoteProperty -name TenantName -value $organization.displayName -Force
+            return $organization
         }
     }
     End{

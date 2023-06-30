@@ -43,7 +43,10 @@ Function Get-MonkeyCSOMSitesForUser{
         [System.Array]$Webs,
 
         [Parameter(Mandatory=$false, HelpMessage="Scan sites")]
-        [Switch]$ScanSites
+        [Switch]$ScanSites,
+
+        [Parameter(Mandatory=$false, HelpMessage="Recursive search")]
+        [Switch]$Recurse = $false
     )
     Begin{
         #Set new list
@@ -94,7 +97,7 @@ Function Get-MonkeyCSOMSitesForUser{
                     #SPS auth object
                     $p = @{
                         Authentication = $sps_auth;
-                        ScanSubSites = $ScanSubSites;
+                        ScanSubSites = $Recurse;
                         Verbose = $O365Object.verbose;
                         Debug = $O365Object.debug;
                         InformationAction = $O365Object.InformationAction;

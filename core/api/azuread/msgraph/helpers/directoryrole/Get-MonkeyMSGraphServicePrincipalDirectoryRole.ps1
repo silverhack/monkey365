@@ -53,18 +53,18 @@ Function Get-MonkeyMSGraphServicePrincipalDirectoryRole{
         $msg = @{
             MessageData = ($message.ObjectIdMessageInfo -f "user's", $principalId);
             callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'debug';
-            InformationAction = $InformationAction;
+            logLevel = 'verbose';
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
             Tags = @('AzureGraphDirectoryRoleByApplicationId');
         }
-        Write-Debug @msg
+        Write-Verbose @msg
         #Get servicePrincipalMemberOf
         $filter = ("appId eq '{0}'" -f $principalId)
         $expand = 'MemberOf'
         $p = @{
             filter = $filter;
             Expand = $expand;
-            Method = "GET";
             APIVersion = $APIVersion;
             InformationAction = $O365Object.InformationAction;
             Verbose = $O365Object.verbose;
@@ -112,13 +112,14 @@ Function Get-MonkeyMSGraphServicePrincipalDirectoryRole{
             MessageData = ("Unable to get servicePrincipal's directory role information from id {0}" -f $principalId);
             callStack = (Get-PSCallStack | Select-Object -First 1);
             logLevel = 'warning';
-            InformationAction = $InformationAction;
+            InformationAction = $O365Object.InformationAction;
             Tags = @('AzureGraphSPDirectoryRole');
         }
         Write-Warning @msg
         #Set verbose
         $msg.MessageData = $_
         $msg.logLevel = 'Verbose'
+        [void]$msg.Add('verbose',$O365Object.verbose)
         Write-Verbose @msg
     }
 }

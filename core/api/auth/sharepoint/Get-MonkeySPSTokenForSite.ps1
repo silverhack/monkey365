@@ -35,10 +35,10 @@ Function Get-MonkeySPSTokenForSite{
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory=$false, HelpMessage="parameters")]
+        [Parameter(Mandatory=$true, HelpMessage="parameters")]
         [Object]$parameters,
 
-        [Parameter(Mandatory=$false, HelpMessage="parameters")]
+        [Parameter(Mandatory=$true, HelpMessage="resource")]
         [String]$resource
     )
     #Check if scheme is present

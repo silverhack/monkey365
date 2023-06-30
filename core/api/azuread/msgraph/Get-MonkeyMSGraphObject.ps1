@@ -197,6 +197,8 @@ Function Get-MonkeyMSGraphObject{
             #Perform query
             $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($final_uri)
             $ServicePoint.ConnectionLimit = 1000;
+            #set count
+            $countObjects = 0;
             try{
                 switch ($Method) {
                     'GET'
@@ -251,6 +253,8 @@ Function Get-MonkeyMSGraphObject{
                     Write-Verbose $final_uri
                 }
                 if($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and @($Objects.value).Count -gt 0){
+                    #Count objects
+                    $countObjects += @($Objects.value).Count
                     #return Value
                     $Objects.value
                 }
@@ -259,7 +263,12 @@ Function Get-MonkeyMSGraphObject{
                     $Objects.value
                 }
                 else{
+                    #Count objects
+                    $countObjects += @($Objects).Count
                     $Objects
+                }
+                if($Top -and $Top -ge $countObjects){
+                    return
                 }
                 #Search for paging objects
                 if ($Objects.PsObject.Properties.Item('@odata.nextLink')){
@@ -269,7 +278,7 @@ Function Get-MonkeyMSGraphObject{
                         #https://social.technet.microsoft.com/wiki/contents/articles/29863.powershell-rest-api-invoke-restmethod-gotcha.aspx
                         $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($nextLink)
                         #Make RestAPI call
-                        $param = @{
+                        $p = @{
                             Url = $nextLink;
                             Method = "Get";
                             Headers = $requestHeader;
@@ -278,8 +287,8 @@ Function Get-MonkeyMSGraphObject{
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $NextPage = Invoke-UrlRequest @param
-                        $nextLink = $nextPage.'@odata.nextLink'
+                        $NextPage = Invoke-UrlRequest @p
+                        $nextLink = $NextPage | Select-Object -ExpandProperty '@odata.nextLink' -ErrorAction Ignore
                         $NextPage.value
                         #Sleep to avoid throttling
                         Start-Sleep -Milliseconds 500

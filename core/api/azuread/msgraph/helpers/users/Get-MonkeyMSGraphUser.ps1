@@ -53,6 +53,9 @@ Function Get-MonkeyMSGraphUser {
         [Parameter(Mandatory=$false)]
         [Switch]$Count,
 
+        [parameter(Mandatory=$false)]
+        [String]$Top,
+
         [Parameter(Mandatory=$false, HelpMessage="Bypass MFA check")]
         [Switch]$BypassMFACheck,
 
@@ -110,6 +113,7 @@ Function Get-MonkeyMSGraphUser {
                 Select = $Select;
                 Expand = $Expand;
                 Count = $Count;
+                Top = $Top;
                 ContentType = 'application/json';
                 Method = "GET";
                 APIVersion = $APIVersion;

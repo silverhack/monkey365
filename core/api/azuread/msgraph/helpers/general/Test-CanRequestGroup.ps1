@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Connect-MonkeySharepointOnline {
+Function Test-CanRequestGroup {
     <#
         .SYNOPSIS
+		Check if current identity can request users in Microsoft Graph
 
         .DESCRIPTION
+		Check if current identity can request users in Microsoft Graph
 
         .INPUTS
 
@@ -27,17 +29,37 @@ Function Connect-MonkeySharepointOnline {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Connect-MonkeySharepointOnline
+            File Name	: Test-CanRequestGroup
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-    [CmdletBinding()]
-    Param (
-        [Parameter(Mandatory=$true, HelpMessage="parameters")]
-        [Object]$parameters
+
+	[CmdletBinding()]
+    [OutputType([System.Boolean])]
+	Param (
+        [parameter(Mandatory=$false, HelpMessage="API version")]
+        [ValidateSet("v1.0","beta")]
+        [String]$APIVersion = "v1.0"
     )
-    #Connect to Sharepoint Online
-    Get-MSALTokenForSharepointOnline @parameters
+    Process{
+        $params = @{
+            Top = "10";
+            APIVersion = $APIVersion;
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+        $groups = Get-MonkeyMSGraphGroup @params
+        if($groups){
+            return $true
+        }
+        else{
+            return $false
+        }
+    }
+    End{
+        #Nothing to do here
+    }
 }
