@@ -33,7 +33,7 @@ Function Invoke-UrlRequest{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
     [CmdletBinding()]
     Param (
@@ -100,6 +100,12 @@ Function Invoke-UrlRequest{
         if($PSBoundParameters.ContainsKey('InformationAction')){
             $InformationAction = $PSBoundParameters['InformationAction']
         }
+        if(!$PSBoundParameters.ContainsKey('Timeout')){
+            $_timeout = [Timespan]::FromMinutes(2);
+        }
+        else{
+            $_timeout = $PSBoundParameters['Timeout']
+        }
         #Method
         switch ($Method.ToLower()) {
             'connect'
@@ -123,11 +129,6 @@ Function Invoke-UrlRequest{
                 $Method = [System.Net.WebRequestMethods+Http]::Head
             }
         }
-        #Set TimeSpan
-        if (!$Timeout){
-            #$Timeout = [timespan]::Zero
-            $Timeout = [Timespan]::FromMinutes(2);
-        }
         #Check if should disable SSL
         if($PSBoundParameters.ContainsKey('disableSSLVerification')){
             [ServerCertificateValidationCallback]::Ignore();
@@ -145,10 +146,10 @@ Function Invoke-UrlRequest{
         if($null -ne $request -and $request -is [System.Net.HttpWebRequest]){
             #Establish Request Method
             $request.Method = $Method
-            #Add keepalive
-            $request.KeepAlive = $true
+            #set keepalive false
+            $request.KeepAlive = $False
             #Add TimeOut
-            $request.TimeOut = $TimeOut.TotalMilliseconds;
+            $request.TimeOut = $_timeout.TotalMilliseconds;
             #Add Headers
             if($Headers){
                 foreach($element in $headers.GetEnumerator()){

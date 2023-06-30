@@ -40,7 +40,8 @@ Function Get-MSALTokenForPowerBI{
         # pscredential of the application requesting the token
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
-        [System.Management.Automation.PSCredential] $user_credentials,
+        [Alias('user_credentials')]
+        [System.Management.Automation.PSCredential] $UserCredentials,
 
         # Tenant identifier of the authority to issue token.
         [Parameter(Mandatory = $false)]
@@ -60,6 +61,11 @@ Function Get-MSALTokenForPowerBI{
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-OnBehalfOf')]
         [securestring] $ClientSecret,
 
+        # Secure secret of the client requesting the token.
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
+        [Alias('client_credentials')]
+        [System.Management.Automation.PSCredential] $ClientCredentials,
+
         # Client assertion certificate of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-AuthorizationCode')]
@@ -70,7 +76,7 @@ Function Get-MSALTokenForPowerBI{
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-File')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-AuthorizationCode')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-OnBehalfOf')]
-        [System.IO.FileInfo]$certificate,
+        [System.IO.FileInfo]$Certificate,
 
         # Secure password of the certificate
         [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Please specify the certificate password')]

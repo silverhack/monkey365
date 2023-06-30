@@ -40,7 +40,8 @@ Function Get-MonkeyMSALToken{
         # pscredential of the application requesting the token
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
-        [System.Management.Automation.PSCredential] $user_credentials,
+        [Alias('user_credentials')]
+        [System.Management.Automation.PSCredential] $UserCredentials,
 
         [parameter(Mandatory= $false, ParameterSetName = 'Implicit', HelpMessage= "User for access to the O365 services")]
         [String]$UserPrincipalName,
@@ -76,7 +77,8 @@ Function Get-MonkeyMSALToken{
 
         # Secure secret of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
-        [System.Management.Automation.PSCredential] $client_credentials,
+        [Alias('client_credentials')]
+        [System.Management.Automation.PSCredential] $ClientCredentials,
 
         # Client assertion certificate of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]
@@ -217,8 +219,8 @@ Function Get-MonkeyMSALToken{
             [Microsoft.Identity.Client.IConfidentialClientApplication]$app = New-MonkeyMsalApplication @app_params
         }
         "ClientSecret-InputObject" {
-            $app_params.applicationId = $client_credentials.UserName
-            $app_params.clientSecret = $client_credentials.Password
+            $app_params.applicationId = $ClientCredentials.UserName
+            $app_params.clientSecret = $ClientCredentials.Password
             [Microsoft.Identity.Client.IConfidentialClientApplication]$app = New-MonkeyMsalApplication @app_params
         }
         'ClientSecret-ConfidentialApp' {
@@ -257,8 +259,8 @@ Function Get-MonkeyMSALToken{
         else{
             $Prompt = $PromptBehavior
         }
-        if ($user_credentials) {
-            $authContext = $app.AcquireTokenByUsernamePassword($scope, $user_credentials.UserName, $user_credentials.Password)
+        if ($UserCredentials) {
+            $authContext = $app.AcquireTokenByUsernamePassword($scope, $UserCredentials.UserName, $UserCredentials.Password)
         }
         elseif($DeviceCode.IsPresent){
             $AuthType = 'Device_Code'

@@ -29,14 +29,42 @@ Function Get-OneDriveUrl{
     param
     (
         # Well Known Azure service
-        [Parameter(Mandatory = $false, HelpMessage = 'Tenant details')]
-        [Object] $TenantDetails
+        [Parameter(Mandatory = $true, HelpMessage = 'Tenant details')]
+        [Object] $TenantDetails,
+
+        [Parameter(Mandatory = $false, HelpMessage = 'Environment')]
+        [String]$Environment = "AzurePublic"
     )
     try{
         if($null -ne $TenantDetails){
-            $defaultDomain = $TenantDetails.verifiedDomains | Where-Object {$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.initial -eq $true}
-            if($defaultDomain -is [pscustomobject]){
-                $sharePointUrl = ("https://{0}-my.sharepoint.com" -f $defaultDomain[0].name.split(".")[0])
+            $defaultDomain = $TenantDetails.verifiedDomains.Where({$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.isInitial -eq $true})
+            if($defaultDomain.Count -gt 0){
+                switch ($Environment) {
+                    "AzurePublic"
+                    {
+                        $sharePointUrl = ("https://{0}-my.sharepoint.com" -f $defaultDomain[0].name.split(".")[0]);
+                        break
+                    }
+                    "AzureUSGovernment"
+                    {
+                        $sharePointUrl = ("https://{0}-my.sharepoint.us" -f $defaultDomain[0].name.split(".")[0]);
+                        break
+                    }
+                    "AzureGermany"
+                    {
+                        $sharePointUrl = ("https://{0}-my.sharepoint.de" -f $defaultDomain[0].name.split(".")[0]);
+                        break
+                    }
+                    "AzureChina"{
+                        $sharePointUrl = ("https://{0}-my.sharepoint.cn" -f $defaultDomain[0].name.split(".")[0]);
+                        break
+                    }
+                    "Default"
+                    {
+                        $sharePointUrl = ("https://{0}-my.sharepoint.com" -f $defaultDomain[0].name.split(".")[0]);
+                        break
+                    }
+                }
                 return $sharePointUrl
             }
             else{

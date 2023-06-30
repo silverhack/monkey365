@@ -34,8 +34,8 @@ Function Get-DefaultTenantName{
     )
     try{
         if($null -ne $TenantDetails){
-            $defaultDomain = $TenantDetails.verifiedDomains | Where-Object {$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.initial -eq $true}
-            if($defaultDomain -is [pscustomobject]){
+            $defaultDomain = $TenantDetails.verifiedDomains.Where({$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.isInitial -eq $true})
+            if($defaultDomain.Count -gt 0){
                 return $defaultDomain[0].name
             }
             else{

@@ -38,9 +38,11 @@ Function Get-MonkeyMSALPSSessionForComplianceCenter {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingConvertToSecureStringWithPlainText", "")]
     [CmdletBinding()]
     Param (
-        # pscredential of the application requesting the token
-        [Parameter(Mandatory = $false)]
-        [System.Management.Automation.PSCredential] $user_credentials,
+       # pscredential of the application requesting the token
+       [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+       [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+       [Alias('user_credentials')]
+       [System.Management.Automation.PSCredential] $UserCredentials,
 
         # Tenant identifier of the authority to issue token.
         [Parameter(Mandatory = $false)]
@@ -60,6 +62,11 @@ Function Get-MonkeyMSALPSSessionForComplianceCenter {
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-OnBehalfOf')]
         [securestring] $ClientSecret,
 
+        # Secure secret of the client requesting the token.
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
+        [Alias('client_credentials')]
+        [System.Management.Automation.PSCredential] $ClientCredentials,
+
         # Client assertion certificate of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-AuthorizationCode')]
@@ -70,7 +77,7 @@ Function Get-MonkeyMSALPSSessionForComplianceCenter {
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-File')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-AuthorizationCode')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-OnBehalfOf')]
-        [System.IO.FileInfo]$certificate,
+        [System.IO.FileInfo]$Certificate,
 
         # Secure password of the certificate
         [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Please specify the certificate password')]
@@ -178,11 +185,23 @@ Function Get-MonkeyMSALPSSessionForComplianceCenter {
             if($isPublicApp -eq $false -or $ConfidentialApp){
                 $tenantName = $null
                 #Get Tenant Info
-                $internal_params.Resource = $AzureEnvironment.Graph
+                $internal_params.Resource = $AzureEnvironment.Graphv2
                 $access_token = Get-MonkeyMSALToken @internal_params
                 if($null -ne $access_token -and $access_token -is [Microsoft.Identity.Client.AuthenticationResult]){
-                    $Tenant = Get-TenantInfo -AuthObject $access_token
-                    $tenantName = Get-DefaultTenantName -TenantDetails $Tenant
+                    $Tenant = Get-MSGraphOrganization -AuthObject $access_token
+                    if($null -eq $Tenant){
+                        if($TenantId -and (Test-IsValidTenantId -TenantId $TenantId) -eq $false){
+                            #Potential domain name is passed as TenantId
+                            $tenantName = $TenantId;
+                        }
+                        else{
+                            Write-Warning $Script:messages.TenantGuidError;
+                            $tenantName = $null;
+                        }
+                    }
+                    else{
+                        $tenantName = Get-DefaultTenantName -TenantDetails $Tenant
+                    }
                 }
                 if($null -ne $tenantName){
                     #Create PSSession

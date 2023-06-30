@@ -37,10 +37,11 @@ Function Get-MSALTokenForGraph{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "", Scope="Function")]
     [CmdletBinding()]
     Param (
-        # pscredential of the application requesting the token
-        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
-        [System.Management.Automation.PSCredential] $user_credentials,
+       # pscredential of the application requesting the token
+       [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+       [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+       [Alias('user_credentials')]
+       [System.Management.Automation.PSCredential] $UserCredentials,
 
         [parameter(Mandatory= $false, ParameterSetName = 'Implicit', HelpMessage= "User for access to the O365 services")]
         [String]$UserPrincipalName,
@@ -74,7 +75,8 @@ Function Get-MSALTokenForGraph{
 
         # Secure secret of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
-        [System.Management.Automation.PSCredential] $client_credentials,
+        [Alias('client_credentials')]
+        [System.Management.Automation.PSCredential] $ClientCredentials,
 
         # Client assertion certificate of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]
@@ -96,7 +98,7 @@ Function Get-MSALTokenForGraph{
             }
             return $true
         })]
-        [System.IO.FileInfo]$certificate,
+        [System.IO.FileInfo]$Certificate,
 
         # Secure password of the certificate
         [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Please specify the certificate password')]

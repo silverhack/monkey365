@@ -111,41 +111,32 @@ Function Write-Verbose {
             if (-not $PSBoundParameters.ContainsKey('logLevel')) {
                 $PSBoundParameters.Add('logLevel','verbose')
             }
+            #Add verbose false
+            [void]$newPsboundParams.Add('Verbose',$false);
             #Check if Verbose is present in psboundparameters
-            if(-NOT $PSBoundParameters.ContainsKey('Verbose')){
-                $PSBoundParameters.Add('Verbose',$false);
-                $informationAction = $VerbosePreference
-            }
-            #Check if verbose variable is present
-            if($null -ne (Get-Variable -Name Verbose -ErrorAction Ignore)){
-                #override default option
-                $PSBoundParameters.Verbose = $script:Verbose
-                if($script:Verbose -eq $true){
-                    $informationAction = "Continue"
-                }
-                else{
-                    $informationAction = "SilentlyContinue"
-                }
+            if($PSBoundParameters.ContainsKey('Verbose')){
+                $newPsboundParams['Verbose'] = $PSBoundParameters['Verbose']
             }
             #Check if verbosity variable is present
             elseif($null -ne (Get-Variable -Name Verbosity -ErrorAction Ignore)){
                 if($Verbosity -is [hashtable] -and $Verbosity.ContainsKey("Verbose")){
-                    $PSBoundParameters.Verbose = $verbosity.Verbose
-                    if($Verbosity.Verbose -eq $true){
-                        $informationAction = "Continue"
-                    }
+                    $newPsboundParams['Verbose'] = $verbosity.Verbose
                 }
             }
             else{
-                $informationAction = $VerbosePreference
+                #Check if verbose variable is present
+                if($null -ne (Get-Variable -Name Verbose -ErrorAction Ignore)){
+                    #override default option
+                    $newPsboundParams['Verbose'] = $script:Verbose
+                }
             }
             #Create msg object
             $msg = [System.Management.Automation.InformationRecord]::new($Message,$Command)
             $msg | Add-Member -type NoteProperty -name ForegroundColor -value $PSBoundParameters['ForegroundColor']
             $msg | Add-Member -type NoteProperty -name BackgroundColor -value $PSBoundParameters['BackgroundColor']
-            $msg | Add-Member -type NoteProperty -name InformationAction -value $informationAction
+            #$msg | Add-Member -type NoteProperty -name InformationAction -value $informationAction
             $msg | Add-Member -type NoteProperty -name level -value $PSBoundParameters.logLevel
-            $msg | Add-Member -type NoteProperty -name Verbose -value $PSBoundParameters.Verbose
+            $msg | Add-Member -type NoteProperty -name Verbose -value $newPsboundParams['Verbose']
             $msg | Add-Member -type NoteProperty -name channel -value $channel
             #Add tags
             if($Tags){
@@ -171,18 +162,14 @@ Function Write-Verbose {
                 NoNewline       = $NoNewline.IsPresent
             }
             #Add message to newPsBoundParameters
-            #$newPsboundParams.Message = $msgObject
-            $out_message = @{
-                Message = $msgObject
-                Verbose = $PSBoundParameters.Verbose
-            }
+            $newPsboundParams.Message = $msgObject
             $outBuffer = $null
             if ($PSBoundParameters.TryGetValue('OutBuffer', [ref]$outBuffer))
             {
                 $PSBoundParameters['OutBuffer'] = 1
             }
             $wrappedCmd = $ExecutionContext.InvokeCommand.GetCommand('Microsoft.PowerShell.Utility\Write-Verbose', [System.Management.Automation.CommandTypes]::Cmdlet)
-            $scriptCmd = {& $wrappedCmd @out_message }
+            $scriptCmd = {& $wrappedCmd @newPsboundParams }
             $steppablePipeline = $scriptCmd.GetSteppablePipeline($myInvocation.CommandOrigin)
             $steppablePipeline.Begin($PSCmdlet)
         } catch {

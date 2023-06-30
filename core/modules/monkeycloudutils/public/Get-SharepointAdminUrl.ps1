@@ -29,7 +29,7 @@ Function Get-SharepointAdminUrl{
     param
     (
         # Well Known Azure service
-        [Parameter(Mandatory = $false, HelpMessage = 'Tenant details')]
+        [Parameter(Mandatory = $true, HelpMessage = 'Tenant details')]
         [Object] $TenantDetails,
 
         [Parameter(Mandatory = $false, HelpMessage = 'Environment')]
@@ -37,8 +37,8 @@ Function Get-SharepointAdminUrl{
     )
     try{
         if($null -ne $TenantDetails){
-            $defaultDomain = $TenantDetails.verifiedDomains | Where-Object {$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.initial -eq $true}
-            if($defaultDomain -is [pscustomobject]){
+            $defaultDomain = $TenantDetails.verifiedDomains.Where({$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.isInitial -eq $true})
+            if($defaultDomain.Count -gt 0){
                 switch ($Environment) {
                     "AzurePublic"
                     {
@@ -52,11 +52,11 @@ Function Get-SharepointAdminUrl{
                     }
                     "AzureGermany"
                     {
-                        $sharePointAdminUrl = $sharePointAdminUrl = ("https://{0}-admin.sharepoint.de" -f $defaultDomain[0].name.split(".")[0]);
+                        $sharePointAdminUrl = ("https://{0}-admin.sharepoint.de" -f $defaultDomain[0].name.split(".")[0]);
                         break
                     }
                     "AzureChina"{
-                        $sharePointAdminUrl = $sharePointAdminUrl = ("https://{0}-admin.sharepoint.cn" -f $defaultDomain[0].name.split(".")[0]);
+                        $sharePointAdminUrl = ("https://{0}-admin.sharepoint.cn" -f $defaultDomain[0].name.split(".")[0]);
                         break
                     }
                     "Default"

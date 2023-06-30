@@ -112,41 +112,31 @@ Function Write-Debug {
                 $PSBoundParameters.Add('logLevel','debug')
             }
             #Check if Debug is present in psboundparameters
-            if(-NOT $PSBoundParameters.ContainsKey('Debug')){
-                $PSBoundParameters.Add('Debug',$false);
-                $informationAction = $DebugPreference
-            }
-            #Check if Debug variable is present
-            if($null -ne (Get-Variable -Name Debug -ErrorAction Ignore)){
-                #override default option
-                $PSBoundParameters.Debug = $script:Debug
-                if($script:Debug -eq $true){
-                    $informationAction = "Continue"
-                    $DebugPreference = 'Continue'
-                }
-                else{
-                    $informationAction = "SilentlyContinue"
-                }
+            if(!$PSBoundParameters.ContainsKey('Debug')){
+                [void]$PSBoundParameters.Add('Debug',$false);
             }
             #Check if verbosity variable is present
             elseif($null -ne (Get-Variable -Name Verbosity -ErrorAction Ignore)){
                 if($Verbosity -is [hashtable] -and $Verbosity.ContainsKey("Debug")){
-                    $PSBoundParameters.Debug = $verbosity.Debug
-                    if($Verbosity.Debug -eq $true){
-                        $informationAction = "Continue"
-                        $DebugPreference = 'Continue'
-                    }
+                    $PSBoundParameters['Debug'] = $verbosity.Debug
                 }
             }
             else{
-                $informationAction = $DebugPreference
+                #Check if verbose variable is present
+                if($null -ne (Get-Variable -Name Verbose -ErrorAction Ignore)){
+                    #override default option
+                    $PSBoundParameters['Debug'] = $script:Debug
+                }
+            }
+            #Change debugpreference
+            if($PSBoundParameters['Debug']){
+                $DebugPreference = 'Continue'
             }
             #Create msg object
             $msg = [System.Management.Automation.InformationRecord]::new($Message,$Command)
             $msg | Add-Member -type NoteProperty -name ForegroundColor -value $PSBoundParameters['ForegroundColor']
             $msg | Add-Member -type NoteProperty -name BackgroundColor -value $PSBoundParameters['BackgroundColor']
             $msg | Add-Member -type NoteProperty -name level -value $PSBoundParameters.logLevel
-            $msg | Add-Member -type NoteProperty -name InformationAction -value $informationAction
             $msg | Add-Member -type NoteProperty -name Debug -value $PSBoundParameters.Debug
             $msg | Add-Member -type NoteProperty -name channel -value $channel
             #Add tags

@@ -38,9 +38,11 @@ Function Get-MSALTokenForTeams{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "", Scope="Function")]
     [CmdletBinding()]
     Param (
-        # pscredential of the application requesting the token
-        [Parameter(Mandatory = $false)]
-        [System.Management.Automation.PSCredential] $user_credentials,
+       # pscredential of the application requesting the token
+       [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+       [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+       [Alias('user_credentials')]
+       [System.Management.Automation.PSCredential] $UserCredentials,
 
         # Tenant identifier of the authority to issue token.
         [Parameter(Mandatory = $false)]
@@ -59,6 +61,11 @@ Function Get-MSALTokenForTeams{
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-AuthorizationCode')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-OnBehalfOf')]
         [securestring] $ClientSecret,
+
+        # Secure secret of the client requesting the token.
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
+        [Alias('client_credentials')]
+        [System.Management.Automation.PSCredential] $ClientCredentials,
 
         # Client assertion certificate of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]

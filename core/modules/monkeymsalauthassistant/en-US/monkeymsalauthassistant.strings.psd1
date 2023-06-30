@@ -11,4 +11,6 @@
     SPSAdminUrlErrorMessage          = Unable to get Sharepoint Admin Url
     SPSSiteUrlErrorMessage           = Unable to get Sharepoint Url
     NotAllowedToAuth                 = Confidential application is not allowed to authenticate to {0}
+    TenantGuidError                  = TenantId cannot be a Guid, please enter the name of the tenant instead
+    UnableToGetTenantInfo            = Unable to get tenant information. Possible errors are invalid permissions or incorrect scopes
 '@

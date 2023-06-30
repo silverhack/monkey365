@@ -38,8 +38,10 @@ Function Get-MSALTokenForSharePointOnline {
     [CmdletBinding()]
     Param (
         # pscredential of the application requesting the token
-        [Parameter(Mandatory = $false)]
-        [System.Management.Automation.PSCredential] $user_credentials,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+        [Alias('user_credentials')]
+        [System.Management.Automation.PSCredential] $UserCredentials,
 
         # Tenant identifier of the authority to issue token.
         [Parameter(Mandatory = $false)]
@@ -58,6 +60,11 @@ Function Get-MSALTokenForSharePointOnline {
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-AuthorizationCode')]
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-OnBehalfOf')]
         [securestring] $ClientSecret,
+
+        # Secure secret of the client requesting the token.
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
+        [Alias('client_credentials')]
+        [System.Management.Automation.PSCredential] $ClientCredentials,
 
         # Client assertion certificate of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]
@@ -154,11 +161,31 @@ Function Get-MSALTokenForSharePointOnline {
             $internal_params = Remove-MSALPublicParam -parameters $internal_params
         }
         $auth_params = Get-MSALAuthParam -parameters $internal_params
-        $access_token = Get-MonkeyMSALToken @auth_params -Resource $AzureEnvironment.Graph
+        $access_token = Get-MonkeyMSALToken @auth_params -Resource $AzureEnvironment.Graphv2
         if($null -ne $access_token -and $access_token -is [Microsoft.Identity.Client.AuthenticationResult]){
-            $Tenant = Get-TenantInfo -AuthObject $access_token
+            $Tenant = Get-MSGraphOrganization -AuthObject $access_token
             if($null -ne $Tenant){
                 Set-Variable Tenant -Value $Tenant -Scope Script -Force
+            }
+            else{
+                if($TenantId -and (Test-IsValidTenantId -TenantId $TenantId) -eq $false){
+                    #Potential domain name is passed as TenantId
+                    $Tenant = @{
+                        verifiedDomains = @(
+                            @{
+                                capabilities = 'Email, OfficeCommunicationsOnline';
+                                isDefault = $true;
+                                isInitial = $true;
+                                name = $TenantId;
+                            }
+                        );
+                    }
+                    Set-Variable Tenant -Value $Tenant -Scope Script -Force
+                }
+                else{
+                    #Write message
+                    Write-Warning -Message ($Script:messages.UnableToGetTenantInfo)
+                }
             }
         }
         if($Endpoint){
