@@ -336,6 +336,18 @@ Function Get-MonkeyMSALToken{
             Write-Verbose ($script:messages.AcquireTokenFailed -f $token_result.Exception.InnerException.ErrorCode)
             #Detailed error
             Write-Debug $token_result.Exception.InnerException
+            #Retry if AADSTS50076
+            try{
+                if($token_result.Exception.InnerException.Message -match "AADSTS50076"){
+                    [ref]$null = $PSBoundParameters.Remove('Silent')
+                    Get-MonkeyMSALToken @PSBoundParameters
+                    return
+                }
+            }
+            catch{
+                Write-Warning ($script:messages.UnableToRetryFlow)
+                Write-Verbose $_
+            }
         }
         if($null -ne $token_result.Result){
             #add elements to auth object
@@ -359,7 +371,9 @@ Function Get-MonkeyMSALToken{
             }
             #Add function to check for near expiration
             $new_token | Add-Member -Type ScriptMethod -Name IsNearExpiry -Value {
-                return ($this.ExpiresOn.UtcDateTime.AddMinutes(-15) -lt [System.Datetime]::UtcNow)
+                $ExpiresOn = (Get-Date ($this.ExpiresOn.UtcDateTime)).AddMinutes(-5)
+                return ((Get-Date) -gt $ExpiresOn)
+                #return ($this.ExpiresOn.UtcDateTime.AddMinutes(-15) -lt [System.Datetime]::UtcNow)
             }
             #Add function to disable token renewal
             $new_token | Add-Member -Type ScriptMethod -Name DisableRenew -Value {

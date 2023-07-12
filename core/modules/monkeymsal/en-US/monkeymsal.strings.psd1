@@ -9,4 +9,5 @@
     UsingLoginHint                   = Using LoginHint {0}
     AccountWasNotFound               = No account was found on public application
     RefreshingToken                  = Refreshing token
+    UnableToRetryFlow                = Unexpected error. Unable to retry authentication flow
 '@
