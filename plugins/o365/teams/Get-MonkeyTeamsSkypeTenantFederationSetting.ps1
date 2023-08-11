@@ -75,23 +75,17 @@ function Get-MonkeyTeamsSkypeTenantFederationSetting {
 				Tags = @('TeamsTenantFederationSettings');
 			}
 			Write-Information @msg
-			if ($null -ne $O365Object.Tenant.MyDomain.Id) {
-				$domain = $O365Object.Tenant.MyDomain.Id
-			}
-			else {
-				$domain = 'common'
-			}
-			$params = @{
+			$p = @{
 				Authentication = $access_token;
 				InternalPath = 'SkypePolicy';
-				ObjectType = "configurations/TenantFederationSettings";
-				AdminDomain = $domain;
+				ObjectType = "configurations";
+				ObjectId = 'TenantFederationSettings';
 				Environment = $Environment;
 				InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 			}
-			$fed_settings = Get-MonkeyTeamsObject @params
+			$fed_settings = Get-MonkeyTeamsObject @p
 		}
 	}
 	end {

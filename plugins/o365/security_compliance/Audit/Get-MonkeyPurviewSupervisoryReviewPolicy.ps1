@@ -64,7 +64,7 @@ function Get-MonkeyPurviewSupervisoryReviewPolicy {
 		$exo_session = Test-EXOConnection -ComplianceCenter
 	}
 	process {
-		if ($null -ne $exo_session) {
+		if($null -ne $exo_session){
 			$msg = @{
 				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft Purview: Supervisory review policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -90,7 +90,7 @@ function Get-MonkeyPurviewSupervisoryReviewPolicy {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview= Supervisory review policy",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview Supervisory review policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
@@ -110,7 +110,7 @@ function Get-MonkeyPurviewSupervisoryReviewPolicy {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview= Supervisory reports",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Purview Supervisory reports",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;

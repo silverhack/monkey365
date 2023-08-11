@@ -1,0 +1,39 @@
+{
+    "dashboard_name":  "MySQL Configuration",
+    "menu_name":  "Database Configuration",
+    "issue_name":  "Ensure server parameter 'audit_log_enabled' is set to 'ON' for MySQL Database Server",
+    "description":  "Enable audit_log_enabled on MySQL Servers.",
+    "rationale":  '
+		Enabling audit_log_enabled helps MySQL Database to log items such as connection attempts to the server, DDL/DML access, and more. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.
+	',
+    "impact": "There are further costs incurred for storage of logs. For high traffic databases these logs will be significant. Determine your organization's needs before enabling.
+	",
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.5.0",
+                           "reference":  "4.4.3"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_mysql_servers",
+    "display_path":  "configuration",
+    "conditions":  [
+                       "and",
+                       [
+                           "parameterName",
+                           "eq",
+                           "audit_log_enabled"
+                       ],
+                       [
+                           "parameterValue",
+                           "ne",
+                           "off"
+                       ]
+                   ],
+    "id_suffix":  "mysql_audit_log_disabled"
+}

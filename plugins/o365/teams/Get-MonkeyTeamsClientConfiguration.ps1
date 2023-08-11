@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyTeamsSkypeClientConfiguration {
+function Get-MonkeyTeamsClientConfiguration {
 <#
         .SYNOPSIS
-		Plugin to get information about Teams client configuration (Skype)
+		Plugin to get information about Teams organisation settings
 
         .DESCRIPTION
-		Plugin to get information about Teams client configuration (Skype)
+		Plugin to get information about Teams organisation settings
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyTeamsSkypeClientConfiguration {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyTeamsSkypeClientConfiguration
+            File Name	: Get-MonkeyTeamsClientConfiguration
             Version     : 1.0
 
         .LINK
@@ -44,15 +44,15 @@ function Get-MonkeyTeamsSkypeClientConfiguration {
 	)
 	begin {
 		#Plugin metadata
-		$monkey_metadata = @{
-			Id = "teams08";
+        $monkey_metadata = @{
+			Id = "teams07";
 			Provider = "Microsoft365";
 			Resource = "MicrosoftTeams";
 			ResourceType = $null;
 			resourceName = $null;
-			PluginName = "Get-MonkeyTeamsSkypeClientConfiguration";
+			PluginName = "Get-MonkeyTeamsClientConfiguration";
 			ApiType = $null;
-			Title = "Plugin to get information about Teams client configuration (Skype)";
+			Title = "Plugin to get information about Teams client configuration";
 			Group = @("MicrosoftTeams");
 			Tags = @{
 				"enabled" = $true
@@ -63,53 +63,50 @@ function Get-MonkeyTeamsSkypeClientConfiguration {
 		$Environment = $O365Object.Environment
 		#Get Access Token from Teams
 		$access_token = $O365Object.auth_tokens.Teams
-		$client_conf = $null
+		$organisationSettings = $null
 	}
 	process {
 		if ($null -ne $access_token) {
 			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft 365 Teams: Skype client configuration",$O365Object.TenantID);
+				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Microsoft 365 Teams Client settings",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $O365Object.InformationAction;
-				Tags = @('TeamsClientSettings');
+				InformationAction = $InformationAction;
+				Tags = @('TeamsOrgSettings');
 			}
 			Write-Information @msg
-			$params = @{
+			$p = @{
 				Authentication = $access_token;
 				InternalPath = 'SkypePolicy';
-				ObjectType = "configurations/TeamsClientConfiguration";
+				ObjectType = "configurations";
+				ObjectId = 'TeamsClientConfiguration';
 				Environment = $Environment;
 				InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 			}
-			$client_conf = Get-MonkeyTeamsObject @params
+			$organisationSettings = Get-MonkeyTeamsObject @p
 		}
 	}
 	end {
-		if ($client_conf) {
-			$client_conf.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Skype.ClientConfiguration')
+		if ($organisationSettings) {
+			$organisationSettings.PSObject.TypeNames.Insert(0,'Monkey365.Teams.OrgSettings')
 			[pscustomobject]$obj = @{
-				Data = $client_conf;
+				Data = $organisationSettings;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.o365_teams_skype_client_conf = $obj
+			$returnData.o365_teams_client_settings = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams= Skype client configuration",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft 365 Teams Client settings",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
+				logLevel = 'verbose';
+				InformationAction = $InformationAction;
                 Verbose = $O365Object.Verbose;
-				Tags = @('TeamsSkypeClientConfEmptyResponse');
+				Tags = @('TeamsOrgSettingsEmptyResponse');
 			}
 			Write-Verbose @msg
 		}
 	}
 }
-
-
-
-

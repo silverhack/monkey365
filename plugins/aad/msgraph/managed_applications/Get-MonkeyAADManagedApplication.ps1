@@ -95,7 +95,6 @@ function Get-MonkeyAADManagedApplication {
 		}
 		$managed_apps = Get-MonkeyMSGraphAADServicePrincipal @p
 		#Get service principal permissions
-        <#
         $p = @{
             Command = "Get-MonkeyMSGraphAADServicePrincipalPermission";
             ImportCommands = $O365Object.libutils;
@@ -110,8 +109,7 @@ function Get-MonkeyAADManagedApplication {
             BatchSleep = $O365Object.BatchSleep;
             BatchSize = $O365Object.BatchSize;
         }
-        #>
-
+        <#
 		$p = @{
 			ScriptBlock = { Get-MonkeyMSGraphAADServicePrincipalPermission -ServicePrincipal $_ };
 			Runspacepool = $O365Object.monkey_runspacePool;
@@ -119,10 +117,10 @@ function Get-MonkeyAADManagedApplication {
 			Debug = $O365Object.VerboseOptions.Debug;
 			Verbose = $O365Object.VerboseOptions.Verbose;
 			MaxQueue = $O365Object.MaxQueue;
-			BatchSleep = $O365Object.BatchSleep;
-			BatchSize = $O365Object.BatchSize;
+            BatchSleep = $O365Object.BatchSleep;
+            BatchSize = $O365Object.BatchSize;
 		}
-
+        #>
 		$managed_app_perms = $managed_apps | Invoke-MonkeyJob @p
 		#Get user consented apps
 		$p = @{
@@ -132,7 +130,6 @@ function Get-MonkeyAADManagedApplication {
 			Debug = $O365Object.Debug;
 		}
 		$user_consented_apps = Get-MonkeyMSGraphServicePrincipalUserConsentPermission @p
-
 	}
 	end {
 		#Return managed apps properties

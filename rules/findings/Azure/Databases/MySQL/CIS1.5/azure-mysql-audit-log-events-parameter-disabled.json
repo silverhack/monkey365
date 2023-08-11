@@ -1,0 +1,36 @@
+{
+    "dashboard_name":  "MySQL Configuration",
+    "menu_name":  "Database Configuration",
+    "issue_name":  "Ensure server parameter 'audit_log_events' has 'CONNECTION' set for MySQL Database Server",
+    "description":  "Enabling CONNECTION helps MySQL Database to log items such as successful and failed connection attempts to the server. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
+    "rationale":  null,
+    "impact":  null,
+    "remediation":  null,
+    "references":  [
+                       "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.4.0",
+                           "reference":  "4.3.3"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_mysql_servers",
+    "display_path":  "configuration",
+    "conditions":  [
+                       "and",
+                       [
+                           "parameterName",
+                           "eq",
+                           "audit_log_events"
+                       ],
+                       [
+                           "parameterValue",
+                           "notcontains",
+                           "CONNECTION"
+                       ]
+                   ],
+    "id_suffix":  "mysql_log_connections_disabled"
+}

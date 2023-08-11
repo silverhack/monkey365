@@ -60,20 +60,34 @@ function Get-MonkeyEXOSensitivityInfoType {
 			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online Compliance Center
-		$exo_session = Test-EXOConnection -ComplianceCenter
 	}
 	process {
-		if ($exo_session) {
+		if($O365Object.onlineServices.Purview -eq $true){
 			$msg = @{
 				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance Sensitivity Information Types",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $InformationAction;
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompComplianceTagsInfo');
 			}
 			Write-Information @msg
-			$sensitivity_info = Get-DlpSensitiveInformationType
+			#Get Security and Compliance Auth token
+            $ExoAuth = $O365Object.auth_tokens.ComplianceCenter
+            #Get Backend Uri
+            $Uri = $O365Object.SecCompBackendUri
+            #InitParams
+            $p = @{
+                Authentication = $ExoAuth;
+                EndPoint = $Uri;
+                ResponseFormat = 'clixml';
+                Command = 'Get-DlpSensitiveInformationType';
+                Method = "POST";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+			#Get sensitivity info
+			$sensitivity_info = Get-PSExoAdminApiObject @p
 		}
 	}
 	end {

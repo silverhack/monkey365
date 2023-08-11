@@ -51,8 +51,8 @@
     "tags":  [
                  "Microsoft 365 CIS benchmark 3.7"
              ],
-    "path":  "o365_teams_org_settings",
-    "display_path":  "o365_teams_org_settings",
+    "path":  "o365_teams_client_settings",
+    "display_path":  "o365_teams_client_settings",
     "conditions":  [
                        "or",
                        [

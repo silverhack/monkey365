@@ -64,7 +64,7 @@ function Get-MonkeyEXOAdminAuditLogConfig {
 		$exo_session = Test-EXOConnection -ComplianceCenter
 	}
 	process {
-		if ($null -ne $exo_session) {
+		if($null -ne $exo_session){
 			$msg = @{
 				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance Admin audit log config",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);

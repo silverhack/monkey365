@@ -30,15 +30,15 @@
                        }
                    ],
     "tags":  null,
-    "path":  "aad_group_settings",
-    "display_path":  "aad_group_settings",
+    "path":  "aad_authorization_policy",
+    "display_path":  "aad_authorization_policy",
     "conditions":  [
-                       "and",
-                       [
-                           "securityGroupsEnabled",
-                           "eq",
-                           "True"
-                       ]
-                   ],
+		"and",
+		[
+			"TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateSecurityGroups",
+			"eq",
+			"True"
+		]
+	],
     "id_suffix":  "aad_restrict_security_group_creation_admins"
 }

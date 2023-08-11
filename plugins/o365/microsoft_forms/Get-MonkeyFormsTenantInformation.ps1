@@ -77,11 +77,11 @@ function Get-MonkeyFormsTenantInformation {
 			$params = @{
 				Url = $url;
 				Method = 'Get';
-				Content_Type = 'application/json';
+				ContentType = 'application/json';
 				Headers = $authHeader;
 			}
 			#call tenant settings
-			$forms_tenant_settings = Invoke-UrlRequest @params
+			$forms_tenant_settings = Invoke-MonkeyWebRequest @params
 		}
 		else {
 			$msg = @{

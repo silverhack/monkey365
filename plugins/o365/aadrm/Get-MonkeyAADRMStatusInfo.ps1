@@ -85,12 +85,12 @@ function Get-MonkeyAADRMStatusInfo {
 			$params = @{
 				Url = $url;
 				Method = 'Get';
-				Content_Type = 'application/json; charset=utf-8';
+				ContentType = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
 				disableSSLVerification = $true;
 			}
 			#call AADRM endpoint
-			$AADRM_Status = Invoke-UrlRequest @params
+			$AADRM_Status = Invoke-MonkeyWebRequest @params
 			if ($AADRM_Status -eq 1) {
 				$aadrm_feature_status | Add-Member -Type NoteProperty -Name status -Value "Enabled"
 			}
@@ -110,7 +110,7 @@ function Get-MonkeyAADRMStatusInfo {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management= Status",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management Status",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;

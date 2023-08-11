@@ -83,12 +83,12 @@ function Get-MonkeyAADRMOnboarding {
 			$params = @{
 				Url = $url;
 				Method = 'Get';
-				Content_Type = 'application/json; charset=utf-8';
+				ContentType = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
 				disableSSLVerification = $true;
 			}
 			#call AADRM endpoint
-			$AADRM_Onboarding = Invoke-UrlRequest @params
+			$AADRM_Onboarding = Invoke-MonkeyWebRequest @params
 		}
 	}
 	end {
@@ -102,7 +102,7 @@ function Get-MonkeyAADRMOnboarding {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management= Onboarding control policy",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management Onboarding control policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;

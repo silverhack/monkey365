@@ -67,7 +67,7 @@ RequiredModules = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
 NestedModules = @(
-    'core/modules/monkeywebrequest/monkeywebrequest.psm1',
+    'core/modules/monkeyhttpwebrequest/monkeyhttpwebrequest.psm1',
     'core/modules/monkeyutils/monkeyutils.psm1',
     'core/modules/monkeylogger/monkeylogger.psm1',
     'core/modules/monkeyast/monkeyast.psm1',
@@ -75,14 +75,13 @@ NestedModules = @(
     'core/modules/monkeyexcel/monkeyexcel.psm1',
     'core/modules/psmarkdig/psmarkdig.psm1',
     'core/modules/monkeyruleset/monkeyruleset.psm1',
-    'core/modules/monkeyhtml/monkeyhtml.psm1',
-    'core/modules/monkeycloudutils/monkeycloudutils.psm1'
+    'core/modules/monkeyhtml/monkeyhtml.psm1'
 )
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
     'Invoke-Monkey365',
-    'Get-MonkeyJobError',
+    'Get-MonkeyJobError'
     'Get-MonkeyJobRS',
     'Get-MonkeyEnvironment',
     'Get-AstFunction',

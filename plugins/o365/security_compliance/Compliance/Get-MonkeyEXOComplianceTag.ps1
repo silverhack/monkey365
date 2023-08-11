@@ -60,10 +60,9 @@ function Get-MonkeyEXOComplianceTag {
 			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		$exo_session = Test-EXOConnection -ComplianceCenter
 	}
 	process {
-		if ($null -ne $exo_session) {
+		if($O365Object.onlineServices.Purview -eq $true){
 			$msg = @{
 				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance tags",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -72,8 +71,23 @@ function Get-MonkeyEXOComplianceTag {
 				Tags = @('SecCompTagsInfo');
 			}
 			Write-Information @msg
+			#Get Security and Compliance Auth token
+            $ExoAuth = $O365Object.auth_tokens.ComplianceCenter
+            #Get Backend Uri
+            $Uri = $O365Object.SecCompBackendUri
+            #InitParams
+            $p = @{
+                Authentication = $ExoAuth;
+                EndPoint = $Uri;
+                ResponseFormat = 'clixml';
+                Command = 'Get-ComplianceTag';
+                Method = "POST";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
 			#Get Compliance tags
-			$compliance_tags = Get-ComplianceTag
+			$compliance_tags = Get-PSExoAdminApiObject @p
 		}
 	}
 	end {

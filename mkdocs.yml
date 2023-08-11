@@ -54,10 +54,14 @@ nav:
       - Handle Rate Limit: configuration/rate-limit.md
     - Authentication:
       - Overview: authentication/overview.md
-      - Web Browser Interactive: authentication/interactive.md
-      - Device Code: authentication/devicecode.md
-      - Service Principal: authentication/sp.md
-      - Resource Owner Password Credential: authentication/ropc.md
+      - Supported Authentication Methods By Application: authentication/supported_auth_methods_byapp.md
+      - Authentication Prompts: authentication/authprompts.md
+      - Authentication Flows:
+        - Web Browser Interactive: authentication/authFlows/interactive.md
+        - Device Code: authentication/authFlows/devicecode.md
+        - Service Principal: authentication/authFlows/sp.md
+        - Resource Owner Password Credential: authentication/authFlows/ropc.md
+      - Current limitations: authentication/limitations.md
     - Docker:
       - Overview: docker/docker.md
     - Export Data:

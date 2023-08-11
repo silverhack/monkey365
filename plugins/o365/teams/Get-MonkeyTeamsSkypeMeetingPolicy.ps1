@@ -75,16 +75,17 @@ function Get-MonkeyTeamsSkypeMeetingPolicy {
 				Tags = @('TeamsMeetingPolicies');
 			}
 			Write-Information @msg
-			$params = @{
+			$p = @{
 				Authentication = $access_token;
 				InternalPath = 'SkypePolicy';
-				ObjectType = "configurations/TeamsMeetingPolicy";
+				ObjectType = "configurations";
+				ObjectId = 'TeamsMeetingPolicy';
 				Environment = $Environment;
 				InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 			}
-			$meeting_policies = Get-MonkeyTeamsObject @params
+			$meeting_policies = Get-MonkeyTeamsObject @p
 		}
 	}
 	end {

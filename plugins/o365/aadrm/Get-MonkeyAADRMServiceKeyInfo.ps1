@@ -83,12 +83,12 @@ function Get-MonkeyAADRMServiceKeyInfo {
 			$params = @{
 				Url = $url;
 				Method = 'Get';
-				Content_Type = 'application/json; charset=utf-8';
+				ContentType = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
 				disableSSLVerification = $true;
 			}
 			#call AADRM endpoint
-			$AADRM_service_key = Invoke-UrlRequest @params
+			$AADRM_service_key = Invoke-MonkeyWebRequest @params
 		}
 	}
 	end {
@@ -102,7 +102,7 @@ function Get-MonkeyAADRMServiceKeyInfo {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management= Service Key Status",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management Service Key Status",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;

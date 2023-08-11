@@ -75,17 +75,16 @@ function Get-MonkeyTeamsAppSetupPolicy {
 				Tags = @('TeamsAppSettings');
 			}
 			Write-Information @msg
-			$params = @{
+			$p = @{
 				Authentication = $access_token;
-				InternalPath = 'PowerShell';
-				ObjectType = "TeamsAppSetupPolicy";
-				AdminDomain = 'common';
+				InternalPath = 'SkypePolicy';
+				ObjectType = "configurations/TeamsAppSetupPolicy";
 				Environment = $Environment;
 				InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 			}
-			$app_setup_policies = Get-MonkeyTeamsObject @params
+			$app_setup_policies = Get-MonkeyTeamsObject @p
 		}
 	}
 	end {

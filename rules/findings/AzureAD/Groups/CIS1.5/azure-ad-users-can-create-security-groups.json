@@ -1,0 +1,44 @@
+{
+    "dashboard_name":  "Groups",
+    "menu_name":  "Azure AD",
+    "issue_name":  "Ensure that 'Users can create security groups in Azure portals, API or PowerShell' is set to 'No'",
+    "description":  "Consider to prevent that regular users can create security groups. When this settings is enabled, all users in the Azure directory are allowed to create new security groups and add members to these groups.",
+    "rationale":  "When creating security groups is enabled, all users in the directory are allowed to create new security groups and add members to those groups. Unless a business requires this day-to-day delegation, security group creation should be restricted to administrators only.",
+    "impact":  "Enabling this setting could create a number of request that would need to be managed by an administrator.",
+    "remediation":  "
+					###### From Azure Console
+					1. Go to `Azure Active Directory`
+					2. Go to `Groups`
+					3. Go to `General`
+					4. Ensure that `Users can create security groups in Azure portals, API or PowerShell` is set to `No`
+	",
+    "references":  [
+                       "https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/methods-for-assigning-users-and-groups",
+                       "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/groups-self-service-management",
+					   "https://docs.microsoft.com/en-us/azure/active-directory/active-directory-accessmanagement-self-service-group-management#making-a-group-available-for-end-user-self-service",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-5-automate-entitlement-management",
+					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.5.0",
+                           "reference":  "1.19"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "aad_authorization_policy",
+    "display_path":  "aad_authorization_policy",
+    "conditions":  [
+		"and",
+		[
+			"TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateSecurityGroups",
+			"eq",
+			"True"
+		]
+	],
+    "id_suffix":  "aad_restrict_security_group_creation_admins"
+}

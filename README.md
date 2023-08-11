@@ -95,6 +95,8 @@ The following standards are supported by Monkey365:
 
 * CIS Microsoft Azure Foundations Benchmark v1.4.0
 * CIS Microsoft 365 Foundations Benchmark v1.4.0
+* CIS Microsoft Azure Foundations Benchmark v1.5.0
+* CIS Microsoft 365 Foundations Benchmark v1.5.0
 
 More standards will be added in next releases (NIST, HIPAA, GDPR, PCI-DSS, etc..) as they are available.
 

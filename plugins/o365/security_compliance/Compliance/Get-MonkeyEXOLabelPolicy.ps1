@@ -60,11 +60,9 @@ function Get-MonkeyEXOLabelPolicy {
 			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online Compliance Center
-		$exo_session = Test-EXOConnection -ComplianceCenter
 	}
 	process {
-		if ($exo_session) {
+		if($O365Object.onlineServices.Purview -eq $true){
 			$msg = @{
 				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance label policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -73,7 +71,23 @@ function Get-MonkeyEXOLabelPolicy {
 				Tags = @('SecCompLabelPolicyInfo');
 			}
 			Write-Information @msg
-			$label_policy = Get-LabelPolicy
+			#Get Security and Compliance Auth token
+            $ExoAuth = $O365Object.auth_tokens.ComplianceCenter
+            #Get Backend Uri
+            $Uri = $O365Object.SecCompBackendUri
+            #InitParams
+            $p = @{
+                Authentication = $ExoAuth;
+                EndPoint = $Uri;
+                ResponseFormat = 'clixml';
+                Command = 'Get-LabelPolicy -WarningAction SilentlyContinue';
+                Method = "POST";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+			#Get label policy
+			$label_policy = Get-PSExoAdminApiObject @p
 		}
 	}
 	end {

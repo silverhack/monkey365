@@ -144,7 +144,7 @@ function Get-MonkeyAZClassicStorageAccount {
 							Method = "GET";
 							UserAgent = $O365Object.UserAgent;
 						}
-						[xml]$QueueDiagSettings = Invoke-UrlRequest @params
+						[xml]$QueueDiagSettings = Invoke-MonkeyWebRequest @params
 						if ($QueueDiagSettings) {
 							#Add to psobject
 							$new_str_account | Add-Member -Type NoteProperty -Name queueLogVersion -Value $QueueDiagSettings.StorageServiceProperties.logging.Version
@@ -169,7 +169,7 @@ function Get-MonkeyAZClassicStorageAccount {
 							Method = "GET";
 							UserAgent = $O365Object.UserAgent;
 						}
-						[xml]$TableDiagSettings = Invoke-UrlRequest @params
+						[xml]$TableDiagSettings = Invoke-MonkeyWebRequest @params
 						if ($TableDiagSettings) {
 							#Add to psobject
 							$new_str_account | Add-Member -Type NoteProperty -Name tableLogVersion -Value $TableDiagSettings.StorageServiceProperties.logging.Version
@@ -195,7 +195,7 @@ function Get-MonkeyAZClassicStorageAccount {
 							Method = "GET";
 							UserAgent = $O365Object.UserAgent;
 						}
-						[xml]$FileDiagSettings = Invoke-UrlRequest @params
+						[xml]$FileDiagSettings = Invoke-MonkeyWebRequest @params
 						if ($FileDiagSettings) {
 							#Add to psobject
 							$new_str_account | Add-Member -Type NoteProperty -Name fileHourMetricsVersion -Value $FileDiagSettings.StorageServiceProperties.HourMetrics.Version
@@ -230,7 +230,7 @@ function Get-MonkeyAZClassicStorageAccount {
 							Method = "GET";
 							UserAgent = $O365Object.UserAgent;
 						}
-						[xml]$BlobDiagSettings = Invoke-UrlRequest @params
+						[xml]$BlobDiagSettings = Invoke-MonkeyWebRequest @params
 						if ($BlobDiagSettings) {
 							#Add to psobject
 							$new_str_account | Add-Member -Type NoteProperty -Name blobLogVersion -Value $BlobDiagSettings.StorageServiceProperties.logging.Version

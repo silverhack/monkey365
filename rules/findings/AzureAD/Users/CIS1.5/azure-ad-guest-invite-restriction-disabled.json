@@ -1,0 +1,47 @@
+{
+    "dashboard_name": "Users",
+    "menu_name": "Azure AD",
+    "issue_name":  "Ensure that 'Guest invite restrictions' is set to 'Only users assigned to specific admin roles can invite guest users'",
+    "description":  "Restrict invitations to users with specific administrative roles only.",
+    "rationale":  '
+				Restricting invitations to users with specific administrator roles ensures that only authorized accounts have access to cloud resources. This helps to maintain "Need to Know" permissions and prevents inadvertent access to data.
+				
+				By default the setting `Guest invite restrictions` is set to `Anyone in the organization can invite guest users including guests and non-admins`. This would allow anyone within the organization to invite guests and non-admins to the tenant, posing a security risk.
+	',
+    "impact":  "
+			With the option of `Only users assigned to specific admin roles can invite guest users` selected, users with specific admin roles will be in charge of sending invitations to the Azure Workspace, requiring additional overhead by them to manage user accounts. This will mean coordinating with other departments as they are onboarding new users, and manually removing access from users who no longer need it.
+
+	",
+    "remediation":  "
+						###### From Azure Console
+						1. Go to `Azure Active Directory`
+						2. Go to `External Identities`
+						3. Go to `External collaboration settings`
+						4. Under `Guest invite settings`, for `Guest invite restrictions`, ensure that that `Only users assigned to specific admin roles can invite guest users` is selected
+	",
+    "references":  [
+                       "https://learn.microsoft.com/en-us/azure/active-directory/external-identities/external-collaboration-settings-configure",
+                       "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
+                       "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+					   "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-privileged-access#pa-5-automate-entitlement-management"
+                   ],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.5.0",
+                           "reference":  "1.16"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "aad_authorization_policy",
+    "display_path":  "aad_authorization_policy",
+    "conditions":  [
+                       "and",
+                       [
+                           "TenantAuthPolicy.allowInvitesFrom",
+                           "ne",
+                           "adminsAndGuestInviters"
+                       ]
+                   ],
+    "id_suffix":  "aad_guest_invite_all_enabled"
+}

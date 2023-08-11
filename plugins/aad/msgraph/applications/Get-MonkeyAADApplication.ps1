@@ -94,6 +94,7 @@ function Get-MonkeyAADApplication {
 		}
 		$all_applications = Get-MonkeyMSGraphAADApplication @p | Format-AADApplicationCredential
 		#Get Application permissions
+
         $p = @{
 			ScriptBlock = { Get-MonkeyMSGraphAADAPPPermission -Application $_ };
 			Runspacepool = $O365Object.monkey_runspacePool;
@@ -101,9 +102,10 @@ function Get-MonkeyAADApplication {
 			Debug = $O365Object.VerboseOptions.Debug;
 			Verbose = $O365Object.VerboseOptions.Verbose;
 			MaxQueue = $O365Object.MaxQueue;
-			BatchSleep = $O365Object.BatchSleep;
-			BatchSize = $O365Object.BatchSize;
+            BatchSleep = $O365Object.BatchSleep;
+            BatchSize = $O365Object.BatchSize;
 		}
+
         <#
         $p = @{
             Command = "Get-MonkeyMSGraphAADAPPPermission";

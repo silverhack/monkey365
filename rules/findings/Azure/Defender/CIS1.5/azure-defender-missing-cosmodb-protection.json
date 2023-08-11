@@ -1,0 +1,46 @@
+{
+	"dashboard_name":  "Microsoft Defender for Cloud",
+    "menu_name":  "Subscription",
+    "issue_name":  "Ensure That Microsoft Defender for Cosmos DB Is Set To 'On'",
+    "description":  "Microsoft Defender for Cosmos DB scans all incoming network requests for changes to your virtual machine.",
+	"rationale":  "In scanning Cosmos DB requests within a subscription, requests are compared to a heuristic list of potential security threats. These threats could be a result of a security breach within your services, thus scanning for them could prevent a potential security threat from being introduced.",
+    "impact":  "Enabling Microsoft Defender for Cosmos requires enabling Microsoft Defender for your subscription. Both will incur additional charges.",
+    "remediation":  "
+					###### From Azure Console
+					1. Go to `Microsoft Defender for Cloud`
+					2. Select `Environment settings`
+					3. Click on the subscription name
+					4. Select the `Defender plans` blade
+					5. Review the chosen pricing tier. For the `Cosmos DB` resource type the radial button should be set to `On`
+					6. Select `Save`
+	",
+    "references":  [
+                       "https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql?view=azuresql",
+					   "https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-enable-database-protections",
+					   "https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview"
+	],
+    "compliance":  [
+                       {
+                           "name":  "CIS Microsoft Azure Foundations",
+                           "version":  "1.5.0",
+                           "reference":  "2.1.10"
+                       }
+                   ],
+    "tags":  null,
+    "path":  "az_pricing_tier",
+    "display_path":  "az_pricing_tier",
+    "conditions":  [
+                       "and",
+                       [
+                           "name",
+						   "eq",
+						   "CosmosDbs"
+					    ],
+						[
+						   "properties.pricingTier",
+                           "eq",
+                           "Free"
+                       ]
+                   ],
+    "id_suffix":  "azure_defender_missing_cosmodb_protection"
+}

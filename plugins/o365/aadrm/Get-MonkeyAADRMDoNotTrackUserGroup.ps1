@@ -85,12 +85,12 @@ function Get-MonkeyAADRMDoNotTrackUserGroup {
 			$params = @{
 				Url = $url;
 				Method = 'Get';
-				Content_Type = 'application/json; charset=utf-8';
+				ContentType = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
 				disableSSLVerification = $true;
 			}
 			#call AADRM endpoint
-			$grp_not_track = Invoke-UrlRequest @params
+			$grp_not_track = Invoke-MonkeyWebRequest @params
 			if ([string]::IsNullOrEmpty($grp_not_track)) {
 				$aadrm_feature_status | Add-Member -Type NoteProperty -Name status -Value "NotConfigured"
 			}
@@ -111,7 +111,7 @@ function Get-MonkeyAADRMDoNotTrackUserGroup {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management= DoNotTrack feature",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management DoNotTrack feature",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;

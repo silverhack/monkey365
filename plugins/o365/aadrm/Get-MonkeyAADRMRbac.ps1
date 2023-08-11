@@ -85,12 +85,12 @@ function Get-MonkeyAADRMRbac {
 			$params = @{
 				Url = $url_global;
 				Method = 'Get';
-				Content_Type = 'application/json; charset=utf-8';
+				ContentType = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
 				disableSSLVerification = $true;
 			}
 			#call AADRM endpoint
-			$AADRM_Global_Admins = Invoke-UrlRequest @params
+			$AADRM_Global_Admins = Invoke-MonkeyWebRequest @params
 			if ($AADRM_Global_Admins) {
 				$aadrm_rbac | Add-Member -Type NoteProperty -Name Global_Admins -Value $AADRM_Global_Admins
 			}
@@ -102,12 +102,12 @@ function Get-MonkeyAADRMRbac {
 			$params = @{
 				Url = $url_connector;
 				Method = 'Get';
-				Content_Type = 'application/json; charset=utf-8';
+				ContentType = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
 				disableSSLVerification = $true;
 			}
 			#call AADRM endpoint
-			$AADRM_Connector_Admins = Invoke-UrlRequest @params
+			$AADRM_Connector_Admins = Invoke-MonkeyWebRequest @params
 			if ($AADRM_Connector_Admins) {
 				$aadrm_rbac | Add-Member -Type NoteProperty -Name Connector_Admins -Value $AADRM_Connector_Admins
 			}
@@ -127,7 +127,7 @@ function Get-MonkeyAADRMRbac {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management= RBAC users",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management RBAC users",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;

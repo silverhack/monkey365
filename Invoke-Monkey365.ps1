@@ -449,6 +449,10 @@ Function Invoke-Monkey365{
         Initialize-AuthenticationParam
         #Connect
         Connect-MonkeyCloud
+        #Start Watcher
+        if($null -ne (Get-Command -Name "Watch-AccessToken" -ErrorAction ignore)){
+            Watch-AccessToken -Timer $O365Object.Timer
+        }
     }
     Process{
         if(($PSBoundParameters.ContainsKey('ImportJob') -and $null -eq $PSBoundParameters['ImportJob']) -and $null -ne $O365Object.Instance){
@@ -488,7 +492,7 @@ Function Invoke-Monkey365{
         }
         #Start Watcher
         if($null -ne (Get-Command -Name "Watch-AccessToken" -ErrorAction ignore)){
-            Watch-AccessToken -Stop
+            #Watch-AccessToken -Stop
         }
         #Stop timer
         $O365Object.Timer.stop()
@@ -497,5 +501,6 @@ Function Invoke-Monkey365{
         Stop-Logger
         #collect garbage
         [System.GC]::GetTotalMemory($true) | out-null
+        return $O365Object
     }
 }

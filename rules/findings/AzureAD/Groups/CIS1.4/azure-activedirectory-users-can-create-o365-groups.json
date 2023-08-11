@@ -31,12 +31,17 @@
                        }
                    ],
     "tags":  null,
-    "path":  "aad_group_settings",
-    "display_path":  "aad_group_settings",
+    "path":  "aad_settings",
+    "display_path":  "aad_settings",
     "conditions":  [
                        "and",
                        [
-                           "office365GroupsEnabled",
+                           "templateId",
+                           "eq",
+                           "62375ab9-6b52-47ed-826b-58e47e0e304b"
+                       ],
+					   [
+                           "properties.EnableGroupCreation",
                            "eq",
                            "True"
                        ]

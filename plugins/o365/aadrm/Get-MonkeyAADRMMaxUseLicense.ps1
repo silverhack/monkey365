@@ -83,12 +83,12 @@ function Get-MonkeyAADRMMaxUseLicense {
 			$params = @{
 				Url = $url;
 				Method = 'Get';
-				Content_Type = 'application/json; charset=utf-8';
+				ContentType = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
 				disableSSLVerification = $true;
 			}
 			#call AADRM endpoint
-			$AADRM_License = Invoke-UrlRequest @params
+			$AADRM_License = Invoke-MonkeyWebRequest @params
 			if ($AADRM_License) {
 				#Create AADRM object
 				$aadrm_feature_status = New-Object -TypeName PSCustomObject
@@ -110,7 +110,7 @@ function Get-MonkeyAADRMMaxUseLicense {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management= max use license validity status",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management max use license validity status",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;

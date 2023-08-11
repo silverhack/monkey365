@@ -85,12 +85,12 @@ function Get-MonkeyAADRMDeviceConfiguration {
 			$params = @{
 				Url = $url;
 				Method = 'Get';
-				Content_Type = 'application/json; charset=utf-8';
+				ContentType = 'application/json; charset=utf-8';
 				Headers = $requestHeader;
 				disableSSLVerification = $true;
 			}
 			#call AADRM endpoint
-			$AADRM_Devices = Invoke-UrlRequest @params
+			$AADRM_Devices = Invoke-MonkeyWebRequest @params
 			#Construct psobject
 			foreach ($device in $AADRM_Devices) {
 				switch ($device.Key) {
@@ -141,7 +141,7 @@ function Get-MonkeyAADRMDeviceConfiguration {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management= Device Configuration",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Office 365 Rights Management Device Configuration",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;

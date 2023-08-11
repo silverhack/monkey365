@@ -75,7 +75,7 @@ function Get-MonkeyTeamsTargetingPolicy {
 				Tags = @('TeamsTargetingPolicyInfo');
 			}
 			Write-Information @msg
-			$params = @{
+			$p = @{
 				Authentication = $access_token;
 				InternalPath = 'SkypePolicy';
 				ObjectType = "configurations";
@@ -85,7 +85,7 @@ function Get-MonkeyTeamsTargetingPolicy {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 			}
-			$targeting_policy = Get-MonkeyTeamsObject @params
+			$targeting_policy = Get-MonkeyTeamsObject @p
 		}
 	}
 	end {

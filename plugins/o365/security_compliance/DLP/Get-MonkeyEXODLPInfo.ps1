@@ -60,16 +60,14 @@ function Get-MonkeyEXODLPInfo {
 			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online Compliance Center
-		$exo_session = Test-EXOConnection -ComplianceCenter
 	}
 	process {
-		if ($exo_session) {
+		if($O365Object.onlineServices.Purview -eq $true){
 			$msg = @{
 				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance DLP compliance information",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $InformationAction;
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompDLPInfo');
 			}
 			Write-Information @msg
@@ -79,7 +77,7 @@ function Get-MonkeyEXODLPInfo {
 					MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance DLP analysis",$O365Object.TenantID);
 					callStack = (Get-PSCallStack | Select-Object -First 1);
 					logLevel = 'info';
-					InformationAction = $InformationAction;
+					InformationAction = $O365Object.InformationAction;
 					Tags = @('SecCompDLPInfo');
 				}
 				Write-Information @msg

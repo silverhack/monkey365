@@ -60,20 +60,34 @@ function Get-MonkeyEXODLPCompliancePolicy {
 			};
 			Docs = "https://silverhack.github.io/monkey365/"
 		}
-		#Check if already connected to Exchange Online Compliance Center
-		$exo_session = Test-EXOConnection -ComplianceCenter
 	}
 	process {
-		if ($exo_session) {
+		if($O365Object.onlineServices.Purview -eq $true){
 			$msg = @{
 				MessageData = ($message.MonkeyGenericTaskMessage -f $pluginId,"Security and Compliance DLP compliance policies",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $InformationAction;
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompDLPInfo');
 			}
 			Write-Information @msg
-			$exo_compliance_dlp_policies = Get-DlpCompliancePolicy
+			#Get Security and Compliance Auth token
+            $ExoAuth = $O365Object.auth_tokens.ComplianceCenter
+            #Get Backend Uri
+            $Uri = $O365Object.SecCompBackendUri
+            #InitParams
+            $p = @{
+                Authentication = $ExoAuth;
+                EndPoint = $Uri;
+                ResponseFormat = 'clixml';
+                Command = 'Get-DlpCompliancePolicy';
+                Method = "POST";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+			#Get DLP compliance policies
+			$exo_compliance_dlp_policies = Get-PSExoAdminApiObject @p
 			if ($null -eq $exo_compliance_dlp_policies) {
 				$exo_compliance_dlp_policies = @{
 					isEnabled = $false

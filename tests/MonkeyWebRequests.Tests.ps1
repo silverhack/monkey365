@@ -10,7 +10,7 @@ Describe 'Google' {
     }
     It 'Serves pages over http' {
         InModuleScope monkeywebrequest {
-            $retData = Invoke-UrlRequest -url 'http://google.com/' -AllowAutoRedirect -returnRawResponse
+            $retData = Invoke-MonkeyWebRequest -url 'http://google.com/' -AllowAutoRedirect -returnRawResponse
             $StatusCode = $retData | Select-Object -ExpandProperty StatusCode
             $retData.Close()
             $retData.Dispose()
@@ -20,7 +20,7 @@ Describe 'Google' {
 
     It 'Serves pages over https' {
         InModuleScope monkeywebrequest {
-            $retData = Invoke-UrlRequest -url "https://google.co.uk/" -AllowAutoRedirect -returnRawResponse
+            $retData = Invoke-MonkeyWebRequest -url "https://google.co.uk/" -AllowAutoRedirect -returnRawResponse
             $StatusCode = $retData | Select-Object -ExpandProperty StatusCode
             $retData.Close()
             $retData.Dispose()

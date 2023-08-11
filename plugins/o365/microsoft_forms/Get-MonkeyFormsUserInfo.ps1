@@ -77,11 +77,11 @@ function Get-MonkeyFormsUserInfo {
 			$params = @{
 				Url = $url;
 				Method = 'Get';
-				Content_Type = 'application/json';
+				ContentType = 'application/json';
 				Headers = $authHeader;
 			}
 			#call user info
-			$forms_user_info = Invoke-UrlRequest @params
+			$forms_user_info = Invoke-MonkeyWebRequest @params
 		}
 	}
 	end {
