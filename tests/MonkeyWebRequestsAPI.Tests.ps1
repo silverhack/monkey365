@@ -4,7 +4,7 @@ Set-StrictMode -Version Latest
 
 Describe 'Star Wars' {
     BeforeAll {
-        $Module = Get-ChildItem ("{0}/core/modules/monkeywebrequest" -f (Split-Path $PSScriptRoot -Parent)) -Filter '*.psm1'
+        $Module = Get-ChildItem ("{0}/core/modules/monkeyhttpwebrequest" -f (Split-Path $PSScriptRoot -Parent)) -Filter '*.psm1'
         $MyModule = $Module.DirectoryName
         Import-Module $MyModule -Force
     }

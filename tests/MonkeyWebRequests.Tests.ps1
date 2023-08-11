@@ -4,13 +4,13 @@ Set-StrictMode -Version Latest
 
 Describe 'Google' {
     BeforeAll {
-        $Module = Get-ChildItem ("{0}/core/modules/monkeywebrequest" -f (Split-Path $PSScriptRoot -Parent)) -Filter '*.psm1'
+        $Module = Get-ChildItem ("{0}/core/modules/monkeyhttpwebrequest" -f (Split-Path $PSScriptRoot -Parent)) -Filter '*.psm1'
         $MyModule = $Module.DirectoryName
         Import-Module $MyModule -Force
     }
     It 'Serves pages over http' {
-        InModuleScope monkeywebrequest {
-            $retData = Invoke-MonkeyWebRequest -url 'http://google.com/' -AllowAutoRedirect -returnRawResponse
+        InModuleScope monkeyhttpwebrequest {
+            $retData = Invoke-MonkeyWebRequest -url 'http://google.com/' -AllowAutoRedirect $true -RawResponse
             $StatusCode = $retData | Select-Object -ExpandProperty StatusCode
             $retData.Close()
             $retData.Dispose()
@@ -19,8 +19,8 @@ Describe 'Google' {
     }
 
     It 'Serves pages over https' {
-        InModuleScope monkeywebrequest {
-            $retData = Invoke-MonkeyWebRequest -url "https://google.co.uk/" -AllowAutoRedirect -returnRawResponse
+        InModuleScope monkeyhttpwebrequest {
+            $retData = Invoke-MonkeyWebRequest -url "https://google.co.uk/" -AllowAutoRedirect $true -RawResponse
             $StatusCode = $retData | Select-Object -ExpandProperty StatusCode
             $retData.Close()
             $retData.Dispose()
