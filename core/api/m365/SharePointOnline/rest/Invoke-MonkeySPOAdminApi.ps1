@@ -140,8 +140,6 @@ Function Invoke-MonkeySPOAdminApi{
                 "Authorization" = $AuthHeader
             }
             #Perform query
-            $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($URL)
-            $ServicePoint.ConnectionLimit = 1000;
             try{
                 switch ($Method) {
                         'GET'
@@ -150,23 +148,19 @@ Function Invoke-MonkeySPOAdminApi{
                                 Url = $URL;
                                 Headers = $requestHeader;
                                 Method = $Method;
-                                Content_Type = $ContentType;
-                                Encoding = $ContentType;
+                                ContentType = $ContentType;
+                                Accept = $ContentType;
                                 UserAgent = $O365Object.UserAgent;
                                 Verbose = $Verbose;
                                 Debug = $Debug;
                                 InformationAction = $InformationAction;
                             }
-                            $Objects = Invoke-UrlRequest @param
+                            $Objects = Invoke-MonkeyWebRequest @param
                         }
                 }
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
             catch {
                 Write-Verbose $_
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
         }
     }

@@ -24,9 +24,11 @@ if($null -ne $isO365Object){
         Import-LocalizedData @LocalizedDataParams;
     }
     #Start Watcher
+    <#
     if($null -ne (Get-Command -Name "Watch-AccessToken" -ErrorAction ignore)){
         Watch-AccessToken -Timer $O365Object.Timer
     }
+    #>
     #set the default connection limit
     [System.Net.ServicePointManager]::DefaultConnectionLimit = 1024;
     [System.Net.ServicePointManager]::MaxServicePoints = 1000;

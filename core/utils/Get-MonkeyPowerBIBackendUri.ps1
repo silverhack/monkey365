@@ -69,13 +69,13 @@ function Get-MonkeyPowerBIBackendUri {
                 Url = $uri;
                 Method = 'Put';
                 Headers = $requestHeader;
-                Encoding = 'application/json';
+                Accept = 'application/json';
                 UserAgent = $O365Object.UserAgent;
                 Verbose = $O365Object.Verbose;
                 Debug = $O365Object.Debug;
                 InformationAction = $O365Object.InformationAction;
             }
-            $Object = Invoke-UrlRequest @param
+            $Object = Invoke-MonkeyWebRequest @param
             if($null -ne $Object -and $null -ne ($Object.PsObject.Properties.Item('DynamicClusterUri'))){
                 try{
                     $backendUri = $Object | Select-Object -ExpandProperty DynamicClusterUri

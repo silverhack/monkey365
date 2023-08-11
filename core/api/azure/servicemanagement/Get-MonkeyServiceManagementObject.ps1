@@ -85,13 +85,13 @@ Function Get-MonkeyServiceManagementObject{
                 Url = $URI;
                 Headers = $requestHeader;
                 Method = 'Get';
-                Content_Type = $ContentType;
+                ContentType = $ContentType;
                 UserAgent = $O365Object.UserAgent;
                 Verbose = $Verbose;
                 Debug = $Debug;
                 InformationAction = $InformationAction;
             }
-            $AllObjects = Invoke-UrlRequest @param
+            $AllObjects = Invoke-MonkeyWebRequest @param
             ####close all the connections made to the host####
             [void]$ServicePoint.CloseConnectionGroup("")
         }

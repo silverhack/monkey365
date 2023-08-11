@@ -35,6 +35,8 @@ Function Invoke-AzureADScanner{
     #>
     [CmdletBinding()]
     Param()
+    #Create a new HTTPClient
+    #$O365Object.HttpClient = New-HttpClient
     #Set vars
     $aad_plugins = $null
     #Set synchronized hashtable
@@ -131,4 +133,12 @@ Function Invoke-AzureADScanner{
         #Perform garbage collection
         [gc]::Collect()
     }
+    <#
+    #Cleaning HttpClient
+    if($null -ne $O365Object.HttpClient -and $O365Object.HttpClient -is [System.Net.Http.HttpClient]){
+        $O365Object.HttpClient.Dispose();
+        #Perform garbage collection
+        [gc]::Collect()
+    }
+    #>
 }

@@ -228,8 +228,6 @@ Function Get-MonkeyRMObject{
             }
         }
         #Perform query
-        $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($final_uri)
-        $ServicePoint.ConnectionLimit = 1000;
         try{
             switch ($Method) {
                 'GET'
@@ -238,13 +236,13 @@ Function Get-MonkeyRMObject{
                         Url = $final_uri;
                         Headers = $requestHeader;
                         Method = $Method;
-                        Content_Type = "application/json";
+                        ContentType = "application/json";
                         UserAgent = $O365Object.UserAgent;
                         Verbose = $Verbose;
                         Debug = $Debug;
                         InformationAction = $InformationAction;
                     }
-                    $return_objects = Invoke-UrlRequest @p
+                    $return_objects = Invoke-MonkeyWebRequest @p
                 }
                 'POST'
                 {
@@ -253,7 +251,7 @@ Function Get-MonkeyRMObject{
                             Url = $final_uri;
                             Headers = $requestHeader;
                             Method = $Method;
-                            Content_Type = $ContentType;
+                            ContentType = $ContentType;
                             Data = $Data;
                             UserAgent = $O365Object.UserAgent;
                             Verbose = $Verbose;
@@ -266,7 +264,7 @@ Function Get-MonkeyRMObject{
                             Url = $final_uri;
                             Headers = $requestHeader;
                             Method = $Method;
-                            Content_Type = $ContentType;
+                            ContentType = $ContentType;
                             UserAgent = $O365Object.UserAgent;
                             Verbose = $Verbose;
                             Debug = $Debug;
@@ -274,7 +272,7 @@ Function Get-MonkeyRMObject{
                         }
                     }
                     #send request
-                    $return_objects = Invoke-UrlRequest @p
+                    $return_objects = Invoke-MonkeyWebRequest @p
                 }
             }
             if($null -ne $return_objects -and $null -ne $return_objects.PSObject.Properties.Item('value') -and $return_objects.value.Count -gt 0){
@@ -310,7 +308,7 @@ Function Get-MonkeyRMObject{
                         Debug = $Debug;
                         InformationAction = $InformationAction;
                     }
-                    $NextPage = Invoke-UrlRequest @p
+                    $NextPage = Invoke-MonkeyWebRequest @p
                     if($null -ne $NextPage.PSObject.Properties.Item('odata.nextLink')){
                         $nextLink = $nextPage.'odata.nextLink'
                     }
@@ -324,17 +322,12 @@ Function Get-MonkeyRMObject{
                     $NextPage.value
                 }
             }
-            ####close all the connections made to the host####
-            [void]$ServicePoint.CloseConnectionGroup("")
         }
         catch{
             Write-Verbose $_
-            ####close all the connections made to the host####
-            [void]$ServicePoint.CloseConnectionGroup("")
         }
     }
     End{
-        ####close all the connections made to the host####
-        [void]$ServicePoint.CloseConnectionGroup("")
+        #Nothing to do here
     }
 }

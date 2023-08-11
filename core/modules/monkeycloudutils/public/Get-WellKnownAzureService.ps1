@@ -56,6 +56,7 @@ Function Get-WellKnownAzureService{
         ExchangeOnlineV2 = "fb78d390-0c51-40cd-8e17-fdbfab77341b";
         AADRM = "90f610bf-206d-4950-b61d-37fa6fd1b224";
         SharePointOnline  = "9bc3ab49-b65d-410a-85ad-de819febfddc";
+        SharePointPnP = '31359c7f-bd7e-475c-86db-fdb8c937548e';
         BrokerPlugin = "fc0f3af4-6835-4174-b806-f7db311fd2f3";
         Lync = "7716031e-6f8b-45a4-b82b-922b1af0fbb4";
         Intune = "d1ddf0e4-d672-4dae-b554-9d5bdfd93547";

@@ -101,32 +101,40 @@ Function Get-MonkeyAzurePortalObject{
             "Authorization" = $AuthHeader
         }
         #Perform query
-        $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($URI)
-        $ServicePoint.ConnectionLimit = 1000;
         try{
             switch ($Method) {
                 'GET'
                 {
                     $param = @{
                         Url = $URI;
+                        #Client = $O365Object.HttpClient;
                         Headers = $requestHeader;
                         Method = $Method;
-                        Content_Type = $ContentType;
+                        ContentType = $ContentType;
                         UserAgent = $O365Object.UserAgent;
                         Verbose = $Verbose;
                         Debug = $Debug;
                         InformationAction = $InformationAction;
                     }
-                    $Objects = Invoke-UrlRequest @param
+                    $Objects = Invoke-MonkeyWebRequest @param
                 }
                 'POST'
                 {
                     if($PostData){
+                        if($PostData -isnot [System.String]){
+                            try{
+                                $PostData = $PostData | ConvertTo-Json -Depth 100
+                            }
+                            catch{
+                                Write-Error $_
+                            }
+                        }
                         $param = @{
                             Url = $URI;
+                            #Client = $O365Object.HttpClient;
                             Headers = $requestHeader;
                             Method = $Method;
-                            Content_Type = $ContentType;
+                            ContentType = $ContentType;
                             Data = $PostData;
                             UserAgent = $O365Object.UserAgent;
                             Verbose = $Verbose;
@@ -137,9 +145,10 @@ Function Get-MonkeyAzurePortalObject{
                     else{
                         $param = @{
                             Url = $URI;
+                            #Client = $O365Object.HttpClient;
                             Headers = $requestHeader;
                             Method = $Method;
-                            Content_Type = $ContentType;
+                            ContentType = $ContentType;
                             UserAgent = $O365Object.UserAgent;
                             Verbose = $Verbose;
                             Debug = $Debug;
@@ -147,7 +156,7 @@ Function Get-MonkeyAzurePortalObject{
                         }
                     }
                     #Launch request
-                    $Objects = Invoke-UrlRequest @param
+                    $Objects = Invoke-MonkeyWebRequest @param
                 }
             }
             if($null -ne $Objects){
@@ -192,17 +201,18 @@ Function Get-MonkeyAzurePortalObject{
                     if($Method.ToUpper() -eq "POST"){
                         $NextLink = '"{0}"' -f $NextLink
                         $param = @{
-                            Url = $URI
+                            Url = $URI;
+                            #Client = $O365Object.HttpClient;
                             Headers = $requestHeader;
                             Method = $Method;
-                            Content_Type = $ContentType;
+                            ContentType = $ContentType;
                             UserAgent = $O365Object.UserAgent;
                             Data = $NextLink;
                             Verbose = $Verbose;
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $more_objects = Invoke-UrlRequest @param
+                        $more_objects = Invoke-MonkeyWebRequest @param
                     }
                     ElseIf($Method.ToUpper() -eq "GET"){
                         if($EncodeGet){
@@ -224,15 +234,16 @@ Function Get-MonkeyAzurePortalObject{
                         }
                         $param = @{
                             Url = $URI;
+                            #Client = $O365Object.HttpClient;
                             Headers = $requestHeader;
                             Method = $Method;
-                            Content_Type = $ContentType;
+                            ContentType = $ContentType;
                             UserAgent = $O365Object.UserAgent;
                             Verbose = $Verbose;
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $more_objects = Invoke-UrlRequest @param
+                        $more_objects = Invoke-MonkeyWebRequest @param
                     }
                     if($null -ne $more_objects){
                         if(($more_objects -is [System.Object]) -and ($null -ne $more_objects.psobject.Properties.Item('nextLink')) -and ($more_objects.nextLink)){
@@ -264,18 +275,13 @@ Function Get-MonkeyAzurePortalObject{
                         $NextLink = $null
                     }
                 }
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
         }
         catch {
             Write-Verbose $_
-            ####close all the connections made to the host####
-            [void]$ServicePoint.CloseConnectionGroup("")
         }
     }
     End{
-        ####close all the connections made to the host####
-        [void]$ServicePoint.CloseConnectionGroup("")
+        #Nothing to do here
     }
 }

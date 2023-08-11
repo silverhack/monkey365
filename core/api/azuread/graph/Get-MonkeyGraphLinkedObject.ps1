@@ -130,13 +130,13 @@ Function Get-MonkeyGraphLinkedObject{
                     Url = $URI;
                     Headers = $requestHeader;
                     Method = $Method;
-                    Content_Type = $ContentType;
+                    ContentType = $ContentType;
                     UserAgent = $O365Object.UserAgent;
                     Verbose = $Verbose;
                     Debug = $Debug;
                     InformationAction = $InformationAction;
                 }
-                $all_objects = Invoke-UrlRequest @param
+                $all_objects = Invoke-MonkeyWebRequest @param
                 #Get data
                 if($null -ne $all_objects -and $all_objects.psobject.Properties.Item('value') -and $all_objects.value.Count -gt 0){
                     $graphObjects+= $all_objects.value
@@ -174,7 +174,7 @@ Function Get-MonkeyGraphLinkedObject{
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $NextPage = Invoke-UrlRequest @param
+                        $NextPage = Invoke-MonkeyWebRequest @param
                         #Get Value and nextLink if any
                         if($null -ne $NextPage -and $NextPage.psobject.Properties.Item('value') -and $NextPage.value.Count -gt 0){
                             $graphObjects+= $NextPage.value

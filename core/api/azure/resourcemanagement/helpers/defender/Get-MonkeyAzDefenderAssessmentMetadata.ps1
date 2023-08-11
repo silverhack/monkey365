@@ -35,7 +35,7 @@ Function Get-MonkeyAzDefenderAssessmentMetadata {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "", Scope="Function")]
 	[CmdletBinding()]
 	Param (
         [parameter(Mandatory=$false, HelpMessage="API version")]

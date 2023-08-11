@@ -109,6 +109,7 @@ Function Get-MonkeyMSGraphAADServicePrincipalPermission {
             return $appRoleAssignment
         }
         catch{
+            Write-Error $_
             $msg = @{
 			    MessageData = ($_);
 			    callStack = (Get-PSCallStack | Select-Object -First 1);

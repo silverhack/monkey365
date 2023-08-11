@@ -98,7 +98,7 @@ Function New-MsalApplicationForExo{
             }
             if($null -ne $redirectUri){
                 if(-NOT $app_params.ContainsKey('redirectUri')){
-                    #Add Force refresh
+                    #Add redirect uri
                     [ref]$null = $app_params.Add('redirectUri',$redirectUri)
                 }
                 else{

@@ -44,10 +44,9 @@ Function Import-MonkeyJob{
             Write-Warning ("{0} does not exists" -f $MyParams.OutDir)
             return
         }
-        $all_jobs_metadata = Get-ChildItem -Path $MyParams.OutDir -Recurse | Where-Object {$_.Name -eq "monkey365.json"}
-        foreach($report in $all_jobs_metadata){
-            $allJobs+= (Get-Content $report.FullName -Raw) | ConvertFrom-Json
-        }
+        $all_files = [System.IO.Directory]::EnumerateFiles($MyParams.OutDir,"*.json","AllDirectories")
+        $all_jobs_metadata = $all_files.Where({$_ -like "*monkey365.json*"})
+        $allJobs = $all_jobs_metadata.ForEach({[System.IO.File]::ReadAllText($_, [Text.Encoding]::UTF8) | ConvertFrom-Json})
     }
     Process{
         if($allJobs.Count -ge 1){

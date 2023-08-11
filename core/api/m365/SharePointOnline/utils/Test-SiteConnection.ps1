@@ -58,14 +58,14 @@ Function Test-SiteConnection{
             headers = $headers;
             Method = "POST";
             Data = $post_data;
-            Content_Type = "text/xml";
+            ContentType = "text/xml";
             UserAgent = $O365Object.userAgent;
             InformationAction = $O365Object.InformationAction;
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
         #Execute query
-        [xml]$raw_data = Invoke-UrlRequest @param
+        [xml]$raw_data = Invoke-MonkeyWebRequest @param
         if($null -ne $raw_data){
             $site_availability = $raw_data.Envelope.Body.GetUpdatedFormDigestInformationResponse.GetUpdatedFormDigestInformationResult.WebFullUrl
         }

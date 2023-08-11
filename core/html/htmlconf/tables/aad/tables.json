@@ -16,11 +16,10 @@
             "translate": {
                 "appId": "Application Id",
                 "displayName": "Display Name",
-                "objectType": "Object Type",
                 "identifierUris":"Identifier URIs",
-                "informationalUrls.privacy": "Informational URIs"
+                "info.privacyStatementUrl": "Privacy Statement Url"
             },
-            "emphasis": ["Informational URIs"],
+            "emphasis": ["Privacy Statement Url"],
             "table": "asList"
         }
     ],
@@ -29,11 +28,21 @@
             "translate": {
                 "appId": "Application Id",
                 "displayName": "Display Name",
-                "objectType": "Object Type",
                 "identifierUris":"Identifier URIs",
-                "homepage": "Home Page"
+                "web.homePageUrl": "Home Page"
             },
             "emphasis": ["Home Page"],
+            "table": "asList"
+        }
+    ],
+	"aad_application_no_fte_owners": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "identifierUris":"Identifier URIs"
+            },
+            "emphasis": ["Display Name"],
             "table": "asList"
         }
     ],
@@ -42,10 +51,9 @@
             "translate": {
                 "appId": "Application Id",
                 "displayName": "Display Name",
-                "objectType": "Object Type",
-                "homepage": "Home Page",
+                "web.homePageUrl": "Home Page",
                 "identifierUris":"Identifier URIs",
-                "logoutUrl": "Logout Url"
+                "web.logoutUrl": "Logout Url"
             },
             "emphasis": ["Logout Url"],
             "table": "asList"
@@ -56,10 +64,9 @@
             "translate": {
                 "appId": "Application Id",
                 "displayName": "Display Name",
-                "objectType": "Object Type",
-                "homepage": "Home Page",
+                "web.homePageUrl": "Home Page",
                 "identifierUris":"Identifier URIs",
-                "replyUrls": "Replay Urls"
+                "web.redirectUris": "Replay Urls"
             },
             "emphasis": ["Replay Urls"],
             "table": "asList"
@@ -70,8 +77,7 @@
             "translate": {
                 "appId": "Application Id",
                 "displayName": "Display Name",
-                "objectType": "Object Type",
-                "homepage": "Home Page",
+                "web.homePageUrl": "Home Page",
                 "identifierUris":"Identifier URIs",
                 "Owners": "Owners"
             },
@@ -82,13 +88,22 @@
     "aad_application_excessive_permissions": [
         {
             "translate": {
-                "ClientPrincipalId": "Application Id",
-                "ClientDisplayName": "Display Name",
-                "Permission": "Permision",
-                "UserConsentDescription": "Consent description",
-                "ConsentType": "Consent type"
+                "principalId": "Application Id",
+                "principalDisplayName": "Display Name",
+                "ClaimValue": "Permision",
+                "PermissionDisplayName": "Permission Name"
             },
             "emphasis": ["Permission"],
+            "table": "asList"
+        }
+    ],
+	"aad_test_application_present": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Application Name"
+            },
+            "emphasis": ["Application Name"],
             "table": "asList"
         }
     ],
@@ -181,13 +196,11 @@
     "aad_restrict_security_group_creation_admins": [
         {
             "translate": {
-                "objectId": "Object Id",
-                "displayName": "Display Name",
-                "usersCanRegisterApps": "Users can register apps",
-                "restrictNonAdminUsers": "Restrict non-admin users",
-                "securityGroupsEnabled": "Security Group enabled"
+				"displayName": "Display Name",
+				"description": "Description",
+				"TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateSecurityGroups": "Allowed to create Security Groups"
             },
-            "emphasis": ["Security Group enabled"],
+            "emphasis": ["Allowed to create Security Groups"],
             "table": "asList"
         }
     ],
@@ -356,9 +369,10 @@
 	"aad_privileged_users_with_mfa_disabled": [
         {
             "translate": {
-                "userPrincipalName": "User Principal Name",
+                "userPrincipalName": "UPN",
                 "objectType": "Object Type",
                 "userType": "User Type",
+				"directoryRoleInfo.AssignedRole": "Role",
 				"mfaenabled": "MFA enabled"
             },
             "table": "Normal",
@@ -441,6 +455,42 @@
                 "MemberOf": "Member Of"
             },
             "table": "Normal"
+        }
+    ],
+	"aad_guest_access_object_restriction_disabled": [
+        {
+            "translate": {
+				"displayName": "Display Name",
+				"description": "Description",
+				"TenantAuthPolicy.guestUserRoleId": "Permission Level"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"aad_guest_invite_all_enabled": [
+        {
+            "translate": {
+				"displayName": "Display Name",
+				"description": "Description",
+				"TenantAuthPolicy.allowInvitesFrom": "Allow Invites From"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
         }
     ]
 }

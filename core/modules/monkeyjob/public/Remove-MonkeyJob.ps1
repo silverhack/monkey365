@@ -85,6 +85,23 @@ Function Remove-MonkeyJob{
         foreach($query in $queries){
             $MonkeyJob = $MonkeyJobs | Where-Object $query -ErrorAction Ignore;
             if($null -ne $MonkeyJob){
+                #Get potential exceptions
+                $JobStatus = $MonkeyJob.Job.JobStatus();
+                if($JobStatus.Error.Count -gt 0){
+                    foreach($exception in $JobStatus.Error.GetEnumerator()){
+                        $JobError = [ordered]@{
+                            Id = $MonkeyJob.Id;
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            ErrorStr = $exception.Exception.Message;
+                            Exception = $exception;
+                        }
+                        #Add exception to ref
+                        $errObj = New-Object PSObject -Property $JobError
+                        if($null -ne (Get-Variable -Name MonkeyJobErrors -ErrorAction Ignore)){
+                            [void]$MonkeyJobErrors.Add($errObj)
+                        }
+                    }
+                }
                 if($PSBoundParameters.ContainsKey('Force')){
                     [void]$MonkeyJob.Job.InnerJob.Stop()
                 }

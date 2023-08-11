@@ -167,8 +167,6 @@ Function Get-MonkeyTeamsObject{
             "Authorization" = $AuthHeader
         }
         #Perform query
-        $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($final_uri)
-        $ServicePoint.ConnectionLimit = 1000;
         try{
             $AllObjects = @()
             switch ($Method) {
@@ -178,13 +176,13 @@ Function Get-MonkeyTeamsObject{
                             Url = $final_uri;
                             Headers = $requestHeader;
                             Method = $Method;
-                            Content_Type = "application/json";
+                            ContentType = "application/json";
                             UserAgent = $O365Object.UserAgent;
                             Verbose = $Verbose;
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $Objects = Invoke-UrlRequest @param
+                        $Objects = Invoke-MonkeyWebRequest @param
                     }
                     'POST'
                     {
@@ -193,7 +191,7 @@ Function Get-MonkeyTeamsObject{
                                 Url = $final_uri;
                                 Headers = $requestHeader;
                                 Method = $Method;
-                                Content_Type = $ContentType;
+                                ContentType = $ContentType;
                                 Data = $Data;
                                 UserAgent = $O365Object.UserAgent;
                                 Verbose = $Verbose;
@@ -206,7 +204,7 @@ Function Get-MonkeyTeamsObject{
                                 Url = $final_uri;
                                 Headers = $requestHeader;
                                 Method = $Method;
-                                Content_Type = $ContentType;
+                                ContentType = $ContentType;
                                 UserAgent = $O365Object.UserAgent;
                                 Verbose = $Verbose;
                                 Debug = $Debug;
@@ -214,7 +212,7 @@ Function Get-MonkeyTeamsObject{
                             }
                         }
                         #Execute Query request
-                        $Objects = Invoke-UrlRequest @param
+                        $Objects = Invoke-MonkeyWebRequest @param
                     }
             }
             if($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -gt 0){
@@ -236,9 +234,6 @@ Function Get-MonkeyTeamsObject{
             if ($Objects.PsObject.Properties.Item('@nextLink')){
                 $nextLink = $Objects.'@nextLink'
                 while ($null -ne $nextLink){
-                    ####Workaround for operation timed out ######
-                    #https://social.technet.microsoft.com/wiki/contents/articles/29863.powershell-rest-api-invoke-restmethod-gotcha.aspx
-                    $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($nextLink)
                     #Make RestAPI call
                     $param = @{
                         Url = $nextLink;
@@ -249,7 +244,7 @@ Function Get-MonkeyTeamsObject{
                         Debug = $Debug;
                         InformationAction = $InformationAction;
                     }
-                    $NextPage = Invoke-UrlRequest @param
+                    $NextPage = Invoke-MonkeyWebRequest @param
                     if($null -ne $NextPage -and $null -ne $NextPage.PSObject.Properties.Item('value') -and $NextPage.value.Count -gt 0){
                         $AllObjects+= $NextPage.value
                     }
@@ -269,13 +264,9 @@ Function Get-MonkeyTeamsObject{
                     }
                 }
             }
-            ####close all the connections made to the host####
-            [void]$ServicePoint.CloseConnectionGroup("")
         }
         catch{
             Write-Verbose $_
-            ####close all the connections made to the host####
-            [void]$ServicePoint.CloseConnectionGroup("")
             return $null
         }
     }

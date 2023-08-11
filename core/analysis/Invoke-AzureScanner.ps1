@@ -35,6 +35,8 @@ Function Invoke-AzureScanner{
     #>
     [CmdletBinding()]
     Param()
+    #Create a new HTTPClient
+    #$O365Object.HttpClient = New-HttpClient
     #Set vars
     $azure_plugins = $null
     $aad_plugins = $null
@@ -203,4 +205,12 @@ Function Invoke-AzureScanner{
         #Perform garbage collection
         [gc]::Collect()
     }
+    <#
+    #Cleaning HttpClient
+    if($null -ne $O365Object.HttpClient -and $O365Object.HttpClient -is [System.Net.Http.HttpClient]){
+        $O365Object.HttpClient.Dispose();
+        #Perform garbage collection
+        [gc]::Collect()
+    }
+    #>
 }

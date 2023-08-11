@@ -92,25 +92,8 @@ Function Receive-MonkeyJob{
             foreach($MonkeyJob in $completedJobs){
                 if($null -ne $MonkeyJob){
                     if($MonkeyJob.Task.IsCompleted -and $MonkeyJob.Task.IsFaulted -eq $false){
-                        #Get potential exceptions
-                        $JobStatus = $MonkeyJob.Job.JobStatus();
-                        if($JobStatus.Error.Count -gt 0){
-                            foreach($exception in $JobStatus.Error.GetEnumerator()){
-                                $JobError = [ordered]@{
-                                    Id = $MonkeyJob.Id;
-                                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                                    ErrorStr = $exception.Exception.Message;
-                                    Exception = $exception;
-                                }
-                                #Add exception to ref
-                                $errObj = New-Object PSObject -Property $JobError
-                                if($null -ne (Get-Variable -Name MonkeyJobErrors -ErrorAction Ignore)){
-                                    [void]$MonkeyJobErrors.Add($errObj)
-                                }
-                            }
-                        }
                         #return data
-                        $MonkeyJob.Task.Result
+                        return $MonkeyJob.Task.Result
                     }
                 }
             }
@@ -119,25 +102,8 @@ Function Receive-MonkeyJob{
             foreach($query in $queries){
                 $MonkeyJob = $MonkeyJobs | Where-Object $query -ErrorAction Ignore;
                 if($null -ne $MonkeyJob -and $MonkeyJob.Job.State -eq [System.Management.Automation.JobState]::Completed){
-                    #Get potential exceptions
-                    $JobStatus = $MonkeyJob.Job.JobStatus();
-                    if($JobStatus.Error.Count -gt 0){
-                        foreach($exception in $JobStatus.Error.GetEnumerator()){
-                            $JobError = [ordered]@{
-                                Id = $MonkeyJob.Id;
-                                callStack = (Get-PSCallStack | Select-Object -First 1);
-                                ErrorStr = $exception.Exception.Message;
-                                Exception = $exception;
-                            }
-                            #Add exception to ref
-                            $errObj = New-Object PSObject -Property $JobError
-                            if($null -ne (Get-Variable -Name MonkeyJobErrors -ErrorAction Ignore)){
-                                [void]$MonkeyJobErrors.Add($errObj)
-                            }
-                        }
-                    }
                     #return data
-                    $MonkeyJob.Task.Result
+                    return $MonkeyJob.Task.Result
                 }
             }
         }

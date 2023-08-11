@@ -39,9 +39,9 @@ Function Initialize-MonkeyVar{
         [Parameter(Mandatory = $false, HelpMessage = 'Params')]
         [object]$MyParams
     )
+    $rootPath = Split-Path -Path $PSCmdlet.MyInvocation.PSCommandPath -Parent
     #Set script path var
-    $ScriptPath = (Get-Item $PSScriptRoot).parent.parent.FullName
-    Set-Variable -Name ScriptPath -Value $ScriptPath -Scope Script
+    Set-Variable -Name ScriptPath -Value $rootPath -Scope Script
     #Initialize Monkey 365 returnData synchronized variable
     Set-Variable returnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
     #Set OnlineServices

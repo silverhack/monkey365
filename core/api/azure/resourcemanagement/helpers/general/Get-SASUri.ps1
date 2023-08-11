@@ -100,40 +100,55 @@ Function Get-SASUri{
         #Get start and expiry dates
         $start = [datetime]::UtcNow.AddMinutes(-1).ToString("yyyy-MM-ddTHH:mm:ssZ") # (now)
         $expiry = [DateTime]::UtcNow.AddHours(1).ToString("yyyy-MM-ddTHH:mm:ssZ") #1 hour
-        #End Datetime
-        $signatureString = ("{0}`n{1}`n{2}`n{3}`n{4}`n{5}`n{6}`n{7}`n{8}`n" -f $accountName,`
-                                                                                $signedPermission,`
-                                                                                $signedServices,`
-                                                                                $signedResourceTypes, `
-                                                                                $start, `
-                                                                                $expiry, `
-                                                                                $signedIP, `
-                                                                                $signedProtocol,`
-                                                                                $signedVersion)
+        #Add Signature
+        if($AccessKey){
+            $signatureString = ("{0}`n{1}`n{2}`n{3}`n{4}`n{5}`n{6}`n{7}`n{8}`n" -f $accountName,`
+                                                                                    $signedPermission,`
+                                                                                    $signedServices,`
+                                                                                    $signedResourceTypes, `
+                                                                                    $start, `
+                                                                                    $expiry, `
+                                                                                    $signedIP, `
+                                                                                    $signedProtocol,`
+                                                                                    $signedVersion)
 
-        #Get signature
-        $encodedSignatureString = [text.encoding]::UTF8.GetBytes($signatureString)
-        $hmacsha = New-Object System.Security.Cryptography.HMACSHA256
-        $hmacsha.key = [Convert]::FromBase64String($AccessKey)
-        $signature = $hmacsha.ComputeHash($encodedSignatureString)
+            #Get signature
+            $encodedSignatureString = [text.encoding]::UTF8.GetBytes($signatureString)
+            $hmacsha = New-Object System.Security.Cryptography.HMACSHA256
+            $hmacsha.key = [Convert]::FromBase64String($AccessKey)
+            $signature = $hmacsha.ComputeHash($encodedSignatureString)
 
-        $signature = [Convert]::ToBase64String($signature)
-        $signature = [uri]::EscapeDataString($signature)
-        #Get ACL
-        #comp=acl&restype=container
-        #Construct URL
-        $sasUri = $URL.AbsoluteUri `
-                    + '?restype=' + $restype `
-                    + '&comp=' + $comp `
-                    + '&sv=' + $signedVersion `
-                    + '&ss=' + $signedServices `
-                    + '&srt=' + $signedResourceTypes `
-                    + '&sp=' + $signedPermission `
-                    + '&st=' + $start `
-                    + '&se=' + $expiry `
-                    + '&sip=' + $signedIP `
-                    + '&spr=' + $signedProtocol `
-                    + '&sig=' + $signature
+            $signature = [Convert]::ToBase64String($signature)
+            $signature = [uri]::EscapeDataString($signature)
+            #Get ACL
+            #comp=acl&restype=container
+            #Construct URL
+            $sasUri = $URL.AbsoluteUri `
+                        + '?restype=' + $restype `
+                        + '&comp=' + $comp `
+                        + '&sv=' + $signedVersion `
+                        + '&ss=' + $signedServices `
+                        + '&srt=' + $signedResourceTypes `
+                        + '&sp=' + $signedPermission `
+                        + '&st=' + $start `
+                        + '&se=' + $expiry `
+                        + '&sip=' + $signedIP `
+                        + '&spr=' + $signedProtocol `
+                        + '&sig=' + $signature
+        }
+        else{
+            $sasUri = $URL.AbsoluteUri `
+                + '?restype=' + $restype `
+                + '&comp=' + $comp `
+                + '&sv=' + $signedVersion `
+                + '&ss=' + $signedServices `
+                + '&srt=' + $signedResourceTypes `
+                + '&sp=' + $signedPermission `
+                + '&st=' + $start `
+                + '&se=' + $expiry `
+                + '&sip=' + $signedIP `
+                + '&spr=' + $signedProtocol
+        }
     }
     End{
         $sasUri

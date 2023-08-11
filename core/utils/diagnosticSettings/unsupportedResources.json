@@ -125,6 +125,18 @@
 			"resource": {
 			  "provider": "microsoft.network/networkwatchers"
 			}
+		},
+		{
+			"name": "WebTests",
+			"resource": {
+			  "provider": "microsoft.insights/webtests"
+			}
+		},
+		{
+			"name": "VirtualNetworkLinks",
+			"resource": {
+			  "provider": "microsoft.network/privatednszones/virtualnetworklinks"
+			}
 		}
 	]
 }

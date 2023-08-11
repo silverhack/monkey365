@@ -100,29 +100,58 @@ Function Get-MonkeyAzStorageAccountDiagnosticSetting {
             else{
                 $endpoint = $StorageAccount.properties.primaryEndpoints.Table
             }
-            if($key -and $null -ne $endpoint){
+            if($null -ne $endpoint){
                 #Get SAS Uri
-                $p = @{
-                    HostName = $endpoint;
-                    AccessKey = $key;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                    InformationAction = $O365Object.InformationAction;
+                if($key){
+                    $p = @{
+                        HostName = $endpoint;
+                        AccessKey = $key;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        InformationAction = $O365Object.InformationAction;
+                    }
+                }
+                else{
+                    $p = @{
+                        HostName = $endpoint;
+                        AccessKey = $key;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        InformationAction = $O365Object.InformationAction;
+                    }
                 }
                 $SAS = Get-SASUri @p
             }
             if($null -ne $SAS){
                 #Get diagnostig settings
-                $p = @{
-                    Url = $SAS;
-                    Method = "GET";
-                    UserAgent = $O365Object.UserAgent;
-                    Headers = @{ 'x-ms-version' = '2020-08-04' }
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                    InformationAction = $O365Object.InformationAction;
+                if($key){
+                    $p = @{
+                        Url = $SAS;
+                        Method = "GET";
+                        UserAgent = $O365Object.UserAgent;
+                        Headers = @{ 'x-ms-version' = '2020-08-04' }
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        InformationAction = $O365Object.InformationAction;
+                    }
+                    [xml]$diagConfig = Invoke-MonkeyWebRequest @p
                 }
-                [xml]$diagConfig = Invoke-UrlRequest @p
+                elseif($null -ne $O365Object.auth_tokens.AzureStorage){
+                    #SAS is not signed, try to get data with access token
+                    $p = @{
+                        Url = $SAS;
+                        Method = "GET";
+                        UserAgent = $O365Object.UserAgent;
+                        Headers = @{
+                            'x-ms-version' = '2020-08-04'
+                            'Authorization' = ("Bearer {0}" -f $O365Object.auth_tokens.AzureStorage.AccessToken);
+                        }
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        InformationAction = $O365Object.InformationAction;
+                    }
+                    [xml]$diagConfig = Invoke-MonkeyWebRequest @p
+                }
             }
             if($null -ne $diagConfig){
                 #Get logging settings

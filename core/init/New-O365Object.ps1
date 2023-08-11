@@ -55,19 +55,13 @@ Function New-O365Object{
         )
         foreach($_path in $paths){
             $api_path = ("{0}/{1}" -f $ScriptPath,$_path)
-            $p = @{
-                Path = $api_path;
-                Recurse = $true;
-                file= $true;
-                Include = "*.ps1";
-                ErrorAction = "Ignore";
-            }
-            $api_fnc += Get-ChildItem @p
+            #$api_fnc += Get-ChildItem @p
+            $api_fnc += [System.IO.Directory]::EnumerateFiles($api_path,"*.ps1","AllDirectories")
         }
         #Add modules
         $internal_modules = @(
             'core/modules/monkeylogger',
-            'core/modules/monkeywebrequest',
+            'core/modules/monkeyhttpwebrequest',
             'core/modules/monkeyast',
             'core/modules/monkeyjob',
             'core/modules/monkeyutils',
@@ -82,7 +76,9 @@ Function New-O365Object{
         #watcher modules
         $watcher_module = @(
             'core/watcher',
-            'core/init'
+            'core/init',
+            'core/modules/monkeymsalauthassistant',
+            'core/modules/monkeycloudutils'
         )
         #Runspace init
         $runspace_init = @(
@@ -94,7 +90,7 @@ Function New-O365Object{
         )
         #runspaces modules
         $runspaces_modules = @(
-            ('{0}/core/modules/monkeywebrequest' -f $ScriptPath),
+            ('{0}/core/modules/monkeyhttpwebrequest' -f $ScriptPath),
             ('{0}/core/modules/monkeylogger' -f $ScriptPath),
             ('{0}/core/modules/monkeyast' -f $ScriptPath),
             ('{0}/core/modules/monkeyjob' -f $ScriptPath),
@@ -103,7 +99,13 @@ Function New-O365Object{
             ('{0}/core/api/m365/SharePointOnline/utils/enum.ps1' -f $ScriptPath)
         )
         #JSON config
-        $json_path = ("{0}/config/monkey_365.config" -f $ScriptPath)
+        $json_path = ("{0}/core/utils/whatIf/whatIf.json" -f $ScriptPath)
+        if (!(Test-Path -Path $json_path)){
+            throw ("{0} whatif config does not exists" -f $json_path)
+        }
+        $whatif_config_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
+        #JSON config
+        $json_path = ("{0}/config/monkey365.config" -f $ScriptPath)
         if (!(Test-Path -Path $json_path)){
             throw ("{0} config does not exists" -f $json_path)
         }
@@ -175,6 +177,8 @@ Function New-O365Object{
             AADLicense = $null;
             Licensing = $null;
             LogPath = $null;
+            msal_public_applications = $null
+            msal_confidential_applications = $null
             exo_msal_application = $null;
             sps_msal_application = $null;
             authContext = $null;
@@ -208,6 +212,7 @@ Function New-O365Object{
             all_resources = $null;
             ResourceGroups = $null;
             internal_config = $internal_config_json;
+            whatIfConfig = $whatif_config_json;
             dlp = $internal_dlp_json;
             executionInfo = $null;
             startDate = $null;
@@ -228,10 +233,18 @@ Function New-O365Object{
             BatchSleep = $internal_config_json.performance.BatchSleep;
             BatchSize = $internal_config_json.performance.BatchSize;
             MaxQueue = $internal_config_json.performance.nestedRunspaces.MaxQueue;
+            nestedRunspaces = @{
+                BatchSleep = ($internal_config_json.performance.BatchSleep * 2);
+                BatchSize = ($internal_config_json.performance.BatchSize * 2);
+                MaxQueue = $internal_config_json.performance.nestedRunspaces.MaxQueue;
+            }
             nestedRunspaceMaxThreads = $null;
             PowerBIBackendUri = $null;
+            SecCompBackendUri = $null;
             Timer = $null;
             me = $null;
+            HttpClient = $null;
+            SystemInfo = $null;
             diag_settings_unsupported_resources = $diag_settings_json;
         }
         #Check if Myparams is present
@@ -255,6 +268,14 @@ Function New-O365Object{
             if($value -eq 0){$value = 1}
             #Add to object
             $tmp_object.nestedRunspaceMaxThreads = $value;
+        }
+        #Get SystemInfo
+        if($null -ne (Get-Command -Name "Get-MonkeySystemInfo" -ErrorAction Ignore)){
+            $tmp_object.SystemInfo = Get-MonkeySystemInfo
+            #Get OS version
+            if($null -ne (Get-Command -Name "Get-OSVersion" -ErrorAction Ignore) -and $null -ne $tmp_object.SystemInfo){
+                $tmp_object.SystemInfo.OSVersion = Get-OSVersion
+            }
         }
         #Check if verbose options are present
         if($null -ne (Get-Variable -Name VerboseOptions -ErrorAction Ignore)){

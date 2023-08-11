@@ -39,29 +39,19 @@ Function Get-MetadataFromPlugin{
     Begin{
         $localPath = $null
         if($null -ne (Get-Variable -Name O365Object -ErrorAction Ignore)){
-            if($null -ne $O365Object.Localpath){
-                $localPath = $O365Object.Localpath;
-            }
-            else{
-                $localPath = $MyInvocation.MyCommand.Path
-            }
+            $localPath = $O365Object.Localpath;
         }
         elseif($null -ne (Get-Variable -Name ScriptPath -ErrorAction Ignore)){
             $localPath = $ScriptPath;
+        }
+        else{
+            $localPath = $MyInvocation.MyCommand.Path
         }
         if($null -eq $localPath){
             break
         }
         $monkey_plugins = @()
-        $p_path = ("{0}/plugins" -f $localPath)
-        $params = @{
-            Path = $p_path;
-            Recurse = $true;
-            File = $true;
-            Include = "*.ps1";
-            ErrorAction = 'Ignore';
-        }
-        $all_plugins = Get-ChildItem @params
+        $all_plugins = [System.IO.Directory]::EnumerateFiles(("{0}/plugins" -f $localPath),"*.ps1","AllDirectories")
         $all_ast_plugins = Get-AstFunction $all_plugins
     }
     Process{
@@ -108,7 +98,7 @@ Function Get-MetadataFromPlugin{
                             }
                         }
                         #Add file properties
-                        $new_dict.Add('File',(Get-ChildItem $ast_plugin.Extent.File))
+                        $new_dict.Add('File',[System.IO.fileinfo]::new($ast_plugin.Extent.File))
                         #Create PsObject
                         $obj = New-Object -TypeName PSCustomObject -Property $new_dict
                         #Add to array

@@ -1,21 +1,17 @@
 ﻿Set-StrictMode -Version Latest
 
-$monkeyPublicPath = ("{0}/public" -f $PSScriptRoot)
+$listofFiles = [System.IO.Directory]::EnumerateFiles(("{0}" -f $PSScriptRoot),"*.ps1","AllDirectories")
+$all_files = $listofFiles.Where({($_ -like "*public*") -or ($_ -like "*private*")})
+$content = $all_files.ForEach({
+    [System.IO.File]::ReadAllText($_, [Text.Encoding]::UTF8) + [Environment]::NewLine
+})
 
-$monkeyPrivatePath = ("{0}/private" -f $PSScriptRoot)
+#Set-Content -Path $tmpFile -Value $content
+. ([scriptblock]::Create($content))
 
-#Load public files
-$monkeyFiles = Get-ChildItem -Path $monkeyPublicPath -Recurse -File -Include "*.ps1"
-
-foreach($monkeyFile in $monkeyFiles){
-    . $monkeyFile.FullName
+$LocalizedDataParams = @{
+    BindingVariable = 'messages';
+    BaseDirectory = "{0}/{1}" -f $PSScriptRoot, "Localized";
 }
-
-#Load private files
-$monkeyFiles = Get-ChildItem -Path $monkeyPrivatePath -Recurse -File -Include "*.ps1"
-
-foreach($monkeyFile in $monkeyFiles){
-    . $monkeyFile.FullName
-}
-
-$script:messages = Get-LocalizedData -DefaultUICulture 'en-US'
+#Import localized data
+Import-LocalizedData @LocalizedDataParams;

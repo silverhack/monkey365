@@ -35,6 +35,8 @@ Function Invoke-M365Scanner{
     #>
     [CmdletBinding()]
     Param()
+    #Create a new HTTPClient
+    #$O365Object.HttpClient = New-HttpClient
     #Get vars
     $vars = Get-MonkeyVar
     #Set vars
@@ -178,6 +180,14 @@ Function Invoke-M365Scanner{
         #Perform garbage collection
         [gc]::Collect()
     }
+    <#
+    #Cleaning HttpClient
+    if($null -ne $O365Object.HttpClient -and $O365Object.HttpClient -is [System.Net.Http.HttpClient]){
+        $O365Object.HttpClient.Dispose();
+        #Perform garbage collection
+        [gc]::Collect()
+    }
+    #>
     #Combine objects
     #Check if AAD data
     if($null -ne (Get-Variable -Name aadReturnData -Scope Script -ErrorAction Ignore)){

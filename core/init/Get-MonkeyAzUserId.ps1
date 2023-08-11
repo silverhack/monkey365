@@ -44,7 +44,7 @@ Function Get-MonkeyAzUserId{
         $UserObjectId = [String]::Empty
     }
     else{
-        if($null -ne $O365Object.auth_tokens.ResourceManager.PsObject.Properties.Item('UniqueId')){
+        if($null -ne $O365Object.auth_tokens.ResourceManager -and $null -ne $O365Object.auth_tokens.ResourceManager.PsObject.Properties.Item('UniqueId')){
             try{
                 $UserObjectId = $O365Object.auth_tokens.ResourceManager.UniqueId
             }

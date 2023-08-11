@@ -69,6 +69,9 @@ Function Initialize-AuthenticationParam{
         )
         #Set isPublicApp var
         $isPublicApp = $true
+        #Set new clients
+        $O365Object.msal_public_applications = [System.Collections.Generic.List[Microsoft.Identity.Client.IPublicClientApplication]]::new()
+        $O365Object.msal_confidential_applications = [System.Collections.Generic.List[Microsoft.Identity.Client.IConfidentialClientApplication]]::new()
     }
     Process{
         if($null -eq $O365Object.application_args){
@@ -133,6 +136,8 @@ Function Initialize-AuthenticationParam{
                 $new_params.add($param.Key, $param.Value)
             }
             $O365Object.msal_application_args = $new_params
+            #Add confidential client
+            [void]$O365Object.msal_confidential_applications.Add($O365Object.msalapplication)
         }
         else{
             #Public application
@@ -148,6 +153,8 @@ Function Initialize-AuthenticationParam{
             #Update application args
             $O365Object.application_args = $new_params
             $O365Object.msal_application_args = $app_param
+            #Add public client
+            [void]$O365Object.msal_public_applications.Add($O365Object.msalapplication)
         }
     }
 }

@@ -40,6 +40,9 @@ Function Get-PSExoAdminApiObject{
         [parameter(ValueFromPipeline = $True,HelpMessage="Authentication Object")]
         [Object]$Authentication,
 
+        [parameter(ValueFromPipeline = $True,HelpMessage="Endpoint")]
+        [String]$EndPoint,
+
         [parameter(ValueFromPipeline = $True,HelpMessage="Environment")]
         [Object]$Environment,
 
@@ -77,7 +80,9 @@ Function Get-PSExoAdminApiObject{
         [String]$APIVersion = "beta"
     )
     Begin{
-        $extra_params = $null
+        $URI = [String]::Empty
+        $SessionID = (New-Guid).ToString().Replace("-","")
+        $extra_params = $Data = $null
         $Verbose = $Debug = $False;
         $InformationAction = 'SilentlyContinue'
         if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
@@ -101,6 +106,9 @@ Function Get-PSExoAdminApiObject{
         else{
             $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
         }
+    }
+    Process{
+        #Set URI
         if($extraParameters){
             $extra_params = ('?{0}' -f $extraParameters)
         }
@@ -108,170 +116,191 @@ Function Get-PSExoAdminApiObject{
             #Construct URI
             $URI = 'adminapi/{0}/{1}/{2}' -f $APIVersion, $Authentication.TenantId, $ObjectType
         }
-        ElseIf($OwnQuery){
-            $URI = $OwnQuery
-        }
         ElseIf($Command){
             #Construct URI
             $URI = 'adminapi/{0}/{1}/InvokeCommand' -f $APIVersion, $Authentication.TenantId
         }
-        Else{
-            break
-        }
         if($extra_params){
             $URI = ("{0}{1}" -f $URI,$extra_params)
         }
-        $SessionID = (New-Guid).ToString().Replace("-","")
-    }
-    Process{
-        $requestHeader = @{
-            "client-request-id" = $SessionID
-            "Prefer" = 'odata.maxpagesize=1000;'
-            "Authorization" = $AuthHeader
+        if($OwnQuery){
+            $URI = $OwnQuery
         }
-        if($PSBoundParameters.ContainsKey('RemoveOdataHeader') -and $PSBoundParameters.RemoveOdataHeader.IsPresent){
-            #Remove Prefer header
-            [void]$requestHeader.Remove('Prefer')
+        elseif($EndPoint){
+            $Server = ("{0}" -f $EndPoint.Replace('https://',''))
+            $URI = ("{0}/{1}" -f $Server,$URI)
+            $URI = [regex]::Replace($URI,"/+","/")
+            $URI = ("https://{0}" -f $URI.ToString())
         }
-        if($Command){
-            #Add response format
-            [void]$requestHeader.Add('X-ResponseFormat',$ResponseFormat);
-            #Add serialization level
-            [void]$requestHeader.Add('X-SerializationLevel','Full');
-            #Convert command
-            $Data = ConvertTo-ExoRestCommand -Command $Command
-        }
-        if($Environment -and -NOT $OwnQuery){
+        elseif($Environment){
             $Server = ("{0}" -f $Environment.Outlook.Replace('https://',''))
             $URI = ("{0}/{1}" -f $Server,$URI)
             $URI = [regex]::Replace($URI,"/+","/")
             $URI = ("https://{0}" -f $URI.ToString())
         }
-        #Perform query
-        try{
-            $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($URI)
-            $ServicePoint.ConnectionLimit = 1000;
-        }
-        catch{
-            Write-Error $_
-            Write-Error ($PSBoundParameters)
-            #$ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($Environment.Outlook);
-            Write-Error $URI
-        }
-        try{
-            switch ($Method) {
-                    'GET'
-                    {
-                        $param = @{
-                            Url = $URI;
-                            Headers = $requestHeader;
-                            Method = $Method;
-                            Content_Type = $ContentType;
-                            UserAgent = $O365Object.UserAgent;
-                            Verbose = $Verbose;
-                            Debug = $Debug;
-                            InformationAction = $InformationAction;
-                        }
-                        $Objects = Invoke-UrlRequest @param
-                    }
-                    'POST'
-                    {
-                        if($Data){
-                            $param = @{
-                                Url = $URI;
-                                Headers = $requestHeader;
-                                Method = $Method;
-                                Content_Type = $ContentType;
-                                Data = $Data;
-                                UserAgent = $O365Object.UserAgent;
-                                Verbose = $Verbose;
-                                Debug = $Debug;
-                                InformationAction = $InformationAction;
-                            }
-                        }
-                        else{
-                            $param = @{
-                                Url = $URI;
-                                Headers = $requestHeader;
-                                Method = $Method;
-                                Content_Type = $ContentType;
-                                UserAgent = $O365Object.UserAgent;
-                                Verbose = $Verbose;
-                                Debug = $Debug;
-                                InformationAction = $InformationAction;
-                            }
-                        }
-                        #Launch request
-                        $Objects = Invoke-UrlRequest @param
-                    }
-            }
-            if($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -gt 0){
-                if(($PSBoundParameters.ContainsKey('ResponseFormat') -and $PSBoundParameters['ResponseFormat'] -eq 'clixml') -and $PSBoundParameters.ContainsKey('Command')){
-                    $value = $Objects.value | Select-Object -ExpandProperty _clixml -ErrorAction Ignore
-                    if($null -ne $value){
-                         If($null -ne (Get-Command -Name "Import-MonkeyCliXml" -ErrorAction Ignore)){
-                            Import-MonkeyCliXml -RawData $value
-                         }
-                         else{
-                            Write-Warning -Message "Command Import-MonkeyCliXml not found"
-                         }
-                    }
-                }
-                else{
-                    $Objects.value
-                }
-            }
-            elseif($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -eq 0){
-                #empty response
-                $Objects.value
-            }
-            elseIf($Objects -is [System.Array]){
-                $Objects
-            }
-            Else{
-                $Objects
-            }
-            if ($Objects.PsObject.Properties.Item('@odata.nextLink')){
-                $NextLink = $Objects.'@odata.nextLink'
-                #Search for paging objects
-                while($null -ne $NextLink){
-                    If($Method.ToUpper() -eq "GET"){
-                        $param = @{
-                            Url = $NextLink;
-                            Method = "GET";
-                            Headers = $requestHeader;
-                            UserAgent = $O365Object.UserAgent;
-                            Verbose = $Verbose;
-                            Debug = $Debug;
-                            InformationAction = $InformationAction;
-                        }
-                        $Objects = Invoke-UrlRequest @param
-                        If($Objects.PsObject.Properties.Item('@odata.nextLink')){
-                            $NextLink = $Objects.'@odata.nextLink'
-                        }
-                        else{
-                            $NextLink = $null
-                        }
-                        if($Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -gt 0){
-                            $Objects.value
-                        }
-                        else{
-                            $Objects
-                        }
-                    }
-                }
-            }
-            ####close all the connections made to the host####
-            [void]$ServicePoint.CloseConnectionGroup("")
-        }
-        catch {
-            Write-Verbose $_
-            ####close all the connections made to the host####
-            [void]$ServicePoint.CloseConnectionGroup("")
+        else{
+            break
         }
     }
     End{
-        ####close all the connections made to the host####
-        [void]$ServicePoint.CloseConnectionGroup("")
+        if($URI -and $AuthHeader){
+            #Set headers
+            $requestHeader = @{
+                "client-request-id" = $SessionID
+                "Prefer" = 'odata.maxpagesize=1000;'
+                "Authorization" = $AuthHeader
+            }
+            if($PSBoundParameters.ContainsKey('RemoveOdataHeader') -and $PSBoundParameters.RemoveOdataHeader.IsPresent){
+                #Remove Prefer header
+                [void]$requestHeader.Remove('Prefer')
+            }
+            if($Command){
+                #Add response format
+                [void]$requestHeader.Add('X-ResponseFormat',$ResponseFormat);
+                #Add serialization level
+                [void]$requestHeader.Add('X-SerializationLevel','Full');
+                #Convert command
+                $Data = ConvertTo-ExoRestCommand -Command $Command
+                #Support for warning/Error action
+                if($Data){
+                    $jsonData = $Data | ConvertFrom-Json
+                    if($jsonData.CmdletInput.Parameters){
+                        #Get WarningAction
+                        $wa = $jsonData.CmdletInput.Parameters | Select-Object -ExpandProperty WarningAction -ErrorAction Ignore
+                        if($wa){
+                            #Add Warning action header
+                            [void]$requestHeader.Add('WarningAction',$wa);
+                        }
+                        #Get ErrorAction
+                        $ea = $jsonData.CmdletInput.Parameters | Select-Object -ExpandProperty ErrorAction -ErrorAction Ignore
+                        if($ea){
+                            #Add ErrorAction header
+                            [void]$requestHeader.Add('ErrorAction',$ea);
+                        }
+                    }
+                }
+            }
+            #Perform query
+            try{
+                switch ($Method) {
+                        'GET'
+                        {
+                            $param = @{
+                                Url = $URI;
+                                Headers = $requestHeader;
+                                Method = $Method;
+                                ContentType = $ContentType;
+                                UserAgent = $O365Object.UserAgent;
+                                TimeOut = 40;
+                                Verbose = $Verbose;
+                                Debug = $Debug;
+                                InformationAction = $InformationAction;
+                            }
+                            $Objects = Invoke-MonkeyWebRequest @param
+                        }
+                        'POST'
+                        {
+                            if($Data){
+                                $param = @{
+                                    Url = $URI;
+                                    Headers = $requestHeader;
+                                    Method = $Method;
+                                    ContentType = $ContentType;
+                                    Data = $Data;
+                                    UserAgent = $O365Object.UserAgent;
+                                    TimeOut = 40;
+                                    Verbose = $Verbose;
+                                    Debug = $Debug;
+                                    InformationAction = $InformationAction;
+                                }
+                            }
+                            else{
+                                $param = @{
+                                    Url = $URI;
+                                    Headers = $requestHeader;
+                                    Method = $Method;
+                                    ContentType = $ContentType;
+                                    UserAgent = $O365Object.UserAgent;
+                                    TimeOut = 40;
+                                    Verbose = $Verbose;
+                                    Debug = $Debug;
+                                    InformationAction = $InformationAction;
+                                }
+                            }
+                            #Launch request
+                            $Objects = Invoke-MonkeyWebRequest @param
+                        }
+                }
+                if($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -gt 0){
+                    if(($PSBoundParameters.ContainsKey('ResponseFormat') -and $PSBoundParameters['ResponseFormat'] -eq 'clixml') -and $PSBoundParameters.ContainsKey('Command')){
+                        $value = $Objects.value | Select-Object -ExpandProperty _clixml -ErrorAction Ignore
+                        if($null -ne $value){
+                             If($null -ne (Get-Command -Name "Import-MonkeyCliXml" -ErrorAction Ignore)){
+                                Import-MonkeyCliXml -RawData $value
+                             }
+                             else{
+                                Write-Warning -Message "Command Import-MonkeyCliXml not found"
+                             }
+                        }
+                    }
+                    else{
+                        $Objects.value
+                    }
+                }
+                elseif($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -eq 0){
+                    #empty response
+                    $Objects.value
+                }
+                elseIf($Objects -is [System.Array]){
+                    $Objects
+                }
+                Else{
+                    $Objects
+                }
+                #Get potential warnings
+                if($null -ne $Objects -and $null -ne $Objects.PsObject.Properties.Item('@adminapi.warnings')){
+                    $warningData = $Objects.'@adminapi.warnings'
+                    if(@($warningData).Count -gt 0){
+                        foreach($elem in @($warningData)){
+                            Write-Warning $elem
+                        }
+                    }
+                }
+                if ($Objects.PsObject.Properties.Item('@odata.nextLink')){
+                    $NextLink = $Objects.'@odata.nextLink'
+                    #Search for paging objects
+                    while($null -ne $NextLink){
+                        If($Method.ToUpper() -eq "GET"){
+                            $param = @{
+                                Url = $NextLink;
+                                Method = "GET";
+                                Headers = $requestHeader;
+                                UserAgent = $O365Object.UserAgent;
+                                TimeOut = 40;
+                                Verbose = $Verbose;
+                                Debug = $Debug;
+                                InformationAction = $InformationAction;
+                            }
+                            $Objects = Invoke-MonkeyWebRequest @param
+                            If($Objects.PsObject.Properties.Item('@odata.nextLink')){
+                                $NextLink = $Objects.'@odata.nextLink'
+                            }
+                            else{
+                                $NextLink = $null
+                            }
+                            if($Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -gt 0){
+                                $Objects.value
+                            }
+                            else{
+                                $Objects
+                            }
+                        }
+                    }
+                }
+            }
+            catch {
+                Write-Verbose $_
+            }
+        }
     }
 }

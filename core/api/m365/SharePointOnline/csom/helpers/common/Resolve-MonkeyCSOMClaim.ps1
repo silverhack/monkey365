@@ -52,7 +52,7 @@ Function Resolve-MonkeyCSOMClaim{
         }
         $p = @{
             Authentication = $Authentication;
-            Content_Type = 'application/json; charset=utf-8';
+            ContentType = 'application/json; charset=utf-8';
             Data = $body_data;
             ObjectMetadata= $objectMetadata;
             InformationAction = $O365Object.InformationAction;

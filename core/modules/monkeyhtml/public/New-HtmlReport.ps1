@@ -159,7 +159,7 @@ Function New-HtmlReport{
             $main_dashboard = $template.ImportNode($main_dashboard.get_DocumentElement(), $True)
         }
         #Get all issues
-        $formatted_issues = Get-HtmlIssues
+        $formatted_issues = Get-HtmlIssue
         $all_issues = $formatted_issues.html_issues
         if($all_issues -is [System.Xml.XmlDocument]){
             $all_issues = $template.ImportNode($all_issues.get_DocumentElement(), $True)

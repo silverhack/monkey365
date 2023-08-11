@@ -194,35 +194,35 @@ Function Get-MonkeyMSGraphObject{
             $requestHeader = @{
                 Authorization = $AuthHeader
             }
-            #Perform query
-            $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($final_uri)
-            $ServicePoint.ConnectionLimit = 1000;
             #set count
             $countObjects = 0;
+            #Perform query
             try{
                 switch ($Method) {
                     'GET'
                     {
                         $param = @{
                             Url = $final_uri;
+                            #Client = $O365Object.HttpClient;
                             Headers = $requestHeader;
                             Method = $Method;
-                            Content_Type = $ContentType;
+                            ContentType = $ContentType;
                             UserAgent = $O365Object.UserAgent;
                             Verbose = $Verbose;
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $Objects = Invoke-UrlRequest @param
+                        $Objects = Invoke-MonkeyWebRequest @param
                     }
                     'POST'
                     {
                         if($Data){
                             $param = @{
                                 Url = $final_uri;
+                                #Client = $O365Object.HttpClient;
                                 Headers = $requestHeader;
                                 Method = $Method;
-                                Content_Type = $ContentType;
+                                ContentType = $ContentType;
                                 Data = $Data;
                                 UserAgent = $O365Object.UserAgent;
                                 Verbose = $Verbose;
@@ -233,9 +233,10 @@ Function Get-MonkeyMSGraphObject{
                         else{
                             $param = @{
                                 Url = $final_uri;
+                                #Client = $O365Object.HttpClient;
                                 Headers = $requestHeader;
                                 Method = $Method;
-                                Content_Type = $ContentType;
+                                ContentType = $ContentType;
                                 UserAgent = $O365Object.UserAgent;
                                 Verbose = $Verbose;
                                 Debug = $Debug;
@@ -243,7 +244,7 @@ Function Get-MonkeyMSGraphObject{
                             }
                         }
                         #Execute Query request
-                        $Objects = Invoke-UrlRequest @param
+                        $Objects = Invoke-MonkeyWebRequest @param
                     }
                 }
                 if($ObjectType){
@@ -274,12 +275,10 @@ Function Get-MonkeyMSGraphObject{
                 if ($Objects.PsObject.Properties.Item('@odata.nextLink')){
                     $nextLink = $Objects.'@odata.nextLink'
                     while ($null -ne $nextLink){
-                        ####Workaround for operation timed out ######
-                        #https://social.technet.microsoft.com/wiki/contents/articles/29863.powershell-rest-api-invoke-restmethod-gotcha.aspx
-                        $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($nextLink)
                         #Make RestAPI call
                         $p = @{
                             Url = $nextLink;
+                            #Client = $O365Object.HttpClient;
                             Method = "Get";
                             Headers = $requestHeader;
                             UserAgent = $O365Object.UserAgent;
@@ -287,25 +286,20 @@ Function Get-MonkeyMSGraphObject{
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $NextPage = Invoke-UrlRequest @p
+                        $NextPage = Invoke-MonkeyWebRequest @p
                         $nextLink = $NextPage | Select-Object -ExpandProperty '@odata.nextLink' -ErrorAction Ignore
                         $NextPage.value
                         #Sleep to avoid throttling
                         Start-Sleep -Milliseconds 500
                     }
                 }
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
             catch{
                 Write-Verbose $_
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
         }
     }
     End{
-        ####close all the connections made to the host####
-        [void]$ServicePoint.CloseConnectionGroup("")
+        #Nothing to do here
     }
 }

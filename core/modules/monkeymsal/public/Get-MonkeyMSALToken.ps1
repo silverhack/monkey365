@@ -40,8 +40,7 @@ Function Get-MonkeyMSALToken{
         # pscredential of the application requesting the token
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
-        [Alias('user_credentials')]
-        [System.Management.Automation.PSCredential] $UserCredentials,
+        [System.Management.Automation.PSCredential] $user_credentials,
 
         [parameter(Mandatory= $false, ParameterSetName = 'Implicit', HelpMessage= "User for access to the O365 services")]
         [String]$UserPrincipalName,
@@ -77,8 +76,7 @@ Function Get-MonkeyMSALToken{
 
         # Secure secret of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
-        [Alias('client_credentials')]
-        [System.Management.Automation.PSCredential] $ClientCredentials,
+        [System.Management.Automation.PSCredential] $client_credentials,
 
         # Client assertion certificate of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]
@@ -219,8 +217,8 @@ Function Get-MonkeyMSALToken{
             [Microsoft.Identity.Client.IConfidentialClientApplication]$app = New-MonkeyMsalApplication @app_params
         }
         "ClientSecret-InputObject" {
-            $app_params.applicationId = $ClientCredentials.UserName
-            $app_params.clientSecret = $ClientCredentials.Password
+            $app_params.applicationId = $client_credentials.UserName
+            $app_params.clientSecret = $client_credentials.Password
             [Microsoft.Identity.Client.IConfidentialClientApplication]$app = New-MonkeyMsalApplication @app_params
         }
         'ClientSecret-ConfidentialApp' {
@@ -259,8 +257,8 @@ Function Get-MonkeyMSALToken{
         else{
             $Prompt = $PromptBehavior
         }
-        if ($UserCredentials) {
-            $authContext = $app.AcquireTokenByUsernamePassword($scope, $UserCredentials.UserName, $UserCredentials.Password)
+        if ($user_credentials) {
+            $authContext = $app.AcquireTokenByUsernamePassword($scope, $user_credentials.UserName, $user_credentials.Password)
         }
         elseif($DeviceCode.IsPresent){
             $AuthType = 'Device_Code'
@@ -336,18 +334,6 @@ Function Get-MonkeyMSALToken{
             Write-Verbose ($script:messages.AcquireTokenFailed -f $token_result.Exception.InnerException.ErrorCode)
             #Detailed error
             Write-Debug $token_result.Exception.InnerException
-            #Retry if AADSTS50076
-            try{
-                if($token_result.Exception.InnerException.Message -match "AADSTS50076"){
-                    [ref]$null = $PSBoundParameters.Remove('Silent')
-                    Get-MonkeyMSALToken @PSBoundParameters
-                    return
-                }
-            }
-            catch{
-                Write-Warning ($script:messages.UnableToRetryFlow)
-                Write-Verbose $_
-            }
         }
         if($null -ne $token_result.Result){
             #add elements to auth object
@@ -371,9 +357,7 @@ Function Get-MonkeyMSALToken{
             }
             #Add function to check for near expiration
             $new_token | Add-Member -Type ScriptMethod -Name IsNearExpiry -Value {
-                $ExpiresOn = (Get-Date ($this.ExpiresOn.UtcDateTime)).AddMinutes(-5)
-                return ((Get-Date) -gt $ExpiresOn)
-                #return ($this.ExpiresOn.UtcDateTime.AddMinutes(-15) -lt [System.Datetime]::UtcNow)
+                return ($this.ExpiresOn.UtcDateTime.AddMinutes(-15) -lt [System.Datetime]::UtcNow)
             }
             #Add function to disable token renewal
             $new_token | Add-Member -Type ScriptMethod -Name DisableRenew -Value {

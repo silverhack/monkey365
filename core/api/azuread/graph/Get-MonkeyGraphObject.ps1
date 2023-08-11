@@ -159,8 +159,6 @@ Function Get-MonkeyGraphObject{
         if($final_uri){
             #Set statusBar
             $statusBar.Status = $startCon
-            $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($final_uri)
-            $ServicePoint.ConnectionLimit = 1000;
             $all_objects = $null
             $graphObjects = @()
             try{
@@ -175,13 +173,13 @@ Function Get-MonkeyGraphObject{
                             Url = $final_uri;
                             Headers = $requestHeader;
                             Method = $Method;
-                            Content_Type = $ContentType;
+                            ContentType = $ContentType;
                             UserAgent = $O365Object.UserAgent;
                             Verbose = $Verbose;
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $all_objects = Invoke-UrlRequest @param
+                        $all_objects = Invoke-MonkeyWebRequest @param
                     }
                     'POST'
                     {
@@ -190,7 +188,7 @@ Function Get-MonkeyGraphObject{
                                 Url = $final_uri;
                                 Headers = $requestHeader;
                                 Method = $Method;
-                                Content_Type = $ContentType;
+                                ContentType = $ContentType;
                                 Data = $Data;
                                 UserAgent = $O365Object.UserAgent;
                                 Verbose = $Verbose;
@@ -203,7 +201,7 @@ Function Get-MonkeyGraphObject{
                                 Url = $final_uri;
                                 Headers = $requestHeader;
                                 Method = $Method;
-                                Content_Type = $ContentType;
+                                ContentType = $ContentType;
                                 UserAgent = $O365Object.UserAgent;
                                 Verbose = $Verbose;
                                 Debug = $Debug;
@@ -211,7 +209,7 @@ Function Get-MonkeyGraphObject{
                             }
                         }
                         #Launch request
-                        $all_objects = Invoke-UrlRequest @param
+                        $all_objects = Invoke-MonkeyWebRequest @param
                     }
                 }
                 #Get data
@@ -263,7 +261,7 @@ Function Get-MonkeyGraphObject{
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $NextPage = Invoke-UrlRequest @param
+                        $NextPage = Invoke-MonkeyWebRequest @param
                         #Get nextLink
                         if($null -ne $NextPage -and $null -ne $NextPage.PSObject.Properties.Item('odata.nextLink')){
                             $nextLink = $NextPage.'odata.nextLink'
@@ -280,19 +278,13 @@ Function Get-MonkeyGraphObject{
                         }
                     }
                 }
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
             catch{
                 Write-Verbose $_
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
         }
     }
     End{
-        ####close all the connections made to the host####
-        [void]$ServicePoint.CloseConnectionGroup("")
         $p = @{
             Activity = ("Azure request for object type {0}" -f $ObjectType.Trim());
             Completed = $True;

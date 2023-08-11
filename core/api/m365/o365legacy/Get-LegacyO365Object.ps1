@@ -86,14 +86,14 @@ Function Get-LegacyO365Object{
             $param = @{
                 Url = $final_uri;
                 Method = "POST";
-                Content_Type = $ContentType;
+                ContentType = $ContentType;
                 Data = $Envelope.OuterXml;
                 UserAgent = $O365Object.UserAgent;
                 Verbose = $Verbose;
                 Debug = $Debug;
                 InformationAction = $InformationAction;
             }
-            [xml]$Objects = Invoke-UrlRequest @param
+            [xml]$Objects = Invoke-MonkeyWebRequest @param
             ####close all the connections made to the host####
             [void]$ServicePoint.CloseConnectionGroup("")
         }

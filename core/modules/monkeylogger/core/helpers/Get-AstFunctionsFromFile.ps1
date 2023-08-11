@@ -45,6 +45,14 @@ Function Get-AstFunctionsFromFile{
     }
     Process{
         foreach($fnc in $Files){
+            if($fnc -is [System.Management.Automation.PSObject] -and $null -ne $fnc.Psobject.Properties.Item('FullName')){
+                #Convert to filesystemInfo
+                $fnc = [System.IO.fileinfo]::new($fnc)
+            }
+            elseif($fnc -is [System.String]){
+                #Convert to filesystemInfo
+                $fnc = [System.IO.fileinfo]::new($fnc)
+            }
             $ast = [System.Management.Automation.Language.Parser]::ParseFile(
                 $fnc.FullName,
                 [ref]$tokens,

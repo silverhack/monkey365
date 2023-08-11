@@ -99,14 +99,14 @@ Function Get-MonkeyMSGraphProfilePhoto {
                 #Get profile Photo
                 $p = @{
                     Url = $logoUrl;
-                    Content_Type = 'image/jpg';
+                    ContentType = 'image/jpg';
                     Method = "GET";
                     InformationAction = $O365Object.InformationAction;
                     Verbose = $O365Object.verbose;
                     Debug = $O365Object.debug;
                     GetBytes = $True;
                 }
-                $profilePhoto = Invoke-UrlRequest @p
+                $profilePhoto = Invoke-MonkeyWebRequest @p
             }
         }
         elseif($PSCmdlet.ParameterSetName -eq 'ApplicationId'){
@@ -126,14 +126,14 @@ Function Get-MonkeyMSGraphProfilePhoto {
                 #Get profile Photo
                     $p = @{
                         Url = $logoUrl;
-                        Content_Type = 'image/jpg';
+                        ContentType = 'image/jpg';
                         Method = "GET";
                         InformationAction = $O365Object.InformationAction;
                         Verbose = $O365Object.verbose;
                         Debug = $O365Object.debug;
                         GetBytes = $True;
                     }
-                    $profilePhoto = Invoke-UrlRequest @p
+                    $profilePhoto = Invoke-MonkeyWebRequest @p
                 }
             }
         }

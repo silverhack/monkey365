@@ -63,10 +63,12 @@ Function Connect-MonkeyM365{
             'purview'{
                 $O365Object.o365_sessions.ComplianceCenter = (Connect-MonkeyComplianceCenter -parameters $parameters)
                 #Add resource for ComplianceCenter
-                if($null -ne $O365Object.o365_sessions.ComplianceCenter){
-                    $O365Object.auth_tokens.ComplianceCenter = (Get-TokenForEXO -parameters $parameters)
+                $O365Object.auth_tokens.ComplianceCenter = (Get-TokenForEXO -parameters $parameters)
+                #Get Backend URI
+                if($null -ne $O365Object.auth_tokens.ComplianceCenter){
+                    $O365Object.SecCompBackendUri = Get-MonkeySecCompBackendUri
                 }
-                if($null -ne $O365Object.o365_sessions.ComplianceCenter -and $null -ne $O365Object.auth_tokens.ComplianceCenter){
+                if($null -ne $O365Object.SecCompBackendUri -and $null -ne $O365Object.auth_tokens.ComplianceCenter){
                     $O365Object.onlineServices.$($service) = $True
                 }
             }
@@ -92,24 +94,21 @@ Function Connect-MonkeyM365{
                     [void]$sps_params.Add($elem.Key,$elem.Value)
                 }
                 #Connect to root site
-                $sps_params.Add('rootSite',$true);
-                $O365Object.auth_tokens.SharePointOnline = (Connect-MonkeySharepointOnline -parameters $sps_params)
+                $O365Object.auth_tokens.SharePointOnline = Connect-MonkeySPO -parameters $sps_params -rootSite
                 #Set new application args
                 $sps_params = @{}
                 foreach($elem in $parameters.GetEnumerator()){
                     [void]$sps_params.Add($elem.Key,$elem.Value)
                 }
                 #Connect to the admin site
-                $sps_params.Add('Admin',$true);
-                $O365Object.auth_tokens.SharePointAdminOnline = (Connect-MonkeySharepointOnline -parameters $sps_params)
+                $O365Object.auth_tokens.SharePointAdminOnline = Connect-MonkeySPO -parameters $sps_params -Admin
                 #Set new application args
                 $sps_params = @{}
                 foreach($elem in $parameters.GetEnumerator()){
                     [void]$sps_params.Add($elem.Key,$elem.Value)
                 }
-                #Connects to OneDrive site
-                $sps_params.Add('oneDrive',$true);
-                $O365Object.auth_tokens.OneDrive = (Connect-MonkeySharepointOnline -parameters $sps_params)
+                #Connect to OneDrive site
+                $O365Object.auth_tokens.OneDrive = Connect-MonkeySPO -parameters $sps_params -oneDrive
                 if($null -ne $O365Object.auth_tokens.SharePointOnline -and $null -ne $O365Object.auth_tokens.SharePointAdminOnline){
                     #Check if user is SharePoint administrator
                     $p = @{
@@ -161,7 +160,9 @@ Function Connect-MonkeyM365{
                     }
                     #Get Webs for user
                     $O365Object.spoWebs = Get-MonkeyCSOMWebsForUser @p
-                    $O365Object.onlineServices.$($service) = $True
+                    if($null -ne $O365Object.spoWebs){
+                        $O365Object.onlineServices.$($service) = $True
+                    }
                 }
             }
             #Connect to Microsoft Teams

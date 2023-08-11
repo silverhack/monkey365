@@ -35,46 +35,33 @@ function Get-OSVersion {
     #>
 
     Begin{
+        $OS = $null
         #Set constants
         $Windows = [System.Runtime.InteropServices.OSPlatform]::Windows
-        try{
-            $Linux = [System.Runtime.InteropServices.OSPlatform]::Linux
-        }
-        catch{
-            $Linux = $null
-        }
-        try{
-            $OSX = [System.Runtime.InteropServices.OSPlatform]::OSX
-        }
-        catch{
-            $OSX = $null
-        }
-        try{
+        $Linux = [System.Runtime.InteropServices.OSPlatform]::Linux
+        $OSX = [System.Runtime.InteropServices.OSPlatform]::OSX
+        if ($PSVersionTable.PSVersion -ge [version]'6.0') {
             $FREEBSD = [System.Runtime.InteropServices.OSPlatform]::FreeBSD
         }
-        catch{
+        else{
             $FREEBSD = $null
         }
     }
     Process{
-        try{
-            if([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($Windows)){
-                $OS = $Windows
-            }
-            elseif([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($Linux)){
-                $OS = $Linux
-            }
-            elseif([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($OSX)){
-                $OS = $OSX
-            }
-            elseif([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($FREEBSD)){
-                $OS = $FREEBSD
-            }
-            else{
-                $OS = "Unknown"
-            }
+        #Check for Windows OS
+        if([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($Windows)){
+            $OS = $Windows
+        }#Check for Linux OS
+        elseif([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($Linux)){
+            $OS = $Linux
+        }#Check for OSX
+        elseif([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($OSX)){
+            $OS = $OSX
+        }#Check for FREEBSD
+        elseif($null -ne $FREEBSD -and [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($FREEBSD)){
+            $OS = $FREEBSD
         }
-        catch{
+        else{
             Write-Warning ('Unable to get OS')
             $OS = 'Unknown'
         }

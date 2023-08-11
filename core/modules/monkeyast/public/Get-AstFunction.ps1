@@ -52,6 +52,10 @@ Function Get-AstFunction{
                 #Convert to filesystemInfo
                 $object = [System.IO.fileinfo]::new($object)
             }
+            elseif($object -is [System.String]){
+                #Convert to filesystemInfo
+                $object = [System.IO.fileinfo]::new($object)
+            }
             if($object -is [System.IO.FileSystemInfo]){
                 $ast = [System.Management.Automation.Language.Parser]::ParseFile(
                     $object.FullName,

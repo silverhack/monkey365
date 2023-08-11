@@ -67,7 +67,7 @@ Function New-Logger{
         }
         #Create object
         $logger = New-Object -Type PSObject -Property @{
-          path = (Split-Path -Parent $PSCommandPath)
+          path = Split-Path -Path $PSCmdlet.MyInvocation.PSCommandPath -Parent
           CallStack = (Get-PSCallStack | Select-Object -First 1);
           Callers = @()
           is_enabled = $false
@@ -90,38 +90,35 @@ Function New-Logger{
         New-Variable -Name Debug -Scope Script -Value $verbosity.Debug -Force
         New-Variable -Name Verbose -Scope Script -Value $verbosity.Verbose -Force
         #Import write-information wrapper function
-        $current_path = Split-Path -Parent $PSCommandPath
-        $directoryInfo = [System.IO.FileInfo]::new($current_path)
-        $scriptPath = $directoryInfo.Directory.Parent.FullName
-        $rootPath = $directoryInfo.Directory.Parent.Parent.Parent.Parent
-        #Set path
-        $logger.path = $scriptPath
-        $logger.rootPath = $rootPath
         #Load configuration
         $logger | Add-Member -Type ScriptMethod -Name loadConf -Value {
             #reset callers array
             $this.Callers = @()
             #Load configuration files
             $conf_path = ("{0}/targets" -f $this.path)
-            $conf_files = Get-ChildItem -Path $conf_path -Filter '*.json'
+            #$conf_files = Get-ChildItem -Path $conf_path -Filter '*.json'
+            $conf_files = [System.IO.Directory]::EnumerateFiles($conf_path,"*.json",[System.IO.SearchOption]::TopDirectoryOnly)
             foreach($conf_file in $conf_files){
-                $this.Callers += (Get-Content $conf_file.FullName -Raw) | ConvertFrom-Json
+                $this.Callers += (Get-Content $conf_file -Raw) | ConvertFrom-Json
             }
             #Load output scripts
             $conf_path = ("{0}/output" -f $this.path)
-            $output_callers = Get-ChildItem -Path $conf_path -Filter '*.ps1'
+            $output_callers = [System.IO.Directory]::EnumerateFiles($conf_path,"*.ps1",[System.IO.SearchOption]::TopDirectoryOnly)
+            #$output_callers = Get-ChildItem -Path $conf_path -Filter '*.ps1'
             if($null -ne $output_callers){
                 $this.func_definitions = Get-AstFunctionsFromFile -Files $output_callers
             }
             #Add validation functions
             $validators_path = ("{0}/core/init" -f $this.path)
-            $validator_functions = Get-ChildItem -Path $validators_path -Filter '*.ps1'
+            $validator_functions = [System.IO.Directory]::EnumerateFiles($validators_path,"*.ps1",[System.IO.SearchOption]::TopDirectoryOnly)
+            #$validator_functions = Get-ChildItem -Path $validators_path -Filter '*.ps1'
             if($null -ne $validator_functions){
                 $this.validation_functions = Get-AstFunctionsFromFile -Files $validator_functions
             }
             #Add helpers functions
             $helpers_path = ("{0}/core/helpers" -f $this.path)
-            $helpers_functions = Get-ChildItem -Path $helpers_path -Filter '*.ps1'
+            $helpers_functions = [System.IO.Directory]::EnumerateFiles($helpers_path,"*.ps1",[System.IO.SearchOption]::TopDirectoryOnly)
+            #$helpers_functions = Get-ChildItem -Path $helpers_path -Filter '*.ps1'
             if($null -ne $helpers_functions){
                 $this.helper_functions = Get-AstFunctionsFromFile -Files $helpers_functions
             }

@@ -1,12 +1,13 @@
 ﻿Set-StrictMode -Version Latest
 
 $mj_path = ("{0}/helpers/MonkeyJob.cs" -f $PSScriptRoot)
-$mj_helper = Get-ChildItem -Path $mj_path | Where-Object {$_.Extension -in ".cs"} | Select-Object FullName -ErrorAction Ignore
-if($null -ne $mj_helper){
+$exists = [System.IO.File]::Exists($mj_path)
+#$mj_helper = Get-ChildItem -Path $mj_path | Where-Object {$_.Extension -in ".cs"} | Select-Object FullName -ErrorAction Ignore
+if($exists){
     #Import MonkeyJob helper
     if (-not ([System.Management.Automation.PSTypeName]'MonkeyJob').Type){
         $params = @{
-            LiteralPath = $mj_helper.FullName;
+            LiteralPath = $mj_path;
             IgnoreWarnings = $true;
             WarningVariable = "warnVar";
             WarningAction = "SilentlyContinue"
@@ -14,20 +15,20 @@ if($null -ne $mj_helper){
         Add-Type @params
     }
     #Loading internal functions
-    $monkeyJobPublicPath = ("{0}/public" -f $PSScriptRoot)
-    $monkeyJobPrivatePath = ("{0}/private" -f $PSScriptRoot)
-    #Load public files
-    $monkeyFiles = Get-ChildItem -Path $monkeyJobPublicPath -Recurse -File -Include "*.ps1"
-    foreach($monkeyFile in $monkeyFiles){
-        . $monkeyFile.FullName
+    $listofFiles = [System.IO.Directory]::EnumerateFiles(("{0}" -f $PSScriptRoot),"*.ps1","AllDirectories")
+    $all_files = $listofFiles.Where({($_ -like "*public*") -or ($_ -like "*private*")})
+    $content = $all_files.ForEach({
+        [System.IO.File]::ReadAllText($_, [Text.Encoding]::UTF8) + [Environment]::NewLine
+    })
+
+    #Set-Content -Path $tmpFile -Value $content
+    . ([scriptblock]::Create($content))
+    $LocalizedDataParams = @{
+        BindingVariable = 'messages';
+        BaseDirectory = "{0}/{1}" -f $PSScriptRoot, "Localized";
     }
-    #Load private files
-    $monkeyFiles = Get-ChildItem -Path $monkeyJobPrivatePath -Recurse -File -Include "*.ps1"
-    foreach($monkeyFile in $monkeyFiles){
-        . $monkeyFile.FullName
-    }
-    #Load localized messages
-    $script:messages = Get-LocalizedData -DefaultUICulture 'en-US'
+    #Import localized data
+    Import-LocalizedData @LocalizedDataParams;
     #Set JobErrors var
     $JobErrors = [System.Collections.Generic.List[System.Object]]::new()
     Set-Variable MonkeyJobErrors -Value $JobErrors -Scope Script -Force

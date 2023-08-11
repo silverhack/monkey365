@@ -128,7 +128,7 @@ Function Get-MonkeyAzAppService {
                         $app_service.diagnosticSettings.rawData = $diag;
                     }
                     #Check if identity is present
-                    if($null -ne $app_service.rawObject.PsObject.Properties.Item('Idenity')){
+                    if($null -ne $app_service.rawObject.PsObject.Properties.Item('identity')){
                         $app_service.identity.enabled = $true;
                         $app_service.identity.type = $app_service.rawObject.identity.type;
                         $app_service.identity.rawData = $app_service.rawObject.identity;

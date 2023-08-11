@@ -164,10 +164,12 @@ RunspaceError                    = Runspace state was not opened
 ConditionalAccessEmptyMessage    = One or more specified conditional access policies were not found
 ConditionalAccessErrorMessage    = Unable to get conditional access policies
 PowerBIBackendError              = Unable to get PowerBI backend for {0} tenant
+SecCompBackendError              = Unable to get Security & Compliance backend for {0} tenant
 SuccessfullyConnectedTo          = Successfully connected to {0}
 AADAppPermissionObjectError      = Unable to create application permission object for {0}
 SPOPermissionObjectError         = Unable to create SharePoint permission object for {0}
 SPOEmptyRoleAssignmentMessage    = Empty role assignment was found for {0}
 SPOInvalieWebObjectMessage       = Invalid Web object
 MSGraphDirectoryObjectError      = Unable to get directory objects
+NotConnectedTo                   = Not connected to {0}
 '@;

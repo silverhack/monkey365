@@ -58,6 +58,7 @@ Function Get-MonkeyEnvironment{
                 Graphv2 = "https://graph.microsoft.com/";
                 ResourceManager = "https://management.azure.com/";
                 Outlook = "https://outlook.office365.com/";
+                ComplianceCenterAPI = "https://ps.compliance.protection.outlook.com";
                 ExchangeOnline = "https://outlook.office365.com/Powershell-LiveId";
                 ComplianceCenter = "https://ps.compliance.protection.outlook.com/Powershell-LiveId";
                 Lync = "https://admin1e.online.lync.com/OcsPowershellOAuth";
@@ -89,6 +90,7 @@ Function Get-MonkeyEnvironment{
                 Graphv2 = "https://microsoftgraph.chinacloudapi.cn/";
                 ResourceManager = "https://management.chinacloudapi.cn/";
                 Outlook = "https://outlook.office365.com/";
+                ComplianceCenterAPI = "https://ps.compliance.protection.outlook.com";
                 ExchangeOnline = "https://outlook.office365.com/powershell-liveid";
                 ComplianceCenter = "https://ps.compliance.protection.outlook.com/powershell-liveid";
                 Lync = "https://admin1e.online.lync.com/OcsPowershellOAuth";
@@ -120,6 +122,7 @@ Function Get-MonkeyEnvironment{
                 Graphv2 = "https://graph.microsoft.us/";
                 ResourceManager = "https://management.usgovcloudapi.net/";
                 Outlook = "https://outlook.office365.us/";
+                ComplianceCenterAPI = "https://ps.compliance.protection.outlook.us";
                 ExchangeOnline = "https://outlook.office365.us/powershell-liveid";
                 ComplianceCenter = "https://ps.compliance.protection.outlook.us/powershell-liveid";
                 Lync = "https://admin1e.online.lync.com/OcsPowershellOAuth";
@@ -151,6 +154,7 @@ Function Get-MonkeyEnvironment{
                 Graphv2 = "https://graph.microsoft.de/";
                 ResourceManager = "https://management.microsoftazure.de/";
                 Outlook = "https://outlook.office365.de/";
+                ComplianceCenterAPI = "https://ps.compliance.protection.outlook.de";
                 ExchangeOnline = "https://outlook.office365.de/powershell-liveid";
                 ComplianceCenter = "https://ps.compliance.protection.outlook.de/powershell-liveid";
                 Lync = "https://admin1e.online.lync.com/OcsPowershellOAuth";

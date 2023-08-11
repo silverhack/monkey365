@@ -61,7 +61,7 @@ Function Get-LyncDomain{
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $domain_metadata = Invoke-UrlRequest @p
+            $domain_metadata = Invoke-MonkeyWebRequest @p
         }
         else{
             $msg = @{
@@ -83,7 +83,7 @@ Function Get-LyncDomain{
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $root = Invoke-UrlRequest @p
+            $root = Invoke-MonkeyWebRequest @p
             if($root){
                 $originalUrl = New-Object System.Uri $root._links.self.href
                 $newURI = ("https://{0}{1}/domain{2}" -f $originalUrl.Host, $originalUrl.AbsolutePath, $originalUrl.Query)
@@ -95,7 +95,7 @@ Function Get-LyncDomain{
                     Verbose = $O365Object.verbose;
                     Debug = $O365Object.debug;
                 }
-                $last_step = Invoke-UrlRequest @p
+                $last_step = Invoke-MonkeyWebRequest @p
                 $xml_data = [xml]$last_step
             }
         }

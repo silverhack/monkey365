@@ -1,26 +1,26 @@
 ﻿Set-StrictMode -Version Latest
 
-$Modules = @{
-    engine = '/core/engine'
-    runspaces_helpers = '/core/runspaces'
-    console_helper = '/core/helpers'
-}
+$listofFiles = [System.IO.Directory]::EnumerateFiles(("{0}" -f $PSScriptRoot),"*.ps1","AllDirectories")
+$all_files = $listofFiles.Where({`
+    ($_ -like ("*core{0}engine*" -f [System.IO.Path]::DirectorySeparatorChar)) `
+    -or ($_ -like ("*core{0}runspaces*" -f [System.IO.Path]::DirectorySeparatorChar)) `
+    -or ($_ -like ("*core{0}helpers*" -f [System.IO.Path]::DirectorySeparatorChar))})
+    $content = $all_files.ForEach({
+        [System.IO.File]::ReadAllText($_, [Text.Encoding]::UTF8) + [Environment]::NewLine
+    })
 
-foreach($module in $Modules.GetEnumerator()){
-    $loggerPath = ("{0}/{1}" -f $PSScriptRoot,$module.value)
-    #Load public files
-    $LoggerFiles = Get-ChildItem -Path $loggerPath -Recurse -File -Include "*.ps1"
-    foreach($loggerFile in $LoggerFiles){
-        Write-Verbose ("Trying to load {0} module" -f $loggerFile.FullName)
-        . $loggerFile.FullName
-    }
-}
+#Set-Content -Path $tmpFile -Value $content
+. ([scriptblock]::Create($content))
 
 #Load proxy functions
-$monkeyProxyFunctions = Get-ChildItem -Path ("{0}/core/console" -f $PSScriptRoot) -Recurse -File -Include "*.ps1"
-foreach($monkeyFile in $monkeyProxyFunctions){
-    . $monkeyFile.FullName
-}
+$monkeyProxyFunctions = ("{0}/core/console" -f $PSScriptRoot)
+$listofFiles = [System.IO.Directory]::EnumerateFiles(("{0}" -f $monkeyProxyFunctions),"*.ps1","AllDirectories")
+$content = $listofFiles.ForEach({
+    [System.IO.File]::ReadAllText($_, [Text.Encoding]::UTF8) + [Environment]::NewLine
+})
+
+#Set-Content -Path $tmpFile -Value $content
+. ([scriptblock]::Create($content))
 
 Function Start-Logger{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]

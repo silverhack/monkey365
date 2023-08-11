@@ -119,8 +119,6 @@ Function Get-MonkeyM365AdminObject{
                 [void]$requestHeader.Add('Expect','100-continue');
             }
             #Perform query
-            $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($final_uri)
-            $ServicePoint.ConnectionLimit = 1000;
             $AllObjects = @()
             try{
                 switch ($Method) {
@@ -130,13 +128,13 @@ Function Get-MonkeyM365AdminObject{
                             Url = $final_uri;
                             Headers = $requestHeader;
                             Method = $Method;
-                            Content_Type = $ContentType;
+                            ContentType = $ContentType;
                             UserAgent = $O365Object.UserAgent;
                             Verbose = $Verbose;
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $Objects = Invoke-UrlRequest @param
+                        $Objects = Invoke-MonkeyWebRequest @param
                     }
                 }
                 if($ObjectType){
@@ -159,9 +157,6 @@ Function Get-MonkeyM365AdminObject{
                 if ($Objects.PsObject.Properties.Item('@odata.nextLink')){
                     $nextLink = $Objects.'@odata.nextLink'
                     while ($null -ne $nextLink){
-                        ####Workaround for operation timed out ######
-                        #https://social.technet.microsoft.com/wiki/contents/articles/29863.powershell-rest-api-invoke-restmethod-gotcha.aspx
-                        $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($nextLink)
                         #Make RestAPI call
                         $param = @{
                             Url = $nextLink;
@@ -172,7 +167,7 @@ Function Get-MonkeyM365AdminObject{
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $NextPage = Invoke-UrlRequest @param
+                        $NextPage = Invoke-MonkeyWebRequest @param
                         $NextPage.value
                         $nextLink = $nextPage.'@odata.nextLink'
                     }
@@ -222,22 +217,17 @@ Function Get-MonkeyM365AdminObject{
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
-                        $NextPage = Invoke-UrlRequest @param
+                        $NextPage = Invoke-MonkeyWebRequest @param
                         $NextPage.value
                     }
                 }
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
             catch{
                 Write-Verbose $_
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
         }
     }
     End{
-        ####close all the connections made to the host####
-        [void]$ServicePoint.CloseConnectionGroup("")
+        #Nothing to do here
     }
 }

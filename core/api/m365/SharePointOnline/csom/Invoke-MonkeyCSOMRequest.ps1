@@ -49,7 +49,7 @@ Function Invoke-MonkeyCSOMRequest{
         [String]$Select,
 
         [parameter(Mandatory=$false, HelpMessage="ContentType")]
-        [String]$Content_Type = "text/xml",
+        [String]$ContentType = "text/xml",
 
         [parameter(Mandatory=$false, HelpMessage="XML object data")]
         [Xml]$Data,
@@ -279,16 +279,13 @@ Function Invoke-MonkeyCSOMRequest{
     }
     Process{
         if($null -ne $url){
-            #Set servicePoint
-            $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($url)
-            $ServicePoint.ConnectionLimit = 1000;
             #Get Data
             if($Data){
                 $param = @{
                     Url = $url;
                     Headers = $requestHeader;
                     Method = "POST";
-                    Content_Type = $Content_Type;
+                    ContentType = $ContentType;
                     Data = $Data.OuterXml;
                     UserAgent = $O365Object.UserAgent;
                     Verbose = $Verbose;
@@ -301,7 +298,7 @@ Function Invoke-MonkeyCSOMRequest{
                     Url = $url;
                     Headers = $requestHeader;
                     Method = "POST";
-                    Content_Type = $Content_Type;
+                    ContentType = $ContentType;
                     UserAgent = $O365Object.UserAgent;
                     Verbose = $Verbose;
                     Debug = $Debug;
@@ -309,7 +306,7 @@ Function Invoke-MonkeyCSOMRequest{
                 }
             }
             #Execute Query
-            $tmp_response = Invoke-UrlRequest @param
+            $tmp_response = Invoke-MonkeyWebRequest @param
             try{
                 if($null -ne $tmp_response){
                     if($null -eq $tmp_response.PsObject.Properties.Item('Length') -and $tmp_response -is [object]){
@@ -364,8 +361,6 @@ Function Invoke-MonkeyCSOMRequest{
                         }
                     }
                 }
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
             catch{
                 $msg = @{
@@ -398,8 +393,6 @@ Function Invoke-MonkeyCSOMRequest{
                         Write-Verbose @msg
                     }
                 }
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
         }
     }

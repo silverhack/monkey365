@@ -37,25 +37,45 @@ Function Get-DataLossPreventionInfo{
     [CmdletBinding()]
     Param()
     Begin{
-        $msg = @{
-            MessageData = ("Getting Data Loss Prevention Configuration");
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $script:InformationAction;
-            Tags = @('O365DLPInfo');
-        }
-        Write-Information @msg
+        $DLPStatus = New-Object System.Collections.Generic.List[System.Object]
         $DLPCollection = $Sensitivity_Types = $custom_types = $null
-        if($null -ne (Get-Command -Name Get-DlpCompliancePolicy -errorAction Ignore)){
-            $DLPStatus = New-Object System.Collections.Generic.List[System.Object]
+        if($O365Object.onlineServices.Purview -eq $true){
             $DLPCollection = [ordered]@{}
+            #Get Security and Compliance Auth token
+            $ExoAuth = $O365Object.auth_tokens.ComplianceCenter
+            #Get Backend Uri
+            $Uri = $O365Object.SecCompBackendUri
+            #InitParams
+            $p = @{
+                Authentication = $ExoAuth;
+                EndPoint = $Uri;
+                ResponseFormat = 'clixml';
+                Command = $null;
+                Method = "POST";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $msg = @{
+                MessageData = ("Getting Data Loss Prevention Configuration");
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'info';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('O365DLPInfo');
+            }
+            Write-Information @msg
             try{
                 #Get DLP Compliance Policy
-                $DLPCollection.DLPCompliancePolicy = Get-DlpCompliancePolicy
+                $p.Command = 'Get-DlpCompliancePolicy';
+                $DLPCollection.DLPCompliancePolicy = Get-PSExoAdminApiObject @p
                 #Get DLP Compliance Rules
-                $DLPCollection.DLPComplianceRules = Get-DlpComplianceRule
+                Start-Sleep -Milliseconds 1000
+                $p.Command = 'Get-DlpComplianceRule';
+                $DLPCollection.DLPComplianceRules = Get-PSExoAdminApiObject @p
                 #Get Custom Sensitivity types
-                $Sensitivity_Types = Get-DlpSensitiveInformationType -ErrorAction Ignore
+                Start-Sleep -Milliseconds 1000
+                $p.Command = 'Get-DlpSensitiveInformationType -ErrorAction Ignore';
+                $Sensitivity_Types = Get-PSExoAdminApiObject @p
                 if($null -ne $Sensitivity_Types){
                     $custom_types = $Sensitivity_Types | Where-Object { $_.Publisher -ne "Microsoft Corporation" }
                 }
@@ -66,19 +86,20 @@ Function Get-DataLossPreventionInfo{
                     MessageData = ($_);
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'verbose';
-                    InformationAction = $InformationAction;
-                    Tags = @('O365DLPInfo');
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Tags = @('SecComplianceDLPInfoError');
                 }
                 Write-Verbose @msg
             }
         }
         else{
             $msg = @{
-                MessageData = ($message.NoPsSessionWasFound -f "Security and Compliance Manager");
+                MessageData = ($message.NotConnectedTo -f "Security and Compliance Manager");
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('O365DLPInfo');
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('SecComplianceDLPConnectionError');
             }
             Write-Warning @msg
         }
@@ -87,7 +108,7 @@ Function Get-DataLossPreventionInfo{
         if($null -ne $DLPCollection -and $DLPCollection.DLPCompliancePolicy){
             foreach($DLPPolicy in @($DLPCollection.DLPCompliancePolicy)){
                 $sits = $null;
-                $all_sits = @()
+                $all_sits = [System.Collections.Generic.List[System.Object]]::new()
                 $enabled = $DLPPolicy.Enabled;
                 $policyName = $DLPPolicy.Name;
                 if($null -ne $DLPCollection.DLPComplianceRules){
@@ -99,16 +120,19 @@ Function Get-DataLossPreventionInfo{
                 if($null -ne $associated_rule){
                     foreach($rule in @($associated_rule)){
                         #Get Sensitivity information type
-                        if($rule.ContentContainsSensitiveInformation[0].groups){
-                            $sits = Get-DLPSensitiveInformationGroup -sit_groups $rule.ContentContainsSensitiveInformation[0]
-                            if($null -ne $sits){
-                                $all_sits += $sits | ForEach-Object {$_.sit | Select-Object -ExpandProperty Name} | Select-Object -Unique
-                            }
+                        $p = @{
+                            Rule = $rule;
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
                         }
-                        else{
-                            $sits = Get-DLPSensitiveInformation -sits $rule.ContentContainsSensitiveInformation[0]
-                            if($null -ne $sits){
-                                $all_sits += $sits | Select-Object -ExpandProperty Name
+                        $sits = Get-DLPSensitiveInformation @p
+                        if($null -ne $sits){
+                            $uniqueSits = $sits | ForEach-Object {$_.sit | Select-Object -ExpandProperty Name -ErrorAction Ignore} | Select-Object -Unique
+                            if($uniqueSits){
+                                foreach($usit in $uniqueSits){
+                                    [void]$all_sits.Add($usit);
+                                }
                             }
                         }
                     }

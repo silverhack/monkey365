@@ -132,17 +132,11 @@ Function Get-MSALTokenForSharePointOnline {
         [Switch]$DeviceCode,
 
         # Tenant identifier of the authority to issue token.
-        [Parameter(Mandatory = $false, HelpMessage="Connect SharePoint Url")]
-        [string] $Endpoint,
+        [Parameter(Mandatory = $true, HelpMessage="Connect SharePoint Url")]
+        [string]$Endpoint,
 
-        [Parameter(Mandatory=$false, HelpMessage="Connect SharePoint Admin Url")]
-        [Switch]$Admin,
-
-        [Parameter(Mandatory=$false, HelpMessage="Connect SharePoint Siteroot Url")]
-        [Switch]$rootSite,
-
-        [Parameter(Mandatory=$false, HelpMessage="Connect SharePoint Siteroot Url")]
-        [Switch]$oneDrive
+        [Parameter(Mandatory=$false, HelpMessage="scopes")]
+        [array]$Scopes
     )
     Begin{
         #Get InformationAction
@@ -152,8 +146,7 @@ Function Get-MSALTokenForSharePointOnline {
         else{
             $informationAction = "SilentlyContinue"
         }
-        $sps_login = $sharepointUrl = $Tenant = $null
-        $AzureEnvironment = Get-MonkeyEnvironment -Environment $Environment
+        $sps_login = $null
         $isPublicApp = Confirm-IfMSALPublicApp -parameters $PSBoundParameters
         $internal_params = $PSBoundParameters
         if($isPublicApp -eq $false){
@@ -161,70 +154,12 @@ Function Get-MSALTokenForSharePointOnline {
             $internal_params = Remove-MSALPublicParam -parameters $internal_params
         }
         $auth_params = Get-MSALAuthParam -parameters $internal_params
-        $access_token = Get-MonkeyMSALToken @auth_params -Resource $AzureEnvironment.Graphv2
-        if($null -ne $access_token -and $access_token -is [Microsoft.Identity.Client.AuthenticationResult]){
-            $Tenant = Get-MSGraphOrganization -AuthObject $access_token
-            if($null -ne $Tenant){
-                Set-Variable Tenant -Value $Tenant -Scope Script -Force
-            }
-            else{
-                if($TenantId -and (Test-IsValidTenantId -TenantId $TenantId) -eq $false){
-                    #Potential domain name is passed as TenantId
-                    $Tenant = @{
-                        verifiedDomains = @(
-                            @{
-                                capabilities = 'Email, OfficeCommunicationsOnline';
-                                isDefault = $true;
-                                isInitial = $true;
-                                name = $TenantId;
-                            }
-                        );
-                    }
-                    Set-Variable Tenant -Value $Tenant -Scope Script -Force
-                }
-                else{
-                    #Write message
-                    Write-Warning -Message ($Script:messages.UnableToGetTenantInfo)
-                }
-            }
-        }
-        if($Endpoint){
-            $sharepointUrl = $Endpoint
-        }
-        elseif($Admin){
-            if($null -ne $Tenant){
-                $sharepointUrl = Get-SharePointAdminUrl -TenantDetails $Tenant -Environment $Environment
-            }
-        }
-        elseif($rootSite){
-            if($null -ne $Tenant){
-                $sharepointUrl = Get-SharePointUrl -TenantDetails $Tenant
-            }
-        }
-        elseif($oneDrive){
-            if($null -ne $Tenant){
-                $sharepointUrl = Get-OneDriveUrl -TenantDetails $Tenant
-            }
-        }
-        else{
-            #Connect to SharePoint Admin Url
-            $sharepointUrl = Get-SharePointAdminUrl -TenantDetails $Tenant -Environment $Environment
-        }
-        #Set clientId
-        if($null -ne $PublicApp -and $PublicApp -is [Microsoft.Identity.Client.PublicClientApplication]){
-            #$auth_params.Add('ClientId',(Get-WellKnownAzureService -AzureService SharePointOnline))
-            #$auth_params.Add('RedirectUri',"https://oauth.spops.microsoft.com/")
-            if($PSEdition -eq "Desktop"){
-                $PublicApp.RedirectUri = "https://oauth.spops.microsoft.com/"
-            }
-        }
         #Add resource
-        $auth_params.Add('Resource',$sharepointUrl)
+        $auth_params.Add('Resource',$Endpoint)
     }
     Process{
-        if($null -ne $sharepointUrl){
-            $sps_login = Get-MonkeyMSALToken @auth_params
-        }
+        #Get Auth token
+        $sps_login = Get-MonkeyMSALToken @auth_params
     }
     End{
         if($null -ne $sps_login -and $sps_login -is [Microsoft.Identity.Client.AuthenticationResult]){

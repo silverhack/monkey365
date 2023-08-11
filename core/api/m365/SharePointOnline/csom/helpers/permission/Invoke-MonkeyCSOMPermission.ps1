@@ -132,39 +132,52 @@ Function Invoke-MonkeyCSOMPermission{
                         $PermissionType = [PrincipalType]$uniquerole.Member.PrincipalType
                         #Check if the Principal is SharePoint group
                         if($PermissionType -eq "SharePointGroup"){
-                            $p = @{
-                                GroupId = $uniquerole.Member._ObjectIdentity_;
-                                Authentication = $Authentication;
-                                Endpoint = $sps_uri.AbsoluteUri;
-                                InformationAction = $O365Object.InformationAction;
-                                Verbose = $O365Object.verbose;
-                                Debug = $O365Object.debug;
-                            }
-                            $groupMembers = Get-MonkeyCSOMGroupMember @p
-                            #Leave Empty Groups
-                            if(@($groupMembers).count -eq 0){
-                                Continue
-                            }
-                            #$GroupUsers = ($groupMembers | Select-Object -ExpandProperty Title | Where-Object { $_ -ne "System Account"}) -join "; "
-                            $GroupUsers = $groupMembers.Where({$_.Title -ne "System Account"})
-                            if($GroupUsers.Length -eq 0) {
-                                Continue
-                            }
-                            $GroupUsers = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
-                            #Get Real users
-                            $grpmembers = $groupMembers.Where({$_.PrincipalType -eq 4}) | Select-Object -ExpandProperty Members -ErrorAction Ignore
-                            if($grpmembers){
-                                foreach($usr in @($grpmembers)){
-                                    [void]$GroupUsers.Add($usr)
+                            try{
+                                $p = @{
+                                    GroupId = $uniquerole.Member._ObjectIdentity_;
+                                    Authentication = $Authentication;
+                                    Endpoint = $sps_uri.AbsoluteUri;
+                                    InformationAction = $O365Object.InformationAction;
+                                    Verbose = $O365Object.verbose;
+                                    Debug = $O365Object.debug;
                                 }
-                            }
-                            $tusers = $groupMembers.Where({$_.PrincipalType -eq 1})
-                            if($tusers){
-                                if($tusers){
-                                    foreach($usr in @($tusers)){
+                                $groupMembers = Get-MonkeyCSOMGroupMember @p
+                                #Leave Empty Groups
+                                if(@($groupMembers).count -eq 0){
+                                    Continue
+                                }
+                                #$GroupUsers = ($groupMembers | Select-Object -ExpandProperty Title | Where-Object { $_ -ne "System Account"}) -join "; "
+                                $GroupUsers = $groupMembers.Where({$_.Title -ne "System Account"})
+                                if($GroupUsers.Length -eq 0) {
+                                    Continue
+                                }
+                                $GroupUsers = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
+                                #Get Real users
+                                $grpmembers = $groupMembers.Where({$_.PrincipalType -eq 4}) | Select-Object -ExpandProperty Members -ErrorAction Ignore
+                                if($grpmembers){
+                                    foreach($usr in @($grpmembers)){
                                         [void]$GroupUsers.Add($usr)
                                     }
                                 }
+                                $tusers = $groupMembers.Where({$_.PrincipalType -eq 1})
+                                if($tusers){
+                                    if($tusers){
+                                        foreach($usr in @($tusers)){
+                                            [void]$GroupUsers.Add($usr)
+                                        }
+                                    }
+                                }
+                            }
+                            catch{
+                                $msg = @{
+                                    MessageData = ($_);
+                                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                                    logLevel = 'verbose';
+                                    InformationAction = $O365Object.InformationAction;
+                                    Verbose = $O365Object.verbose;
+                                    Tags = @('SPSPermissionError');
+                                }
+                                Write-Verbose $_
                             }
                             #Granted through
                             $GrantedThrough = ("SharePoint Group: {0}"-f $uniquerole.Member.LoginName)
@@ -204,6 +217,14 @@ Function Invoke-MonkeyCSOMPermission{
                                 $GroupUsers = $User;
                             }
                             catch{
+                                $msg = @{
+                                    MessageData = ($_);
+                                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                                    logLevel = 'verbose';
+                                    InformationAction = $O365Object.InformationAction;
+                                    Verbose = $O365Object.verbose;
+                                    Tags = @('SPSPermissionError');
+                                }
                                 Write-Verbose $_
                                 $GroupUsers = $uniquerole.Member;
                             }

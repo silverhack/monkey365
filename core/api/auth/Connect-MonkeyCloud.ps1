@@ -36,6 +36,7 @@ Function Connect-MonkeyCloud{
 
     [CmdletBinding()]
     Param ()
+    #Set null
     $app_params = $null
     #Using MSAL authentication
     if($null -ne $O365Object.msalapplication -and $null -ne $O365Object.msal_application_args){
@@ -202,6 +203,24 @@ Function Connect-MonkeyCloud{
     }
     else{
         $O365Object.canRequestMFAForUsers = $false
+    }
+    #Check if requestMFA for users must be enabled by config
+    try{
+        $requestMFA = $O365Object.internal_config.azuread.canRequestMFA
+    }
+    catch{
+        $msg = @{
+            MessageData = ($message.MonkeyInternalConfigError);
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'verbose';
+            InformationAction = $O365Object.InformationAction;
+            Tags = @('Monkey365ConfigError');
+        }
+        Write-Verbose @msg
+        $requestMFA = $false
+    }
+    if($O365Object.canRequestMFAForUsers -eq $false -and $requestMFA -eq $true){
+        $O365Object.canRequestMFAForUsers = $true;
     }
     #Check if current identity can request users and groups from Microsoft Graph
     $p = @{

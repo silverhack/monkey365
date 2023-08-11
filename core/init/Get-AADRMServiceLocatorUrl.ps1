@@ -47,11 +47,11 @@ Function Get-AADRMServiceLocatorUrl{
                 Url = $url;
                 Method = "Post";
                 Data = $post_data;
-                Content_Type = 'text/xml; charset=utf-8';
+                ContentType = 'text/xml; charset=utf-8';
                 Headers = $requestHeader;
                 disableSSLVerification = $true;
             }
-            [xml]$xml_response = Invoke-UrlRequest @p
+            [xml]$xml_response = Invoke-MonkeyWebRequest @p
             #Get service locator url
             if($null -ne $xml_response){
                 $ns = @{ns="http://microsoft.com/DRM/ServiceLocatorService"}

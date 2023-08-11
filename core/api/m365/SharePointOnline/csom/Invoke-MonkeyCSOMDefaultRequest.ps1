@@ -43,7 +43,7 @@ Function Invoke-MonkeyCSOMDefaultRequest{
         [String]$Endpoint,
 
         [parameter(ValueFromPipeline = $True, ValueFromPipeLineByPropertyName = $True)]
-        [String]$Content_Type = "text/xml",
+        [String]$ContentType = "text/xml",
 
         [parameter(ValueFromPipeline = $True, ValueFromPipeLineByPropertyName = $True)]
         [string]$Data,
@@ -96,16 +96,13 @@ Function Invoke-MonkeyCSOMDefaultRequest{
     }
     Process{
         if($null -ne $url){
-            #Set servicePoint
-            $ServicePoint = [System.Net.ServicePointManager]::FindServicePoint($url)
-            $ServicePoint.ConnectionLimit = 1000;
             #Get Data
             if($Data){
                 $param = @{
                     Url = $url;
                     Headers = $requestHeader;
                     Method = "POST";
-                    Content_Type = $Content_Type;
+                    ContentType = $ContentType;
                     Data = $Data;
                     UserAgent = $O365Object.UserAgent;
                     Verbose = $Verbose;
@@ -118,7 +115,7 @@ Function Invoke-MonkeyCSOMDefaultRequest{
                     Url = $url;
                     Headers = $requestHeader;
                     Method = "POST";
-                    Content_Type = $Content_Type;
+                    ContentType = $ContentType;
                     UserAgent = $O365Object.UserAgent;
                     Verbose = $Verbose;
                     Debug = $Debug;
@@ -126,7 +123,7 @@ Function Invoke-MonkeyCSOMDefaultRequest{
                 }
             }
             #Execute Query
-            $tmp_response = Invoke-UrlRequest @param
+            $tmp_response = Invoke-MonkeyWebRequest @param
             try{
                 if($ObjectMetadata){
                     #Verify return data
@@ -192,14 +189,10 @@ Function Invoke-MonkeyCSOMDefaultRequest{
                         Write-Verbose @msg
                     }
                 }
-                ####close all the connections made to the host####
-                [void]$ServicePoint.CloseConnectionGroup("")
             }
         }
     }
     End{
-        ####close all the connections made to the host####
-        [void]$ServicePoint.CloseConnectionGroup("")
         if($raw_response){
             return $raw_response
         }
