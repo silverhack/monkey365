@@ -12,7 +12,6 @@ Describe 'Google' {
         InModuleScope monkeyhttpwebrequest {
             $retData = Invoke-MonkeyWebRequest -url 'http://google.com/' -AllowAutoRedirect $true -RawResponse
             $StatusCode = $retData | Select-Object -ExpandProperty StatusCode
-            $retData.Close()
             $retData.Dispose()
             $StatusCode | Should -Be 'OK'
         }
@@ -22,7 +21,6 @@ Describe 'Google' {
         InModuleScope monkeyhttpwebrequest {
             $retData = Invoke-MonkeyWebRequest -url "https://google.co.uk/" -AllowAutoRedirect $true -RawResponse
             $StatusCode = $retData | Select-Object -ExpandProperty StatusCode
-            $retData.Close()
             $retData.Dispose()
             $StatusCode | Should -Be 'OK'
         }
