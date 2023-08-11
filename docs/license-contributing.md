@@ -20,14 +20,28 @@ Monkey365 welcomes all types of contributions that will help us to refine the to
 
 If you are interested in contributing directly to Monkey365, here is how you can get started:
 
-* Report issues
-* Improve documentation
-* Contribute code
+## Report issues
 
-If you have what looks like a bug, or you would like to make a feature request, feel free to open a ticket on the <a href='https://github.com/silverhack/monkey365/issues' target='_blank'>Monkey365 repository</a> on GitHub, but please, you should keep a few things in mind:
+Monkey365 uses GitHub issues to track bugs and feature requests. This is the best place to report bugs. If you have what looks like a bug, or you would like to make a feature request, feel free to open a ticket on the <a href='https://github.com/silverhack/monkey365/issues' target='_blank'>Monkey365 repository</a> on GitHub, but please, you should keep a few things in mind:
 
 * Before you file an issue, please search existing issues to see if it is already covered
 * Please include detailed information about how to reproduce the problem
+* Write precise steps to reproduce
+
+## Improve documentation
+
+We use `mkdocs` to build the documentation and deploy to GitHub Pages. You can easily contribute with new docs or improving existing ones. To run documentation locally, run:
+
+* Inside the Monkey365 repository folder run:
+```json
+pip install -r requirements-docs.txt
+mkdocs serve
+```
+* Documentation will be served on localhost:8000
+* You can find all pages within the monkey365/docs directory
+* Make all needed changes or add new documents
+* When you are ready, send a pull request to us for review and merge
+* If you want to know more details about how to use the MkDocs, please visit <a href='https://www.mkdocs.org/' target='_blank'>MkDocs</a>
 
 ## Thank you
 
