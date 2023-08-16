@@ -55,8 +55,9 @@ Function New-O365Object{
         )
         foreach($_path in $paths){
             $api_path = ("{0}/{1}" -f $ScriptPath,$_path)
-            #$api_fnc += Get-ChildItem @p
-            $api_fnc += [System.IO.Directory]::EnumerateFiles($api_path,"*.ps1","AllDirectories")
+            if ([System.IO.Directory]::Exists($api_path)){
+                $api_fnc += [System.IO.Directory]::EnumerateFiles($api_path,"*.ps1",[System.IO.SearchOption]::AllDirectories)
+            }
         }
         #Add modules
         $internal_modules = @(
