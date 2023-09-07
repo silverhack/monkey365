@@ -9,21 +9,20 @@ $LocalizedDataParams = @{
 #Import localized data
 Import-LocalizedData @LocalizedDataParams;
 
-#msal modules
-$msal_modules = @(
-    'core/modules/monkeycloudutils',
-    'core/modules/monkeymsal',
-    'core/modules/monkeymsalauthassistant'
-)
-$msal_modules.ForEach({Import-Module ("{0}{1}{2}" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar, $_.ToString()) -Scope Global})
-
 $listofFiles = [System.IO.Directory]::EnumerateFiles(("{0}{1}core" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar),"*.ps1","AllDirectories")
-$all_files = $listofFiles.Where({$_ -notlike "*modules*" -and $_ -notlike "*runspace_init*"})
+$all_files = $listofFiles.Where({$_ -notlike ("*core{0}modules*" -f [System.IO.Path]::DirectorySeparatorChar) -and $_ -notlike "*runspace_init*"})
 $content = $all_files.ForEach({
     [System.IO.File]::ReadAllText($_, [Text.Encoding]::UTF8) + [Environment]::NewLine
 })
 #Set-Content -Path $tmpFile -Value $content
 . ([scriptblock]::Create($content))
+
+$msal_modules = @(
+    'core/modules/monkeycloudutils',
+    'core/modules/monkeymsal',
+    'core/modules/monkeymsalauthassistant'
+)
+$msal_modules.ForEach({Import-Module ("{0}{1}{2}" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar, $_.ToString()) -Scope Global -Force})
 
 New-Variable -Name ScriptPath -Value $PSScriptRoot -Scope Script -Force
 

@@ -100,7 +100,7 @@ function Get-MonkeyAADAuthorizationPolicy {
 				Data = $auth_policy;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.Add('aad_authorization_policy',$obj)
+			$returnData.aad_authorization_policy = $obj;
 		}
 		else {
 			$msg = @{

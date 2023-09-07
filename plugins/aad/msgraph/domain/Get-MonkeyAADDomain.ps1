@@ -107,7 +107,7 @@ function Get-MonkeyAADDomain {
 				Data = $domains;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.Add('aad_domains',$obj)
+			$returnData.aad_domains = $obj;
 		}
 		else {
 			$msg = @{

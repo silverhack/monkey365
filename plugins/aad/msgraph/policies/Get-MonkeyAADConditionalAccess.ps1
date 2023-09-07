@@ -101,7 +101,7 @@ function Get-MonkeyAADConditionalAccess {
 				Data = $conditional_access_policy;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.Add('aad_conditional_access_policy',$obj)
+			$returnData.aad_conditional_access_policy = $obj;
 		}
 		else {
 			$msg = @{

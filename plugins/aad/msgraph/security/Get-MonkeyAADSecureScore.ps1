@@ -100,7 +100,7 @@ function Get-MonkeyAADSecureScore {
 				Data = $secure_score;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.Add('aad_secure_score',$obj)
+			$returnData.aad_secure_score = $obj;
 		}
 		else {
 			$msg = @{

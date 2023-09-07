@@ -100,7 +100,7 @@ function Get-MonkeyAADSecureScoreControlProfile {
 				Data = $ss_control_profile;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.Add('aad_conditional_access_policy',$obj)
+			$returnData.aad_conditional_access_policy = $obj;
 		}
 		else {
 			$msg = @{

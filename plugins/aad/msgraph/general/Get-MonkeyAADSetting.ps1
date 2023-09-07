@@ -85,7 +85,7 @@ function Get-MonkeyAADSetting {
 				Data = $settings;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.Add('aad_settings',$obj)
+			$returnData.aad_settings = $obj;
 		}
 		else {
 			$msg = @{

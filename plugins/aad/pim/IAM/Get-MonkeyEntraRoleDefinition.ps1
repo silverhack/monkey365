@@ -130,7 +130,7 @@ function Get-MonkeyEntraRoleDefinition {
 				Data = $role_definition;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.Add('aad_pim_roleDefinition',$obj)
+			$returnData.aad_pim_roleDefinition = $obj;
 		}
 		else {
 			$msg = @{
@@ -149,7 +149,7 @@ function Get-MonkeyEntraRoleDefinition {
 				Data = $all_active_ra;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.Add('aad_pim_active_assignment',$obj)
+			$returnData.aad_pim_active_assignment = $obj;
 		}
 		else {
 			$msg = @{
@@ -168,7 +168,7 @@ function Get-MonkeyEntraRoleDefinition {
 				Data = $all_eligible_ra;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.Add('aad_pim_eligible_assignment',$obj)
+			$returnData.aad_pim_eligible_assignment = $obj;
 		}
 		else {
 			$msg = @{

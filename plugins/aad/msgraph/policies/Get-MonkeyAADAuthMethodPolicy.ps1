@@ -100,7 +100,7 @@ function Get-MonkeyAADAuthMethodPolicy {
 				Data = $auth_methods;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.Add('aad_auth_method_policies',$obj)
+			$returnData.aad_auth_method_policies = $obj;
 		}
 		else {
 			$msg = @{
