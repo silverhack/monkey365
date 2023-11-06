@@ -44,9 +44,9 @@ Function Get-MonkeyExoRedirectUri{
     )
     [psobject]$EnvRedirectUri = @{
         AzurePublic = 'https://login.microsoftonline.com/common/oauth2/nativeclient';
-        AzureGermany = 'https://login.microsoftonline.de/organizations';
-        AzureChina = 'https://login.chinacloudapi.cn/organizations';
-        AzureUSGovernment = 'https://login.microsoftonline.us/organizations';
+        AzureGermany = 'https://login.microsoftonline.de/organizations/oauth2/nativeclient';
+        AzureChina = 'https://login.chinacloudapi.cn/organizations/oauth2/nativeclient';
+        AzureUSGovernment = 'https://login.microsoftonline.us/organizations/oauth2/nativeclient';
     }
     #Check if resource exists
     if($EnvRedirectUri.ContainsKey($Environment)){
