@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Out-Compress {
+function Out-Gzip {
     <#
         .SYNOPSIS
-		https://stackoverflow.com/questions/53583677/unexpected-convertto-json-results-answer-it-has-a-default-depth-of-2
+		Out-Gzip
 
         .DESCRIPTION
-		https://stackoverflow.com/questions/53583677/unexpected-convertto-json-results-answer-it-has-a-default-depth-of-2
+		Out-Gzip
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Out-Compress {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Out-Compress
+            File Name	: Out-Gzip
             Version     : 1.0
 
         .LINK
@@ -43,7 +43,7 @@ function Out-Compress {
         [ValidateNotNullOrEmpty()]
         [PSObject[]]$InputObject,
 
-        [Parameter(Mandatory=$false,ValueFromPipeline=$true)]
+        [Parameter(Mandatory=$true)]
         [String]$outFile
     )
     begin {
@@ -60,7 +60,7 @@ function Out-Compress {
             Write-Verbose -Message ($Script:messages.GzipOutputMessage -f $outFile);
         }
         catch{
-            Write-Debug -Message $_
+            Write-Verbose -Message $_
             $type = $null
         }
     }
@@ -69,7 +69,7 @@ function Out-Compress {
             try {
                 [void]$type.InvokeMember("Serialize", "InvokeMethod,NonPublic,Instance", $null, $serializer, [object[]]@($InputObject))
             } catch {
-                Write-Debug -Message ($Script:messages.SerializationError -f $InputObject.GetType(), $_)
+                Write-Verbose -Message ($Script:messages.SerializationError -f $InputObject.GetType(), $_)
             }
         }
     }
@@ -79,7 +79,7 @@ function Out-Compress {
             #$sw.ToString()
             $xw.Close()
             $sw.Dispose()
-            Write-Debug -Message ($Script:messages.GzipOutputInfoMessage -f $outFile)
+            Write-Verbose -Message ($Script:messages.GzipOutputInfoMessage -f $outFile)
         }
     }
 }

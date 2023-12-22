@@ -7,6 +7,7 @@
     UnableToGetToken                 = Unable to get token for {0}
     EndpointNotFound                 = Endpoint not found {0}
     SuccessfullyConnectedTo          = Successfully connected to {0}
+    TokenAcquiredInfoMessage         = A new token was successfully acquired for {0}
     ConnectionError                  = Unable to connect to {0}
     SPSAdminUrlErrorMessage          = Unable to get Sharepoint Admin Url
     SPSSiteUrlErrorMessage           = Unable to get Sharepoint Url

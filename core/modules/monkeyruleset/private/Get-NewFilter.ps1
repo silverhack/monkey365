@@ -33,44 +33,96 @@ Function Get-NewFilter{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [String]$element_to_check,
+        [parameter(Mandatory=$True,HelpMessage="Element to check")]
+        [AllowNull()]
+        [AllowEmptyString()]
+        [String]$LeftItem,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [String]$verb,
+        [parameter(Mandatory=$True,HelpMessage="Operator")]
+        [String]$Operator,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [Object]$value
+        [parameter(Mandatory=$True,HelpMessage="Right item")]
+        [AllowNull()]
+        [AllowEmptyString()]
+        [Object]$RightItem
     )
     Process{
-        $tmp_filter = $null;
+        $tmp_filter = $nullLeft = $pipeline = $null;
+        if([string]::IsNullOrEmpty($LeftItem)){
+            $nullLeft = $True
+        }
+        if($LeftItem -eq '{$_}'){
+            $pipeline = $True
+        }
         #Pass value and try to cast to a real reference
-        $converted_value = Convert-Value -value $value;
-        if([string]::IsNullOrEmpty($verb)){
-            $tmp_filter = ('$_.{0}' -f $element_to_check)
+        $converted_value = Convert-Value -Value $RightItem;
+        if([string]::IsNullOrEmpty($Operator)){
+            if($nullLeft){
+                $tmp_filter = ('$null')
+            }
+            Elseif($pipeline){
+                $tmp_filter = '$_'
+            }
+            else{
+                $tmp_filter = ('$_.{0}' -f $LeftItem)
+            }
+        }
+        elseif([string]::IsNullOrEmpty($converted_value)){
+            if($nullLeft){
+                $tmp_filter = ('$null -{0} $null' -f $Operator)
+            }
+            Elseif($pipeline){
+                $tmp_filter = ('$_ -{0} $null' -f $Operator)
+            }
+            else{
+                $tmp_filter = ('$null -{0} $_.{1}' -f $Operator, $LeftItem)
+            }
         }
         elseif($converted_value -is [string]){
-            $tmp_filter = ('$_.{0} -{1} "{2}"' -f $element_to_check, $verb, $converted_value)
+            if($nullLeft){
+                $tmp_filter = ('$null -{0} ''{1}''' -f $Operator, [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value))
+            }
+            Elseif($pipeline){
+                $tmp_filter = ('$_ -{0} ''{1}''' -f $Operator, [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value))
+            }
+            else{
+                $tmp_filter = ('$_.{0} -{1} ''{2}''' -f $LeftItem, $Operator, [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value))
+            }
         }
         elseif($converted_value -is [Boolean]){
-            $tmp_filter = ('$_.{0} -{1} ${2}' -f $element_to_check, $verb, $converted_value)
+            if($nullLeft){
+                $tmp_filter = ('$null -{0} ${1}' -f $Operator, $converted_value)
+            }
+            Elseif($pipeline){
+                $tmp_filter = ('$_ -{0} ${1}' -f $Operator, $converted_value)
+            }
+            else{
+                $tmp_filter = ('$_.{0} -{1} ${2}' -f $LeftItem, $Operator, $converted_value)
+            }
         }
-        elseif($null -eq $converted_value){
-            $tmp_filter = ('$null -{0} $_.{1}' -f $verb, $element_to_check)
-        }
-        <#
-        elseif([string]::IsNullOrEmpty($converted_value)){
-            $tmp_filter = ('$_.{0} -{1} $null' -f $element_to_check, $verb)
-        }
-        #>
         elseif($converted_value -is [System.Array]){
-            #$tmp_filter = ('$_.{0} -{1} ("{2}")' -f $element_to_check, $verb,(@($converted_value) -join ','))
-            $tmp_filter = ('$_.{0} -{1} ({2})' -f $element_to_check, $verb,('"' + ($converted_value -join -join '","')+ '"'))
+            if($nullLeft){
+                $tmp_filter = ('$null -{0} ({1})' -f $Operator,('"' + ([System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value) -join -join '","')+ '"'))
+            }
+            Elseif($pipeline){
+                $tmp_filter = ('$_ -{0} ({1})' -f $Operator,('"' + ([System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value) -join -join '","')+ '"'))
+            }
+            else{
+                $tmp_filter = ('$_.{0} -{1} ({2})' -f $LeftItem, $Operator,('"' + ([System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value) -join -join '","')+ '"'))
+            }
         }
         else{
-            $tmp_filter = ('$_.{0} -{1} {2}' -f $element_to_check, $verb, $converted_value)
+            if($nullLeft){
+                $tmp_filter = ('$null -{0} {1}' -f $Operator, $converted_value)
+            }
+            Elseif($pipeline){
+                $tmp_filter = ('$_ -{0} {1}' -f $Operator, $converted_value)
+            }
+            else{
+                $tmp_filter = ('$_.{0} -{1} {2}' -f $LeftItem, $Operator, $converted_value)
+            }
         }
         if($tmp_filter){
             return $tmp_filter

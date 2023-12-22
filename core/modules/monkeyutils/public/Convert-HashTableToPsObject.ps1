@@ -36,25 +36,27 @@ function Convert-HashTableToPsObject{
 
     [CmdletBinding()]
     Param (
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [HashTable]$hashtable,
+        [parameter(Mandatory=$false,ValueFromPipeline = $True, HelpMessage="Hashtable")]
+        [HashTable]$InputObject,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$false,HelpMessage="Object Name")]
         [String]$psName
     )
     Begin{
-        #$object = New-Object PSObject
+        $object = $null
     }
     Process{
-        #$_.GetEnumerator() | ForEach-Object { Add-Member -inputObject $object -memberType NoteProperty -name $_.Name -value $_.Value }
-        foreach ( $key in $hashtable.Keys | Where-Object {$null -ne $hashtable[$_] -and $hashtable[$_].GetType() -eq @{}.GetType() } ) {
-            $hashtable[$key] = Convert-HashTableToPsObject $hashtable[$key]
+        If(([System.Collections.IDictionary]).IsAssignableFrom($InputObject.GetType())){
+            #$_.GetEnumerator() | ForEach-Object { Add-Member -inputObject $object -memberType NoteProperty -name $_.Name -value $_.Value }
+            foreach ( $key in $InputObject.Keys | Where-Object {$null -ne $InputObject[$_] -and $InputObject[$_].GetType() -eq @{}.GetType() } ) {
+                $InputObject[$key] = Convert-HashTableToPsObject $InputObject[$key]
+            }
+            #Create custom object
+            $object = New-Object PSObject -Property $InputObject
         }
-        #Create custom object
-        $object = New-Object PSObject -Property $hashtable
     }
     End{
-        if($psName){
+        if($null -ne $object -and $psName){
             $object.PSObject.TypeNames.Insert(0,$psName)
         }
         $object

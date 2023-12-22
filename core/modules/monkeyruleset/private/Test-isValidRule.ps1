@@ -36,38 +36,47 @@ Function Test-isValidRule{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     Param (
-        [parameter(Mandatory=$true, HelpMessage="Rule object")]
-        [Object]$Rule
+        [parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Rule object")]
+        [Object]$InputObject
     )
-    $isvalid = $false;
-    #Rule valid keys
-    $skeleton = @(
-        'issue_name',
-        'description',
-        'rationale',
-        'references',
-        'path',
-        'display_path',
-        'conditions',
-        'id_suffix'
-    )
-    try{
-        foreach ($key in $skeleton){
-            if ($null -ne $Rule.psobject.Properties.Item($key)){
-                #passed test
-                $isvalid = $True;
-                continue;
-            }
-            else{
-                #Invalid element found
-                $isvalid = $false;
+    Process{
+        $missingElements = @();
+        #Rule valid keys
+        $skeleton = @(
+            'serviceType',
+            'serviceName',
+            'displayName',
+            'description',
+            'rationale',
+            'references',
+            'path',
+            'conditions',
+            'idSuffix'
+        )
+        try{
+            foreach ($key in $skeleton){
+                if ($null -ne $InputObject.psobject.Properties.Item($key)){
+                    #passed test
+                    continue;
+                }
+                else{
+                    #no element was found
+                    $missingElements+=$key
+                }
             }
         }
+        catch{
+            #Invalid rule
+            return $false;
+        }
+        if($missingElements.Count -eq 0){
+            Write-Verbose ($Script:messages.ValidObjectMessage -f "rule")
+            return $true
+        }
+        else{
+            $missing = @($missingElements) -join ','
+            Write-Warning ($Script:messages.MissingElementsMessage -f "rule", $missing)
+            return $false
+        }
     }
-    catch{
-        #Invalid rule
-        $isvalid = $false;
-        return $isvalid;
-    }
-    return $isvalid;
 }

@@ -62,7 +62,7 @@ Function New-HtmlReport{
         [Object]$dashboardData,
 
         [Parameter(Mandatory=$True)]
-        [ValidateSet('Azure','Microsoft365','AzureAD')]
+        [ValidateSet('Azure','Microsoft365','EntraID')]
         [String]$Instance,
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
@@ -128,7 +128,7 @@ Function New-HtmlReport{
         }
         #Get Modal
         $param = @{
-            modal_title = "Monkey 365 error";
+            modal_title = "Monkey365 error";
             id_modal = "my_modal";
             WithFooter = $True;
             addCloseButton = $True;

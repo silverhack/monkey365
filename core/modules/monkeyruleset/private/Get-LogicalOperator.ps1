@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Get-MonkeyGuid{
+function Get-LogicalOperator{
     <#
         .SYNOPSIS
+        Returns a scriptblock object that represents the compiled query
 
         .DESCRIPTION
+        Returns a scriptblock object that represents the compiled query
 
         .INPUTS
 
@@ -27,12 +29,31 @@ Function Get-MonkeyGuid{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyGuid
+            File Name	: Get-LogicalOperator
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
-    return ([System.Guid]::NewGuid()).ToString()
+    [CmdletBinding()]
+    [OutputType([System.Management.Automation.ScriptBlock])]
+    Param (
+        [parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Conditions")]
+        [String]$InputObject
+    )
+    Process{
+        Try{
+            $obj = @($InputObject)
+            [array]$indexed_operators = [Linq.Enumerable]::Where(
+                [Linq.Enumerable]::Range(0, $obj.Length),
+                [Func[int, bool]] { param($i)
+                    $obj[$i] -eq 'or' -or $obj[$i] -eq 'and' -or $obj[$i] -eq 'xor'
+                }
+            )
+            return $indexed_operators
+        }
+        Catch{
+            Write-Error $_
+        }
+    }
 }

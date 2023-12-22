@@ -1,4 +1,4 @@
-﻿Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version 1.0
 
 $listofFiles = [System.IO.Directory]::EnumerateFiles(("{0}" -f $PSScriptRoot),"*.ps1","AllDirectories")
 $all_files = $listofFiles.Where({($_ -like "*public*") -or ($_ -like "*private*")})

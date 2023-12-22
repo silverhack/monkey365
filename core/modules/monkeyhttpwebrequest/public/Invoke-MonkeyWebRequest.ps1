@@ -55,7 +55,7 @@ Function Invoke-MonkeyWebRequest{
         [String]$Referer,
 
         [Parameter(Mandatory = $false, HelpMessage='Timeout threshold for request operations in timespan format')]
-        [int32]$TimeOut = 20,
+        [int32]$TimeOut = 60,
 
         [parameter(Mandatory=$False, HelpMessage='cookies')]
         [Object[]]$Cookies,
@@ -129,6 +129,10 @@ Function Invoke-MonkeyWebRequest{
                         $newPsboundParams.Add($p,$PSBoundParameters[$p])
                     }
                 }
+                #Add verbose, debug, etc..
+                [void]$newPsboundParams.Add('InformationAction',$InformationAction)
+                [void]$newPsboundParams.Add('Verbose',$Verbose)
+                [void]$newPsboundParams.Add('Debug',$Debug)
             }
             #get new http client
             $httpClient = New-HttpClient @newPsboundParams
@@ -142,6 +146,10 @@ Function Invoke-MonkeyWebRequest{
                     $newPsboundParams.Add($p,$PSBoundParameters[$p])
                 }
             }
+            #Add verbose, debug, etc..
+            [void]$newPsboundParams.Add('InformationAction',$InformationAction)
+            [void]$newPsboundParams.Add('Verbose',$Verbose)
+            [void]$newPsboundParams.Add('Debug',$Debug)
         }
         #Get string content
         $body = New-StringContent @newPsboundParams
@@ -154,6 +162,10 @@ Function Invoke-MonkeyWebRequest{
                     $newPsboundParams.Add($p,$PSBoundParameters[$p])
                 }
             }
+            #Add verbose, debug, etc..
+            [void]$newPsboundParams.Add('InformationAction',$InformationAction)
+            #[void]$newPsboundParams.Add('Verbose',$Verbose)
+            [void]$newPsboundParams.Add('Debug',$Debug)
         }
         #Get string content
         $request = New-HttpRequestMessage @newPsboundParams

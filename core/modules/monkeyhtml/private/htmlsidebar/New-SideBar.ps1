@@ -43,7 +43,7 @@ function New-SideBar{
     )
     Begin{
         $sidebar = [xml] '<div class="vertical-nav" id="sidebar"></div>'
-        $menu_items = $items | Select-Object -ExpandProperty menu_name -Unique | Sort-Object
+        $menu_items = $items | Select-Object -ExpandProperty serviceName -Unique | Sort-Object
         ######Create ul and li elements ########
         $ul_attributes = @{
             class = 'nav-item';
@@ -155,7 +155,7 @@ function New-SideBar{
             #Append a to li element
             [void]$li.AppendChild($a)
             #Get Subitems
-            $subitems = $items | Where-Object {$_.menu_name -eq $item} | Select-Object -ExpandProperty dashboard_name -Unique
+            $subitems = $items | Where-Object {$_.serviceName -eq $item} | Select-Object -ExpandProperty serviceType -Unique
             #Create UL
             $sub_ul = $sidebar.CreateElement("ul")
             [void]$sub_ul.SetAttribute('class','nav-submenu collapse')

@@ -39,7 +39,7 @@ Function Convert-IssuesToHtmlCards{
     Param()
     $all_ps_elements = @()
     #Get flagged issues
-    $flagged_issues = $matched | Group-Object Dashboard_name
+    $flagged_issues = $matched | Group-Object serviceType
     foreach($resource in $flagged_issues){
         #Create new ObjectElement PsObject that will hold all the properties that will make the HTML pages
         $ObjectElement = New-Object -TypeName PSCustomObject
@@ -49,6 +49,8 @@ Function Convert-IssuesToHtmlCards{
         $all_modal_objects = @()
         #Iterate over all issues within group
         foreach($issue in $resource.Group){
+            $issue | Add-Member -Type NoteProperty -name idSuffix1 -value ($issue.getNewIdSuffix()) -Force
+            $issue | Add-Member -Type NoteProperty -name idSuffix2 -value ($issue.getNewIdSuffix()) -Force
             $new_html_issue = New-IssueCard -issue $issue -dashboard_name $resource.Name
             if($new_html_issue){
                 $all_html_issues+=$new_html_issue
@@ -58,6 +60,7 @@ Function Convert-IssuesToHtmlCards{
         $ObjectElement | Add-Member -type NoteProperty -name issues -value $all_html_issues
         #Get detailed issues
         foreach($issue in $resource.Group){
+            $table = $null;
             if($issue.level -ne 'Good'){
                 $data = $issue | New-PsHtmlObject
                 if($data){
@@ -78,9 +81,9 @@ Function Convert-IssuesToHtmlCards{
                         issueCard= $true;
                         card_class = 'monkey-issue-card d-none';
                         card_header_class = 'card-header-blue';
-                        title_header = $issue.issue_name;
+                        title_header = $issue.displayName;
                         span_class = $level;
-                        id_card = $issue.id_suffix2;
+                        id_card = $issue.idSuffix2;
                         body = $table;
                     }
                     $new_html_issue = Get-HtmlCard @params

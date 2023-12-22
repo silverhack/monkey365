@@ -36,104 +36,137 @@ Function Get-MonkeyMSALPSSessionForExchangeOnline {
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "", Scope="Function")]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingConvertToSecureStringWithPlainText", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidDefaultValueForMandatoryParameter", "", Scope="Function")]
     [CmdletBinding()]
     Param (
-       # pscredential of the application requesting the token
-       [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
-       [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
-       [Alias('user_credentials')]
-       [System.Management.Automation.PSCredential] $UserCredentials,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit', HelpMessage = 'Application Id')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-App', HelpMessage = 'Application Id')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate', HelpMessage = 'Application Id')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Application Id')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-IntegratedWindowsAuth', HelpMessage = 'Application Id')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-InputObject', HelpMessage = 'Application Id')]
+        [String]$ClientId = "1950a258-227b-4e31-a9cf-717495945fc2",
 
-        # Tenant identifier of the authority to issue token.
-        [Parameter(Mandatory = $false)]
-        [string] $TenantId,
+        [parameter(Mandatory= $false, ParameterSetName = 'Implicit', HelpMessage= "User for access to the O365 services")]
+        [String]$UserPrincipalName,
 
-        [parameter(Mandatory= $false, HelpMessage= "Select an instance of Azure services")]
-        [ValidateSet("AzurePublic","AzureGermany","AzureChina","AzureUSGovernment")]
-        [String]$Environment= "AzurePublic",
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-InputObject')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+        [System.Management.Automation.PSCredential]$UserCredentials,
 
-        # Identifier of the client requesting the token.
-        [Parameter(Mandatory = $false)]
-        [string] $ClientId,
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-App', HelpMessage = 'Client Secret')]
+        [Security.SecureString]$ClientSecret = [Security.SecureString]::new(),
 
-        # Secure secret of the client requesting the token.
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-App')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-AuthorizationCode')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-OnBehalfOf')]
-        [securestring] $ClientSecret,
-
-        # Secure secret of the client requesting the token.
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject', HelpMessage = 'PsCredential')]
         [Alias('client_credentials')]
-        [System.Management.Automation.PSCredential] $ClientCredentials,
+        [ValidateNotNull()]
+        [System.Management.Automation.PSCredential]$ClientCredentials,
 
-        # Client assertion certificate of the client requesting the token.
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-AuthorizationCode')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-OnBehalfOf')]
-        [System.Security.Cryptography.X509Certificates.X509Certificate2] $ClientAssertionCertificate,
-
-        # ClientAssertionCertificate of the application requesting the token
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-File')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-AuthorizationCode')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-OnBehalfOf')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Certificate file path')]
+        [ValidateScript(
+            {
+            if( -Not ($_ | Test-Path) ){
+                throw ("The cert file does not exist in {0}" -f (Split-Path -Path $_))
+            }
+            if(-Not ($_ | Test-Path -PathType Leaf) ){
+                throw "The argument must be a PFX file. Folder paths are not allowed."
+            }
+            if($_ -notmatch "(\.pfx)"){
+                throw "The certificate specified argument must be of type pfx"
+            }
+            return $true
+        })]
         [System.IO.FileInfo]$Certificate,
 
-        # Secure password of the certificate
-        [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Please specify the certificate password')]
-        [Security.SecureString] $CertFilePassword,
+        [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Certificate password')]
+        [Security.SecureString]$CertficatePassword,
 
-        # Public client application
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate', HelpMessage = 'Client assertion certificate')]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$ClientAssertionCertificate,
+
+        [parameter(Mandatory=$false, HelpMessage = 'Redirect URI')]
+        [System.Uri]$RedirectUri,
+
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-App')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-File')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'ClientSecret-ConfidentialApp')]
+        [String]$TenantId,
+
+        [parameter(Mandatory=$false, HelpMessage = 'Environment')]
+        [Microsoft.Identity.Client.AzureCloudInstance]$Environment = [Microsoft.Identity.Client.AzureCloudInstance]::AzurePublic,
+
+        [parameter(Mandatory=$false, HelpMessage = 'Instance')]
+        [String]$Instance,
+
+        [parameter(Mandatory=$false, HelpMessage = 'Authority')]
+        [System.Uri]$Authority,
+
         [Parameter(Mandatory = $true, ParameterSetName = 'Implicit-PublicApplication')]
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [Microsoft.Identity.Client.IPublicClientApplication] $PublicApp,
 
-        # Confidential client application
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-ConfidentialApp')]
-        [Parameter(Mandatory = $false, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [Microsoft.Identity.Client.IConfidentialClientApplication] $ConfidentialApp,
 
-        # The authorization code received from service authorization endpoint.
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-AuthorizationCode')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-AuthorizationCode')]
-        [string] $AuthorizationCode,
+        [Parameter(Mandatory = $false, ParameterSetName = 'ClientSecret-InputObject')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ConfidentialClientSecret-AuthorizationCode')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ConfidentialClientCertificate-AuthorizationCode')]
+        [String] $AuthorizationCode,
 
-        # Assertion representing the user.
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-OnBehalfOf')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-OnBehalfOf')]
-        [string] $UserAssertion,
+        [parameter(Mandatory= $false, HelpMessage= "Resource to connect")]
+        [String]$Resource,
 
-        # Type of the assertion representing the user.
-        [Parameter(Mandatory = $false, ParameterSetName = 'ClientSecret-OnBehalfOf')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'ClientAssertionCertificate-OnBehalfOf')]
-        [string] $UserAssertionType,
-
-        # Address to return to upon receiving a response from the authority.
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'ClientSecret-AuthorizationCode')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'ClientAssertionCertificate-AuthorizationCode')]
-        [uri] $RedirectUri,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+        [ValidateSet("SelectAccount", "NoPrompt", "Never", "ForceLogin")]
+        [String] $PromptBehavior = 'SelectAccount',
 
-        # Indicates whether AcquireToken should automatically prompt only if necessary or whether it should prompt regardless of whether there is a cached token.
-        [Parameter(Mandatory = $false)]
-        [ValidateSet("Always", "Auto", "Never", "RefreshSession","SelectAccount")]
-        [String] $PromptBehavior = 'Auto',
-
-        # This parameter will be appended as is to the query string in the HTTP authentication request to the authority.
+        # Ignore any access token in the user token cache and attempt to acquire new access token using the refresh token for the account if one is available.
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
-        [string] $extraQueryParameters,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-InputObject')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'ClientSecret-ConfidentialApp')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'ClientSecret-App')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'ClientSecret-InputObject')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'ClientAssertionCertificate')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'ClientAssertionCertificate-File')]
+        [Switch]$ForceRefresh,
 
-        [Parameter(Mandatory=$false, HelpMessage="Force Authentication Context. Only valid for user&password auth method")]
-        [Switch]$ForceAuth,
+        [Parameter(Mandatory=$false, HelpMessage="scopes")]
+        [Array]$Scopes,
+
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-InputObject')]
+        [String[]] $ExtraScopesToConsent,
+
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-IntegratedWindowsAuth')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-InputObject')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+        [Switch] $IntegratedWindowsAuth,
+
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-IntegratedWindowsAuth')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-InputObject')]
+        [String] $LoginHint,
+
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication', HelpMessage="Device code authentication")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-InputObject', HelpMessage="Device code authentication")]
+        [Switch]$DeviceCode,
 
         [Parameter(Mandatory=$false, HelpMessage="Force silent authentication")]
         [Switch]$Silent,
 
-        [Parameter(Mandatory=$false, HelpMessage="Force refresh token")]
-        [Switch]$ForceRefresh,
-
-        [Parameter(Mandatory=$false, HelpMessage="Device code authentication")]
-        [Switch]$DeviceCode
+        [Parameter(Mandatory=$false, ParameterSetName = 'Implicit', HelpMessage="Force Authentication Context. Only valid for user&password auth method")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
+        [Switch]$ForceAuth
     )
     Begin{
         #Get InformationAction

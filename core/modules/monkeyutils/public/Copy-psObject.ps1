@@ -12,14 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-Function Copy-psObject{
+Function Copy-PsObject {
     <#
         .SYNOPSIS
-		Clone a psObject
 
         .DESCRIPTION
-		Clone a psObject
 
         .INPUTS
 
@@ -30,7 +27,7 @@ Function Copy-psObject{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Copy-psObject
+            File Name	: Copy-PsObject
             Version     : 1.0
 
         .LINK
@@ -38,25 +35,16 @@ Function Copy-psObject{
     #>
 
     [CmdletBinding()]
-    Param (
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [Object]$Object
+    param (
+        [Parameter(
+            Position = 0,
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true
+        )] [object] $InputObject
     )
     Process{
-        try{
-            $memory_stream = New-Object System.IO.MemoryStream
-            $binary_formatter = New-Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            $binary_formatter.Serialize($memory_stream, $object)
-            $memory_stream.Position = 0
-            $shadow_object = $binary_formatter.Deserialize($memory_stream)
-            $memory_stream.Close()
-            #return cloned object
-            return $shadow_object
-        }
-        catch{
-            Write-Warning -Message $Scriptmessages.UnableToCloneObject;
-            #Debug
-            Write-Debug $_.Exception
-        }
+        $obj_serializer = [System.Management.Automation.PSSerializer]::Serialize($InputObject, [int32]::MaxValue)
+        return [System.Management.Automation.PSSerializer]::Deserialize($obj_serializer)
     }
 }

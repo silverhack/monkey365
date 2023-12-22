@@ -50,7 +50,7 @@ Function Get-HtmlIcon{
             'Enterprise Applications'='assets/inc-azicons/identity/10225-icon-service-Enterprise-Applications.svg'
             'Conditional Access'='assets/inc-azicons/security/10233-icon-service-Conditional-Access.svg'
             'App Services'='assets/inc-azicons/app services/10035-icon-service-App-Services.svg'
-            'Azure AD Identity'='assets/inc-azicons/identity/10230-icon-service-Users.svg'
+            'Entra ID Identity'='assets/inc-azicons/identity/10230-icon-service-Users.svg'
             'Identity Protection'='assets/inc-azicons/identity/10231-icon-service-Azure-AD-Identity-Protection.svg'
             'Applications'='assets/inc-azicons/identity/10225-icon-service-Enterprise-Applications.svg'
             'Subscription Policies'='assets/inc-azicons/management + governance/10316-icon-service-Policy.svg'

@@ -37,69 +37,59 @@ Function Initialize-HtmlData{
     #>
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory=$true, ParameterSetName='issue', position=0, ValueFromPipeline=$true, HelpMessage="Object")]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Object")]
         [Object]$InputObject
     )
-    Begin{
-        #Nothing to do here
-    }
     Process{
-        #ReturnObject and extendedData Generic List
-        $returnObject = New-Object System.Collections.Generic.List[System.Object]
+        #extendedData Generic List
         $extendedData = New-Object System.Collections.Generic.List[System.Object]
-        #Formatting object
-        If($null -ne $InputObject.affected_resources){
-            #Check for limits
-            if($null -ne $InputObject.actions.objectData.PsObject.Properties.Item('limit') -and $null -ne $InputObject.actions.objectData.limit){
-                [int]$int_min_value = [int32]::MinValue;
-                [bool]$integer = [int]::TryParse($InputObject.actions.objectData.limit, [ref]$int_min_value);
-                if($integer){
-                    $elements = $InputObject.affected_resources | Select-Object -First $InputObject.actions.objectData.limit
+        try{
+            $showModal = [System.Convert]::ToBoolean($InputObject.actions.showModalButton)
+            $goTo = [System.Convert]::ToBoolean($InputObject.actions.showGoToButton)
+            $expand = $InputObject.actions.objectData | Select-Object -ExpandProperty expand -ErrorAction Ignore
+            $format = $InputObject.actions.objectData.format
+        }
+        catch{
+            $showModal = $false
+            $goTo = $false
+            $expand = '*'
+            $format = 'json'
+        }
+        try{
+            #Formatting object
+            If($null -ne $InputObject.affectedResources){
+                $returnObject = $InputObject | ConvertTo-PsTableObject
+                if($null -eq $returnObject){
+                    #convert objects
+                    $returnObject = $InputObject.affectedResources | Format-PsObject
                 }
                 else{
-                    Write-Verbose "Unable to limit objects"
-                }
-            }
-            else{
-                $elements = $InputObject.affected_resources
-            }
-            If($null -ne $InputObject.translate){
-                ForEach($element in $elements){
-                    $new_element = New-Object -TypeName PSCustomObject
-                    ForEach($prop in $InputObject.translate.PsObject.Properties){
-                        try{
-                            $value = $element.GetPropertyByPath($prop.Name)
-                            #Update psObject (escape values, convert to URI format, etc..)
-                            $value = $value | Format-PsObject
-                            if($value -is [System.Collections.IEnumerable] -and $value -isnot [string]){
-                                $value = (@($value) -join ',')
-                            }
-                            $new_element | Add-Member -type NoteProperty -name $prop.Value -value $value
-                        }
-                        catch{
-                            Write-Warning ("Error in {0}" -f $issue.id_suffix)
-                            Write-Warning ($_.Exception)
-                        }
-                    }
-                    #Add to array
-                    [void]$returnObject.Add($new_element);
                     #Check if modal
-                    if($null -ne $InputObject.actions.PsObject.Properties.Item('showModalButton') -and $InputObject.actions.showModalButton -eq $true){
-                        if($null -ne $InputObject.actions.objectData.expand){
-                            if($InputObject.actions.objectData.expand.Contains('*')){
-                                $selected_elements = $element | Select-Object * -ErrorAction Ignore
+                    if($showModal){
+                        foreach($element in $InputObject.affectedResources){
+                            $selected_elements = $null;
+                            if($expand -eq '*'){
+                                $selected_elements = $element | Select-Object * -ExcludeProperty Raw -ErrorAction Ignore
                             }
                             else{
                                 try{
                                     $selected_elements = New-Object -TypeName PSCustomObject
-                                    foreach($key in @($InputObject.actions.objectData.expand)){
+                                    foreach($key in @($expand)){
                                         $value = $element.GetPropertyByPath($key)
                                         #Update psObject (escape values, convert to URI format, etc..)
-                                        $value = $value | Select-Object * -ExcludeProperty rawObject
+                                        if($null -ne $value){
+                                            $isPsCustomObject = ([System.Management.Automation.PSCustomObject]).IsAssignableFrom($value.GetType())
+                                            #check if PsObject
+                                            $isPsObject = ([System.Management.Automation.PSObject]).IsAssignableFrom($value.GetType())
+                                            if($isPsCustomObject -or $isPsObject){
+                                                $value = $value | Select-Object * -ExcludeProperty rawObject
+                                            }
+                                        }
                                         $value = $value | Format-PsObject
-                                        $selected_elements | Add-Member -type NoteProperty -name $key -value $value -Force
+                                        $selected_elements | Add-Member -type NoteProperty -name ($key.Split('.')[-1]) -value $value -Force
                                     }
                                 }
                                 catch{
@@ -108,7 +98,7 @@ Function Initialize-HtmlData{
                                 }
                             }
                             if($null -ne $selected_elements){
-                                if($InputObject.actions.objectData.format -eq "json"){
+                                if($format -eq "json"){
                                     $id = ("rawObject_{0}" -f [System.Guid]::NewGuid().Guid.Replace('-','').ToString())
                                 }
                                 else{
@@ -116,7 +106,7 @@ Function Initialize-HtmlData{
                                 }
                                 $new_obj = [psobject]@{
                                     raw_data = $selected_elements;
-                                    format = $InputObject.actions.objectData.format;
+                                    format = $format;
                                     id = $id;
                                 }
                                 #Add to array
@@ -124,22 +114,16 @@ Function Initialize-HtmlData{
                             }
                         }
                     }
-                    #End modal
                 }
             }
-            else{
-                Write-Verbose ("Empty translate properties found on {0}" -f $InputObject.id_suffix)
-                #convert objects
-                $returnObject = $InputObject.affected_resources | Format-PsObject
-            }
+            #Update PsObject
+            $InputObject | Add-Member -type NoteProperty -name data -value $returnObject -Force
+            $InputObject | Add-Member -type NoteProperty -name extended_data -value $extendedData -Force
+            ## Return the object but don't enumerate it
+            $InputObject
         }
-        #Update PsObject
-        $InputObject | Add-Member -type NoteProperty -name data -value $returnObject -Force
-        $InputObject | Add-Member -type NoteProperty -name extended_data -value $extendedData -Force
-        ## Return the object but don't enumerate it
-        $InputObject
-    }
-    End{
-        #Nothing to do here
+        catch{
+            Write-Error $_
+        }
     }
 }

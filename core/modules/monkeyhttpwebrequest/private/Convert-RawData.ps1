@@ -42,19 +42,25 @@ Function Convert-RawData{
         [parameter(Mandatory=$false, HelpMessage='Content type')]
         [String]$ContentType
     )
-    switch -Regex ($ContentType) {
-        "application/(json)"
-        {
-            $RawResponse = ConvertFrom-Json -InputObject $RawObject
+    $RawResponse = $null;
+    try{
+        switch -Regex ($ContentType) {
+            "application/(json)"
+            {
+                $RawResponse = ConvertFrom-Json -InputObject $RawObject
+            }
+            "application/(xml)"
+            {
+                $RawResponse = Convert-RawObjectToXml -RawObject $RawObject
+            }
+            Default
+            {
+                $RawResponse = $RawObject
+            }
         }
-        "application/(xml)"
-        {
-            $RawResponse = Convert-RawObjectToXml -RawObject $RawObject
-        }
-        Default
-        {
-            $RawResponse = $RawObject
-        }
+    }
+    catch{
+        Write-Verbose $_.Exception.Message
     }
     #Return Object
     Return $RawResponse

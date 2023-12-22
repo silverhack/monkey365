@@ -71,13 +71,26 @@ Function New-StringContent{
             $body = [System.Net.Http.StringContent]::new('',[System.Text.Encoding]::UTF8)
         }
         #Add content type
-        if($PSBoundParameters.ContainsKey('ContentType')){
-            [System.Net.Http.Headers.MediaTypeHeaderValue]$mediaType = $null
-            if([System.Net.Http.Headers.MediaTypeHeaderValue]::TryParse($ContentType.ToString(),[ref]$mediaType)){
-                $body.Headers.ContentType = $mediaType
+        if($PSBoundParameters.ContainsKey('ContentType') -and $PSBoundParameters['ContentType']){
+            try{
+                [System.Net.Http.Headers.MediaTypeHeaderValue]$mediaType = $null
+                if([System.Net.Http.Headers.MediaTypeHeaderValue]::TryParse($ContentType.ToString(),[ref]$mediaType)){
+                    $body.Headers.ContentType = $mediaType
+                }
+                else{
+                    Write-Verbose ("ContentType {0} not supported. Adding without validation" -f $ContentType)
+                    [void]$body.Headers.TryAddWithoutValidation('ContentType',$ContentType)
+                }
             }
-            else{
-                Write-Warning ("ContentType {0} not supported" -f $ContentType)
+            catch{
+                Write-Error $_
+                $param = @{
+                    Message = $_.Exception;
+                    Verbose = $Verbose;
+                    Debug = $Debug;
+                    InformationAction = $InformationAction;
+                }
+                Write-Verbose @param
             }
         }
         #Add headers
@@ -104,7 +117,7 @@ Function New-StringContent{
                                         $body.Headers.ContentType = $mediaType
                                     }
                                     else{
-                                        Write-Warning ("ContentType {0} not supported" -f $header.Value)
+                                        Write-Verbose ("ContentType {0} not supported" -f $header.Value)
                                     }
                                 }
                                 'contentlength'
@@ -114,7 +127,7 @@ Function New-StringContent{
                                         $body.Headers.ContentLength = $contentLength
                                     }
                                     else{
-                                        Write-Warning ("ContentLength {0} not supported" -f $header.Value)
+                                        Write-Verbose ("ContentLength {0} not supported" -f $header.Value)
                                     }
                                 }
                                 'contentdisposition'
@@ -159,7 +172,7 @@ Function New-StringContent{
                         Debug = $Debug;
                         InformationAction = $InformationAction;
                     }
-                    Write-Debug @param
+                    Write-Verbose @param
                 }
             }
         }

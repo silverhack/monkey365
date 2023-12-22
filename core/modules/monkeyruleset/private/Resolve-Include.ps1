@@ -15,8 +15,10 @@
 Function Resolve-Include{
     <#
         .SYNOPSIS
+        Resolve include query
 
         .DESCRIPTION
+        Resolve include query
 
         .INPUTS
 
@@ -33,59 +35,49 @@ Function Resolve-Include{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
-        [parameter(Mandatory=$true, HelpMessage="Include file")]
-        [string]$include_file,
-
-        [parameter(Mandatory=$true, HelpMessage="Conditions Path")]
-        [string]$conditions_path
+        [parameter(Mandatory=$True,HelpMessage="Statement")]
+        [Object]$Statement
     )
-    $new_filter = @()
-    $pass_filter = $null
-    $pass_nested_filter = ""
-    $inc_file = $include_file.Split("(").split(")")[1]
-    $conditions_file = ("{0}/{1}" -f $conditions_path, $inc_file.ToString())
-    $file_exists = [System.IO.File]::Exists($conditions_file)
-    if($file_exists){
-        try{
-            $new_conditions = (Get-Content $conditions_file -Raw) | ConvertFrom-Json
-            $first_verb = $new_conditions.conditions[0]
-            foreach($condition in $new_conditions.conditions[1..($new_conditions.conditions.length -1)]){
-                $is_filter = Test-IsNewFilter -conditions $condition
-                if($is_filter){
-                    if($condition.Length -eq 2){$condition+=[string]::Empty}
-                    $prepare_filter = [ordered]@{
-                        element_to_check = $condition[0];
-                        verb = $condition[1];
-                        value = $condition[2];
-                    }
-                    $filter = Get-NewFilter @prepare_filter
-                    $new_filter+=$filter
+    try{
+        $includeFile = $Statement.include
+        $isRoot = [System.IO.Path]::IsPathRooted($includeFile);
+        if($isRoot){
+            if([System.IO.File]::Exists($includeFile)){
+                try{
+                    $new_condition = (Get-Content $includeFile -Raw) | ConvertFrom-Json
+                    ConvertTo-Query -Conditions $new_condition
                 }
-                else{
-                    $first = (@($new_filter) -join (' -{0} ' -f $first_verb))
-                    $nested_filter = Get-NestedFilter -condition $condition
-                    if($nested_filter){
-                        $pass_nested_filter += $nested_filter
-                    }
+                catch{
+                    Write-Warning $_.Exception.Message
+                    Write-Verbose $_.Exception
                 }
-            }
-            if($pass_nested_filter){
-                $pass_filter = ("{0} {1}" -f $first, $pass_nested_filter)
-                return [ScriptBlock]::Create(("({0})" -f$pass_filter))
-                #return $pass_filter
             }
             else{
-                $pass_filter = (@($new_filter) -join (' -{0} ' -f $first_verb))
-                return [ScriptBlock]::Create(("({0})" -f$pass_filter))
-                #return $pass_filter
+                Write-Warning ("The file {0} does not exists" -f $includeFile)
             }
         }
-        catch{
-            Write-warning ($Script:messages.InvalidCondition -f $inc_file)
-            #Write verbose
-            Write-Verbose $_
+        else{
+            if($null -ne (Get-Variable -Name ConditionsPath -Scope Script -ErrorAction Ignore)){
+                $rule = Get-File -FileName $includeFile -Rulepath $Script:ConditionsPath
+                if($rule){
+                    try{
+                        $new_condition = (Get-Content $rule.FullName -Raw) | ConvertFrom-Json
+                        ConvertTo-Query -Conditions $new_condition
+                    }
+                    catch{
+                        Write-Warning $_.Exception.Message
+                        Write-Verbose $_.Exception
+                    }
+                }
+            }
+            else{
+                Write-Warning ("Unable to resolve include file {0}" -f $includeFile)
+            }
         }
+    }
+    catch{
+        Write-Error $_
     }
 }

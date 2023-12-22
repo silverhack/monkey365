@@ -43,11 +43,12 @@ Function Confirm-IfMSALPublicApp{
     )
     $isPublicApp = $true
     $confidentialParams=@(
-        'ClientAssertionCertificate',
-        'certificate_credentials',
         'ClientSecret',
+        'ClientCredentials',
         'Certificate',
-        'ConfidentialApp'
+        'CertficatePassword',
+        'ConfidentialApp',
+        'AuthorizationCode'
     )
     foreach ($param in $parameters.GetEnumerator()){
         if ($param.key -in $confidentialParams) { $isPublicApp = $false }

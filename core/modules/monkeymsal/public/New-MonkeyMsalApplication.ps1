@@ -35,49 +35,68 @@ function New-MonkeyMsalApplication{
     #>
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidDefaultValueForMandatoryParameter", "", Scope="Function")]
     [CmdletBinding()]
-    param
+    Param
     (
-        [Parameter(Mandatory = $false, HelpMessage = 'Application Id')]
-        [string] $clientId = "1950a258-227b-4e31-a9cf-717495945fc2",
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit', HelpMessage = 'Application Id')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-App', HelpMessage = 'Application Id')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate', HelpMessage = 'Application Id')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Application Id')]
+        [String]$ClientId = "1950a258-227b-4e31-a9cf-717495945fc2",
 
-        # Client secret
-        [Parameter(Mandatory = $false, HelpMessage = 'Client Secret')]
-        [Security.SecureString] $clientsecret = [Security.SecureString]::new(),
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-App', HelpMessage = 'Client Secret')]
+        [Security.SecureString]$ClientSecret = [Security.SecureString]::new(),
 
-        # pscredential of the application requesting the token
-        [Parameter(Mandatory = $false, HelpMessage = 'PsCredential')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject', HelpMessage = 'PsCredential')]
+        [Alias('client_credentials')]
         [ValidateNotNull()]
-        [System.Management.Automation.PSCredential] $client_credentials,
+        [System.Management.Automation.PSCredential]$ClientCredentials,
 
-        # Client certificate
-        [Parameter(Mandatory = $false, HelpMessage = 'Please specify the certificate file path')]
-        [System.IO.FileInfo] $certificate,
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Certificate file path')]
+        [System.IO.FileInfo]$Certificate,
 
-        [Parameter(Mandatory = $false, HelpMessage = 'Please specify the certificate password')]
-        [Security.SecureString] $certfilepassword,
+        [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Certificate password')]
+        [Security.SecureString]$CertFilePassword,
 
-        # Client assertion certificate of the client requesting the token.
-        [Parameter(Mandatory = $false)]
-        [System.Security.Cryptography.X509Certificates.X509Certificate2] $ClientAssertionCertificate,
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate', HelpMessage = 'Client assertion certificate')]
+        [System.Security.Cryptography.X509Certificates.X509Certificate2]$ClientAssertionCertificate,
 
-        # return address
-        [parameter(Mandatory=$false)]
-        [uri] $RedirectUri,
+        [parameter(Mandatory=$false, HelpMessage = 'Redirect URI')]
+        [System.Uri]$RedirectUri,
 
-        # Tenant identifier of the authority to issue token.
-        [parameter(Mandatory=$false)]
-        [string] $TenantId,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-App')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-File')]
+        [String]$TenantId,
 
-        # Azure AD Instance
-        [parameter(Mandatory=$false)]
+        [parameter(Mandatory=$false, HelpMessage = 'Environment')]
         [Microsoft.Identity.Client.AzureCloudInstance]$Environment = [Microsoft.Identity.Client.AzureCloudInstance]::AzurePublic,
 
-        [parameter(Mandatory=$false)]
-        [string] $Instance
+        [parameter(Mandatory=$false, HelpMessage = 'Instance')]
+        [String]$Instance,
+
+        [parameter(Mandatory=$false, HelpMessage = 'Authority')]
+        [System.Uri]$Authority,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'PublicClient-InputObject', Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Microsoft.Identity.Client.PublicClientApplicationOptions]$PublicClientOptions,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'ConfidentialClient-InputObject', Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Microsoft.Identity.Client.ConfidentialClientApplicationOptions] $ConfidentialClientOptions
     )
     Begin{
-        $Verbose = $Debug = $False;
+        $appBuilder = $newApplication = $null;
+        $Verbose = $Debug = $isPublicApp = $False;
+        #Check if public or confidential application
+        if($PSCmdlet.ParameterSetName -eq 'Implicit' -or $PSCmdlet.ParameterSetName -eq 'PublicClient-InputObject'){
+            $isPublicApp = $true
+        }
+        else{
+            $isPublicApp = $false
+        }
         $InformationAction = 'SilentlyContinue'
         if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
             $Verbose = $True
@@ -85,148 +104,113 @@ function New-MonkeyMsalApplication{
         if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
             $Debug = $True
         }
-        if($PSBoundParameters.ContainsKey('InformationAction')){
+        if($PSBoundParameters.ContainsKey('InformationAction') -and $PSBoundParameters['InformationAction']){
             $InformationAction = $PSBoundParameters['InformationAction']
         }
-        #Set clientId
-        if($PSBoundParameters.ContainsKey('clientId') -and $PSBoundParameters.clientId){
-            $clientId = $PSBoundParameters.clientId
-        }
-        else{
-            $clientId = "1950a258-227b-4e31-a9cf-717495945fc2"
-        }
-        $az_application = $null
-        $certificateApp = $false
-        $isPublicApp = $true
-        if($certificate){
-            $certificateApp = $true
-            $isPublicApp = $false
-        }
-        ## Check inputObject
-        if ($client_credentials) {
-            [string] $clientId = $client_credentials.UserName
-            [securestring] $clientsecret = $client_credentials.Password
-        }
-        if($clientsecret.Length -gt 0 -or $certificate){
-            $isPublicApp = $false
-        }
-        #Set parameters
-        if($clientsecret.Length -gt 0 -and -NOT $isPublicApp){
-            $az_args = @{
-                applicationId = $clientId;
-                ClientSecret = $clientsecret;
-                RedirectUri = $RedirectUri
-                TenantId =$TenantId;
-                Environment = $Environment;
-                Instance = $Instance;
-                isPublicApp = $isPublicApp;
+        switch -Wildcard ($PSCmdlet.ParameterSetName) {
+            "PublicClient*" {
+                $appBuilder = [Microsoft.Identity.Client.PublicClientApplicationBuilder]::CreateWithApplicationOptions($PublicClientOptions)
             }
-        }
-        else{
-            $az_args = @{
-                applicationId = $clientId;
-                RedirectUri = $RedirectUri
-                TenantId =$TenantId;
-                Environment = $Environment;
-                Instance = $Instance;
-                isPublicApp = $isPublicApp;
+            "ConfidentialClient*" {
+                $appBuilder = [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]::CreateWithApplicationOptions($ConfidentialClientOptions)
             }
-        }
-        if(!$certificateApp){
-            #Get options
-            $options = New-MonkeyMsalApplicationClientOptions @az_args
-            if($options -is [Microsoft.Identity.Client.ConfidentialClientApplicationOptions]){
-                $application_builder = [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]::CreateWithApplicationOptions($options)
-            }
-            elseif ($options -is [Microsoft.Identity.Client.PublicClientApplicationOptions]){
-                $application_builder = [Microsoft.Identity.Client.PublicClientApplicationBuilder]::CreateWithApplicationOptions($options)
-            }
-            if($RedirectUri){
-                $p = @{
-                    Message = ($script:messages.UsingRedirectUri -f $RedirectUri.AbsoluteUri);
-                    Verbose = $verbose;
+            "*" {
+                #Get command metadata
+                $AppOptions = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "New-MonkeyMSALApplicationClientOptions")
+                #Set new dict
+                $newPsboundParams = [ordered]@{}
+                $param = $AppOptions.Parameters.Keys
+                foreach($p in $param.GetEnumerator()){
+                    if($PSBoundParameters.ContainsKey($p)){
+                        $newPsboundParams.Add($p,$PSBoundParameters[$p])
+                    }
                 }
-                Write-Verbose @p
-                [void] $application_builder.WithRedirectUri($RedirectUri.AbsoluteUri)
-            }
-            if(-NOT $RedirectUri -or $null -eq $options.RedirectUri -and $options -is [Microsoft.Identity.Client.PublicClientApplicationOptions]) {
-                $p = @{
-                    Message = ($script:messages.UsingDefaultRedirectUri);
-                    Verbose = $verbose;
+                #Add verbose, debug, etc..
+                [void]$newPsboundParams.Add('InformationAction',$InformationAction)
+                [void]$newPsboundParams.Add('Verbose',$Verbose)
+                [void]$newPsboundParams.Add('Debug',$Debug)
+                #Add isPublicApp to parameters
+                [void]$newPsboundParams.Add('IsPublicApp',$isPublicApp)
+                ## Check inputObject
+                if ($PSBoundParameters.ContainsKey('ClientCredentials') -and $PSBoundParameters['ClientCredentials']) {
+                    [void]$newPsboundParams.Add('ClientId',$ClientCredentials.UserName)
+                    [void]$newPsboundParams.Add('ClientSecret',$ClientCredentials.Password)
                 }
-                Write-Verbose @p
-                [void] $application_builder.WithDefaultRedirectUri()
-            }
-        }
-        else{
-            $az_args = @{
-                applicationId = $clientId;
-                RedirectUri = $RedirectUri
-                TenantId =$TenantId;
-                Environment = $Environment;
-                Instance = $Instance;
-                isPublicApp = $isPublicApp;
-            }
-            $options = New-MonkeyMsalApplicationClientOptions @az_args
-            $application_builder = [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]::CreateWithApplicationOptions($options)
-            if($TenantId){
-                $p = @{
-                    Message = ($script:messages.UsingTenantId -f $TenantId);
-                    Verbose = $verbose;
+                #Get client options
+                $ClientOptions = New-MonkeyMsalApplicationClientOptions @newPsboundParams
+                #Create application
+                if($isPublicApp){
+                    $appBuilder = [Microsoft.Identity.Client.PublicClientApplicationBuilder]::CreateWithApplicationOptions($ClientOptions)
                 }
-                Write-Verbose @p
-                [void]$application_builder.WithTenantId($TenantId)
-            }
-            if($RedirectUri){
-                $p = @{
-                    Message = ($script:messages.UsingDefaultRedirectUri);
-                    Verbose = $verbose;
+                else{
+                    $appBuilder = [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]::CreateWithApplicationOptions($ClientOptions)
                 }
-                Write-Verbose @p
-                [void] $application_builder.WithDefaultRedirectUri()
             }
         }
     }
     Process{
-        if($application_builder){
-            try{
-                #Check if certificate credentials
-                if($certificate -and $application_builder -is [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]){
-                    #$Cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
-                    $client_cert = [System.IO.File]::ReadAllBytes($certificate)
-                    if($certfilepassword){
-                        $Cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2($client_cert, $certfilepassword, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::UserKeySet)
+        try{
+            if($null -ne $appBuilder){
+                #Add redirect Uri
+                if ($PSBoundParameters.ContainsKey('RedirectUri') -and $PSBoundParameters['RedirectUri']) {
+                    $p = @{
+                        Message = ($script:messages.UsingRedirectUri -f $RedirectUri.AbsoluteUri);
+                        Verbose = $verbose;
+                    }
+                    Write-Verbose @p
+                    [void]$appBuilder.WithRedirectUri($RedirectUri.AbsoluteUri)
+                }
+                else{
+                    if($isPublicApp){
+                        $p = @{
+                            Message = ($script:messages.UsingDefaultRedirectUri);
+                            Verbose = $verbose;
+                        }
+                        Write-Verbose @p
+                        [void] $appBuilder.WithDefaultRedirectUri()
+                    }
+                }
+                #Add TenantId
+                if ($PSBoundParameters.ContainsKey('TenantId') -and $PSBoundParameters['TenantId']) {
+                    $p = @{
+                        Message = ($script:messages.UsingTenantId -f $TenantId);
+                        Verbose = $verbose;
+                    }
+                    Write-Verbose @p
+                    [void]$appBuilder.WithTenantId($TenantId)
+                }
+                #Add Certificate options
+                if ($PSBoundParameters.ContainsKey('Certificate') -and $PSBoundParameters['Certificate']) {
+                    $client_cert = [System.IO.File]::ReadAllBytes($PSBoundParameters['Certificate'])
+                    if ($PSBoundParameters.ContainsKey('CertFilePassword') -and $PSBoundParameters['CertFilePassword']) {
+                        $Cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new($client_cert, $PSBoundParameters['CertFilePassword'], [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::UserKeySet)
                     }
                     else{
-                        $Cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2($client_cert, [String]::Empty, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::UserKeySet)
+                        $Cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new($client_cert, [String]::Empty, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::UserKeySet)
                     }
                     #Add cert options
-                    [void]$application_builder.WithCertificate($Cert);
+                    [void]$appBuilder.WithCertificate($Cert);
                 }
-                elseif($ClientAssertionCertificate -and $application_builder -is [Microsoft.Identity.Client.ConfidentialClientApplicationBuilder]){
+                Elseif ($PSBoundParameters.ContainsKey('ClientAssertionCertificate') -and $PSBoundParameters['ClientAssertionCertificate']) {
                     #Add cert options
-                    [void]$application_builder.WithCertificate($ClientAssertionCertificate);
+                    [void]$appBuilder.WithCertificate($PSBoundParameters['ClientAssertionCertificate']);
                 }
             }
-            catch{
-                Write-Verbose $_.Exception.Message
-                return
+            #Add Authority
+            if($PSBoundParameters.ContainsKey('Authority') -and $PSBoundParameters['Authority']) {
+                #Add Authority
+                [void]$appBuilder.WithAuthority($PSBoundParameters['Authority'].AbsoluteUri)
             }
             #Build application
-            try{
-                $az_application = $application_builder.Build()
-            }
-            catch{
-                Write-Verbose $_.Exception.Message
-                Write-Debug $_
-            }
+            $newApplication = $appBuilder.Build()
+            #Add isPublicApp to object
+            $newApplication | Add-Member -type NoteProperty -name isPublicApp -value $isPublicApp -Force
+        }
+        catch{
+            Write-Error $_
         }
     }
     End{
-        if($null -ne $az_application){
-            #Add isPublicApp to object
-            $az_application | Add-Member -type NoteProperty -name isPublicApp -value $isPublicApp -Force
-            return $az_application
-        }
+        return $newApplication
     }
 }

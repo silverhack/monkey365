@@ -26,52 +26,44 @@ Function Get-SharepointUrl{
      This example gets sharepoint URL from verifiedDomains var
     #>
     [CmdletBinding()]
-    param
-    (
-        # Well Known Azure service
-        [Parameter(Mandatory = $true, HelpMessage = 'Tenant details')]
-        [Object] $TenantDetails,
+    Param(
+        # Endpoint
+        [Parameter(Mandatory = $true, HelpMessage = 'Endpoint')]
+        [String]$Endpoint,
 
         [Parameter(Mandatory = $false, HelpMessage = 'Environment')]
+        [ValidateSet("AzurePublic","AzureGermany","AzureChina","AzureUSGovernment")]
         [String]$Environment = "AzurePublic"
     )
     try{
-        if($null -ne $TenantDetails){
-            $defaultDomain = $TenantDetails.verifiedDomains.Where({$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.isInitial -eq $true})
-            if($defaultDomain.Count -gt 0){
-                switch ($Environment) {
-                    "AzurePublic"
-                    {
-                        $sharePointUrl = ("https://{0}.sharepoint.com" -f $defaultDomain[0].name.split(".")[0]);
-                        break
-                    }
-                    "AzureUSGovernment"
-                    {
-                        $sharePointUrl = ("https://{0}.sharepoint.us" -f $defaultDomain[0].name.split(".")[0]);
-                        break
-                    }
-                    "AzureGermany"
-                    {
-                        $sharePointUrl = ("https://{0}.sharepoint.de" -f $defaultDomain[0].name.split(".")[0]);
-                        break
-                    }
-                    "AzureChina"{
-                        $sharePointUrl = ("https://{0}.sharepoint.cn" -f $defaultDomain[0].name.split(".")[0]);
-                        break
-                    }
-                    "Default"
-                    {
-                        $sharePointUrl = ("https://{0}.sharepoint.com" -f $defaultDomain[0].name.split(".")[0]);
-                        break
-                    }
-                }
-                return $sharePointUrl
+        $sharePointUrl = $null
+        switch ($Environment) {
+            "AzurePublic"
+            {
+                $sharePointUrl = ("https://{0}.sharepoint.com" -f $Endpoint.split(".")[0]);
+                break
             }
-            else{
-                #Write message
-                Write-Warning -Message $Script:messages.SPSSiteUrlErrorMessage;
+            "AzureUSGovernment"
+            {
+                $sharePointUrl = ("https://{0}.sharepoint.us" -f $Endpoint.split(".")[0]);
+                break
+            }
+            "AzureGermany"
+            {
+                $sharePointUrl = ("https://{0}.sharepoint.de" -f $Endpoint.split(".")[0]);
+                break
+            }
+            "AzureChina"{
+                $sharePointUrl = ("https://{0}.sharepoint.cn" -f $Endpoint.split(".")[0]);
+                break
+            }
+            "Default"
+            {
+                $sharePointUrl = ("https://{0}.sharepoint.com" -f $Endpoint.split(".")[0]);
+                break
             }
         }
+        return $sharePointUrl
     }
     catch{
         Write-Debug $_

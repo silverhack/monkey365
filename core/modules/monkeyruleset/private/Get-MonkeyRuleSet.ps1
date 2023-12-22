@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-Function Get-RulesFromRuleSet{
+Function Get-MonkeyRuleSet{
     <#
         .SYNOPSIS
-		Get rules from ruleset file. Check for every single rule if args are present, if rule enabled, etc..
+		Get content from ruleset file.
 
         .DESCRIPTION
-		Get rules from ruleset file. Check for every single rule if args are present, if rule enabled, etc..
+		Get content from ruleset file.
 
         .INPUTS
 
@@ -30,32 +29,25 @@ Function Get-RulesFromRuleSet{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-RulesFromRuleSet
+            File Name	: Get-MonkeyRuleSet
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [Object]$ruleset,
-
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [String]$rulepath
+        [parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="Ruleset File")]
+        [String]$Ruleset
     )
     Process{
-        #$total_rules = @()
-        foreach($rule_file in $ruleset){
-            $fileName = $rule_file | Select-Object -ExpandProperty Name -ErrorAction SilentlyContinue
-            if($null -ne $fileName){
-                $file = Get-RuleFromFile -fileName $fileName -rulepath $rulepath
-                if($file -is [System.IO.FileInfo]){
-                    Get-Rule -file $file -rule_file $rule_file
-                }
+        if (Test-Path -Path $Ruleset){
+            $myRuleset = Get-Content $Ruleset -Raw | ConvertFrom-Json
+            if(Test-isValidRuleSet -Object $myRuleset){
+                return $myRuleset
             }
             else{
-                Write-Warning -Message $Script:messages.UnableToGetObjectProperty
+                Write-Warning -Message ($Script:messages.InvalidRulesetMessage -f $Ruleset)
             }
         }
     }

@@ -188,7 +188,6 @@ Function Get-HtmlTableFromObject{
                     if(($null -ne $actions.psobject.Properties.Item('showGoToButton') -and $actions.showGoToButton -eq $True) -or ($null -ne $actions.psobject.Properties.Item('showModalButton') -and $actions.showModalButton -eq $True)){
                         #Set actions column
                         $thead = $xmlTable.SelectSingleNode("table/thead/tr")
-                        #Write-Host $thead.OuterXml
                         #Add Actions column
                         $th = $xmlTable.CreateElement("th")
                         $th.InnerText = "actions"

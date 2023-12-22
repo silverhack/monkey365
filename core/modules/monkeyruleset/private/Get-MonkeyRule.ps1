@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Get-Rule{
+Function Get-MonkeyRule{
     <#
         .SYNOPSIS
 
@@ -27,40 +27,34 @@ Function Get-Rule{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-Rule
+            File Name	: Get-MonkeyRule
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [System.IO.FileInfo]$file,
-
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [object]$rule_file
+        [parameter(Mandatory=$true, ValueFromPipeline = $True,HelpMessage="File name")]
+        [Object]$Rule
     )
-    Begin{
+    Process{
         try{
-            $shadow_rule = (Get-Content $file.FullName -Raw) | ConvertFrom-Json
-            $ValidRule = Test-isValidRule -Rule $shadow_rule;
+            $shadow_rule = (Get-Content $Rule.File.FullName -Raw) | ConvertFrom-Json
+            $ValidRule = $shadow_rule | Test-isValidRule;
         }
         catch{
-            Write-Warning -Message ($Script:messages.InvalidRuleFound -f $rule_file.Name)
+            Write-Warning -Message ($Script:messages.InvalidRuleMessage -f $Rule.Name)
             Write-Verbose $_.Exception
-            Write-Debug $_.Exception.StackTrace
+            #Write-Debug $_.Exception.StackTrace
             $shadow_rule = $null
             $ValidRule = $false
         }
-        $found_args = $rule_file.Value | Select-Object -ExpandProperty args -ErrorAction Ignore
-        $total_rules = @()
-    }
-    Process{
         try{
             if($ValidRule){
-                foreach ($element in $rule_file.Value){
-                    $raw_rule = (Get-Content $file.FullName -Raw)
+                foreach ($element in $Rule.Value){
+                    $raw_rule = (Get-Content $Rule.File.FullName -Raw)
+                    $found_args = $element | Select-Object -ExpandProperty args -ErrorAction Ignore
                     $level = $element | Select-Object -ExpandProperty level -ErrorAction Ignore
                     $is_rule_enabled = $element | Select-Object -ExpandProperty enabled -ErrorAction Ignore
                     $compliance = $element | Select-Object -ExpandProperty compliance -ErrorAction Ignore
@@ -87,31 +81,33 @@ Function Get-Rule{
                         if($null -ne $level){
                             $new_json_rule | Add-Member -Type NoteProperty -name level -value $level -Force
                         }
-                        else{
-                            Write-Warning -Message ($Script:messages.LevelNotSet -f $rule_file.Name)
+                        elseif($null -ne $new_json_rule.PsObject.Properties.Item('level') -and $null -eq $new_json_rule.level){
+                            Write-Warning -Message ($Script:messages.LevelNotSet -f $Rule.File.Name)
                             $new_json_rule | Add-Member -Type NoteProperty -name level -value "Info" -Force
+                        }
+                        else{
+                            #nothing to do here
                         }
                         #Updating Compliance
                         if($null -ne $compliance){
-                            Write-Verbose -Message ($Script:messages.UpdatingComlianceMessage -f $rule_file.Name)
+                            Write-Verbose -Message ($Script:messages.UpdatingComlianceMessage -f $Rule.File.Name)
                             $new_json_rule | Add-Member -Type NoteProperty -name compliance -value $compliance -Force
                         }
-                        #Add to array
-                        $total_rules+=$new_json_rule
+                        #Add file
+                        $new_json_rule | Add-Member -Type NoteProperty -name File -value $Rule.File -Force
+                        #return rule
+                        $new_json_rule
                     }
                 }
             }
             else{
-                Write-Warning -Message ($Script:messages.InvalidRuleFound -f $rule_file.Name)
+                Write-Warning -Message ($Script:messages.InvalidRuleMessage -f $Rule.File.Name)
             }
         }
         catch{
-            Write-Warning -Message ($Script:messages.InvalidRuleFound -f $rule_file.Name)
+            Write-Warning -Message ($Script:messages.InvalidRuleMessage -f $Rule.File.Name)
             Write-Verbose $_.Exception
             Write-Debug $_
         }
-    }
-    End{
-        return $total_rules
     }
 }

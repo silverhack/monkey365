@@ -41,7 +41,10 @@ Function New-MsalApplicationForSPO{
 
         [parameter(Mandatory = $False)]
         [ValidateSet("AzurePublic","AzureGermany","AzureChina","AzureUSGovernment")]
-        [String]$Environment= "AzurePublic"
+        [String]$Environment= "AzurePublic",
+
+        [parameter(Mandatory = $False)]
+        [Switch]$ForceDesktop
     )
     Begin{
         #Set vars
@@ -60,7 +63,9 @@ Function New-MsalApplicationForSPO{
         #Get ClientId
         $clientId = Get-WellKnownAzureService -AzureService SharePointOnline
         #Get redirectUri
-        $redirectUri = "https://oauth.spops.microsoft.com/"
+        If($PSEdition -eq "Desktop" -or ($PSBoundParameters.ContainsKey('ForceDesktop') -and $PSBoundParameters['ForceDesktop'])){
+            $redirectUri = "https://oauth.spops.microsoft.com/"
+        }
     }
     Process{
         #Create a new app

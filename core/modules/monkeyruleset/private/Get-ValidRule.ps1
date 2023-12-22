@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-function Test-IsNewFilter{
+Function Get-ValidRule{
     <#
         .SYNOPSIS
+        Remove unused rules
 
         .DESCRIPTION
+        Remove unused rules
 
         .INPUTS
 
@@ -27,22 +29,30 @@ function Test-IsNewFilter{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Test-IsNewFilter
+            File Name	: Get-ValidRule
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-    [cmdletbinding()]
-    Param (
-        [parameter(Mandatory=$true, HelpMessage="Conditions")]
-        [object]$conditions
-    )
-    $new_filter = $true
-    foreach($elem in $conditions){
-        if($elem -is [System.Array]){
-            $new_filter = $false
+    [CmdletBinding()]
+    Param ()
+    try{
+        #Create new array
+        $all_rules = @()
+        #Remove elements that are not present in dataset
+        $all_paths = $Script:AllRules | Select-Object -ExpandProperty path | Select-Object -Unique
+        foreach($elem in $all_paths){
+            $exists = $Script:Dataset | Select-Object -ExpandProperty $elem -ErrorAction Ignore
+            if($null -eq $exists){
+                #removing rule
+                Write-Verbose -Message ($Script:messages.UnitItemNotFound -f $elem)
+                $all_rules += $elem
+            }
         }
+        $Script:AllRules | Where-Object {$_.path -notin $all_rules}
     }
-    return $new_filter
+    catch{
+        Write-Error $_
+    }
 }

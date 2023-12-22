@@ -55,7 +55,16 @@ Function Get-MSGraphOrganization{
             #Create authorization header
             $Authorization = $AuthObject.CreateAuthorizationHeader()
             $Tenants = Invoke-WebRequest $uri -Method Get -Headers @{Authorization=$Authorization};
-            return (ConvertFrom-Json $Tenants.Content).value;
+            $Tenants = (ConvertFrom-Json $Tenants.Content).value;
+            if($Tenants){
+                foreach($organization in @($Tenants)){
+                    #Add objectId legacy property
+                    $organization | Add-Member -type NoteProperty -name objectId -value $organization.id -Force
+                    #Add tenantName legacy property
+                    $organization | Add-Member -type NoteProperty -name TenantName -value $organization.displayName -Force
+                }
+                return $Tenants
+            }
         }
         else{
             Write-Warning -Message ($Script:messages.InvalidAudienceError -f "Tenant information")

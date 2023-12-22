@@ -92,8 +92,8 @@ Function New-HttpRequestMessage{
             #Check if uncommon headers present
             if($UncommonHeaders.Count -gt 0){
                 foreach($header in $UncommonHeaders.GetEnumerator()){
-                    Write-Debug ($script:messages.AddUncommonHeaderInfo -f $header.Key)
-                    [void]$request.Headers.TryAddWithoutValidation($header.Key,$header.Value)
+                    Write-Verbose ($script:messages.AddUncommonHeaderInfo -f $header.Key)
+                    [void]$request.Headers.TryAddWithoutValidation($header.Key,$header.Value.ToString())
                 }
             }
         }

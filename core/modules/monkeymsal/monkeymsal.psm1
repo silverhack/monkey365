@@ -1,4 +1,20 @@
-﻿Set-StrictMode -Version Latest
+﻿param(
+    [parameter(Position=0,Mandatory=$false)][Object[]]$ForceDesktop
+)
+Set-StrictMode -Version Latest
+
+if ($PSVersionTable.PSVersion.Major -lt 6.0) {
+    switch ($([System.Environment]::OSVersion.Platform)) {
+        'Win32NT' {
+            New-Variable -Option Constant -Name IsWindows -Value $True -ErrorAction SilentlyContinue
+            New-Variable -Option Constant -Name IsLinux -Value $false -ErrorAction SilentlyContinue
+            New-Variable -Option Constant -Name IsMacOs -Value $false -ErrorAction SilentlyContinue
+        }
+    }
+}
+$Script:IsLinuxEnvironment = (Get-Variable -Name "IsLinux" -ErrorAction Ignore) -and $IsLinux
+$Script:IsMacOSEnvironment = (Get-Variable -Name "IsMacOS" -ErrorAction Ignore) -and $IsMacOS
+$Script:IsWindowsEnvironment = !$IsLinuxEnvironment -and !$IsMacOSEnvironment
 
 Function Install-Core(){
     try{
@@ -95,23 +111,31 @@ if($null -ne $osInfo){
             Install-MsalLibrary
         }
     }
-    ElseIf (($PSVersionTable.PSEdition -eq 'Core') -and ($PSVersionTable.Platform -eq 'Unix')){
+    ElseIf (($PSVersionTable.PSEdition -eq 'Core') -and $Script:IsLinuxEnvironment){
         Write-Verbose ($script:messages.OSVersionMessage -f "Unix", "Core")
         $isInstalled = Install-Core
         if($isInstalled){
             Install-MsalLibrary
         }
     }
-    ElseIf (($PSVersionTable.PSEdition -eq 'Core') -and ($PSVersionTable.Platform -eq 'Win32NT')){
-        Write-Verbose ($script:messages.OSVersionMessage -f "Windows", "Desktop")
-        $isInstalled = Install-Desktop
-        if($isInstalled){
-            Install-MsalLibrary
+    ElseIf (($PSVersionTable.PSEdition -eq 'Core') -and $Script:IsWindowsEnvironment){
+        if($ForceDesktop){
+            $isInstalled = Install-Desktop
+            if($isInstalled){
+                Install-MsalLibrary
+            }
+        }
+        else{
+            Write-Verbose ($script:messages.OSVersionMessage -f "Windows", "Core")
+            $isInstalled = Install-Core
+            if($isInstalled){
+                Install-MsalLibrary
+            }
         }
     }
     Else{
-        Write-Warning -Message 'Unable to determine if OS is Windows or Linux. Loading MSAL Desktop'
-        $isInstalled = Install-Desktop
+        Write-Warning -Message 'Unable to determine if OS is Windows or Linux. Loading MSAL Core'
+        $isInstalled = Install-Core
         if($isInstalled){
             Install-MsalLibrary
         }

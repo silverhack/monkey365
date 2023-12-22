@@ -68,7 +68,6 @@ Function Invoke-HTMLCharts{
                 Write-Verbose ($script:messages.NewChartMessage -f $dataChart.label)
                 $new_chart = Build-HtmlChart -dataChart $dataChart
                 if($new_chart){
-                    #Write-Host $new_chart.outerXml
                     #import chart
                     $new_chart = $rowTemplate.ImportNode($new_chart.get_DocumentElement(), $True)
                     [void]$div.AppendChild($new_chart)

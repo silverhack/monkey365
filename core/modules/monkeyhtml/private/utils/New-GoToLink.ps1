@@ -53,12 +53,12 @@ Function New-GoToLink{
         $div = [xml] '<div class="row"></div>'
         $raw_data = $id_resource = $portal_url = $tenant_id = $link = $a_link = $null
         try{
-            if($null -ne $issue.psobject.Properties.Item('affected_resources')){
-                if(@($issue.affected_resources).Count -gt 1){
-                    $raw_data = $issue.affected_resources.Item($idx)
+            if($null -ne $issue.psobject.Properties.Item('affectedResources')){
+                if(@($issue.affectedResources).Count -gt 1){
+                    $raw_data = $issue.affectedResources.Item($idx)
                 }
                 else{
-                    $raw_data = $issue.affected_resources
+                    $raw_data = $issue.affectedResources
                 }
             }
             if($null -ne $raw_data -and $instance -eq "azure"){

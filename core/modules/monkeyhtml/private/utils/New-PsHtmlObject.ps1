@@ -39,7 +39,7 @@ Function New-PsHtmlObject{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory=$true, ParameterSetName='issue', position=0, ValueFromPipeline=$true, HelpMessage="Object")]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Object")]
         [Object]$InputObject
     )
     Begin{
@@ -47,11 +47,11 @@ Function New-PsHtmlObject{
     }
     Process{
         #check If affected resources is empty
-        if($null -ne $InputObject.Psobject.Properties.Item('affected_resources') -and $null -ne $InputObject.affected_resources){
+        if($null -ne $InputObject.Psobject.Properties.Item('affectedResources') -and $null -ne $InputObject.affectedResources){
             try{
                 if($null -ne (Get-Variable -Name dtables -ErrorAction Ignore)){
-                    if($null -ne $InputObject.PsObject.Properties.Item('id_suffix') -and $null -ne $InputObject.id_suffix){
-                        $table_formatting = $dtables | Select-Object -ExpandProperty $InputObject.id_suffix -ErrorAction Ignore
+                    if($null -ne $InputObject.PsObject.Properties.Item('idSuffix') -and $null -ne $InputObject.idSuffix){
+                        $table_formatting = $dtables | Select-Object -ExpandProperty $InputObject.idSuffix -ErrorAction Ignore
                         if($table_formatting){
                             #Convert to newObject
                             $ht = [ordered]@{}
@@ -76,8 +76,8 @@ Function New-PsHtmlObject{
                             #ConvertToPsObject
                             $Object = New-Object PSObject -Property $translate
                         }
-                        #Add id_suffix
-                        $Object | Add-Member -type NoteProperty -name id_suffix -value $InputObject.id_suffix -Force
+                        #Add idSuffix
+                        $Object | Add-Member -type NoteProperty -name idSuffix -value $InputObject.idSuffix -Force
                     }
                     else{
                         $translate = [ordered]@{
@@ -93,8 +93,8 @@ Function New-PsHtmlObject{
                         }
                         #ConvertToPsObject
                         $Object = New-Object PSObject -Property $translate
-                        #Add id_suffix
-                        $Object | Add-Member -type NoteProperty -name id_suffix -value $null -Force
+                        #Add idSuffix
+                        $Object | Add-Member -type NoteProperty -name idSuffix -value $null -Force
                     }
                 }
                 else{
@@ -111,16 +111,22 @@ Function New-PsHtmlObject{
                     }
                     #ConvertToPsObject
                     $Object = New-Object PSObject -Property $translate
+                    #Add idSuffix
+                    $Object | Add-Member -type NoteProperty -name idSuffix -value $InputObject.idSuffix -Force
                 }
                 #Add raw_data
-                if($null -ne $Object -and $null -ne $InputObject.Psobject.Properties.Item('affected_resources')){
-                    $Object | Add-Member -type NoteProperty -name affected_resources -value $InputObject.affected_resources -Force
+                if($null -ne $Object -and $null -ne $InputObject.Psobject.Properties.Item('affectedResources')){
+                    $Object | Add-Member -type NoteProperty -name affectedResources -value $InputObject.affectedResources -Force
                 }
                 else{
-                    $Object | Add-Member -type NoteProperty -name affected_resources -value $null -Force
+                    $Object | Add-Member -type NoteProperty -name affectedResources -value $null -Force
                 }
                 if($null -ne $Object -and $null -eq $Object.psobject.Properties.Item('translate')){
                     $Object | Add-Member -type NoteProperty -name translate -value $null -Force
+                }
+                #Add expand for nested tables
+                if($null -ne $Object -and $null -eq $Object.psobject.Properties.Item('expand')){
+                    $Object | Add-Member -type NoteProperty -name expand -value $null -Force
                 }
                 #Check if action should be added to the table
                 if($null -ne $Object -and ($null -ne $Object.psobject.Properties.Item('actions') -and $null -ne $Object.actions.psobject.Properties.Item('objectData'))){
@@ -147,11 +153,11 @@ Function New-PsHtmlObject{
                     $Object | Add-Member -type NoteProperty -name actions -value $actions -Force
                 }
                 #Add issue name
-                if($null -ne $InputObject.PsObject.Properties.Item('issue_name')){
-                    $Object | Add-Member -type NoteProperty -name issue_name -value $InputObject.issue_name -Force
+                if($null -ne $InputObject.PsObject.Properties.Item('displayName')){
+                    $Object | Add-Member -type NoteProperty -name displayName -value $InputObject.displayName -Force
                 }
                 else{
-                    $Object | Add-Member -type NoteProperty -name issue_name -value "Unknown" -Force
+                    $Object | Add-Member -type NoteProperty -name displayName -value "Unknown" -Force
                 }
                 #return Object
                 $Object | Initialize-HtmlData

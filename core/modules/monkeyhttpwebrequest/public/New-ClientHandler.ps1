@@ -48,6 +48,10 @@ Function New-ClientHandler{
         [ValidateRange(1,65535)]
         [int32]$MaxRedirections = 40,
 
+        [Parameter(HelpMessage="Maximum redirection")]
+        [ValidateRange(1,65535)]
+        [int32]$MaxConnectionsPerServer,
+
         [parameter(Mandatory=$False, HelpMessage='control redirects')]
         [Bool]$AllowAutoRedirect = $true,
 
@@ -92,6 +96,10 @@ Function New-ClientHandler{
         #Check automatic redirects
         if($PSBoundParameters.ContainsKey('AllowAutoRedirect')){
             $handler.AllowAutoRedirect = $PSBoundParameters['AllowAutoRedirect'];
+        }
+        #Check max connections per server
+        if($PSBoundParameters.ContainsKey('MaxConnectionsPerServer')){
+            $handler.MaxConnectionsPerServer = $PSBoundParameters['MaxConnectionsPerServer'];
         }
     }
     End{

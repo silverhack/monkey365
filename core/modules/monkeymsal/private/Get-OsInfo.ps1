@@ -19,8 +19,8 @@
             $files = [System.IO.Directory]::EnumerateFiles($MsalLibPath,"*.dll","AllDirectories")
         }
         Else{
-            Write-Warning -Message 'Unable to determine if OS is Windows or Linux. Loading MSAL Desktop'
-            $MsalLibPath = ("{0}/lib/desktop" -f $rootPath)
+            Write-Warning -Message 'Unable to determine if OS is Windows or Linux. Loading MSAL Core'
+            $MsalLibPath = ("{0}/lib/core" -f $rootPath)
             $files = [System.IO.Directory]::EnumerateFiles($MsalLibPath,"*.dll","AllDirectories")
         }
         #Set ScriptBlock

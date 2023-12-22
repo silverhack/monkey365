@@ -130,7 +130,7 @@ Function New-IssueCard{
     Process{
         #Compile issue
         #Get id suffix from issue
-        $id_suffix = $issue.id_suffix1.Replace(' ','_')
+        $id_suffix = $issue.idSuffix1.Replace(' ','_')
         $random = Get-Random -Minimum 20 -Maximum 400
         #Create new ID
         $id = ("{0}_{1}" -f $id_suffix, $random)
@@ -325,10 +325,9 @@ Function New-IssueCard{
         }
         #Right div
         $checked = $li.Clone()
-        $checked.InnerText = ("{0} checked: {1}" -f $dashboard_name, $issue.resources)
+        $checked.InnerText = ("{0} checked: {1}" -f $dashboard_name, $issue.resourcesCount())
         $flagged = $li.Clone()
-        #$affected_rsrc = @($issue.affected_resources).Count
-        $flagged.InnerText = ("{0} flagged: {1}" -f $dashboard_name, $issue.affected_resources_count)
+        $flagged.InnerText = ("{0} flagged: {1}" -f $dashboard_name, $issue.affectedResourcesCount())
         #Add to ul
         [void]$ul.AppendChild($checked)
         [void]$ul.AppendChild($flagged)
@@ -340,7 +339,7 @@ Function New-IssueCard{
             issueCard = $True;
             card_class = 'monkey-issue-card';
             card_header_class = 'card-header-blue';
-            title_header = $issue.issue_name;
+            title_header = $issue.displayName;
             span_class = $level;
             body = $issue_skeleton;
             WithFooter= $True;
@@ -383,7 +382,7 @@ Function New-IssueCard{
                 $a_button_params.appendObject = $span_issue
                 $a_button_params.own_template = $my_card
                 #$a_button_params.CreateTextNode = 'Details'
-                $a_button_params.attributes.'data-issue' = $issue.id_suffix2
+                $a_button_params.attributes.'data-issue' = $issue.idSuffix2
                 $a_button = New-HtmlTag @a_button_params
                 if($a_button){
                     [void]$a_button.AppendChild($my_card.CreateTextNode('Details'))

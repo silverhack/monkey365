@@ -65,26 +65,30 @@ Function Remove-MonkeyJob{
 
     )
     Begin{
-        $queries = [System.Collections.Generic.List[ScriptBlock]]::new()
+        $queries = [System.Collections.Generic.List[System.String]]::new()
     }
     Process{
         $psn = $PSCmdlet.ParameterSetName
         $items = $PSBoundParameters[$psn]
-        foreach($item in $items){
-            if($PSCmdlet.ParameterSetName -eq 'Job'){
-                $rule = ('$_.{0} -eq "{1}"' -f "Id",$item.Id)
+        foreach($item in @($items)){
+            try{
+                if($PSCmdlet.ParameterSetName -eq 'Job'){
+                    $rule = ('$_.{0} -eq "{1}"' -f "Id",$item.Id)
+                }
+                else{
+                    $rule = ('$_.{0} -eq "{1}"' -f $psn,$item)
+                }
+                [void]$queries.Add($rule)
             }
-            else{
-                $rule = ('$_.{0} -eq "{1}"' -f $psn,$item)
+            catch{
+                Write-Error $_.Exception
             }
-            $sb = [ScriptBlock]::Create($rule)
-            [void]$queries.Add($sb)
         }
     }
     End{
         foreach($query in $queries){
-            $MonkeyJob = $MonkeyJobs | Where-Object $query -ErrorAction Ignore;
-            if($null -ne $MonkeyJob){
+            $_jobs = $MonkeyJobs.Where({$query})
+            foreach($MonkeyJob in $_jobs){
                 #Get potential exceptions
                 $JobStatus = $MonkeyJob.Job.JobStatus();
                 if($JobStatus.Error.Count -gt 0){
@@ -112,10 +116,14 @@ Function Remove-MonkeyJob{
                     #$MonkeyJob.Job.InnerJob.RunspacePool.Close();
                     $MonkeyJob.Job.InnerJob.RunspacePool.Dispose();
                 }
-                $MonkeyJob.Job.StopJob();
+                if($MonkeyJob.Job.State -ne [System.Management.Automation.JobState]::Stopped){
+                    $MonkeyJob.Job.StopJob();
+                }
                 $MonkeyJob.Job.Dispose();
-                $MonkeyJob.Task.Dispose();
-                $MonkeyJob.Task = $null;
+                if($null -ne $MonkeyJob.Task){
+                    $MonkeyJob.Task.Dispose();
+                    $MonkeyJob.Task = $null;
+                }
                 [void]$MonkeyJobs.Remove($MonkeyJob)
                 #Perform garbage collection
                 [gc]::Collect()

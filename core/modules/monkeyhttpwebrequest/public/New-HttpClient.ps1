@@ -131,18 +131,12 @@ Function New-HttpClient{
         if($PSBoundParameters.ContainsKey('Accept')){
             foreach($elem in $PSBoundParameters['Accept']){
                 try{
-                    $_accept = [System.Net.Http.Headers.MediaTypeWithQualityHeaderValue]::new($elem)
-                    [void]$client.DefaultRequestHeaders.Accept.Add($_accept)
+                    [System.Net.Http.Headers.MediaTypeWithQualityHeaderValue]$mediaType = [System.Net.Http.Headers.MediaTypeWithQualityHeaderValue]::Parse($elem)
+                    [void]$client.DefaultRequestHeaders.Accept.Add($mediaType)
                 }
                 catch{
-                    Write-Warning $_.Exception.Message
-                    $param = @{
-                        Message = $_;
-                        Verbose = $Verbose;
-                        Debug = $Debug;
-                        InformationAction = $InformationAction;
-                    }
-                    Write-Debug @param
+                    Write-Verbose ("Accept {0} not supported. Adding without validation" -f $elem)
+                    [void]$client.DefaultRequestHeaders.TryAddWithoutValidation('Accept',$elem)
                 }
             }
         }

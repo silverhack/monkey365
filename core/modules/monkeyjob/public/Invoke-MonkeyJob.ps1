@@ -152,9 +152,7 @@ Function Invoke-MonkeyJob{
             }
         }
         #Set Monkeyjobs variable
-        if($null -eq (Get-Variable -Name MonkeyJobs -ErrorAction Ignore)){
-            $MonkeyJobs = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-        }
+        $MyMonkeyJobs = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
         #Set timers, vars
         $Timer = [system.diagnostics.stopwatch]::StartNew()
         $SubTimer = [system.diagnostics.stopwatch]::StartNew()
@@ -217,6 +215,7 @@ Function Invoke-MonkeyJob{
                         }
                     }
                     #Add to list
+                    [void]$MyMonkeyJobs.Add($newJob);
                     [void]$MonkeyJobs.Add($newJob);
                 }
             }
@@ -234,8 +233,8 @@ Function Invoke-MonkeyJob{
     }
     End{
         try{
-            for($NumJob = 0 ; $NumJob -lt $MonkeyJobs.Count; $NumJob++){
-                $MonkeyJob = $MonkeyJobs.Item($NumJob)
+            for($NumJob = 0 ; $NumJob -lt $MyMonkeyJobs.Count; $NumJob++){
+                $MonkeyJob = $MyMonkeyJobs.Item($NumJob)
                 #Start Job
                 $MonkeyJob.Task = $MonkeyJob.Job.StartTask();
                 #Check if maxQueue
@@ -243,7 +242,7 @@ Function Invoke-MonkeyJob{
                     Write-Verbose ($script:messages.TimeSpentInvokeBatchMessage -f ($NumJob / $BatchSize), $SubTimer.Elapsed.ToString())
                     $SubTimer.Reset();$SubTimer.Start()
                     $p = @{
-                        Jobs = $MonkeyJobs;
+                        Jobs = $MyMonkeyJobs;
                         BatchSize = $BatchSize;
                         Timeout = $Timeout;
                         Jobscollected = ([ref]$Script:jobsCollected);
@@ -263,11 +262,11 @@ Function Invoke-MonkeyJob{
             #All jobs are invoked at this time, just collect all of them
             Write-Verbose "Invoked all Jobs, Collecting the last jobs that are running"
             #Collect all jobs
-            While ((@($MonkeyJobs | Where-Object {$_.Job.State -eq [System.Management.Automation.JobState]::Running})).count -gt 0){
+            While ((@($MyMonkeyJobs | Where-Object {$_.Job.State -eq [System.Management.Automation.JobState]::Running})).count -gt 0){
                 #We want to collect all the Jobs, so just double the BatchSize
-			    $BS = (@($MonkeyJobs | Where-Object {$_.Job.State -eq [System.Management.Automation.JobState]::Running})).count * 2
+			    $BS = (@($MyMonkeyJobs | Where-Object {$_.Job.State -eq [System.Management.Automation.JobState]::Running})).count * 2
                 $p = @{
-                    Jobs = $MonkeyJobs;
+                    Jobs = $MyMonkeyJobs;
                     BatchSize = $BS;
                     Timeout = $Timeout;
                     Jobscollected = ([ref]$Script:jobsCollected);
@@ -280,13 +279,49 @@ Function Invoke-MonkeyJob{
         }
         finally{
             #Get Data
-            $completedJobs = $MonkeyJobs | Where-Object {$_.Job.State -eq [System.Management.Automation.JobState]::Completed}
+            $completedJobs = $MyMonkeyJobs | Where-Object {$_.Job.State -eq [System.Management.Automation.JobState]::Completed}
             #Receive jobs
             $completedJobs | Receive-MonkeyJob
             #Clean objects
-            if($MonkeyJobs.Count -gt 0){
-                Write-Verbose ($script:messages.TerminateJobMessage -f $MonkeyJobs.Count)
-                Get-MonkeyJob | Remove-MonkeyJob -KeepRunspacePool:$reuseRSP
+            if($MyMonkeyJobs.Count -gt 0){
+                Write-Verbose ($script:messages.TerminateJobMessage -f $MyMonkeyJobs.Count)
+                foreach($MonkeyJob in $MyMonkeyJobs){
+                    #Get potential exceptions
+                    $JobStatus = $MonkeyJob.Job.JobStatus();
+                    if($JobStatus.Error.Count -gt 0){
+                        foreach($exception in $JobStatus.Error.GetEnumerator()){
+                            $JobError = [ordered]@{
+                                Id = $MonkeyJob.Id;
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                ErrorStr = $exception.Exception.Message;
+                                Exception = $exception;
+                            }
+                            #Add exception to ref
+                            $errObj = New-Object PSObject -Property $JobError
+                            if($null -ne (Get-Variable -Name MonkeyJobErrors -ErrorAction Ignore)){
+                                [void]$MonkeyJobErrors.Add($errObj)
+                            }
+                        }
+                    }
+                    #Clean MonkeyJob object
+                    #$MonkeyJob.Job.InnerJob.Stop();
+                    $MonkeyJob.Job.InnerJob.Dispose();
+                    if(!$ReuseRunspacePool){
+                        #$MonkeyJob.Job.InnerJob.RunspacePool.Close();
+                        $MonkeyJob.Job.InnerJob.RunspacePool.Dispose();
+                    }
+                    if($MonkeyJob.Job.State -ne [System.Management.Automation.JobState]::Stopped){
+                        $MonkeyJob.Job.StopJob();
+                    }
+                    $MonkeyJob.Job.Dispose();
+                    if($null -ne $MonkeyJob.Task){
+                        $MonkeyJob.Task.Dispose();
+                        $MonkeyJob.Task = $null;
+                    }
+                    [void]$MonkeyJobs.Remove($MonkeyJob)
+                    #Perform garbage collection
+                    [gc]::Collect()
+                }
             }
             #Stop timer
             If($Timer.Isrunning){

@@ -35,8 +35,10 @@ Function Convert-Value{
     #>
 
     Param (
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [Object]$value
+        [parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="Object to evaluate")]
+        [AllowNull()]
+        [AllowEmptyString()]
+        [Object]$Value
     )
     Begin{
         #Refs
@@ -44,40 +46,42 @@ Function Convert-Value{
         [int]$int_min_value = [int32]::MinValue;
         [double]$double_min_value  = [double]::MinValue;
         [int64]$integer64_minimum = [int64]::MinValue;
-        #[datetime]$datetime_min_value  = [datetime]::MinValue
-        #End refs
-        [bool]$integer = [int]::TryParse($value, [ref]$int_min_value);
-        [bool]$integer64 = [int64]::TryParse($value, [ref]$integer64_minimum);
-        [bool]$double = [Double]::TryParse($value,[ref]$double_min_value);
-        #[bool]$isdatetime = [datetime]::TryParse($value, [ref]$datetime_min_value);
+        [datetime]$datetime_min_value  = [datetime]::MinValue
+        [String[]]$formats = "MM/dd/yyyy", "dd/MM/yyyy h:mm:ss", "MM/dd/yyyy hh:mm tt", "yyyy'-'MM'-'dd'T'HH':'mm':'ss";
     }
     Process{
-        If([bool]::TryParse($value, [ref]$out)){
-            return [System.Convert]::ToBoolean($value);
+        #End refs
+        [bool]$integer = [int]::TryParse($Value, [ref]$int_min_value);
+        [bool]$integer64 = [int64]::TryParse($Value, [ref]$integer64_minimum);
+        [bool]$double = [Double]::TryParse($Value,[ref]$double_min_value);
+        [bool]$isdatetime = [datetime]::TryParseExact($Value, $formats,[System.Globalization.CultureInfo]::InvariantCulture,[System.Globalization.DateTimeStyles]::None, [ref]$datetime_min_value);
+        #Evaluate value
+        If([bool]::TryParse($Value, [ref]$out)){
+            return [System.Convert]::ToBoolean($Value);
         }
         elseif($integer -eq $True){
-            return [System.Convert]::ToInt32($value);
+            return [System.Convert]::ToInt32($Value);
         }
         elseif($double -eq $True){
-            return [System.Convert]::ToDouble($value);
+            return [System.Convert]::ToDouble($Value);
         }
         elseif($integer64 -eq $True){
-            return [System.Convert]::ToInt64($value);
+            return [System.Convert]::ToInt64($Value);
         }
-        <#
         elseif($isdatetime -eq $True){
-            [System.Convert]::ToDateTime($value);
+            [System.Convert]::ToDateTime($Value);
         }
-        #>
-        elseif([string]::IsNullOrEmpty($value)){
+        elseif($null -ne $Value -and [string]::IsNullOrWhiteSpace($Value)){
+            return $Value.ToString()
+        }
+        elseif([string]::IsNullOrEmpty($Value)){
             return $null
         }
         elseif($value -is [System.Array]){
-            #return (@($value) -join ',')
-            return $value
+            return $Value
         }
         else{
-            return [System.Convert]::ToString($value);
+            return [System.Convert]::ToString($Value);
         }
     }
     End{

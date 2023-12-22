@@ -37,30 +37,31 @@ function New-MonkeyMSALApplicationClientOptions{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "", Scope="Function")]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [CmdletBinding()]
-    param
+    Param
     (
-        # application id
         [Parameter(Mandatory = $false, HelpMessage = 'Application Id')]
-        [string] $applicationId = "1950a258-227b-4e31-a9cf-717495945fc2",
-        # Client secret
+        [String]$ClientId = "1950a258-227b-4e31-a9cf-717495945fc2",
+
         [Parameter(Mandatory = $false, HelpMessage = 'Client Secret')]
         [Security.SecureString] $ClientSecret,
-        # return address
-        [parameter(Mandatory=$false)]
-        [uri] $RedirectUri,
-        # Tenant identifier of the authority to issue token.
-        [parameter(Mandatory=$false)]
-        [string] $TenantId,
-        # Azure AD Instance
-        [parameter(Mandatory=$false)]
+
+        [parameter(Mandatory=$false, HelpMessage = 'Redirect Uri')]
+        [System.Uri]$RedirectUri,
+
+        [parameter(Mandatory=$false, HelpMessage = 'TenantId')]
+        [String]$TenantId,
+
+        [parameter(Mandatory=$false, HelpMessage = 'Environment')]
         [Microsoft.Identity.Client.AzureCloudInstance]$Environment = [Microsoft.Identity.Client.AzureCloudInstance]::AzurePublic,
-        [parameter(Mandatory=$false)]
-        [string] $Instance,
+
+        [parameter(Mandatory=$false, HelpMessage = 'Instance')]
+        [String]$Instance,
+
         [Parameter(Mandatory=$false, HelpMessage="is PUblic application")]
-        [Switch]$isPublicApp
+        [Switch]$IsPublicApp
     )
     Begin{
-        if($isPublicApp){
+        if($PSBoundParameters.ContainsKey('IsPublicApp') -and $PSBoundParameters['IsPublicApp'].IsPresent){
             $client_options = [Microsoft.Identity.Client.PublicClientApplicationOptions]::new()
         }
         else{
@@ -88,7 +89,7 @@ function New-MonkeyMSALApplicationClientOptions{
             $client_options.AzureCloudInstance = $Environment
         }
         #Set application Id
-        $client_options.ClientId = $applicationId
+        $client_options.ClientId = $ClientId
 
         #add options
         if(-NOT $TenantId){

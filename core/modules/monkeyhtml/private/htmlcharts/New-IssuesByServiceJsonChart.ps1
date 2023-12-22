@@ -59,7 +59,7 @@ Function New-IssuesByServiceJsonChart {
         $hoverBackgroundColor = @("#FFCE56","#1f78b4","#a6cee3","#e31a1c","#7fc97f","#7570b3")
         $legendColor = @("#FFCE56","#1f78b4","#a6cee3","#e31a1c","#7fc97f","#7570b3")
         #Group objects
-        $grouped_elements = $matched | Group-Object dashboard_name | Sort-Object Name | Select-Object Name, Group
+        $grouped_elements = $matched | Group-Object serviceType | Sort-Object Name | Select-Object Name, Group
         #Get labels
         if($null -ne $grouped_elements){
             $labels = $grouped_elements | Select-Object -ExpandProperty Name

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-function Copy-psObject{
+Function New-MonkeyGuid{
     <#
         .SYNOPSIS
 
@@ -27,34 +27,14 @@ function Copy-psObject{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Copy-psObject
+            File Name	: New-MonkeyGuid
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
-    Param (
-        [parameter(Mandatory=$true, HelpMessage="Object to copy to")]
-        [Object]$object
-    )
-    try{
-        if($object){
-            $memory_stream = New-Object System.IO.MemoryStream
-            $binary_formatter = New-Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            $binary_formatter.Serialize($memory_stream, $object)
-            $memory_stream.Position = 0
-            $shadow_object = $binary_formatter.Deserialize($memory_stream)
-            $memory_stream.Close()
-            #return cloned object
-            return $shadow_object
-        }
-    }
-    catch{
-        Write-Warning -Message ("Unable to clone object")
-        #Verbose
-        Write-Verbose -Message $_.Exception
-        #return null object
-        return $null
-    }
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+    [CmdletBinding()]
+    Param ()
+    return ([System.Guid]::NewGuid()).ToString()
 }

@@ -72,7 +72,7 @@ Function New-InitialSessionState{
         if($null -ne $sessionstate -and $sessionstate -is [System.Management.Automation.Runspaces.InitialSessionState]){
             if($ImportVariables){
                 $all_vars = New-Object System.Collections.ArrayList
-                if($ImportVariables -is [hashtable]){
+                if(([System.Collections.IDictionary]).IsAssignableFrom($ImportVariables.GetType())){
                     $all_scopes = [System.Management.Automation.ScopedItemOptions]::AllScope
                     foreach ($var in $ImportVariables.GetEnumerator()){
                         if($null -eq $var.Value){
@@ -122,7 +122,9 @@ Function New-InitialSessionState{
             }
             #Check if should import modules
             if($ImportModules){
-                if($ImportModules -is [hashtable]){$ImportModules = $ImportModules.Values}
+                if(([System.Collections.IDictionary]).IsAssignableFrom($ImportModules.GetType())){
+                    $ImportModules = $ImportModules.Values
+                }
                 foreach($module in $ImportModules){
                     $moduleToImport = Resolve-Path -Path $module -ErrorAction Ignore
                     if($null -ne $moduleToImport){
@@ -150,7 +152,7 @@ Function New-InitialSessionState{
                 }
             }
             if($ImportCommands){
-                $CommandsToImport = Get-AstFunction -objects $ImportCommands
+                $CommandsToImport = $ImportCommands | Get-FunctionDefinitionAst
                 if($null -ne $CommandsToImport){
                     foreach($fnc in $CommandsToImport){
                         if($fnc -is [System.Management.Automation.Language.FunctionDefinitionAst]){

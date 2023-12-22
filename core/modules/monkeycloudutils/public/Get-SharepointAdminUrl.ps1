@@ -26,52 +26,44 @@ Function Get-SharepointAdminUrl{
      This example gets sharepoint Admin URL from verifiedDomains var
     #>
     [CmdletBinding()]
-    param
-    (
-        # Well Known Azure service
-        [Parameter(Mandatory = $true, HelpMessage = 'Tenant details')]
-        [Object] $TenantDetails,
+    Param(
+        # Endpoint
+        [Parameter(Mandatory = $true, HelpMessage = 'Endpoint')]
+        [String]$Endpoint,
 
         [Parameter(Mandatory = $false, HelpMessage = 'Environment')]
+        [ValidateSet("AzurePublic","AzureGermany","AzureChina","AzureUSGovernment")]
         [String]$Environment = "AzurePublic"
     )
     try{
-        if($null -ne $TenantDetails){
-            $defaultDomain = $TenantDetails.verifiedDomains.Where({$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.isInitial -eq $true})
-            if($defaultDomain.Count -gt 0){
-                switch ($Environment) {
-                    "AzurePublic"
-                    {
-                        $sharePointAdminUrl = ("https://{0}-admin.sharepoint.com" -f $defaultDomain[0].name.split(".")[0]);
-                        break
-                    }
-                    "AzureUSGovernment"
-                    {
-                        $sharePointAdminUrl = ("https://{0}-admin.sharepoint.us" -f $defaultDomain[0].name.split(".")[0]);
-                        break
-                    }
-                    "AzureGermany"
-                    {
-                        $sharePointAdminUrl = ("https://{0}-admin.sharepoint.de" -f $defaultDomain[0].name.split(".")[0]);
-                        break
-                    }
-                    "AzureChina"{
-                        $sharePointAdminUrl = ("https://{0}-admin.sharepoint.cn" -f $defaultDomain[0].name.split(".")[0]);
-                        break
-                    }
-                    "Default"
-                    {
-                        $sharePointAdminUrl = ("https://{0}-admin.sharepoint.com" -f $defaultDomain[0].name.split(".")[0]);
-                        break
-                    }
-                }
-                return $sharePointAdminUrl
+        $sharePointAdminUrl = $null
+        switch ($Environment) {
+            "AzurePublic"
+            {
+                $sharePointAdminUrl = ("https://{0}-admin.sharepoint.com" -f $Endpoint.split(".")[0]);
+                break
             }
-            else{
-                #Write message
-                Write-Warning $Script:messages.SPSAdminUrlErrorMessage;
+            "AzureUSGovernment"
+            {
+                $sharePointAdminUrl = ("https://{0}-admin.sharepoint.us" -f $Endpoint.split(".")[0]);
+                break
+            }
+            "AzureGermany"
+            {
+                $sharePointAdminUrl = ("https://{0}-admin.sharepoint.de" -f $Endpoint.split(".")[0]);
+                break
+            }
+            "AzureChina"{
+                $sharePointAdminUrl = ("https://{0}-admin.sharepoint.cn" -f $Endpoint.split(".")[0]);
+                break
+            }
+            "Default"
+            {
+                $sharePointAdminUrl = ("https://{0}-admin.sharepoint.com" -f $Endpoint.split(".")[0]);
+                break
             }
         }
+        return $sharePointAdminUrl
     }
     catch{
         Write-Debug $_

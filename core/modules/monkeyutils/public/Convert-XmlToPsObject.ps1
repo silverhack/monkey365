@@ -42,23 +42,23 @@ function Convert-XmlToPsObject{
     )
     $hash = @{}
     foreach($attribute in $node.attributes){
-        $hash.$($attribute.name) = $attribute.Value
+        $hash.Item($attribute.name) = $attribute.Value;
     }
     $childNodesList = ($node.childnodes | Where-Object {$_ -ne $null}).LocalName
     foreach($childnode in ($node.childnodes | Where-Object {$_ -ne $null})){
         if(($childNodesList | Where-Object {$_ -eq $childnode.LocalName}).count -gt 1){
-            if(!($hash.$($childnode.LocalName))){
-                $hash.$($childnode.LocalName) += @()
+            if(!($hash.Item($childnode.Localname))){
+                $hash.Item($childnode.LocalName)+=@()
             }
             if ($null -ne $childnode.'#text') {
-                $hash.$($childnode.LocalName) += $childnode.'#text'
+                $hash.Item($childnode.LocalName) += $childnode.'#text'
             }
-            $hash.$($childnode.LocalName) += xmlNodeToPsCustomObject($childnode)
+            $hash.Item($childnode.LocalName) += xmlNodeToPsCustomObject($childnode)
         }else{
             if ($null -ne $childnode.'#text') {
-                $hash.$($childnode.LocalName) = $childnode.'#text'
+                $hash.Item($childnode.LocalName) = $childnode.'#text'
             }else{
-                $hash.$($childnode.LocalName) = xmlNodeToPsCustomObject($childnode)
+                $hash.Item($childnode.LocalName) = xmlNodeToPsCustomObject($childnode)
             }
         }
     }

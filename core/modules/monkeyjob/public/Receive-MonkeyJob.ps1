@@ -93,7 +93,7 @@ Function Receive-MonkeyJob{
                 if($null -ne $MonkeyJob){
                     if($MonkeyJob.Task.IsCompleted -and $MonkeyJob.Task.IsFaulted -eq $false){
                         #return data
-                        return $MonkeyJob.Task.Result
+                        $MonkeyJob.Task.Result
                     }
                 }
             }
@@ -103,7 +103,7 @@ Function Receive-MonkeyJob{
                 $MonkeyJob = $MonkeyJobs | Where-Object $query -ErrorAction Ignore;
                 if($null -ne $MonkeyJob -and $MonkeyJob.Job.State -eq [System.Management.Automation.JobState]::Completed){
                     #return data
-                    return $MonkeyJob.Task.Result
+                    $MonkeyJob.Task.Result
                 }
             }
         }

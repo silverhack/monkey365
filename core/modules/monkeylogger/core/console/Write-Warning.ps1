@@ -108,7 +108,7 @@ Function Write-Warning {
             }
             #Check Log Level
             if (-not $PSBoundParameters.ContainsKey('logLevel')) {
-                $PSBoundParameters.Add('logLevel','info')
+                $PSBoundParameters.Add('logLevel','warning')
             }
             #Check InformationAction
             if (-not $PSBoundParameters.ContainsKey('informationAction')) {

@@ -44,7 +44,7 @@ Function Get-FabricIcon{
     )
     Begin{
         $fabric_icons = @{
-            'Azure AD' = 'AADLogo'
+            'Microsoft Entra ID' = 'AADLogo'
             'IAM' = 'AccountManagement'
             'Hosted Services' = 'WebComponents'
             'AppIcon' = 'AppIconDefault'

@@ -200,7 +200,12 @@ Function Invoke-ClientRequest{
                     return $webTaskResult.Result.Content
                 }
                 else{
-                    Write-Warning ("[{0}] {1}" -f $webTaskResult.Result.StatusCode, $webTaskResult.Result.RequestMessage.RequestUri.AbsoluteUri)
+                    $p = @{
+                        Message = ("[{0}] {1}" -f $webTaskResult.Result.StatusCode, $webTaskResult.Result.RequestMessage.RequestUri.AbsoluteUri);
+                        Verbose = $Verbose;
+                        InformationAction = $InformationAction
+                    }
+                    Write-Verbose @p
                     $p = @{
                         ErrorResponse = $webTaskResult.Result;
                         Verbose = $Verbose;

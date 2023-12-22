@@ -46,7 +46,7 @@ Function Get-MonkeySystemInfo {
         Elseif (($PSVersionTable.PSEdition -eq 'Core') -and ($PSVersionTable.Platform -eq 'Win32NT')){
             $sysObj.IsAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')
             $sysObj.OsType = 'Windows'
-            $sysObj.MsalType = 'Desktop'
+            $sysObj.MsalType = 'Core'
         }
         Else{
             Write-Warning -Message 'Unable to get System Information'

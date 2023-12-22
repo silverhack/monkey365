@@ -39,7 +39,7 @@ function New-SubscriptionInfo{
     [OutputType([System.Xml.XmlDocument])]
     Param (
         [Parameter(Mandatory=$false)]
-        [ValidateSet('Azure','Microsoft365','AzureAD')]
+        [ValidateSet('Azure','Microsoft365','EntraID')]
         [String]$Instance
     )
     Begin{
@@ -69,7 +69,7 @@ function New-SubscriptionInfo{
                 $CloudType = $sub_info.SelectSingleNode('//span[@id="cloudType"]')
                 $CloudType.InnerText = 'Microsoft 365'
             }
-            'AzureAD'{
+            'EntraID'{
                 #Select subscription ID
                 $span = $sub_info.SelectSingleNode('//span[@class="subscription"]')
                 $span.InnerText = $script:user_info.tenant.TenantName
@@ -78,7 +78,7 @@ function New-SubscriptionInfo{
                 $logo.class = "ms-Icon ms-Icon--AADLogo cloud-monkey-color fa-lg"
                 #Set Name
                 $CloudType = $sub_info.SelectSingleNode('//span[@id="cloudType"]')
-                $CloudType.InnerText = 'Microsoft Azure AD'
+                $CloudType.InnerText = 'Microsoft Entra ID'
             }
             Default{
                 #Select subscription ID

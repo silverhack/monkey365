@@ -40,10 +40,10 @@ Function New-DashboardTable{
     Begin{
         $table = [xml] '<table id="dashboard_table" class="monkey-table table-hover responsive nowrap" width="100%"><thead><tr><th>Services</th><th>Resources</th><th>Rules</th><th>Findings</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="5" class="text-center">data</td></tr></tfoot></table>'
         #Flagged elements
-        $flagged = $matched |Group-Object Dashboard_name
-        $flagged = $flagged | Select-Object Name, @{Name='resources';Expression={(($_.Group.resources[0]))}}, @{Name='flagged';Expression={@($_.Group | Where-Object {$_.level -ne "Good"}).Count}}
+        $flagged = $matched |Group-Object serviceType
+        $flagged = $flagged | Select-Object Name, @{Name='resources';Expression={(($_.Group[0].resourcesCount()))}}, @{Name='flagged';Expression={@($_.Group | Where-Object {$_.level -ne "Good"}).Count}}
         foreach($flag in $flagged){
-            $number_of_rules = @($rules | Where-Object {$_.dashboard_name -eq $flag.Name}).Count
+            $number_of_rules = @($rules | Where-Object {$_.serviceType -eq $flag.Name}).Count
             if( $null -eq $flag.flagged){
                 $flag.flagged = 1;
             }

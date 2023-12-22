@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-function Get-NewIDSuffix{
+Function Get-MonkeyFile{
     <#
         .SYNOPSIS
 
@@ -27,19 +27,33 @@ function Get-NewIDSuffix{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-NewIDSuffix
+            File Name	: Get-MonkeyFile
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
     [CmdletBinding()]
-    Param (
-        [parameter(Mandatory=$true, HelpMessage="Suffix")]
-        [string]$suffix
+    Param(
+        [Parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Path to search")]
+        [String]$Path,
+
+        [Parameter(Mandatory=$false, HelpMessage="pattern")]
+        [String]$Pattern = "*ps1",
+
+        [Parameter(Mandatory=$false, HelpMessage="Recursive search")]
+        [Switch]$Recurse
     )
-    $suffix = $suffix.Replace(' ','_')
-    $random = Get-Random -Minimum 20 -Maximum 400
-    $id = ("{0}_{1}" -f $suffix, $random)
-    return $id
+    Process{
+        if($PSBoundParameters.ContainsKey('Recurse') -and $PSBoundParameters['Recurse'].isPresent){
+            $options = [System.IO.SearchOption]::AllDirectories
+        }
+        else{
+            $options = [System.IO.SearchOption]::TopDirectoryOnly
+        }
+        if ([System.IO.Directory]::Exists($Path)){
+            [System.IO.Directory]::EnumerateFiles($Path,$Pattern,$options)
+        }
+    }
 }

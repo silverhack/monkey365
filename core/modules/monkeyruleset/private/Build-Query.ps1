@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-function Build-Query{
+Function Build-Query{
     <#
         .SYNOPSIS
+        Resolve statement
 
         .DESCRIPTION
+        Resolve statement
 
         .INPUTS
 
@@ -33,87 +35,58 @@ function Build-Query{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "", Scope="Function")]
-    [OutputType([System.Management.Automation.ScriptBlock])]
+    [CmdletBinding()]
     Param (
-        [parameter(Mandatory=$true, HelpMessage="Conditions")]
-        [object]$conditions,
-
-        [parameter(Mandatory=$true, HelpMessage="Conditions directory path")]
-        [string]$conditions_path
+        [parameter(Mandatory=$false, ParameterSetName = 'RuleObject', HelpMessage="Rule object")]
+        [Object]$InputObject
     )
-    $new_filter = @()
-    $pass_filter = $null
-    $first_verb = $conditions[0]
-    $pass_nested_filter = ""
-    foreach($condition in $conditions[1..($conditions.length -1)]){
-        $is_filter = Test-IsNewFilter -conditions $condition
-        if($is_filter){
-            try{
-                if($condition.Length -eq 2){$condition+=[string]::Empty}
-                $prepare_filter = [ordered]@{
-                    element_to_check = $condition[0];
-                    verb = $condition[1];
-                    value = $condition[2];
-                }
-                if($prepare_filter.element_to_check.Contains("_INCLUDE_") -and $conditions_path){
-                    $include = Resolve-Include -include_file $prepare_filter.element_to_check `
-                                               -conditions_path $conditions_path
-                    $new_filter+=$include
-                    continue;
-                }
-                $filter = Get-NewFilter @prepare_filter
-                $new_filter+=$filter
+    try{
+        if($PSCmdlet.ParameterSetName -eq 'RuleObject' -and $PSBoundParameters['InputObject']){
+            #Set new obj
+            $tmp_object = [ordered]@{}
+            foreach($elem in $InputObject.Psobject.Properties){
+                [void]$tmp_object.Add($elem.Name,$elem.Value)
             }
-            catch{
-                Write-warning $Script:messages.BuildQueryErrorMessage
-                #Verbose
-                Write-Verbose -Message $_
-                continue
+            $InputObject = New-Object -TypeName PSCustomObject -Property $tmp_object
+            $unitCondition = $InputObject.conditions;
+            if($unitCondition){
+                $newQuery = ConvertTo-Query -Conditions $unitCondition
+                if($newQuery){
+                    $safeQuery = $newQuery | ConvertTo-ScriptBlock
+                    if($safeQuery){
+                        $InputObject | Add-Member -type NoteProperty -name query -value $safeQuery
+                        return $InputObject
+                    }
+                    else{
+                        Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $rule.displayName)
+                    }
+                }
+            }
+        }
+        elseif($null -ne (Get-Variable -Name AllRules -ErrorAction Ignore)){
+            foreach($unitRule in $Script:AllRules){
+                Write-Verbose -Message ($Script:messages.BuildQueryMessage -f $unitRule.displayName)
+                $unitCondition = $unitRule.conditions;
+                if($unitCondition){
+                    $newQuery = ConvertTo-Query -Conditions $unitCondition
+                    if($newQuery){
+                        $safeQuery = $newQuery | ConvertTo-ScriptBlock
+                    }
+                    if($safeQuery){
+                        $unitRule | Add-Member -type NoteProperty -name query -value $safeQuery
+                    }
+                    else{
+                        Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $unitRule.displayName)
+                    }
+                }
             }
         }
         else{
-            #Potentially nested filter
-            $first = (@($new_filter) -join (' -{0} ' -f $first_verb))
-            $nested_filter = Get-NestedFilter -condition $condition -conditions_path $conditions_path
-            if($nested_filter){
-                $pass_nested_filter += $nested_filter
-            }
+            Write-Warning $Script:messages.UnableToGetRules
         }
     }
-    if($pass_nested_filter){
-        $pass_filter = ("({0}) {1}" -f $first, $pass_nested_filter)
-        #Write-Host $pass_filter -ForegroundColor Yellow
-        try{
-            return [ScriptBlock]::Create($pass_filter)
-        }
-        catch{
-            #Verbose
-            Write-Verbose -Message $_
-            #debug
-            Write-Debug -Message $_.Exception.StackTrace
-        }
-    }
-    else{
-        try{
-            $pass_filter = (@($new_filter) -join (' -{0} ' -f $first_verb))
-            if($null -ne $pass_filter -and $pass_filter.substring(2,1) -eq "-"){
-                $pass_filter = $pass_filter.substring(6,($pass_filter.Length -8))
-            }
-            #Write-Host $pass_filter -ForegroundColor Magenta
-            try{
-                return [ScriptBlock]::Create($pass_filter)
-            }
-            catch{
-                #Verbose
-                Write-Verbose -Message $_
-            }
-        }
-        catch{
-            Write-warning $Script:messages.BuildQueryErrorMessage
-            #Verbose
-            Write-Verbose -Message $_
-        }
+    catch{
+        Write-Error $_
     }
 }
