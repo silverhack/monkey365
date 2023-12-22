@@ -15,22 +15,22 @@
 Function Invoke-Monkey365{
     <#
         .SYNOPSIS
-            Monkey365 is a multi-threaded plugin-based tool to help assess the security of both Azure Cloud and Microsoft 365 environment configurations.
+            Monkey365 is a multi-threaded collector-based tool to help assess the security of both Azure Cloud and Microsoft 365 environment configurations.
             This module will not change any asset deployed in cloud. Only GET and POST HTTP requests are made to the API endpoints.
 
         .DESCRIPTION
             The main features included in this version are:
 
-	        Return a number of attributes on computers, users, configurations from Azure Active Directory
-            Review of Azure AD configuration
-	        Search for High level accounts in both Azure and Microsoft 365, including Azure Active Directory, classic administrators and Directory Roles (RBAC)
+	        Return a number of attributes on computers, users, configurations from Microsoft Entra ID
+            Review of Microsoft Entra ID configuration
+	        Search for High level accounts in both Azure and Microsoft 365, including Microsoft Entra ID, classic administrators and Directory Roles (RBAC)
 	        Multi-Threading support
-	        Plugin Support
+	        Collector Support
             The following Azure services are supported by Monkey365:
                 Azure SQL Databases
                 Azure MySQL Databases
                 Azure PostgreSQL Databases
-                Azure Active Directory
+                Microsoft Entra ID
                 Storage Accounts
                 Classic Virtual Machines
                 Virtual Machines V2
@@ -67,7 +67,7 @@ Function Invoke-Monkey365{
                 https://github.com/silverhack/monkey365
 
         .EXAMPLE
-	        $assets = Invoke-Monkey365 -ExportTo PRINT -PromptBehavior SelectAccount -IncludeAzureAD -Instance Microsoft365 -Analysis SharePointOnline
+	        $assets = Invoke-Monkey365 -ExportTo PRINT -PromptBehavior SelectAccount -IncludeEntraID -Instance Microsoft365 -Analysis SharePointOnline
 
             This example retrieves information of both Azure AD and SharePoint Online and print results. If credentials are not supplied, Monkey365 will prompt for credentials.
 
@@ -117,8 +117,8 @@ Function Invoke-Monkey365{
         .PARAMETER ExcludedResources
 	        Exclude unwanted azure resources from being scanned
 
-        .PARAMETER ExcludePlugin
-	        Exclude plugins from being executed
+        .PARAMETER ExcludeCollector
+	        Exclude collectors from being executed
 
         .PARAMETER Threads
 	        Change the threads settings. By default, a large number of requests will be made with two threads
@@ -156,12 +156,15 @@ Function Invoke-Monkey365{
         .PARAMETER DeviceCode
             Authenticate by using device code authentication flow
     #>
-    [CmdletBinding(HelpUri='https://silverhack.github.io/monkey365/')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
+    [CmdletBinding(DefaultParameterSetName = 'Implicit', HelpUri='https://silverhack.github.io/monkey365/')]
     Param (
         # pscredential of the user requesting the token
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-InputObject')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Implicit-PublicApplication')]
         [Alias('user_credentials')]
-        [System.Management.Automation.PSCredential] $UserCredentials,
+        [System.Management.Automation.PSCredential]$UserCredentials,
 
         [parameter(Mandatory= $false, ParameterSetName = 'Implicit', HelpMessage= "User for access to the O365 services")]
         [String]$UserPrincipalName,
@@ -180,64 +183,41 @@ Function Invoke-Monkey365{
 
         [Parameter(Mandatory=$false)]
         [ValidateSet('Azure','Microsoft365')]
-        $Instance,
+        [String]$Instance,
 
-        [Parameter(Mandatory=$false, HelpMessage="Clear token cache")]
-        [Switch]
-        $IncludeAzureAD,
+        [Parameter(Mandatory=$false, HelpMessage="Include Azure AD")]
+        [Switch]$IncludeEntraID,
 
         [Parameter(HelpMessage="Save entire project")]
-        [Switch]
-        $SaveProject,
+        [Switch]$SaveProject,
 
         [Parameter(HelpMessage="Import Monkey 365 Job")]
         [Switch]$ImportJob,
 
-        [Parameter(Mandatory=$false, HelpMessage="Plugins to exclude")]
-        [string[]]$ExcludePlugin,
+        [Parameter(Mandatory=$false, HelpMessage="Collectors to exclude")]
+        [string[]]$ExcludeCollector,
 
         [parameter(Mandatory= $false, HelpMessage= "Export data to multiple formats")]
         [ValidateSet("CSV","JSON","CLIXML","PRINT","EXCEL", "HTML")]
         [Array]$ExportTo=@(),
 
+        [Parameter(HelpMessage="Compress Monkey365 output to a ZIP file")]
+        [Switch]$Compress,
+
         [Parameter(Mandatory= $false, HelpMessage = 'Please specify folder to export results')]
         [System.IO.DirectoryInfo]$OutDir,
 
         [Parameter(Mandatory=$false, HelpMessage="Change the threads settings. Default is 2")]
-        [int32]
-        $Threads = 2,
+        [int32]$Threads = 2,
 
         [Parameter(Mandatory=$false, HelpMessage="Clear token cache")]
-        [Switch]
-        $ClearCache,
+        [Switch]$ClearCache,
 
         [Parameter(Mandatory= $false, HelpMessage="Auditor Name. Used in Excel File")]
 	    [String] $AuditorName = $env:username,
 
-        [Parameter(Mandatory= $false, HelpMessage="Resolve Tenant domain name")]
-	    [String] $ResolveTenantDomainName,
-
-        [Parameter(Mandatory= $false, HelpMessage="Resolve Tenant user name")]
-	    [String] $ResolveTenantUserName,
-
         [Parameter(Mandatory=$false, HelpMessage="Write Log file")]
-        [Switch]
-        $WriteLog=$false,
-
-        [parameter(Mandatory= $false, HelpMessage= "json file with all rules")]
-        [ValidateScript({
-                        if( -Not (Test-Path -Path $_) ){
-                            throw ("The ruleset does not exist in {0}" -f (Split-Path -Path $_))
-                        }
-                        if(-Not (Test-Path -Path $_ -PathType Leaf) ){
-                            throw "The ruleSet argument must be a json file. Folder paths are not allowed."
-                        }
-                        if($_ -notmatch "(\.json)"){
-                            throw "The file specified in the ruleset argument must be of type json"
-                        }
-                        return $true
-        })]
-        [System.IO.FileInfo]$RuleSet,
+        [Switch]$WriteLog,
 
         # Identifier of the client requesting the token.
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
@@ -251,16 +231,16 @@ Function Invoke-Monkey365{
         [securestring]$ClientSecret,
 
         # Secure secret of the client requesting the token.
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject', HelpMessage = 'PsCredential')]
         [Alias('client_credentials')]
-        [System.Management.Automation.PSCredential] $ClientCredentials,
+        [System.Management.Automation.PSCredential]$ClientCredentials,
 
         # Client assertion certificate of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate')]
         [System.Security.Cryptography.X509Certificates.X509Certificate2] $ClientAssertionCertificate,
 
         # ClientAssertionCertificate of the application requesting the token
-        [Parameter(Mandatory = $true, ParameterSetName = 'ClientAssertionCertificate-File')]
+        [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Certificate')]
         [parameter(Mandatory= $false, HelpMessage= "pfx certificate file")]
         [ValidateScript(
             {
@@ -278,8 +258,35 @@ Function Invoke-Monkey365{
         [System.IO.FileInfo]$Certificate,
 
         # Secure password of the certificate
-        [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Please specify the certificate password')]
+        [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Certificate password')]
         [Security.SecureString]$CertFilePassword,
+
+        [parameter(Mandatory= $false, HelpMessage= "json file with all rules")]
+        [ValidateScript({
+            if( -Not (Test-Path -Path $_) ){
+                throw ("The ruleset does not exist in {0}" -f (Split-Path -Path $_))
+            }
+            if(-Not (Test-Path -Path $_ -PathType Leaf) ){
+                throw "The ruleSet argument must be a json file. Folder paths are not allowed."
+            }
+            if($_ -notmatch "(\.json)"){
+                throw "The file specified in the ruleset argument must be of type json"
+            }
+            return $true
+        })]
+        [System.IO.FileInfo]$RuleSet,
+
+        [parameter(Mandatory= $false, HelpMessage= "Directory with all rules")]
+        [ValidateScript({
+            if( -Not (Test-Path -Path $_) ){
+                throw ("The directory does not exist in {0}" -f (Split-Path -Path $_))
+            }
+            if(-Not (Test-Path -Path $_ -PathType Container) ){
+                throw "The RulesPath argument must be a directory. Files are not allowed."
+            }
+            return $true
+        })]
+        [System.IO.DirectoryInfo]$RulesPath,
 
         # location where the authorization server will sends the user once is authenticated.
         [Parameter(Mandatory = $false)]
@@ -287,8 +294,8 @@ Function Invoke-Monkey365{
 
         # Indicates whether AcquireToken should automatically prompt only if necessary or whether it should prompt regardless of whether there is a cached token.
         [Parameter(Mandatory = $false, ParameterSetName = 'Implicit')]
-        [ValidateSet("Always", "Auto", "Never", "RefreshSession","SelectAccount")]
-        [String]$PromptBehavior = 'Auto',
+        [ValidateSet("SelectAccount", "NoPrompt", "Never", "ForceLogin")]
+        [String]$PromptBehavior,
 
         [Parameter(Mandatory=$false, ParameterSetName = 'Implicit', HelpMessage="Force Authentication Context. Only valid for user&password auth method")]
         [Switch]$ForceAuth,
@@ -297,7 +304,10 @@ Function Invoke-Monkey365{
         [Switch]$Silent,
 
         [Parameter(Mandatory=$false, ParameterSetName = 'Implicit', HelpMessage="Device code authentication")]
-        [Switch]$DeviceCode
+        [Switch]$DeviceCode,
+
+        [Parameter(Mandatory=$false, HelpMessage="Force to load MSAL Desktop PowerShell Core on Windows")]
+        [Switch]$ForceMSALDesktop
     )
     dynamicparam{
         # Set available instance class
@@ -316,7 +326,7 @@ Function Invoke-Monkey365{
             $attributeCollection.Add($analysis_attr_name)
 
             # set the ValidateSet attribute
-            $token_attr_name = New-Object System.Management.Automation.ValidateSetAttribute($instance_class.$Instance)
+            $token_attr_name = New-Object System.Management.Automation.ValidateSetAttribute($instance_class.Item($Instance))
             $attributeCollection.Add($token_attr_name)
 
             # create the dynamic -Analysis parameter
@@ -397,65 +407,46 @@ Function Invoke-Monkey365{
     }
     Begin{
         #Set Window name
-        $Host.UI.RawUI.WindowTitle = "Monkey 365 Security Scanner"
-        #Start Time
-        $starttimer = Get-Date
+        $Host.UI.RawUI.WindowTitle = "Monkey365 Cloud Security Scanner"
         #####Get Default parameters ########
         $MyParams = $PSBoundParameters
-        ################### Validate parameters #########################
-        $MyParams = Initialize-MonkeyParameter -MyParams $MyParams
-        ################### End Validate parameters #####################
-        Initialize-MonkeyVar -MyParams $MyParams
         #Create O365 object
         New-O365Object
+        #Import MSAL module
+        $msg = @{
+            MessageData = "Importing MSAL authentication library";
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'info';
+            InformationAction = $O365Object.InformationAction;
+            Tags = @('Monkey365LoadMSAL');
+        }
+        Write-Information @msg
+        $MSAL = ("{0}{1}core/modules/monkeymsal" -f $O365Object.Localpath,[System.IO.Path]::DirectorySeparatorChar)
+        Import-Module $MSAL -Scope Global -Force -ArgumentList $O365Object.forceMSALDesktop
+        #Start Time
+        $starttimer = Get-Date
+        ################### End Validate parameters #####################
         #Set timer
         $O365Object.startDate = $starttimer
         Update-PsObject
         #Initialize Logger
         Initialize-MonkeyLogger
-        #Resolve tenant
-        if($MyParams.ResolveTenantDomainName){
-            $msg = @{
-                MessageData = "Getting public tenant information";
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $script:InformationAction;
-                Tags = @('Monkey365ResolveTenant');
-            }
-            Write-Information @msg
-            Get-PublicTenantInformation -Domain $ResolveTenantDomainName
-            return
-        }
-        if($MyParams.ResolveTenantUserName){
-            $msg = @{
-                MessageData = "Getting public tenant information";
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $script:InformationAction;
-                Tags = @('Monkey365ResolveTenant');
-            }
-            Write-Information @msg
-            Get-PublicTenantInformation -Username $ResolveTenantUserName
-            return
-        }
         #Check if import job
         if($PSBoundParameters.ContainsKey('ImportJob') -and $PSBoundParameters.ImportJob){
             Import-MonkeyJob
             return
         }
-        #Get Environment
-        $O365Object.Environment = Get-MonkeyEnvironment -Environment $MyParams.Environment;
         #Initialize authentication parameters
         Initialize-AuthenticationParam
         #Connect
         Connect-MonkeyCloud
         #Start Watcher
         if($null -ne (Get-Command -Name "Watch-AccessToken" -ErrorAction ignore)){
-            Watch-AccessToken -Timer $O365Object.Timer
+            Watch-AccessToken
         }
     }
     Process{
-        if(($PSBoundParameters.ContainsKey('ImportJob') -and $null -eq $PSBoundParameters['ImportJob']) -and $null -ne $O365Object.Instance){
+        if(($O365Object.onlineServices.GetEnumerator() | Where-Object {$_.Value -eq $true})){
             switch ($O365Object.Instance.ToLower()){
                 'azure'{
                     Invoke-AzureScanner
@@ -463,8 +454,8 @@ Function Invoke-Monkey365{
                 'microsoft365'{
                     Invoke-M365Scanner
                 }
-                'azuread'{
-                    Invoke-AzureADScanner
+                'entraid'{
+                    Invoke-EntraIDScanner
                 }
                 default{
                     throw ("{0}" -f "Unable to recognize {0} environment",$O365Object.Instance.ToLower())
@@ -473,33 +464,39 @@ Function Invoke-Monkey365{
         }
     }
     End{
-        #Stop timer
-        $stoptimer = Get-Date
-        $elapsedTime =  [math]::round(($stoptimer - $starttimer).TotalMinutes , 2)
-        $msg = @{
-            MessageData = ($message.TimeElapsedScript -f $elapsedTime);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $script:InformationAction;
-            Tags = @('Monkey365ScriptFinished');
+        try{
+            #Stop timer
+            $stoptimer = Get-Date
+            $elapsedTime =  [math]::round(($stoptimer - $starttimer).TotalMinutes , 2)
+            $msg = @{
+                MessageData = ($message.TimeElapsedScript -f $elapsedTime);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'info';
+                InformationAction = $script:InformationAction;
+                Tags = @('Monkey365FinishedJobs');
+            }
+            Write-Information @msg
+            #Stop Watcher
+            if($null -ne (Get-Command -Name "Watch-AccessToken" -ErrorAction ignore)){
+                Watch-AccessToken -Stop
+            }
+            #Stop loggers
+            Stop-Logger
         }
-        Write-Information @msg
-        #Stopping sessions
-        Remove-MonkeyPsSession
-        #Clean runspaces
-        if($null -ne $O365Object.monkey_runspacePool -and $O365Object.monkey_runspacePool -is [System.Management.Automation.Runspaces.RunspacePool]){
-            $O365Object.monkey_runspacePool.Dispose()
+        catch{
+            Write-Error $_
         }
-        #Start Watcher
-        if($null -ne (Get-Command -Name "Watch-AccessToken" -ErrorAction ignore)){
-            #Watch-AccessToken -Stop
+        Finally{
+            #Remove Report variable
+            if($null -ne (Get-Variable -Name Report -Scope Script -ErrorAction Ignore)){
+                Remove-Variable -Name Report -Scope Script -Force
+            }
+            #Remove Report variable
+            if($null -ne (Get-Variable -Name returnData -Scope Script -ErrorAction Ignore)){
+                Remove-Variable -Name returnData -Scope Script -Force
+            }
+            #collect garbage
+            [System.GC]::GetTotalMemory($true) | out-null
         }
-        #Stop timer
-        $O365Object.Timer.stop()
-        $O365Object.Timer.dispose()
-        #Stop loggers
-        Stop-Logger
-        #collect garbage
-        [System.GC]::GetTotalMemory($true) | out-null
     }
 }

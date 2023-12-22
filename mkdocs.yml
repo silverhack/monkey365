@@ -78,9 +78,10 @@ nav:
       - Overview: security_checks/overview.md
       - Create a custom rule: security_checks/custom-rule.md
       - Custom ruleset: security_checks/custom-ruleset.md
-    - License and Contributing: license-contributing.md
-    - Support: support.md
-    - Disclaimer: disclaimer.md
+  - License and Contributing: license-contributing.md
+  - Support: support.md
+  - Disclaimer: disclaimer.md
+  - Sample Report: sample/Monkey365.html
 
 extra:
   consent:
@@ -103,6 +104,9 @@ extra:
     repo_issue: https://github.com/silverhack/monkey365/issues
     repo_discussion: https://github.com/silverhack/monkey365/discussions
     
-copyright: >
-  Copyright &copy; 2023 Juan Garrido –
-  <a href="#__consent">Change cookie settings</a>
+copyright: Copyright &copy; 2023 <a href="https://twitter.com/tr1ana" target="blank">Juan Garrido</a>
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences

@@ -10,12 +10,12 @@
 </p>
 
 <p
-  <i>Monkey365</i> is an Open Source security tool that can be used to easily conduct not only Microsoft 365, but also Azure subscriptions and Azure Active Directory security configuration reviews without the significant overhead of learning tool APIs or complex admin panels from the start. To help with this effort, Monkey365 also provides several ways to identify security gaps in the desired tenant setup and configuration. Monkey365 provides valuable recommendations on how to best configure those settings to get the most out of your Microsoft 365 tenant or Azure subscription.
+  <i>Monkey365</i> is an Open Source security tool that can be used to easily conduct not only Microsoft 365, but also Azure subscriptions and Microsoft Entra ID security configuration reviews without the significant overhead of learning tool APIs or complex admin panels from the start. To help with this effort, Monkey365 also provides several ways to identify security gaps in the desired tenant setup and configuration. Monkey365 provides valuable recommendations on how to best configure those settings to get the most out of your Microsoft 365 tenant or Azure subscription.
 </p>
 
 # Introduction
 
-Monkey365 is a plugin-based PowerShell module that can be used to review the security posture of your cloud environment. With Monkey365 you can scan for potential misconfigurations and security issues in public cloud accounts according to security best practices and compliance standards, across Azure, Azure AD, and Microsoft365 core applications.
+Monkey365 is a collector-based PowerShell module that can be used to review the security posture of your cloud environment. With Monkey365 you can scan for potential misconfigurations and security issues in public cloud accounts according to security best practices and compliance standards, across Azure, Microsoft Entra ID, and Microsoft 365 core applications.
 
 # Installation
 
@@ -69,7 +69,7 @@ $param = @{
     Instance = 'Microsoft365';
     Analysis = 'SharePointOnline';
     PromptBehavior = 'SelectAccount';
-    IncludeAzureAD = $true;
+    IncludeEntraID = $true;
     ExportTo = 'PRINT';
 }
 $assets = Invoke-Monkey365 @param

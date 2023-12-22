@@ -12,7 +12,7 @@
 RootModule = 'monkey365.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.0'
+ModuleVersion = '0.91.2'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -67,41 +67,19 @@ RequiredModules = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
 NestedModules = @(
-    'core/modules/monkeyhttpwebrequest/monkeyhttpwebrequest.psm1',
-    'core/modules/monkeyutils/monkeyutils.psm1',
-    'core/modules/monkeylogger/monkeylogger.psm1',
-    'core/modules/monkeyast/monkeyast.psm1',
-    'core/modules/monkeyjob/monkeyjob.psm1',
-    'core/modules/monkeyexcel/monkeyexcel.psm1',
-    'core/modules/psmarkdig/psmarkdig.psm1',
-    'core/modules/monkeyruleset/monkeyruleset.psm1',
-    'core/modules/monkeyhtml/monkeyhtml.psm1'
+    'core/modules/monkeylogger/monkeylogger.psm1'
 )
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
     'Invoke-Monkey365',
-    'Get-MonkeyJobError'
-    'Get-MonkeyJobRS',
-    'Get-MonkeyEnvironment',
-    'Get-AstFunction',
     'Write-Information',
+    'Write-Warning',
+    'Write-Debug',
     'Write-Verbose',
     'Write-Error',
-    'Write-Debug',
-    'Get-ActiveRunspacePool',
     'Convert-MarkDownToHtml',
-    'Get-TenantInfo',
-    'Get-WellKnownAzureService',
-    'Copy-psObject',
-    'Get-TenantsForUser',
-    'Get-SharepointAdminUrl',
-    'Get-SharepointUrl',
-    'Get-OneDriveUrl',
-    'Get-MonkeyExoRedirectUri',
-    'Get-DefaultTenantName',
-    'Update-PsObject',
-    'Get-MonkeySubscriptionInfo'
+    'Get-MonkeyJobError'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -128,16 +106,27 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        # Tags = @()
+        Tags = @(
+            "Microsoft365",
+            "Microsoft 365 security",
+            "Azure",
+            "AzureAD",
+            "Microsoft Entra",
+            "CSPM",
+            "Office 365",
+            "Office 365 Security"
+        )
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://github.com/silverhack/monkey365/blob/main/LICENSE'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://silverhack.github.io/monkey365/'
 
         # A URL to an icon representing this module.
-        # IconUri = ''
+        IconUri = 'https://user-images.githubusercontent.com/5271640/181045413-1d17333c-0533-404a-91be-2070ccc6ee29.png'
+
+        Prerelease = 'beta'
 
         # ReleaseNotes of this module
         ReleaseNotes = '*'
