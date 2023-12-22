@@ -4,7 +4,7 @@ author: Juan Garrido
 
 ## Device code authentication
 
-Interactive authentication with Azure Active Directory requires a web browser. However, in operating systems that do not provide a Web browser, such as containers, command line tools or non-gui systems, Device code flow lets the user use another computer to sign-in interactively. The tokens will be obtained through a two-step process.
+Interactive authentication with Microsoft Entra ID requires a web browser. However, in operating systems that do not provide a Web browser, such as containers, command line tools or non-gui systems, Device code flow lets the user use another computer to sign-in interactively. The tokens will be obtained through a two-step process.
 
 ## Usage Examples
 
@@ -14,7 +14,7 @@ $param = @{
     Instance = 'Microsoft365';
     Analysis = 'SharePointOnline';
     DeviceCode = $true;
-    IncludeAzureAD = $true;
+    IncludeEntraID = $true;
     ExportTo = 'PRINT';
 }
 $assets = Invoke-Monkey365 @param

@@ -4,7 +4,7 @@ author: Juan Garrido
 
 ## Service Principal Authentication
 
-This type of grant is commonly used for machine-to-machine interactions that must run in the background, such as daemons, or service accounts. In this case, Azure AD authenticates and authorizes the app rather than a user. During this step, the client has to authenticate itself to Azure AD. The Microsoft identity platform allows the confidential client to authenticate using a shared secret, certificate or federated credential.
+This type of grant is commonly used for machine-to-machine interactions that must run in the background, such as daemons, or service accounts. In this case, Microsoft Entra ID authenticates and authorizes the app rather than a user. During this step, the client has to authenticate itself to Microsoft Entra ID. The Microsoft identity platform allows the confidential client to authenticate using a shared secret, certificate or federated credential.
 
 ## Usage Examples
 
@@ -43,6 +43,8 @@ Invoke-Monkey365 @param
 ```
 
 ## References
+
+<a href='https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread' target='_blank'>https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread</a>
 
 <a href='https://learn.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app' target='_blank'>https://learn.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app</a>
 

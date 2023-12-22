@@ -23,7 +23,7 @@ $param = @{
     Instance = 'Microsoft365';
     Analysis = 'SharePointOnline';
     PromptBehavior = 'SelectAccount';
-    IncludeAzureAD = $true;
+    IncludeEntraID = $true;
     ExportTo = 'PRINT';
 }
 $assets = Invoke-Monkey365 @param

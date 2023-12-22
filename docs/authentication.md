@@ -18,9 +18,9 @@ The Microsoft identity platform supports the OAuth 2.0 Resource Owner Password C
 
 ## Device code authentication
 
-Interactive authentication with Azure Active Directory requires a web browser. However, in operating systems that do not provide a Web browser, such as containers, command line tools or non-gui systems, Device code flow lets the user use another computer to sign-in interactively. The tokens will be obtained through a two-step process.
+Interactive authentication with Microsoft Entra ID requires a web browser. However, in operating systems that do not provide a Web browser, such as containers, command line tools or non-gui systems, Device code flow lets the user use another computer to sign-in interactively. The tokens will be obtained through a two-step process.
 
 ## Client credential authentication
 
-This type of grant is commonly used for machine-to-machine interactions that must run in the background, such as daemons, or service accounts. In this case, Azure AD authenticates and authorizes the app rather than a user. During this step, the client has to authenticate itself to Azure AD. The Microsoft identity platform allows the confidential client to authenticate using a shared secret, certificate or federated credential.
+This type of grant is commonly used for machine-to-machine interactions that must run in the background, such as daemons, or service accounts. In this case, Microsoft Entra ID authenticates and authorizes the app rather than a user. During this step, the client has to authenticate itself to Microsoft Entra ID. The Microsoft identity platform allows the confidential client to authenticate using a shared secret, certificate or federated credential.
 

@@ -7,7 +7,7 @@ Monkey365 enable users to create rules, both simple and complex, to tell Monkey3
 
 ## Rule Body
 
-A rule is described in JSON. A single rule can be used to represent complex rules. A rule has an `issue_name` and a list of conditions that are evaluated when the rule is triggered.
+A rule is described in JSON. A single rule can be used to represent complex rules. A rule has an `DisplayName` and a list of conditions that are evaluated when the rule is triggered.
 
 ![](../assets/images/rule_example.PNG)
 
@@ -19,9 +19,9 @@ To check the remote PowerShell access status for users, create a JSON rule with 
 
 ``` json 
 {
-    "dashboard_name": "Exchange Online",
-    "menu_name": "Microsoft 365",
-    "issue_name": "Exchange Online Remote PowerShell Access Enabled",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Exchange Online Remote PowerShell Access Enabled",
     "description": "It was possible for users to access the Exchange Online Remote PowerShell on the Microsoft 365 environment.",
     "references": [
         "https://docs.microsoft.com/en-us/powershell/exchange/disable-access-to-exchange-online-powershell?view=exchange-ps"
@@ -32,25 +32,27 @@ To check the remote PowerShell access status for users, create a JSON rule with 
         ]
     ],
     "path": "o365_exo_users",
-    "display_path": "o365_exo_users",
-    "conditions": [
-        "and",
-        [
-            "RemotePowerShellEnabled",
-            "ne",
-            "False"
-        ]
-    ],
-    "id_suffix": "o365_exo_users_remote_ps_enabled"
+	"conditions":  [
+		{
+			statements: [
+				{
+					conditions : [
+						["RemotePowerShellEnabled","ne","False"]
+					]
+				}
+			]
+		}
+	],
+    "idsuffix": "o365_exo_users_remote_ps_enabled"
 }
 
 ```
 
-1.- ```dashboard_name```: This is the friendly name of the application/service that is checked, displayed on the HTML dashboard.
+1.- ```serviceType```: This is the friendly name of the application/service that is checked, displayed on the HTML dashboard.
 
-2.- ```menu_name```: This is the friendly name of the provider, which is displayed on the HTML sidebar.
+2.- ```serviceName```: This is the friendly name of the provider, which is displayed on the HTML sidebar.
 
-3.- ```issue_name```: The rule name.
+3.- ```displayName```: The rule name.
 
 4.- ```description```: The rule description. Rule description supports <a href='https://en.wikipedia.org/wiki/Markdown' target='_blank'>Markdown</a>. That way you can add links and apply minor text styles.
 
@@ -58,7 +60,9 @@ To check the remote PowerShell access status for users, create a JSON rule with 
 
 6.- The ```condition``` property determines the checks Monkey365 will use to test each user returned in Exchange Online. Specifically, the ```RemotePowerShellEnabled``` property of each user object will be evaluated. The value of ```RemotePowerShellEnabled``` should not be *False*. Multiple PowerShell comparison operators are supported. The following <a href='https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators?view=powershell-7.2' target='_blank'>link</a> is a list of comparison operators supported by PowerShell. 
 
-7.- Name your rule with a unique name .Json.
+7.-  ```idSuffix```: UniqueID for the rule.
+
+8.- Name your rule with a unique name .Json.
 
 ## Testing rules
 

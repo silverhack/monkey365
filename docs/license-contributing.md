@@ -16,7 +16,7 @@ Additionaly, the following components are used in order to generate the HTML rep
 - Azure icons, Microsoft license - https://docs.microsoft.com/en-us/azure/architecture/icons/
 - Microsoft 365 icons, Microsoft license
 
-Monkey365 welcomes all types of contributions that will help us to refine the tool. Testing and feedback on different PowerShell modules and plugins are ways everyone can help in addition to module features or bug fixes, so any support would be much appreciated.
+Monkey365 welcomes all types of contributions that will help us to refine the tool. Testing and feedback on different PowerShell modules and collectors are ways everyone can help in addition to module features or bug fixes, so any support would be much appreciated.
 
 If you are interested in contributing directly to Monkey365, here is how you can get started:
 
