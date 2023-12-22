@@ -52,7 +52,7 @@ Function Get-MonkeySKUInfo{
                 #Get all licenses
                 $json_path = ("{0}/{1}" -f $O365Object.Localpath,$O365Object.internal_config.o365.licenseInfo)
                 if (!(Test-Path -Path $json_path)){
-                    throw ("{0} license file does not exists" -f $json_path)
+                    throw ("{0} license file not found" -f $json_path)
                 }
                 $licenses = (Get-Content $json_path -Raw) | ConvertFrom-Json
             }
@@ -70,7 +70,7 @@ Function Get-MonkeySKUInfo{
     }
     Process{
         if($null -ne $O365Object.Tenant -and $null -ne $O365Object.Tenant.psobject.Properties.Item('SKU') -and $null -ne $O365Object.Tenant.SKU){
-            $current_licenses = Copy-psObject -object $O365Object.Tenant.SKU
+            $current_licenses = $O365Object.Tenant.SKU | Copy-PsObject
             foreach($license in $current_licenses){
                 $match = $licenses | Where-Object {$_.Guid -eq $license.skuId} -ErrorAction Ignore
                 if($null -ne $match){

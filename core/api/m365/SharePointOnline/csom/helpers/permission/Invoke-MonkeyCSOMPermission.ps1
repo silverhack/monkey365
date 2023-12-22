@@ -147,19 +147,19 @@ Function Invoke-MonkeyCSOMPermission{
                                     Continue
                                 }
                                 #$GroupUsers = ($groupMembers | Select-Object -ExpandProperty Title | Where-Object { $_ -ne "System Account"}) -join "; "
-                                $GroupUsers = $groupMembers.Where({$_.Title -ne "System Account"})
+                                $GroupUsers = @($groupMembers).Where({$_.Title -ne "System Account"})
                                 if($GroupUsers.Length -eq 0) {
                                     Continue
                                 }
                                 $GroupUsers = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
                                 #Get Real users
-                                $grpmembers = $groupMembers.Where({$_.PrincipalType -eq 4}) | Select-Object -ExpandProperty Members -ErrorAction Ignore
+                                $grpmembers = @($groupMembers).Where({$_.PrincipalType -eq 4}) | Select-Object -ExpandProperty Members -ErrorAction Ignore
                                 if($grpmembers){
                                     foreach($usr in @($grpmembers)){
                                         [void]$GroupUsers.Add($usr)
                                     }
                                 }
-                                $tusers = $groupMembers.Where({$_.PrincipalType -eq 1})
+                                $tusers = @($groupMembers).Where({$_.PrincipalType -eq 1})
                                 if($tusers){
                                     if($tusers){
                                         foreach($usr in @($tusers)){

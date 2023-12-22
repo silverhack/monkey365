@@ -53,11 +53,15 @@ Function New-MonkeyVaultObject {
                 sku = $KeyVault.properties.sku;
                 tenantId = $KeyVault.properties.tenantId;
                 properties = $KeyVault.properties;
+                locks = $null;
                 resourceGroupName = $KeyVault.Id.Split("/")[4];
                 networkAcls = if($null -ne $KeyVault.properties.PsObject.Properties.Item('networkAcls')){$KeyVault.properties.networkAcls}else{$null};
                 diagnosticSettings = [PSCustomObject]@{
                     enabled = $false;
-                    rawObject = $null;
+                    name = $null;
+                    id = $null;
+                    properties = $null;
+                    rawData = $null;
                 };
                 objects = [PSCustomObject]@{
                     keys = $null;

@@ -34,9 +34,9 @@ Function Connect-MonkeyPIM {
             https://github.com/silverhack/monkey365
     #>
     [CmdletBinding()]
-    Param (
-        [Parameter(Mandatory=$false, HelpMessage="parameters")]
-        [Object]$parameters
-    )
-    Get-MSALTokenForPIM @parameters
+    Param ()
+    if($null -ne $O365Object.msal_application_args){
+        $app_params = $O365Object.msal_application_args;
+        Get-MSALTokenForPIM @app_params
+    }
 }

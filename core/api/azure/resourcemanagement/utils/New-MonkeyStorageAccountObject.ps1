@@ -68,11 +68,11 @@ Function New-MonkeyStorageAccountObject {
                 dfsEndpoint = $StrAccount.Properties.primaryEndpoints.dfs;
                 keyRotation = [PSCustomObject]@{
                     key1 = [PSCustomObject]@{
-                        isRotated = $false;
+                        isRotated = $null;
                         lastRotationDate = $null;
                     };
                     key2 = [PSCustomObject]@{
-                        isRotated = $false;
+                        isRotated = $null;
                         lastRotationDate = $null;
                     };
                 };
@@ -86,7 +86,7 @@ Function New-MonkeyStorageAccountObject {
                 lastFileEnabledTime = $StrAccount.Properties.encryption.services.File.lastEnabledTime;
                 isEncrypted = $null;
                 lastEnabledTime = $null;
-                allowAzureServices = $StrAccount.Properties.networkAcls.bypass -eq 'AzureServices';
+                allowAzureServices = $StrAccount.Properties.networkAcls.bypass -match 'AzureServices';
                 allowAccessFromAllNetworks = if (-not $StrAccount.Properties.networkAcls.virtualNetworkRules -and -not $StrAccount.Properties.networkAcls.ipRules -and $StrAccount.Properties.networkAcls.defaultAction -eq 'Allow'){$true}else{$false};
                 dataProtection = $null;
                 advancedProtectionEnabled = $null;
@@ -98,6 +98,7 @@ Function New-MonkeyStorageAccountObject {
                     blob = $null;
                     table = $null;
                 };
+                locks = $null;
                 rawObject = $StrAccount;
             }
             #Create PsObject

@@ -40,6 +40,7 @@ Function Invoke-DumpExcel{
         [HashTable] $ObjectData
     )
     Begin{
+        Write-Warning "Excel output has been deprecated and will be removed in next release"
         if($null -ne $O365Object.internal_config.excelSettings){
             $ExcelSettings = $O365Object.internal_config.excelSettings
             $TableFormatting = $ExcelSettings.tableFormatting.Style
@@ -205,14 +206,8 @@ Function Invoke-DumpExcel{
             $directory_roles = $allSheets | Where-Object { $_.sheetName -eq "aad_directory_roles" } | Select-Object -ExpandProperty data -ErrorAction SilentlyContinue
             if($null -ne $directory_roles){
                 $DRChart = @{}
-                foreach ($group in $directory_roles){
-                    if($group.members -eq 0){
-                        continue
-                    }
-                    else{
-                        $DRChart.Add($group.displayName, $group.Members)
-                    }
-                }
+                #Group for each object for count values
+                $directory_roles.roledefinition | Group-Object displayName | ForEach-Object {$DRChart.Add($_.Name,@($_.Count))}
                 if($DRChart){
                     $params = @{
                         Data = $DRChart;
@@ -237,7 +232,7 @@ Function Invoke-DumpExcel{
             if($null -ne $RBAC){
                 $RBACChart = @{}
                 #Group for each object for count values
-                $RBAC | Group-Object RoleName | ForEach-Object {$RBACChart.Add($_.Name,@($_.Count))}
+                $RBAC.roleAssignmentInfo | Group-Object RoleName | ForEach-Object {$RBACChart.Add($_.Name,@($_.Count))}
                 if($RBACChart){
                     $params = @{
                         Data = $RBACChart;

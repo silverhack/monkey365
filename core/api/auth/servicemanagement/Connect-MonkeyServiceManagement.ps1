@@ -34,9 +34,15 @@ Function Connect-MonkeyServiceManagement {
             https://github.com/silverhack/monkey365
     #>
     [CmdletBinding()]
-    Param (
-        [Parameter(Mandatory=$false, HelpMessage="parameters")]
-        [Object]$parameters
-    )
-    Get-MSALTokenForServiceManagement @parameters
+    Param ()
+    $app_params = $null
+    if($null -ne $O365Object.msal_application_args){
+        $app_params = $O365Object.msal_application_args;
+    }
+    elseif($null -ne $O365Object.application_args){
+        $app_params = $O365Object.application_args;
+    }
+    if($null -ne $app_params){
+        Get-MSALTokenForServiceManagement @app_params
+    }
 }

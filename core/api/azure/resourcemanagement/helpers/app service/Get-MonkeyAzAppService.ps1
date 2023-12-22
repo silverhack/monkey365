@@ -39,7 +39,7 @@ Function Get-MonkeyAzAppService {
 	[CmdletBinding()]
 	Param (
         [Parameter(Mandatory=$true, ValueFromPipeline = $True)]
-        [Object]$App,
+        [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
         [String]$APIVersion = "2021-02-01"
@@ -47,7 +47,7 @@ Function Get-MonkeyAzAppService {
     Process{
         try{
             $p = @{
-		        Id = $App.Id;
+		        Id = $InputObject.Id;
                 ApiVersion = $APIVersion;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
@@ -97,6 +97,8 @@ Function Get-MonkeyAzAppService {
                         $app_service.recovery.backup.count = @($app_backup).Count;
                         $app_service.recovery.backup.rawData = $app_backup;
                     }
+                    #Get locks
+                    $app_service.locks = $app_service | Get-MonkeyAzLockInfo
                     #Get app snapshot
                     $p = @{
 		                App = $app_service;
@@ -111,21 +113,23 @@ Function Get-MonkeyAzAppService {
                         $app_service.recovery.snapShot.count = @($app_snapshot).Count;
                         $app_service.recovery.snapShot.rawData = $app_snapshot;
                     }
-                    #Get diagnostic settings
-                    $p = @{
-		                Id = $app_service.Id;
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
-                        InformationAction = $O365Object.InformationAction;
-	                }
-	                $diag = Get-MonkeyAzDiagnosticSettingsById @p
-                    if($diag){
-                        #Add to object
-                        $app_service.diagnosticSettings.enabled = $true;
-                        $app_service.diagnosticSettings.name = $diag.name;
-                        $app_service.diagnosticSettings.id = $diag.id;
-                        $app_service.diagnosticSettings.properties = $diag.properties;
-                        $app_service.diagnosticSettings.rawData = $diag;
+                    If($InputObject.supportsDiagnosticSettings -eq $True){
+                        #Get diagnostic settings
+                        $p = @{
+		                    Id = $app_service.Id;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                            InformationAction = $O365Object.InformationAction;
+	                    }
+	                    $diag = Get-MonkeyAzDiagnosticSettingsById @p
+                        if($diag){
+                            #Add to object
+                            $app_service.diagnosticSettings.enabled = $true;
+                            $app_service.diagnosticSettings.name = $diag.name;
+                            $app_service.diagnosticSettings.id = $diag.id;
+                            $app_service.diagnosticSettings.properties = $diag.properties;
+                            $app_service.diagnosticSettings.rawData = $diag;
+                        }
                     }
                     #Check if identity is present
                     if($null -ne $app_service.rawObject.PsObject.Properties.Item('identity')){
@@ -133,8 +137,9 @@ Function Get-MonkeyAzAppService {
                         $app_service.identity.type = $app_service.rawObject.identity.type;
                         $app_service.identity.rawData = $app_service.rawObject.identity;
                     }
+                    #return object
+                    return $app_service
                 }
-                return $app_service
             }
         }
         catch{

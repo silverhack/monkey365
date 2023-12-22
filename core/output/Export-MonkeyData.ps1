@@ -35,104 +35,113 @@ Function Export-MonkeyData{
     #>
 
     Param (
-        [Parameter(Mandatory = $false, HelpMessage = 'Output formats')]
-        [String]$ExportTo,
-
-        [Parameter(Mandatory = $false, HelpMessage = 'Output Directory')]
-        [String]$OutDir
+        [Parameter(Mandatory = $true, HelpMessage = 'Output format')]
+        [String]$ExportTo
     )
     #Export data
     switch ($ExportTo) {
         'CSV'
         {
-            foreach($unit_element in $MonkeyExportObject.Output.GetEnumerator()){
-                if($unit_element.Name -and $unit_element.value.Data){
-                    $csv_file = ("{0}/{1}.csv" -f $OutDir,$unit_element.Name)
-                    $msg = @{
-                        MessageData = ($message.ExportDataToMessage -f $csv_file,'csv');
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'debug';
-                        InformationAction = $InformationAction;
-                        Tags = @('NewCSVFile');
+            $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())
+            $OutDir = New-MonkeyFolder -destination $out_folder
+            if($OutDir){
+                foreach($unit_element in $MonkeyExportObject.Output.GetEnumerator()){
+                    if($unit_element.Name -and $unit_element.value.Data){
+                        $csv_file = ("{0}/{1}.csv" -f $OutDir,$unit_element.Name)
+                        $msg = @{
+                            MessageData = ($message.ExportDataToInfo -f $csv_file,'csv');
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'verbose';
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Tags = @('NewCSVFile');
+                        }
+                        Write-Verbose @msg
+                        $params = @{
+                            Object = $unit_element.value.Data;
+                            OutFile = $csv_file;
+                        }
+                        Out-CSV @params
                     }
-                    Write-Debug @msg
-                    $params = @{
-                        Object = $unit_element.value.Data;
-                        OutFile = $csv_file;
-                    }
-                    Out-CSV @params
                 }
             }
         }
         'JSON'
         {
-            foreach($unit_element in $MonkeyExportObject.Output.GetEnumerator()){
-                if($unit_element.Name -and $unit_element.value.Data){
-                    $json_file = ("{0}/{1}.json" -f $OutDir,$unit_element.Name)
-                    $msg = @{
-                        MessageData = ($message.ExportDataToMessage -f $json_file,'json');
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'debug';
-                        InformationAction = $InformationAction;
-                        Tags = @('NewJSONFile');
-                    }
-                    Write-Debug @msg
-                    try{
-                        $params = @{
-                            Object = $unit_element.value.Data;
-                            OutFile = $json_file;
-                        }
-                        Out-JSON @params
-                    }
-                    catch{
+            $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())
+            $OutDir = New-MonkeyFolder -destination $out_folder
+            if($OutDir){
+                foreach($unit_element in $MonkeyExportObject.Output.GetEnumerator()){
+                    if($unit_element.Name -and $unit_element.value.Data){
+                        $json_file = ("{0}/{1}.json" -f $OutDir,$unit_element.Name)
                         $msg = @{
-                            MessageData = ($message.UnableToExport -f $json_file,'json');
+                            MessageData = ($message.ExportDataToInfo -f $json_file,'json');
                             callStack = (Get-PSCallStack | Select-Object -First 1);
-                            logLevel = 'debug';
-                            InformationAction = $InformationAction;
-                            Tags = @('UnableToExport');
+                            logLevel = 'verbose';
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Tags = @('NewJSONFile');
                         }
-                        Write-Debug @msg
+                        Write-Verbose @msg
+                        try{
+                            $params = @{
+                                Object = $unit_element.value.Data;
+                                OutFile = $json_file;
+                            }
+                            Out-JSON @params
+                        }
+                        catch{
+                            $msg = @{
+                                MessageData = ($message.UnableToExport -f $json_file,'json');
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'debug';
+                                InformationAction = $O365Object.InformationAction;
+                                Debug = $O365Object.debug;
+                                Tags = @('UnableToExport');
+                            }
+                            Write-Debug @msg
+                        }
                     }
                 }
             }
         }
         'CLIXML'
         {
-            foreach($unit_element in $MonkeyExportObject.Output.GetEnumerator()){
-                if($unit_element.Name -and $unit_element.value.Data){
-                    $xml_file = ("{0}/{1}.xml" -f $OutDir,$unit_element.Name)
-                    $msg = @{
-                        MessageData = ($message.ExportDataToMessage -f $xml_file,'xml');
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'debug';
-                        InformationAction = $InformationAction;
-                        Tags = @('NewXMLFile');
+            $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())
+            $OutDir = New-MonkeyFolder -destination $out_folder
+            if($OutDir){
+                foreach($unit_element in $MonkeyExportObject.Output.GetEnumerator()){
+                    if($unit_element.Name -and $unit_element.value.Data){
+                        $xml_file = ("{0}/{1}.xml" -f $OutDir,$unit_element.Name)
+                        $msg = @{
+                            MessageData = ($message.ExportDataToInfo -f $xml_file,'xml');
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'verbose';
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Tags = @('NewXMLFile');
+                        }
+                        Write-Verbose @msg
+                        $params = @{
+                            Object = $unit_element.value.Data;
+                            OutFile = $xml_file;
+                        }
+                        Out-XML @params
                     }
-                    Write-Debug @msg
-                    $params = @{
-                        Object = $unit_element.value.Data;
-                        OutFile = $xml_file;
-                    }
-                    Out-XML @params
                 }
             }
         }
         'EXCEL'
         {
             Invoke-DumpExcel -ObjectData $MonkeyExportObject.Output
-            <#
-            if ($PSEdition -eq 'Core'){
-                Write-Warning -Message ("Exporting data to Excel format is not supported on {0}" -f [System.Environment]::OSVersion.VersionString)
-            }
-            else{
-                Invoke-DumpExcel -ObjectData $Dataset
-            }
-            #>
         }
         "HTML"
         {
-            Invoke-HtmlReport -OutDir $OutDir
+            $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())
+            $OutDir = New-MonkeyFolder -destination $out_folder
+            if($OutDir){
+                Invoke-HtmlReport -OutDir $OutDir
+            }
         }
         "PRINT"
         {

@@ -36,97 +36,118 @@ Function Get-MonkeyAzKeyVault {
             https://github.com/silverhack/monkey365
     #>
 
-	[CmdletBinding()]
+	[cmdletbinding(DefaultParameterSetName='KeyVault')]
 	Param (
-        [Parameter(Mandatory=$True, ParameterSetName = 'Id')]
+        [Parameter(Mandatory=$true, ValueFromPipeline = $True, ParameterSetName = 'Id')]
         [String]$Id,
 
-        [Parameter(Mandatory=$True, ParameterSetName = 'KeyVault')]
+        [Parameter(Mandatory=$true, ValueFromPipeline = $True, ParameterSetName = 'KeyVault')]
         [Object]$KeyVault,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
         [String]$APIVersion = "2021-10-01"
     )
-    try{
-        $vaultObject = $null;
-        if($PSCmdlet.ParameterSetName -eq 'Id'){
-            $p = @{
-			    Id = $Id;
-                ApiVersion = $APIVersion;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-                InformationAction = $O365Object.InformationAction;
-		    }
-		    $vaultObject = Get-MonkeyAzObjectById @p
+    Process{
+        try{
+            $vaultObject = $null;
+            if($PSCmdlet.ParameterSetName -eq 'Id'){
+                $p = @{
+			        Id = $Id;
+                    ApiVersion = $APIVersion;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+		        }
+		        $vaultObject = Get-MonkeyAzObjectById @p
+            }
+            else{
+                $p = @{
+			        Id = $KeyVault.Id;
+                    ApiVersion = $APIVersion;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+		        }
+		        $vaultObject = Get-MonkeyAzObjectById @p
+            }
+            if($null -ne $vaultObject){
+                #Check for purge protection
+                if($null -eq $vaultObject.Properties.PsObject.Properties.Item('enablePurgeProtection')){
+                    $vaultObject.Properties | Add-Member -type NoteProperty -name enablePurgeProtection -value $false -Force
+                }
+                #Get Network properties
+			    if (-not $vaultObject.Properties.networkAcls) {
+				    $vaultObject | Add-Member -Type NoteProperty -Name allowAccessFromAllNetworks -Value $true
+			    }
+			    elseif ($vaultObject.Properties.networkAcls.bypass -eq "AzureServices" -and $vaultObject.Properties.networkAcls.defaultAction -eq "Allow") {
+				    $vaultObject | Add-Member -Type NoteProperty -Name allowAccessFromAllNetworks -Value $true
+			    }
+			    else {
+				    $vaultObject | Add-Member -Type NoteProperty -Name allowAccessFromAllNetworks -Value $false
+			    }
+                $vaultObject = New-MonkeyVaultObject -KeyVault $vaultObject
+                #Get keys
+                $p = @{
+                    KeyVault = $vaultObject;
+                    ObjectType = 'keys';
+                    GetProperties = $True;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                $keys = Get-MonkeyAzKeyVaultObject @p
+                if($keys){
+                    $vaultObject.objects.keys = $keys;
+                }
+                #Get secrets
+                $p = @{
+                    KeyVault = $vaultObject;
+                    ObjectType = 'secrets';
+                    GetProperties = $True;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                $secrets = Get-MonkeyAzKeyVaultObject @p
+                if($secrets){
+                    $vaultObject.objects.secrets = $secrets;
+                }
+                #Get certificates
+                $p = @{
+                    KeyVault = $vaultObject;
+                    ObjectType = 'certificates';
+                    GetProperties = $True;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                $certificates = Get-MonkeyAzKeyVaultObject @p
+                if($certificates){
+                    $vaultObject.objects.certificates = $certificates;
+                }
+                #Get Diagnostic settings
+                $p = @{
+                    Id = $vaultObject.Id;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                $diag = Get-MonkeyAzDiagnosticSettingsById @p
+                if($diag){
+                    $vaultObject.diagnosticSettings.enabled = $true;
+                    $vaultObject.diagnosticSettings.name = $diag.name;
+                    $vaultObject.diagnosticSettings.id = $diag.id;
+                    $vaultObject.diagnosticSettings.properties = $diag.properties;
+                    $vaultObject.diagnosticSettings.rawData = $diag;
+                }
+                #Get locks
+                $vaultObject.locks = $vaultObject | Get-MonkeyAzLockInfo
+                #return vault object
+                return $vaultObject
+            }
         }
-        else{
-            $p = @{
-			    Id = $KeyVault.Id;
-                ApiVersion = $APIVersion;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-                InformationAction = $O365Object.InformationAction;
-		    }
-		    $vaultObject = Get-MonkeyAzObjectById @p
+        catch{
+            Write-Verbose $_
         }
-        if($null -ne $vaultObject){
-            $vaultObject = New-MonkeyVaultObject -KeyVault $vaultObject
-            #Get keys
-            $p = @{
-                KeyVault = $vaultObject;
-                ObjectType = 'keys';
-                GetProperties = $True;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-                InformationAction = $O365Object.InformationAction;
-            }
-            $keys = Get-MonkeyAzKeyVaultObject @p
-            if($keys){
-                $vaultObject.objects.keys = $keys;
-            }
-            #Get secrets
-            $p = @{
-                KeyVault = $vaultObject;
-                ObjectType = 'secrets';
-                GetProperties = $True;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-                InformationAction = $O365Object.InformationAction;
-            }
-            $secrets = Get-MonkeyAzKeyVaultObject @p
-            if($secrets){
-                $vaultObject.objects.secrets = $secrets;
-            }
-            #Get certificates
-            $p = @{
-                KeyVault = $vaultObject;
-                ObjectType = 'certificates';
-                GetProperties = $True;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-                InformationAction = $O365Object.InformationAction;
-            }
-            $certificates = Get-MonkeyAzKeyVaultObject @p
-            if($certificates){
-                $vaultObject.objects.certificates = $certificates;
-            }
-            #Get Diagnostic settings
-            $p = @{
-                Id = $vaultObject.Id;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-                InformationAction = $O365Object.InformationAction;
-            }
-            $diag = Get-MonkeyAzDiagnosticSettingsById @p
-            if($diag){
-                $vaultObject.diagnosticSettings.enabled = $True;
-                $vaultObject.diagnosticSettings.rawObject = $diag;
-            }
-            #return vault object
-            return $vaultObject
-        }
-    }
-    catch{
-        Write-Verbose $_
     }
 }

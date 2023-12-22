@@ -34,9 +34,9 @@ Function Connect-MonkeyPowerBI {
             https://github.com/silverhack/monkey365
     #>
     [CmdletBinding()]
-    Param (
-        [Parameter(Mandatory=$false, HelpMessage="parameters")]
-        [Object]$parameters
-    )
-    Get-MSALTokenForPowerBI @parameters
+    Param ()
+    if($null -ne $O365Object.msal_application_args){
+        $p = $O365Object.msal_application_args;
+        Get-MSALTokenForPowerBI @p
+    }
 }

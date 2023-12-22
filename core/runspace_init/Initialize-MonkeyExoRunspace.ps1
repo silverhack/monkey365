@@ -14,7 +14,6 @@
 
 [CmdletBinding()]
 param ()
-$compliance_session = $null
 $isO365Object = Get-Variable -Name O365Object -ErrorAction Ignore
 if($null -ne $isO365Object){
     $progresspreference_backup = $progresspreference;
@@ -34,28 +33,6 @@ if($null -ne $isO365Object){
         }
         Write-Information @msg
         Import-LocalizedData @LocalizedDataParams;
-    }
-    #Import Exchange Online Compliance PsSession
-    if($null -ne ($O365Object.o365_sessions.GetEnumerator() | Where-Object {$_.Name -eq 'ComplianceCenter'})){
-        $compliance_session = $O365Object.o365_sessions.ComplianceCenter
-    }
-    if($null -ne $compliance_session -and $compliance_session -is [System.Management.Automation.Runspaces.PSSession]){
-        $msg = @{
-            MessageData = "Importing Exchange Online Compliance Center PsSession within runspace";
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $script:InformationAction;
-            Tags = @('InitializePsSession');
-        }
-        Write-Information @msg
-        $p = @{
-            Session = $compliance_session;
-            DisableNameChecking = $true;
-            AllowClobber= $true;
-        }
-        [ref]$null = Import-PSSession @p
-        #Sleep
-        Start-Sleep -Milliseconds 500
     }
     #Return old progress preference
     $progresspreference = $progresspreference_backup;

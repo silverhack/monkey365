@@ -1,0 +1,500 @@
+{
+	"aad_group_feature_access_enabled": [
+        {
+            "translate": {
+                "usersCanAddExternalUsers": "Users Can Add External Users",
+                "limitedAccessCanAddExternalUsers": "Limited Users Can Add External Users",
+                "securityGroupsEnabled": "Security Groups Enabled",
+                "groupsInAccessPanelEnabled":"Users Can Access To Groups Features"
+            },
+            "emphasis": ["Users Can Access To Groups Features"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_lack_privacy_disclosure": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "identifierUris":"Identifier URIs",
+                "info.privacyStatementUrl": "Privacy Statement Url"
+            },
+            "emphasis": ["Privacy Statement Url"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_lack_homepage_ssl": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "identifierUris":"Identifier URIs",
+                "web.homePageUrl": "Home Page"
+            },
+            "emphasis": ["Home Page"],
+            "table": "asList"
+        }
+    ],
+	"aad_application_no_fte_owners": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "identifierUris":"Identifier URIs"
+            },
+            "emphasis": ["Display Name"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_plain_logouturl": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "web.homePageUrl": "Home Page",
+                "identifierUris":"Identifier URIs",
+                "web.logoutUrl": "Logout Url"
+            },
+            "emphasis": ["Logout Url"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_plain_returnurl": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "web.homePageUrl": "Home Page",
+                "identifierUris":"Identifier URIs",
+                "web.redirectUris": "Replay Urls"
+            },
+            "emphasis": ["Replay Urls"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_empty_owners": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Display Name",
+                "web.homePageUrl": "Home Page",
+                "identifierUris":"Identifier URIs",
+                "Owners": "Owners"
+            },
+            "emphasis": ["Owners"],
+            "table": "asList"
+        }
+    ],
+    "aad_application_excessive_permissions": [
+        {
+            "translate": {
+                "principalId": "Application Id",
+                "principalDisplayName": "Display Name",
+                "ClaimValue": "Permision",
+                "PermissionDisplayName": "Permission Name"
+            },
+            "emphasis": ["Permission"],
+            "table": "asList"
+        }
+    ],
+	"aad_test_application_present": [
+        {
+            "translate": {
+                "appId": "Application Id",
+                "displayName": "Application Name"
+            },
+            "emphasis": ["Application Name"],
+            "table": "asList"
+        }
+    ],
+    "aad_all_users_group_disabled": [
+        {
+            "translate": {
+                "usersCanRegisterApps": "Users Can Register Apps",
+                "showUserActivityReportsFeature": "Show User Activity Reports Feature",
+                "usersCanRegisterApps": "Users Can Register Apps",
+                "usersCanAddExternalUsers": "Users Can Add External Users",
+                "restrictDirectoryAccess": "Restrict Directory Access",
+                "usersCanAddExternalUsers": "Users Can Add External Users",
+                "allUsersGroupEnabled": "All Users Dynamic Group Enabled"
+            },
+            "emphasis": ["All Users Dynamic Group Enabled"],
+            "table": "asList"
+        }
+    ],
+    "aad_mfa_devices_disabled": [
+        {
+            "translate": {
+                "isEnabled": "Enabled",
+                "requireMfaSetting": "Require MFA setting",
+                "maxDeviceNumberPerUserSetting": "Max devices per user"
+            },
+            "emphasis": ["Require MFA setting"],
+            "table": "asList"
+        }
+    ],
+    "aad_guests_can_invite": [
+        {
+            "translate": {
+                "TenantAuthPolicy.displayName": "Display Name",
+                "TenantAuthPolicy.description": "Description",
+                "TenantAuthPolicy.allowInvitesFrom": "Guest Invite Settings"
+            },
+            "emphasis": ["Guest Invite Settings"],
+            "table": "asList"
+        }
+    ],
+    "aad_members_can_invite": [
+        {
+            "translate": {
+                "limitedAccessCanAddExternalUsers": "Limited access can add external users",
+                "usersCanAddExternalUsers": "Users can add external users",
+                "restrictDirectoryAccess": "Restrict directory access",
+                "allowInvitations": "Allow invitations"
+            },
+            "emphasis": ["Users can add external users"],
+            "table": "asList"
+        }
+    ],
+    "aad_guest_permissions": [
+        {
+            "translate": {
+                "usersCanAddExternalUsers": "Users can add external users",
+                "limitedAccessCanAddExternalUsers": "Limited access can add external users",
+                "restrictDirectoryAccess": "Restrict directory access",
+                "allowInvitations": "Allow invitations"
+            },
+            "emphasis": ["Restrict directory access"],
+            "table": "asList"
+        }
+    ],
+    "aad_restrict_users_ad_portal": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps",
+                "restrictNonAdminUsers": "Restrict non-admin users"
+            },
+            "emphasis": ["Restrict non-admin users"],
+            "table": "asList"
+        }
+    ],
+    "aad_restrict_o365_group_creation_admins": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps",
+                "restrictNonAdminUsers": "Restrict non-admin users",
+                "office365GroupsEnabled": "Office 365 group enabled"
+            },
+            "emphasis": ["Office 365 group enabled"],
+            "table": "asList"
+        }
+    ],
+    "aad_restrict_security_group_creation_admins": [
+        {
+            "translate": {
+				"displayName": "Display Name",
+				"description": "Description",
+				"TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateSecurityGroups": "Allowed to create Security Groups"
+            },
+            "emphasis": ["Allowed to create Security Groups"],
+            "table": "asList"
+        }
+    ],
+    "aad_restrict_o365_group_management_admins": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps",
+                "restrictNonAdminUsers": "Restrict non-admin users",
+                "usersCanManageOfficeGroups": "Users can manage office groups"
+            },
+            "emphasis": ["Users can manage office groups"],
+            "table": "asList"
+        }
+    ],
+    "aad_restrict_group_management_admins": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps",
+                "restrictNonAdminUsers": "Restrict non-admin users",
+                "usersCanManageSecurityGroups": "Users can manage security groups"
+            },
+            "emphasis": ["Users can manage security groups"],
+            "table": "asList"
+        }
+    ],
+    "aad_self_service_group_management_enabled": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps",
+                "selfServiceGroupManagementEnabled": "Self service group management Enabled"
+            },
+            "emphasis": ["Self service group management Enabled"],
+            "table": "asList"
+        }
+    ],
+    "aad_require_admin_consent_apps": [
+        {
+            "translate": {
+                "usersCanAddGalleryApps": "Users can add gallery apps",
+                "usersCanAllowAppsToAccessData": "Users can allow apps to access data"
+            },
+            "emphasis": ["Users can allow apps to access data"],
+            "table": "asList"
+        }
+    ],
+    "aad_require_admins_gallery_apps": [
+        {
+            "translate": {
+                "usersCanAllowAppsToAccessData": "Users can allow apps to access data",
+                "usersCanAddGalleryApps": "Users can add gallery apps"
+            },
+            "emphasis": ["Users can add gallery apps"],
+            "table": "asList"
+        }
+    ],
+    "aad_3rd_apps_all_users_enabled": [
+        {
+            "translate": {
+                "objectId": "Object Id",
+                "displayName": "Display Name",
+                "usersCanRegisterApps": "Users can register apps"
+            },
+            "emphasis": ["Users can register apps"],
+            "table": "asList"
+        }
+    ],
+    "aad_guest_users_present": [
+        {
+            "translate": {
+                "mailNickname": "Mail Nick Name",
+                "accountEnabled": "Account Enabled",
+                "userType": "User Type"
+            },
+            "table": "Normal"
+        }
+    ],
+	"aad_sbd_enabled": [
+        {
+            "translate": {
+                "anyCAPolicyEnabled": "Any Conditional Access Policy Enabled",
+                "securityDefaultsEnabled": "Security Defaults Enabled",
+                "anyClassicPolicyEnabled": "Any Classic Policy Enabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"aad_sspr_disabled": [
+        {
+            "translate": {
+                "enablementType": "Enablement Type",
+                "emailOptionEnabled": "Email",
+                "mobilePhoneOptionEnabled": "Mobile Phone",
+				"officePhoneOptionEnabled": "Office Phone",
+				"securityQuestionsOptionEnabled": "Security questions",
+				"mobileAppNotificationEnabled": "Mobile app notification",
+				"mobileAppCodeEnabled": "Mobile app code"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"True",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"aad_users_can_register_apps_enabled": [
+        {
+            "translate": {
+				"displayName": "Display Name",
+				"description": "Description",
+                "TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateApps": "Allowed to Create apps",
+                "blockMsolPowerShell": "Block Msol PowerShell"
+            },
+            "emphasis": ["Allowed to Create apps"],
+            "table": "asList"
+        }
+    ],
+	"aad_linkedin_sync_enabled": [
+        {
+            "translate": {
+				"displayName": "Display Name",
+				"usersCanRegisterApps": "User can register apps",
+                "enableLinkedInAppFamily": "Linkedin Sync enabled"
+            },
+            "emphasis": ["Linkedin Sync enabled"],
+            "table": "asList"
+        }
+    ],
+	"aad_users_with_mfa_disabled": [
+        {
+            "translate": {
+                "userPrincipalName": "User Principal Name",
+                "objectType": "Object Type",
+                "userType": "User Type",
+				"mfaenabled": "MFA enabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"limit":"5000",
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"False",
+				"showModalButton":"False"
+			}
+        }
+    ],
+	"aad_privileged_users_with_mfa_disabled": [
+        {
+            "translate": {
+                "effectiveMembers.userPrincipalName": "UPN",
+                "effectiveMembers.objectType": "Object Type",
+                "effectiveMembers.userType": "User Type",
+				"displayName": "Role",
+				"isBuiltIn": "isBuiltIn",
+				"effectiveMembers.mfaenabled": "MFA enabled"
+            },
+			"expand": "effectiveMembers",
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"limit":"5000",
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"False",
+				"showModalButton":"False"
+			}
+        }
+    ],
+	"aad_only_one_global_admin": [
+        {
+            "translate": {
+                "effectiveMembers.userPrincipalName": "User Principal Name",
+                "effectiveMembers.objectType": "Object Type",
+                "effectiveMembers.userType": "User Type",
+				"effectiveMembers.mfaenabled": "MFA enabled"
+            },
+			"expand": "effectiveMembers",
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"False",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"aad_excessive_global_admins": [
+        {
+            "translate": {
+                "effectiveMembers.userPrincipalName": "User Principal Name",
+                "effectiveMembers.objectType": "Object Type",
+                "effectiveMembers.userType": "User Type",
+				"effectiveMembers.mfaenabled": "MFA enabled"
+            },
+			"expand": "effectiveMembers",
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"False",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"aad_pim_high_level_active_assignment": [
+        {
+            "translate": {
+				"subject.principalName": "Principal Name",
+                "subject.displayName": "Display Name",
+                "subject.type": "Object Type",
+                "roleDefinition.displayName": "Role Name",
+				"assignmentState": "State"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"False",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"aad_service_principal_global_admin": [
+        {
+            "translate": {
+                "displayName": "Display Name",
+                "objectType": "Object Type",
+                "accountEnabled": "Account Enabled",
+                "homePage": "Home Page",
+                "MemberOf": "Member Of"
+            },
+            "table": "Normal"
+        }
+    ],
+	"aad_guest_access_object_restriction_disabled": [
+        {
+            "translate": {
+				"displayName": "Display Name",
+				"description": "Description",
+				"TenantAuthPolicy.guestUserRoleId": "Permission Level"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"False",
+				"showModalButton":"True"
+			}
+        }
+    ],
+	"aad_guest_invite_all_enabled": [
+        {
+            "translate": {
+				"displayName": "Display Name",
+				"description": "Description",
+				"TenantAuthPolicy.allowInvitesFrom": "Allow Invites From"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"False",
+				"showModalButton":"True"
+			}
+        }
+    ]
+}

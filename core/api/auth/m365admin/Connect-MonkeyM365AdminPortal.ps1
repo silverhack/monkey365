@@ -34,9 +34,9 @@ Function Connect-MonkeyM365AdminPortal {
             https://github.com/silverhack/monkey365
     #>
     [CmdletBinding()]
-    Param (
-        [Parameter(Mandatory=$false, HelpMessage="parameters")]
-        [Object]$parameters
-    )
-    Get-MSALTokenForMicrosoft365AdminPortal @parameters
+    Param ()
+    if($null -ne $O365Object.msal_application_args -and $null -ne $O365Object.AuthType -and $O365Object.AuthType -eq 'Interactive'){
+        $app_params = $O365Object.msal_application_args;
+        Get-MSALTokenForMicrosoft365AdminPortal @app_params
+    }
 }

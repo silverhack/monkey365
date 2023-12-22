@@ -35,29 +35,36 @@ Function Get-TenantInformation{
     #>
     [CmdletBinding()]
     Param()
+    #Create hashtable
+    $tenantInfo= [PsCustomObject]@{
+        TenantName = $null;
+        TenantId = $null;
+        CompanyInfo = $null;
+        SKU = $null;
+        Domains = $null;
+        MyDomain = $null;
+    }
     if($O365Object.auth_tokens.MSGraph -and $O365Object.TenantId){
         try{
             #Write message
             $msg = @{
                 MessageData = ($message.AADTenantInfoMessage -f $O365Object.TenantId);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
+                logLevel = 'verbose';
                 Tags = @('AADTenantInfo');
             }
             Write-Verbose @msg
-            #Create hashtable
-            $tenantInfo= [ordered]@{
-                TenantName = $null;
-                TenantId = $null;
-                CompanyInfo = $null;
-                SKU = $null;
-                Domains = $null;
-                MyDomain = $null;
-            }
             #Get Auth from old graph
             $msgraph_auth = $O365Object.auth_tokens.MSGraph
+            #Get Tenant Origin
+            if($O365Object.isValidTenantGuid -eq $false){
+                $tid = Read-JWTtoken -token $O365Object.auth_tokens.MSGraph.AccessToken | Select-Object -ExpandProperty tid -ErrorAction Ignore
+            }
+            else{
+                $tid = $O365Object.TenantId
+            }
             #Get tenant details
-            $Tenant = Get-MonkeyMSGraphOrganization -TenantId $O365Object.TenantId
+            $Tenant = Get-MonkeyMSGraphOrganization -TenantId $tid
             if($Tenant){
                 #Set Tenant info var
                 Set-Variable Tenant -Value $Tenant -Scope Script -Force
@@ -120,11 +127,10 @@ Function Get-TenantInformation{
             $tenantInfo.Domains = Get-MonkeyMSGraphDomain
             if($null -ne $tenantInfo.Domains){
                 #Set property
-                $tenantInfo.MyDomain = $tenantInfo.Domains | Where-Object -Property IsDefault -EQ "True"
+                $tenantInfo.MyDomain = $tenantInfo.Domains | Where-Object {$_.IsDefault -eq $true}
             }
-            #Return object
-            $tenant_object = New-Object PSObject -Property $tenantInfo
-            return $tenant_object
+            #return Obj
+            return $tenantInfo
         }
         catch{
             $msg = @{

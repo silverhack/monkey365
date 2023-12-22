@@ -46,8 +46,14 @@ Function Get-PSExoAdminApiObject{
         [parameter(ValueFromPipeline = $True,HelpMessage="Environment")]
         [Object]$Environment,
 
+        [parameter(Mandatory=$False, HelpMessage='Headers as hashtable')]
+        [System.Collections.Hashtable]$Headers,
+
         [parameter(ValueFromPipeline = $True,HelpMessage="EXO command to execute")]
         [String]$Command,
+
+        [parameter(ValueFromPipeline = $True,HelpMessage="Timeout")]
+        [int32]$TimeOut = 30,
 
         [parameter(ValueFromPipeline = $True,HelpMessage="Response format")]
         [ValidateSet("clixml","json")]
@@ -154,6 +160,14 @@ Function Get-PSExoAdminApiObject{
                 #Remove Prefer header
                 [void]$requestHeader.Remove('Prefer')
             }
+            if($PSBoundParameters.ContainsKey('Headers') -and $PSBoundParameters['Headers']){
+                #Add extra header
+                foreach($header in $PSBoundParameters['Headers'].GetEnumerator()){
+                    if(!$requestHeader.ContainsKey($header.Key)){
+                        [void]$requestHeader.Add($header.Key,$header.Value)
+                    }
+                }
+            }
             if($Command){
                 #Add response format
                 [void]$requestHeader.Add('X-ResponseFormat',$ResponseFormat);
@@ -191,7 +205,7 @@ Function Get-PSExoAdminApiObject{
                                 Method = $Method;
                                 ContentType = $ContentType;
                                 UserAgent = $O365Object.UserAgent;
-                                TimeOut = 40;
+                                TimeOut = $TimeOut;
                                 Verbose = $Verbose;
                                 Debug = $Debug;
                                 InformationAction = $InformationAction;
@@ -208,7 +222,7 @@ Function Get-PSExoAdminApiObject{
                                     ContentType = $ContentType;
                                     Data = $Data;
                                     UserAgent = $O365Object.UserAgent;
-                                    TimeOut = 40;
+                                    TimeOut = $TimeOut;
                                     Verbose = $Verbose;
                                     Debug = $Debug;
                                     InformationAction = $InformationAction;
@@ -221,7 +235,7 @@ Function Get-PSExoAdminApiObject{
                                     Method = $Method;
                                     ContentType = $ContentType;
                                     UserAgent = $O365Object.UserAgent;
-                                    TimeOut = 40;
+                                    TimeOut = $TimeOut;
                                     Verbose = $Verbose;
                                     Debug = $Debug;
                                     InformationAction = $InformationAction;
@@ -276,7 +290,7 @@ Function Get-PSExoAdminApiObject{
                                 Method = "GET";
                                 Headers = $requestHeader;
                                 UserAgent = $O365Object.UserAgent;
-                                TimeOut = 40;
+                                TimeOut = $TimeOut;
                                 Verbose = $Verbose;
                                 Debug = $Debug;
                                 InformationAction = $InformationAction;

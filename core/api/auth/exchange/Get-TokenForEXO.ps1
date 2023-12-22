@@ -34,66 +34,65 @@ Function Get-TokenForEXO {
             https://github.com/silverhack/monkey365
     #>
     [CmdletBinding()]
-    Param (
-        [Parameter(Mandatory=$false, HelpMessage="parameters")]
-        [Object]$parameters
-    )
-    #Get Environment
-    $AzureEnvironment = Get-MonkeyEnvironment -Environment $parameters.Environment
-    #Set new params
-    $new_params = @{}
-    foreach ($param in $parameters.GetEnumerator()){
-        $new_params.add($param.Key, $param.Value)
-    }
-    #Check if confidential App
-    if($O365Object.isConfidentialApp -eq $false){
-        #Check if application is present
-        if(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService ExchangeOnlineV2)})).Count -gt 0){
-            $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService ExchangeOnlineV2)}) | Select-Object -First 1
+    Param ()
+    try{
+        #Set new params
+        $new_params = @{}
+        foreach ($param in $O365Object.msal_application_args.GetEnumerator()){
+            $new_params.add($param.Key, $param.Value)
         }
-        else{
-            #Potentially first time the user is authenticating, so we use original parameters
-            $new_params = @{}
-            foreach ($param in $O365Object.msal_application_args.GetEnumerator()){
-                $new_params.add($param.Key, $param.Value)
-            }
-            #Create a new msal client application
-            $client_app = @{}
-            foreach ($param in $O365Object.application_args.GetEnumerator()){
-                $client_app.add($param.Key, $param.Value)
-            }
-            $p = @{
-                app_params = $client_app;
-                Environment = $O365Object.initParams.Environment;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-                InformationAction = $O365Object.InformationAction;
-            }
-            $exo_app = New-MsalApplicationForExo @p
-            if($null -ne $exo_app){
-                $O365Object.exo_msal_application = $exo_app
-                $new_params.publicApp = $O365Object.exo_msal_application
-                #Add to Object
-                [void]$O365Object.msal_public_applications.Add($exo_app)
+        #Check if confidential App
+        if($O365Object.isConfidentialApp -eq $false){
+            #Check if application is present
+            if(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService ExchangeOnlineV2)})).Count -gt 0){
+                $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService ExchangeOnlineV2)}) | Select-Object -First 1
             }
             else{
-                $msg = @{
-                    MessageData = "Unable to get MSAL application for Exchange Online";
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'Warning';
-                    InformationAction = $O365Object.InformationAction;
-                    Tags = @('ExchangeOnlineApplicationError');
+                #Potentially first time the user is authenticating, so we use original parameters
+                #Set new params
+                $new_params = @{}
+                foreach ($param in $O365Object.msalAuthArgs.GetEnumerator()){
+                    $new_params.add($param.Key, $param.Value)
                 }
-                Write-Warning @msg
+                #Create a new msal client application
+                $client_app = @{}
+                foreach ($param in $O365Object.application_args.GetEnumerator()){
+                    $client_app.add($param.Key, $param.Value)
+                }
+                $p = @{
+                    app_params = $client_app;
+                    Environment = $O365Object.initParams.Environment;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                $exo_app = New-MsalApplicationForExo @p
+                if($null -ne $exo_app){
+                    $new_params.publicApp = $exo_app
+                    #Add to Object
+                    [void]$O365Object.msal_public_applications.Add($exo_app)
+                }
+                else{
+                    $msg = @{
+                        MessageData = "Unable to get MSAL application for Exchange Online";
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'Warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('ExchangeOnlineApplicationError');
+                    }
+                    Write-Warning @msg
+                }
             }
         }
+        else{
+            $new_params.confidentialApp = $O365Object.msalapplication;
+        }
+        #Add Exo resource parameter
+        $new_params.Add('Resource',$O365Object.Environment.Outlook)
+        #Get token with new params
+        Get-MSALTokenForResource @new_params
     }
-    else{
-        $O365Object.exo_msal_application = $O365Object.msalapplication
-        $new_params.confidentialApp = $O365Object.msalapplication;
+    catch{
+        Write-Error $_
     }
-    #Add Exo resource parameter
-    $new_params.Add('Resource',$AzureEnvironment.Outlook)
-    #Get token with new params
-    Get-MSALTokenForResource @new_params
 }

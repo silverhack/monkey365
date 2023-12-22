@@ -36,86 +36,63 @@ Function Connect-MonkeyCloud{
 
     [CmdletBinding()]
     Param ()
-    #Set null
-    $app_params = $null
     #Using MSAL authentication
-    if($null -ne $O365Object.msalapplication -and $null -ne $O365Object.msal_application_args){
-        #Set new application args
-        $app_params = @{}
-        foreach($elem in $O365Object.msal_application_args.GetEnumerator()){
-            [void]$app_params.Add($elem.Key,$elem.Value)
-        }
-        if($O365Object.msalapplication.isPublicApp){
-            #Set parameters
-            if($app_params.ContainsKey('publicApp')){
-                #Remove and add public application
-                [ref]$null = $app_params.Remove('publicApp')
-                [ref]$null = $app_params.Add('publicApp',$O365Object.msalapplication);
+    if($null -ne $O365Object.msal_application_args){
+        #Connect to MSGraph
+        $O365Object.auth_tokens.MSGraph = Connect-MonkeyMSGraph
+        if($null -ne $O365Object.auth_tokens.MSGraph){
+            #Check if valid TenantId
+            If($null -ne $O365Object.TenantId){
+                $tid = $O365Object.TenantId
             }
             else{
-                [ref]$null = $app_params.Add('publicApp',$O365Object.msalapplication);
+                $tid = $O365Object.auth_tokens.MSGraph.TenantId
             }
-            if($O365Object.application_args.ContainsKey('Silent') -and $O365Object.application_args.Silent){
-                #Add silent auth if not exists
-                if(-NOT $app_params.ContainsKey('Silent')){
-                    #Add silent auth
-                    [ref]$null = $app_params.Add('Silent',$true)
+            #Check if valid Tenant Id
+            $O365Object.isValidTenantGuid = Test-IsValidTenantId -TenantId $tid
+            #Get Tenant Origin
+            if($O365Object.isValidTenantGuid -eq $false){
+                $msg = @{
+                    MessageData = ("{0} is not a valid TenantId. Getting TenantId from Access Token" -f $O365Object.TenantId);
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'verbose';
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Tags = @('NonValidTenantId');
                 }
+                Write-Verbose @msg
+                $tid = Read-JWTtoken -token $O365Object.auth_tokens.MSGraph.AccessToken | Select-Object -ExpandProperty tid -ErrorAction Ignore
             }
+            else{
+                $tid = $O365Object.TenantId
+            }
+            $p = @{
+                TenantId = $tid
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            #Get Tenant origin
+            $O365Object.tenantOrigin = Get-MonkeyMSGraphOrganization @p
+            #Remove Device code
+            $app_params = $O365Object.msal_application_args;
+            if($app_params.ContainsKey('DeviceCode')){
+                [ref]$null = $app_params.Remove('DeviceCode')
+            }
+            #Add silent
+            if(-NOT $app_params.ContainsKey('Silent')){
+                #Add silent auth
+                [ref]$null = $app_params.Add('Silent',$true)
+            }
+            #Add params to msal auth params
+            $O365Object.msal_application_args = $app_params;
         }
         else{
-            #Confidential App
-            [ref]$null = $app_params.Add('confidentialApp',$O365Object.msalapplication);
-        }
-        #Remove ClientId
-        if($app_params.ContainsKey('ClientId')){
-            [ref]$null = $app_params.Remove('ClientId')
-        }
-    }
-    if($null -ne $app_params){
-        #Connect to MSGraph
-        $O365Object.auth_tokens.MSGraph = (Connect-MonkeyMSGraph $app_params)
-    }
-    if($null -ne $O365Object.auth_tokens.MSGraph){
-        #Get Tenant Origin
-        $p = @{
-            TenantId = $O365Object.auth_tokens.MSGraph.TenantId
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
-        }
-        $O365Object.tenantOrigin = Get-MonkeyMSGraphOrganization @p
-        #Remove device code if exists
-        if($app_params.ContainsKey('DeviceCode')){
-            [ref]$null = $app_params.Remove('DeviceCode')
-        }
-        if(-NOT $app_params.ContainsKey('Silent')){
-            #Add silent auth
-            [ref]$null = $app_params.Add('Silent',$true)
+            #Probably cancelled connection
+            return
         }
         #Connect to Resource management
-        $O365Object.auth_tokens.ResourceManager = (Connect-MonkeyResourceManagement $app_params)
-    }
-    else{
-        #Probably cancelled connection
-        return
-    }
-    #Check if connected
-    if($null -ne $O365Object.auth_tokens.ResourceManager){
-        $msg = @{
-            MessageData = ($message.SuccessfullyConnectedTo -f "Resource Manager");
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $O365Object.InformationAction;
-            Tags = @('SuccessFullyConnected');
-        }
-        Write-Information @msg
-        #Add authentication args to O365Object
-        $auth_param = @{}
-        foreach($p in $app_params.GetEnumerator()){
-            [void]$auth_param.Add($p.Key,$p.Value);
-        }
-        $O365Object.authentication_args = $auth_param
+        $O365Object.auth_tokens.ResourceManager = Connect-MonkeyResourceManagement
     }
     #Select tenant
     if($null -eq $O365Object.TenantId -and $null -ne $O365Object.auth_tokens.ResourceManager){
@@ -132,27 +109,24 @@ Function Connect-MonkeyCloud{
             }
         }
     }
+    #Update object
+    $O365Object.AuthType = $O365Object.auth_tokens.Values.GetEnumerator() | Select-Object -ExpandProperty AuthType -Unique -ErrorAction Ignore
+    #Check if connected to MSGraph and Resource Manager
     if($null -ne $O365Object.auth_tokens.ResourceManager -and $null -ne $O365Object.auth_tokens.MSGraph){
         #Connect to Microsoft old Graph
-        $O365Object.auth_tokens.Graph = (Connect-MonkeyGraph $app_params)
+        $O365Object.auth_tokens.Graph = Connect-MonkeyGraph
         #Connect to Azure Portal
         if($O365Object.isConfidentialApp -eq $false){
-            $O365Object.auth_tokens.AzurePortal = (Connect-MonkeyAzurePortal $app_params)
+            $O365Object.auth_tokens.AzurePortal = Connect-MonkeyAzurePortal
         }
         #Connect to PIM
-        $O365Object.auth_tokens.MSPIM = (Connect-MonkeyPIM $app_params)
+        $O365Object.auth_tokens.MSPIM = Connect-MonkeyPIM
         #Get Tenant Information
         $O365Object.Tenant = Get-TenantInformation
     }
-    #Set Azure AD connections to True if connection is present
-    if($null -ne $O365Object.auth_tokens.MSGraph -and $null -ne $O365Object.auth_tokens.Graph){
-        $O365Object.onlineServices.AzureAD = $True
-    }
-    #Update object
-    $O365Object.AuthType = $O365Object.auth_tokens.Values.GetEnumerator() | Select-Object -ExpandProperty AuthType -Unique -ErrorAction Ignore
     #Check if Azure services is selected
     if($O365Object.initParams.Instance -eq "Azure"){
-        Connect-MonkeyAzure -parameters $app_params
+        Connect-MonkeyAzure
         #Set Azure connections to True if connection and subscription are present
         if($null -ne $O365Object.auth_tokens.ResourceManager -and $null -ne $O365Object.auth_tokens.Graph -and $null -ne $O365Object.auth_tokens.MSGraph -and $null -ne $O365Object.subscriptions){
             $O365Object.onlineServices.Azure = $True
@@ -164,16 +138,15 @@ Function Connect-MonkeyCloud{
     }
     #Check if Microsoft 365 is selected
     elseif($O365Object.initParams.Instance -eq "Microsoft365"){
-        Connect-MonkeyM365 -parameters $app_params
+        Connect-MonkeyM365
     }
     #Get licensing information
     $O365Object.Licensing = Get-MonkeySKUInfo
     #Get actual userId
-    $O365Object.userId = Get-MonkeyAzUserId
-    #Get AzureAd Licensing
-    $O365Object.AADLicense = Get-M365AADLicense
-    #Get Plugins
-    $O365Object.Plugins = Get-MonkeyPlugin
+    $authObject = $O365Object.auth_tokens.GetEnumerator() | Where-Object {$null -ne $_.Value} | Select-Object -ExpandProperty Value -First 1
+    If($null -ne $authObject){
+        $O365Object.userId = $authObject | Get-UserIdFromToken
+    }
     #Get Azure AD permissions
     if($O365Object.isConfidentialApp){
         $user_permissions = Get-MonkeyMSGraphServicePrincipalDirectoryRole -principalId $O365Object.clientApplicationId
@@ -206,7 +179,7 @@ Function Connect-MonkeyCloud{
     }
     #Check if requestMFA for users must be enabled by config
     try{
-        $requestMFA = $O365Object.internal_config.azuread.canRequestMFA
+        $requestMFA = $O365Object.internal_config.entraId.forceRequestMFA
     }
     catch{
         $msg = @{
@@ -219,7 +192,8 @@ Function Connect-MonkeyCloud{
         Write-Verbose @msg
         $requestMFA = $false
     }
-    if($O365Object.canRequestMFAForUsers -eq $false -and $requestMFA -eq $true){
+    if($requestMFA -eq $true){
+        #Force request MFA for users
         $O365Object.canRequestMFAForUsers = $true;
     }
     #Check if current identity can request users and groups from Microsoft Graph
@@ -232,4 +206,23 @@ Function Connect-MonkeyCloud{
     $O365Object.canRequestGroupsFromMsGraph = Test-CanRequestGroup @p
     #Get information about current identity
     $O365Object.me = Get-MonkeyMe @p
+    #Check if connected to Azure AD
+    if($O365Object.canRequestUsersFromMsGraph -eq $false -and $null -eq $O365Object.Tenant.CompanyInfo){
+        $msg = @{
+            MessageData = ($message.NotConnectedTo -f "Microsoft Entra ID");
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'warning';
+            InformationAction = $O365Object.InformationAction;
+            Tags = @('Monkey365GraphAPIError');
+        }
+        Write-Warning @msg
+        $O365Object.onlineServices.EntraID = $false
+    }
+    else{
+        $O365Object.onlineServices.EntraID = $true
+    }
+    #Get AzureAD Licensing
+    $O365Object.AADLicense = Get-M365AADLicense
+    #Get collectors
+    $O365Object.Collectors = Get-MonkeyCollector
 }

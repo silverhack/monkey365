@@ -65,11 +65,11 @@ Function Select-MonkeyTenant{
                 $selected_Tenant = $tenants | Out-GridView -Title "Choose a Tenant ..." -OutputMode Single
                 if($selected_Tenant){
                     $msg = @{
-                        MessageData = ($message.AzureADSelectedTenantInfo -f $selected_Tenant.displayName);
+                        MessageData = ($message.EntraIDSelectedTenantInfo -f $selected_Tenant.displayName);
                         callStack = (Get-PSCallStack | Select-Object -First 1);
                         logLevel = 'info';
                         InformationAction = $O365Object.InformationAction;
-                        Tags = @('AzureADTenantInfo');
+                        Tags = @('EntraIDTenantInfo');
                     }
                     Write-Information @msg
                 }
@@ -90,6 +90,7 @@ Function Select-MonkeyTenant{
             $O365Object.Tenant = $selected_Tenant
             #Check if already connected
             if($selected_Tenant.tenantId -ne $O365Object.tenantOrigin.objectId){
+                <#
                 if($null -eq $O365Object.application_args.Item('TenantId')){
                     #Add TenantId
                     [ref]$null = $O365Object.application_args.Add('TenantId',$selected_Tenant.tenantId)
@@ -97,6 +98,7 @@ Function Select-MonkeyTenant{
                 else{
                     $O365Object.application_args.TenantId = $selected_Tenant.tenantId
                 }
+                #>
                 #Because a new tenant was selected, a new application should be created
                 Initialize-AuthenticationParam
                 return $True

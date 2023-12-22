@@ -39,54 +39,65 @@ Function New-O365ExportObject{
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [CmdletBinding()]
-    Param ()
+    Param (
+        [parameter(Mandatory=$false, HelpMessage="Provider")]
+        [ValidateSet("Azure","EntraID","Microsoft365")]
+        [String]$Provider = "Azure"
+    )
     try{
-        if($null -ne $O365Object.Tenant -and $null -ne $O365Object.Tenant.Psobject.Properties.Item('tenantId')){
-            $tid = $O365Object.Tenant.tenantId;
-        }
-        else{
-            if($null -ne $O365Object.auth_tokens.Graph){
-                $tid = $O365Object.auth_tokens.Graph.TenantId;
+        switch ($Provider.ToLower()){
+            { @("microsoft365", "entraid") -contains $_ }{
+                $_object = [PsCustomObject]@{
+                    Environment = $O365Object.Environment;
+                    StartDate = $O365Object.startDate.ToLocalTime();
+                    Tenant = $O365Object.Tenant;
+                    TenantID = $O365Object.TenantId;
+                    Localpath = $O365Object.Localpath;
+                    Output = $Script:returnData;
+                    Collectors = $O365Object.Collectors;
+                    Instance = $O365Object.Instance;
+                    IncludeEntraID = $O365Object.IncludeEntraID;
+                    aadpermissions = $O365Object.aadPermissions;
+                    executionInfo = $O365Object.executionInfo;
+                }
             }
-            else{
-                $tid = $null;
+            'azure'{
+                $_object = [PsCustomObject]@{
+                    Environment = $O365Object.Environment;
+                    StartDate = $O365Object.startDate.ToLocalTime();
+                    Tenant = $O365Object.Tenant;
+                    TenantID = $O365Object.TenantId;
+                    Subscription = $O365Object.current_subscription;
+                    Localpath = $O365Object.Localpath;
+                    Output = $Script:returnData;
+                    Collectors = $O365Object.Collectors;
+                    Instance = $O365Object.Instance;
+                    IncludeEntraID = $O365Object.IncludeEntraID;
+                    aadpermissions = $O365Object.aadPermissions;
+                    executionInfo = $O365Object.executionInfo;
+                    allResources = $O365Object.all_resources;
+                }
+            }
+            Default{
+                $_object = [PsCustomObject]@{
+                    Environment = $O365Object.Environment;
+                    StartDate = $O365Object.startDate.ToLocalTime();
+                    Tenant = $O365Object.Tenant;
+                    TenantID = $O365Object.TenantId;
+                    Localpath = $O365Object.Localpath;
+                    Output = $Script:returnData;
+                    Collectors = $O365Object.Collectors;
+                    Instance = $O365Object.Instance;
+                    IncludeEntraID = $O365Object.IncludeEntraID;
+                    aadpermissions = $O365Object.aadPermissions;
+                    executionInfo = $O365Object.executionInfo;
+                    allResources = $O365Object.all_resources;
+                }
             }
         }
-        #Create and return a new PsObject
-        $tmp_object = @{
-            Environment = $O365Object.Environment;
-            StartDate = $starttimer.ToLocalTime();;
-            Subscription = $O365Object.current_subscription;
-            Tenant = $O365Object.Tenant;
-            TenantID = $tid;
-            Localpath = $O365Object.Localpath;
-            Output = $Script:returnData;
-            Plugins = $O365Object.Plugins;
-            Instance = $O365Object.Instance;
-            IncludeAAD = $O365Object.IncludeAAD;
-            aadpermissions = $O365Object.aadPermissions;
-            execution_info = $O365Object.executionInfo;
-            all_resources = $O365Object.all_resources;
-        }
-        $MyO365Object = New-Object -TypeName PSCustomObject -Property $tmp_object
-        return $MyO365Object
+        return $_object
     }
     catch{
-        $msg = @{
-            MessageData = $message.UnableToCreateMonkeyObject;
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'warning';
-            Tags = @('MonkeyObjectError');
-        }
-        Write-Warning @msg
-        #Write debug
-        $msg = @{
-            MessageData = $_;
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'debug';
-            Debug = $O365Object.debug;
-            Tags = @('MonkeyObjectError');
-        }
-        Write-Debug @msg
+        throw ("{0}. {1}" -f $message.UnableToCreateMonkeyObject,$_.Exception.Message)
     }
 }

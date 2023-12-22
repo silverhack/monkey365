@@ -38,7 +38,7 @@ Function Get-MonkeyAzDiagnosticSettingsById {
 
 	[CmdletBinding()]
 	Param (
-        [Parameter(Mandatory=$True, ParameterSetName = 'Resource Id')]
+        [Parameter(Mandatory=$True, HelpMessage= 'Resource Id')]
         [Object]$Id
     )
     try{

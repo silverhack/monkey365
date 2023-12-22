@@ -76,7 +76,7 @@ Function Get-MonkeyAzResourceGroup{
                 }
                 else{
                     $msg = @{
-                        MessageData = ($message.ResourceGroupNotFoundMessage -f $rg, $Script:Subscription.subscriptionId);
+                        MessageData = ($message.ResourceGroupNotFoundMessage -f $rg, $O365Object.current_subscription.subscriptionId);
                         callStack = (Get-PSCallStack | Select-Object -First 1);
                         logLevel = 'warning';
                         InformationAction = $InformationAction;

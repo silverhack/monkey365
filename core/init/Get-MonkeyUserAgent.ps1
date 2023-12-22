@@ -36,19 +36,41 @@ Function Get-MonkeyUserAgent{
 
     [CmdletBinding()]
     Param()
+    $userAgent = $version = $manifest = $null;
+    $monkeymod = Get-Module -Name monkey365 -ErrorAction Ignore
+    #Get version
+    if($null -ne $monkeymod){
+        $version = $monkeymod.Version.ToString()
+        #Get manifest
+        $fi = [System.IO.FileInfo]::new($monkeymod.Path)
+        $manifest = Test-ModuleManifest -Path ("{0}/monkey365.psd1" -f $fi.Directory.FullName)
+        if ($null -ne $manifest -and $manifest.PrivateData.PSData['Prerelease']){
+            $prerelease = $manifest.PrivateData.PSData['Prerelease']
+            if ($prerelease -and $prerelease.StartsWith('-')){
+                $version = [string]$version + $prerelease
+            }
+            else{
+                $version = [string]$version + '-' + $prerelease
+            }
+        }
+    }
     #Check if O365Object exists
     if($null -ne (Get-Variable -Name O365Object -Scope Script -ErrorAction Ignore)){
         #Set UserAgent
-        if(![System.String]::IsNullOrEmpty($O365Object.internal_config.httpSettings.userAgent)){
-            $userAgent = $O365Object.internal_config.httpSettings.userAgent
+        try{
+            if(![System.String]::IsNullOrEmpty($O365Object.internal_config.httpSettings.userAgent)){
+                $userAgent = $O365Object.internal_config.httpSettings.userAgent
+            }
         }
-        else{
-            $monkey_version = $O365Object.internal_config.version.Monkey365Version
-            $userAgent = ("Monkey365 {0} ({1}) {2}" -f $monkey_version, `
-                                                [System.Environment]::OSVersion.Platform.ToString(), `
-                                                [System.Environment]::OSVersion.VersionString.ToString())
+        catch{
+            Write-Verbose $_
         }
-        #return userAgent
-        return $userAgent
     }
+    if($null -eq $userAgent){
+        $userAgent = ("Monkey365 {0} ({1}) {2}" -f $version.ToString(), `
+                        [System.Environment]::OSVersion.Platform.ToString(), `
+                        [System.Environment]::OSVersion.VersionString.ToString())
+    }
+    #return UA
+    return $userAgent
 }

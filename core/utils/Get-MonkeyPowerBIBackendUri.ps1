@@ -40,45 +40,51 @@ function Get-MonkeyPowerBIBackendUri {
 	[CmdletBinding()]
 	param()
     Begin{
-        $backendUri = $uri = $access_token = $null
+        $backendUri = $null
+        $uri = 'https://api.powerbi.com/powerbi/globalservice/v201606/environments/discover?client=powerbi-msolap'
+        $clouds = @{
+            AzurePublic = "GlobalCloud";
+            AzureChina = "ChinaCloud";
+            AzureGermany = "GermanyCloud";
+            AzureUSGovernment = "USGovCloud";
+        }
         if($null -ne (Get-Variable -Name O365Object -Scope Script -ErrorAction Ignore)){
-            $Environment = $O365Object.Environment
-            if($null -ne ($O365Object.auth_tokens.PowerBI)){
-                $access_token = $O365Object.auth_tokens.PowerBI
-                #Get Cluster URI
-                $uri = ('{0}/{1}' -f $Environment.PowerBIAPI,'/spglobalservice/GetOrInsertClusterUrisByTenantlocation')
-            }
+            $cloutType = $clouds.Item($O365Object.initParams.Environment)
+        }
+        else{
+            $cloutType = $clouds.Item('AzurePublic')
         }
     }
     Process{
-        if($null -ne $uri -and $null -ne $access_token){
-            #Get Authorization Header
-            $methods = $access_token | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
-            if($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
-                $AuthHeader = $access_token.CreateAuthorizationHeader()
-            }
-            else{
-                $AuthHeader = ("Bearer {0}" -f $access_token.AccessToken)
-            }
-            $requestHeader = @{
-                ActivityId = (New-Guid).ToString()
-                RequestId = (New-Guid).ToString()
-                Authorization = $AuthHeader
-            }
-            $param = @{
-                Url = $uri;
-                Method = 'Put';
-                Headers = $requestHeader;
-                Accept = 'application/json';
-                UserAgent = $O365Object.UserAgent;
-                Verbose = $O365Object.Verbose;
-                Debug = $O365Object.Debug;
-                InformationAction = $O365Object.InformationAction;
-            }
-            $Object = Invoke-MonkeyWebRequest @param
-            if($null -ne $Object -and $null -ne ($Object.PsObject.Properties.Item('DynamicClusterUri'))){
+        $param = @{
+            Url = $uri;
+            Method = 'Post';
+            UserAgent = $O365Object.UserAgent;
+            Verbose = $O365Object.Verbose;
+            Debug = $O365Object.Debug;
+            InformationAction = $O365Object.InformationAction;
+        }
+        $Object = Invoke-MonkeyWebRequest @param
+        if($null -ne $Object -and $null -ne ($Object.PsObject.Properties.Item('environments'))){
+            $PowerBICloud = $Object.environments.Where({$_.cloudName -eq $cloutType})
+            if($PowerBICloud.Count -gt 0){
                 try{
-                    $backendUri = $Object | Select-Object -ExpandProperty DynamicClusterUri
+                    $backendUri = $PowerBICloud.services.Where({$_.name -eq 'powerbi-backend'}) | Select-Object -ExpandProperty endpoint
+                    if($backendUri){
+                        #Set resource
+                        $rsrc = $PowerBICloud.services.Where({$_.name -eq 'powerbi-backend'}) | Select-Object -ExpandProperty resourceId
+                        if($rsrc){
+                            $msg = @{
+				                MessageData = ("Updating PowerBI backend uri to {0}" -f $rsrc)
+				                callStack = (Get-PSCallStack | Select-Object -First 1);
+				                logLevel = 'info';
+				                InformationAction = $O365Object.InformationAction;
+				                Tags = @('PowerBIClusterUriError');
+			                }
+			                Write-Information @msg
+                            $O365Object.Environment.PowerBI = $rsrc
+                        }
+                    }
                 }
                 catch{
                     $msg = @{

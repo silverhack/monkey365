@@ -27,7 +27,7 @@ Function Invoke-AzureScanner{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Invoke-AzureScanner
+            File Name	: Invoke-M365Scanner
             Version     : 1.0
 
         .LINK
@@ -35,182 +35,108 @@ Function Invoke-AzureScanner{
     #>
     [CmdletBinding()]
     Param()
-    #Create a new HTTPClient
-    #$O365Object.HttpClient = New-HttpClient
-    #Set vars
-    $azure_plugins = $null
-    $aad_plugins = $null
-    #Get Azure plugins
-    if($null -ne $O365Object.Plugins){
-        $azure_plugins = $O365Object.Plugins.Where({$_.Provider -eq "Azure"}) | Select-Object -ExpandProperty File -ErrorAction Ignore
-        $aad_plugins = $O365Object.Plugins.Where({$_.Provider -eq "AzureAD"}) | Select-Object -ExpandProperty File -ErrorAction Ignore
-    }
-    #Set runspacePool for nested queries
-    $p = @{
-        Provider = "Azure";
-        Throttle = $O365Object.threads;
-    }
-    $O365Object.monkey_runspacePool = New-MonkeyRunsPacePool @p
-    #Set variable for nested runspaces
-    $O365Object.runspace_vars = Get-MonkeyVar
-    #Execute AAD plugins
-    if($null -ne $O365Object.subscriptions -and $null -ne $aad_plugins){
-        #Set synchronized hashtable
-        Set-Variable aadReturnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
-        $vars = @{
-            O365Object = $O365Object;
-            WriteLog = $O365Object.WriteLog;
-            Verbosity = $O365Object.VerboseOptions;
-            InformationAction = $O365Object.InformationAction;
-            returnData = $Script:aadReturnData;
-        }
-        $p = @{
-            ImportPlugins = $aad_plugins;
-            ImportVariables = $vars;
-            ImportCommands = $O365Object.libutils;
-            ImportModules = $O365Object.runspaces_modules;
-            StartUpScripts = $O365Object.runspace_init;
-            ThrowOnRunspaceOpenError = $true;
-            Debug = $O365Object.VerboseOptions.Debug;
-            Verbose = $O365Object.VerboseOptions.Verbose;
-        }
-        Invoke-MonkeyRunspace @p
-        #Sleep some time
-        $msg = @{
-            MessageData = ($Script:message.SleepMessage -f 10000);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $InformationAction;
-            Tags = @('Monkey365SleepTime');
-        }
-        Write-Information @msg
-        Start-Sleep -Milliseconds 10000
-    }
-    if($null -ne $O365Object.subscriptions -and $null -ne $azure_plugins){
-        foreach($azSubscription in @($O365Object.subscriptions)){
-            $msg = @{
-                MessageData = ($message.SubscriptionWorkingMessage -f $azSubscription.displayName);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'info';
-                InformationAction = $O365Object.InformationAction;
-                Tags = @('AzureSubscriptionScanner');
-            }
-            Write-Information @msg
-            #Add current subscription to O365Object
-            $O365Object.current_subscription = Resolve-AzureSubscription -Subscription $azSubscription
-            #set legacy script vars
-            Set-Variable Subscription -Value $O365Object.current_subscription -Scope Script -Force
-            Set-Variable Tenant -Value $O365Object.current_subscription.Tenant -Scope Script -Force
-            Set-Variable TenantID -Value $O365Object.current_subscription.TenantID -Scope Script -Force
-            #Update authentication objects
-            Update-MonkeyAuthObject
-            $O365Object.azPermissions = Get-MonkeyAzIAMPermission -CurrentUser
-            #Get ExecutionInfo
-            $O365Object.executionInfo = Get-ExecutionInfo
-            #Get resources and resource groups
-            if($null -ne $O365Object.auth_tokens.ResourceManager -AND $null -ne $O365Object.current_subscription.SubscriptionId){
-                $msg = @{
-                    MessageData = ($message.SubscriptionResourcesMessage -f $O365Object.current_subscription.displayName);
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'info';
-                    InformationAction = $O365Object.InformationAction;
-                    Tags = @('AzureSubscriptionScanner');
-                }
-                Write-Information @msg
-                #Get resource groups
-                if($O365Object.initParams.psobject.Properties.Item('resourcegroups')){
-                    $rg_names = $O365Object.initParams.resourcegroups
-                }
-                else{
-                    $rg_names = $null
-                }
-                $all_rg = Get-MonkeyAzResourceGroup -ResourceGroupNames $rg_names
-                if($all_rg){
-                    $O365Object.ResourceGroups = $all_rg
-                }
-                #Get all resources within subscription
-                $all_resources = Get-MonkeyAzResource -ResourceGroupNames $rg_names
-                if($all_resources){
-                    $O365Object.all_resources = $all_resources
-                    #Check if should skip resources from being scanned
-                    Skip-MonkeyAzResource
-                }
-            }
-            #Check if plugins are present
-            If(@($azure_plugins).Count -gt 0){
+    try{
+        if($null -ne $O365Object.Collectors -and @($O365Object.Collectors).Count -gt 0){
+            if($O365Object.IncludeEntraID){
                 #Set synchronized hashtable
-                Set-Variable returnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
-                $vars = @{
-                    O365Object = $O365Object;
-                    WriteLog = $O365Object.WriteLog;
-                    Verbosity = $O365Object.VerboseOptions;
-                    InformationAction = $O365Object.InformationAction;
-                    returnData = $Script:returnData;
-                }
+                Set-Variable aadReturnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
+                #Set params
                 $p = @{
-                    ImportPlugins = $azure_plugins;
-                    ImportVariables = $vars;
-                    ImportCommands = $O365Object.libutils;
-                    ImportModules = $O365Object.runspaces_modules;
-                    StartUpScripts = $O365Object.runspace_init;
-                    ThrowOnRunspaceOpenError = $true;
-                    Debug = $O365Object.VerboseOptions.Debug;
-                    Verbose = $O365Object.VerboseOptions.Verbose;
+                    Provider = 'EntraID';
+                    Throttle = $O365Object.threads;
+                    ReturnData = $Script:aadReturnData;
+                    Debug = $O365Object.Debug;
+                    Verbose = $O365Object.Verbose;
+                    InformationAction = $O365Object.InformationAction;
                 }
-                Invoke-MonkeyRunspace @p
-                #Check if AAD data
-                if($null -ne (Get-Variable -Name aadReturnData -Scope Script -ErrorAction Ignore)){
-                    $Script:returnData = Join-HashTable -HashTable $returnData -JoinHashTable $aadReturnData
-                }
-                if($Script:returnData.Count -gt 0){
-                    #Get Monkey Object with all data to export
-                    $MonkeyExportObject = New-O365ExportObject
-                    #Prepare Output
-                    Out-MonkeyData -MonkeyExportObject $MonkeyExportObject
-                }
-                else{
+                #Launch collectors
+                Invoke-MonkeyScanner @p
+            }
+            if($null -ne $O365Object.subscriptions){
+                foreach($azSubscription in @($O365Object.subscriptions)){
                     $msg = @{
-                        MessageData = "There is no data to export";
+                        MessageData = ($message.SubscriptionWorkingMessage -f $azSubscription.displayName);
                         callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'warning';
+                        logLevel = 'info';
                         InformationAction = $O365Object.InformationAction;
                         Tags = @('AzureSubscriptionScanner');
                     }
-                    Write-Warning @msg
+                    Write-Information @msg
+                    #Add current subscription to O365Object
+                    $O365Object.current_subscription = Resolve-AzureSubscription -Subscription $azSubscription
+                    #Update authentication objects
+                    Update-MonkeyAuthObject
+                    $O365Object.azPermissions = Get-MonkeyAzIAMPermission -CurrentUser
+                    #Get ExecutionInfo
+                    $O365Object.executionInfo = Get-ExecutionInfo
+                    $msg = @{
+                        MessageData = ($message.SubscriptionResourcesMessage -f $O365Object.current_subscription.displayName);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'info';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('AzureSubscriptionScanner');
+                    }
+                    Write-Information @msg
+                    $msg = @{
+                        MessageData = ($message.SubscriptionResourcesMessage -f $O365Object.current_subscription.displayName);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'info';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('AzureSubscriptionScanner');
+                    }
+                    Write-Information @msg
+                    #Get resource groups
+                    if($O365Object.initParams.psobject.Properties.Item('resourcegroups')){
+                        $rg_names = $O365Object.initParams.resourcegroups
+                    }
+                    else{
+                        $rg_names = $null
+                    }
+                    $O365Object.ResourceGroups = Get-MonkeyAzResourceGroup -ResourceGroupNames $rg_names
+                    #Get all resources within subscription
+                    $O365Object.all_resources = Get-MonkeyAzResource -ResourceGroupNames $rg_names -DiagnosticSettingsSupport
+                    #Check if should skip resources from being scanned
+                    Skip-MonkeyAzResource
+                    #Set synchronized hashtable
+                    Set-Variable returnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
+                    #Set params
+                    $p = @{
+                        Provider = 'Azure';
+                        Throttle = $O365Object.threads;
+                        ReturnData = $Script:returnData;
+                        Debug = $O365Object.Debug;
+                        Verbose = $O365Object.Verbose;
+                        InformationAction = $O365Object.InformationAction;
+                    }
+                    #Launch collectors
+                    Invoke-MonkeyScanner @p
+                    #Check if AAD data
+                    if($null -ne (Get-Variable -Name aadReturnData -Scope Script -ErrorAction Ignore)){
+                        $Script:returnData = Join-HashTable -HashTable $returnData -JoinHashTable $aadReturnData
+                    }
+                    if($Script:returnData.Count -gt 0){
+                        #Prepare output
+                        Out-MonkeyData -OutData $returnData
+                    }
+                    else{
+                        $msg = @{
+                            MessageData = "There is no data to export";
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('AzureScannerEmptyData');
+                        }
+                        Write-Warning @msg
+                    }
                 }
-                #Reset Report var
-                if($null -ne (Get-Variable -Name Report -Scope Script -ErrorAction Ignore)){
-                    Remove-Variable -Name Report -Scope Script -Force
-                }
-                #collect garbage
-                #[gc]::Collect()
-                [System.GC]::GetTotalMemory($true) | out-null
-                #Sleep some time
-                $msg = @{
-                    MessageData = ($Script:message.SleepMessage -f 10000);
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'info';
-                    InformationAction = $InformationAction;
-                    Tags = @('Monkey365SleepTime');
-                }
-                Write-Information @msg
-                Start-Sleep -Milliseconds 10000
             }
         }
     }
-    #Cleaning Runspace
-    if($null -ne $O365Object.monkey_runspacePool -and $O365Object.monkey_runspacePool -is [System.Management.Automation.Runspaces.RunspacePool]){
-        #$O365Object.monkey_runspacePool.Close()
-        $O365Object.monkey_runspacePool.Dispose()
-        #Perform garbage collection
-        [gc]::Collect()
+    Catch{
+        Write-Error $_
     }
-    <#
-    #Cleaning HttpClient
-    if($null -ne $O365Object.HttpClient -and $O365Object.HttpClient -is [System.Net.Http.HttpClient]){
-        $O365Object.HttpClient.Dispose();
+    Finally{
         #Perform garbage collection
-        [gc]::Collect()
+        [System.GC]::GetTotalMemory($true) | out-null
     }
-    #>
 }

@@ -85,6 +85,8 @@ Function Find-MonkeyAzStoragePublicBlob {
                     $Object = New-Object PSObject -Property $new_container;
                     #Add to array
                     [void]$allContainers.Add($Object);
+                    #Avoid throttling
+                    Start-Sleep -Milliseconds 500
                 }
             }
         }

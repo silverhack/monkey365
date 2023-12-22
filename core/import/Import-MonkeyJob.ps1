@@ -67,19 +67,40 @@ Function Import-MonkeyJob{
     }
     End{
         if($null -ne $raw_data){
+            #Set new O365Object
+            $MyParams.Instance = $raw_data.Instance;
+            $MyParams.IncludeEntraID = $raw_data.IncludeEntraID;
+            #Create O365 object
+            New-O365Object
             try{
-                #Set report var
-                Set-Variable -Name Report -Value $selected_job.jobFolder -Scope Script
-                #Set instance to O365Object
-                $O365Object.IncludeAAD = $selected_job.IncludeAAD
-                $O365Object.Instance = $selected_job.Instance
-                $O365Object.Tenant = $raw_data.Tenant
-                $O365Object.TenantId = $raw_data.TenantID
-                $O365Object.Environment = $raw_data.Environment
-                $O365Object.all_resources = $raw_data.all_resources
-                #Set init params to O365Object
-                $O365Object.initParams = $MyParams
-                Out-MonkeyData -MonkeyExportObject $raw_data
+                if($raw_data.Instance -eq 'Azure'){
+                    $O365Object.Environment = $raw_data.Environment;
+                    $O365Object.startDate = $raw_data.StartDate;
+                    $O365Object.Tenant = $raw_data.Tenant;
+                    $O365Object.TenantId = $raw_data.TenantId;
+                    $O365Object.current_subscription = $raw_data.Subscription;
+                    $O365Object.Collectors = $raw_data.Collectors;
+                    $O365Object.Instance = $raw_data.Instance;
+                    $O365Object.IncludeEntraID = $raw_data.IncludeEntraID;
+                    $O365Object.aadpermissions = $raw_data.aadpermissions;
+                    $O365Object.executionInfo = $raw_data.executionInfo;
+                    $O365Object.all_resources = $raw_data.allResources;
+                }
+                else{
+                    $O365Object.Environment = $raw_data.Environment;
+                    $O365Object.startDate = $raw_data.StartDate;
+                    $O365Object.Tenant = $raw_data.Tenant;
+                    $O365Object.TenantId = $raw_data.TenantId;
+                    $O365Object.Collectors = $raw_data.Collectors;
+                    $O365Object.Instance = $raw_data.Instance;
+                    $O365Object.IncludeEntraID = $raw_data.IncludeEntraID;
+                    $O365Object.aadpermissions = $raw_data.aadpermissions;
+                    $O365Object.executionInfo = $raw_data.executionInfo;
+                }
+                #Set new variables
+                Set-Variable returnData -Value $raw_data.Output -Scope Script -Force
+                Set-Variable Report -Value $selected_job.jobFolder -Scope Script -Force
+                Out-MonkeyData -OutData $Script:returnData
             }
             catch{
                 $msg = @{

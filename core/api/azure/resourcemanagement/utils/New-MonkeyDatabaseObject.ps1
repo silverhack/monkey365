@@ -59,6 +59,7 @@ Function New-MonkeyDatabaseObject {
                 defaultSecondaryLocation = if($null -ne $Database.properties.PsObject.properties.Item('defaultSecondaryLocation')){$Database.properties.defaultSecondaryLocation}else{$null};
                 readScale = if($null -ne $Database.properties.PsObject.properties.Item('readScale')){$Database.properties.readScale}else{$null};
                 encryptionStatus = $null;
+                locks = $null;
                 tdeSettings = [PSCustomObject]@{
                     enabled = $null;
                     rawData = $null;

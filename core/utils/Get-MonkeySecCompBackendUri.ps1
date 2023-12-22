@@ -45,7 +45,7 @@ function Get-MonkeySecCompBackendUri {
             if($null -ne ($O365Object.auth_tokens.ComplianceCenter) -and $null -ne $O365Object.TenantId){
                 $access_token = $O365Object.auth_tokens.ComplianceCenter
                 #Get URI
-                $uri = ('{0}/AdminApi/v1.0/{1}/EXOModuleFile?Version=3.2.0' -f $O365Object.Environment.ComplianceCenterAPI,$O365Object.TenantId)
+                $uri = ('{0}/AdminApi/v1.0/{1}/EXOModuleFile?Version=3.2.0' -f $O365Object.Environment.ComplianceCenterAPI,$O365Object.auth_tokens.ComplianceCenter.TenantId)
             }
         }
     }
@@ -64,6 +64,19 @@ function Get-MonkeySecCompBackendUri {
                 "Prefer" = 'odata.maxpagesize=1000;';
                 Authorization = $AuthHeader;
             }
+            #Add AnchorMailbox header
+            if($O365Object.isConfidentialApp){
+                if($null -ne $O365Object.Tenant.MyDomain){
+                    [void]$requestHeader.Add('X-AnchorMailbox',("UPN:Monkey365@{0}" -f $O365Object.Tenant.MyDomain.id))
+                }
+                elseif((Test-IsValidTenantId -TenantId $O365Object.TenantId) -eq $false){
+                    [void]$requestHeader.Add('X-AnchorMailbox',("UPN:Monkey365@{0}" -f $O365Object.TenantId))
+                }
+                else{
+                    Write-Warning "Tenant Name was not recognized. Unable to get Compliance Center backend url"
+                    return
+                }
+            }
             $param = @{
                 Url = $uri;
                 Method = 'Get';
@@ -81,7 +94,7 @@ function Get-MonkeySecCompBackendUri {
                 #get backend
                 try{
                     if($null -ne $Response.Headers.Location){
-                        $backendUri = ("https://{0}" -f $Response.Headers.Location.Host)
+                        $backendUri = ("https://{0}" -f $Response.Headers.Location.Host.Replace('admin','ps.compliance'))
                     }
                 }
                 catch{

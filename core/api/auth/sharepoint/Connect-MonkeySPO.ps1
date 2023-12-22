@@ -36,153 +36,134 @@ Function Connect-MonkeySPO {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "", Scope="Function")]
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory=$true, HelpMessage="parameters")]
-        [Object]$parameters,
-
-        [Parameter(Mandatory=$false, ParameterSetName = 'Endpoint', HelpMessage="Connect SharePoint Url")]
+        [Parameter(Mandatory=$true, HelpMessage="Connect SharePoint Url")]
         [string]$Endpoint,
 
         [Parameter(Mandatory=$false, ParameterSetName = 'Admin', HelpMessage="Connect SharePoint Admin Url")]
         [Switch]$Admin,
 
         [Parameter(Mandatory=$false, ParameterSetName = 'rootSite', HelpMessage="Connect SharePoint Siteroot Url")]
-        [Switch]$rootSite,
+        [Switch]$RootSite,
 
         [Parameter(Mandatory=$false, ParameterSetName = 'oneDrive', HelpMessage="Connect OneDrive Url")]
-        [Switch]$oneDrive
+        [Switch]$OneDrive
     )
-    $sharepointUrl = $companyInfo = $null;
-    #Set new params
-    $new_params = @{}
-    foreach ($param in $parameters.GetEnumerator()){
-        $new_params.add($param.Key, $param.Value)
-    }
-    if($null -ne $O365Object.Tenant -and $null -ne $O365Object.Tenant.Psobject.Properties.Item('CompanyInfo')){
-        $companyInfo = $O365Object.Tenant.CompanyInfo
-    }
-    else{
-        Write-Warning "Not connected to MSGraph"
-    }
-    #Get Endpoint
-    switch -Wildcard ($PSCmdlet.ParameterSetName) {
-        'Endpoint' {
-            $sharepointUrl = $Endpoint
-        }
-        'Admin' {
-            if($null -ne $companyInfo){
-                $sharepointUrl = Get-SharepointAdminUrl -TenantDetails $companyInfo
-            }
-            else{
-                Write-Warning "Unable to get SharePoint Online admin url"
-            }
-        }
-        'rootSite' {
-            if($null -ne $companyInfo){
-                $sharepointUrl = Get-SharepointUrl -TenantDetails $companyInfo
-            }
-            else{
-                Write-Warning "Unable to get SharePoint Online root url"
-            }
-        }
-        'oneDrive' {
-            if($null -ne $companyInfo){
-                $sharepointUrl = Get-OneDriveUrl -TenantDetails $companyInfo
-            }
-            else{
-                Write-Warning "Unable to get OneDrive url"
-            }
-        }
-        Default {
-            if($null -ne $companyInfo){
-                $sharepointUrl = Get-SharepointUrl -TenantDetails $companyInfo
-            }
-            else{
-                Write-Warning "Unable to get SharePoint Online url"
-            }
-        }
-    }
     try{
-        $usePnpManagementShell = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.UsePnPManagementShell)
-    }
-    catch{
-        $usePnpManagementShell = $false
-    }
-    if($null -ne $sharepointUrl){
-        #Get SharePoint Online application
-        if($O365Object.isConfidentialApp -eq $false){
-            #Check if application is present
-            if(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)})).Count -gt 0){
-                $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)}) | Select-Object -First 1
+        $sharepointUrl = $null;
+        #Get Environment
+        $CloudType = $O365Object.initParams.Environment
+        $sps_p = @{
+            Endpoint = $PSBoundParameters['Endpoint'];
+            Environment = $CloudType;
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+        #Get Endpoint
+        switch -Wildcard ($PSCmdlet.ParameterSetName) {
+            'Admin' {
+                $sharepointUrl = Get-SharepointAdminUrl @sps_p
             }
-            ElseIf(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)})).Count -gt 0){
-                $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)}) | Select-Object -First 1
+            'rootSite' {
+                $sharepointUrl = Get-SharepointUrl @sps_p
             }
-            Else{
-                #Potentially first time the user is authenticating, so we use original parameters
-                $new_params = @{}
-                foreach ($param in $O365Object.msal_application_args.GetEnumerator()){
-                    $new_params.add($param.Key, $param.Value)
+            'oneDrive' {
+                $sharepointUrl = Get-OneDriveUrl @sps_p
+            }
+            Default {
+                $sharepointUrl = Get-SharepointUrl @sps_p
+            }
+        }
+        try{
+            $usePnpManagementShell = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.UsePnPManagementShell)
+        }
+        catch{
+            $usePnpManagementShell = $false
+        }
+        if($null -ne $sharepointUrl){
+            #Set new params
+            $new_params = @{}
+            foreach ($param in $O365Object.msal_application_args.GetEnumerator()){
+                $new_params.add($param.Key, $param.Value)
+            }
+            #Check if confidential App
+            if($O365Object.isConfidentialApp -eq $false){
+                #Check if application is present
+                if(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)})).Count -gt 0){
+                    $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)}) | Select-Object -First 1
                 }
-                #Create new SPO application
-                $client_app = @{}
-                foreach ($param in $O365Object.application_args.GetEnumerator()){
-                    $client_app.add($param.Key, $param.Value)
-                }
-                $p = @{
-                    Environment = $O365Object.initParams.Environment;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                    InformationAction = $O365Object.InformationAction;
-                }
-                if($usePnpManagementShell){
-                    $spo_app = New-MsalApplicationForPnP @p
+                ElseIf(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)})).Count -gt 0){
+                    $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)}) | Select-Object -First 1
                 }
                 else{
-                    if($O365Object.SystemInfo.OSVersion -ne 'windows' -and -NOT $new_params.ContainsKey('DeviceCode')){
+                    #Potentially first time the user is authenticating, so we use original parameters
+                    #Set new params
+                    $new_params = @{}
+                    foreach ($param in $O365Object.msalAuthArgs.GetEnumerator()){
+                        $new_params.add($param.Key, $param.Value)
+                    }
+                    #Create a new MSAL application
+                    $p = @{
+                        Environment = $O365Object.initParams.Environment;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        InformationAction = $O365Object.InformationAction;
+                    }
+                    if($usePnpManagementShell){
+                        $spo_app = New-MsalApplicationForPnP @p
+                    }
+                    else{
+                        if($O365Object.SystemInfo.OSVersion -ne 'windows' -and -NOT $new_params.ContainsKey('DeviceCode')){
+                            $msg = @{
+                                MessageData = "Unable to connect SharePoint Online. SharePoint Online Management Shell is not supporting interactive authentication on .NET core. Use DeviceCode instead";
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'Warning';
+                                InformationAction = $O365Object.InformationAction;
+                                Tags = @('SPOAuthenticationError');
+                            }
+                            Write-Warning @msg
+                            return
+                        }
+                        #Check if force MSAL desktop
+                        if($null -ne $O365Object.SystemInfo -and $O365Object.SystemInfo.MsalType -eq 'Desktop'){
+                            $p.Item('ForceDesktop') = $true
+                        }
+                        #Get Application for SPO
+                        $spo_app = New-MsalApplicationForSPO @p
+                    }
+                    if($null -ne $spo_app){
+                        $new_params.publicApp = $spo_app
+                        #Add to Object
+                        [void]$O365Object.msal_public_applications.Add($spo_app)
+                    }
+                    else{
                         $msg = @{
-                            MessageData = "Unable to connect SharePoint Online. SharePoint Online Management Shell is not supporting interactive authentication on .NET core. Use DeviceCode instead";
+                            MessageData = "Unable to get MSAL application for SharePoint Online";
                             callStack = (Get-PSCallStack | Select-Object -First 1);
                             logLevel = 'Warning';
                             InformationAction = $O365Object.InformationAction;
-                            Tags = @('SPOAuthenticationError');
+                            Tags = @('SPOPublicApplicationError');
                         }
                         Write-Warning @msg
                         return
                     }
-                    #Get Application for SPO
-                    $spo_app = New-MsalApplicationForSPO @p
-                }
-                if($null -ne $spo_app){
-                    $O365Object.sps_msal_application = $spo_app
-                    $new_params.publicApp = $spo_app
-                    #Add to Object
-                    [void]$O365Object.msal_public_applications.Add($spo_app)
-                }
-                else{
-                    $msg = @{
-                        MessageData = "Unable to get MSAL application for SharePoint Online";
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'Warning';
-                        InformationAction = $O365Object.InformationAction;
-                        Tags = @('SPOPublicApplicationError');
-                    }
-                    Write-Warning @msg
-                    return
                 }
             }
+            else{
+                $new_params.confidentialApp = $O365Object.msalapplication;
+            }
+            #Add SharePoint url to object
+            [void]$new_params.Add('Resource',$sharepointUrl);
+            #Add scopes if PnP application is used
+            if($usePnpManagementShell){
+                [string[]]$scope = "AllSites.Read"
+                [void]$new_params.Add('Scopes',$scope);
+            }
+            #Connect to SharePoint Online
+            Get-MSALTokenForSharePointOnline @new_params
         }
-        else{
-            $O365Object.sps_msal_application = $O365Object.msalapplication
-            $new_params.confidentialApp = $O365Object.msalapplication;
-        }
-        #Add SharePoint url to object
-        [void]$new_params.Add('Endpoint',$sharepointUrl);
-        #Add scopes if PnP application is used
-        if($usePnpManagementShell){
-            [string[]]$scope = "AllSites.Read"
-            [void]$new_params.Add('Scopes',$scope);
-        }
-        #Connect to SharePoint Online
-        Get-MSALTokenForSharePointOnline @new_params
+    }
+    catch{
+        Write-Error $_
     }
 }

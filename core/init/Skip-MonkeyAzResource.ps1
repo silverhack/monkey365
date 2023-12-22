@@ -49,24 +49,24 @@ Function Skip-MonkeyAzResource{
                         MessageData = $_;
                         callStack = (Get-PSCallStack | Select-Object -First 1);
                         logLevel = 'warning';
-                        InformationAction = $script:InformationAction;
+                        InformationAction = $O365Object.InformationAction;
                         Tags = @('UnabletoGetExclusions');
                     }
                     Write-Warning @msg
                 }
             }
             else{
-                throw ("{0} exclusion file does not exists" -f $O365Object.excludeResources.FullName)
+                throw ("{0} exclusion file not found" -f $O365Object.excludeResources.FullName)
             }
         }
     }
     Process{
         #Validate file
-        if($null -ne $az_exclusion_file -and $null -ne $az_exclusion_file.Psobject.Properties.Item('exclusions')){
+        if($null -ne $az_exclusion_file -and $null -ne $az_exclusion_file.Psobject.Properties.Item('exclusions') -and $null -ne $az_exclusion_file.exclusions){
             foreach($exclusion in $az_exclusion_file.exclusions){
                 if($exclusion.PsObject.Properties.Item('code') -and $exclusion.PsObject.Properties.Item('suppress')){
                     $suppress = $exclusion.suppress
-                    if($suppress.PsObject.Properties.Item('pattern') -and $suppress.PsObject.Properties.Item('justification')){
+                    if($null -ne $suppress -and $suppress.PsObject.Properties.Item('pattern') -and $suppress.PsObject.Properties.Item('justification')){
                         $all_exclusions+=$exclusion
                     }
                 }
@@ -85,7 +85,7 @@ Function Skip-MonkeyAzResource{
                         MessageData = $message;
                         callStack = (Get-PSCallStack | Select-Object -First 1);
                         logLevel = 'warning';
-                        InformationAction = $script:InformationAction;
+                        InformationAction = $O365Object.InformationAction;
                         Tags = @('ExcludeAzureResourceFromScanning');
                     }
                     #Write-Warning @msg

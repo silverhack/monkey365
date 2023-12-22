@@ -63,6 +63,7 @@ Function New-MonkeyAppServiceObject {
                 };
                 authSettings = $null;
                 authSettingsV2 = $null;
+                locks = $null;
                 diagnosticSettings = [PSCustomObject]@{
                     enabled = $false;
                     name = $null;

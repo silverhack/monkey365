@@ -39,8 +39,8 @@ Function Update-MonkeyAuthObject{
     try{
         foreach($auth in $O365Object.auth_tokens.GetEnumerator()){
             if($null -ne $auth.Value -and $null -ne $auth.Value.psobject.Properties.Item('AccessToken')){
-                if($null -ne (Get-Variable -Name Subscription -Scope Script -ErrorAction Ignore) -and $null -ne $Script:Subscription){
-                    $auth.Value | Add-Member -type NoteProperty -name SubscriptionId -value $script:Subscription.subscriptionId -Force
+                if($null -ne $O365Object.current_subscription){
+                    $auth.Value | Add-Member -type NoteProperty -name SubscriptionId -value $O365Object.current_subscription.subscriptionId -Force
                 }
             }
         }
@@ -71,5 +71,7 @@ Function Update-MonkeyAuthObject{
             Tags = @('AzureSubscriptionError');
         }
         Write-Debug @msg
+        #Throw error
+        throw ("[SubscriptionError] {0}: {1}" -f "Unable to set subscriptionId",$_.Exception.Message)
     }
 }

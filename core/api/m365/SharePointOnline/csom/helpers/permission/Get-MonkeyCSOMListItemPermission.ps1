@@ -52,6 +52,8 @@ Function Get-MonkeyCSOMListItemPermission{
         [Switch]$IncludeInheritedPermission
     )
     Begin{
+        #Get libs for runspace
+        $rsOptions = Initialize-MonkeyScan -Provider Microsoft365 | Where-Object {$_.scanName -eq 'SharePointOnline'}
         $arg = @{
             Authentication = $Authentication;
             Endpoint = $Endpoint;
@@ -59,7 +61,7 @@ Function Get-MonkeyCSOMListItemPermission{
         $job_params = @{
             Command = "Invoke-MonkeyCSOMPermission";
             Arguments = $arg;
-            ImportCommands = $O365Object.libutils;
+            ImportCommands = $rsOptions.libCommands;
             ImportVariables = $O365Object.runspace_vars;
             ImportModules = $O365Object.runspaces_modules;
             StartUpScripts = $O365Object.runspace_init;

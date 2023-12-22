@@ -46,33 +46,37 @@ Function Get-ExecutionInfo{
         else{
             $domainName = $null
         }
-        #Get TenantId and Tenant name
-        if($null -ne $O365Object.Tenant){
-            $tenantId = $O365Object.TenantId
-            $tenantName = $O365Object.Tenant.TenantName
+        #Get TenantId
+        if($null -ne $O365Object.Tenant.TenantId){
+            $tenantId = $O365Object.Tenant.TenantId
         }
         elseif($null -ne $O365Object.TenantId){
             $tenantId = $O365Object.TenantId
-            $tenantName = $null;
         }
         else{
             $tenantId = $null;
+        }
+        #Get Tenant Name
+        if($null -ne $O365Object.Tenant.TenantName){
+            $tenantName = $O365Object.Tenant.TenantName
+        }
+        else{
             $tenantName = $null;
         }
         #Set hashtable
         if($O365Object.Instance -eq "Azure"){
             $user_profile = [ordered]@{
                 Domain = $domainName;
-                "Tenant Id" = $tenantId;
+                "TenantId" = $tenantId;
                 "Tenant Name" = $tenantName;
-                "Subscription Id" = $O365Object.current_subscription.subscriptionId;
+                "SubscriptionId" = $O365Object.current_subscription.subscriptionId;
                 "Subscription Name" = $O365Object.current_subscription.displayName;
             }
         }
         else{
             $user_profile = [ordered]@{
                 Domain = $domainName;
-                "Tenant Id" = $tenantId;
+                "TenantId" = $tenantId;
                 "Tenant Name" = $tenantName;
             }
         }
@@ -93,10 +97,10 @@ Function Get-ExecutionInfo{
     Process{
         #Get roles
         if($O365Object.Instance -eq "Azure" -and $null -ne $O365Object.azPermissions){
-            $roles = $O365Object.azPermissions.roleAssignmentInfo | Select-Object -ExpandProperty RoleName -ErrorAction Ignore
+            $roles = $O365Object.azPermissions | Select-Object -Unique -ExpandProperty RoleName -ErrorAction Ignore
         }
         elseif($O365Object.Instance -ne "Azure" -and $null -ne $O365Object.aadPermissions){
-            $roles = $O365Object.aadPermissions.directoryRoleInfo | Select-Object -ExpandProperty displayName -ErrorAction Ignore
+            $roles = $O365Object.aadPermissions | Select-Object -ExpandProperty displayName -ErrorAction Ignore
         }
         else{
             $msg = @{

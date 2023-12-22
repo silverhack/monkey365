@@ -69,8 +69,8 @@ Function Initialize-MonkeyLogger{
             Loggers = $loggers;
             InitialPath = $InitialPath;
             informationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.VerboseOptions.verbose;
-            Debug = $O365Object.VerboseOptions.debug;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
         }
         $status = Start-Logger @l_param
     }
@@ -78,8 +78,8 @@ Function Initialize-MonkeyLogger{
         $l_param = @{
             InitialPath = $InitialPath;
             InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.VerboseOptions.verbose;
-            Debug = $O365Object.VerboseOptions.debug;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
         }
         $status = Start-Logger @l_param
     }

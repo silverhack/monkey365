@@ -34,29 +34,88 @@ Function Get-PSExoModuleFile{
             https://github.com/silverhack/monkey365
     #>
     [cmdletbinding()]
-    Param ()
+    Param (
+        [parameter(Mandatory=$false, HelpMessage="Endpoint")]
+        [Switch]$Purview
+    )
     try{
-        #Get environment
-        $Environment = $O365Object.Environment
-        #Get Auth token
-        $exoAuth = $O365Object.auth_tokens.ExchangeOnline
-        #Get Module file
-        $param = @{
-            Authentication = $exoAuth;
-            Environment = $Environment;
-            ObjectType = 'EXOModuleFile';
-            ExtraParameters = "Version=3.5.0";
-            Method = "GET";
-            RemoveOdataHeader = $true;
-            APIVersion = 'v1.0';
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
+        if($PSBoundParameters['Purview'] -and $PSBoundParameters['Purview'].IsPresent){
+            #Get Security and Compliance Auth token
+			$ExoAuth = $O365Object.auth_tokens.ComplianceCenter
+            #Get TenantId from token
+            #$tid = Read-JWTtoken -token $O365Object.auth_tokens.ComplianceCenter.AccessToken | Select-Object -ExpandProperty tid -ErrorAction Ignore
+			#Get Backend Uri
+			$Uri = $O365Object.SecCompBackendUri
+            #Add AnchorMailbox header
+            if($O365Object.isConfidentialApp){
+                if($null -ne $O365Object.Tenant.MyDomain){
+                    $extraHeader = @{
+                        'X-AnchorMailbox' = ("UPN:Monkey365@{0}" -f $O365Object.Tenant.MyDomain.id);
+                    }
+                }
+                elseif((Test-IsValidTenantId -TenantId $O365Object.TenantId) -eq $false){
+                    $extraHeader = @{
+                        'X-AnchorMailbox' = ("UPN:Monkey365@{0}" -f $O365Object.TenantId);
+                    }
+                }
+                else{
+                    Write-Warning "Tenant Name was not recognized. Unable to get Compliance Center backend url"
+                    return
+                }
+                #Get Module file
+                $param = @{
+                    Authentication = $ExoAuth;
+                    EndPoint = $Uri;
+                    ObjectType = 'EXOModuleFile';
+                    Headers = $extraHeader;
+                    ExtraParameters = "Version=3.2.0";
+                    Method = "GET";
+                    TimeOut = 50;
+                    RemoveOdataHeader = $true;
+                    APIVersion = 'v1.0';
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+            }
+            else{
+                #Get Module file
+                $param = @{
+                    Authentication = $ExoAuth;
+                    EndPoint = $Uri;
+                    ObjectType = 'EXOModuleFile';
+                    ExtraParameters = "Version=3.2.0";
+                    Method = "GET";
+                    TimeOut = 50;
+                    RemoveOdataHeader = $true;
+                    APIVersion = 'v1.0';
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+            }
         }
-        $moduleFile = Get-PSExoAdminApiObject @param
-        if($moduleFile){
-            return $moduleFile
+        else{
+            #Get environment
+            $Environment = $O365Object.Environment
+            #Get Auth token
+            $exoAuth = $O365Object.auth_tokens.ExchangeOnline
+            #Get Module file
+            $param = @{
+                Authentication = $exoAuth;
+                Environment = $Environment;
+                ObjectType = 'EXOModuleFile';
+                ExtraParameters = "Version=3.5.0";
+                Method = "GET";
+                TimeOut = 50;
+                RemoveOdataHeader = $true;
+                APIVersion = 'v1.0';
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
         }
+        Get-PSExoAdminApiObject @param
     }
     catch{
         Write-Verbose $_

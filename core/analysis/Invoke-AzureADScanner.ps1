@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Invoke-AzureADScanner{
+Function Invoke-EntraIDScanner{
     <#
         .SYNOPSIS
 
@@ -27,7 +27,7 @@ Function Invoke-AzureADScanner{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Invoke-AzureADScanner
+            File Name	: Invoke-EntraIDScanner
             Version     : 1.0
 
         .LINK
@@ -35,84 +35,28 @@ Function Invoke-AzureADScanner{
     #>
     [CmdletBinding()]
     Param()
-    #Create a new HTTPClient
-    #$O365Object.HttpClient = New-HttpClient
-    #Set vars
-    $aad_plugins = $null
-    #Set synchronized hashtable
-    Set-Variable returnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
-    #Get Azure AD plugins
-    if($null -ne $O365Object.Plugins){
-        $aad_plugins = $O365Object.Plugins.Where({$_.Provider -eq "AzureAD"}) | Select-Object -ExpandProperty File -ErrorAction Ignore
-    }
-    #Set runspacePool for nested queries
-    $p = @{
-        Provider = "Azure";
-        Throttle = $O365Object.threads;
-    }
-    $O365Object.monkey_runspacePool = New-MonkeyRunsPacePool @p
-    if($null -ne $O365Object.TenantId -and $O365Object.Plugins){
-        #Add current subscription to O365Object
-        if($null -ne $O365Object.Tenant){
-            $TenantObject = $O365Object.Tenant
-            $displayName = $O365Object.Tenant.TenantName;
-            $subscriptionId = $O365Object.Tenant.TenantId;
-        }
-        else{
-            $msg = @{
-                MessageData = ($Script:message.O365TenantInfoError);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $O365Object.InformationAction;
-                Tags = @('Monkey365TenantError');
+    try{
+        if($null -ne $O365Object.Collectors -and @($O365Object.Collectors).Count -gt 0){
+            #Get Execution Info
+            $O365Object.executionInfo = Get-ExecutionInfo
+            #Set synchronized hashtable
+            Set-Variable returnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
+            if($O365Object.IncludeEntraID){
+                #Set params
+                $p = @{
+                    Provider = 'EntraID';
+                    Throttle = $O365Object.threads;
+                    ReturnData = $Script:returnData;
+                    Debug = $O365Object.Debug;
+                    Verbose = $O365Object.Verbose;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                #Launch collectors
+                Invoke-MonkeyScanner @p
             }
-            Write-Warning @msg
-            if($null -ne $O365Object.auth_tokens.Graph){
-                $displayName = $O365Object.auth_tokens.Graph.TenantId;
-                $subscriptionId = $O365Object.auth_tokens.Graph.TenantId;
-            }
-            else{
-                $displayName = $null;
-                $subscriptionId = $null;
-            }
-            $TenantObject = $null;
-        }
-        $new_subscription = [ordered]@{
-            Tenant = $TenantObject;
-            DisplayName = $displayName;
-            subscriptionId = $subscriptionId;
-        }
-        $O365Object.current_subscription = $new_subscription
-        #Get Execution Info
-        $O365Object.executionInfo = Get-ExecutionInfo
-        #Invoke new scan
-        if(@($aad_plugins).Count -gt 0){
-            #Set vars
-            $vars = @{
-                O365Object = $O365Object;
-                WriteLog = $O365Object.WriteLog;
-                Verbosity = $Verbosity;
-                InformationAction = $O365Object.InformationAction;
-                returnData = $Script:returnData;
-            }
-            $p = @{
-                ImportPlugins = $aad_plugins;
-                ImportVariables = $vars;
-                ImportCommands = $O365Object.libutils;
-                ImportModules = $O365Object.runspaces_modules;
-                StartUpScripts = $O365Object.runspace_init;
-                ThrowOnRunspaceOpenError = $true;
-                Throttle = $O365Object.threads;
-                BatchSleep = $O365Object.BatchSleep;
-                BatchSize = $O365Object.BatchSize;
-                Debug = $O365Object.VerboseOptions.Debug;
-                Verbose = $O365Object.VerboseOptions.Verbose;
-            }
-            Invoke-MonkeyRunspace @p
-            if($Script:returnData.Count -gt 0){
-                $MonkeyExportObject = New-O365ExportObject
-                #Prepare Output
-                Out-MonkeyData -MonkeyExportObject $MonkeyExportObject
+            if($Script:ReturnData.Count -gt 0){
+                #Prepare output
+                Out-MonkeyData -OutData $returnData
             }
             else{
                 $msg = @{
@@ -120,25 +64,17 @@ Function Invoke-AzureADScanner{
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'warning';
                     InformationAction = $O365Object.InformationAction;
-                    Tags = @('AzureSubscriptionScanner');
+                    Tags = @('EntraIDScanner');
                 }
                 Write-Warning @msg
             }
         }
     }
-    #Cleaning Runspace
-    if($null -ne $O365Object.monkey_runspacePool -and $O365Object.monkey_runspacePool -is [System.Management.Automation.Runspaces.RunspacePool]){
-        $O365Object.monkey_runspacePool.Close()
-        $O365Object.monkey_runspacePool.Dispose()
+    Catch{
+        Write-Error $_
+    }
+    Finally{
         #Perform garbage collection
         [gc]::Collect()
     }
-    <#
-    #Cleaning HttpClient
-    if($null -ne $O365Object.HttpClient -and $O365Object.HttpClient -is [System.Net.Http.HttpClient]){
-        $O365Object.HttpClient.Dispose();
-        #Perform garbage collection
-        [gc]::Collect()
-    }
-    #>
 }

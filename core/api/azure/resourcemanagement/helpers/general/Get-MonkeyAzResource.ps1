@@ -33,13 +33,17 @@ Function Get-MonkeyAzResource{
         .LINK
             https://github.com/silverhack/monkey365
     #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
     [cmdletbinding()]
     Param (
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [String[]]$ResourceGroupNames
+        [parameter(Mandatory=$false,HelpMessage="Resource group names")]
+        [String[]]$ResourceGroupNames,
+
+        [parameter(Mandatory=$false,HelpMessage="Check if diagnostic settings is supported")]
+        [Switch]$DiagnosticSettingsSupport
     )
     Begin{
-        $all_resources = New-Object System.Collections.Generic.List[System.Object]
+        $all_resources = [System.Collections.Generic.List[System.Object]]::new()
         #Get API version
         $apiDetails = $O365Object.internal_config.resourceManager | Where-Object {$_.Name -eq 'resources'} | Select-Object -ExpandProperty resource -ErrorAction Ignore
         if($null -eq $apiDetails){
@@ -72,7 +76,7 @@ Function Get-MonkeyAzResource{
                 }
                 $resources = Get-MonkeyRMObject @p
                 if($resources){
-                    [void]$all_resources.Add($resources)
+                    [void]$all_resources.AddRange($resources)
                 }
             }
         }
@@ -91,13 +95,37 @@ Function Get-MonkeyAzResource{
             }
             $resources = Get-MonkeyRMObject @params
             if($resources){
-                [void]$all_resources.Add($resources)
+                [void]$all_resources.AddRange($resources)
             }
         }
     }
     End{
-        if($all_resources){
-            return $all_resources
+        if($all_resources.Count -gt 0){
+            if($PSBoundParameters.ContainsKey('DiagnosticSettingsSupport') -and $PSBoundParameters['DiagnosticSettingsSupport'].isPresent){
+                $diagSettings = Get-MonkeyAzProviderOperation
+                if($null -ne $diagSettings){
+                    foreach($rsrc in $all_resources){
+                        $type = $rsrc.type.Split('/')[0]
+                        $resourceType = $rsrc.type.Replace(("{0}/" -f $type),'')
+                        $ds = ('{0}/providers/Microsoft.Insights/diagnosticSettings' -f $resourceType)
+                        #Search provider
+                        $resourceMatch = $diagSettings.Where({$_.name -eq $type}).Where({$_.resourceTypes.Where({$_.name -eq $ds},'First')})
+                        if($resourceMatch.Count -gt 0){
+                            $m = $resourceMatch.resourceTypes.Where({$_.name -eq $ds},'First')
+                            if($m.Count -gt 0){
+                                $rsrc | Add-Member -Type NoteProperty -name supportsDiagnosticSettings -value $true -Force
+                            }
+                        }
+                        else{
+                            $rsrc | Add-Member -Type NoteProperty -name supportsDiagnosticSettings -value $false -Force
+                        }
+                    }
+                }
+                return $all_resources
+            }
+            else{
+                return $all_resources
+            }
         }
     }
 }

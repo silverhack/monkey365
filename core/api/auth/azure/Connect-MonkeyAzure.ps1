@@ -34,10 +34,7 @@ Function Connect-MonkeyAzure{
             https://github.com/silverhack/monkey365
     #>
     [CmdletBinding()]
-    Param (
-        [Parameter(Mandatory=$true, HelpMessage="parameters")]
-        [Object]$parameters
-    )
+    Param ()
     Begin{
         $azure_services = @{
             ResourceManager = $O365Object.Environment.ResourceManager;
@@ -50,6 +47,13 @@ Function Connect-MonkeyAzure{
             MSGraph =$O365Object.Environment.Graphv2;
             LogAnalytics = $O365Object.Environment.LogAnalytics;
         }
+        #Get new app params
+        if($null -ne $O365Object.msal_application_args){
+            $app_params = $O365Object.msal_application_args;
+        }
+        else{
+            $app_params = $null;
+        }
     }
     Process{
         if($null -ne $O365Object.auth_tokens.ResourceManager){
@@ -57,20 +61,20 @@ Function Connect-MonkeyAzure{
         }
     }
     End{
-        if($null -ne $O365Object.subscriptions){
+        if($null -ne $O365Object.subscriptions -and $null -ne $app_params){
             foreach($service in $azure_services.GetEnumerator()){
                 $msg = @{
-                    MessageData = ("Authenticating to {0}" -f $service.Name);
+                    MessageData = ($message.TokenRequestInfoMessage -f $service.Name)
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'info';
                     InformationAction = $O365Object.InformationAction;
-                    Tags = @('AuthenticatingInfoMessage');
+                    Tags = @('TokenRequestInfoMessage');
                 }
                 Write-Information @msg
                 $azure_service = $service.Name
                 #Get new parameters
                 $new_params = @{}
-                foreach ($param in $parameters.GetEnumerator()){
+                foreach ($param in $app_params.GetEnumerator()){
                     $new_params.add($param.Key, $param.Value)
                 }
                 #Add resource parameter
@@ -78,16 +82,23 @@ Function Connect-MonkeyAzure{
                 try{
                     $O365Object.auth_tokens.$($azure_service) = Get-MSALTokenForResource @new_params
                     $msg = @{
-                        MessageData = ("Successfully connected to {0}" -f $service.Name);
+                        MessageData = ($message.TokenAcquiredInfoMessage -f $service.Name)
                         callStack = (Get-PSCallStack | Select-Object -First 1);
                         logLevel = 'info';
                         InformationAction = $O365Object.InformationAction;
-                        Tags = @('AuthSuccessInfoMessage');
+                        Tags = @('TokenAcquiredMessage');
                     }
                     Write-Information @msg
                 }
                 catch{
-                    Write-Warning ("Unable to get Token for {0}" -f $service.Name)
+                    $msg = @{
+                        MessageData = ($message.UnableToGetAccessToken -f $service.Name)
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'info';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('TokenErrorMessage');
+                    }
+                    Write-Warning @msg
                     if($O365Object.auth_tokens.ContainsKey($azure_service)){
                         $O365Object.auth_tokens.$($azure_service) = $null
                     }
@@ -99,6 +110,7 @@ Function Connect-MonkeyAzure{
                         callStack = (Get-PSCallStack | Select-Object -First 1);
                         logLevel = 'verbose';
                         InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
                         Tags = @('TokenError');
                     }
                     Write-Verbose $_

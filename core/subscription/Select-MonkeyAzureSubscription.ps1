@@ -35,12 +35,10 @@ Function Select-MonkeyAzureSubscription{
     #>
 
     Begin{
-        $param = $O365Object.application_args.Clone()
         #Create Array for subscriptions
         $AllSubscriptions = @()
         #Create selected subscriptions and sub vars
         $selected_subscriptions = $sub = $null
-        $param.TenantId = $O365Object.TenantId
         if($null -ne $O365Object.auth_tokens.ResourceManager){
             $sparam = @{
                 AuthObject = $O365Object.auth_tokens.ResourceManager
@@ -68,11 +66,11 @@ Function Select-MonkeyAzureSubscription{
                 }
                 else{
                     $msg = @{
-                        MessageData = ($message.AzureADTenantNameError);
+                        MessageData = ($message.EntraIDTenantNameError);
                         callStack = (Get-PSCallStack | Select-Object -First 1);
                         logLevel = 'warning';
                         InformationAction = $O365Object.InformationAction;
-                        Tags = @('AzureADTenantNameNotFound');
+                        Tags = @('EntraIDTenantNameNotFound');
                     }
                     Write-Warning @msg
                     $sub | Add-Member -type NoteProperty -name TenantName -value $null -Force

@@ -27,7 +27,7 @@ Function Invoke-M365Scanner{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Invoke-O365Scanner
+            File Name	: Invoke-M365Scanner
             Version     : 1.0
 
         .LINK
@@ -35,181 +35,58 @@ Function Invoke-M365Scanner{
     #>
     [CmdletBinding()]
     Param()
-    #Create a new HTTPClient
-    #$O365Object.HttpClient = New-HttpClient
-    #Get vars
-    $vars = Get-MonkeyVar
-    #Set vars
-    $m365_plugins = [System.Collections.Generic.List[System.Object]]::new()
-    $exo_non_rest_plugins = $exo_rest_plugins = $aad_plugins = $null
-    #Get Azure plugins
-    if($null -ne $O365Object.TenantId -and $null -ne $O365Object.Plugins){
-        #Get AAD plugins
-        $aad_plugins = $O365Object.Plugins.Where({$_.Provider -eq "AzureAD"}) | Select-Object -ExpandProperty File -ErrorAction Ignore
-        #Get Exo legacy plugins
-        $exo_non_rest_plugins = $O365Object.Plugins.Where({($_.Resource.Tolower() -eq 'exchangeonline' -or $_.Resource.ToLower() -eq 'purview') -and $_.ApiType -notcontains 'ExoApi'}) | Select-Object -ExpandProperty File -ErrorAction Ignore
-        #Get Exo rest Plugins
-        $exo_rest_plugins = $O365Object.Plugins.Where({($_.Resource.Tolower() -eq 'exchangeonline' -or $_.Resource.ToLower() -eq 'purview' -and ($_.ApiType -contains "ExoApi"))}) | Select-Object -ExpandProperty File -ErrorAction Ignore
-        #Add to array
-        foreach($pl in $exo_rest_plugins){
-            [void]$m365_plugins.Add($pl);
-        }
-        #Get M365 plugins
-        $m365_rest_plugins = $O365Object.Plugins.Where({($_.Provider.ToLower() -eq "microsoft365") -and (@('exchangeonline','purview') -notcontains $_.Resource.Tolower())}) | Select-Object -ExpandProperty File -ErrorAction Ignore
-        #Add to array
-        foreach($pl in $m365_rest_plugins){
-            [void]$m365_plugins.Add($pl);
-        }
-        #Add current subscription to O365Object
-        if($null -ne $O365Object.Tenant){
-            $TenantObject = $O365Object.Tenant
-            $displayName = $O365Object.Tenant.TenantName;
-            $subscriptionId = $O365Object.Tenant.TenantId;
-        }
-        else{
-            $msg = @{
-                MessageData = ($Script:message.O365TenantInfoError);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $O365Object.InformationAction;
-                Tags = @('Monkey365TenantError');
+    try{
+        if($null -ne $O365Object.Collectors -and @($O365Object.Collectors).Count -gt 0){
+            #Get Execution Info
+            $O365Object.executionInfo = Get-ExecutionInfo
+            #Set synchronized hashtable
+            Set-Variable returnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
+            if($O365Object.IncludeEntraID){
+                #Set params
+                $p = @{
+                    Provider = 'EntraID';
+                    Throttle = $O365Object.threads;
+                    ReturnData = $Script:returnData;
+                    Debug = $O365Object.Debug;
+                    Verbose = $O365Object.Verbose;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                #Launch collectors
+                Invoke-MonkeyScanner @p
             }
-            Write-Warning @msg
-            if($null -ne $O365Object.auth_tokens.Graph){
-                $displayName = $O365Object.auth_tokens.Graph.TenantId;
-                $subscriptionId = $O365Object.auth_tokens.Graph.TenantId;
+            #Execute rest of collectors
+            #Set params
+            $p = @{
+                Provider = 'Microsoft365';
+                Throttle = $O365Object.threads;
+                ReturnData = $Script:returnData;
+                Debug = $O365Object.Debug;
+                Verbose = $O365Object.Verbose;
+                InformationAction = $O365Object.InformationAction;
+            }
+            #Launch collectors
+            Invoke-MonkeyScanner @p
+            if($Script:ReturnData.Count -gt 0){
+                #Prepare output
+                Out-MonkeyData -OutData $returnData
             }
             else{
-                $displayName = $null;
-                $subscriptionId = $null;
+                $msg = @{
+                    MessageData = "There is no data to export";
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'warning';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('AzureSubscriptionScanner');
+                }
+                Write-Warning @msg
             }
-            $TenantObject = $null;
         }
-        $new_subscription = [ordered]@{
-            Tenant = $TenantObject;
-            DisplayName = $displayName;
-            subscriptionId = $subscriptionId;
-        }
-        $O365Object.current_subscription = $new_subscription
-        #Get Execution Info
-        $O365Object.executionInfo = Get-ExecutionInfo
     }
-    #Set runspacePool for nested queries
-    $p = @{
-        Provider = "AzureAD";
-        Throttle = $O365Object.threads;
+    Catch{
+        Write-Error $_
     }
-    $O365Object.monkey_runspacePool = New-MonkeyRunsPacePool @p
-    #Set variable for nested runspaces
-    $O365Object.runspace_vars = Get-MonkeyVar
-    #Launch non-rest plugins scan
-    if($null -ne $O365Object.TenantId -and $null -ne $exo_non_rest_plugins -and $exo_non_rest_plugins.Count -gt 0){
-        #Set synchronized hashtable
-        Set-Variable exoReturnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
-        #Set vars
-        $vars.returnData = $Script:exoReturnData;
-        #Set params
-        $p = @{
-            ImportPlugins = $exo_non_rest_plugins;
-            ImportVariables = $vars;
-            ImportCommands = $O365Object.libutils;
-            ImportModules = $O365Object.runspaces_modules;
-            StartUpScripts = $O365Object.exo_runspace_init;
-            ThrowOnRunspaceOpenError = $true;
-            Debug = $O365Object.VerboseOptions.Debug;
-            Verbose = $O365Object.VerboseOptions.Verbose;
-        }
-        #Launch plugins
-        Invoke-MonkeyRunspace @p -MaxQueue 1 -Throttle 1
-    }
-    #Disable token renewal for purview
-    if($null -ne $O365Object.o365_sessions.ComplianceCenter -and $O365Object.o365_sessions.ComplianceCenter -is [System.Management.Automation.Runspaces.PSSession]){
-        $O365Object.o365_sessions.ComplianceCenter.DisableRenew()
-    }
-    #Execute AAD plugins
-    if($null -ne $O365Object.TenantId -and $null -ne $aad_plugins){
-        #Set synchronized hashtable
-        Set-Variable aadReturnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
-        $vars.returnData = $Script:aadReturnData;
-        $p = @{
-            ImportPlugins = $aad_plugins;
-            ImportVariables = $vars;
-            ImportCommands = $O365Object.libutils;
-            ImportModules = $O365Object.runspaces_modules;
-            StartUpScripts = $O365Object.runspace_init;
-            ThrowOnRunspaceOpenError = $true;
-            Debug = $O365Object.VerboseOptions.Debug;
-            Verbose = $O365Object.VerboseOptions.Verbose;
-        }
-        Invoke-MonkeyRunspace @p
-        #Sleep some time
-        $msg = @{
-            MessageData = ($Script:message.SleepMessage -f 10000);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'info';
-            InformationAction = $O365Object.InformationAction;
-            Tags = @('Monkey365SleepTime');
-        }
-        Write-Information @msg
-        Start-Sleep -Milliseconds 10000
-    }
-    #execute M365 rest plugins scan
-    if($null -ne $O365Object.TenantId -and $m365_plugins.Count -gt 0){
-        #Set synchronized hashtable
-        Set-Variable ReturnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
-        #Set vars
-        $vars.returnData = $Script:ReturnData;
-        #Set params
-        $p = @{
-            ImportPlugins = $m365_plugins;
-            ImportVariables = $vars;
-            ImportCommands = $O365Object.libutils;
-            ImportModules = $O365Object.runspaces_modules;
-            StartUpScripts = $O365Object.runspace_init;
-            ThrowOnRunspaceOpenError = $true;
-            Debug = $O365Object.VerboseOptions.Debug;
-            Verbose = $O365Object.VerboseOptions.Verbose;
-        }
-        #Launch plugins
-        Invoke-MonkeyRunspace @p
-    }
-    #Cleaning Runspace
-    if($null -ne $O365Object.monkey_runspacePool -and $O365Object.monkey_runspacePool -is [System.Management.Automation.Runspaces.RunspacePool]){
-        #$O365Object.monkey_runspacePool.Close()
-        $O365Object.monkey_runspacePool.Dispose()
+    Finally{
         #Perform garbage collection
         [gc]::Collect()
-    }
-    <#
-    #Cleaning HttpClient
-    if($null -ne $O365Object.HttpClient -and $O365Object.HttpClient -is [System.Net.Http.HttpClient]){
-        $O365Object.HttpClient.Dispose();
-        #Perform garbage collection
-        [gc]::Collect()
-    }
-    #>
-    #Combine objects
-    #Check if AAD data
-    if($null -ne (Get-Variable -Name aadReturnData -Scope Script -ErrorAction Ignore)){
-        $Script:ReturnData = Join-HashTable -HashTable $ReturnData -JoinHashTable $aadReturnData
-    }
-    #Check if exo data
-    if($null -ne (Get-Variable -Name exoReturnData -Scope Script -ErrorAction Ignore)){
-        $Script:ReturnData = Join-HashTable -HashTable $ReturnData -JoinHashTable $exoReturnData
-    }
-    if($Script:ReturnData.Count -gt 0){
-        $MonkeyExportObject = New-O365ExportObject
-        #Prepare Output
-        Out-MonkeyData -MonkeyExportObject $MonkeyExportObject
-    }
-    else{
-        $msg = @{
-            MessageData = "There is no data to export";
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'warning';
-            InformationAction = $O365Object.InformationAction;
-            Tags = @('AzureSubscriptionScanner');
-        }
-        Write-Warning @msg
     }
 }

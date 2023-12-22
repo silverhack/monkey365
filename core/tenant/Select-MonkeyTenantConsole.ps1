@@ -78,11 +78,11 @@ Function Select-MonkeyTenantConsole{
                         $badInput = $false
                         # everything OK and tenant is selected
                         $msg = @{
-                            MessageData = ($message.AzureADSelectedTenantInfo -f $tenants[$index].DisplayName);
+                            MessageData = ($message.EntraIDSelectedTenantInfo -f $tenants[$index].DisplayName);
                             callStack = (Get-PSCallStack | Select-Object -First 1);
                             logLevel = 'info';
                             InformationAction = $O365Object.InformationAction;
-                            Tags = @('AzureADTenantInfo');
+                            Tags = @('EntraIDTenantInfo');
                         }
                         Write-Information @msg
                         $selected_Tenant = $tenants[$index]
@@ -97,7 +97,7 @@ Function Select-MonkeyTenantConsole{
                         callStack = (Get-PSCallStack | Select-Object -First 1);
                         logLevel = 'warning';
                         InformationAction = $O365Object.InformationAction;
-                        Tags = @('AzureADTenantBadInput');
+                        Tags = @('EntraIDTenantBadInput');
                     }
                     Write-Warning @msg
                     Start-Sleep -Seconds 4

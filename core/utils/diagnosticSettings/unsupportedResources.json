@@ -7,6 +7,18 @@
 			}
 		},
 		{
+			"name": "MetricAlerts",
+			"resource": {
+			  "provider": "metricalerts"
+			}
+		},
+		{
+			"name": "MicrosoftPortal",
+			"resource": {
+			  "provider": "Microsoft.Portal"
+			}
+		},
+		{
 			"name": "Resources",
 			"resource": {
 			  "provider": "Microsoft.Resources"

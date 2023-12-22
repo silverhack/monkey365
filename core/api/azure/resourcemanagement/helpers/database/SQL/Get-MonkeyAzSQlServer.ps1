@@ -39,7 +39,7 @@ Function Get-MonkeyAzSQlServer {
 	[CmdletBinding()]
 	Param (
         [Parameter(Mandatory=$True, ValueFromPipeline = $True)]
-        [Object]$Server,
+        [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
         [String]$APIVersion = "2021-05-01-preview"
@@ -47,7 +47,7 @@ Function Get-MonkeyAzSQlServer {
     Process{
         try{
             $p = @{
-			    Id = $Server.Id;
+			    Id = $InputObject.Id;
                 ApiVersion = $APIVersion;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
@@ -155,6 +155,28 @@ Function Get-MonkeyAzSQlServer {
                     if($fwRules){
                         $new_dbServer.fwRules = $fwRules;
                     }
+                    #Get locks
+                    $new_dbServer.locks = $new_dbServer | Get-MonkeyAzLockInfo
+                    #Get diagnostic settings
+                    If($InputObject.supportsDiagnosticSettings -eq $True){
+                        $p = @{
+		                    Id = $new_dbServer.Id;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                            InformationAction = $O365Object.InformationAction;
+	                    }
+	                    $diag = Get-MonkeyAzDiagnosticSettingsById @p
+                        if($diag){
+                            #Add to object
+                            $new_dbServer.diagnosticSettings.enabled = $true;
+                            $new_dbServer.diagnosticSettings.name = $diag.name;
+                            $new_dbServer.diagnosticSettings.id = $diag.id;
+                            $new_dbServer.diagnosticSettings.properties = $diag.properties;
+                            $new_dbServer.diagnosticSettings.rawData = $diag;
+                        }
+                    }
+                    #Get Failover group
+                    $new_dbServer.failoverGroups = $new_dbServer | Get-MonkeyAzSQLFailoverGroup
                 }
                 return $new_dbServer
             }

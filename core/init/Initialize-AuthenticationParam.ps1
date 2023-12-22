@@ -36,125 +36,66 @@ Function Initialize-AuthenticationParam{
     [CmdletBinding()]
     Param ()
     Begin{
-        #Confidential params
-        $confidentialParams=@(
-            'ClientAssertionCertificate',
-            'certificate_credentials',
-            'ClientSecret',
-            'Certificate',
-            'CertFilePassword',
-            'ClientCredentials'
-        )
-        #Public Implicit Params
-        $publicParams=@(
-            'Silent',
-            'DeviceCode',
-            'PromptBehavior',
-            'ForceAuth',
-            'UserCredentials'
-        )
-        #parameters to skip in auth
-        $skip=@(
-            'OutDir','SaveProject','ResourceGroups',
-            'IncludeAzureAD',
-            'Analysis','ExportTo','Threads','Instance',
-            'ClearCache','WriteLog','cache_token_file',
-            'AuditorName', 'saveProject',
-            'ResolveTenantDomainName', 'reportType',
-            'profileName','ResolveTenantUserName',
-            'ClearCache','Subscriptions',
-            'AllSubscriptions','RuleSet',
-            'ImportJob','ExcludePlugin',
-            'ExcludedResources','ScanSites'
-        )
-        #Set isPublicApp var
-        $isPublicApp = $true
         #Set new clients
         $O365Object.msal_public_applications = [System.Collections.Generic.List[Microsoft.Identity.Client.IPublicClientApplication]]::new()
         $O365Object.msal_confidential_applications = [System.Collections.Generic.List[Microsoft.Identity.Client.IConfidentialClientApplication]]::new()
     }
     Process{
-        if($null -eq $O365Object.application_args){
-            #Check if public application (Interactive, devicecode,etc..)
-            foreach ($param in $O365Object.initParams.GetEnumerator()){
-                if ($param.key -in $confidentialParams) { $isPublicApp = $false }
+        $msalAppMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "New-MonkeyMsalApplication")
+        #Set new dict
+        $newPsboundParams = [ordered]@{}
+        $param = $msalAppMetadata.Parameters.Keys
+        foreach($p in $param.GetEnumerator()){
+            if($O365Object.initParams.ContainsKey($p) -and $O365Object.initParams.Item($p)){
+                if ($p -eq 'Instance') { continue }
+                $newPsboundParams.Add($p,$O365Object.initParams.Item($p))
             }
-            #Remove common params
-            $body_params = @{}
-            foreach ($param in $O365Object.initParams.GetEnumerator()){
-                if ($param.key -in $skip) { continue }
-                #Remove additional params if is confidential app
-                if($isPublicApp -eq $false -and $param.key -in $publicParams){ continue }
-                $body_params.add($param.Key, $param.Value)
-            }
-            #Set confidentialApp in Object
-            if($isPublicApp){
-                $O365Object.isConfidentialApp = $false
-            }
-            else{
-                $O365Object.isConfidentialApp = $true
-            }
-            #Remove implicit args if confidential app
-            if($O365Object.isConfidentialApp){
-                $new_params = @{}
-                foreach ($param in $body_params.GetEnumerator()){
-                    if ($param.key -in $publicParams) { continue }
-                    $new_params.add($param.Key, $param.Value)
-                }
-                $body_params = $new_params
-            }
-            else{
-                #Public app detected. Remove confidential params if exists
-                $new_params = @{}
-                foreach ($param in $body_params.GetEnumerator()){
-                    if ($param.key -in $confidentialParams) { continue }
-                    $new_params.add($param.Key, $param.Value)
-                }
-                $body_params = $new_params
-            }
-            #Remove ClientId if null value
-            if($body_params.ContainsKey('ClientId') -and $null -eq $body_params.ClientId){
-                [ref]$null = $body_params.Remove('ClientId')
-            }
-            #Remove TenantId if null value
-            if($body_params.ContainsKey('TenantId') -and $null -eq $body_params.TenantId){
-                [ref]$null = $body_params.Remove('TenantId')
-            }
-            #Add auth params
-            $O365Object.application_args = $body_params;
         }
+        #Check if TenantId
+        if($null -ne $O365Object.TenantId){
+            $newPsboundParams.Item('TenantId') = $O365Object.TenantId;
+        }
+        #Add auth params
+        $O365Object.application_args = $newPsboundParams;
     }
     End{
-        #Initialize authentication params
-        if($O365Object.isConfidentialApp){
-            $app_param = $O365Object.application_args
+        if($O365Object.application_args){
+            $app_param = $O365Object.application_args;
             $O365Object.msalapplication = New-MonkeyMsalApplication @app_param
-            #Remove confidential params and add msal application
+            $O365Object.isConfidentialApp = -NOT $O365Object.msalapplication.isPublicApp;
+            #Get Auth params
+            $msalAppMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-MonkeyMSALToken")
+            #Set new dict
+            $newPsboundParams = @{}
+            $param = $msalAppMetadata.Parameters.Keys
+            foreach($p in $param.GetEnumerator()){
+                if($O365Object.initParams.ContainsKey($p) -and $O365Object.initParams.Item($p)){
+                    if ($p -in $app_param.keys) {continue }
+                    $newPsboundParams.Add($p,$O365Object.initParams.Item($p))
+                }
+            }
+            if($O365Object.isConfidentialApp){
+                #Add confidential client
+                [void]$O365Object.msal_confidential_applications.Add($O365Object.msalapplication)
+                [ref]$null = $newPsboundParams.Add('confidentialApp',$O365Object.msalapplication);
+            }
+            else{
+                #Add public client
+                [void]$O365Object.msal_public_applications.Add($O365Object.msalapplication)
+                [ref]$null = $newPsboundParams.Add('publicApp',$O365Object.msalapplication);
+            }
+            #Add Verbose, informationAction and Debug parameters
+            [ref]$null = $newPsboundParams.Add('InformationAction',$O365Object.InformationAction);
+            [ref]$null = $newPsboundParams.Add('Verbose',$O365Object.verbose);
+            [ref]$null = $newPsboundParams.Add('Debug',$O365Object.debug);
+            #Update msal application args. These parameters will contain current MSAL application
+            $O365Object.msal_application_args = $newPsboundParams
+            #Set initial backup application args
             $new_params = @{}
-            foreach ($param in $app_param.GetEnumerator()){
-                if ($param.key -in $confidentialParams) { continue }
+            foreach ($param in $newPsboundParams.GetEnumerator()){
                 $new_params.add($param.Key, $param.Value)
             }
-            $O365Object.msal_application_args = $new_params
-            #Add confidential client
-            [void]$O365Object.msal_confidential_applications.Add($O365Object.msalapplication)
-        }
-        else{
-            #Public application
-            $app_param = $O365Object.application_args
-            #Remove extra parameters
-            $new_params = @{}
-            foreach ($param in $app_param.GetEnumerator()){
-                if ($param.key -in $publicParams) { continue }
-                $new_params.add($param.Key, $param.Value)
-            }
-            #Create public application
-            $O365Object.msalapplication = New-MonkeyMsalApplication @new_params
-            #Update application args
-            $O365Object.application_args = $new_params
-            $O365Object.msal_application_args = $app_param
-            #Add public client
-            [void]$O365Object.msal_public_applications.Add($O365Object.msalapplication)
+            $O365Object.msalAuthArgs = $new_params
         }
     }
 }

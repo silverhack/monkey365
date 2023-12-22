@@ -36,17 +36,23 @@ function Get-MonkeyAzObjectById{
 
     [cmdletbinding()]
     Param (
-        [Parameter(HelpMessage="Object Id")]
+        [Parameter(Mandatory=$false, HelpMessage="Object Id")]
         [String]$Id,
 
-        [Parameter(HelpMessage="Api version")]
+        [Parameter(Mandatory=$false, HelpMessage="Resource")]
         [String]$Resource,
 
-        [parameter(HelpMessage="Method")]
+        [Parameter(Mandatory=$false, HelpMessage="Filter")]
+        [String]$Filter,
+
+        [parameter(Mandatory=$false, HelpMessage="Expand")]
+        [String[]]$Expand,
+
+        [parameter(Mandatory=$false, HelpMessage="Method")]
         [ValidateSet("GET","POST")]
         [String]$Method = "GET",
 
-        [Parameter(HelpMessage="Api version")]
+        [Parameter(Mandatory=$true, HelpMessage="Api version")]
         [String]$ApiVersion
     )
     Begin{
@@ -59,6 +65,8 @@ function Get-MonkeyAzObjectById{
         $rm_auth = $O365Object.auth_tokens.ResourceManager
         $base_uri = [String]::Empty
         $Server = ("{0}" -f $Environment.ResourceManager.Replace('https://',''))
+        #Set filter
+        $my_filter = [String]::Empty
     }
     Process{
         #Add objectId
@@ -69,8 +77,26 @@ function Get-MonkeyAzObjectById{
         if($Resource){
             $base_uri = ("{0}/{1}" -f $base_uri, $Resource)
         }
+        if($Filter){
+            If($Filter.Contains(' ')){
+                $my_filter = ('&$filter={0}' -f [uri]::EscapeDataString($Filter))
+            }
+            else{
+                $my_filter = ('&$filter={0}' -f $Filter)
+            }
+        }
+        #add Expand
+        if($Expand){
+            if($null -ne $my_filter){
+                $my_filter = ('{0}&$expand={1}' -f $my_filter, (@($Expand) -join ','))
+            }
+            else{
+                $my_filter = ('?$expand={0}' -f (@($Expand) -join ','))
+            }
+        }
         #Add api version
-        $base_uri = ("{0}?api-version={1}" -f $base_uri, $ApiVersion)
+        $my_filter = ("?api-version={0}{1}" -f $ApiVersion,$my_filter)
+        $base_uri = ("{0}{1}" -f $base_uri, $my_filter)
         #Remove double slashes
         $final_uri = ("{0}{1}" -f $Server,$base_uri)
         $final_uri = [regex]::Replace($final_uri,"/+","/")

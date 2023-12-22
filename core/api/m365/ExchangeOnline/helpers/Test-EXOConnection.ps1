@@ -36,6 +36,7 @@ Function Test-EXOConnection{
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     Param (
         [Parameter(Mandatory= $false, HelpMessage="Compliance Center")]
         [Switch]$ComplianceCenter

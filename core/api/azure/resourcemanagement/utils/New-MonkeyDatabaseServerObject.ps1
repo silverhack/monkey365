@@ -95,10 +95,19 @@ Function New-MonkeyDatabaseServerObject {
                     isStorageSecondaryKeyInUse= $null;
                     rawData = $null;
                 };
+                diagnosticSettings = [PSCustomObject]@{
+                    enabled = $false;
+                    name = $null;
+                    id = $null;
+                    properties = $null;
+                    rawData = $null;
+                };
                 vaConfig = $null;
                 fwRules = $null;
                 configuration = $null;
+                failoverGroups = $null;
                 databases = $null;
+                locks = $null;
                 rawObject = $Server;
             }
             #Create PsObject

@@ -46,9 +46,9 @@ Function Test-MonkeyAADIAM {
         [String]$RoleName
     )
     try{
-        if($null -ne $O365Object.aadPermissions -and $null -ne $O365Object.aadPermissions.directoryRoleInfo){
+        if($null -ne $O365Object.aadPermissions){
             if($PSCmdlet.ParameterSetName -eq 'RoleId'){
-                if($O365Object.aadPermissions.directoryRoleInfo | Where-Object {$_.roleTemplateId -eq $RoleTemplateId}){
+                if(@($O365Object.aadPermissions).Where({$_.roleTemplateId -eq $RoleTemplateId})){
                     return $true
                 }
                 else{
@@ -56,7 +56,7 @@ Function Test-MonkeyAADIAM {
                 }
             }
             elseif($PSCmdlet.ParameterSetName -eq 'Role'){
-                if($O365Object.aadPermissions.directoryRoleInfo | Where-Object {$_.displayName -eq $RoleName}){
+                if(@($O365Object.aadPermissions).Where({$_.displayName -eq $RoleName})){
                     return $true
                 }
                 else{
