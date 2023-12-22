@@ -21,7 +21,7 @@
         <link rel="next" href="../microsoft365-options/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.1.2">
     
     
       
@@ -249,6 +249,54 @@
   
 
       
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../license-contributing/" class="md-tabs__link">
+      License and Contributing
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../support/" class="md-tabs__link">
+      Support
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../disclaimer/" class="md-tabs__link">
+      Disclaimer
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../sample/Monkey365.html" class="md-tabs__link">
+      Sample Report
+    </a>
+  </li>
+
+      
     </ul>
   </div>
 </nav>
@@ -325,12 +373,6 @@
       <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
       
       
-        
-          
-        
-          
-        
-          
         
           
         
@@ -1144,8 +1186,16 @@
 
             
           
-            
-              
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
   
   
   
@@ -1156,10 +1206,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1170,10 +1221,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1184,10 +1236,18 @@
     </li>
   
 
-            
-          
-        </ul>
-      </nav>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sample/Monkey365.html" class="md-nav__link">
+        Sample Report
+      </a>
     </li>
   
 
@@ -1304,91 +1364,90 @@
 <p>By default, Monkey365 will show the subscriptions to which the provided identity have access to. A user can select all the subscriptions to which the provided identity have access.</p>
 <p><img alt="" src="../../assets/images/subscription.png" /></p>
 <p>The <code>-Subscriptions</code> option can be used to scan a number of subscriptions in one execution.</p>
-<pre><code class="language-powershell">$param = @{
-    Instance = 'Azure';
-    Analysis = 'All';
-    PromptBehavior = 'SelectAccount';
-    subscriptions = '00000000-0000-0000-0000-000000000000 11111111-1111-1111-1111-111111111111';
-    TenantID = '00000000-0000-0000-0000-000000000000';
-    ExportTo = 'PRINT';
-}
-$assets = Invoke-Monkey365 @param
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Azure&#39;</span><span class="p">;</span>
+    <span class="n">Analysis</span> <span class="p">=</span> <span class="s1">&#39;All&#39;</span><span class="p">;</span>
+    <span class="n">PromptBehavior</span> <span class="p">=</span> <span class="s1">&#39;SelectAccount&#39;</span><span class="p">;</span>
+    <span class="n">subscriptions</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000 11111111-1111-1111-1111-111111111111&#39;</span><span class="p">;</span>
+    <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
+    <span class="n">ExportTo</span> <span class="p">=</span> <span class="s1">&#39;PRINT&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nv">$assets</span> <span class="p">=</span> <span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
+</code></pre></div>
 <p>The <code>-AllSubscriptions</code> option can be used to scan all the subscriptions.</p>
-<pre><code class="language-powershell">$param = @{
-    Instance = 'Azure';
-    Analysis = 'All';
-    PromptBehavior = 'SelectAccount';
-    AllSubscriptions = $true;
-    TenantID = '00000000-0000-0000-0000-000000000000';
-    ExportTo = 'PRINT';
-}
-$assets = Invoke-Monkey365 @param
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Azure&#39;</span><span class="p">;</span>
+    <span class="n">Analysis</span> <span class="p">=</span> <span class="s1">&#39;All&#39;</span><span class="p">;</span>
+    <span class="n">PromptBehavior</span> <span class="p">=</span> <span class="s1">&#39;SelectAccount&#39;</span><span class="p">;</span>
+    <span class="n">AllSubscriptions</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">;</span>
+    <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
+    <span class="n">ExportTo</span> <span class="p">=</span> <span class="s1">&#39;PRINT&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nv">$assets</span> <span class="p">=</span> <span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
+</code></pre></div>
 <h2 id="exclude-azure-resources-from-scans">Exclude azure resources from scans</h2>
 <p>To ensure that all Azure resources are scanned, we recommend creating exclusions only when it is absolutely necessary. However, there are situations in which you may need to exclude an specific Azure resource, for example a Virtual Machine that is controlled by a third party integrations. </p>
 <p>The <code>-ExcludedResources</code> option can be used to exclude unwanted azure resources from being scanned.</p>
-<pre><code class="language-powershell">$param = @{
-    Instance = 'Azure';
-    Analysis = 'All';
-    PromptBehavior = 'SelectAccount';
-    AllSubscriptions = $true;
-    TenantID = '00000000-0000-0000-0000-000000000000';
-    ExcludedResources = 'C:\temp\az_excluded_resources.json';
-    ExportTo = 'HTML';
-}
-Invoke-Monkey365 @param
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Azure&#39;</span><span class="p">;</span>
+    <span class="n">Analysis</span> <span class="p">=</span> <span class="s1">&#39;All&#39;</span><span class="p">;</span>
+    <span class="n">PromptBehavior</span> <span class="p">=</span> <span class="s1">&#39;SelectAccount&#39;</span><span class="p">;</span>
+    <span class="n">AllSubscriptions</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">;</span>
+    <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
+    <span class="n">ExcludedResources</span> <span class="p">=</span> <span class="s1">&#39;C:\temp\az_excluded_resources.json&#39;</span><span class="p">;</span>
+    <span class="n">ExportTo</span> <span class="p">=</span> <span class="s1">&#39;HTML&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
+</code></pre></div>
 <p>This parameter only accepts a JSON file path. This JSON file must have the following structure:</p>
-<pre><code class="language-json">{
-    &quot;title&quot;: &quot;Azure exclusion list&quot;,
-    &quot;exclusions&quot;: [
-        {
-            &quot;code&quot;: &quot;Exclusion title&quot;,
-            &quot;suppress&quot;: {
-                &quot;pattern&quot;: &quot;*mypattern*&quot;,
-                &quot;justification&quot;: &quot;Justification text&quot;
-            }
-        }
-    ]
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Azure exclusion list&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;exclusions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Exclusion title&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;suppress&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*mypattern*&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;justification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Justification text&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>Consider the following example of a JSON exclusion file to understand how to use the <code>ExcludedResources</code> feature:</p>
-<pre><code class="language-json">{
-    &quot;title&quot;: &quot;Azure exclusion list&quot;,
-    &quot;exclusions&quot;: [
-        {
-            &quot;code&quot;: &quot;Azure VMs&quot;,
-            &quot;suppress&quot;: {
-                &quot;pattern&quot;: &quot;*excludedmachine*&quot;,
-                &quot;justification&quot;: &quot;Controlled by Third-Party integrations&quot;
-            }
-        },
-        {
-            &quot;code&quot;: &quot;Azure Storage account&quot;,
-            &quot;suppress&quot;: {
-                &quot;pattern&quot;: &quot;*excludedstorageaccount*&quot;,
-                &quot;justification&quot;: &quot;Controlled by Third-Party integrations&quot;
-            }
-        },
-        {
-            &quot;code&quot;: &quot;Azure Resource Group&quot;,
-            &quot;suppress&quot;: {
-                &quot;pattern&quot;: &quot;*resourceGroups/excludedrg*&quot;,
-                &quot;justification&quot;: &quot;Controlled by Third-Party integrations&quot;
-            }
-        },
-        {
-            &quot;code&quot;: &quot;Azure Containers&quot;,
-            &quot;suppress&quot;: {
-                &quot;pattern&quot;: &quot;*resourceGroups/Containers*&quot;,
-                &quot;justification&quot;: &quot;Controlled by Third-Party integrations&quot;
-            }
-        }
-    ]
-}
-
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Azure exclusion list&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;exclusions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Azure VMs&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;suppress&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*excludedmachine*&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;justification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Controlled by Third-Party integrations&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Azure Storage account&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;suppress&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*excludedstorageaccount*&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;justification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Controlled by Third-Party integrations&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Azure Resource Group&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;suppress&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*resourceGroups/excludedrg*&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;justification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Controlled by Third-Party integrations&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Azure Containers&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;suppress&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*resourceGroups/Containers*&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;justification&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Controlled by Third-Party integrations&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
 
 
   
@@ -1412,7 +1471,7 @@ Invoke-Monkey365 @param
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2023 Juan Garrido – <a href="#__consent">Change cookie settings</a>
+      Copyright &copy; 2023 <a href="https://twitter.com/tr1ana" target="blank">Juan Garrido</a>
     </div>
   
   

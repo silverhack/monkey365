@@ -21,7 +21,7 @@
         <link rel="next" href="../../exporting/exporting-data/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.1.2">
     
     
       
@@ -249,6 +249,54 @@
   
 
       
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../license-contributing/" class="md-tabs__link">
+      License and Contributing
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../support/" class="md-tabs__link">
+      Support
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../disclaimer/" class="md-tabs__link">
+      Disclaimer
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../sample/Monkey365.html" class="md-tabs__link">
+      Sample Report
+    </a>
+  </li>
+
+      
     </ul>
   </div>
 </nav>
@@ -325,12 +373,6 @@
       <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
       
       
-        
-          
-        
-          
-        
-          
         
           
         
@@ -1110,8 +1152,16 @@
 
             
           
-            
-              
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
   
   
   
@@ -1122,10 +1172,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1136,10 +1187,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1150,10 +1202,18 @@
     </li>
   
 
-            
-          
-        </ul>
-      </nav>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sample/Monkey365.html" class="md-nav__link">
+        Sample Report
+      </a>
     </li>
   
 
@@ -1198,12 +1258,12 @@
 <p>The docker image is an Ubuntu for Linux and Windows Server Core for Windows that comes with all pre-requisite components required to run Monkey365. These are non-root container images.</p>
 <h1 id="running-the-container">Running the Container</h1>
 <p>To run this image, use the <code>build.ps1</code> script located in the root folder:</p>
-<pre><code class="language-powershell">.\build.ps1 -Name monkey365 -version latest -Path .\docker\Dockerfile_linux
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">build</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Name</span> <span class="n">monkey365</span> <span class="n">-version</span> <span class="n">latest</span> <span class="n">-Path</span> <span class="p">.\</span><span class="n">docker</span><span class="p">\</span><span class="n">Dockerfile_linux</span>
+</code></pre></div>
 <p>This will create a new Monkey365 Docker image based on Ubuntu for Linux.</p>
 <p>The following command can be used to create a Windows-based container:</p>
-<pre><code class="language-powershell">.\build.ps1 -Name monkey365 -version latest -Path .\docker\Dockerfile_windows
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">.\</span><span class="n">build</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-Name</span> <span class="n">monkey365</span> <span class="n">-version</span> <span class="n">latest</span> <span class="n">-Path</span> <span class="p">.\</span><span class="n">docker</span><span class="p">\</span><span class="n">Dockerfile_windows</span>
+</code></pre></div>
 <p>Once container is created, you can run monkey365 container using <code>docker run -it monkey365</code></p>
 <h1 id="supported-environment-variables">Supported environment variables</h1>
 <p>The following environment variables are supported:</p>
@@ -1219,13 +1279,13 @@
 <li>MONKEY_ENV_DEBUG</li>
 </ul>
 <p>You can also use the -e, --env, and --env-file flags to set simple environment variables in the container.</p>
-<pre><code class="language-bash">docker run -it --env-file monkey.env monkey365 pwsh &quot;/home/monkey365/monkey365/monkey365.ps1&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--env-file<span class="w"> </span>monkey.env<span class="w"> </span>monkey365<span class="w"> </span>pwsh<span class="w"> </span><span class="s2">&quot;/home/monkey365/monkey365/monkey365.ps1&quot;</span>
+</code></pre></div>
 <p>In case you want to map a directory to a docker container directory, you can use the --volume flag, as shown below:</p>
-<pre><code class="language-bash">docker run -it --env-file monkey.env `
-               -volume=C:\temp:/home/monkey365/monkey365/monkey-reports `
-               monkey365 pwsh &quot;/home/monkey365/monkey365/monkey365.ps1&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--env-file<span class="w"> </span>monkey.env<span class="w"> </span><span class="sb">`</span>
+<span class="w">               </span>-volume<span class="o">=</span>C:<span class="se">\t</span>emp:/home/monkey365/monkey365/monkey-reports<span class="w"> </span><span class="sb">`</span>
+<span class="w">               </span>monkey365<span class="w"> </span>pwsh<span class="w"> </span><span class="s2">&quot;/home/monkey365/monkey365/monkey365.ps1&quot;</span>
+</code></pre></div>
 
 
   
@@ -1249,7 +1309,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2023 Juan Garrido – <a href="#__consent">Change cookie settings</a>
+      Copyright &copy; 2023 <a href="https://twitter.com/tr1ana" target="blank">Juan Garrido</a>
     </div>
   
   

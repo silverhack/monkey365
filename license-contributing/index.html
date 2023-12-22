@@ -21,7 +21,7 @@
         <link rel="next" href="../support/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.1.2">
     
     
       
@@ -227,8 +227,6 @@
         
   
   
-    
-  
 
 
   
@@ -240,13 +238,63 @@
   
   
     <li class="md-tabs__item">
-      <a href="../install-instructions/" class="md-tabs__link md-tabs__link--active">
+      <a href="../install-instructions/" class="md-tabs__link">
         Getting started
       </a>
     </li>
   
 
   
+
+      
+        
+  
+  
+    
+  
+
+
+  <li class="md-tabs__item">
+    <a href="./" class="md-tabs__link md-tabs__link--active">
+      License and Contributing
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../support/" class="md-tabs__link">
+      Support
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../disclaimer/" class="md-tabs__link">
+      Disclaimer
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../sample/Monkey365.html" class="md-tabs__link">
+      Sample Report
+    </a>
+  </li>
 
       
     </ul>
@@ -313,24 +361,16 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
       
       
-        
-          
-        
-          
-        
-          
         
           
         
@@ -353,7 +393,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_2">
           <span class="md-nav__icon md-icon"></span>
           Getting started
@@ -1098,8 +1138,16 @@
 
             
           
-            
-              
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
   
   
     
@@ -1161,10 +1209,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1175,10 +1224,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1189,10 +1239,18 @@
     </li>
   
 
-            
-          
-        </ul>
-      </nav>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sample/Monkey365.html" class="md-nav__link">
+        Sample Report
+      </a>
     </li>
   
 
@@ -1275,7 +1333,7 @@
 <li>Azure icons, Microsoft license - https://docs.microsoft.com/en-us/azure/architecture/icons/</li>
 <li>Microsoft 365 icons, Microsoft license</li>
 </ul>
-<p>Monkey365 welcomes all types of contributions that will help us to refine the tool. Testing and feedback on different PowerShell modules and plugins are ways everyone can help in addition to module features or bug fixes, so any support would be much appreciated.</p>
+<p>Monkey365 welcomes all types of contributions that will help us to refine the tool. Testing and feedback on different PowerShell modules and collectors are ways everyone can help in addition to module features or bug fixes, so any support would be much appreciated.</p>
 <p>If you are interested in contributing directly to Monkey365, here is how you can get started:</p>
 <h2 id="report-issues">Report issues</h2>
 <p>Monkey365 uses GitHub issues to track bugs and feature requests. This is the best place to report bugs. If you have what looks like a bug, or you would like to make a feature request, feel free to open a ticket on the <a href='https://github.com/silverhack/monkey365/issues' target='_blank'>Monkey365 repository</a> on GitHub, but please, you should keep a few things in mind:</p>
@@ -1287,12 +1345,10 @@
 <h2 id="improve-documentation">Improve documentation</h2>
 <p>We use <code>mkdocs</code> to build the documentation and deploy to GitHub Pages. You can easily contribute with new docs or improving existing ones. To run documentation locally, run:</p>
 <ul>
-<li>Inside the Monkey365 repository folder run:</li>
-</ul>
-<pre><code class="language-json">pip install -r requirements-docs.txt
-mkdocs serve
-</code></pre>
-<ul>
+<li>Inside the Monkey365 repository folder run:
+<div class="highlight"><pre><span></span><code><span class="err">pip</span><span class="w"> </span><span class="err">i</span><span class="kc">nstall</span><span class="w"> </span><span class="mi">-</span><span class="err">r</span><span class="w"> </span><span class="err">requireme</span><span class="kc">nts</span><span class="mi">-</span><span class="err">docs.</span><span class="kc">t</span><span class="err">x</span><span class="kc">t</span>
+<span class="err">mkdocs</span><span class="w"> </span><span class="err">serve</span>
+</code></pre></div></li>
 <li>Documentation will be served on localhost:8000</li>
 <li>You can find all pages within the monkey365/docs directory</li>
 <li>Make all needed changes or add new documents</li>
@@ -1325,7 +1381,7 @@ mkdocs serve
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2023 Juan Garrido – <a href="#__consent">Change cookie settings</a>
+      Copyright &copy; 2023 <a href="https://twitter.com/tr1ana" target="blank">Juan Garrido</a>
     </div>
   
   

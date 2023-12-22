@@ -21,7 +21,7 @@
         <link rel="next" href="../rate-limit/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.1.2">
     
     
       
@@ -244,6 +244,54 @@
   
 
       
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../license-contributing/" class="md-tabs__link">
+      License and Contributing
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../support/" class="md-tabs__link">
+      Support
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../disclaimer/" class="md-tabs__link">
+      Disclaimer
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../sample/Monkey365.html" class="md-tabs__link">
+      Sample Report
+    </a>
+  </li>
+
+      
     </ul>
   </div>
 </nav>
@@ -320,12 +368,6 @@
       <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
       
       
-        
-          
-        
-          
-        
-          
         
           
         
@@ -1103,8 +1145,16 @@
 
             
           
-            
-              
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
   
   
   
@@ -1115,10 +1165,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1129,10 +1180,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1143,10 +1195,18 @@
     </li>
   
 
-            
-          
-        </ul>
-      </nav>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sample/Monkey365.html" class="md-nav__link">
+        Sample Report
+      </a>
     </li>
   
 
@@ -1189,28 +1249,29 @@
 
 <p>The Monkey365 configuration file contains settings that are used for managing CLI behavior. The configuration file itself is located at <code>$monkey365_DIR/config/monkey_365.config</code>.</p>
 <p>Configuration file is written in the JSON file format. This file format is followed by a list of key-value entries. Also, Boolean is case-insensitive, and is represented by <code>True</code> (Enabled/must check) and <code>False</code> (Disabled/not check).</p>
-<p>The following is an example of a configuration file that sets up Monkey365 to use the <code>1.6</code> version of the Azure AD API but is also setting the <code>getUsersWithAADInternalAPI</code> key to <code>True</code>. With this change, Monkey365 will use the internal (1.6-internal) API version to extract information regarding Azure AD users:</p>
-<pre><code class="language-json">&quot;azuread&quot;: {
-    &quot;useMsGraph&quot;: &quot;true&quot;,
-    &quot;auditLog&quot;:{
-        &quot;enabled&quot;: &quot;false&quot;,
-        &quot;AuditLogDaysAgo&quot;: &quot;-7&quot;
-    },
-    &quot;provider&quot;: {
-        &quot;graph&quot;:{
-            &quot;api_version&quot;: &quot;1.6&quot;,
-            &quot;internal_api_version&quot;: &quot;1.61-internal&quot;,
-            &quot;getUsersWithAADInternalAPI&quot;: &quot;true&quot;
-        },
-        &quot;portal&quot;:{
-            &quot;GetManagedApplicationsByPrincipalId&quot;: &quot;true&quot;
-        },
-        &quot;msgraph&quot;:{
-            &quot;api_version&quot;: &quot;V1.0&quot;
-        }
-    }
-}
-</code></pre>
+<p>The following is an example of a configuration file that sets up Monkey365 to use the <code>1.6</code> version of the Microsoft Entra ID API but is also setting the <code>getUsersWithAADInternalAPI</code> key to <code>True</code>. With this change, Monkey365 will use the internal (1.6-internal) API version to extract information regarding Microsoft Entra ID users:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;entraId&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;useMsGraph&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;forceRequestMFA&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;getUsersWithAADInternalAPI&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;auditLog&quot;</span><span class="p">:{</span>
+<span class="w">        </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;AuditLogDaysAgo&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;-7&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;graph&quot;</span><span class="p">:{</span>
+<span class="w">            </span><span class="nt">&quot;api_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.6&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;internal_api_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.61-internal&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;portal&quot;</span><span class="p">:{</span>
+<span class="w">            </span><span class="nt">&quot;GetManagedApplicationsByPrincipalId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;msgraph&quot;</span><span class="p">:{</span>
+<span class="w">            </span><span class="nt">&quot;api_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;V1.0&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
 
   
@@ -1234,7 +1295,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2023 Juan Garrido – <a href="#__consent">Change cookie settings</a>
+      Copyright &copy; 2023 <a href="https://twitter.com/tr1ana" target="blank">Juan Garrido</a>
     </div>
   
   

@@ -21,7 +21,7 @@
         <link rel="next" href="../basic-usage/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.1.2">
     
     
       
@@ -89,6 +89,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#interactive-authentication" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -244,6 +249,54 @@
   
 
       
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../license-contributing/" class="md-tabs__link">
+      License and Contributing
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../support/" class="md-tabs__link">
+      Support
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../disclaimer/" class="md-tabs__link">
+      Disclaimer
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../sample/Monkey365.html" class="md-tabs__link">
+      Sample Report
+    </a>
+  </li>
+
+      
     </ul>
   </div>
 </nav>
@@ -320,12 +373,6 @@
       <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
       
       
-        
-          
-        
-          
-        
-          
         
           
         
@@ -419,9 +466,52 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Permissions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Permissions
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-authentication" class="md-nav__link">
+    Interactive authentication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-principal-authentication" class="md-nav__link">
+    Service Principal Authentication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    References
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1103,8 +1193,16 @@
 
             
           
-            
-              
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
   
   
   
@@ -1115,10 +1213,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1129,10 +1228,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1143,10 +1243,18 @@
     </li>
   
 
-            
-          
-        </ul>
-      </nav>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sample/Monkey365.html" class="md-nav__link">
+        Sample Report
+      </a>
     </li>
   
 
@@ -1169,6 +1277,35 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-authentication" class="md-nav__link">
+    Interactive authentication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-principal-authentication" class="md-nav__link">
+    Service Principal Authentication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    References
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1189,8 +1326,9 @@
 
 <p>The module will not change or modify any assets deployed in an Azure subscription. Monkey365's only perform read-only access operations. Monkey365 cannot manipulate or change data and cannot influence the resources within Azure or Microsoft 365.</p>
 <p>Depending on what workloads you are trying to connect, Monkey365 will require that the provided identity have the following roles according to the principle of least privilege:</p>
+<h2 id="interactive-authentication">Interactive authentication</h2>
 <ul>
-<li>Azure AD and Azure environments<ul>
+<li>Microsoft Entra ID and Azure environments<ul>
 <li><strong>Global Reader</strong> and <strong>Security Reader</strong> roles in all the subscriptions to assess</li>
 </ul>
 </li>
@@ -1200,6 +1338,32 @@
 </ul>
 </li>
 </ul>
+<h2 id="service-principal-authentication">Service Principal Authentication</h2>
+<p>Access to APIs and Microsoft services require configuration of access scopes and roles. If you want a client application to access Azure and Microsoft 365 services, configure permissions to access the API in the app registration. The following permissions must be granted to the client application created in Azure:</p>
+<ul>
+<li>Microsoft Entra ID environment<ul>
+<li>Directory.Read.All</li>
+<li>Policy.Read.All</li>
+<li>UserAuthenticationMethod.Read.All</li>
+</ul>
+</li>
+<li>Azure<ul>
+<li><strong>Reader</strong> role in all the subscriptions to assess</li>
+</ul>
+</li>
+<li>SharePoint Online<ul>
+<li>Sites.FullControl.All</li>
+</ul>
+</li>
+<li>Exchange Online and Security and Compliance<ul>
+<li>Exchange.ManageAsApp</li>
+<li>Grant the given identity the role of <strong>Global Reader</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="references">References</h2>
+<p><a href='https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps' target='_blank'>https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps</a></p>
+<p><a href='https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread' target='_blank'>https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread</a></p>
 
 
   
@@ -1223,7 +1387,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2023 Juan Garrido – <a href="#__consent">Change cookie settings</a>
+      Copyright &copy; 2023 <a href="https://twitter.com/tr1ana" target="blank">Juan Garrido</a>
     </div>
   
   

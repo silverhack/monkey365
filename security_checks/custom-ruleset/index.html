@@ -21,7 +21,7 @@
         <link rel="next" href="../../license-contributing/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.1.2">
     
     
       
@@ -249,6 +249,54 @@
   
 
       
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../license-contributing/" class="md-tabs__link">
+      License and Contributing
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../support/" class="md-tabs__link">
+      Support
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../disclaimer/" class="md-tabs__link">
+      Disclaimer
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../sample/Monkey365.html" class="md-tabs__link">
+      Sample Report
+    </a>
+  </li>
+
+      
     </ul>
   </div>
 </nav>
@@ -325,12 +373,6 @@
       <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
       
       
-        
-          
-        
-          
-        
-          
         
           
         
@@ -1192,8 +1234,16 @@
 
             
           
-            
-              
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
   
   
   
@@ -1204,10 +1254,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1218,10 +1269,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1232,10 +1284,18 @@
     </li>
   
 
-            
-          
-        </ul>
-      </nav>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sample/Monkey365.html" class="md-nav__link">
+        Sample Report
+      </a>
     </li>
   
 
@@ -1375,24 +1435,24 @@
 <p><img alt="" src="../../assets/images/overrides.PNG" /></p>
 <h3 id="run-monkey365-with-the-new-ruleset">Run Monkey365 with the new ruleset</h3>
 <p>After you have finished creating the ruleset file, you will need to use the <code>RuleSet</code> parameter to load the ruleset, as shown below:</p>
-<pre><code class="language-powershell">$param = @{
-    Instance = 'Microsoft365';
-    Analysis = 'ExchangeOnline';
-    PromptBehavior = 'SelectAccount';
-    TenantID = '00000000-0000-0000-0000-000000000000';
-    RuleSet = C:\temp\myruleset.json;
-    ExportTo = 'HTML';
-}
-Invoke-Monkey365 @param
-</code></pre>
-<p>You may want to use the previously created ruleset with saved projects. The following example shows how to use ImportJob and the RuleSet options:</p>
-<pre><code class="language-powershell">$param = @{
-    ImportJob = $True;
-    RuleSet = C:\temp\myruleset.json;
-    ExportTo = 'HTML';
-}
-Invoke-Monkey365 @param
-</code></pre>
+<p><div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Microsoft365&#39;</span><span class="p">;</span>
+    <span class="n">Analysis</span> <span class="p">=</span> <span class="s1">&#39;ExchangeOnline&#39;</span><span class="p">;</span>
+    <span class="n">PromptBehavior</span> <span class="p">=</span> <span class="s1">&#39;SelectAccount&#39;</span><span class="p">;</span>
+    <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
+    <span class="n">RuleSet</span> <span class="p">=</span> <span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">myruleset</span><span class="p">.</span><span class="n">json</span><span class="p">;</span>
+    <span class="n">ExportTo</span> <span class="p">=</span> <span class="s1">&#39;HTML&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
+</code></pre></div>
+You may want to use the previously created ruleset with saved projects. The following example shows how to use ImportJob and the RuleSet options:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="n">ImportJob</span> <span class="p">=</span> <span class="nv">$True</span><span class="p">;</span>
+    <span class="n">RuleSet</span> <span class="p">=</span> <span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">myruleset</span><span class="p">.</span><span class="n">json</span><span class="p">;</span>
+    <span class="n">ExportTo</span> <span class="p">=</span> <span class="s1">&#39;HTML&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
+</code></pre></div>
 
 
   
@@ -1416,7 +1476,7 @@ Invoke-Monkey365 @param
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2023 Juan Garrido – <a href="#__consent">Change cookie settings</a>
+      Copyright &copy; 2023 <a href="https://twitter.com/tr1ana" target="blank">Juan Garrido</a>
     </div>
   
   

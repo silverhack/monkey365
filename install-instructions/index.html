@@ -21,7 +21,7 @@
         <link rel="next" href="../permissions/">
       
       <link rel="icon" href="../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.1.2">
     
     
       
@@ -249,6 +249,54 @@
   
 
       
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../license-contributing/" class="md-tabs__link">
+      License and Contributing
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../support/" class="md-tabs__link">
+      Support
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../disclaimer/" class="md-tabs__link">
+      Disclaimer
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../sample/Monkey365.html" class="md-tabs__link">
+      Sample Report
+    </a>
+  </li>
+
+      
     </ul>
   </div>
 </nav>
@@ -325,12 +373,6 @@
       <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
       
       
-        
-          
-        
-          
-        
-          
         
           
         
@@ -1191,8 +1233,16 @@
 
             
           
-            
-              
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
   
   
   
@@ -1203,10 +1253,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1217,10 +1268,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1231,10 +1283,18 @@
     </li>
   
 
-            
-          
-        </ul>
-      </nav>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sample/Monkey365.html" class="md-nav__link">
+        Sample Report
+      </a>
     </li>
   
 
@@ -1354,49 +1414,49 @@
 </ul>
 <h2 id="prerequisites">Prerequisites</h2>
 <p>Monkey365 works out of the box with PowerShell. You can check your PowerShell version executing the command <code>$PsVersionTable</code></p>
-<pre><code class="language-PowerShell">PS C:\Users\monkeyuser&gt; $PSVersionTable
+<div class="highlight"><pre><span></span><code><span class="nb">PS </span><span class="n">C</span><span class="p">:\</span><span class="n">Users</span><span class="p">\</span><span class="n">monkeyuser</span><span class="p">&gt;</span> <span class="nv">$PSVersionTable</span>
 
-Name                           Value
-----                           -----
-PSVersion                      7.2.4
-PSEdition                      Core
-GitCommitId                    7.2.4
-OS                             Microsoft Windows 10.0.19044
-Platform                       Win32NT
-PSCompatibleVersions           {1.0, 2.0, 3.0, 4.0…}
-PSRemotingProtocolVersion      2.3
-SerializationVersion           1.1.0.1
-WSManStackVersion              3.0
-</code></pre>
+<span class="n">Name</span>                           <span class="n">Value</span>
+<span class="p">----</span>                           <span class="p">-----</span>
+<span class="n">PSVersion</span>                      <span class="n">7</span><span class="p">.</span><span class="n">2</span><span class="p">.</span><span class="n">4</span>
+<span class="n">PSEdition</span>                      <span class="n">Core</span>
+<span class="n">GitCommitId</span>                    <span class="n">7</span><span class="p">.</span><span class="n">2</span><span class="p">.</span><span class="n">4</span>
+<span class="n">OS</span>                             <span class="n">Microsoft</span> <span class="n">Windows</span> <span class="n">10</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">19044</span>
+<span class="n">Platform</span>                       <span class="n">Win32NT</span>
+<span class="n">PSCompatibleVersions</span>           <span class="p">{</span><span class="n">1</span><span class="p">.</span><span class="n">0</span><span class="p">,</span> <span class="n">2</span><span class="p">.</span><span class="n">0</span><span class="p">,</span> <span class="n">3</span><span class="p">.</span><span class="n">0</span><span class="p">,</span> <span class="n">4</span><span class="p">.</span><span class="n">0</span><span class="err">…</span><span class="p">}</span>
+<span class="n">PSRemotingProtocolVersion</span>      <span class="n">2</span><span class="p">.</span><span class="n">3</span>
+<span class="n">SerializationVersion</span>           <span class="n">1</span><span class="p">.</span><span class="n">1</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">1</span>
+<span class="n">WSManStackVersion</span>              <span class="n">3</span><span class="p">.</span><span class="n">0</span>
+</code></pre></div>
 <h3 id="install-powershell-on-non-windows-platforms">Install PowerShell on non-Windows platforms</h3>
 <p>PowerShell 7.x can be installed on macOS, Linux, and Windows but is not installed by default. For installation on non-Windows systems (i.e., Linux or macOS) please refer to the installation notes on Microsoft:</p>
 <p><a href='https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-7' target='_blank'>Get PowerShell</a></p>
 <h2 id="install-monkey365">Install Monkey365</h2>
 <h3 id="git">Git</h3>
-<pre><code class="language-powershell"># change path to Module directory
-PS C:\Users\monkeyuser&gt; Push-Location ~\Documents\WindowsPowerShell\Modules
+<div class="highlight"><pre><span></span><code><span class="c"># change path to Module directory</span>
+<span class="nb">PS </span><span class="n">C</span><span class="p">:\</span><span class="n">Users</span><span class="p">\</span><span class="n">monkeyuser</span><span class="p">&gt;</span> <span class="nb">Push-Location</span> <span class="p">~\</span><span class="n">Documents</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">Modules</span>
 
-# clone repository
-PS C:\Users\monkeyuser\Documents\WindowsPowerShell\Modules&gt; git clone https://github.com/silverhack/monkey365.git
+<span class="c"># clone repository</span>
+<span class="nb">PS </span><span class="n">C</span><span class="p">:\</span><span class="n">Users</span><span class="p">\</span><span class="n">monkeyuser</span><span class="p">\</span><span class="n">Documents</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">Modules</span><span class="p">&gt;</span> <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">silverhack</span><span class="p">/</span><span class="n">monkey365</span><span class="p">.</span><span class="n">git</span>
 
-# return to original location
-PS C:\Users\monkeyuser\Documents\WindowsPowerShell\Modules&gt; Pop-Location
-</code></pre>
+<span class="c"># return to original location</span>
+<span class="nb">PS </span><span class="n">C</span><span class="p">:\</span><span class="n">Users</span><span class="p">\</span><span class="n">monkeyuser</span><span class="p">\</span><span class="n">Documents</span><span class="p">\</span><span class="n">WindowsPowerShell</span><span class="p">\</span><span class="n">Modules</span><span class="p">&gt;</span> <span class="nb">Pop-Location</span>
+</code></pre></div>
 <h3 id="manual">Manual</h3>
 <p>You can download the latest zip by clicking <a href="https://github.com/silverhack/monkey365/archive/refs/heads/main.zip">here</a>. Once downloaded, you must extract the file and extract the files to a suitable directory.</p>
 <p>Once you have unzipped the zip file, you can use the PowerShell V3 Unblock-File cmdlet to unblock files</p>
-<pre><code class="language-powershell">Get-ChildItem -Recurse c:\monkey365 | Unblock-File
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nb">Get-ChildItem</span> <span class="n">-Recurse</span> <span class="n">c</span><span class="p">:\</span><span class="n">monkey365</span> <span class="p">|</span> <span class="nb">Unblock-File</span>
+</code></pre></div>
 <h2 id="import-module">Import module</h2>
-<p>Once you have installed the monkey365 module on your system, you will likely want to import the module with the Import-Module cmdlet. Assuming that monkey365 is located in the <code>PSModulePath</code>, PowerShell would load monkey365 into active memory:</p>
-<pre><code class="language-powershell">Import-Module monkey365
-</code></pre>
-<p>If monkey365 is not located on a <code>PSModulePath</code> path, you can use an explicit path to import:</p>
-<pre><code class="language-powershell">Import-Module C:\temp\monkey365
-</code></pre>
-<p>You can also use the <code>Force</code> parameter in case you want to reimport the monkey365 module into the same session</p>
-<pre><code class="language-powershell">Import-Module C:\temp\monkey365 -Force
-</code></pre>
+<p>Once you have installed the monkey365 module on your system, you will likely want to import the module with the Import-Module cmdlet. Assuming that monkey365 is located in the <code>PSModulePath</code>, PowerShell would load monkey365 into active memory:
+<div class="highlight"><pre><span></span><code><span class="nb">Import-Module</span> <span class="n">monkey365</span>
+</code></pre></div>
+If monkey365 is not located on a <code>PSModulePath</code> path, you can use an explicit path to import:
+<div class="highlight"><pre><span></span><code><span class="nb">Import-Module</span> <span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">monkey365</span>
+</code></pre></div>
+You can also use the <code>Force</code> parameter in case you want to reimport the monkey365 module into the same session
+<div class="highlight"><pre><span></span><code><span class="nb">Import-Module</span> <span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">monkey365</span> <span class="n">-Force</span>
+</code></pre></div></p>
 
 
   
@@ -1420,7 +1480,7 @@ PS C:\Users\monkeyuser\Documents\WindowsPowerShell\Modules&gt; Pop-Location
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2023 Juan Garrido – <a href="#__consent">Change cookie settings</a>
+      Copyright &copy; 2023 <a href="https://twitter.com/tr1ana" target="blank">Juan Garrido</a>
     </div>
   
   

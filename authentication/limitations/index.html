@@ -21,7 +21,7 @@
         <link rel="next" href="../../docker/docker/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.2">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.1.2">
     
     
       
@@ -249,6 +249,54 @@
   
 
       
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../license-contributing/" class="md-tabs__link">
+      License and Contributing
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../support/" class="md-tabs__link">
+      Support
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../disclaimer/" class="md-tabs__link">
+      Disclaimer
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../sample/Monkey365.html" class="md-tabs__link">
+      Sample Report
+    </a>
+  </li>
+
+      
     </ul>
   </div>
 </nav>
@@ -325,12 +373,6 @@
       <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
       
       
-        
-          
-        
-          
-        
-          
         
           
         
@@ -783,16 +825,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#microsoft-purview-security-compliance-in-nix-environments" class="md-nav__link">
-    Microsoft purview (Security &amp; Compliance) in NIX environments
+  <a href="#sharepoint-online-in-powershell-core" class="md-nav__link">
+    SharePoint Online in PowerShell Core
+  </a>
+  
+    <nav class="md-nav" aria-label="SharePoint Online in PowerShell Core">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#change-the-authentication-flow" class="md-nav__link">
+    Change the authentication flow
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#sharepoint-online-in-nix-environments" class="md-nav__link">
-    SharePoint Online in NIX environments
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1155,8 +1203,16 @@
 
             
           
-            
-              
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
   
   
   
@@ -1167,10 +1223,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1181,10 +1238,11 @@
     </li>
   
 
-            
-          
-            
-              
+    
+      
+      
+      
+
   
   
   
@@ -1195,10 +1253,18 @@
     </li>
   
 
-            
-          
-        </ul>
-      </nav>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sample/Monkey365.html" class="md-nav__link">
+        Sample Report
+      </a>
     </li>
   
 
@@ -1230,16 +1296,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#microsoft-purview-security-compliance-in-nix-environments" class="md-nav__link">
-    Microsoft purview (Security &amp; Compliance) in NIX environments
+  <a href="#sharepoint-online-in-powershell-core" class="md-nav__link">
+    SharePoint Online in PowerShell Core
+  </a>
+  
+    <nav class="md-nav" aria-label="SharePoint Online in PowerShell Core">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#change-the-authentication-flow" class="md-nav__link">
+    Change the authentication flow
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#sharepoint-online-in-nix-environments" class="md-nav__link">
-    SharePoint Online in NIX environments
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1270,16 +1342,25 @@
 
 <h1 id="current-limitations">Current limitations</h1>
 <p>Review the following sections to learn about current limitations of Monkey365 on NIX environments.</p>
-<h2 id="microsoft-purview-security-compliance-in-nix-environments">Microsoft purview (Security &amp; Compliance) in NIX environments</h2>
-<p>In the new version of Monkey365, Security and Compliance was fully migrated from WSMAN/RemotePS to REST-based PowerShell. On the other hand, some commands were not fully migrated from Microsoft, and the company has decided to delay the deprecation of the RPS protocol until October 2023. Some CmdLets are requiring an active PowerShell PSSession because those commands doesn't return (not migrated yet) information for REST-based connections, and for that reason some commands may not work on NIX operating systems. </p>
-<h2 id="sharepoint-online-in-nix-environments">SharePoint Online in NIX environments</h2>
-<p>Monkey365 is using the <strong>SharePoint Online Management Shell</strong> ClientId when Interactive authentication flow is used. In order to give support to .NET Core, developers must set the reply URI to <strong>http://localhost</strong>, because .NET Core does not have an integrated UI. Due to <strong>SharePoint Online Management Shell</strong> is not configured to use <strong>http://localhost</strong> in the reply URI, authentication methods such as <a href="../authFlows/interactive">Interactive browser authentication</a> or <a href="../authFlows/ropc">Authentication with a username and password</a> are not supported in SharePoint Online when Monkey365 is used in Linux environments. Valid authentication methods are <a href="../authFlows/devicecode">Device Code Authentication</a> or <a href="../authFlows/sp">Certificate-based Authentication</a>.  </p>
+<h2 id="sharepoint-online-in-powershell-core">SharePoint Online in PowerShell Core</h2>
+<p>Monkey365 is using the <strong>SharePoint Online Management Shell</strong> ClientId when Interactive authentication flow is used. In order to give support to .NET Core, developers must set the reply URI to <strong>http://localhost</strong>, because .NET Core does not have an integrated UI. Due to <strong>SharePoint Online Management Shell</strong> is not configured to use <strong>http://localhost</strong> in the reply URI, authentication methods such as <a href="../authFlows/interactive">Interactive browser authentication</a> or <a href="../authFlows/ropc">Authentication with a username and password</a> are not supported in SharePoint Online when Monkey365 is executed using PowerShell Core (PowerShell 6 or later and PowerShell in NIX environments). The following options are available to avoid authentication issues:</p>
+<h3 id="change-the-authentication-flow">Change the authentication flow</h3>
+<ul>
+<li>
+<p>Change the authentication flow to <a href="../authFlows/devicecode">Device Code Authentication</a> or <a href="../authFlows/sp">Certificate-based Authentication</a>.</p>
+</li>
+<li>
+<p>Execute Monkey365 using the PowerShell V5 Default version. <span style="color:red"><em>Only valid on Windows environments</em></span></p>
+</li>
+<li>
+<p>Use the <code>-ForceMSALDesktop</code> parameter will force PowerShell 6 and higher to load .NET MSAL libraries instead of .NET core versions. <span style="color:red"><em>Only valid on Windows environments</em></span></p>
+</li>
+</ul>
 <h2 id="references">References</h2>
 <p><a href='https://learn.microsoft.com/en-us/entra/msal/dotnet/how-to/default-reply-uri' target='_blank'>https://learn.microsoft.com/en-us/entra/msal/dotnet/how-to/default-reply-uri</a></p>
 <p><a href='https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-authentication-flows#authorization-code' target='_blank'>https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-authentication-flows#authorization-code</a></p>
 <p><a href='https://learn.microsoft.com/en-us/azure/active-directory/authentication/concepts-azure-multi-factor-authentication-prompts-session-lifetime' target='_blank'>https://learn.microsoft.com/en-us/azure/active-directory/authentication/concepts-azure-multi-factor-authentication-prompts-session-lifetime</a></p>
 <p><a href='https://learn.microsoft.com/en-us/azure/active-directory/develop/reply-url' target='_blank'>https://learn.microsoft.com/en-us/azure/active-directory/develop/reply-url</a></p>
-<p><a href='https://techcommunity.microsoft.com/t5/exchange-team-blog/deprecation-of-remote-powershell-in-exchange-online-re-enabling/ba-p/3779692' target='_blank'>https://techcommunity.microsoft.com/t5/exchange-team-blog/deprecation-of-remote-powershell-in-exchange-online-re-enabling/ba-p/3779692</a></p>
 
 
   
@@ -1303,7 +1384,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2023 Juan Garrido – <a href="#__consent">Change cookie settings</a>
+      Copyright &copy; 2023 <a href="https://twitter.com/tr1ana" target="blank">Juan Garrido</a>
     </div>
   
   
