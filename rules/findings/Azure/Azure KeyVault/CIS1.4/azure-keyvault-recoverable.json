@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Azure KeyVault",
-    "menu_name":  "Storage",
-    "issue_name":  "Ensure the key vault is recoverable",
+    "serviceType":  "Azure KeyVault",
+    "serviceName":  "Storage",
+    "displayName":  "Ensure the key vault is recoverable",
     "description":  '
 					The key vault contains object keys, secrets and certificates. Accidental unavailability of a key vault can cause immediate data loss or loss of security functions (authentication, validation, verification, non-repudiation, etc.) supported by the key vault objects.
 					It is recommended the key vault be made recoverable by enabling the "Do Not Purge" and "Soft Delete" functions. This is in order to prevent loss of encrypted data including storage accounts, SQL databases, and/or dependent services provided by key vault objects (Keys, Secrets, Certificates) etc., as may happen in the case of accidental deletion by a user or from disruptive activity by a malicious user.
@@ -26,30 +26,30 @@
 					```
 	',
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/key-vault/key-vault-ovw-soft-delete"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/key-vault/key-vault-ovw-soft-delete"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "8.6"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "8.6"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_keyvault",
-    "display_path":  "az_keyvault",
     "conditions":  [
-                       "and",
-                       [
-                           "properties.enableSoftDelete",
-                           "eq",
-                           "false"
-                       ],
-                       [
-                           "properties.enablePurgeProtection",
-                           "eq",
-                           "false"
-                       ]
-                   ],
-    "id_suffix":  "azure_key_vault_recoverable_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["properties.enableSoftDelete","eq","false"],
+						["properties.enablePurgeProtection","eq","false"]
+					],
+					operator:  "or"
+				}
+			]
+		}
+	],
+    "idSuffix":  "azure_key_vault_recoverable_disabled"
 }

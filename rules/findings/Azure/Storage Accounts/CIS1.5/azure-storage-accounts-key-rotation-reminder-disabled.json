@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Storage Accounts",
-    "menu_name":  "Storage",
-    "issue_name":  "Ensure that 'Enable key rotation reminders' is enabled for each Storage Account",
+    "serviceType":  "Storage Accounts",
+    "serviceName":  "Storage",
+    "displayName":  "Ensure that 'Enable key rotation reminders' is enabled for each Storage Account",
     "description": 'Access Keys authenticate application access requests to data contained in Storage Accounts. A periodic rotation of these keys is recommended to ensure that potentially compromised keys cannot result in a long-term exploitable credential. The "Rotation Reminder" is an automatic reminder feature for a manual procedure.
 	',
     "rationale": "
@@ -24,22 +24,26 @@
 					   "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems"
                    ],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.5.0",
-                           "reference":  "3.3"
-                       }
-                   ],
+		{
+		   "name":  "CIS Microsoft Azure Foundations",
+		   "version":  "1.5.0",
+		   "reference":  "3.3"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_storage_accounts",
     "display_path":  "az_storage_accounts",
-    "conditions":  [
-                       "and",
-                       [
-                           "properties.keyPolicy.keyExpirationPeriodInDays",
-                           "eq",
-                           ""
-                       ]
-   ],
-    "id_suffix":  "storage_accounts_rotation_reminder_disabled"
+	"conditions":  [
+		{
+			statements:  [
+				{
+					conditions:  [
+						["properties.keyPolicy.keyExpirationPeriodInDays","eq",""]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "storage_accounts_rotation_reminder_disabled"
 }

@@ -1,31 +1,34 @@
 {
-    "dashboard_name":  "App Services",
-    "menu_name":  "Hosted Services",
-    "issue_name":  "Enable HTTPS-Only on Application Service",
+    "serviceType":  "App Services",
+    "serviceName":  "Hosted Services",
+    "displayName":  "Enable HTTPS-Only on Application Service",
     "description":  "Azure Web Apps allows sites to run under both HTTP and HTTPS by default. Web apps can be accessed by anyone using non-secure HTTP links by default. Non-secure HTTP requests can be restricted and all HTTP requests redirected to the secure HTTPS port. It is recommended to enforce HTTPS-only traffic. Enabling HTTPS-only traffic will redirect all non-secure HTTP request to HTTPS ports. HTTPS uses the SSL/TLS protocol to provide a secure connection, which is both encrypted and authenticated. So it is important to support HTTPS for the security benefits.",
     "rationale":  null,
     "impact":  null,
     "remediation":  null,
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "9.2"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "9.2"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_app_services",
-    "display_path":  "az_app_services",
     "conditions":  [
-                       "and",
-                       [
-                           "properties.httpsOnly",
-                           "eq",
-                           "False"
-                       ]
-                   ],
-    "id_suffix":  "app_service_httpsonly_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["properties.httpsOnly","eq","False"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "app_service_httpsonly_disabled"
 }

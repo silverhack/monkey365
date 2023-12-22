@@ -1,0 +1,11 @@
+{
+	statements: [
+		{
+			conditions : [
+				["Protocol", "eq", "*"],
+				["Protocol", "eq", "TCP"]
+			],
+			operator : 'or'
+		}
+	]
+}

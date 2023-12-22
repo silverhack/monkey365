@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Azure Virtual Machines",
-    "menu_name":  "Compute",
-    "issue_name":  "Ensure that only approved extensions are installed",
+    "serviceType":  "Azure Virtual Machines",
+    "serviceName":  "Compute",
+    "displayName":  "Ensure that only approved extensions are installed",
     "description":  "Only install organization-approved extensions on VMs.",
     "rationale":  "Azure virtual machine extensions are small applications that provide post-deployment configuration and automation tasks on Azure virtual machines. These extensions run with administrative privileges and could potentially access anything on a virtual machine. The Azure Portal and community provide several such extensions. Each organization should carefully evaluate these extensions and ensure that only those that are approved for use are actually implemented.",
     "impact":  "",
@@ -13,26 +13,29 @@
 					4. Ensure that the listed extensions are approved for use.
 	",
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/virtual-machines/windows/extensions-features",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/virtual-machines/windows/extensions-features",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "7.4"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "7.4"
+		}	
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_virtual_machines",
-    "display_path":  "az_virtual_machines",
     "conditions":  [
-                       "and",
-                       [
-                           "resources",
-                           "ne",
-                           ""
-                       ]
-    ],
-    "id_suffix":  "azure_os_allowed_extensions"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["resources","ne"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "azure_os_allowed_extensions"
 }

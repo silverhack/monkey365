@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Subscription Security",
-    "menu_name":  "Subscription",
-    "issue_name":  "Ensure that Resource Locks are set for Mission Critical Azure Resources",
+    "serviceType":  "Subscription Security",
+    "serviceName":  "Subscription",
+    "displayName":  "Ensure that Resource Locks are set for Mission Critical Azure Resources",
     "description":  "Resource Manager Locks provide a way for administrators to lock down Azure resources to prevent deletion of, or modifications to, a resource. These locks sit outside of the Role Based Access Controls (RBAC) hierarchy and, when applied, will place restrictions on the resource for all users. These locks are very useful when there is an important resource in a subscription that users should not be able to delete or change. Locks can help prevent accidental and malicious changes or deletion.",
     "rationale":  "
 					As an administrator, it may be necessary to lock a subscription, resource group, or resource to prevent other users in the organization from accidentally deleting or modifying critical resources. The lock level can be set to to CanNotDelete or ReadOnly to achieve this purpose.
@@ -17,30 +17,32 @@
 					3. Click `Add`
 					4. Give the lock a name and a description, then select the type, `CanNotDelete` or `ReadOnly` as appropriate					
 					Assign the newly created role to the appropriate user.
-',
+	',
     "references":  [
                        "https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/lock-resources?tabs=json"
-                   ],
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft 365 Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "8.5"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft 365 Foundations",
+			"version":  "1.4.0",
+			"reference":  "8.5"
+		}
+	],
+	"level": "medium",
     "tags":  [
-                 "Microsoft 365 CIS benchmark 1.4.0"
-             ],
+		"Microsoft 365 CIS benchmark 1.4.0"
+	],
     "path":  "az_locks",
-    "display_path":  "az_locks",
     "conditions":  [
-                       "and",
-                       [
-                           "locks.Count",
-                           "eq",
-                           "0"
-                       ]
-					   
-   ],
-    "id_suffix":  "azure_subscription_missing_custom_lock_role"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["locks.Count","eq","0"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "azure_subscription_missing_custom_lock_role"
 }

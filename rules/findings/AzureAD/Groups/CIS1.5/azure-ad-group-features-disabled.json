@@ -1,40 +1,43 @@
 {
-    "dashboard_name":  "Groups",
-    "menu_name":  "Azure AD",
-    "issue_name":  "Ensure that 'Restrict user ability to access groups features in the Access Pane' is Set to 'Yes'",
+    "serviceType":  "Groups",
+    "serviceName":  "Microsoft Entra ID",
+    "displayName":  "Ensure that 'Restrict user ability to access groups features in the Access Pane' is Set to 'Yes'",
     "description":  "Restricts group creation to administrators with permissions only.",
-    "rationale":  "Self-service group management enables users to create and manage security groups or Office 365 groups in Azure Active Directory (Azure AD). Unless a business requires this day-to-day delegation for some users, self-service group management should be disabled.",
+    "rationale":  "Self-service group management enables users to create and manage security groups or Office 365 groups in Microsoft Entra ID (Azure Active Directory). Unless a business requires this day-to-day delegation for some users, self-service group management should be disabled.",
     "impact":  "Setting to `Yes` could create administrative overhead by customers seeking certain group memberships that will have to be manually managed by administrators with appropriate permissions.",
     "remediation":  "
 					###### From Azure Console
-					1. Go to `Azure Active Directory`
+					1. Go to `Microsoft Entra ID`
 					2. Go to `Groups`
 					3. Go to `General`
 					4. Ensure that `Restrict user ability to access groups features in the Access Pane` is set to `Yes`
 
 	",
     "references":  [
-                       "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-self-service-management",
-                       "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
-                       "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems"
-                   ],
+		"https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-self-service-management",
+		"https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+		"https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.5.0",
-                           "reference":  "1.18"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.5.0",
+			"reference":  "1.18"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "aad_directory_properties",
-    "display_path":  "aad_directory_properties",
     "conditions":  [
-                       "and",
-                       [
-                           "groupsInAccessPanelEnabled",
-                           "eq",
-                           "True"
-                       ]
-                   ],
-    "id_suffix":  "aad_group_features_enabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["groupsInAccessPanelEnabled","eq","True"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "aad_group_features_enabled"
 }

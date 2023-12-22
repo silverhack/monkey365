@@ -1,0 +1,21 @@
+{
+	statements: [
+		{
+			conditions : [
+				["ClaimValue", "eq", "Application.ReadWrite.All"],
+				["ClaimValue", "eq", "Directory.ReadWrite.All"],
+				["ClaimValue", "eq", "Domain.ReadWrite.All"],
+				["ClaimValue", "eq", "Member.Read.Hidden"],
+				["ClaimValue", "eq", "User.ReadWrite.All"],
+				["ClaimValue", "eq", "AppRoleAssignment.ReadWrite.All"],
+				["ClaimValue", "eq", "RoleManagement.ReadWrite.Directory"],
+				["ClaimValue", "eq", "full_access_as_app"],
+				["ClaimValue", "eq", "Mail.Send"],
+				["ClaimValue", "eq", "Sites.ReadWrite.All"],
+				["ClaimValue", "eq", "Files.ReadWrite.All"],
+				["ClaimValue", "eq", "Mail.ReadWrite"]
+			],
+			operator : 'or'
+		}
+	]
+}

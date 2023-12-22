@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Subscription Security",
-    "menu_name":  "Subscription",
-    "issue_name":  "Ensure Custom Role is assigned for Administering Resource Locks",
+    "serviceType":  "Subscription Security",
+    "serviceName":  "Subscription",
+    "displayName":  "Ensure Custom Role is assigned for Administering Resource Locks",
     "description":  "Resource locking is a powerful protection mechanism that can prevent inadvertent modification/deletion of resources within Azure subscriptions/Resource Groups and is a recommended NIST configuration.",
     "rationale":  "Given the resource lock functionality is outside of standard Role Based Access Control(RBAC), it would be prudent to create a resource lock administrator role to prevent inadvertent unlocking of resources.",
     "impact":  "By adding this role is you can have specific permissions granted for managing just resource locks rather than needing to provide the wide owner or contributor role reducing the risk of the user being able to do unintentional damage.",
@@ -42,48 +42,46 @@
 					New-AzRoleDefinition -Role $role
 					Get-AzureRmRoleDefinition "Resource Lock Administrator"
 					```
-',
+	',
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/role-based-access-control/custom-roles",
-					   "https://docs.microsoft.com/en-us/azure/role-based-access-control/check-access",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-7-follow-just-enough-administration-least-privilege-principle",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-5-automate-entitlement-management",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
-
-                   ],
+		"https://docs.microsoft.com/en-us/azure/role-based-access-control/custom-roles",
+		"https://docs.microsoft.com/en-us/azure/role-based-access-control/check-access",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-7-follow-just-enough-administration-least-privilege-principle",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-5-automate-entitlement-management",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft 365 Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "1.22"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft 365 Foundations",
+			"version":  "1.4.0",
+			"reference":  "1.22"
+		}
+	],
+	"level": "medium",
     "tags":  [
-                 "Microsoft 365 CIS benchmark 1.22"
-             ],
+		"Microsoft 365 CIS benchmark 1.22"
+	],
     "path":  "az_role_definitions",
-    "display_path":  "az_role_definitions",
     "conditions":  [
-                       "and",
-                       [
-                           "properties.type",
-                           "eq",
-                           "CustomRole"
-                       ],
-					   [
-                           "properties.permissions.actions",
-                           "match",
-                           "Microsoft.Authorization/locks/*"
-                       ]
-					   
-                   ],
+		{
+			statements:  [
+				{
+					conditions:  [
+						["properties.type","eq","CustomRole"],
+						["properties.permissions.actions","match","Microsoft.Authorization/locks/*"]
+					],
+					operator: "and"
+				}
+			]
+		}
+	],
 	"shouldExist":  "true",
     "returnObject":  {
-                         "Missing Role":  "Custom Resource Lock Administrator",
-                         "Status":  "DoesNotExists"
-                     },
-    "id_suffix":  "azure_subscription_missing_custom_lock_role"
+		"Missing Role":  "Custom Resource Lock Administrator",
+		"Status":  "DoesNotExists"
+	},
+    "idSuffix":  "azure_subscription_missing_custom_lock_role"
 }

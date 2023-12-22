@@ -1,38 +1,38 @@
 {
-    "dashboard_name":  "PostgreSQL Configuration",
-    "menu_name":  "Database Configuration",
-    "issue_name":  "Ensure server parameter 'log_retention_days' is greater than 3 days for PostgreSQL Database Server",
+    "serviceType":  "PostgreSQL Configuration",
+    "serviceName":  "Database Configuration",
+    "displayName":  "Ensure server parameter 'log_retention_days' is greater than 3 days for PostgreSQL Database Server",
     "description":  "Enable `log_retention_days` on PostgreSQL Servers.",
     "rationale":  "Enabling `log_retention_days` helps PostgreSQL Database to `Sets number of days a log file is retained` which in turn generates query and error logs. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
     "impact":  null,
     "remediation":  null,
     "references":  [
-                       "https://learn.microsoft.com/en-us/azure/postgresql/single-server/how-to-configure-server-parameters-using-portal",
-					   "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver",
-					   "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v2-logging-threat-detection#lt-6-configure-log-storage-retention"
-                   ],
+		"https://learn.microsoft.com/en-us/azure/postgresql/single-server/how-to-configure-server-parameters-using-portal",
+		"https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver",
+		"https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v2-logging-threat-detection#lt-6-configure-log-storage-retention"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "4.3.6"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "4.3.6"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_postgresql_servers",
-    "display_path":  "configuration",
     "conditions":  [
-                       "and",
-                       [
-                           "parameterName",
-                           "eq",
-                           "log_retention_days"
-                       ],
-                       [
-                           "parameterValue",
-                           "le",
-                           "3"
-                       ]
+		{
+			statements:  [
+				{
+					conditions:  [
+						["parameterName","eq","log_retention_days"],
+						["parameterValue","le","3"]
+					],
+					operator:  "and"
+				}
+			]
+		}
 	],
-    "id_suffix":  "postgresql_log_retention_days_minimum_value"
+    "idSuffix":  "postgresql_log_retention_days_minimum_value"
 }

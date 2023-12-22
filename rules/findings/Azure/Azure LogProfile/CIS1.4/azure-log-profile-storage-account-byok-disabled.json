@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Azure Log Profile",
-    "menu_name":  "Subscription",
-    "issue_name":  "Ensure the storage account containing the container with activity logs is encrypted using own key",
+    "serviceType":  "Azure Log Profile",
+    "serviceName":  "Subscription",
+    "displayName":  "Ensure the storage account containing the container with activity logs is encrypted using own key",
     "description":  "The storage account with the activity log export container is configured to use BYOK (Use Your Own Key).",
     "rationale":  "Configuring the storage account with the activity log export container to use BYOK (Use Your Own Key) provides additional confidentiality controls on log data as a given user must have read permission on the corresponding storage account and must be granted decrypt permission by the CMK.",
     "impact":  null,
@@ -19,25 +19,28 @@
 
 	',
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-logs-overview"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-logs-overview"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "5.1.4"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "5.1.4"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_log_profile",
-    "display_path":  "az_log_profile",
     "conditions":  [
-                       "and",
-                       [
-                           "storageAccountUsingOwnKey",
-                           "eq",
-                           "false"
-                       ]
-                   ],
-    "id_suffix":  "azure_log_profile_storage_byok_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["storageAccountUsingOwnKey","eq","false"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "azure_log_profile_storage_byok_disabled"
 }

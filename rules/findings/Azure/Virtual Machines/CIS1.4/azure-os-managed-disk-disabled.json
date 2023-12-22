@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Azure Virtual Machines",
-    "menu_name":  "Compute",
-    "issue_name":  "Ensure Virtual Machines are utilizing Managed Disks",
+    "serviceType":  "Azure Virtual Machines",
+    "serviceName":  "Compute",
+    "displayName":  "Ensure Virtual Machines are utilizing Managed Disks",
     "description":  "
 					Migrate BLOB based VHD's to Managed Disks on Virtual Machines to exploit the default features of this configuration. The features include:
 					1. Default Disk Encryption
@@ -28,26 +28,29 @@
 
 	",
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-overview",
-                       "https://docs.microsoft.com/en-us/azure/governance/policy/overview"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-overview",
+		"https://docs.microsoft.com/en-us/azure/governance/policy/overview"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "7.1"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "7.1"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_virtual_machines",
-    "display_path":  "az_virtual_machines",
     "conditions":  [
-                       "and",
-                       [
-                           "os_managed_disk",
-                           "ne",
-                           "true"
-                       ]
-    ],
-    "id_suffix":  "azure_os_managed_disk_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["osDisk.isManagedDisk","ne","true"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "azure_os_managed_disk_disabled"
 }

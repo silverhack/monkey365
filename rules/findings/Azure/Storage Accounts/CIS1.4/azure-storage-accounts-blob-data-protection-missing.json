@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Storage Accounts",
-    "menu_name":  "Storage",
-    "issue_name":  "Ensure soft delete is enabled for Azure Storage",
+    "serviceType":  "Storage Accounts",
+    "serviceName":  "Storage",
+    "displayName":  "Ensure soft delete is enabled for Azure Storage",
     "description":  "The Azure Storage blobs contain data like ePHI, Financial, secret or personal. Erroneously modified or deleted accidentally by an application or other storage account user cause data loss or data unavailability.  
 					It is recommended the Azure Storage be made recoverable by enabling **soft delete** configuration. This is to save and recover data when blobs or blob snapshots are deleted.
 	",
@@ -21,26 +21,28 @@
 
 	',
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-soft-delete"
-
-                   ],
+		"https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-soft-delete"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "3.8"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "3.8"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_storage_accounts",
-    "display_path":  "az_storage_accounts",
     "conditions":  [
-                       "and",
-                       [
-                           "dataProtection.properties.deleteRetentionPolicy.enabled",
-                           "eq",
-                           "False"
-                       ]
-                   ],
-    "id_suffix":  "storage_accounts_missing_blob_data_protection"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["dataProtection.properties.deleteRetentionPolicy.enabled","eq","False"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "storage_accounts_missing_blob_data_protection"
 }

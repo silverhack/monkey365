@@ -1,0 +1,46 @@
+{
+    "serviceType":  "Exchange Online",
+    "serviceName":  "Microsoft 365",
+    "displayName":  "Ensure the Advanced Threat Protection Safe Attachments policy is enabled",
+    "description":  "Enabling the Advanced Threat Protection Safe Attachments policy extends malware protections to include routing all messages and attachments without a known malware signature to a special hypervisor environment. In that environment, a behavior analysis is performed using a variety of machine learning and analysis techniques to detect malicious intent.",
+    "rationale":  "This policy increases the likelihood of identifying and stopping previously unknown malware.",
+    "impact":  "Delivery of email with attachments may be delayed while scanning is occurring.",
+    "remediation":  '
+					###### To enable the ATP Safe Attachments policy, use the Microsoft 365 Admin Center
+					1. Click `Security` to open the `Security portal`.
+					2. Navigate to `Threat management`, then `Policy`, and select `Safe Attachments`.
+					3. Click `+`.
+					4. Enter Policy Name and Description followed by the Users, Groups, or Domains it will 
+					apply to.
+					5. Select `Block`, `Monitor`, `Replace` or `Dynamic Delivery` based on your organizational policies.
+					6. Select `Next`.
+					7. Select `Submit` followed by `Done`.
+	',
+    "references":  [
+		"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-attachments?view=o365-worldwide"
+	],
+    "compliance":  [
+		{
+			"name":  "CIS Microsoft 365 Foundations",
+			"version":  "1.4.0",
+			"reference":  "2.4"
+		}
+	],
+	"level": "medium",
+    "tags":  [
+		"Microsoft 365 CIS benchmark 4.8"
+	],
+    "path":  "o365_exo_safe_attachment_policy",
+    "conditions":  [
+		{
+			statements: [
+				{
+					conditions : [
+						["Enable","eq","false"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "o365_exo_safe_attachment_policy_disabled"
+}

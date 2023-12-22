@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "SQL Server",
-    "menu_name":  "Databases",
-    "issue_name":  "Ensure SQL server's TDE protector is encrypted with Customer-managed key",
+    "serviceType":  "SQL Server",
+    "serviceName":  "Databases",
+    "displayName":  "Ensure SQL server's TDE protector is encrypted with Customer-managed key",
     "description":  '
 					TDE with Customer-managed key support provides increased transparency and control over the TDE Protector, increased security with an HSM-backed external service, and promotion of separation of duties.
 					With TDE, data is encrypted at rest with a symmetric key (called the database encryption key) stored in the database or data warehouse distribution. To protect this data encryption key (DEK) in the past, only a certificate that the Azure SQL Service managed could be used. Now, with Customer-managed key support for TDE, the DEK can be protected with an asymmetric key that is stored in the Key Vault. Key Vault is a highly available and scalable cloud-based key store which offers central key management, leverages FIPS 140-2 Level 2 validated hardware security modules (HSMs), and allows separation of management of keys and data, for additional security.
@@ -19,40 +19,32 @@
 	",
     "remediation":  null,
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/azure-sql/database/transparent-data-encryption-byok-overview?view=azuresql"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/azure-sql/database/transparent-data-encryption-byok-overview?view=azuresql"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "4.6"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "4.6"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_sql_servers",
-    "display_path":  "az_sql_servers",
     "conditions":  [
-                       "and",
-                       [
-                           "tdeSettings.protectorMode",
-                           "eq",
-                           "ServiceManaged"
-                       ],
-                       [
-                           "tdeSettings.properties.keyName",
-                           "eq",
-                           "ServiceManaged"
-                       ],
-                       [
-                           "tdeSettings.properties.keyType",
-                           "eq",
-                           "ServiceManaged"
-                       ],
-                       [
-                           "tdeSettings.protectorUri",
-                           "eq",
-                           ""
-                       ]
-                   ],
-    "id_suffix":  "sql_server_tdp_own_key_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["tdeSettings.protectorMode","eq","ServiceManaged"],
+						["tdeSettings.properties.keyName","eq","ServiceManaged"],
+						["tdeSettings.properties.keyType","eq","ServiceManaged"],
+						["tdeSettings.protectorUri","eq",""]
+					],
+					operator:  "and"
+				}
+			]
+		}
+	],
+    "idSuffix":  "sql_server_tdp_own_key_disabled"
 }

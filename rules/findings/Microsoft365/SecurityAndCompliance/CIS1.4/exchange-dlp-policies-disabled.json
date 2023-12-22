@@ -1,0 +1,41 @@
+{
+    "serviceType":  "Security and Compliance",
+    "serviceName":  "Microsoft 365",
+    "displayName":  "Ensure DLP policies are enabled",
+    "description":  "Enabling Data Loss Prevention (DLP) policies allows Exchange Online and SharePoint Online content to be scanned for specific types of data like social security numbers, credit card numbers, or passwords.",
+    "rationale":  null,
+    "impact":  null,
+    "remediation":  null,
+    "references":  [
+		"https://docs.microsoft.com/en-us/microsoft-365/compliance/dlp-learn-about-dlp?view=o365-worldwide"
+	],
+    "compliance":  [
+		{
+			"name":  "CIS Microsoft 365 Foundations",
+			"version":  "1.4.0",
+			"reference":  "3.4"
+		}
+	],
+	"level": "medium",
+    "tags":  [
+		"Microsoft 365 CIS benchmark 3.4"
+	],
+    "path":  "o365_secomp_dlp_compliance_info",
+    "conditions":  [
+		{
+			statements: [
+				{
+					conditions : [
+						["isEnabled","eq","True"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "o365_exo_dlp_disabled",
+    "shouldExist":  "true",
+    "returnObject":  {
+		"Feature":  "Enabled DLP Policies",
+		"Status":  "DoesNotExists"
+	}
+}

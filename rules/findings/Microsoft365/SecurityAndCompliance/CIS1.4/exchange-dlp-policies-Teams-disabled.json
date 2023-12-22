@@ -1,0 +1,43 @@
+{
+    "serviceType":  "Security and Compliance",
+    "serviceName":  "Microsoft 365",
+    "displayName":  "Ensure DLP policies are enabled for Microsoft Teams",
+    "description":  "Enabling Data Loss Prevention (DLP) policies for Microsoft Teams, blocks sensitive content when shared in teams or channels. Content to be scanned for specific types of data like social security numbers, credit card numbers, or passwords.",
+    "rationale":  "Enabling DLP policies alerts users and administrators that specific types of data should not be exposed, helping to protect the data from accidental exposure.",
+    "impact":  "Enabling a Teams DLP policy will allow sensitive data in Teams channels or chat messages to be detected or blocked.",
+    "remediation":  null,
+    "references":  [
+		"https://docs.microsoft.com/en-us/microsoft-365/compliance/dlp-microsoft-teams?view=o365-worldwide"
+	],
+    "compliance":  [
+		{
+			"name":  "CIS Microsoft 365 Foundations",
+			"version":  "1.4.0",
+			"reference":  "3.5"
+		}
+	],
+	"level": "medium",
+    "tags":  [
+		"Microsoft 365 CIS benchmark 3.5"
+	],
+    "path":  "o365_secomp_dlp_compliance_info",
+    "conditions":  [
+		{
+			statements:  [
+				{
+					conditions:  [
+						["isEnabled","eq","True"],
+						["Policy.TeamsLocation.Name","eq","All"]
+					],
+					operator:  "and"
+				}
+			]
+		}
+	],
+    "idSuffix":  "o365_exo_dlp_Teams_disabled",
+    "shouldExist":  "true",
+    "returnObject":  {
+		"Feature":  "Enabled DLP Policies For Teams",
+		"Status":  "DoesNotExists"
+	}
+}

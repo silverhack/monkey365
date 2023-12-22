@@ -1,5 +1,9 @@
 {
 	"about": "This ruleset contains a collection of rules for Azure based on CIS benchmark. The rules are used as a mechanism to evaluate the configuration of Azure resources and to determine whether controls within a standard are being adhered to. Rules are also divided into categories and subcategories according to the rule's type. This will ensures that Azure cloud will meet the industry standards.",
+	"framework": {
+		"name" : "CIS Microsoft Azure Foundations",
+		"version" : "1.5.0"
+	},
 	"rules": {
 		"aad-security-defaults-disabled.json": [
 			{
@@ -17,7 +21,7 @@
 		"aad-iam-privileged-users-disabled-mfa.json": [
 			{
 				"args": [
-					"conditions/aad-privileged-roles.json"
+					"aad-privileged-roles.json"
 				],
 				"enabled": true,
 				"level": "high",
@@ -1496,6 +1500,19 @@
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "1.5.0",
 						"reference": "7.3"
+					}
+				]
+			}
+		],
+		"azure-vm-approved-extensions.json": [
+			{
+				"enabled": true,
+				"level": "low",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "1.5.0",
+						"reference": "7.4"
 					}
 				]
 			}

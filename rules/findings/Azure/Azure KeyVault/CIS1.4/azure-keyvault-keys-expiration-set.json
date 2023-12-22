@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Azure KeyVault",
-    "menu_name":  "Storage",
-    "issue_name":  "Ensure that the expiration date is set on all keys",
+    "serviceType":  "Azure KeyVault",
+    "serviceName":  "Storage",
+    "displayName":  "Ensure that the expiration date is set on all keys",
     "description":  "Ensure that all keys in Azure Key Vault have an expiration time set.",
     "rationale":  "Azure Key Vault enables users to store and use cryptographic keys within the Microsoft Azure environment. The `exp` (expiration time) attribute identifies the expiration time on or after which the key MUST NOT be used for a cryptographic operation. By default, keys never expire. It is thus recommended that keys be rotated in the key vault and set an explicit expiration time for all keys. This ensures that the keys cannot be used beyond their assigned lifetimes.",
     "impact":  "Keys cannot be used beyond their assigned expiration times respectively. Keys need to be rotated periodically wherever they are used.",
@@ -13,29 +13,30 @@
 					4. Set an appropriate **expiration date** on all keys.
 	",
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "8.1"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "8.1"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_keyvault",
-    "display_path":  "az_keyvault",
     "conditions":  [
-                       "and",
-                       [
-                           "objects.keys",
-                           "eq"
-                       ],
-					   [
-                           "objects.keys.attributes.exp",
-                           "eq",
-                           ""
-                       ]
-                   ],
-    "id_suffix":  "azure_key_vault_keys_notexpire"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["objects.keys","ne"],
+						["objects.keys.attributes.exp","eq",""]
+					],
+					operator:  "and"
+				}
+			]
+		}
+	],
+    "idSuffix":  "azure_key_vault_keys_notexpire"
 }

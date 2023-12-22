@@ -1,0 +1,73 @@
+{
+    "serviceType":  "Microsoft Teams",
+    "serviceName":  "Microsoft 365",
+    "displayName":  "Ensure external file sharing in Teams is enabled for only approved cloud storage services",
+    "description":  "Microsoft Teams enables collaboration via file sharing. This file sharing is conducted within Teams, using SharePoint Online, by default; however, third-party cloud services are allowed as well.",
+    "rationale":  "Ensuring that only authorized cloud storage providers are accessible from Teams will help to dissuade the use of non-approved storage providers.",
+    "impact":  "Impact associated with this change is highly dependent upon current practices in the tenant. If users do not use other storage providers, then minimal impact is likely. However, if users do regularly utilize providers outside of the tenant this will affect their ability to continue to do so.",
+    "remediation":  "
+						###### To Set external file sharing in Teams, use the Microsoft 365 Admin Center:
+						1. Under `Admin Centers` choose `Teams`.
+						2. Expand `Org Wide Settings` select `Teams settings`.
+						3. Set each cloud storage service under Files to `On` if it is authorized.
+						
+						**To verify external file sharing in Teams you may also utilize Powershell. Ensure that the Skype for business online, Windows Powershell module and Microsoft Teams module are both installed.**
+						
+						1. Install the Powershell module for teams. Skype module will need downloaded from Microsoft
+						
+						```Powershell
+						Install-Module MicrosoftTeams -Scope CurrentUser
+						Import-Module SkypeOnlineConnector
+						```
+						2. Connect to your tenant as a Global Administrator, methods will differ based on whether 2FA is enabled. See the following article for more information:
+						https://docs.microsoft.com/en-us/office365/enterprise/powershell/manage-skype-for-business-online-with-office-365-powershell
+						3. Run the following command to verify which cloud storage providers are enabled for Teams
+						```Powershell
+						Get-CsTeamsClientConfiguration | select allow*
+						```
+						4. Run the following Powershell command to disable external providers that are not authorized. (the example disables ShareFile, GoogleDrive, Box, and DropBox)
+						```Powershell
+						Set-CsTeamsClientConfiguration -AllowGoogleDrive $false `
+													   -AllowShareFile $false `
+													   -AllowBox $false `
+													   -AllowDropBox $false `
+													   -AllowEgnyte $false
+						```
+						5. You may verify this worked by running the following Powershell command again.
+						```Powershell
+						Get-CsTeamsClientConfiguration | select allow*
+						```
+	",
+    "references":  [
+		"https://docs.microsoft.com/en-us/powershell/module/skype/set-csteamsclientconfiguration?view=skype-ps"
+	],
+    "compliance":  [
+		{
+			"name":  "CIS Microsoft 365 Foundations",
+			"version":  "1.4.0",
+			"reference":  "3.7"
+		}
+	],
+	"level": "medium",
+    "tags":  [
+		"Microsoft 365 CIS benchmark 3.7"
+	],
+    "path":  "o365_teams_client_settings",
+    "conditions":  [
+		{
+			statements: [
+				{
+					conditions : [
+						["AllowDropBox","eq","True"],
+						["AllowBox","eq","True"],
+						["AllowGoogleDrive","eq","True"],
+						["AllowShareFile","eq","True"],
+						["AllowEgnyte","eq","True"]
+					],
+					operator:  "or"
+				}
+			]
+		}
+	],
+    "idSuffix":  "o365_teams_external_sharing_allowed"
+}

@@ -1,0 +1,46 @@
+{
+    "serviceType":  "SharePoint Online",
+    "serviceName":  "Microsoft 365",
+    "displayName":  "Ensure Office 365 SharePoint infected files are disallowed for download",
+    "description":  "Office 365 ATP for SharePoint, OneDrive, and Microsoft Teams protects your organization from inadvertently sharing malicious files. When an infected file is detected, that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization\u0027s security team.",
+    "rationale":  "Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams protects your organization from inadvertently sharing malicious files. When an infected file is detected, that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization's security team.",    "impact":  null,
+    "impact":"The only potential impact associated with implementation of this setting is potential inconvenience associated with the small percentage of false positive detections that may occur.",
+	"remediation":  '
+					###### To set O365 SharePoint to disallow download of infected files, use Powershell:
+					1. Connect using `Connect-SPOService`, you will need to enter the URL for your Sharepoint Online admin page https://*-admin.sharepoint.com as well as a Global Admin account.
+					2. Run the following Powershell command to set the value to True
+					```Powershell
+					Set-SPOTenant –DisallowInfectedFileDownload $true
+					```
+					3. After several minutes run the following to verify the value for `DisallowInfectedFileDownload` has been set to True.
+					```Powershell
+					Get-SPOTenant | Select-Object DisallowInfectedFileDownload
+					```
+	',
+    "references":  [
+		"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/turn-on-atp-for-spo-odb-and-teams",
+		"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/virus-detection-in-spo?view=o365-worldwide"
+	],
+    "compliance":  [
+		{
+			"name":  "CIS Microsoft 365 Foundations",
+			"version":  "1.4.0",
+			"reference":  "2.5"
+		}
+	],
+	"level": "medium",
+    "tags":  null,
+    "path":  "o365_spo_tenant_admin_details",
+    "conditions":  [
+		{
+			statements:  [
+				{
+					conditions:  [
+						["DisallowInfectedFileDownload","eq","false"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "o365_spo_infected_files_allowed_download"
+}

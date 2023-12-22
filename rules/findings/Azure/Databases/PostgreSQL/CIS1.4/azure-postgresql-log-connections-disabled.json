@@ -1,36 +1,36 @@
 {
-    "dashboard_name":  "PostgreSQL Configuration",
-    "menu_name":  "Database Configuration",
-    "issue_name":  "Enable log_connections on PostgreSQL Servers",
+    "serviceType":  "PostgreSQL Configuration",
+    "serviceName":  "Database Configuration",
+    "displayName":  "Enable log_connections on PostgreSQL Servers",
     "description":  "Enabling log_connections helps PostgreSQL Database to log attempted connection to the server, as well as successful completion of client authentication. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
     "rationale":  null,
     "impact":  null,
     "remediation":  null,
     "references":  [
-                       "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
-                   ],
+		"https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "4.3.3"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "4.3.3"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_postgresql_servers",
-    "display_path":  "configuration",
     "conditions":  [
-                       "and",
-                       [
-                           "parameterName",
-                           "eq",
-                           "log_connections"
-                       ],
-                       [
-                           "parameterName",
-                           "eq",
-                           "off"
-                       ]
-                   ],
-    "id_suffix":  "postgresql_log_connections_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["parameterName","eq","log_connections"],
+						["parameterName","eq","off"]
+					],
+					operator:  "and"
+				}
+			]
+		}
+	],
+    "idSuffix":  "postgresql_log_connections_disabled"
 }

@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Storage Accounts",
-    "menu_name":  "Storage",
-    "issue_name":  "Storage account access from all networks",
+    "serviceType":  "Storage Accounts",
+    "serviceName":  "Storage",
+    "displayName":  "Storage account access from all networks",
     "description":  "Azure Storage provides a layered security model. This model enables administrators to secure storage accounts to a specific subset of networks. An administrator can limit access to your storage account to requests originating from specified IP addresses, IP ranges or from a list of subnets in Azure Virtual Networks.",
     "rationale":  "Storage accounts should be configured to deny access to traffic from all networks (including internet traffic). Access can be granted to traffic from specific Azure Virtual networks, allowing a secure network boundary for specific applications to be built. Access can also be granted to public internet IP address ranges, to enable connections from specific internet or on-premises clients. When network rules are configured, only applications from allowed networks can access a storage account. When calling from an allowed network, applications continue to require proper authorization (a valid access key or SAS token) to access the storage account.",
     "impact":  null,
@@ -14,27 +14,30 @@
 					5. Click Save to apply your changes
 	',
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "3.6"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "3.6"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_storage_accounts",
-    "display_path":  "az_storage_accounts",
     "conditions":  [
-                       "and",
-                       [
-                           "AllowAccessFromAllNetworks",
-                           "eq",
-                           "True"
-                       ]
-                   ],
-    "id_suffix":  "storage_accounts_all_networks"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["AllowAccessFromAllNetworks","eq","True"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "storage_accounts_all_networks"
 }

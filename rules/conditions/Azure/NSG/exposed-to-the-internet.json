@@ -1,0 +1,21 @@
+{
+	operator: 'and',
+	statements: [
+		{
+			conditions : [
+				["direction", "eq", "Inbound"],
+				["Access", "eq", "Allow"]
+			],
+			operator : 'and'
+		},
+		{
+			conditions : [
+				[ "SourceAddressPrefix", "eq", "*" ],
+				[ "SourceAddressPrefix", "eq", "Internet" ],
+				[ "SourceAddressPrefixes", "eq", "*" ],
+				[ "SourceAddressPrefixes", "eq", "Internet" ]
+			],
+			operator : 'or'
+		}		
+	]
+}

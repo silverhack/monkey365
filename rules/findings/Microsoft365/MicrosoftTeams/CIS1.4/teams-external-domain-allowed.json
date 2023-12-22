@@ -1,0 +1,45 @@
+{
+    "serviceType":  "Microsoft Teams",
+    "serviceName":  "Microsoft 365",
+    "displayName":  "Ensure external domains are not allowed in Skype or Teams",
+    "description":  "Disable the ability of your users to communicate via Skype or Teams with users outside your organization.",
+    "rationale":  "You should not allow your users to communicate with Skype or Teams users outside your organization. While there are legitimate, productivity-improving scenarios for this, it also represents a potential security threat because those external users will be able to interact with your users over Skype for Business or Teams. Attackers may be able to pretend to be someone your user knows and then send malicious links or attachments, resulting in an account breach or leaked information.",
+    "impact":  "Impact associated with this change is highly dependent upon current practices in the tenant. If users do not regularly communicate with external parties using Skype or Teams channels, then minimal impact is likely. However, if users do regularly utilize Teams and Skype for client communication, potentially significant impacts could occur, and users should be contacts, and if necessary, alternate mechanisms to continue this communication should be identified prior to disabling external access to Teams and Skype.",
+    "remediation":  "
+						###### To disable Skype forBusiness and Teams access with external users, use the Microsoft 365 Admin Center
+						1. Under `Admin Centers` choose `Teams`.
+						2. Expand `Org Wide Settings` then select `External Access`.
+						3. Set `Users can communicate with Skype for Business and Teams users` to `Off`.
+						4. Set `Skype for Business users can communicate with Skype users` to `Off`.
+	",
+    "references":  [
+		"https://docs.microsoft.com/en-us/microsoftteams/teams-skype-interop",
+		"https://docs.microsoft.com/en-us/skypeforbusiness/set-up-skype-for-business-online/allow-users-to-contact-external-skype-for-business-users"
+	],
+    "compliance":  [
+		{
+			"name":  "CIS Microsoft 365 Foundations",
+			"version":  "1.4.0",
+			"reference":  "3.3"
+		}
+	],
+	"level": "medium",
+    "tags":  [
+		"Microsoft 365 CIS benchmark 3.3"
+	],
+    "path":  "o365_teams_skype_federation_settings",
+    "conditions":  [
+		{
+			statements: [
+				{
+					conditions : [
+						["AllowFederatedUsers","eq","True"],
+						["AllowPublicUsers","ne","True"]
+					],
+					operator:  "or"
+				}
+			]
+		}
+	],
+    "idSuffix":  "o365_skype_external_allowed"
+}

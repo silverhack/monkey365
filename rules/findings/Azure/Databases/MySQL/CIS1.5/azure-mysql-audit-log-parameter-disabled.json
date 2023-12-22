@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "MySQL Configuration",
-    "menu_name":  "Database Configuration",
-    "issue_name":  "Ensure server parameter 'audit_log_enabled' is set to 'ON' for MySQL Database Server",
+    "serviceType":  "MySQL Configuration",
+    "serviceName":  "Database Configuration",
+    "displayName":  "Ensure server parameter 'audit_log_enabled' is set to 'ON' for MySQL Database Server",
     "description":  "Enable audit_log_enabled on MySQL Servers.",
     "rationale":  '
 		Enabling audit_log_enabled helps MySQL Database to log items such as connection attempts to the server, DDL/DML access, and more. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.
@@ -10,30 +10,30 @@
 	",
     "remediation":  null,
     "references":  [
-                       "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
-                   ],
+		"https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.5.0",
-                           "reference":  "4.4.3"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.5.0",
+			"reference":  "4.4.3"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_mysql_servers",
-    "display_path":  "configuration",
     "conditions":  [
-                       "and",
-                       [
-                           "parameterName",
-                           "eq",
-                           "audit_log_enabled"
-                       ],
-                       [
-                           "parameterValue",
-                           "ne",
-                           "off"
-                       ]
-                   ],
-    "id_suffix":  "mysql_audit_log_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["parameterName","eq","audit_log_enabled"],
+						["parameterValue","ne","off"]
+					],
+					operator:  "and"
+				}
+			]
+		}
+	],
+    "idSuffix":  "mysql_audit_log_disabled"
 }

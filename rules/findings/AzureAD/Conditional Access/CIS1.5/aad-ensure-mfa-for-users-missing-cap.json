@@ -1,93 +1,65 @@
 {
-    "dashboard_name":  "Conditional Access",
-    "menu_name":  "Azure AD",
-    "issue_name":  "Ensure that A Multi-factor Authentication Policy Exists for All Users",
+    "serviceType":  "Conditional Access",
+    "serviceName":  "Microsoft Entra ID",
+    "displayName":  "Ensure that A Multi-factor Authentication Policy Exists for All Users",
     "description":  "For designated users, they will be prompted to use their multi-factor authentication (MFA) process on logins.
 	",
     "rationale":  'Enabling multi-factor authentication is a recommended setting to limit the potential of accounts being compromised and limiting access to authenticated personnel.
 	',
     "impact":  "
-		There is an increased cost, as Conditional Access policies require Azure AD Premium. Similarly, this may require additional overhead to maintain if users lose access to their MFA.
+		There is an increased cost, as Conditional Access policies require Microsoft Entra ID Premium. Similarly, this may require additional overhead to maintain if users lose access to their MFA.
 	",
     "remediation":  "
 					###### From Azure Console
-					1. From Azure Home open the Portal Menu in top left, and select Azure Active Directory
+					1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID
 					2. Scroll down in the menu on the left, and select `Security`
 					3. Select on the left side `Conditional Access`
 					4. Click the `+ New policy`
 	",
     "references":  [
-                       "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa",
-					   "https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access",
-					   "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/troubleshoot-conditional-access-what-if",
-					   "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/plan-conditional-access",
-					   "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-7-restrict-resource-access-based-on--conditions"
-                   ],
+		"https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa",
+		"https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access",
+		"https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/troubleshoot-conditional-access-what-if",
+		"https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/plan-conditional-access",
+		"https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-7-restrict-resource-access-based-on--conditions"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.5.0",
-                           "reference":  "1.2.4"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.5.0",
+			"reference":  "1.2.4"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "aad_conditional_policies",
-    "display_path":  "aad_conditional_policies",
-    "conditions":  [
-		"and",
-		[
-			"applyRule",
-			"eq",
-			"true"
-	   ],
-	   [
-			"rawPolicy.controls.challengeWithMfa",
-			"eq",
-			"true"
-	   ],
-	   [
-		   "rawPolicy.usersV2.allUsers",
-		   "eq",
-		   "1"
-	   ],
-	   [
-		   "rawPolicy.servicePrincipals.allServicePrincipals",
-		   "eq",
-		   "1"
-	   ],
-	   [
-		"and",
-			[
-			"and",
-				[
-					"rawPolicy.conditions.minSigninRisk.mediumRisk",
-					"eq",
-					"false"
-				],
-				[
-					"rawPolicy.conditions.minSigninRisk.highRisk",
-					"eq",
-					"false"
-				],
-				[
-					"rawPolicy.conditions.minSigninRisk.lowRisk",
-					"eq",
-					"false"
-				],
-				[
-					"rawPolicy.conditions.minSigninRisk.noRisk",
-					"eq",
-					"false"
-				],
-				[
-					"rawPolicy.conditions.minSigninRisk.applyCondition",
-					"eq",
-					"false"
-				]
+	"conditions":  [
+		{
+			operator:  'and',
+			statements:  [
+				{
+					conditions:  [
+						["applyRule","eq","true"],
+						["rawPolicy.controls.challengeWithMfa","eq","true"],
+						["rawPolicy.usersV2.allUsers","eq","1"],
+						["rawPolicy.servicePrincipals.allServicePrincipals","eq","1"]
+					],
+					operator:  'and'
+				},
+				{
+					conditions:  [
+						["rawPolicy.conditions.minSigninRisk.mediumRisk","eq","false"],
+						["rawPolicy.conditions.minSigninRisk.highRisk","eq","false"],
+						["rawPolicy.conditions.minSigninRisk.lowRisk","eq","false"],
+						["rawPolicy.conditions.minSigninRisk.noRisk","eq","false"],
+						["rawPolicy.conditions.minSigninRisk.applyCondition","eq","false"]
+					],
+					operator:  'and'
+				}				
 			]
-		]
-   ],
+		}
+	],
 	"shouldExist":  "true",
 	"returnObject":  null,
-    "id_suffix":  "aad_cap_force_mfa_all_users"
+    "idSuffix":  "aad_cap_force_mfa_all_users"
 }

@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "SQL Server",
-    "menu_name":  "Databases",
-    "issue_name":  "Enable auditing on SQL Servers",
+    "serviceType":  "SQL Server",
+    "serviceName":  "Databases",
+    "displayName":  "Enable auditing on SQL Servers",
     "description":  "Auditing for Azure SQL Database tracks database events and writes them to an audit log. It could be used to maintain regulatory compliance, understand database activity, and gain insight into discrepancies and anomalies that could indicate business concerns or suspected security violations.",
     "rationale":  "The Azure platform allows a SQL server to be created as a service. Enabling auditing at the server level ensures that all existing and newly created databases on the SQL server instance are audited. Auditing policy applied on the SQL database does not override auditing policy and settings applied on the particular SQL server where the database is hosted.  
 				   Auditing tracks database events and writes them to an audit log in the Azure storage account. It also helps to maintain regulatory compliance, understand database activity, and gain insight into discrepancies and anomalies that could indicate business concerns or suspected security violations.
@@ -15,29 +15,32 @@
 					4. Set Auditing to `On`
 	',
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-auditing",
-					   "https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-auditing-on-sql-servers",
-					   "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserverauditing?view=azurermps-5.2.0",
-					   "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/set-azurermsqlserverauditingpolicy?view=azurermps-5.2.0",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/sql-database/sql-database-auditing",
+		"https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-auditing-on-sql-servers",
+		"https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserverauditing?view=azurermps-5.2.0",
+		"https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/set-azurermsqlserverauditingpolicy?view=azurermps-5.2.0",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "4.1.1"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "4.1.1"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_sql_servers",
-    "display_path":  "az_sql_servers",
     "conditions":  [
-                       "and",
-                       [
-                           "auditing.enabled",
-                           "eq",
-                           "False"
-                       ]
-                   ],
-    "id_suffix":  "sql_server_auditing_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["auditing.enabled","eq","False"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "sql_server_auditing_disabled"
 }

@@ -1,21 +1,21 @@
 {
-    "dashboard_name":  "Azure AD Identity",
-    "menu_name":  "IAM",
-    "issue_name":  "Use Just In Time privileged access to High Privileged roles",
-    "description":  "Azure Active Directory Privileged Identity Management can be used to audit roles, allow just in time activation of roles and allow for periodic role attestation. Organizations should remove permanent members from privileged Office 365 roles and instead make them eligible, through a JIT activation workflow.",
+    "serviceType":  "Microsoft Entra ID Identity",
+    "serviceName":  "IAM",
+    "displayName":  "Use Just In Time privileged access to High Privileged roles",
+    "description":  "Microsoft Entra ID Privileged Identity Management can be used to audit roles, allow just in time activation of roles and allow for periodic role attestation. Organizations should remove permanent members from privileged Office 365 roles and instead make them eligible, through a JIT activation workflow.",
     "rationale":  "
-		Organizations want to minimize the number of people who have access to secure information or resources, because that reduces the chance of a malicious actor getting that access, or an authorized user inadvertently impacting a sensitive resource. However, users still need to carry out privileged operations in Azure AD and Office 365. Organizations can give users just-in-time (JIT) privileged access to roles. There is a need for oversight for what those users are doing with their administrator privileges. PIM helps to mitigate the risk of excessive, unnecessary, or misused access rights.
+		Organizations want to minimize the number of people who have access to secure information or resources, because that reduces the chance of a malicious actor getting that access, or an authorized user inadvertently impacting a sensitive resource. However, users still need to carry out privileged operations in Microsoft Entra ID and Office 365. Organizations can give users just-in-time (JIT) privileged access to roles. There is a need for oversight for what those users are doing with their administrator privileges. PIM helps to mitigate the risk of excessive, unnecessary, or misused access rights.
 	",
     "impact": "
 		Implementation of Just in Time privileged access is likely to necessitate changes to administrator routine. Administrators will only be granted access to administrative roles when required. When administrators request role activation, they will need to document the reason for requiring role access, anticipated time required to have the access, and to reauthenticate to enable role access.
 	",
     "remediation":  "
-		To configure sensitive Azure AD roles for Privileged Identity Management Role activation, use the following steps:
+		To configure sensitive Microsoft Entra ID roles for Privileged Identity Management Role activation, use the following steps:
 		
 		###### From Azure Entra portal
 			1. Sign in to the Azure Entra portal as a global administrator.
 			2. In the Azure Entra portal, click `Identity and Governance` and search for and click on `Privileged Identity Management`.
-			3. Under `Manage` click on `Azure AD Roles`.
+			3. Under `Manage` click on `Microsoft Entra ID Roles`.
 			4. Under `Manage` click on `Roles`.
 			5. Inspect the following sensitive roles. For each of the members that have an `ASSIGNMENT TYPE` of `Permanent`, click on the `...` and choose `Make eligible`:
 
@@ -45,26 +45,27 @@
 			* User Administrator
 	",
     "references":  [
-					   "https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-configure",
-					   "https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-how-to-activate-role"
-                   ],
+		"https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-configure",
+		"https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-how-to-activate-role"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "1.1.10"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "1.1.10"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "aad_pim_active_assignment",
-    "display_path":  "aad_pim_active_assignment",
     "conditions":  [
-                       "and",
-                       [
-                           "_INCLUDE_(_ARG_0_)",
-                           "",
-                           ""
-                       ]
-                   ],
-    "id_suffix":  "aad_pim_high_level_active_assignment"
+		{
+			statements:  [
+				{
+					include: "_ARG_0_"
+				}
+			]
+		}
+	],
+    "idSuffix":  "aad_pim_high_level_active_assignment"
 }

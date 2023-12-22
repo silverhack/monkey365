@@ -1,0 +1,45 @@
+{
+    "serviceType":  "Exchange Online",
+    "serviceName":  "Microsoft 365",
+    "displayName":  "Ensure MailTips are enabled for end users",
+    "description":  "Consider to enable MailTips, which is designed to assist end users with identifying strange patterns to emails they send.",
+    "rationale":  "Setting up MailTips gives a visual aid to users when they send emails to large groups of recipients or send emails to recipients not within the tenant.",
+    "impact":  "",
+    "remediation":  '
+					###### To enable MailTips, use the Exchange Online PowerShell Module
+					1. Connect to Exchange Online using `Connect-ExchangeOnline`
+					2. Run the following PowerShell command:					
+					```powershell
+					Set-OrganizationConfig -MailTipsAllTipsEnabled $true -MailTipsExternalRecipientsTipsEnabled $true -MailTipsGroupMetricsEnabled $true -MailTipsLargeAudienceThreshold \'25\'
+					```
+	',
+    "references":  [
+                       "https://docs.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/mailtips/mailtips"
+	],
+    "compliance":  [
+		{
+			"name":  "CIS Microsoft 365 Foundations",
+			"version":  "1.3.0",
+			"reference":  "4.15"
+		}
+	],
+	"level": "medium",
+    "tags":  null,
+    "path":  "o365_exo_org_config",
+    "conditions":  [
+		{
+			statements: [
+				{
+					conditions : [
+						["MailTipsAllTipsEnabled","eq","false"],
+						["MailTipsExternalRecipientsTipsEnabled","eq","false"],
+						["MailTipsGroupMetricsEnabled","eq","false"],
+						["MailTipsLargeAudienceThreshold","lt","25"]
+					],
+					operator:  "or"
+				}
+			]
+		}
+	],
+    "idSuffix":  "o365_exo_mailtips_disabled"
+}

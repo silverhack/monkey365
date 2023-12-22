@@ -1,0 +1,50 @@
+{
+    "serviceType":  "SharePoint Online",
+    "serviceName":  "Microsoft 365",
+    "displayName":  "Ensure modern authentication for SharePoint applications is required",
+    "description":  "Modern authentication in Microsoft 365 enables authentication features like multifactor authentication (MFA) using smart cards, certificate-based authentication (CBA), and third party SAML identity provider.",
+    "rationale":  "Strong authentication controls, such as the use of multifactor authentication, may be circumvented if basic authentication is used by SharePoint applications. Requiring modern authentication for SharePoint applications ensures strong authentication mechanisms are used when establishing sessions between these applications, SharePoint, and connecting users.",
+    "impact":  "Implementation of modern authentication for SharePoint will require users to authenticate to SharePoint using modern authentication. This may cause a minor impact to typical user behavior.",
+    "remediation":  "
+					###### To set SharePoint settings, use the Microsoft 365 Admin Center
+					1. Under `Admin centers` select `SharePoint`.
+					2. Expand `Policies` then select `Access Control`.
+					3. Select `Apps that don't use modern authentication`.
+					4. Select the radio button for `Block`.
+					5. Click `Save`
+					###### To set Apps that don't use modern authentication is set to Block, use the SharePoint Online PowerShell Module:
+					1. Connect to SharePoint Online using `Connect-SPOService` -Url https://tenant-admin.sharepoint.com replacing `tenant` with your value.
+					2. Run the following SharePoint Online PowerShell command:
+					```Powershell
+					Set-SPOTenant -LegacyAuthProtocolsEnabled $false
+					```
+	",
+    "references":  [
+		"https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/block-legacy-authentication",
+		"https://stealthbits.com/blog/how-to-harden-you-sharepoint-online-environment-by-disabling-legacy-authentication/"
+	],
+    "compliance":  [
+		{
+			"name":  "CIS Microsoft 365 Foundations",
+			"version":  "1.3.0",
+			"reference":  "1.4"
+		}
+	],
+	"level": "medium",
+    "tags":  [
+		"Microsoft 365 CIS benchmark 1.4"
+	],
+    "path":  "o365_spo_tenant_admin_details",
+    "conditions":  [
+		{
+			statements:  [
+				{
+					conditions:  [
+						["LegacyAuthProtocolsEnabled","eq","true"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "o365_spo_modern_auth_disabled"
+}

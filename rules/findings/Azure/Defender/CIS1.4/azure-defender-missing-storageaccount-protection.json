@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Microsoft Defender for Cloud",
-    "menu_name":  "Subscription",
-    "issue_name":  "Ensure that Microsoft Defender for Cloud is set to On for Storage",
+    "serviceType":  "Microsoft Defender for Cloud",
+    "serviceName":  "Subscription",
+    "displayName":  "Ensure that Microsoft Defender for Cloud is set to On for Storage",
     "description":  "Turning on Microsoft Defender for Cloud enables threat detection for Storage, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
     "rationale":  "Enabling Microsoft Defender for Cloud for Storage allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
     "impact":  "Turning on Microsoft Defender for Cloud in Microsoft Defender for Cloud incurs an additional cost per resource.",
@@ -15,34 +15,34 @@
 					6. Select `Save`
 	",
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview",
-					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
-					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/update",
-					   "https://docs.microsoft.com/en-us/powershell/module/az.security/get-azsecuritypricing",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security#es-1-use-endpoint-detection-and-response-edr"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview",
+		"https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
+		"https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/update",
+		"https://docs.microsoft.com/en-us/powershell/module/az.security/get-azsecuritypricing",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security#es-1-use-endpoint-detection-and-response-edr"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "2.5"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "2.5"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_pricing_tier",
-    "display_path":  "az_pricing_tier",
     "conditions":  [
-                       "and",
-                       [
-                           "name",
-						   "eq",
-						   "StorageAccounts"
-					    ],
-						[
-						   "properties.pricingTier",
-                           "eq",
-                           "Free"
-                       ]
-                   ],
-    "id_suffix":  "azure_defender_missing_storageaccount_protection"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["name","eq","StorageAccounts"],
+						["properties.pricingTier","eq","Free"]
+					],
+					operator: "and"
+				}
+			]
+		}
+	],
+    "idSuffix":  "azure_defender_missing_storageaccount_protection"
 }

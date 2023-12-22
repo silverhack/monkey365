@@ -1,0 +1,24 @@
+{
+	statements: [
+		{
+			conditions : [
+				["roleDefinitionId", "imatch", "62e90394-69f5-4237-9190-012177145e10"],
+				["roleDefinitionId", "imatch", "9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3"],
+				["roleDefinitionId", "imatch", "cf1c38e5-3621-4004-a7cb-879624dced7c"],
+				["roleDefinitionId", "imatch", "c4e39bd9-1100-46d3-8c65-fb160da0071f"],
+				["roleDefinitionId", "imatch", "e3973bdf-4987-49ae-837a-ba8e231c7286"],
+				["roleDefinitionId", "imatch", "7495fdc4-34c4-4d15-a289-98788ce399fd"],
+				["roleDefinitionId", "imatch", "b0f54661-2d74-4c50-afa3-1ec803f12efe"],
+				["roleDefinitionId", "imatch", "158c047a-c907-4556-b7ef-446551a6b5f7"],
+				["roleDefinitionId", "imatch", "17315797-102d-40b4-93e0-432062caca18"],
+				["roleDefinitionId", "imatch", "b1be1c3e-b65d-4f19-8427-f6fa0d97feb9"],
+				["roleDefinitionId", "imatch", "9f06204d-73c1-4d4c-880a-6edb90606fd8"],
+				["roleDefinitionId", "imatch", "9360feb5-f418-4baa-8175-e2a00bac4301"],
+				["roleDefinitionId", "imatch", "fdd7a751-b60b-444a-984c-02652fe8fa1c"],
+				["roleDefinitionId", "imatch", "729827e3-9c14-49f7-bb1b-9608f156bbb8"],
+				["roleDefinitionId", "imatch", "7be44c8a-adaf-4e2a-84d6-ab2649e08a13"]
+			],
+			operator : 'or'
+		}			
+	]
+}

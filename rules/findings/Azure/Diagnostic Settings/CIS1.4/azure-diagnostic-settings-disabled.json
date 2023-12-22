@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Diagnostic Settings",
-    "menu_name":  "Subscription",
-    "issue_name":  "Ensure that a 'Diagnostics Setting' exists",
+    "serviceType":  "Diagnostic Settings",
+    "serviceName":  "Subscription",
+    "displayName":  "Ensure that a 'Diagnostics Setting' exists",
     "description":  "Enable Diagnostic settings for exporting activity logs. Diagnostic setting are available for each individual resources within a subscription. Settings should be configured for all appropriate resources for your environment.",
     "rationale":  "A diagnostic setting controls how a diagnostic log is exported. By default, logs are retained only for 90 days. Diagnostic settings should be defined so that logs can be exported and stored for a longer duration in order to analyze security activities within an Azure subscription.",
     "impact":  "",
@@ -16,27 +16,30 @@
 					Repeat these step for all resources as needed.
 	',
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-activity-logs#export-the-activity-log-with-a-log-profile",
-					   "https://docs.microsoft.com/en-us/cli/azure/monitor/log-profiles?view=azure-cli-latest#az_monitor_log_profiles_create",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-5-centralize-security-log-management-and-analysis"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-overview-activity-logs#export-the-activity-log-with-a-log-profile",
+		"https://docs.microsoft.com/en-us/cli/azure/monitor/log-profiles?view=azure-cli-latest#az_monitor_log_profiles_create",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-logging-threat-detection#lt-5-centralize-security-log-management-and-analysis"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "5.1.1"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "5.1.1"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_diagnostic_settings",
-    "display_path":  "az_diagnostic_settings",
     "conditions":  [
-                       "and",
-                       [
-                           "diagnostic_settings",
-                           "eq",
-                           ""
-                       ]
-                   ],
-    "id_suffix":  "azure_diagnostic_settings_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["diagnostic_settings","eq",""]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "azure_diagnostic_settings_disabled"
 }

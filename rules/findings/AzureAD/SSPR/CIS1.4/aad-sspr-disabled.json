@@ -1,33 +1,36 @@
 {
-    "dashboard_name":  "Identity Protection",
-    "menu_name":  "Azure AD",
-    "issue_name":  "Enable Self-Service Password reset to allow users to reset their own passwords in Azure AD",
-    "description":  "Enabling self-service password reset allows users to reset their own passwords in Azure AD. When your users sign in to Microsoft 365, they will be prompted to enter additional contact information that will help them reset their password in the future. If combined registration is enabled additional information, outside of multi-factor, will not be needed. As of August 2020 combined registration is enabled by default.",
+    "serviceType":  "Identity Protection",
+    "serviceName":  "Microsoft Entra ID",
+    "displayName":  "Enable Self-Service Password reset to allow users to reset their own passwords in Azure AD",
+    "description":  "Enabling self-service password reset allows users to reset their own passwords in Microsoft Entra ID. When your users sign in to Microsoft 365, they will be prompted to enter additional contact information that will help them reset their password in the future. If combined registration is enabled additional information, outside of multi-factor, will not be needed. As of August 2020 combined registration is enabled by default.",
     "rationale":  "Users will no longer need to engage the helpdesk for password resets, and the password reset mechanism will automatically block common, easily guessable passwords.",
     "impact":  "The impact associated with this setting is that users will be required to provide additional contact information to enroll in self-service password reset. Additionally, minor user education may be required for users that are used to calling a help desk for assistance with password resets. As of August of 2020 combined registration is automatic for new tenants therefor users will not need to register for password reset separately from multi-factor authentication.",
     "remediation":  null,
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/active-directory/authentication/concept-sspr-howitworks"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/active-directory/authentication/concept-sspr-howitworks"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft 365 Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "1.1.4"
-                       }
-   ],
+		{
+			"name":  "CIS Microsoft 365 Foundations",
+			"version":  "1.4.0",
+			"reference":  "1.1.4"
+		}
+	],
+	"level": "medium",
     "tags":  [
-                 "Microsoft 365 CIS benchmark 1.1.4"
-             ],
+		"Microsoft 365 CIS benchmark 1.1.4"
+	],
     "path":  "aad_password_reset_policy",
-    "display_path":  "aad_password_reset_policy",
     "conditions":  [
-                       "and",
-                       [
-                           "enablementType",
-                           "eq",
-                           "0"
-                       ]
-                   ],
-    "id_suffix":  "aad_sspr_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["enablementType","eq","0"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "aad_sspr_disabled"
 }

@@ -1,36 +1,36 @@
 {
-    "dashboard_name":  "PostgreSQL Configuration",
-    "menu_name":  "Database Configuration",
-    "issue_name":  "Enable connection_throttling on PostgreSQL Servers",
+    "serviceType":  "PostgreSQL Configuration",
+    "serviceName":  "Database Configuration",
+    "displayName":  "Enable connection_throttling on PostgreSQL Servers",
     "description":  "Enabling connection_throttling helps the PostgreSQL Database to Set the verbosity of logged messages which in turn generates query and error logs with respect to concurrent connections, that could lead to a successful Denial of Service (DoS) attack by exhausting connection resources. A system can also fail or be degraded by an overload of legitimate users. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
     "rationale":  null,
     "impact":  null,
     "remediation":  null,
     "references":  [
-                       "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
-                   ],
+		"https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "4.3.5"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "4.3.5"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_postgresql_servers",
-    "display_path":  "configuration",
     "conditions":  [
-                       "and",
-                       [
-                           "parameterName",
-                           "eq",
-                           "connection_throttling"
-                       ],
-                       [
-                           "parameterValue",
-                           "eq",
-                           "off"
-                       ]
-                   ],
-    "id_suffix":  "postgresql_conn_throttling_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["parameterName","eq","connection_throttling"],
+						["parameterValue","eq","off"]
+					],
+					operator:  "and"
+				}
+			]
+		}
+	],
+    "idSuffix":  "postgresql_conn_throttling_disabled"
 }

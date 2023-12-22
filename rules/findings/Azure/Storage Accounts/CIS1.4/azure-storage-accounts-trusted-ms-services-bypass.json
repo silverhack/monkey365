@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Storage Accounts",
-    "menu_name":  "Storage",
-    "issue_name":  "Allow the set of trusted Microsoft services to bypass the network rules",
+    "serviceType":  "Storage Accounts",
+    "serviceName":  "Storage",
+    "displayName":  "Allow the set of trusted Microsoft services to bypass the network rules",
     "description":  "Some Microsoft services that interact with storage accounts operate from networks that cannot be granted access through network rules. To help this type of service work as intended, allow the set of trusted Microsoft services to bypass the network rules. These services will then use strong authentication to access the storage account. If the Allow trusted Microsoft services exception is enabled, the following services: Azure Backup, Azure Site Recovery, Azure DevTest Labs, Azure Event Grid, Azure Event Hubs, Azure Networking, Azure Monitor and Azure SQL Data Warehouse (when registered in the subscription), are granted access to the storage account. Turning on firewall rules for storage account will block access to incoming requests for data, including from other Azure services. This includes using the Portal, writing logs, etc. We can re-enable functionality. The customer can get access to services like Monitor, Networking, Hubs, and Event Grid by enabling \"Trusted Microsoft Services\" through exceptions. Also, Backup and Restore of Virtual Machines using unmanaged disks in storage accounts with network rules applied is supported via creating an exception.",
     "rationale":  "Turning on firewall rules for storage account will block access to incoming requests for data, including from other Azure services. This includes using the Portal, writing logs, etc. We can re-enable functionality. The customer can get access to services like Monitor, Networking, Hubs, and Event Grid by enabling `Trusted Microsoft Services` through exceptions. Also, Backup and Restore of Virtual Machines using unmanaged disks in storage accounts with network rules applied is supported via creating an exception.",
     "impact":  null,
@@ -14,27 +14,30 @@
 					5. Click Save to apply your changes
 	',
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "3.7"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "3.7"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_storage_accounts",
-    "display_path":  "az_storage_accounts",
     "conditions":  [
-                       "and",
-                       [
-                           "AllowAzureServices",
-                           "eq",
-                           "False"
-                       ]
-                   ],
-    "id_suffix":  "storage_accounts_trusted_ms_services_bypass"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["AllowAzureServices","eq","False"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "storage_accounts_trusted_ms_services_bypass"
 }

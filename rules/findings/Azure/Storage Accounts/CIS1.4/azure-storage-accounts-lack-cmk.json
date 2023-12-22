@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Storage Accounts",
-    "menu_name":  "Storage",
-    "issue_name":  "Ensure storage for critical data are encrypted with Customer Managed Key",
+    "serviceType":  "Storage Accounts",
+    "serviceName":  "Storage",
+    "displayName":  "Ensure storage for critical data are encrypted with Customer Managed Key",
     "description":  "Enable sensitive data encryption at rest using Customer Managed Keys rather than Microsoft Managed keys.",
     "rationale":  "By default, data in the storage account is encrypted using Microsoft Managed Keys at rest. All Azure Storage resources are encrypted, including blobs, disks, files, queues, and tables. All object metadata is also encrypted. However, if you want to control and manage this encryption key yourself, you can specify a customer-managed key, that key is used to protect and control access to the key that encrypts your data. You can also choose to automatically update the key version used for Azure Storage encryption whenever a new version is available in the associated Key Vault.",
     "impact":  "If the key expires by setting the 'activation date' and 'expiration date' of the key, the user must rotate the key manually.  
@@ -17,28 +17,31 @@
 
 	',
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption",
-					   "https://docs.microsoft.com/en-us/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest",
-					   "https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption#azure-storage-encryption-versus-disk-encryption",
-					   "https://docs.microsoft.com/en-us/security/benchmark/azure/security-controls-v2-data-protection#dp-1-discovery,-classify-and-label-sensitive-data"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption",
+		"https://docs.microsoft.com/en-us/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest",
+		"https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption#azure-storage-encryption-versus-disk-encryption",
+		"https://docs.microsoft.com/en-us/security/benchmark/azure/security-controls-v2-data-protection#dp-1-discovery,-classify-and-label-sensitive-data"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "3.9"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "3.9"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_storage_accounts",
-    "display_path":  "az_storage_accounts",
     "conditions":  [
-                       "and",
-                       [
-                           "usingOwnKey",
-                           "eq",
-                           "False"
-                       ]
-                   ],
-    "id_suffix":  "storage_accounts_missing_cmk_encryption"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["usingOwnKey","eq","False"]
+					]
+				}
+			]
+		}
+	],
+    "idSuffix":  "storage_accounts_missing_cmk_encryption"
 }

@@ -1,8 +1,0 @@
-{
-    "conditions":[
-         "or",
-          ["properties.permissions.actions", "match", "Microsoft.Compute/virtualMachines/delete"],
-          ["properties.permissions.actions", "match", "Microsoft.Compute/virtualMachines/write"],
-		  ["properties.permissions.actions", "match", "\\*"]
-      ]
-}

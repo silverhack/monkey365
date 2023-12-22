@@ -1,7 +1,7 @@
 {
-    "dashboard_name":  "Subscription Security",
-    "menu_name":  "Subscription",
-    "issue_name":  "Ensure That 'Notify about alerts with the following severity' is Set to 'High'",
+    "serviceType":  "Subscription Security",
+    "serviceName":  "Subscription",
+    "displayName":  "Ensure That 'Notify about alerts with the following severity' is Set to 'High'",
     "description":  "Enables emailing security alerts to the subscription owner or other designated security contact.",
     "rationale":  "Enabling security alert emails ensures that security alert emails are received from Microsoft. This ensures that the right people are aware of any potential security issues and are able to mitigate the risk.",
     "impact":  null,
@@ -15,33 +15,33 @@
 					6. Click Save
 	',
     "references":  [
-                       "https://docs.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details",
-					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/list",
-					   "https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/update",
-					   "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
-                   ],
+		"https://docs.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details",
+		"https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/list",
+		"https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/update",
+		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
+	],
     "compliance":  [
-                       {
-                           "name":  "CIS Microsoft Azure Foundations",
-                           "version":  "1.4.0",
-                           "reference":  "2.14"
-                       }
-                   ],
+		{
+			"name":  "CIS Microsoft Azure Foundations",
+			"version":  "1.4.0",
+			"reference":  "2.14"
+		}
+	],
+	"level": "medium",
     "tags":  null,
     "path":  "az_security_contacts",
-    "display_path":  "az_security_contacts",
     "conditions":  [
-                       "or",
-                       [
-                           "alertNotifications.state",
-                           "ne",
-                           "On"
-                       ],
-                       [
-                           "alertNotifications.minimalSeverity",
-                           "ne",
-                           "High"
-                       ]
-                   ],
-    "id_suffix":  "security_contact_high_severity_notification_disabled"
+		{
+			statements:  [
+				{
+					conditions:  [
+						["alertNotifications.state","ne","On"],
+						["alertNotifications.minimalSeverity","ne","High"]
+					],
+					operator: "or"
+				}
+			]
+		}
+	],
+    "idSuffix":  "security_contact_high_severity_notification_disabled"
 }
