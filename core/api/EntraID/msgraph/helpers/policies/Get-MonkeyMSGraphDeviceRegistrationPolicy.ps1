@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-Function Get-MonkeyMSGraphAuthorizationPolicy{
+Function Get-MonkeyMSGraphDeviceRegistrationPolicy{
     <#
         .SYNOPSIS
-		Get authorization policy
+		Get device registration policy
 
         .DESCRIPTION
-		Get authorization policy
+		Get device registration policy
 
         .INPUTS
 
@@ -30,7 +30,7 @@ Function Get-MonkeyMSGraphAuthorizationPolicy{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyMSGraphAuthorizationPolicy
+            File Name	: Get-MonkeyMSGraphDeviceRegistrationPolicy
             Version     : 1.0
 
         .LINK
@@ -40,18 +40,15 @@ Function Get-MonkeyMSGraphAuthorizationPolicy{
 	Param (
         [parameter(Mandatory=$false, HelpMessage="API version")]
         [ValidateSet("v1.0","beta")]
-        [String]$APIVersion = "v1.0"
+        [String]$APIVersion = "beta"
     )
     try{
-        #Set var
-        $auth_policy = [ordered]@{
-        }
         $Environment = $O365Object.Environment
         #Get Graph Auth
         $graphAuth = $O365Object.auth_tokens.MSGraph
-        $params = @{
+        $p = @{
             Authentication = $graphAuth;
-            ObjectType = "policies/authorizationPolicy";
+            ObjectType = "policies/deviceRegistrationPolicy";
             Environment = $Environment;
             ContentType = 'application/json';
             Method = "GET";
@@ -60,30 +57,11 @@ Function Get-MonkeyMSGraphAuthorizationPolicy{
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
-        $tenant_auth_policy = Get-MonkeyMSGraphObject @params
-        #Add to dict
-        $auth_policy.Add('TenantAuthPolicy',$tenant_auth_policy)
-        #Get flows policy
-        $params = @{
-            Authentication = $graphAuth;
-            ObjectType = "policies/authenticationFlowsPolicy";
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
-            APIVersion = $APIVersion;
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
-        }
-        $tenant_flows_policy = Get-MonkeyMSGraphObject @params
-        #Add to dict
-        $auth_policy.Add('TenantFlowsPolicy',$tenant_flows_policy)
-        $globalAuthPolicy = New-Object PSObject -Property $auth_policy
-        return $globalAuthPolicy
+        Get-MonkeyMSGraphObject @p
     }
     catch{
         $msg = @{
-            MessageData = "Unable to get authorization policies";
+            MessageData = "Unable to get device registration policies";
             callStack = (Get-PSCallStack | Select-Object -First 1);
             logLevel = 'warning';
             InformationAction = $O365Object.InformationAction;

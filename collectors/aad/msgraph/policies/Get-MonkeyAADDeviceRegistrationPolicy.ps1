@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyADPortalDeviceSetting {
+function Get-MonkeyAADDeviceRegistrationPolicy {
 <#
         .SYNOPSIS
-		Collector to get device settings from Microsoft Entra ID
+		Collector to get information about device registration policy from Microsoft Entra ID
 
         .DESCRIPTION
-		Collector to get device settings from Microsoft Entra ID
+		Collector to get information about device registration policy from Microsoft Entra ID
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyADPortalDeviceSetting {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyADPortalDeviceSetting
+            File Name	: Get-MonkeyAADDeviceRegistrationPolicy
             Version     : 1.0
 
         .LINK
@@ -43,19 +43,18 @@ function Get-MonkeyADPortalDeviceSetting {
 		[string]$collectorId
 	)
 	begin {
-		$Environment = $O365Object.Environment
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "aad0026";
+			Id = "aad0043";
 			Provider = "EntraID";
-			Resource = "EntraIDPortal";
+			Resource = "EntraID";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyADPortalDeviceSetting";
-			ApiType = "EntraIDPortal";
-			description = "Collector to get device settings from Microsoft Entra ID";
+			collectorName = "Get-MonkeyAADDeviceRegistrationPolicy";
+			ApiType = "MSGraph";
+			description = "Collector to get information about device registration policy from Microsoft Entra ID";
 			Group = @(
-				"EntraIDPortal"
+				"EntraID"
 			);
 			Tags = @{
 				"enabled" = $true
@@ -68,39 +67,32 @@ function Get-MonkeyADPortalDeviceSetting {
 
 			);
 		}
-		#Get Azure Active Directory Auth
-		$AADAuth = $O365Object.auth_tokens.AzurePortal
+		$device_policy = $null
 	}
 	process {
 		$msg = @{
 			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID device settings",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
-			Tags = @('AzurePortalDevices');
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('EntraIDAuthPolicyInfo');
 		}
 		Write-Information @msg
-		#Get Device Settings
-		$params = @{
-			Authentication = $AADAuth;
-			Query = 'DeviceSetting';
-			Environment = $Environment;
-			ContentType = 'application/json';
-			Method = "GET";
+		$p = @{
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;
 		}
-		$azure_ad_device_settings = Get-MonkeyAzurePortalObject @params
+		$device_policy = Get-MonkeyMSGraphDeviceRegistrationPolicy @p
 	}
 	end {
-		if ($azure_ad_device_settings) {
-			$azure_ad_device_settings.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.DeviceSettings')
+		if ($null -ne $device_policy) {
+			$device_policy.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.DeviceSettings')
 			[pscustomobject]$obj = @{
-				Data = $azure_ad_device_settings;
+				Data = $device_policy;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.aad_device_settings = $obj
+			$returnData.aad_device_settings = $obj;
 		}
 		else {
 			$msg = @{
@@ -108,8 +100,8 @@ function Get-MonkeyADPortalDeviceSetting {
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('AzurePortalDevicesEmptyResponse');
 				Verbose = $O365Object.Verbose;
+				Tags = @('EntraIDAuthPolicyEmptyResponse')
 			}
 			Write-Verbose @msg
 		}

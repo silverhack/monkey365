@@ -141,3 +141,10 @@ if($null -ne $osInfo){
         }
     }
 }
+Else{
+    Write-Warning -Message 'Unable to determine if OS is Windows or Linux. Loading MSAL Core'
+    $isInstalled = Install-Core
+    if($isInstalled){
+        Install-MsalLibrary
+    }
+}

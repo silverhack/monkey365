@@ -3,6 +3,8 @@
     [OutputType([System.Management.Automation.PSObject])]
     param ()
     Begin{
+        #Set null
+        $files = $null;
         #Get RootPath
         $rootPath = ( Split-Path -Path $PSCmdlet.MyInvocation.PSCommandPath -Parent)
         #Get Files
@@ -20,7 +22,7 @@
         }
         Else{
             Write-Warning -Message 'Unable to determine if OS is Windows or Linux. Loading MSAL Core'
-            $MsalLibPath = ("{0}/lib/core" -f $rootPath)
+            $MsalLibPath = ("{0}/lib/netcore" -f $rootPath)
             $files = [System.IO.Directory]::EnumerateFiles($MsalLibPath,"*.dll","AllDirectories")
         }
         #Set ScriptBlock
@@ -57,14 +59,19 @@
         }
     }
     Process{
-        if($null -ne (Get-Command -Name PowerShell -ErrorAction Ignore)){
-            PowerShell -args @($files) -Command $ScriptBlock
-        }
-        elseif($null -ne (Get-Command -Name pwsh -ErrorAction Ignore)){
-            pwsh -args @($files) -Command $ScriptBlock
+        if($null -ne $files){
+            if($null -ne (Get-Command -Name PowerShell -ErrorAction Ignore)){
+                PowerShell -args @($files) -Command $ScriptBlock
+            }
+            elseif($null -ne (Get-Command -Name pwsh -ErrorAction Ignore)){
+                pwsh -args @($files) -Command $ScriptBlock
+            }
+            else{
+                Write-Warning "PowerShell not installed"
+            }
         }
         else{
-            Write-Warning "PowerShell not installed"
+            throw ("Unable to load MSAL library")
         }
     }
     End{

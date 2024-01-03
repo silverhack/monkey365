@@ -33,7 +33,7 @@
 			statements:  [
 				{
 					conditions:  [
-						["requireMfaSetting","eq","False"]
+						["multiFactorAuthConfiguration","eq","notRequired"]
 					]
 				}
 			]

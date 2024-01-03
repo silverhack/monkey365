@@ -91,7 +91,7 @@ Function Get-MonkeyCollector{
                     break;
                 }
                 else{
-                    $discovered_plugins = @($available_collectors).Where({$_.Provider -eq $O365Object.Instance -and $_.Group.Contains($element)})
+                    $discovered_plugins = @($available_collectors).Where({$_.Provider -eq $O365Object.Instance -and $_.Group.Tolower().Contains($element.Tolower())})
                     if($discovered_plugins){
                         $selected_collectors+=$discovered_plugins
                     }

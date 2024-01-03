@@ -26,7 +26,7 @@ A Monkey365 report uses JSON configuration files to visualize data in a variety 
 
 ## HTML Configuration Files Location
 
-All the table formats are stored under ```Monkey365/core/html/htmlconf```. Internal data is rendered with ```JQuery DataTables```. Basic table and table ```as list ``` are the available formats. Please, note that not all features of HTML tables are supported.
+All the table formats are stored under ```Monkey365/core/utils/dataMappings```. Internal data is rendered with ```JQuery DataTables```. Basic table and table ```as list ``` are the available formats. Please, note that not all features of HTML tables are supported.
 
 ## HTML Table examples
 

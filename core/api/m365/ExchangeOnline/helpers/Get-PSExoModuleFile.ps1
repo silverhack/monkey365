@@ -35,7 +35,7 @@ Function Get-PSExoModuleFile{
     #>
     [cmdletbinding()]
     Param (
-        [parameter(Mandatory=$false, HelpMessage="Endpoint")]
+        [parameter(Mandatory=$false, HelpMessage="Purview")]
         [Switch]$Purview
     )
     try{

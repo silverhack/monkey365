@@ -102,7 +102,7 @@ function Get-MonkeySecCompBackendUri {
 				        MessageData = ($message.SecCompBackendError -f $O365Object.TenantID);
 				        callStack = (Get-PSCallStack | Select-Object -First 1);
 				        logLevel = 'warning';
-				        InformationAction = $InformationAction;
+				        InformationAction = $O365Object.InformationAction;
 				        Tags = @('SecurityComplianceUriError');
 			        }
 			        Write-Warning @msg
@@ -111,6 +111,16 @@ function Get-MonkeySecCompBackendUri {
                     $msg.logLevel = 'verbose';
                     Write-Verbose @msg
                 }
+            }
+            else{
+                $msg = @{
+				    MessageData = ($message.SecCompBackendError -f $O365Object.TenantID);
+				    callStack = (Get-PSCallStack | Select-Object -First 1);
+				    logLevel = 'warning';
+				    InformationAction = $O365Object.InformationAction;
+				    Tags = @('SecurityComplianceUriError');
+			    }
+			    Write-Warning @msg
             }
         }
     }
