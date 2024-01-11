@@ -27,35 +27,40 @@
         }
         #Set ScriptBlock
         $ScriptBlock = {
-            $files = $args[0]
-            $Assemblies = [System.Collections.Generic.List[string]]::new()
-            if($null -ne $files){
-                foreach ($file in $files) {
-                    $Assemblies.Add($file)
+            try{
+                $files = $args[0]
+                $Assemblies = [System.Collections.Generic.List[string]]::new()
+                if($null -ne $files){
+                    foreach ($file in $files) {
+                        $Assemblies.Add($file)
+                    }
                 }
+                $params = @{
+                    LiteralPath = $Assemblies;
+                    IgnoreWarnings = $true;
+                    WarningVariable = "warnVar";
+                    WarningAction = "SilentlyContinue"
+                }
+                Add-Type @params | Out-Null
+                #Create app
+                $client_options = [Microsoft.Identity.Client.PublicClientApplicationOptions]::new()
+                $client_options.RedirectUri = "http://localhost"
+                $client_options.ClientId = [System.Guid]::NewGuid()
+                $client_options.AzureCloudInstance = [Microsoft.Identity.Client.AzureCloudInstance]::AzurePublic
+                $application_builder = [Microsoft.Identity.Client.PublicClientApplicationBuilder]::CreateWithApplicationOptions($client_options)
+                $app = $application_builder.Build()
+                #set new Obj
+                $osObj = [PsCustomObject]@{
+                    IsSystemWebViewAvailable = [Microsoft.Identity.Client.OsCapabilitiesExtensions]::IsSystemWebViewAvailable($app);
+                    IsUserInteractive = [Microsoft.Identity.Client.OsCapabilitiesExtensions]::IsUserInteractive($app);
+                    IsEmbeddedWebViewAvailable = [Microsoft.Identity.Client.OsCapabilitiesExtensions]::IsEmbeddedWebViewAvailable($app);
+                }
+                #return Obj
+                return $osObj
             }
-            $params = @{
-                LiteralPath = $Assemblies;
-                IgnoreWarnings = $true;
-                WarningVariable = "warnVar";
-                WarningAction = "SilentlyContinue"
+            catch{
+                Write-Warning "Unable to get OS options from MSAL"
             }
-            Add-Type @params | Out-Null
-            #Create app
-            $client_options = [Microsoft.Identity.Client.PublicClientApplicationOptions]::new()
-            $client_options.RedirectUri = "http://localhost"
-            $client_options.ClientId = [System.Guid]::NewGuid()
-            $client_options.AzureCloudInstance = [Microsoft.Identity.Client.AzureCloudInstance]::AzurePublic
-            $application_builder = [Microsoft.Identity.Client.PublicClientApplicationBuilder]::CreateWithApplicationOptions($client_options)
-            $app = $application_builder.Build()
-            #set new Obj
-            $osObj = [PsCustomObject]@{
-                IsSystemWebViewAvailable = [Microsoft.Identity.Client.OsCapabilitiesExtensions]::IsSystemWebViewAvailable($app);
-                IsUserInteractive = [Microsoft.Identity.Client.OsCapabilitiesExtensions]::IsUserInteractive($app);
-                IsEmbeddedWebViewAvailable = [Microsoft.Identity.Client.OsCapabilitiesExtensions]::IsEmbeddedWebViewAvailable($app);
-            }
-            #return Obj
-            return $osObj
         }
     }
     Process{

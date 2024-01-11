@@ -30,7 +30,7 @@
 	],
 	"level": "medium",
     "tags":  null,
-    "path":  "aad_auth_policy",
+    "path":  "aad_authorization_policy",
     "conditions":  [
 		{
 			statements:  [

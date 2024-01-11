@@ -245,10 +245,11 @@
     "aad_require_admin_consent_apps": [
         {
             "translate": {
-                "usersCanAddGalleryApps": "Users can add gallery apps",
-                "usersCanAllowAppsToAccessData": "Users can allow apps to access data"
+                "TenantAuthPolicy.allowInvitesFrom": "Allow Invites From",
+                "TenantAuthPolicy.blockMsolPowerShell": "Block MSOL PowerShell",
+				"TenantAuthPolicy.defaultUserRolePermissions.permissionGrantPoliciesAssigned": "User consent for applications"
             },
-            "emphasis": ["Users can allow apps to access data"],
+            "emphasis": ["User consent for applications"],
             "table": "asList"
         }
     ],

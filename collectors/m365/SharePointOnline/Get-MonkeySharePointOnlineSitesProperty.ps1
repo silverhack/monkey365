@@ -16,10 +16,10 @@
 function Get-MonkeySharePointOnlineSitesProperty {
 <#
         .SYNOPSIS
-		Collector to extract information about O365 SharePoint Online services Tenant site properties
+		Collector to extract information about O365 SharePoint Online site properties
 
         .DESCRIPTION
-		Collector to extract information about O365 SharePoint Online services Tenant site properties
+		Collector to extract information about O365 SharePoint Online site properties
 
         .INPUTS
 
@@ -50,9 +50,9 @@ function Get-MonkeySharePointOnlineSitesProperty {
 			Resource = "SharePointOnline";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeySharePointOnlineTenantSitesProperty";
+			collectorName = "Get-MonkeySharePointOnlineSitesProperty";
 			ApiType = "CSOM";
-			description = "Collector to extract information about SharePoint Online Tenant site properties";
+			description = "Collector to extract information about SharePoint Online site properties";
 			Group = @(
 				"SharePointOnline"
 			);
@@ -88,7 +88,7 @@ function Get-MonkeySharePointOnlineSitesProperty {
 	}
 	process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"SharePoint Online Tenant Sites",$O365Object.TenantID);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"SharePoint Online Site Properties",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
 			InformationAction = $O365Object.InformationAction;
@@ -157,7 +157,7 @@ function Get-MonkeySharePointOnlineSitesProperty {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "SharePoint Online Tenant Sites",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "SharePoint Online Site Properties",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;

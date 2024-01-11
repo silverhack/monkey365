@@ -76,7 +76,7 @@ Function Invoke-M365Scanner{
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'warning';
                     InformationAction = $O365Object.InformationAction;
-                    Tags = @('AzureSubscriptionScanner');
+                    Tags = @('M365Scanner');
                 }
                 Write-Warning @msg
             }

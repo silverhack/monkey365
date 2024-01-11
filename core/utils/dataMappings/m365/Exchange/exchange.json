@@ -658,7 +658,7 @@
 			}
 		}
 	],
-	"exchange-transport-rules-domain-whitelisted.json": [
+	"o365_exo_transport_rules_domain_whitelisted": [
 		{
 			"translate": {
 				"Name": "Name",

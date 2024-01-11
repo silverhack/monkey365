@@ -50,7 +50,7 @@ function Get-MonkeyAADDomain {
 			Resource = "EntraID";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyADDomainInfo";
+			collectorName = "Get-MonkeyAADDomain";
 			ApiType = "MSGraph";
 			description = "Collector to get information about domain from Microsoft Entra ID";
 			Group = @(

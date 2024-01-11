@@ -42,6 +42,7 @@ Function Export-MonkeyData{
     switch ($ExportTo) {
         'CSV'
         {
+            Write-Warning "CSV RAW output has been deprecated and will be upgraded two releases later (0.91.4). Please, check https://github.com/silverhack/monkey365/issues/76"
             $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())
             $OutDir = New-MonkeyFolder -destination $out_folder
             if($OutDir){
@@ -68,6 +69,7 @@ Function Export-MonkeyData{
         }
         'JSON'
         {
+            Write-Warning "JSON RAW output has been deprecated and will be upgraded two releases later (0.91.4). Please, check https://github.com/silverhack/monkey365/issues/76"
             $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())
             $OutDir = New-MonkeyFolder -destination $out_folder
             if($OutDir){
@@ -107,6 +109,7 @@ Function Export-MonkeyData{
         }
         'CLIXML'
         {
+            Write-Warning "CLIXML RAW output has been deprecated and will be removed two releases later (0.91.4). Please, check https://github.com/silverhack/monkey365/issues/76"
             $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())
             $OutDir = New-MonkeyFolder -destination $out_folder
             if($OutDir){

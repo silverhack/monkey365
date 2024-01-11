@@ -34,13 +34,13 @@
 	],
 	"level": "medium",
     "tags":  null,
-    "path":  "aad_managed_app_user_settings",
+    "path":  "aad_authorization_policy",
     "conditions":  [
 		{
 			statements:  [
 				{
 					conditions:  [
-						["usersCanAllowAppsToAccessData","eq","True"]
+						["TenantAuthPolicy.defaultUserRolePermissions.permissionGrantPoliciesAssigned.Count","ne","0"]
 					]
 				}
 			]

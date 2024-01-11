@@ -152,13 +152,23 @@ Function Invoke-MonkeyScanner{
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'info';
                     InformationAction = $O365Object.InformationAction;
-                    Tags = @('AzureSubscriptionScanner');
+                    Tags = @('Monkey365Scanner');
                 }
                 Write-Information @msg
+                #Set Generic list
+                $commands = [System.Collections.Generic.List[System.Object]]::new();
+                #Add collectors to libcommands
+                foreach($collector in @($scan.collectors)){
+                    [void]$commands.Add($collector.File);
+                }
+                #Add commands
+                foreach($command in @($scan.libCommands)){
+                    [void]$commands.Add($command);
+                }
                 $rsParam = @{
                     ImportVariables = $scan.vars;
                     ImportModules = $scan.modules;
-                    ImportCommands = $scan.libCommands;
+                    ImportCommands = $commands;
                     ApartmentState = $scan.apartmentState;
                     Throttle = $scan.threads;
                     StartUpScripts = $scan.startUpScripts;
@@ -188,8 +198,8 @@ Function Invoke-MonkeyScanner{
 		                }
                         $Id = ([System.Guid]::NewGuid()).ToString()
                         $argument = @{CollectorId = $Id}
-                        $sb = [ScriptBlock]::Create('{0}' -f $collector.File.FullName)
-                        Invoke-MonkeyJob -ScriptBlock $sb -Arguments $argument @p
+                        #$sb = [ScriptBlock]::Create('{0}' -f $collector.File.FullName)
+                        Invoke-MonkeyJob -Command $collector.collectorName -Arguments $argument @p
                     }
                 }
                 else{

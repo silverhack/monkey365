@@ -32,7 +32,9 @@ $internal_functions = @(
     '/core/api/m365/M365AdminPortal/'
 )
 $all_files = $internal_functions.ForEach({
-    [System.IO.Directory]::EnumerateFiles(("{0}{1}" -f $PSScriptRoot,$_),"*.ps1",[System.IO.SearchOption]::AllDirectories)
+    if([System.IO.Directory]::Exists(("{0}{1}" -f $PSScriptRoot,$_))){
+        [System.IO.Directory]::EnumerateFiles(("{0}{1}" -f $PSScriptRoot,$_),"*.ps1",[System.IO.SearchOption]::AllDirectories)
+    }
 })
 $all_files = $all_files.Where({$_.EndsWith('ps1')})
 $all_files.ForEach({. $_})
