@@ -7,11 +7,20 @@
     "impact":  "Turning on Anti-Phishing should not cause an impact, messages will be displayed when applicable.",
     "remediation":  '
 					###### To set the anti-phishing policy, use the Microsoft 365 Admin Center
-					1. Select Security.
-					2. Expand `Threat Management`then select `Policy`.
-					3. Select `Anti-phishing`.
-					4. Click `Create` to create an anti-phishing policy.
-					
+					1. Navigate to Microsoft 365 Defender https://security.microsoft.com.
+					2. Click to expand Email & collaboration select Policies & rules
+					3. Select Threat policies.
+					4. Under Policies select Anti-phishing.
+					5. Select the Office365 AntiPhish Default (Default) policy and click Edit protection settings.
+					6. Set the Phishing email threshold to at least 2 - Aggressive.	
+
+					Under Impersonation:
+					• Check Enable mailbox intelligence (Recommended)
+					• Check Enable Intelligence for impersonation protection (Recommended). 
+					Under Spoof:
+					• Check Enable spoof intelligence (Recommended).
+					7. Click Save.
+
 					###### To create an anti-phishing policy, use the Exchange Online PowerShell Module
 					1. Connect to Exchange Online using `Connect-ExchangeOnline`
 					2. Run the following PowerShell command:					
