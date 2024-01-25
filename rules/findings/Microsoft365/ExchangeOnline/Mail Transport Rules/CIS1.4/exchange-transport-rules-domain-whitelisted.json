@@ -7,7 +7,7 @@
     "impact":  "Care should be taken before implementation to ensure there is no business need for case-by-case whitelisting. Removing all whitelisted domains could affect incoming mail flow to an organization although modern systems sending legitimate mail should have no issue with this.",
     "remediation":  '
 					###### To alter the mail transport rules so they do not whitelist any specific domains, use the Microsoft 365 Admin Center
-					1. Select `Exchange`.
+					1. TESTETSTETETETETTETET
 					2. Select `Mail Flow` and `Rules`.
 					3. For each rule that whitelists specific domains, select the rule and click the *Delete* icon.
 					
