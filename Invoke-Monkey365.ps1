@@ -410,6 +410,11 @@ Function Invoke-Monkey365{
         $Host.UI.RawUI.WindowTitle = "Monkey365 Cloud Security Scanner"
         #####Get Default parameters ########
         $MyParams = $PSBoundParameters
+        #Find duplicates in analysis parameter
+        $duplicateValue = $PSBoundParameters['Analysis'] | Group-Object | Where-Object -Property Count -gt 1
+        if($duplicateValue){
+            throw ("[DuplicateValueError] Duplicate values were found: {0}" -f ($duplicateValue.Name -join ', '))
+        }
         #Create O365 object
         New-O365Object
         #Import MSAL module
