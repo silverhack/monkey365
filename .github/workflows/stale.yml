@@ -15,7 +15,7 @@ jobs:
           days-before-issue-stale: 120
           days-before-issue-close: 14
           stale-issue-label: "no-issue-activity"
-          stale-issue-message: "This issue has been automatically marked as stale because it has not had recent activity. We kindly ask you to check again if the issue you reported is still relevant in the current version of Monkey 365. If it is, update this issue with a comment, otherwise it will be automatically closed if no further activity occurs. Thank you for your contributions."
+          stale-issue-message: "This issue has been automatically marked as stale because it has not had recent activity. We kindly ask you to check again if the issue you reported is still relevant in the current version of Monkey365. If it is, update this issue with a comment, otherwise it will be automatically closed if no further activity occurs. Thank you for your contributions."
           close-issue-message: "This issue was closed because it has been inactive for 14 days since being marked as stale. If the issue is still relevant, feel free to re-open it or open a new one."
           exempt-issue-labels: 'needs-triage,work-in-progress'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
