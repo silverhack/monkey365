@@ -22,4 +22,5 @@
     RemoveDummyFunctionMessage     = Removing dummy function {0}
     ScriptBlockError               = Unable to create ScriptBlock object
     CommandNotRecognized           = Command {0} cannot be imported
+    UnableToRemoveJob              = "Unable to remove job {0}"
 '@

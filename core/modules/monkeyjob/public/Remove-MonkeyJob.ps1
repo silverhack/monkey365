@@ -106,8 +106,28 @@ Function Remove-MonkeyJob{
                         }
                     }
                 }
-                if($PSBoundParameters.ContainsKey('Force')){
-                    [void]$MonkeyJob.Job.InnerJob.Stop()
+                If ($MonkeyJob.Job.State -notmatch 'Completed|Failed|Stopped') {
+                    if($PSBoundParameters.ContainsKey('Force')){
+                        [void]$MonkeyJob.Job.InnerJob.Stop();
+                        $MonkeyJob.Job.InnerJob.Dispose();
+                        if(!$PSBoundParameters.ContainsKey('KeepRunspacePool')){
+                            #$MonkeyJob.Job.InnerJob.RunspacePool.Close();
+                            $MonkeyJob.Job.InnerJob.RunspacePool.Dispose();
+                        }
+                        if($MonkeyJob.Job.State -ne [System.Management.Automation.JobState]::Stopped){
+                            $MonkeyJob.Job.StopJob();
+                        }
+                        $MonkeyJob.Job.Dispose();
+                        #Dispose task
+                        if($null -ne $MonkeyJob.Task -and $MonkeyJob.Task.Status -match 'Canceled|Faulted|RanToCompletion'){
+                            $MonkeyJob.Task.Dispose();
+                            $MonkeyJob.Task = $null;
+                        }
+                        [void]$MonkeyJobs.Remove($MonkeyJob)
+                    }
+                    Else{
+                        Write-Warning ($script:messages.UnableToRemoveJob -f $MonkeyJob.Id)
+                    }
                 }
                 #Clean MonkeyJob object
                 #$MonkeyJob.Job.InnerJob.Stop();
@@ -120,11 +140,14 @@ Function Remove-MonkeyJob{
                     $MonkeyJob.Job.StopJob();
                 }
                 $MonkeyJob.Job.Dispose();
-                if($null -ne $MonkeyJob.Task){
+                if($null -ne $MonkeyJob.Task -and $MonkeyJob.Task.Status -match 'Canceled|Faulted|RanToCompletion'){
                     $MonkeyJob.Task.Dispose();
                     $MonkeyJob.Task = $null;
+                    [void]$MonkeyJobs.Remove($MonkeyJob)
                 }
-                [void]$MonkeyJobs.Remove($MonkeyJob)
+                Else{
+                    Write-Warning ($script:messages.UnableToRemoveJob -f $MonkeyJob.Id)
+                }
                 #Perform garbage collection
                 [gc]::Collect()
             }
