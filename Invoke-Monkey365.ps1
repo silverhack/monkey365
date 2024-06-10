@@ -408,15 +408,24 @@ Function Invoke-Monkey365{
     Begin{
         #Set Window name
         $Host.UI.RawUI.WindowTitle = "Monkey365 Cloud Security Scanner"
+        #Start Time
+        $starttimer = Get-Date
         #####Get Default parameters ########
         $MyParams = $PSBoundParameters
-        #Find duplicates in analysis parameter
-        $duplicateValue = $PSBoundParameters['Analysis'] | Group-Object | Where-Object -Property Count -gt 1
-        if($duplicateValue){
-            throw ("[DuplicateValueError] Duplicate values were found: {0}" -f ($duplicateValue.Name -join ', '))
-        }
         #Create O365 object
         New-O365Object
+        #Set timer
+        $O365Object.startDate = $starttimer
+        Update-PsObject
+        #Initialize Logger
+        Initialize-MonkeyLogger
+        #Check if import job
+        if($PSBoundParameters.ContainsKey('ImportJob') -and $PSBoundParameters.ImportJob){
+            Import-MonkeyJob
+            return
+        }
+        #Check for mandatory params
+        Test-MandatoryParameter
         #Import MSAL module
         $msg = @{
             MessageData = "Importing MSAL authentication library";
@@ -428,19 +437,7 @@ Function Invoke-Monkey365{
         Write-Information @msg
         $MSAL = ("{0}{1}core/modules/monkeymsal" -f $O365Object.Localpath,[System.IO.Path]::DirectorySeparatorChar)
         Import-Module $MSAL -Scope Global -Force -ArgumentList $O365Object.forceMSALDesktop
-        #Start Time
-        $starttimer = Get-Date
         ################### End Validate parameters #####################
-        #Set timer
-        $O365Object.startDate = $starttimer
-        Update-PsObject
-        #Initialize Logger
-        Initialize-MonkeyLogger
-        #Check if import job
-        if($PSBoundParameters.ContainsKey('ImportJob') -and $PSBoundParameters.ImportJob){
-            Import-MonkeyJob
-            return
-        }
         #Initialize authentication parameters
         Initialize-AuthenticationParam
         #Connect

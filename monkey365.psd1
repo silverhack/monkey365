@@ -24,7 +24,7 @@ GUID = 'b040dfab-f762-4ce1-bcc4-1b3963603ff1'
 Author = 'Juan Garrido'
 
 # Company or vendor of this module
-CompanyName = 'Unknown'
+CompanyName = 'monkey365'
 
 # Copyright statement for this module
 Copyright = '(c)2021 Juan Garrido. All rights reserved.'
@@ -78,8 +78,8 @@ FunctionsToExport = @(
     'Write-Debug',
     'Write-Verbose',
     'Write-Error',
-    'Convert-MarkDownToHtml',
     'Get-MonkeyJobError'
+    'Convert-MarkDownToHtml'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

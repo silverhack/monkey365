@@ -9,6 +9,7 @@ $LocalizedDataParams = @{
 #Import localized data
 Import-LocalizedData @LocalizedDataParams;
 
+<#
 $internal_functions = @(
     '/core/analysis',
     '/core/collector',
@@ -31,14 +32,31 @@ $internal_functions = @(
     '/core/api/m365/SharePointOnline/',
     '/core/api/m365/M365AdminPortal/'
 )
-$all_files = $internal_functions.ForEach({
-    if([System.IO.Directory]::Exists(("{0}{1}" -f $PSScriptRoot,$_))){
-        [System.IO.Directory]::EnumerateFiles(("{0}{1}" -f $PSScriptRoot,$_),"*.ps1",[System.IO.SearchOption]::AllDirectories)
-    }
-})
-$all_files = $all_files.Where({$_.EndsWith('ps1')})
-$all_files.ForEach({. $_})
-
+#>
+<#
+$internal_functions = @(
+    '/core/api/auth',
+    '/core/analysis',
+    '/core/init',
+    #'/core/collector',
+    '/core/utils',
+    '/core/html',
+    '/core/tasks',
+    '/core/watcher',
+    '/core/import',
+    #'/core/office',
+    #'/core/output',
+    '/core/tenant',
+    '/core/api/EntraID/graph',
+    '/core/api/EntraID/msgraph',
+    '/core/subscription'
+   # '/core/api/azure/',
+    #'/core/api/m365/MicrosoftTeams/',
+    #'/core/api/m365/ExchangeOnline/'
+    #'/core/api/m365/SharePointOnline/',
+    #'/core/api/m365/M365AdminPortal/'
+)
+#>
 
 $internal_modules = @(
     'core/modules/monkeyhttpwebrequest'
@@ -89,5 +107,42 @@ $m365_plugins = Get-MonkeyJob | Receive-MonkeyJob
 New-Variable -Name m365_plugins -Value $m365_plugins -Scope Script -Force
 #Remove Job
 Get-MonkeyJob | Remove-MonkeyJob
+
+
+$internal_functions = @(
+    '/core/init',
+    '/core/utils',
+    '/core/collector',
+    '/core/api/auth',
+    '/core/html',
+    '/core/office',
+    '/core/tasks',
+    '/core/analysis',
+    '/core/import',
+    '/core/output',
+    '/core/api/EntraID/msgraph',
+    '/core/tenant',
+    '/core/subscription',
+    '/core/api/azure',
+    '/core/api/EntraID/graph/api',
+    '/core/api/EntraID/graph/helpers/user',
+    '/core/api/azure/resourcemanagement/api',
+    '/core/api/azure/resourcemanagement/helpers/tenant',
+    '/core/api/m365/MicrosoftTeams/',
+    '/core/api/m365/ExchangeOnline/'
+    '/core/api/m365/SharePointOnline/',
+    '/core/api/m365/M365AdminPortal/'
+)
+
+
+$all_files = $internal_functions.ForEach({
+    if([System.IO.Directory]::Exists(("{0}{1}" -f $PSScriptRoot,$_))){
+        [System.IO.Directory]::EnumerateFiles(("{0}{1}" -f $PSScriptRoot,$_),"*.ps1",[System.IO.SearchOption]::AllDirectories)
+    }
+})
+$all_files = $all_files.Where({$_.EndsWith('ps1')})
+$all_files.ForEach({. $_})
+
+
 $monkey = ("{0}/Invoke-Monkey365.ps1" -f $PSScriptRoot)
 . $monkey
