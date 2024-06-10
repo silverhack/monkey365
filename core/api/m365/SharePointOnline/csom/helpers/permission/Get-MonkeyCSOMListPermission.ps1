@@ -12,14 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 Function Get-MonkeyCSOMListPermission{
     <#
         .SYNOPSIS
-		Plugin to get information about O365 Sharepoint Online list item permissions
 
         .DESCRIPTION
-		Plugin to get information about O365 Sharepoint Online list item permissions
 
         .INPUTS
 
@@ -36,70 +33,64 @@ Function Get-MonkeyCSOMListPermission{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
-    [cmdletbinding()]
-    [OutputType([System.Collections.Generic.List[System.Management.Automation.PSObject]])]
+    [CmdletBinding(DefaultParameterSetName = 'Current')]
     Param (
-        [Parameter(Mandatory= $true, HelpMessage="Authentication Object")]
+        [parameter(Mandatory=$false, HelpMessage="Authentication Object")]
         [Object]$Authentication,
 
-        [Parameter(Mandatory= $true, HelpMessage="Sharepoint Web Object")]
+        [parameter(Mandatory=$true, ParameterSetName = 'Web', ValueFromPipeline = $true, HelpMessage="Web Object")]
         [Object]$Web,
+
+        [parameter(Mandatory=$true, ParameterSetName = 'Endpoint', HelpMessage="SharePoint Url")]
+        [Object]$Endpoint,
+
+        [Parameter(Mandatory=$false, HelpMessage="Lists to filter")]
+        [string[]]$Filter,
+
+        [parameter(Mandatory=$false, HelpMessage="Include lists")]
+        [Switch]$IncludeItems,
+
+        [parameter(Mandatory=$false, HelpMessage="Include lists")]
+        [Switch]$ExcludeFolders,
 
         [Parameter(Mandatory= $false, HelpMessage="Include inherited permissions")]
         [Switch]$IncludeInheritedPermission
     )
     Begin{
-        #Set generic list
-        $listPermissions = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
+        #Get permission params
+        $permParam = Set-CommandParameter -Command "Get-MonkeyCSOMPermission" -Params $PSBoundParameters
+        $job_params = @{
+            Command = "Get-MonkeyCSOMPermission";
+            Arguments = $permParam;
+            Runspacepool = $O365Object.monkey_runspacePool;
+			ReuseRunspacePool = $true;
+			Debug = $O365Object.debug;
+			Verbose = $O365Object.verbose;
+			MaxQueue = $O365Object.MaxQueue;
+			BatchSleep = $O365Object.BatchSleep;
+			BatchSize = $O365Object.BatchSize;
+            Throttle = $O365Object.nestedRunspaceMaxThreads;
+        }
     }
     Process{
-        #Check for objectType
-        if ($Web.psobject.properties.Item('_ObjectType_') -and $Web._ObjectType_ -eq 'SP.Web'){
-            #Get all lists
-            $p = @{
-                Authentication = $Authentication;
-                Web = $Web;
-                ExcludeInternalLists = $true;
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
+        $p = Set-CommandParameter -Command "Get-MonkeyCSOMList" -Params $PSBoundParameters
+        $Lists = Get-MonkeyCSOMList @p -ExcludeInternalLists;
+        if($null -ne $Lists){
+            $permParam = Set-CommandParameter -Command "Get-MonkeyCSOMPermission" -Params $PSBoundParameters
+            if($PSBoundParameters.ContainsKey('IncludeInheritedPermission') -and $PSBoundParameters['IncludeInheritedPermission'].IsPresent){
+               $Lists | Invoke-MonkeyJob @job_params;
             }
-            $all_lists = Get-MonkeyCSOMList @p
-            foreach($list in @($all_lists)){
-                $p = @{
-                    Object = $list;
-                    Authentication = $Authentication;
-                    Endpoint = $Web.Url;
-                    IncludeInheritedPermission = $IncludeInheritedPermission;
-                    InformationAction = $O365Object.InformationAction;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                }
-                $perms = Get-MonkeyCSOMObjectPermission @p
-                if($perms){
-                    #Add to list
-                    foreach($perm in $perms){
-                        [void]$listPermissions.Add($perm)
-                    }
+            Else{
+                $_lists = @($Lists).Where({$_ | Test-HasUniqueRoleAssignment})
+                if(@($_lists).Count -gt 0){
+                    $_lists | Invoke-MonkeyJob @job_params;
                 }
             }
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.SPOInvalieWebObjectMessage);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'Warning';
-                InformationAction = $InformationAction;
-                Tags = @('SPOInvalidWebObject');
+            #Check for items
+            if($PSBoundParameters.ContainsKey('IncludeItems') -and $PSBoundParameters['IncludeItems'].IsPresent){
+               $p = Set-CommandParameter -Command "Get-MonkeyCSOMListItemPermission" -Params $PSBoundParameters
+               $Lists | Get-MonkeyCSOMListItemPermission @p;
             }
-            Write-Warning @msg
-            break;
         }
-    }
-    End{
-        #return permissions
-        return , $listPermissions
     }
 }

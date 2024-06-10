@@ -50,7 +50,7 @@ Function Out-MonkeyData{
             #Get export object
             $MonkeyExportObject = New-O365ExportObject -Provider $provider
             #Create report folder
-            if(($O365Object.saveProject -or $null -ne $O365Object.exportTo) -and ($null -eq $O365Object.initParams.ImportJob)){
+            if(($O365Object.saveProject -or $null -ne $O365Object.exportTo -or $O365Object.exportTo.Where({$_.ToLower() -ne 'print'}).Count -gt 0) -and ($null -eq $O365Object.initParams.ImportJob)){
                 #Set a new path for report folder
                 $_path = ("{0}/{1}" -f $O365Object.OutDir,(New-MonkeyGuid))
                 $ReportPath = New-MonkeyFolder -destination $_path

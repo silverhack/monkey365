@@ -36,85 +36,122 @@ Function Get-MonkeyCSOMSiteProperty {
             https://github.com/silverhack/monkey365
     #>
 
-	[CmdletBinding()]
-	Param (
-        [Parameter(Mandatory=$false, ParameterSetName = 'Site', HelpMessage="Site URL")]
-        [String]$Site,
+	[CmdletBinding(DefaultParameterSetName = 'Current')]
+    Param (
+        [parameter(Mandatory=$false, HelpMessage="Authentication Object")]
+        [Object]$Authentication,
 
-        [Parameter(Mandatory=$false, HelpMessage="As user")]
-        [Switch]$AsUser
+        [parameter(Mandatory=$false, ParameterSetName = 'Endpoint', HelpMessage="SharePoint Url")]
+        [Object]$Endpoint,
+
+        [parameter(Mandatory=$false, ParameterSetName = 'Site',ValueFromPipeline = $true, HelpMessage="SharePoint Site")]
+        [Object]$Site,
+
+        #[Parameter(Mandatory=$false, HelpMessage="Request as user")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Endpoint')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Site')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Current')]
+        [Switch]$AsUser,
+
+        [Parameter(Mandatory=$false, ParameterSetName = 'All', HelpMessage="Site properties for all sites")]
+        [Switch]$All
     )
-    Begin{
-        #Set null
-        $site_property = $null
-        #Set False
-        $Verbose = $Debug = $False;
-        $InformationAction = 'SilentlyContinue'
-        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
-            $Verbose = $True
-        }
-        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
-            $Debug = $True
-        }
-        if($PSBoundParameters.ContainsKey('InformationAction')){
-            $InformationAction = $PSBoundParameters['InformationAction']
-        }
-        #Get SharePoint Online administrator token
-        $spo_admin = $O365Object.auth_tokens.SharePointAdminOnline
-        #Get Access Token for Sharepoint
-        $sps_auth = $O365Object.auth_tokens.SharepointOnline
-    }
     Process{
-        if($PSBoundParameters.ContainsKey('AsUser') -and $PSBoundParameters.AsUser.IsPresent){
-            if($PSCmdlet.ParameterSetName -eq 'Site'){
-                $p = @{
-                    Authentication = $sps_auth;
-                    EndPoint = $Site;
-                    ObjectPath = 'SiteProperties';
-                    Verbose = $Verbose;
-                    Debug = $Debug;
-                    InformationAction = $InformationAction;
-                }
-                $site_property = Invoke-MonkeySPOAdminApi @p
-            }
-            else{
-                $p = @{
-                    Authentication = $sps_auth;
-                    ObjectPath = 'SiteProperties';
-                    Verbose = $Verbose;
-                    Debug = $Debug;
-                    InformationAction = $InformationAction;
-                }
-                $site_property = Invoke-MonkeySPOAdminApi @p
-            }
-        }
-        elseif($PSCmdlet.ParameterSetName -eq 'Site'){
-            $body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="Monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="34" ObjectPathId="33"/><ObjectPath Id="36" ObjectPathId="35"/><Query Id="37" ObjectPathId="35"><Query SelectAllProperties="true"><Properties/></Query></Query></Actions><ObjectPaths><Constructor Id="33" TypeId="{268004ae-ef6b-4e9b-8425-127220d84719}"/><Method Id="35" ParentId="33" Name="GetSitePropertiesByUrl"><Parameters><Parameter Type="String">${url}</Parameter><Parameter Type="Boolean">true</Parameter></Parameters></Method></ObjectPaths></Request>' -replace '\${url}', $Site
-            $p = @{
-                Authentication = $spo_admin;
-                Data = $body_data;
-                Verbose = $Verbose;
-                Debug = $Debug;
-                InformationAction = $InformationAction;
-            }
-            $site_property = Invoke-MonkeyCSOMRequest @p
-        }
-        else{
+        if($PSCmdlet.ParameterSetName -eq "All"){
             #Get site properties for all sites
             $body_data = ('<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="Monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="824" ObjectPathId="823" /><ObjectPath Id="826" ObjectPathId="825" /><Query Id="827" ObjectPathId="825"><Query SelectAllProperties="true"><Properties><Property Name="NextStartIndexFromSharePoint" ScalarProperty="true" /></Properties></Query><ChildItemQuery SelectAllProperties="true"><Properties /></ChildItemQuery></Query></Actions><ObjectPaths><Constructor Id="823" TypeId="{268004ae-ef6b-4e9b-8425-127220d84719}" /><Method Id="825" ParentId="823" Name="GetSitePropertiesFromSharePoint"><Parameters><Parameter Type="Null" /><Parameter Type="Boolean">false</Parameter></Parameters></Method></ObjectPaths></Request>')
-            $p = @{
-                Authentication = $spo_admin;
-                Data = $body_data;
-                ChildItems = $True;
-                Verbose = $Verbose;
-                Debug = $Debug;
-                InformationAction = $InformationAction;
+            #Set command parameters
+            $p = Set-CommandParameter -Command "Invoke-MonkeyCSOMRequest" -Params $PSBoundParameters
+            #Add authentication header if missing
+            if(!$p.ContainsKey('Authentication')){
+                if($null -ne $O365Object.auth_tokens.SharePointAdminOnline){
+                    [void]$p.Add('Authentication',$O365Object.auth_tokens.SharePointAdminOnline);
+                }
+                Else{
+                    Write-Warning -Message ($message.NullAuthenticationDetected -f "SharePoint Online")
+                    break
+                }
             }
-            $site_property = Invoke-MonkeyCSOMRequest @p
+            #Add ChildItems
+            [void]$p.Add('ChildItems',$true);
+            #Add Body
+            [void]$p.Add('Data',$body_data);
+            #Execute query
+            Invoke-MonkeyCSOMRequest @p
         }
-        #return data
-        if($null -ne $site_property){
-            return $site_property
+        ElseIf($PSCmdlet.ParameterSetName -eq "Current"){
+            $p = Set-CommandParameter -Command "Get-MonkeyCSOMSite" -Params $PSBoundParameters
+            $_Site = Get-MonkeyCSOMSite @p
+            if($_Site){
+                #Add Site to PsboundParameters
+                [void]$PSBoundParameters.Add('Site',$_Site);
+                Get-MonkeyCSOMSiteProperty @PSBoundParameters
+            }
+        }
+        Else{
+            If ($PSCmdlet.ParameterSetName -eq "Site"){
+                $objectType = $PSBoundParameters['Site'] | Select-Object -ExpandProperty _ObjectType_ -ErrorAction Ignore
+                if ($null -ne $objectType -and $objectType -eq 'SP.Site'){
+                    $Ep = $PSBoundParameters['Site'].Url
+                }
+                Else{
+                    $msg = @{
+                        MessageData = ($message.SPOInvalidSiteObjectMessage);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'Warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('MonkeyCSOMInvalidSiteObject');
+                    }
+                    Write-Warning @msg
+                    $Ep = $null
+                }
+            }
+            Else{
+                $Ep = $PSBoundParameters['EndPoint']
+            }
+            if($null -ne $Ep){
+                if($PSBoundParameters.ContainsKey('AsUser') -and $PSBoundParameters['AsUser'].IsPresent){
+                    #Set command parameters
+                    $p = Set-CommandParameter -Command "Invoke-MonkeySPOAdminApi" -Params $PSBoundParameters
+                    #Add authentication header if missing
+                    if(!$p.ContainsKey('Authentication')){
+                        if($null -ne $O365Object.auth_tokens.SharePointOnline){
+                            [void]$p.Add('Authentication',$O365Object.auth_tokens.SharePointOnline);
+                        }
+                        Else{
+                            Write-Warning -Message ($message.NullAuthenticationDetected -f "SharePoint Online")
+                            break
+                        }
+                    }
+                    #Add EndPoint
+                    $p.Item('Endpoint') = $Ep;
+                    #Add ObjectPath
+                    [void]$p.Add('ObjectPath','SiteProperties');
+                    #Execute query
+                    Invoke-MonkeySPOAdminApi @p
+                }
+                Else{
+                    $body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="Monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="34" ObjectPathId="33"/><ObjectPath Id="36" ObjectPathId="35"/><Query Id="37" ObjectPathId="35"><Query SelectAllProperties="true"><Properties/></Query></Query></Actions><ObjectPaths><Constructor Id="33" TypeId="{268004ae-ef6b-4e9b-8425-127220d84719}"/><Method Id="35" ParentId="33" Name="GetSitePropertiesByUrl"><Parameters><Parameter Type="String">${url}</Parameter><Parameter Type="Boolean">true</Parameter></Parameters></Method></ObjectPaths></Request>' -replace '\${url}', $Ep
+                    #Set command parameters
+                    $p = Set-CommandParameter -Command "Invoke-MonkeyCSOMRequest" -Params $PSBoundParameters
+                    #Remove Endpoint
+                    [void]$p.Remove('Endpoint');
+                    #Add authentication header if missing
+                    if(!$p.ContainsKey('Authentication')){
+                        if($null -ne $O365Object.auth_tokens.SharePointAdminOnline){
+                            [void]$p.Add('Authentication',$O365Object.auth_tokens.SharePointAdminOnline);
+                        }
+                        Else{
+                            Write-Warning -Message ($message.NullAuthenticationDetected -f "SharePoint Online")
+                            break
+                        }
+                    }
+                    #Add Body
+                    [void]$p.Add('Data',$body_data);
+                    #Execute query
+                    Invoke-MonkeyCSOMRequest @p
+                }
+            }
         }
     }
     End{

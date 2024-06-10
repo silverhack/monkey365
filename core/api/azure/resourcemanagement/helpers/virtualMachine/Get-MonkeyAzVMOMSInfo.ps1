@@ -43,12 +43,14 @@ Function Get-MonkeyAzVMOMSInfo {
     )
     Process{
         try{
-            $agent = $vmObject.resources.Where({$_.Id -match "MicrosoftMonitoringAgent" -or $_.Id -match "OmsAgentForLinux"})
-            if($agent.Count -gt 0){
-                $InputObject.isVMAgentInstalled = $True
-            }
-            else{
-                $InputObject.isVMAgentInstalled = $false
+            If($null -ne $InputObject.PsObject.Properties.Item('resources') -and $null -ne $InputObject.resources){
+                $agent = $vmObject.resources.Where({$_.Id -match "MicrosoftMonitoringAgent" -or $_.Id -match "OmsAgentForLinux"})
+                if($agent.Count -gt 0){
+                    $InputObject.isVMAgentInstalled = $True
+                }
+                else{
+                    $InputObject.isVMAgentInstalled = $false
+                }
             }
         }
         catch{

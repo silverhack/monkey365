@@ -37,27 +37,36 @@ Function Get-MonkeyCSOMTenantSyncClientRestriction{
     #>
     [cmdletbinding()]
     Param ()
-    Begin{
-        $sync_restriction = $null
-        #Get Admin Access Token from SPO
-		$sps_auth = $O365Object.auth_tokens.SharePointAdminOnline
-        #Tenant client sync restriction
-        [xml]$body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="4" ObjectPathId="3" /><Query Id="5" ObjectPathId="3"><Query SelectAllProperties="true"><Properties><Property Name="IsUnmanagedSyncClientForTenantRestricted" ScalarProperty="true" /><Property Name="AllowedDomainListForSyncClient" ScalarProperty="true" /><Property Name="BlockMacSync" ScalarProperty="true" /><Property Name="ExcludedFileExtensionsForSyncClient" ScalarProperty="false" /><Property Name="OptOutOfGrooveBlock" ScalarProperty="true" /><Property Name="OptOutOfGrooveSoftBlock" ScalarProperty="true" /><Property Name="DisableReportProblemDialog" ScalarProperty="true" /></Properties></Query></Query></Actions><ObjectPaths><Constructor Id="3" TypeId="{268004ae-ef6b-4e9b-8425-127220d84719}" /></ObjectPaths></Request>'
-    }
     Process{
-        $p = @{
-            Authentication = $sps_auth;
-            Data = $body_data;
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
+        try{
+            If($O365Object.isSharePointAdministrator){
+                #Get Admin Access Token from SPO
+		        $sps_auth = $O365Object.auth_tokens.SharePointAdminOnline
+                #Tenant client sync restriction
+                [xml]$body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="4" ObjectPathId="3" /><Query Id="5" ObjectPathId="3"><Query SelectAllProperties="true"><Properties><Property Name="IsUnmanagedSyncClientForTenantRestricted" ScalarProperty="true" /><Property Name="AllowedDomainListForSyncClient" ScalarProperty="true" /><Property Name="BlockMacSync" ScalarProperty="true" /><Property Name="ExcludedFileExtensionsForSyncClient" ScalarProperty="false" /><Property Name="OptOutOfGrooveBlock" ScalarProperty="true" /><Property Name="OptOutOfGrooveSoftBlock" ScalarProperty="true" /><Property Name="DisableReportProblemDialog" ScalarProperty="true" /></Properties></Query></Query></Actions><ObjectPaths><Constructor Id="3" TypeId="{268004ae-ef6b-4e9b-8425-127220d84719}" /></ObjectPaths></Request>'
+                $p = @{
+                    Authentication = $sps_auth;
+                    Data = $body_data;
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                #Execute query
+                Invoke-MonkeyCSOMRequest @p
+            }
         }
-        #Execute query
-        $sync_restriction = Invoke-MonkeyCSOMRequest @p
+        Catch{
+            $msg = @{
+                MessageData = $_.Exception.Message;
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'Error';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('CSOMTenantClientRestrictionError');
+            }
+            Write-Error @msg
+        }
     }
     End{
-        if($sync_restriction){
-            return $sync_restriction
-        }
+        #Nothing to do here
     }
 }

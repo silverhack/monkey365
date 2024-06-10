@@ -44,7 +44,7 @@ Function Split-Array {
         ,
         [Parameter(Mandatory, Position = 0)]
         [ValidateRange(0, [int]::MaxValue)]
-        [int] $Elements
+        [int]$Elements
     )
     Begin {
         $queue = [System.Collections.Generic.Queue[object]]::new($Elements)

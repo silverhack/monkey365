@@ -48,12 +48,13 @@ Function New-MonkeyVMObject {
             $VMObject = [ordered]@{
                 id = $InputObject.Id;
 		        name = $InputObject.Name;
+                type = $InputObject.type;
                 location = $InputObject.location;
 		        tags = if($null -ne $InputObject.Psobject.Properties.Item('tags')){$InputObject.tags}else{$null};
                 vmSize = $InputObject.properties.hardwareProfile.vmSize;
                 properties = $InputObject.properties;
                 resourceGroupName = $InputObject.Id.Split("/")[4];
-                resources = $InputObject.resources;
+                resources = if($null -ne $InputObject.Psobject.Properties.Item('resources')){$InputObject.resources}else{$null};
                 isAVAgentInstalled = $null;
                 isVMAgentInstalled = $null;
                 instanceView = $InputObject.properties.instanceView;
@@ -92,6 +93,8 @@ Function New-MonkeyVMObject {
                     properties = $null;
                     rawData = $null;
                 };
+                updates = $null;
+                latestPatchResults = $null;
                 rawObject = $InputObject;
             }
             #Create PsObject

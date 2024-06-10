@@ -48,6 +48,7 @@ Function New-MonkeyDatabaseObject {
             $DatabaseObject = [ordered]@{
                 id = $Database.Id;
 		        name = $Database.Name;
+                type = if($null -ne $Database.PsObject.properties.Item('type')){$Database.type}else{$null};
                 location = if($null -ne $Database.PsObject.properties.Item('location')){$Database.location}else{$null};
                 kind = if($null -ne $Database.PsObject.properties.Item('kind')){$Database.kind}else{$null};
                 sku = if($null -ne $Database.PsObject.properties.Item('sku')){$Database.sku}else{$null};

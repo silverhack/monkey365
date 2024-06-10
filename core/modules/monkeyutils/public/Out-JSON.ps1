@@ -44,7 +44,7 @@ Function Out-JSON{
     )
     Process{
         try{
-            $output = ConvertTo-Json $Object -Depth 10
+            $output = ConvertTo-Json $Object -Depth 100
             Set-Content $OutFile $output
         }
         catch{

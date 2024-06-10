@@ -35,28 +35,17 @@ Function Get-PSExoUser{
     #>
 
     Param (
-        [Parameter(Mandatory=$True, HelpMessage="user")]
-        [String]$user,
-
-        [Parameter(Mandatory=$false, HelpMessage="Authentication object")]
-        [Object]$AuthenticationObject
+        [Parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="user")]
+        [String]$User
     )
     Begin{
         #Getting environment
         $Environment = $O365Object.Environment
-        if($PSBoundParameters.ContainsKey('AuthenticationObject')){
-            $exo_auth = $AuthenticationObject
-        }
-        else{
-            #Get Exo authentication
-            $exo_auth = $O365Object.auth_tokens.ExchangeOnline
-        }
-        #Set var with null
-        $exo_user = $null
+        $exo_auth = $O365Object.auth_tokens.ExchangeOnline
     }
     Process{
         #Get role group members
-        $objectType = ("User('{0}')" -f $user)
+        $objectType = ("User('{0}')" -f $User)
         $param = @{
             Authentication = $exo_auth;
             Environment = $Environment;
@@ -67,11 +56,9 @@ Function Get-PSExoUser{
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
-        $exo_user = Get-PSExoAdminApiObject @param
+        Get-PSExoAdminApiObject @param
     }
     End{
-        if($null -ne $exo_user){
-            return $exo_user
-        }
+        #Nothing to do here
     }
 }

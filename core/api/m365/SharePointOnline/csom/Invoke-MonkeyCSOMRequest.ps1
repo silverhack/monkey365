@@ -205,16 +205,9 @@ Function Invoke-MonkeyCSOMRequest{
             if($null -ne $elem.Psobject.Properties.Item('ParentId')){
                 #Check if Id is in array
                 if($elem.Id -in $opIds){
-                    <#
-                    try{
-                        $Id = $elem.PreviousSibling.Id
-                    }
-                    catch{
-                        $Id = Get-Random -Minimum 1 -Maximum 10
-                    }
-                    #>
-                    if($null -ne $elem.PreviousSibling -and $null -ne $elem.PreviousSibling.Psobject.Properties.Item('Id')){
-                        $Id = $elem.PreviousSibling.Id
+                    $_id = $elem.PreviousSibling | Select-Object -ExpandProperty Id -ErrorAction Ignore
+                    if($null -ne $_id){
+                        $Id = $_id
                     }
                     else{
                         $Id = Get-Random -Minimum 1 -Maximum 10
@@ -240,42 +233,6 @@ Function Invoke-MonkeyCSOMRequest{
             }
             $count+=1
         }
-        <#
-        foreach ($elem in $Data.Request.ObjectPaths.GetEnumerator()){
-            #Get opId
-            try{
-                $Id = $opIds.Item($count)
-            }
-            catch{
-                $Id = Get-Random -Minimum 1 -Maximum 10
-                $opIds.Add($Id)
-            }
-            $elem.id = $Id.ToString()
-            if($null -ne $elem.Psobject.Properties.Item('ParentId')){
-                if($null -ne $elem.PreviousSibling -and $elem.PreviousSibling.LocalName -eq 'Property'){
-                    #Get parent Id
-                    $Id = $elem.PreviousSibling.ParentId
-                    $elem.id = $Id.ToString()
-                    $opId = Get-Random -Minimum 1 -Maximum 10
-                }
-                else{
-                    #Get opid
-                    try{
-                        $opId = $elem.PreviousSibling.Id
-                    }
-                    catch{
-                        $opId = (Get-Random -Minimum 1 -Maximum 10)
-                    }
-                }
-                $elem.ParentId = $opId.ToString()
-            }
-            #Add to array
-            if($opId -notin $opIds){
-                $opIds.Add($opId)
-            }
-            $count+=1
-        }
-        #>
     }
     Process{
         if($null -ne $url){

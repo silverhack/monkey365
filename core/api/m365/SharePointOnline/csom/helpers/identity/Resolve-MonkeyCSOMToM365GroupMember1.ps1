@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Resolve-MonkeyCSOMToM365GroupMember{
+Function Resolve-MonkeyCSOMToM365GroupMemberOld{
     <#
         .SYNOPSIS
         Get group members from Microsoft 365

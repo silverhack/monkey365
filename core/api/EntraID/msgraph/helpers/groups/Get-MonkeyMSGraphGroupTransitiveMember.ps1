@@ -49,12 +49,11 @@ Function Get-MonkeyMSGraphGroupTransitiveMember{
         [String]$APIVersion = "v1.0"
     )
     Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
         $Environment = $O365Object.Environment
         #Get Graph Auth
         $graphAuth = $O365Object.auth_tokens.MSGraph
+    }
+    Process{
         $msg = @{
             MessageData = ($message.GroupMembersMessage -f $GroupId);
             callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -64,10 +63,11 @@ Function Get-MonkeyMSGraphGroupTransitiveMember{
             Tags = @('AzureGraphGroupMembers');
         }
         Write-Verbose @msg
+        #Get members
+        $objectType = ('groups/{0}/transitiveMembers' -f $GroupId)
         $params = @{
             Authentication = $graphAuth;
-            ObjectType = "groups";
-            ObjectId = $GroupId;
+            ObjectType = $objectType;
             Environment = $Environment;
             ContentType = 'application/json';
             Method = "GET";
@@ -76,55 +76,37 @@ Function Get-MonkeyMSGraphGroupTransitiveMember{
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
-        $group_exists = Get-MonkeyMSGraphObject @params
-    }
-    Process{
-        if($group_exists){
-            #Get members
-            $objectType = ('groups/{0}/transitiveMembers' -f $group_exists.id)
-            $params = @{
-                Authentication = $graphAuth;
-                ObjectType = $objectType;
-                Environment = $Environment;
-                ContentType = 'application/json';
-                Method = "GET";
-                APIVersion = $APIVersion;
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-            }
-            $group_members = Get-MonkeyMSGraphObject @params
-            if($group_members){
-                foreach($member in $group_members){
-                    if($member.'@odata.type' -eq "#microsoft.graph.user"){
-                        $member
-                    }
-                    elseif($member.'@odata.type' -eq "#microsoft.graph.directoryRole"){
-                        $member
-                    }
-                    elseif($member.'@odata.type' -eq "#microsoft.graph.group"){
-                        if($member.id -notin $Parents){
-                            $Parents +=$member.id
-                            $p = @{
-                                groupId = $member.id
-                                Parents = $Parents
-                                InformationAction = $O365Object.InformationAction;
-                                Verbose = $O365Object.verbose;
-                                Debug = $O365Object.debug;
-                            }
-                            Get-MonkeyMSGraphGroupTransitiveMember @p
+        $group_members = Get-MonkeyMSGraphObject @params
+        if($group_members){
+            foreach($member in $group_members){
+                if($member.'@odata.type' -eq "#microsoft.graph.user"){
+                    $member
+                }
+                elseif($member.'@odata.type' -eq "#microsoft.graph.directoryRole"){
+                    $member
+                }
+                elseif($member.'@odata.type' -eq "#microsoft.graph.group"){
+                    if($member.id -notin $Parents){
+                        $Parents +=$member.id
+                        $p = @{
+                            groupId = $member.id
+                            Parents = $Parents
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
                         }
-                        else{
-                            $msg = @{
-                                MessageData = ($message.PotentialNestedGroupMessage -f $member.displayName, $GroupId);
-                                callStack = (Get-PSCallStack | Select-Object -First 1);
-                                logLevel = 'verbose';
-                                InformationAction = $O365Object.InformationAction;
-                                Verbose = $O365Object.verbose;
-                                Tags = @('AzureGraphGroupMembers');
-                            }
-                            Write-Verbose @msg
+                        Get-MonkeyMSGraphGroupTransitiveMember @p
+                    }
+                    else{
+                        $msg = @{
+                            MessageData = ($message.PotentialNestedGroupMessage -f $member.displayName, $GroupId);
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'verbose';
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Tags = @('AzureGraphGroupMembers');
                         }
+                        Write-Verbose @msg
                     }
                 }
             }

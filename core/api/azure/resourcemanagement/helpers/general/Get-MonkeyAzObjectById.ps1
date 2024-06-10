@@ -52,6 +52,9 @@ function Get-MonkeyAzObjectById{
         [ValidateSet("GET","POST")]
         [String]$Method = "GET",
 
+        [Parameter(Mandatory=$false, HelpMessage="POST data")]
+        [Object]$Data,
+
         [Parameter(Mandatory=$true, HelpMessage="Api version")]
         [String]$ApiVersion
     )
@@ -109,6 +112,7 @@ function Get-MonkeyAzObjectById{
             Environment = $Environment;
             ContentType = 'application/json';
             Method = $Method;
+            Data = $Data;
             InformationAction = $O365Object.InformationAction;
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;

@@ -48,6 +48,7 @@ Function New-MonkeyVmScaleSetObject {
             $VMObject = [ordered]@{
                 id = $InputObject.Id;
 		        name = $InputObject.Name;
+                type = $InputObject.type;
                 location = $InputObject.location;
 		        tags = $InputObject.tags;
                 sku = $InputObject.sku;

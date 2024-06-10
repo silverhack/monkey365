@@ -55,7 +55,7 @@ Function Invoke-MonkeyWebRequest{
         [String]$Referer,
 
         [Parameter(Mandatory = $false, HelpMessage='Timeout threshold for request operations in timespan format')]
-        [int32]$TimeOut = 60,
+        [int32]$TimeOut = 120,
 
         [parameter(Mandatory=$False, HelpMessage='cookies')]
         [Object[]]$Cookies,
@@ -105,7 +105,7 @@ Function Invoke-MonkeyWebRequest{
             $InformationAction = $PSBoundParameters['InformationAction']
         }
         if(!$PSBoundParameters.ContainsKey('Timeout')){
-            $_timeout = 20;
+            $_timeout = 120;
         }
         else{
             $_timeout = $PSBoundParameters['Timeout']
@@ -206,6 +206,14 @@ Function Invoke-MonkeyWebRequest{
                     $obj = Convert-RawData -RawObject $rawData -ContentType $response.Headers.ContentType
                     #Dispose object
                     [void]$response.Dispose();
+                    if($null -ne (Get-Variable -Name ErrorObj -Scope Script -ErrorAction Ignore)){
+                        $p = @{
+                            Message = ($messages.UnableToConvertRawData -f $PSBoundParameters['Url'], $response.Headers.ContentType);
+                            Verbose = $Verbose;
+                        }
+                        Write-Verbose @p
+                        Remove-Variable -Name ErrorObj -Scope Script -Force
+                    }
                     #return obj
                     return $obj
                 }

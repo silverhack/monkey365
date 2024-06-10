@@ -35,133 +35,141 @@ Function Get-MonkeyCSOMExternalLink{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-    [cmdletbinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Current')]
     Param (
-        [parameter(Mandatory= $True, HelpMessage="Web object")]
-        [Object]$Web,
-
-        [parameter(Mandatory=$True, HelpMessage="Authentication object")]
+        [parameter(Mandatory=$false, HelpMessage="Authentication object")]
         [Object]$Authentication,
 
+        [parameter(Mandatory= $false, ParameterSetName = 'Web', ValueFromPipeline = $true, HelpMessage="Web object")]
+        [Object]$Web,
+
+        [Parameter(Mandatory=$false, ParameterSetName = 'EndPoint', HelpMessage="Url")]
+        [String]$Endpoint,
+
         [Parameter(Mandatory=$false, HelpMessage="Lists to search")]
-        [string[]]$ListNames
+        [string[]]$Filter
     )
+    Begin{
+        $uniquePerms = $null;
+        #Set job params
+        $raParams = @{
+	        Command = "Test-HasUniqueRoleAssignment";
+            Arguments = $null;
+	        Runspacepool = $O365Object.monkey_runspacePool;
+	        ReuseRunspacePool = $true;
+	        Debug = $O365Object.debug;
+	        Verbose = $O365Object.verbose;
+	        MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+	        BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+	        BatchSize = $O365Object.nestedRunspaces.BatchSize;
+        }
+        $siParams = @{
+	        Command = "Get-MonkeyCSOMSharingInfo";
+            Arguments = $null;
+	        Runspacepool = $O365Object.monkey_runspacePool;
+	        ReuseRunspacePool = $true;
+	        Debug = $O365Object.debug;
+	        Verbose = $O365Object.verbose;
+	        MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+	        BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+	        BatchSize = $O365Object.nestedRunspaces.BatchSize;
+        }
+    }
     Process{
-        $all_shared_links = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
-        if($null -ne $Web -and $null -ne $Web.psobject.properties.Item('_ObjectType_') -and $Web._ObjectType_ -eq 'SP.Web'){
-            #Get lists
-            $p = @{
-                Authentication = $Authentication;
-                Web = $Web;
-                Filter = $ListNames;
-                ExcludeInternalLists = $True;
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
+        if($PSCmdlet.ParameterSetName -eq 'Endpoint' -or $PSCmdlet.ParameterSetName -eq 'Current'){
+            $p = Set-CommandParameter -Command "Get-MonkeyCSOMWeb" -Params $PSBoundParameters
+            $_Web = Get-MonkeyCSOMWeb @p
+            If($null -ne $_Web){
+                #Remove Endpoint if exists
+                [void]$PSBoundParameters.Remove('Endpoint');
+                #Execute command
+                $_Web | Get-MonkeyCSOMExternalLink @PSBoundParameters
+                return
             }
-            #Execute query
-            $all_lists = Get-MonkeyCSOMList @p
-            #Iterate over all lists
-            if($all_lists){
-                foreach($list in @($all_lists)){
-                    #Get items
-                    $p = @{
-                        Authentication = $Authentication;
-                        List = $list;
-                        EndPoint = $Web.Url;
-                        InformationAction = $O365Object.InformationAction;
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
-                    }
-                    $listItems = Get-MonkeyCSOMListItem @p
-                    if($listItems){
-                        foreach($item in @($listItems)){
-                            #Get sharing info
-						    $item_id = Find-ID -String $item.UniqueId
-						    $msg = @{
-							    MessageData = ($message.SPSGetSharingInfoForItem -f $item_id);
-							    callStack = (Get-PSCallStack | Select-Object -First 1);
-							    logLevel = 'verbose';
-							    InformationAction = $O365Object.InformationAction;
-                                Verbose = $O365Object.verbose;
-							    Tags = @('SPSExternalSharingInfo');
-						    }
-						    Write-Verbose @msg
-                            #Check if roleAssignments
-                            $param = @{
-                                ClientObject = $item;
-                                Properties = "HasUniqueRoleAssignments";
-                                Authentication = $Authentication;
-                                Endpoint = $Web.Url;
-                                InformationAction = $O365Object.InformationAction;
-                                Verbose = $O365Object.verbose;
-                                Debug = $O365Object.debug;
-                            }
-                            $permissions = Get-MonkeyCSOMProperty @param
-                            if($null -ne $permissions -and $permissions.HasUniqueRoleAssignments){
-                                #Get Sharing Info
-                                $p = @{
-                                    Authentication = $Authentication;
-                                    ObjectId = $item._ObjectIdentity_;
-                                    EndPoint = $Web.Url;
-                                    InformationAction = $O365Object.InformationAction;
-                                    Verbose = $O365Object.verbose;
-                                    Debug = $O365Object.debug;
+        }
+        foreach($_Web in @($PSBoundParameters['Web'])){
+            $objectType = $_Web | Select-Object -ExpandProperty _ObjectType_ -ErrorAction Ignore
+            if ($null -ne $objectType -and $objectType -eq 'SP.Web'){
+                #Get command param
+                $p = Set-CommandParameter -Command "Get-MonkeyCSOMList" -Params $PSBoundParameters
+                #Get command param
+                $liarg = Set-CommandParameter -Command "Get-MonkeyCSOMListItem" -Params $PSBoundParameters
+                #Exclude internal lists
+                [void]$p.Add('ExcludeInternalLists',$true);
+                #Add Web
+                $p.Item('Web') = $_Web;
+                #Execute command
+                $allItems = Get-MonkeyCSOMList @p | Get-MonkeyCSOMListItem @liarg
+                if($null -ne $allItems){
+                    #Set new params
+                    $p = Set-CommandParameter -Command "Test-HasUniqueRoleAssignment" -Params $PSBoundParameters
+                    #Update Endpoint
+                    $p.Item('Endpoint') = $_Web.Url;
+                    #Add ClientObject
+                    #$p.Item('ClientObject') = $_
+                    #Set arguments
+                    $raParams.Arguments = $p;
+                    #Execute batch query
+                    $uniquePerms = @($allItems).Where({( $_ | Invoke-MonkeyJob @raParams) -eq $true})
+                }
+                if($null -ne $uniquePerms){
+                    #Set new params
+                    $p = Set-CommandParameter -Command "Get-MonkeyCSOMSharingInfo" -Params $PSBoundParameters
+                    #Update Endpoint
+                    $p.Item('Endpoint') = $_Web.Url;
+                    $siParams.Arguments = $p;
+                    @($uniquePerms).ForEach({
+                        $allLinks = $_._ObjectIdentity_ | Invoke-MonkeyJob @siParams;
+                        foreach($elem in @($allLinks)){
+                            foreach($sharedLink in $elem.SharingLinks){
+                                if($sharedLink.IsEditLink){
+                                    $linkAccess = "Edit"
                                 }
-                                $sharingInfo = Get-MonkeyCSOMSharingInfo @p
-                                if($sharingInfo){
-                                    foreach ($sharedLink in $sharingInfo.SharingLinks){
-                                        if($sharedLink.url){
-                                            if($sharedLink.IsEditLink){
-                                                $linkAccess = "Edit"
-                                            }
-                                            elseif ($sharedLink.IsReviewLink) {
-		                                        $linkAccess = "Review"
-		                                    }
-		                                    else {
-			                                    $linkAccess = "ViewOnly"
-		                                    }
-                                            $LinkObject = [ordered]@{
-                                                Site = $web.Url;
-                                                FileID = $item.UniqueId
-                                                IsFolder = $sharingInfo.IsFolder
-                                                AnonymousEditLink = $sharingInfo.AnonymousEditLink
-                                                AnonymousViewLink = $sharingInfo.AnonymousViewLink
-                                                CanBeShared = $sharingInfo.CanBeShared
-                                                IsSharedWithGuest = $sharingInfo.IsSharedWithGuest
-                                                IsSharedWithMany = $sharingInfo.IsSharedWithMany
-                                                IsSharedWithSecurityGroup = $sharingInfo.IsSharedWithSecurityGroup
-			                                    Name = $item.FileLeafRef
-			                                    FileSystemObjectType = [FileSystemObjectType]$item.FileSystemObjectType
-			                                    RelativeURL = $item.FileRef
-			                                    CreatedByEmail = $item.Author.email
-			                                    CreatedOn = $item.created
-			                                    Modified = $item.Modified
-			                                    ModifiedByEmail = $item.Editor.email
-			                                    SharedLink = $sharedLink.Url
-			                                    SharedLinkAccess = $linkAccess
-			                                    RequiresPassword = $sharedLink.RequiresPassword
-			                                    BlocksDownload = $sharedLink.BlocksDownload
-			                                    SharedLinkType = [SharingLinkKind]$sharedLink.LinkKind
-			                                    AllowsAnonymousAccess = $sharedLink.AllowsAnonymousAccess
-			                                    IsActive = $sharedLink.IsActive
-			                                    RawSharingInfoObject = $sharingInfo
-                                            }
-                                            #return PsObject
-                                            $obj = New-Object -TypeName PsObject -Property $LinkObject
-                                            [void]$all_shared_links.Add($obj)
-                                        }
-                                    }
+                                elseif ($sharedLink.IsReviewLink) {
+		                            $linkAccess = "Review"
+		                        }
+		                        else {
+			                        $linkAccess = "ViewOnly"
+		                        }
+                                $LinkObject = $elem | New-MonkeyCSOMExternalLinkObject
+                                if($LinkObject){
+                                    $LinkObject.Site = $_Web.Url;
+                                    $LinkObject.FileID = $_.UniqueId;
+                                    $LinkObject.Name = $_.FileLeafRef;
+                                    $LinkObject.FileSystemObjectType = [FileSystemObjectType]$_.FileSystemObjectType;
+                                    $LinkObject.RelativeURL = $_.FileRef;
+                                    $LinkObject.CreatedByEmail = $_.Author.email;
+                                    $LinkObject.CreatedOn = $_.created;
+                                    $LinkObject.Modified = $_.Modified;
+                                    $LinkObject.ModifiedByEmail = $_.Editor.email;
+                                    $LinkObject.SharedLinkAccess = $linkAccess;
+                                    $LinkObject.SharedLink = $sharedLink.Url
+			                        $LinkObject.RequiresPassword = $sharedLink.RequiresPassword
+			                        $LinkObject.BlocksDownload = $sharedLink.BlocksDownload
+			                        $LinkObject.SharedLinkType = [SharingLinkKind]$sharedLink.LinkKind
+			                        $LinkObject.AllowsAnonymousAccess = $sharedLink.AllowsAnonymousAccess
+			                        $LinkObject.IsActive = $sharedLink.IsActive
+                                    $LinkObject.RawSharingInfoObject = $elem;
+                                    $LinkObject
                                 }
                             }
                         }
-                    }
+                    });
                 }
+            }
+            Else{
+                $msg = @{
+                    MessageData = ($message.SPOInvalidWebObjectMessage);
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'Warning';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('MonkeyCSOMInvalidWebObject');
+                }
+                Write-Warning @msg
+                return
             }
         }
     }
     End{
-        #Nothing to do here
-        return $all_shared_links
     }
 }

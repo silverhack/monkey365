@@ -54,7 +54,7 @@ Function New-HtmlRawObjectModal{
         #Set attributes
         [void]$code_tag.SetAttribute('class',$format);
         [void]$code_tag.SetAttribute('id',$code_id);
-        $raw_data = $raw_data | ConvertTo-Json -Depth 10 -Compress
+        $raw_data = $raw_data | ConvertTo-Json -Depth 100 -Compress
         [void]$code_tag.AppendChild($modal_body.CreateTextNode($raw_data));
         #Append to pre
         [void]$modal_body.pre.AppendChild($code_tag);

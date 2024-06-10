@@ -43,12 +43,14 @@ Function Get-MonkeyAzVMAVInfo {
     )
     Process{
         try{
-            $av = $InputObject.resources.Where({($_.Id -match "IaaSAntimalware" -or $_.Id -match "MDE.Windows" -or $_.Id -match "MDE.Linux") -and ($_.properties.provisioningState -ne 'Failed')})
-            if($av.Count -gt 0){
-                $InputObject.isAVAgentInstalled = $True
-            }
-            else{
-                $InputObject.isAVAgentInstalled = $false
+            If($null -ne $InputObject.PsObject.Properties.Item('resources') -and $null -ne $InputObject.resources){
+                $av = $InputObject.resources.Where({($_.Id -match "IaaSAntimalware" -or $_.Id -match "MDE.Windows" -or $_.Id -match "MDE.Linux") -and ($_.properties.provisioningState -ne 'Failed')})
+                if($av.Count -gt 0){
+                    $InputObject.isAVAgentInstalled = $True
+                }
+                else{
+                    $InputObject.isAVAgentInstalled = $false
+                }
             }
         }
         catch{

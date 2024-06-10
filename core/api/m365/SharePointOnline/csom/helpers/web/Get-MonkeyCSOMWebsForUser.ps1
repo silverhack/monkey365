@@ -37,6 +37,7 @@ Function Get-MonkeyCSOMWebsForUser{
             https://github.com/silverhack/monkey365
     #>
     [cmdletbinding()]
+    [OutputType([System.Collections.Generic.List[System.Object]])]
     Param(
         [parameter(Mandatory=$false, ParameterSetName = 'Sites', HelpMessage="Scan Sites")]
         [String[]]$Sites,
@@ -54,7 +55,7 @@ Function Get-MonkeyCSOMWebsForUser{
         #Get Access Token for Sharepoint
         $sps_auth = $O365Object.auth_tokens.SharePointOnline
         #Set new list
-        $all_webs = New-Object System.Collections.Generic.List[System.Object]
+        $all_webs = [System.Collections.Generic.List[System.Object]]::new()
     }
     Process{
         if($PSCmdlet.ParameterSetName -eq 'Sites'){

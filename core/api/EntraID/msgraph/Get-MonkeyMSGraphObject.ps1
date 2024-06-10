@@ -69,6 +69,9 @@ Function Get-MonkeyMSGraphObject{
         [switch]$me,
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [switch]$AddConsistencyLevelHeader,
+
+        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
         [String]$RawQuery,
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
@@ -109,6 +112,7 @@ Function Get-MonkeyMSGraphObject{
         else{
             $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
         }
+        #$AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
         #set msgraph uri
         $base_uri = ("/{0}" -f $APIVersion)
         $my_filter = $null
@@ -193,6 +197,9 @@ Function Get-MonkeyMSGraphObject{
             #Create Request Header
             $requestHeader = @{
                 Authorization = $AuthHeader
+            }
+            if($PSBoundParameters.ContainsKey('AddConsistencyLevelHeader') -and $PSBoundParameters['AddConsistencyLevelHeader'].IsPresent){
+                [void]$requestHeader.Add('ConsistencyLevel','eventual')
             }
             #set count
             $countObjects = 0;

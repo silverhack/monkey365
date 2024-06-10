@@ -67,20 +67,21 @@ Function New-PowerShellObject{
             #Add inputobject if any
             if($PSBoundParameters.ContainsKey('InputObject') -and $null -ne $PSBoundParameters['InputObject']){
                 [void]$Pipeline.AddArgument($InputObject)
+                #[void]$Pipeline.AddParameter("InputObject",$InputObject)
             }
             #Add arguments
             if($PSBoundParameters.ContainsKey('Arguments')){
-                Foreach($arg in $PSBoundParameters['Arguments']) {
-                    If ($arg -is [Object[]]) {
-                        Foreach($arg_ in $arg) {
+                Foreach($argInput in $PSBoundParameters['Arguments']) {
+                    If ($argInput -is [Object[]]) {
+                        Foreach($arg_ in $argInput) {
                             [void]$Pipeline.AddArgument($arg_)
                         }
                     }
-                    elseif($arg -is [System.Collections.Specialized.OrderedDictionary] -or $arg -is [System.Collections.Hashtable]){
-                        [void]$Pipeline.AddParameters($arg)
+                    ElseIf(([System.Collections.IDictionary]).IsAssignableFrom($argInput.GetType())){
+                        [void]$Pipeline.AddParameters($argInput)
                     }
                     Else {
-                        [void]$Pipeline.AddArgument($arg)
+                        [void]$Pipeline.AddArgument($argInput)
                     }
                 }
             }

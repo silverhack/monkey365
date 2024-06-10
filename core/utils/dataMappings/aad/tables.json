@@ -93,8 +93,7 @@
                 "ClaimValue": "Permision",
                 "PermissionDisplayName": "Permission Name"
             },
-            "emphasis": ["Permission"],
-            "table": "asList"
+            "table": "Normal"
         }
     ],
 	"aad_test_application_present": [
@@ -377,7 +376,7 @@
 				"isBuiltIn": "isBuiltIn",
 				"effectiveMembers.mfaenabled": "MFA enabled"
             },
-			"expand": "effectiveMembers",
+			"expandObject": "effectiveMembers",
             "table": "Normal",
 			"actions":{
 				"objectData":{
@@ -398,7 +397,7 @@
                 "effectiveMembers.userType": "User Type",
 				"effectiveMembers.mfaenabled": "MFA enabled"
             },
-			"expand": "effectiveMembers",
+			"expandObject": "effectiveMembers",
             "table": "Normal",
 			"actions":{
 				"objectData":{
@@ -418,7 +417,7 @@
                 "effectiveMembers.userType": "User Type",
 				"effectiveMembers.mfaenabled": "MFA enabled"
             },
-			"expand": "effectiveMembers",
+			"expandObject": "effectiveMembers",
             "table": "Normal",
 			"actions":{
 				"objectData":{

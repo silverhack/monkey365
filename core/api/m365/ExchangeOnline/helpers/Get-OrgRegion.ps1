@@ -36,13 +36,22 @@ Function Get-OrgRegion{
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
     [CmdletBinding()]
-    Param()
+    Param(
+		[Parameter(Mandatory = $false,HelpMessage = "Purview")]
+		[Switch]$Purview
+	)
     Begin{
         $org = $null
         #Get instance
         $Environment = $O365Object.Environment
-        #Get Exchange Online Auth token
-        $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
+        if($PSBoundParameters.ContainsKey('Purview') -and $PSBoundParameters['Purview'].IsPresent){
+            #Get Purview token
+            $ExoAuth = $O365Object.auth_tokens.ComplianceCenter
+        }
+        else{
+            #Get Exchange Online Auth token
+            $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
+        }
         #InitParams
         $p = @{
             Authentication = $ExoAuth;

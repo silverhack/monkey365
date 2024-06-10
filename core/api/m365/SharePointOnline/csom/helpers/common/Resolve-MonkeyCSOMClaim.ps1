@@ -36,46 +36,56 @@ Function Resolve-MonkeyCSOMClaim{
 
     [cmdletbinding()]
     Param (
-        [Parameter(Mandatory=$true, HelpMessage="Authentication Object")]
+        [Parameter(Mandatory=$false, HelpMessage="Authentication Object")]
         [Object]$Authentication,
 
-        [Parameter(Mandatory=$true, HelpMessage="Claim")]
-        [string]$Claim
+        [Parameter(Mandatory=$true, ValueFromPipeline = $true, HelpMessage="Claim")]
+        [String]$Claim
     )
-    try{
-        $body_data = ('<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="Monkey 365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><Method Name="DecodeClaim" Id="204" ObjectPathId="151"><Parameters><Parameter Type="String">${claim}</Parameter></Parameters></Method></Actions><ObjectPaths><Constructor Id="151" TypeId="{268004ae-ef6b-4e9b-8425-127220d84719}" /></ObjectPaths></Request>' -replace '\${claim}',$Claim)
-        #Set object metadata
-        $objectMetadata = @{
-            CheckValue = 1;
-            isEqualTo =204;
-            GetValue = 2;
+    Process{
+        try{
+            $body_data = ('<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="Monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><Method Name="DecodeClaim" Id="204" ObjectPathId="151"><Parameters><Parameter Type="String">${claim}</Parameter></Parameters></Method></Actions><ObjectPaths><Constructor Id="151" TypeId="{268004ae-ef6b-4e9b-8425-127220d84719}" /></ObjectPaths></Request>' -replace '\${claim}',$PSBoundParameters['Claim'])
+            #Set object metadata
+            $objectMetadata = @{
+                CheckValue = 1;
+                isEqualTo =204;
+                GetValue = 2;
+            }
+            #Get params
+            $p = Set-CommandParameter -Command "Invoke-MonkeyCSOMDefaultRequest" -Params $PSBoundParameters
+            #Add authentication header if missing
+            if(!$p.ContainsKey('Authentication')){
+                if($null -ne $O365Object.auth_tokens.SharePointOnline){
+                    [void]$p.Add('Authentication',$O365Object.auth_tokens.SharePointOnline);
+                }
+                Else{
+                    Write-Warning -Message ($message.NullAuthenticationDetected -f "SharePoint Online")
+                    break
+                }
+            }
+            #Add Data
+            [void]$p.Add('Data',$body_data);
+            #Add Object metadata
+            [void]$p.Add('ObjectMetadata',$objectMetadata);
+            #Add ContentType
+            [void]$p.Add('ContentType','application/json; charset=utf-8');
+            #Execute query
+            Invoke-MonkeyCSOMDefaultRequest @p
         }
-        $p = @{
-            Authentication = $Authentication;
-            ContentType = 'application/json; charset=utf-8';
-            Data = $body_data;
-            ObjectMetadata= $objectMetadata;
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
+        catch{
+            $msg = @{
+                MessageData = ("Unable to resolve claim {0}" -f $PSBoundParameters['Claim']);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'warning';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365CSOMClaimError');
+            }
+            Write-Warning @msg
+            #Set verbose
+            $msg.MessageData = $_
+            $msg.logLevel = 'Verbose'
+            [void]$msg.Add('Verbose',$O365Object.verbose)
+            Write-Verbose @msg
         }
-        #call SPS
-        $resolved_claim = Invoke-MonkeyCSOMDefaultRequest @p
-        return $resolved_claim
-    }
-    catch{
-        $msg = @{
-            MessageData = ("Unable to resolve claim {0}" -f $Claim);
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'warning';
-            InformationAction = $O365Object.InformationAction;
-            Tags = @('ResolvePSPClaimError');
-        }
-        Write-Warning @msg
-        #Set verbose
-        $msg.MessageData = $_
-        $msg.logLevel = 'Verbose'
-        [void]$msg.Add('Verbose',$O365Object.verbose)
-        Write-Verbose @msg
     }
 }

@@ -39,39 +39,30 @@ Function Convert-SharePointOnlineDateString{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
     [cmdletbinding()]
     Param (
-        [Parameter(Mandatory= $true, HelpMessage="DateTime")]
-        [String]$Date
+        [Parameter(Mandatory= $true, ValueFromPipeline = $True, HelpMessage="DateTime")]
+        [String]$InputObject
     )
-    Begin{
-        $datetime = [ordered]@{
-            Year = 0;
-            Month = 0;
-            Day = 0;
-            Hour = 0;
-            Minute = 0;
-            Second = 0;
-            MilliSecond = 0;
-        }
-        $keys = New-Object System.Collections.Generic.List[String]
-        foreach($el in $datetime.Keys.GetEnumerator()){
-            [void]$keys.Add($el.ToString())
-        }
-    }
     Process{
         try{
-            if(![String]::IsNullOrEmpty($Date)){
-                $new_arr = ($Date.Split('()')[1]).Split(',')
+            $datetime = [ordered]@{
+                Year = 0;
+                Month = 0;
+                Day = 0;
+                Hour = 0;
+                Minute = 0;
+                Second = 0;
+                MilliSecond = 0;
+            }
+            $keys = New-Object System.Collections.Generic.List[String]
+            foreach($el in $datetime.Keys.GetEnumerator()){
+                [void]$keys.Add($el.ToString())
+            }
+            if(![String]::IsNullOrEmpty($InputObject)){
+                $new_arr = ($InputObject.Split('()')[1]).Split(',')
                 for($i=0;$i -lt $new_arr.Count;$i++){
                     $datetime[$keys[$i]] = $new_arr[$i]
                 }
             }
-        }
-        catch{
-            Write-Warning $_
-        }
-    }
-    End{
-        try{
             [System.DateTime]::new(
                 $datetime.Year,
                 $datetime.Month,
@@ -83,7 +74,7 @@ Function Convert-SharePointOnlineDateString{
             )
         }
         catch{
-            $Date
+            $InputObject
         }
     }
 }

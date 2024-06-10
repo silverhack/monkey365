@@ -75,6 +75,7 @@ Function Import-MonkeyJob{
             try{
                 if($raw_data.Instance -eq 'Azure'){
                     $O365Object.Environment = $raw_data.Environment;
+                    $O365Object.cloudEnvironment = $raw_data.cloudEnvironment;
                     $O365Object.startDate = $raw_data.StartDate;
                     $O365Object.Tenant = $raw_data.Tenant;
                     $O365Object.TenantId = $raw_data.TenantId;
@@ -88,6 +89,7 @@ Function Import-MonkeyJob{
                 }
                 else{
                     $O365Object.Environment = $raw_data.Environment;
+                    $O365Object.cloudEnvironment = $raw_data.cloudEnvironment;
                     $O365Object.startDate = $raw_data.StartDate;
                     $O365Object.Tenant = $raw_data.Tenant;
                     $O365Object.TenantId = $raw_data.TenantId;

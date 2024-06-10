@@ -47,7 +47,7 @@ Function Convert-RawData{
         switch -Regex ($ContentType) {
             "application/(json)"
             {
-                $RawResponse = ConvertFrom-Json -InputObject $RawObject
+                $RawResponse = ConvertFrom-Json -InputObject $RawObject -ErrorVariable ErrorObj -WarningVariable ErrorObj
             }
             "application/(xml)"
             {
@@ -61,6 +61,7 @@ Function Convert-RawData{
     }
     catch{
         Write-Verbose $_.Exception.Message
+        $Script:ErrorObj = $ContentType
     }
     #Return Object
     Return $RawResponse

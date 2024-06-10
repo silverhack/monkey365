@@ -39,30 +39,32 @@ Function Update-MonkeyCSOMObject{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [cmdletbinding()]
     Param (
-        [parameter(Mandatory= $True)]
+        [parameter(Mandatory= $True, ValueFromPipeline = $true, HelpMessage="SharePoint Object")]
         [Object]$Object
     )
-    try{
-        $_object = New-Object -TypeName PSCustomObject
-        foreach($elem in $Object.psobject.properties){
-            if($elem.Name.Contains("$")){
-                $_object | Add-Member NoteProperty -name $elem.Name.Split('$')[0] -value $elem.Value -Force
+    Process{
+        try{
+            $_object = New-Object -TypeName PSCustomObject
+            foreach($elem in $Object.psobject.properties){
+                if($elem.Name.Contains("$")){
+                    $_object | Add-Member NoteProperty -name $elem.Name.Split('$')[0] -value $elem.Value -Force
+                }
+                else{
+                    $_object | Add-Member NoteProperty -name $elem.Name -value $elem.Value -Force
+                }
             }
-            else{
-                $_object | Add-Member NoteProperty -name $elem.Name -value $elem.Value -Force
+            return $_object
+        }
+        catch{
+            $msg = @{
+                MessageData = $_;
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'Verbose';
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Tags = @('CSOMCleanObjectError');
             }
+            Write-Verbose @msg
         }
-        return $_object
-    }
-    catch{
-        $msg = @{
-            MessageData = $_;
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'Verbose';
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Tags = @('CSOMCleanObjectError');
-        }
-        Write-Verbose @msg
     }
 }

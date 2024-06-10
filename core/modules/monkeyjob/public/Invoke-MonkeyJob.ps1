@@ -118,8 +118,14 @@ Function Invoke-MonkeyJob{
         else {
             $MaxQueue = $MaxQueue
         }
-        #Create new runspace or reuse existing
-        if (-not $PSBoundParameters.ContainsKey('Runspacepool')) {
+        if($PSBoundParameters.ContainsKey('Runspacepool') -and $PSBoundParameters['Runspacepool']){
+            if($Runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::BeforeOpen){
+                #Open runspace
+                Write-Verbose $script:messages.OpenRunspaceMessage
+                $Runspacepool.Open()
+            }
+        }
+        Else{
             #Create a new runspacePool
             $localparams = @{
                 ImportVariables = $ImportVariables;
@@ -144,13 +150,6 @@ Function Invoke-MonkeyJob{
                 }
             }
         }
-        else{
-            if($Runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::BeforeOpen){
-                #Open runspace
-                Write-Verbose $script:messages.OpenRunspaceMessage
-                $Runspacepool.Open()
-            }
-        }
         #Set Monkeyjobs variable
         $MyMonkeyJobs = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
         #Set timers, vars
@@ -171,8 +170,10 @@ Function Invoke-MonkeyJob{
             #Get scriptblock if any
             $param = @{
                 RunspacePool = $Runspacepool;
-                InputObject = $InputObject;
                 Arguments = $Arguments;
+            }
+            if($PSBoundParameters.ContainsKey('InputObject') -and $PSBoundParameters['InputObject']){
+                [void]$param.Add('InputObject',$PSBoundParameters['InputObject'])
             }
             if($PSCmdlet.ParameterSetName -eq 'ScriptBlock'){
                 if($InputObject){

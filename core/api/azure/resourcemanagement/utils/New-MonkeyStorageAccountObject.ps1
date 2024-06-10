@@ -48,6 +48,7 @@ Function New-MonkeyStorageAccountObject {
             $strObject = [ordered]@{
                 id = $StrAccount.Id;
 		        name = $StrAccount.Name;
+                type = $StrAccount.type;
                 location = $StrAccount.location;
 		        tags = $StrAccount.tags;
                 properties = $StrAccount.Properties;

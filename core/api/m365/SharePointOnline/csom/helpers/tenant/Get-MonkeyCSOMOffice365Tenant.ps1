@@ -38,26 +38,40 @@ Function Get-MonkeyCSOMOffice365Tenant{
     [cmdletbinding()]
     Param ()
     Begin{
-        $m365_tenant = $null
-        #Get Admin Access Token from SPO
-		$sps_auth = $O365Object.auth_tokens.SharePointOnline
         #Microsoft 365 Tenant
-        [xml]$body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="monkey 365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="71" ObjectPathId="70" /><Query Id="72" ObjectPathId="70"><Query SelectAllProperties="true"><Properties /></Query></Query></Actions><ObjectPaths><Constructor Id="70" TypeId="{e45fd516-a408-4ca4-b6dc-268e2f1f0f83}" /></ObjectPaths></Request>'
+        [xml]$body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="71" ObjectPathId="70" /><Query Id="72" ObjectPathId="70"><Query SelectAllProperties="true"><Properties /></Query></Query></Actions><ObjectPaths><Constructor Id="70" TypeId="{e45fd516-a408-4ca4-b6dc-268e2f1f0f83}" /></ObjectPaths></Request>'
     }
     Process{
-        $p = @{
-            Authentication = $sps_auth;
-            Data = $body_data;
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
+        try{
+            If($null -ne $O365Object.auth_tokens.SharePointAdminOnline){
+                $p = @{
+                    Authentication = $O365Object.auth_tokens.SharePointAdminOnline;
+                    Data = $body_data;
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                #Execute query
+                $m365_tenant = Invoke-MonkeyCSOMRequest @p
+                if($m365_tenant){
+                    #Add url
+                    $m365_tenant | Add-Member -type NoteProperty -name Url -value $O365Object.auth_tokens.SharePointAdminOnline.Resource -Force
+                    return $m365_tenant
+                }
+            }
         }
-        #Execute query
-        $m365_tenant = Invoke-MonkeyCSOMRequest @p
+        Catch{
+            $msg = @{
+                MessageData = $_.Exception.Message;
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'Error';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('CSOMM365TenantError');
+            }
+            Write-Error @msg
+        }
     }
     End{
-        if($m365_tenant){
-            return $m365_tenant
-        }
+        #Nothing to do here
     }
 }

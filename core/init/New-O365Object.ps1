@@ -378,6 +378,7 @@ Function New-O365Object{
             #Create and return a new PsObject
             $tmp_object = [ordered]@{
                 Environment = Get-MonkeyEnvironment -Environment $MyParams.Environment;
+                cloudEnvironment = $MyParams.Environment;
                 runspaces_modules = $runspaces_modules;
                 runspace_init = $runspace_init;
                 runspace_vars = $null;
@@ -428,7 +429,7 @@ Function New-O365Object{
                 forceMSALDesktop = if($null -ne $MyParams.ForceMSALDesktop){$MyParams.ForceMSALDesktop}else{$false};
                 isConfidentialApp = $null;
                 isSharePointAdministrator = $null;
-                spoWebs = $null;
+                spoSites = $null;
                 InformationAction= $InformationAction;
                 VerboseOptions = $VerboseOptions;
                 AuthType = $null;

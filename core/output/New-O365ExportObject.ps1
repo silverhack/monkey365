@@ -49,6 +49,7 @@ Function New-O365ExportObject{
             { @("microsoft365", "entraid") -contains $_ }{
                 $_object = [PsCustomObject]@{
                     Environment = $O365Object.Environment;
+                    cloudEnvironment = $O365Object.cloudEnvironment;
                     StartDate = $O365Object.startDate.ToLocalTime();
                     Tenant = $O365Object.Tenant;
                     TenantID = $O365Object.TenantId;
@@ -64,6 +65,7 @@ Function New-O365ExportObject{
             'azure'{
                 $_object = [PsCustomObject]@{
                     Environment = $O365Object.Environment;
+                    cloudEnvironment = $O365Object.cloudEnvironment;
                     StartDate = $O365Object.startDate.ToLocalTime();
                     Tenant = $O365Object.Tenant;
                     TenantID = $O365Object.TenantId;
@@ -81,6 +83,7 @@ Function New-O365ExportObject{
             Default{
                 $_object = [PsCustomObject]@{
                     Environment = $O365Object.Environment;
+                    cloudEnvironment = $O365Object.cloudEnvironment;
                     StartDate = $O365Object.startDate.ToLocalTime();
                     Tenant = $O365Object.Tenant;
                     TenantID = $O365Object.TenantId;

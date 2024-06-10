@@ -16,7 +16,7 @@ $Script:IsLinuxEnvironment = (Get-Variable -Name "IsLinux" -ErrorAction Ignore) 
 $Script:IsMacOSEnvironment = (Get-Variable -Name "IsMacOS" -ErrorAction Ignore) -and $IsMacOS
 $Script:IsWindowsEnvironment = !$IsLinuxEnvironment -and !$IsMacOSEnvironment
 
-Function Install-Core(){
+Function Get-CoreLib(){
     try{
         $MsalLibPath = ("{0}{1}lib{2}netcore" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar)
         $files = [System.IO.Directory]::EnumerateFiles($MsalLibPath,"*.dll","AllDirectories")
@@ -32,7 +32,29 @@ Function Install-Core(){
     }
 }
 
-Function Install-Desktop(){
+Function Get-DeskLibForCore(){
+    try{
+        $MsalLibPath = ("{0}{1}lib{2}desktop" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar)
+        $files = [System.IO.Directory]::EnumerateFiles($MsalLibPath,"*.dll","AllDirectories")
+        #Remove diagnostic source
+        $files = @($files).Where({$_ -notlike '*System.Diagnostics.DiagnosticSource*'})
+        #Load .net core path
+        $MsalLibPath = ("{0}{1}lib{2}netcore" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar)
+        $ds = [System.IO.Directory]::EnumerateFiles($MsalLibPath,"*System.Diagnostics.DiagnosticSource.dll","AllDirectories")
+        $files+=$ds
+        if($null -ne $files){
+            foreach ($file in $files) {
+                $Assemblies.Add($file)
+            }
+        }
+        return $true
+    }
+    catch{
+        return $false
+    }
+}
+
+Function Get-DesktopLib(){
     try{
         $MsalLibPath = ("{0}{1}lib{2}desktop" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar)
         $files = [System.IO.Directory]::EnumerateFiles($MsalLibPath,"*.dll","AllDirectories")
@@ -49,32 +71,38 @@ Function Install-Desktop(){
 }
 
 Function Install-MsalLibrary(){
-    $params = @{
-        LiteralPath = $Assemblies;
-        IgnoreWarnings = $true;
-        WarningVariable = "warnVar";
-        WarningAction = "SilentlyContinue"
-    }
-    Add-Type @params | Out-Null
-    if ($PSVersionTable.PSVersion -ge [version]'6.0') {
-        $Assemblies.Add('System.Console.dll')
-    }
-    if (-not ([System.Management.Automation.PSTypeName]'DeviceCodeHelper').Type){
-        $cs_path = ("{0}/helpers/devicecode.cs" -f $PSScriptRoot)
-        $exists = [System.IO.File]::Exists($cs_path)
-        if($exists){
-            $params = @{
-                LiteralPath = $cs_path;
-                ReferencedAssemblies = $Assemblies;
-                IgnoreWarnings = $true;
-                WarningVariable = "warnVar";
-                WarningAction = "SilentlyContinue"
+    try{
+        $params = @{
+            LiteralPath = $Assemblies;
+            IgnoreWarnings = $true;
+            WarningVariable = "warnVar";
+            WarningAction = "SilentlyContinue"
+        }
+        Add-Type @params | Out-Null
+        if ($PSVersionTable.PSVersion -ge [version]'6.0') {
+            $Assemblies.Add('System.Console.dll')
+        }
+        if (-not ([System.Management.Automation.PSTypeName]'DeviceCodeHelper').Type){
+            $cs_path = ("{0}/helpers/devicecode.cs" -f $PSScriptRoot)
+            $exists = [System.IO.File]::Exists($cs_path)
+            if($exists){
+                $params = @{
+                    LiteralPath = $cs_path;
+                    ReferencedAssemblies = $Assemblies;
+                    IgnoreWarnings = $true;
+                    WarningVariable = "warnVar";
+                    WarningAction = "SilentlyContinue"
+                }
+                Add-Type @params
             }
-            Add-Type @params
+            else{
+                Write-Verbose "Unable to load [DeviceCodeHelper]"
+            }
         }
-        else{
-            Write-Verbose "Unable to load [DeviceCodeHelper]"
-        }
+    }
+    Catch{
+        Write-Error $_
+        throw ("Unable to load MSAL library")
     }
 }
 
@@ -99,52 +127,52 @@ $osInfo = Get-OsInfo
 if($null -ne $osInfo){
     if($osInfo.IsUserInteractive -eq $false){
         Write-Verbose ($script:messages.OSVersionMessage -f "Headless", "Core")
-        $isInstalled = Install-Core
-        if($isInstalled){
+        $AssembliesExists = Get-CoreLib
+        if($AssembliesExists){
             Install-MsalLibrary
         }
     }
     ElseIf ($PSVersionTable.PSEdition -eq 'Desktop'){
         Write-Verbose ($script:messages.OSVersionMessage -f "Windows", "Desktop")
-        $isInstalled = Install-Desktop
-        if($isInstalled){
+        $AssembliesExists = Get-DesktopLib
+        if($AssembliesExists){
             Install-MsalLibrary
         }
     }
     ElseIf (($PSVersionTable.PSEdition -eq 'Core') -and $Script:IsLinuxEnvironment){
         Write-Verbose ($script:messages.OSVersionMessage -f "Unix", "Core")
-        $isInstalled = Install-Core
-        if($isInstalled){
+        $AssembliesExists = Get-CoreLib
+        if($AssembliesExists){
             Install-MsalLibrary
         }
     }
     ElseIf (($PSVersionTable.PSEdition -eq 'Core') -and $Script:IsWindowsEnvironment){
         if($ForceDesktop){
-            $isInstalled = Install-Desktop
-            if($isInstalled){
+            $AssembliesExists = Get-DeskLibForCore
+            if($AssembliesExists){
                 Install-MsalLibrary
             }
         }
         else{
             Write-Verbose ($script:messages.OSVersionMessage -f "Windows", "Core")
-            $isInstalled = Install-Core
-            if($isInstalled){
+            $AssembliesExists = Get-CoreLib
+            if($AssembliesExists){
                 Install-MsalLibrary
             }
         }
     }
     Else{
         Write-Warning -Message 'Unable to determine if OS is Windows or Linux. Loading MSAL Core'
-        $isInstalled = Install-Core
-        if($isInstalled){
+        $AssembliesExists = Get-CoreLib
+        if($AssembliesExists){
             Install-MsalLibrary
         }
     }
 }
 Else{
     Write-Warning -Message 'Unable to determine if OS is Windows or Linux. Loading MSAL Core'
-    $isInstalled = Install-Core
-    if($isInstalled){
+    $AssembliesExists = Get-CoreLib
+    if($AssembliesExists){
         Install-MsalLibrary
     }
 }

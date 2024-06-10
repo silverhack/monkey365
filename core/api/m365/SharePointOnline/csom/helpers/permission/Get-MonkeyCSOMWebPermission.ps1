@@ -12,14 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 Function Get-MonkeyCSOMWebPermission{
     <#
         .SYNOPSIS
-		Get Sharepoint Online web permissions
 
         .DESCRIPTION
-		Get Sharepoint Online web permissions
 
         .INPUTS
 
@@ -36,55 +33,115 @@ Function Get-MonkeyCSOMWebPermission{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
-    [cmdletbinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Current')]
     Param (
-        [Parameter(Mandatory= $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName  = $true, HelpMessage="SharePoint Web Object")]
+        [Parameter(Mandatory= $False, ParameterSetName = 'Web', ValueFromPipeline = $true, HelpMessage="SharePoint Site Object")]
         [Object]$Web,
+
+        [Parameter(Mandatory= $False, HelpMessage="Authentication Object")]
+        [Object]$Authentication,
+
+        [parameter(Mandatory=$False, ParameterSetName = 'Endpoint', HelpMessage="Endpoint")]
+        [String]$Endpoint,
+
+        [parameter(Mandatory=$false, HelpMessage="Recursive search")]
+        [Switch]$Recurse,
+
+        [Parameter(Mandatory=$false, HelpMessage="Subsite depth limit recursion")]
+        [int32]$Limit = 10,
+
+        [parameter(Mandatory=$false, HelpMessage="Include lists")]
+        [Switch]$IncludeLists,
+
+        [parameter(Mandatory=$false, HelpMessage="Include lists")]
+        [Switch]$IncludeItems,
+
+        [parameter(Mandatory=$false, HelpMessage="Include lists")]
+        [Switch]$ExcludeFolders,
+
+        [Parameter(Mandatory=$false, HelpMessage="Lists to filter")]
+        [string[]]$Filter,
 
         [Parameter(Mandatory= $false, HelpMessage="Include inherited permissions")]
         [Switch]$IncludeInheritedPermission
     )
     Begin{
-        #Set generic list
-        $webPermissions = New-Object System.Collections.Generic.List[System.Object]
-        #Get Access Token for Sharepoint
-        $sps_auth = $O365Object.auth_tokens.SharePointOnline
+        #Get permission params
+        $nparams = Set-CommandParameter -Command "Get-MonkeyCSOMWebPermission" -Params $PSBoundParameters
+        #Remove Recurse and limit
+        [void]$nparams.Remove('Recurse')
+        [void]$nparams.Remove('Limit')
+        $job_params = @{
+            Command = "Get-MonkeyCSOMWebPermission";
+            Arguments = $nparams;
+            Runspacepool = $O365Object.monkey_runspacePool;
+			ReuseRunspacePool = $true;
+			Debug = $O365Object.debug;
+			Verbose = $O365Object.verbose;
+			MaxQueue = $O365Object.MaxQueue;
+			BatchSleep = $O365Object.BatchSleep;
+			BatchSize = $O365Object.BatchSize;
+            Throttle = $O365Object.nestedRunspaceMaxThreads;
+        }
     }
     Process{
-        #Check for objectType
-        if ($Web.psobject.properties.Item('_ObjectType_') -and $Web._ObjectType_ -eq 'SP.Web'){
-            $p = @{
-                Object = $Web;
-                Authentication = $sps_auth;
-                Endpoint = $Web.Url;
-                IncludeInheritedPermission = $IncludeInheritedPermission;
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
+        If($PSCmdlet.ParameterSetName -eq "Current" -or $PSCmdlet.ParameterSetName -eq 'Endpoint'){
+            $p = Set-CommandParameter -Command "Get-MonkeyCSOMWeb" -Params $PSBoundParameters
+            #Remove recurse and limit
+            [void]$p.Remove('Recurse');
+            [void]$p.Remove('Limit');
+            $_Web = Get-MonkeyCSOMWeb @p
+            if($null -ne $_Web){
+                 $_Web | Get-MonkeyCSOMWebPermission @PSBoundParameters
             }
-            $perms = Get-MonkeyCSOMObjectPermission @p
-            if($perms){
-                #Add to list
-                foreach($perm in $perms){
-                    [void]$webPermissions.Add($perm)
+            return
+        }
+        foreach($_Web in @($PSBoundParameters['Web'])){
+            $objectType = $_Web | Select-Object -ExpandProperty _ObjectType_ -ErrorAction Ignore
+            if ($null -ne $objectType -and $objectType -eq 'SP.Web'){
+                #Get command params
+                $p = Set-CommandParameter -Command "Get-MonkeyCSOMPermission" -Params $PSBoundParameters
+                #Add Object
+                $p.Item('Object') = $_Web
+                if($PSBoundParameters.ContainsKey('IncludeInheritedPermission') -and $PSBoundParameters['IncludeInheritedPermission'].IsPresent){
+                    Get-MonkeyCSOMPermission @p;
+                }
+                Else{
+                    #Check if unique permissions
+                    If($_Web | Test-HasUniqueRoleAssignment){
+                        Get-MonkeyCSOMPermission @p;
+                    }
+                }
+                #Check for lists
+                if($PSBoundParameters.ContainsKey('IncludeLists') -and $PSBoundParameters['IncludeLists'].IsPresent){
+                    #Get command params
+                    $p = Set-CommandParameter -Command "Get-MonkeyCSOMListPermission" -Params $PSBoundParameters
+                    #Add Object
+                    $p.Item('Web') = $_Web
+                    #Execute command
+                    Get-MonkeyCSOMListPermission @p
+                }
+                #Check for subWebs
+                if($PSBoundParameters.ContainsKey('Recurse') -and $PSBoundParameters['Recurse'].IsPresent){
+                    $sWebParam = Set-CommandParameter -Command "Get-MonkeyCSOMSubWeb" -Params $PSBoundParameters
+                    #Add Object
+                    $sWebParam.Item('Web') = $_Web
+                    #Execute jobs
+                    Get-MonkeyCSOMSubWeb @sWebParam | Invoke-MonkeyJob @job_params
+                    #Sleep
+                    Start-Sleep -Milliseconds 500
                 }
             }
-
-        }
-        else{
-            $msg = @{
-                MessageData = ($message.SPOInvalieWebObjectMessage);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'Warning';
-                InformationAction = $InformationAction;
-                Tags = @('SPOInvalidWebObject');
+            Else{
+                $msg = @{
+                    MessageData = ($message.SPOInvalidWebObjectMessage);
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'Warning';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('MonkeyCSOMInvalidWebObject');
+                }
+                Write-Warning @msg
             }
-            Write-Warning @msg
         }
-    }
-    End{
-        #return permissions
-        return $webPermissions
     }
 }

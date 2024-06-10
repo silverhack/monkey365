@@ -71,7 +71,13 @@ Function Get-HttpResponseError{
         Write-Verbose @param
         #Get response message
         $rawData = $ErrorResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult()
-        $responseBody = Convert-RawData -RawObject $rawData -ContentType "application/json" #$ErrorResponse.Content.Headers.ContentType
+        if($null -eq $ErrorResponse.Content.Headers.ContentType){
+            $contentType = 'application/json'
+        }
+        Else{
+            $contentType = $ErrorResponse.Content.Headers.ContentType.MediaType
+        }
+        $responseBody = Convert-RawData -RawObject $rawData -ContentType $contentType
         if($null -ne $responseBody){
             try{
                 if($null -ne ($responseBody.psobject.properties.Item('odata.error'))){
@@ -93,32 +99,11 @@ Function Get-HttpResponseError{
                     }
                 }
                 elseif($null -ne ($responseBody.psobject.properties.Item('error_description'))){
-                    try{
-                        $error_message = $responseBody.error
+                    $param = @{
+                        Message = $responseBody.error_description;
+                        Verbose = $Verbose;
                     }
-                    catch{
-                        $error_message = $null
-                    }
-                    try{
-                        $errorMessage = $responseBody.error_description
-                    }
-                    catch{
-                        $errorMessage = $null
-                    }
-                    if($null -ne $error_message){
-                        $param = @{
-                            Message = $error_message;
-                            Verbose = $Verbose;
-                        }
-                        Write-Verbose @param
-                    }
-                    if($null -ne $errorMessage){
-                        $param = @{
-                            Message = $errorMessage;
-                            Verbose = $Verbose;
-                        }
-                        Write-Verbose @param
-                    }
+                    Write-Verbose @param
                 }
                 elseif($null -ne ($responseBody.psobject.properties.Item('error'))){
                     try{

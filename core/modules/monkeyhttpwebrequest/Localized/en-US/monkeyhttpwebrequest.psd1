@@ -10,5 +10,6 @@
     UnableToProcessErrorMessage    = Unable to get error message
     UnableToGetDetailedError       = Unable to get detailed error message
     UnableToConvertToXml           = Unable to convert data to XML
+    UnableToConvertRawData         = Request to {0} was failed. Unable to convert raw data to {1}
     AddUncommonHeaderInfo          = Adding {0} header
 '@

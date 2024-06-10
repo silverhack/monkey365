@@ -9,5 +9,5 @@
     UsingTenantId                    = Using TenantId {0}
     UsingLoginHint                   = Using LoginHint {0}
     AccountWasNotFound               = No account was found on public application
-    RefreshingToken                  = Refreshing token
+    RemoveSilentParameter            = Removing Silent parameter
 '@

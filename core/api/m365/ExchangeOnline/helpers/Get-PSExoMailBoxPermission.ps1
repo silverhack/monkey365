@@ -33,39 +33,45 @@ Function Get-PSExoMailBoxPermission{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [CmdletBinding()]
     Param (
-        [Parameter(Mandatory=$True, HelpMessage="mailBox user")]
-        [object]$mailBox
+        [Parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="mailBox user")]
+        [Object]$MailBox
     )
     Begin{
-        $perm = $null
         #Getting environment
         $Environment = $O365Object.Environment
         #Get Exo authentication
         $exo_auth = $O365Object.auth_tokens.ExchangeOnline
     }
     Process{
-        #Get mailbox permission
-        $uri = ("{0}/MailboxPermission" -f $mailBox.'@odata.id')
-        $param = @{
-            Authentication = $exo_auth;
-            Environment = $Environment;
-            OwnQuery = $uri;
-            Method = "GET";
-            InformationAction = $O365Object.InformationAction;
+        $msg = @{
+			MessageData = ($message.ExoMailBoxPermissionInfo -f $MailBox.Identity);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'verbose';
+			InformationAction = $O365Object.InformationAction;
             Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
+			Tags = @('ExoMailboxPermissionInfo');
+		}
+		Write-Verbose @msg
+        #Get mailbox permission
+        $param = @{
+	        Authentication = $exo_auth;
+	        Environment = $Environment;
+	        ResponseFormat = 'clixml';
+	        Command = ('Get-MailboxPermission -Identity {0}' -f $MailBox.Identity);
+	        Method = "POST";
+	        InformationAction = $O365Object.InformationAction;
+	        Verbose = $O365Object.Verbose;
+	        Debug = $O365Object.Debug;
         }
         $mbox_perm = Get-PSExoAdminApiObject @param
-        $mbox_perm = $mbox_perm | Where-Object {($_.PermissionList.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY*" -or $_.User -match "S-1-5-21")}
-        if($mbox_perm){
-            $perm = $mbox_perm | Select-Object @{Name='mailBox';Expression={$_.MailboxIdentity}},@{Name='userPrincipalName';Expression={$mailBox.userPrincipalName}}, @{Name='MailBoxType';Expression={$mailBox.RecipientTypeDetails}}, @{Name='AssignedTo';Expression={$_.user}},@{Name='AccessRights';Expression={[string]::join(', ', $_.PermissionList.AccessRights)}}
+        $mbox_perm = @($mbox_perm).Where({($_.IsInherited -eq $false) -and -not ($_.User -like "NT AUTHORITY*" -or $_.User -match "S-1-5-21")})
+        if($mbox_perm.Count -gt 0){
+            $mbox_perm | Select-Object @{Name='mailBox';Expression={$_.Identity}},@{Name='userPrincipalName';Expression={$MailBox.userPrincipalName}}, @{Name='MailBoxType';Expression={$MailBox.RecipientTypeDetails}}, @{Name='AssignedTo';Expression={$_.User}},@{Name='AccessRights';Expression={$_.AccessRights.ToArray()}}
         }
     }
     End{
-        if($perm){
-            return $perm
-        }
+        Start-Sleep -Milliseconds 100
     }
 }

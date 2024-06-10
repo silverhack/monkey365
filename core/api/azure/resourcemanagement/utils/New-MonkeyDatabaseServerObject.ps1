@@ -48,6 +48,7 @@ Function New-MonkeyDatabaseServerObject {
             $DatabaseObject = [ordered]@{
                 id = $Server.Id;
 		        name = $Server.Name;
+                type = $Server.type;
                 location = $Server.location;
                 identity = if($null -ne $Server.PsObject.Properties.Item('identity')){$Server.identity}else{$null};
 		        tags = $Server.tags;

@@ -48,6 +48,7 @@ Function New-MonkeyRecoveryServicesVaultObject {
             $VaultObject = [ordered]@{
                 id = $InputObject.Id;
 		        name = $InputObject.Name;
+                type = if($null -ne $InputObject.PsObject.properties.Item('type')){$InputObject.type}else{$null};
                 location = $InputObject.location;
 		        tags = if($null -ne $InputObject.Psobject.Properties.Item('tags')){$InputObject.tags}else{$null};
                 sku = $InputObject.sku;

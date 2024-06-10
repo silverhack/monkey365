@@ -282,6 +282,9 @@ Function Get-MonkeyMSALToken{
                         if ($PromptBehavior){
                             [void] $authContext.WithPrompt([Microsoft.Identity.Client.Prompt]::$PromptBehavior)
                         }
+                        Else{
+                            [void] $authContext.WithPrompt([Microsoft.Identity.Client.Prompt]::SelectAccount)
+                        }
                         If($PSBoundParameters.ContainsKey('UseEmbeddedWebView')){
                             [void]$authContext.WithUseEmbeddedWebView($UseEmbeddedWebView)
                         }
@@ -332,6 +335,13 @@ Function Get-MonkeyMSALToken{
                         Write-Verbose ($script:messages.AcquireTokenFailed -f $ErrorCode)
                         #Detailed error
                         Write-Debug $token_result.Exception.InnerException
+                        #Retrying authentication without silent parameter
+                        if($application -is [Microsoft.Identity.Client.PublicClientApplication] -and $PSBoundParameters.ContainsKey('Silent')){
+                            Write-Warning $script:messages.RemoveSilentParameter;
+                            [ref]$null = $PSBoundParameters.Remove('Silent')
+                            Get-MonkeyMSALToken @PSBoundParameters
+                            return
+                        }
                     }
                     if($null -ne $token_result.Result){
                         #add elements to auth object

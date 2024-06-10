@@ -51,6 +51,7 @@ Function New-MonkeyAppServiceObject {
                 location = $App.location;
                 kind = if($null -ne $App.PsObject.Properties.Item('kind')){$App.kind}else{$null};
 		        tags = $App.tags;
+                type = $App.type;
                 properties = $App.properties;
                 resourceGroupName = $App.Id.Split("/")[4];
 		        fqdn = $App.properties.defaultHostName;

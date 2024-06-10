@@ -49,7 +49,7 @@ Function Connect-MonkeySPO {
         [Switch]$OneDrive
     )
     try{
-        $sharepointUrl = $null;
+        $sharepointUrl = $spo_app = $null;
         #Get Environment
         $CloudType = $O365Object.initParams.Environment
         $sps_p = @{
@@ -95,7 +95,7 @@ Function Connect-MonkeySPO {
                 ElseIf(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)})).Count -gt 0){
                     $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)}) | Select-Object -First 1
                 }
-                else{
+                Else{
                     #Potentially first time the user is authenticating, so we use original parameters
                     #Set new params
                     $new_params = @{}
@@ -113,17 +113,6 @@ Function Connect-MonkeySPO {
                         $spo_app = New-MsalApplicationForPnP @p
                     }
                     else{
-                        if($O365Object.SystemInfo.OSVersion -ne 'windows' -and -NOT $new_params.ContainsKey('DeviceCode')){
-                            $msg = @{
-                                MessageData = "Unable to connect SharePoint Online. SharePoint Online Management Shell is not supporting interactive authentication on .NET core. Use DeviceCode instead";
-                                callStack = (Get-PSCallStack | Select-Object -First 1);
-                                logLevel = 'Warning';
-                                InformationAction = $O365Object.InformationAction;
-                                Tags = @('SPOAuthenticationError');
-                            }
-                            Write-Warning @msg
-                            return
-                        }
                         #Check if force MSAL desktop
                         if($null -ne $O365Object.SystemInfo -and $O365Object.SystemInfo.MsalType -eq 'Desktop'){
                             $p.Item('ForceDesktop') = $true
@@ -132,9 +121,30 @@ Function Connect-MonkeySPO {
                         $spo_app = New-MsalApplicationForSPO @p
                     }
                     if($null -ne $spo_app){
-                        $new_params.publicApp = $spo_app
-                        #Add to Object
-                        [void]$O365Object.msal_public_applications.Add($spo_app)
+                        #Validate .net core conflicts
+                        try{
+                            if($spo_app.AppConfig.RedirectUri -match "localhost" -and $O365Object.SystemInfo.MsalType -eq "Core"){
+                                $dc = $new_params.Item('DeviceCode');
+                                if($null -eq $dc -or $dc -eq $false){
+                                    $msg = @{
+                                        MessageData = "Unable to connect SharePoint Online. SharePoint Online Management Shell is not supporting interactive authentication on .NET core. Use DeviceCode instead. For more info, please check the following url: https://silverhack.github.io/monkey365/authentication/limitations/";
+                                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                                        logLevel = 'Warning';
+                                        InformationAction = $O365Object.InformationAction;
+                                        Tags = @('MonkeySPOAuthenticationError');
+                                    }
+                                    Write-Warning @msg
+                                    return
+                                }
+                            }
+                            $new_params.publicApp = $spo_app
+                            #Add to Object
+                            [void]$O365Object.msal_public_applications.Add($spo_app)
+                        }
+                        Catch{
+                            Write-Error $_
+                            return
+                        }
                     }
                     else{
                         $msg = @{

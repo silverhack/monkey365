@@ -45,7 +45,10 @@ Function Invoke-Rule{
         [Object]$Rule,
 
         [parameter(Mandatory=$False, HelpMessage="Rules Path")]
-        [String]$RulesPath
+        [String]$RulesPath,
+
+        [Parameter(Mandatory=$false, HelpMessage="Set the output timestamp format as unix timestamps instead of iso format")]
+        [Switch]$UnixTimestamp
     )
     Begin{
         $Verbose = $False;
@@ -79,7 +82,12 @@ Function Invoke-Rule{
             #Get element
             $ObjectsToCheck = Get-ElementsToCheck -Path $ShadowRule.path
             if($null -ne $ObjectsToCheck -and $null -ne $ShadowRule){
-                $matched_elements = Invoke-UnitRule -InputObject $ShadowRule -ObjectsToCheck $ObjectsToCheck
+                if($null -ne $ObjectsToCheck.PsObject.Properties.Item('Data')){
+                    $matched_elements = Invoke-UnitRule -InputObject $ShadowRule -ObjectsToCheck $ObjectsToCheck.Data
+                }
+                Else{
+                    $matched_elements = Invoke-UnitRule -InputObject $ShadowRule -ObjectsToCheck $ObjectsToCheck
+                }
             }
             else{
                 Write-Warning ("{0} was not found on dataset or query was invalid" -f $ShadowRule.path)
@@ -99,11 +107,14 @@ Function Invoke-Rule{
                     InputObject = $ShadowRule;
                     affectedObjects = $matched_elements;
                     Resources = $ObjectsToCheck;
+                    UnixTimestamp = $PSBoundParameters['UnixTimestamp'];
                 }
                 $findingObj = New-MonkeyFindingObject @p
                 if(!$matched_elements -and $null -ne $findingObj){
                     $findingObj.level = "Good"
                 }
+                #Add status code
+                $findingObj.statusCode = $findingObj.level | Get-StatusCode
                 Write-Output $findingObj
             }
         }

@@ -18,6 +18,25 @@
 			}
         }
     ],
+	"o365_exo_users_remote_ps_enabled": [
+        {
+            "translate": {
+                "DisplayName": "Display Name",
+                "UserPrincipalName": "UserPrincipalName",
+				"RemotePowerShellEnabled": "Remote PowerShell Enabled"
+            },
+            "table": "Normal",
+			"actions":{
+				"objectData":{
+					"limit":"100",
+					"expand": ["*"],
+					"format": "json"
+				},
+				"showGoToButton":"False",
+				"showModalButton":"False"
+			}
+        }
+    ],
 	"o365_exo_automatic_forward_enabled": [
         {
             "translate": {

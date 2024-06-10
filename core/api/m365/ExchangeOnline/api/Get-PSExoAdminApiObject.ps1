@@ -53,7 +53,7 @@ Function Get-PSExoAdminApiObject{
         [String]$Command,
 
         [parameter(ValueFromPipeline = $True,HelpMessage="Timeout")]
-        [int32]$TimeOut = 30,
+        [int32]$TimeOut = 120,
 
         [parameter(ValueFromPipeline = $True,HelpMessage="Response format")]
         [ValidateSet("clixml","json")]
@@ -284,30 +284,75 @@ Function Get-PSExoAdminApiObject{
                     $NextLink = $Objects.'@odata.nextLink'
                     #Search for paging objects
                     while($null -ne $NextLink){
-                        If($Method.ToUpper() -eq "GET"){
+                        if($Data){
                             $param = @{
                                 Url = $NextLink;
-                                Method = "GET";
                                 Headers = $requestHeader;
+                                Method = $Method;
+                                ContentType = $ContentType;
+                                Data = $Data;
                                 UserAgent = $O365Object.UserAgent;
                                 TimeOut = $TimeOut;
                                 Verbose = $Verbose;
                                 Debug = $Debug;
                                 InformationAction = $InformationAction;
                             }
-                            $Objects = Invoke-MonkeyWebRequest @param
-                            If($Objects.PsObject.Properties.Item('@odata.nextLink')){
-                                $NextLink = $Objects.'@odata.nextLink'
+                        }
+                        else{
+                            $param = @{
+                                Url = $NextLink;
+                                Headers = $requestHeader;
+                                Method = $Method;
+                                ContentType = $ContentType;
+                                UserAgent = $O365Object.UserAgent;
+                                TimeOut = $TimeOut;
+                                Verbose = $Verbose;
+                                Debug = $Debug;
+                                InformationAction = $InformationAction;
                             }
-                            else{
-                                $NextLink = $null
+                        }
+                        $Objects = Invoke-MonkeyWebRequest @param
+                        #Get potential warnings
+                        if($null -ne $Objects -and $null -ne $Objects.PsObject.Properties.Item('@adminapi.warnings')){
+                            $warningData = $Objects.'@adminapi.warnings'
+                            if(@($warningData).Count -gt 0){
+                                foreach($elem in @($warningData)){
+                                    Write-Warning $elem
+                                }
                             }
-                            if($Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -gt 0){
+                        }
+                        #Get results
+                        if($null -ne $Objects){
+                            $NextLink = $Objects | Select-Object -ExpandProperty '@odata.nextLink' -ErrorAction Ignore
+                            if($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -gt 0){
+                                if(($PSBoundParameters.ContainsKey('ResponseFormat') -and $PSBoundParameters['ResponseFormat'] -eq 'clixml') -and $PSBoundParameters.ContainsKey('Command')){
+                                    $value = $Objects.value | Select-Object -ExpandProperty _clixml -ErrorAction Ignore
+                                    if($null -ne $value){
+                                         If($null -ne (Get-Command -Name "Import-MonkeyCliXml" -ErrorAction Ignore)){
+                                            Import-MonkeyCliXml -RawData $value
+                                         }
+                                         else{
+                                            Write-Warning -Message "Command Import-MonkeyCliXml not found"
+                                         }
+                                    }
+                                }
+                                else{
+                                    $Objects.value
+                                }
+                            }
+                            elseif($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -eq 0){
+                                #empty response
                                 $Objects.value
                             }
-                            else{
+                            elseIf($Objects -is [System.Array]){
                                 $Objects
                             }
+                            Else{
+                                $Objects
+                            }
+                        }
+                        Else{
+                            $NextLink = $null
                         }
                     }
                 }

@@ -43,7 +43,7 @@ Function ConvertTo-PsTableObject {
     Process{
         $expressions = [System.Collections.Generic.List[System.Object]]::new()
         $elementsToCheck = $myPsObject = $null;
-        $expand = $InputObject | Select-Object -ExpandProperty expand -ErrorAction Ignore
+        $expand = $InputObject | Select-Object -ExpandProperty expandObject -ErrorAction Ignore
         #Check for limits
         if($null -ne $InputObject.actions.objectData.PsObject.Properties.Item('limit') -and $null -ne $InputObject.actions.objectData.limit){
             [int]$int_min_value = [int32]::MinValue;

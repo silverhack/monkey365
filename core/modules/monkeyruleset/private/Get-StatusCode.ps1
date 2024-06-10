@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Connect-MonkeySharepointOnline {
+function Get-StatusCode{
     <#
         .SYNOPSIS
+        Return a status code from level value
 
         .DESCRIPTION
+        Return a status code from level value
 
         .INPUTS
 
@@ -27,17 +29,34 @@ Function Connect-MonkeySharepointOnline {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Connect-MonkeySharepointOnline
+            File Name	: Get-StatusCode
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
     [CmdletBinding()]
+    [OutputType([System.String])]
     Param (
-        [Parameter(Mandatory=$true, HelpMessage="parameters")]
-        [Object]$parameters
+        [parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Level")]
+        [AllowNull()]
+        [AllowEmptyString()]
+        [String]$InputObject
     )
-    #Connect to Sharepoint Online
-    Get-MSALTokenForSharepointOnline @parameters
+    Process{
+        try{
+            If($null -eq $InputObject -or $InputObject -eq [System.String]::Empty){
+                return "unknown"
+            }
+            Elseif($InputObject.ToLower() -eq 'good'){
+                return "pass"
+            }
+            else{
+                return "fail"
+            }
+        }
+        catch{
+            Write-Error $_
+        }
+    }
 }

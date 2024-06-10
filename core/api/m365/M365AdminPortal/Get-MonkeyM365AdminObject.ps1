@@ -42,7 +42,7 @@ Function Get-MonkeyM365AdminObject{
         [Object]$Environment,
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [ValidateSet("settings", "appsettings", "recommendations","identitysecurity","billing","users")]
+        [ValidateSet("settings", "appsettings", "recommendations","identitysecurity","billing","users","domain")]
         [String]$InternalPath = 'settings',
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
@@ -90,6 +90,7 @@ Function Get-MonkeyM365AdminObject{
             'identitysecurity'{$base_uri = 'identitysecurity'}
             'billing'{$base_uri = 'billing'}
             'users'{$base_uri = 'users'}
+            'domain'{$base_uri = 'Domains'}
         }
         $base_uri = ("/admin/api/{0}" -f $base_uri)
         if($ObjectType){

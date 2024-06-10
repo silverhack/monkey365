@@ -49,11 +49,11 @@ Function Invoke-DLPValidation{
                 MessageData = "Getting Microsoft 365 tenant location";
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'info';
-                InformationAction = $script:InformationAction;
+                InformationAction = $O365Object.InformationAction;
                 Tags = @('O365dlpInfo');
             }
             Write-Information @msg
-            $O365Object.orgRegions = Get-OrgRegion
+            $O365Object.orgRegions = Get-OrgRegion -Purview
         }
         #Get All Sits from Object
         $all_rule_sits = $dlp_objects | Select-Object -ExpandProperty sits
@@ -65,7 +65,7 @@ Function Invoke-DLPValidation{
                     MessageData = ("Analysing {0} issues" -f $element.Name);
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'info';
-                    InformationAction = $script:InformationAction;
+                    InformationAction = $O365Object.InformationAction;
                     Tags = @('O365dlpInfo');
                 }
                 Write-Information @msg

@@ -37,11 +37,14 @@ Function Get-MonkeyCSOMSite{
     #>
     [cmdletbinding()]
     Param (
-        [parameter(Mandatory=$True, HelpMessage="Authentication object")]
+        [parameter(Mandatory=$False, HelpMessage="Authentication object")]
         [Object]$Authentication,
 
         [parameter(Mandatory=$False, HelpMessage="Endpoint")]
         [String]$Endpoint,
+
+        [parameter(Mandatory=$false, HelpMessage="All SharePoint web objects")]
+        [Switch]$All,
 
         [Parameter(Mandatory= $false, ParameterSetName = 'Includes', HelpMessage="Includes")]
         [string[]]$Includes
@@ -52,20 +55,9 @@ Function Get-MonkeyCSOMSite{
             'RoleDefinitionBindings',
             'Member','ParentList',
             'RoleAssignments','File',
-            'RootFolder','Webs'
+            'RootFolder','Webs',
+            'CustomScriptSafeDomains'
         )
-        #Set False
-        $Verbose = $Debug = $False;
-        $InformationAction = 'SilentlyContinue'
-        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
-            $Verbose = $True
-        }
-        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
-            $Debug = $True
-        }
-        if($PSBoundParameters.ContainsKey('InformationAction')){
-            $InformationAction = $PSBoundParameters['InformationAction']
-        }
         #Get Site
         [xml]$body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="Monkey 365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="2" ObjectPathId="1"/><ObjectPath Id="4" ObjectPathId="3"/><Query Id="5" ObjectPathId="3"><Query SelectAllProperties="true"></Query></Query></Actions><ObjectPaths><StaticProperty Id="1" TypeId="{3747adcd-a3c3-41b9-bfab-4a64dd2f1e0a}" Name="Current"/><Property Id="3" ParentId="1" Name="Site"/></ObjectPaths></Request>'
         #Set properties
@@ -89,20 +81,35 @@ Function Get-MonkeyCSOMSite{
         [xml]$body_data = $body_data.OuterXml.Replace(" xmlns=`"`"", "")
     }
     Process{
-        $p = @{
-            Authentication = $Authentication;
-            Data = $body_data;
-            Endpoint = $Endpoint;
-            Verbose = $Verbose;
-            Debug = $Debug;
-            InformationAction = $InformationAction;
+        if($PSBoundParameters.ContainsKey('All') -and $PSBoundParameters['All'].IsPresent){
+            $p = Set-CommandParameter -Command "Get-MonkeyCSOMSiteProperty" -Params $PSBoundParameters
+            $Urls = @(Get-MonkeyCSOMSiteProperty @p).Where({$_.Template -notlike "SRCHCEN#0" -and $_.Template -notlike "SPSMSITEHOST*" -and $_.Template -notlike "RedirectSite#0"}) | Select-Object -ExpandProperty Url -ErrorAction Ignore
+            #$Urls = Get-MonkeyCSOMSiteProperty @p | Select-Object -ExpandProperty Url -ErrorAction Ignore
+            if($null -ne $Urls){
+                #Remove All param
+                [void]$PSBoundParameters.Remove('All');
+                @($Urls).ForEach({Get-MonkeyCSOMSite -Endpoint $_ @PSBoundParameters}).Where({$null -ne $_})
+            }
         }
-        #Execute query
-        $raw_sps_site = Invoke-MonkeyCSOMRequest @p
+        Else{
+            $p = Set-CommandParameter -Command "Invoke-MonkeyCSOMRequest" -Params $PSBoundParameters
+            #Add authentication header if missing
+            if(!$p.ContainsKey('Authentication')){
+                if($null -ne $O365Object.auth_tokens.SharePointOnline){
+                    [void]$p.Add('Authentication',$O365Object.auth_tokens.SharePointOnline);
+                }
+                Else{
+                    Write-Warning -Message ($message.NullAuthenticationDetected -f "SharePoint Online")
+                    break
+                }
+            }
+            #Add post Data
+            [void]$p.Add('Data',$body_data);
+            #Execute query
+            Invoke-MonkeyCSOMRequest @p
+        }
     }
     End{
-        if($raw_sps_site){
-            return $raw_sps_site
-        }
+        #Nothing to do here
     }
 }

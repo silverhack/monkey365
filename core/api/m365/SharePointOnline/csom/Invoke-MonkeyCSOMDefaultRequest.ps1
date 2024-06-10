@@ -36,19 +36,19 @@ Function Invoke-MonkeyCSOMDefaultRequest{
 
     [cmdletbinding()]
     Param (
-        [parameter(ValueFromPipeline = $True, ValueFromPipeLineByPropertyName = $True)]
+        [parameter(ValueFromPipeline = $True, HelpMessage="Authentication Object")]
         [Object]$Authentication,
 
-        [parameter(ValueFromPipeline = $True, ValueFromPipeLineByPropertyName = $True)]
+        [parameter(ValueFromPipeline = $True, HelpMessage="Url")]
         [String]$Endpoint,
 
-        [parameter(ValueFromPipeline = $True, ValueFromPipeLineByPropertyName = $True)]
+        [parameter(ValueFromPipeline = $True, HelpMessage="ContentType")]
         [String]$ContentType = "text/xml",
 
-        [parameter(ValueFromPipeline = $True, ValueFromPipeLineByPropertyName = $True)]
+        [parameter(ValueFromPipeline = $True, HelpMessage="Post Data")]
         [string]$Data,
 
-        [parameter(ValueFromPipeline = $True, ValueFromPipeLineByPropertyName = $True)]
+        [parameter(ValueFromPipeline = $True, HelpMessage="Object Metadata")]
         [System.Collections.Hashtable]$ObjectMetadata
     )
     Begin{
@@ -98,7 +98,7 @@ Function Invoke-MonkeyCSOMDefaultRequest{
         if($null -ne $url){
             #Get Data
             if($Data){
-                $param = @{
+                $p = @{
                     Url = $url;
                     Headers = $requestHeader;
                     Method = "POST";
@@ -111,7 +111,7 @@ Function Invoke-MonkeyCSOMDefaultRequest{
                 }
             }
             else{
-                $param = @{
+                $p = @{
                     Url = $url;
                     Headers = $requestHeader;
                     Method = "POST";
@@ -123,8 +123,24 @@ Function Invoke-MonkeyCSOMDefaultRequest{
                 }
             }
             #Execute Query
-            $tmp_response = Invoke-MonkeyWebRequest @param
+            $tmp_response = Invoke-MonkeyWebRequest @p
             try{
+                if($tmp_response -is [object]){
+                    $errorData = $tmp_response[0]
+                    if($null -ne $errorData -and $null -ne $errorData.psobject.properties.Item('ErrorInfo') -and $null -ne $errorData.ErrorInfo){
+                        $errorMessage = "{0} in {1}. {2} {3}" -f $errorData.ErrorInfo.ErrorTypeName, $Server.AbsoluteUri, $errorData.ErrorInfo.ErrorCode, $errorData.ErrorInfo.ErrorMessage
+                        $msg = @{
+                            MessageData = ($message.SPSDetailedErrorMessage -f $errorMessage);
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'verbose';
+                            InformationAction = $InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Tags = @('MonkeyCSOMRequestError');
+                        }
+                        Write-Verbose @msg
+                        return
+                    }
+                }
                 if($ObjectMetadata){
                     #Verify return data
                     if($tmp_response -is [object] -and $tmp_response.GetValue($ObjectMetadata.CheckValue) -eq $ObjectMetadata.isEqualTo `
@@ -163,7 +179,7 @@ Function Invoke-MonkeyCSOMDefaultRequest{
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'warning';
                     InformationAction = $InformationAction;
-                    Tags = @('SPSRequestError');
+                    Tags = @('MonkeyCSOMRequestError');
                 }
                 Write-Warning @msg
                 $msg = @{
@@ -171,24 +187,9 @@ Function Invoke-MonkeyCSOMDefaultRequest{
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'verbose';
                     Verbose = $Verbose;
-                    Tags = @('SPSRequestError');
+                    Tags = @('MonkeyCSOMRequestError');
                 }
                 Write-Verbose @msg
-                if($tmp_response -is [object]){
-                    $errorData = $tmp_response[0]
-                    if($null -ne $errorData -and $null -ne $errorData.psobject.properties.Item('ErrorInfo') -and $null -ne $errorData.ErrorInfo){
-                        $errorMessage = "{0} in {1}. {2} {3}" -f $errorData.ErrorInfo.ErrorTypeName, $Server.AbsoluteUri, $errorData.ErrorInfo.ErrorCode, $errorData.ErrorInfo.ErrorMessage
-                        $msg = @{
-                            MessageData = ($message.SPSDetailedErrorMessage -f $errorMessage);
-                            callStack = (Get-PSCallStack | Select-Object -First 1);
-                            logLevel = 'verbose';
-                            InformationAction = $InformationAction;
-                            Verbose = $O365Object.verbose;
-                            Tags = @('CSOMRequestError');
-                        }
-                        Write-Verbose @msg
-                    }
-                }
             }
         }
     }

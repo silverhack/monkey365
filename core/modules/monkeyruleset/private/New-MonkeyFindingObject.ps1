@@ -50,7 +50,10 @@ Function New-MonkeyFindingObject {
         [parameter(Mandatory= $false, HelpMessage="objects to check")]
         [AllowNull()]
         [AllowEmptyString()]
-        [Object]$Resources
+        [Object]$Resources,
+
+        [Parameter(Mandatory=$false, HelpMessage="Set the output timestamp format as unix timestamps instead of iso format")]
+        [Switch]$UnixTimestamp
     )
     Process{
         try{
@@ -64,8 +67,29 @@ Function New-MonkeyFindingObject {
             if($null -eq $InputObject.PsObject.Properties.Item('level')){
                 $InputObject | Add-Member -Type NoteProperty -name level -value $null -Force
             }
+            #Add metadata
+            If($null -ne $Resources -and ([System.Collections.IDictionary]).IsAssignableFrom($Resources.GetType())){
+                $Metadata = $Resources.Item('Metadata')
+            }
+            ElseIf(($Resources.GetType() -eq [System.Management.Automation.PSCustomObject] -or $Resources.GetType() -eq [System.Management.Automation.PSObject])){
+                $Metadata = $Resources | Select-Object -ExpandProperty 'Metadata' -ErrorAction Ignore
+            }
+            Else{##Object isn't an hashtable, collection, etc...
+                $Metadata = $null
+            }
+            $InputObject | Add-Member -Type NoteProperty -name metadata -value $Metadata -Force
             $InputObject | Add-Member -Type NoteProperty -name affectedResources -value $affectedObjects -Force
             $InputObject | Add-Member -Type NoteProperty -name resources -value $Resources -Force
+            #Add timestamp
+            if($PSBoundParameters.ContainsKey('UnixTimestamp') -and $PSBoundParameters['UnixTimestamp'].IsPresent){
+                $timestamp = ([System.DateTime]::UtcNow).ToString("yyyy-MM-ddTHH:mm:ssK")
+            }
+            Else{
+                $timestamp = ([System.DateTime]::Now.ToString('o'))
+            }
+            $InputObject | Add-Member -Type NoteProperty -name timestamp -value $timestamp -Force
+            #Add StatusCode
+            $InputObject | Add-Member -Type NoteProperty -name statusCode -value $null -Force
             #Add method to count resources
             $InputObject | Add-Member -Type ScriptMethod -Name affectedResourcesCount -Value {
                 if($null -ne $this.affectedResources){

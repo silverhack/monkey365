@@ -40,7 +40,7 @@ Function Get-MonkeyCSOMObjectType{
     [cmdletbinding()]
     Param (
         [parameter(Mandatory= $True, ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True, HelpMessage="SharePoint Object: Web, List, Folder or List Item")]
-        [Object]$Object
+        [Object]$InputObject
     )
     Begin{
         $regexGuid = '\{?(([0-9a-f]){8}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){12})\}?'
@@ -56,48 +56,48 @@ Function Get-MonkeyCSOMObjectType{
                 Path = $null;
                 Url = $null;
             }
-            if($null -ne $Object.PsObject.Properties.Item('_ObjectType_')){
-                Switch($Object._ObjectType_.ToString()){
+            if($null -ne $InputObject.PsObject.Properties.Item('_ObjectType_')){
+                Switch($InputObject._ObjectType_.ToString()){
                     "SP.Web"{
                         $obj_dict.ObjectType = "Web";
-                        $obj_dict.Title = $Object.Title;
-                        $obj_dict.Path = $Object.ServerRelativeUrl;
-                        $obj_dict.Url = $Object.Url;
+                        $obj_dict.Title = $InputObject.Title;
+                        $obj_dict.Path = $InputObject.ServerRelativeUrl;
+                        $obj_dict.Url = $InputObject.Url;
                     }
                     "SP.Site"{
                         $obj_dict.ObjectType = "Site";
                         #Get Title
-                        if($null -ne $Object.PsObject.Properties.Item('Id') -and $Object.Id -match $regexGuid){
+                        if($null -ne $InputObject.PsObject.Properties.Item('Id') -and $InputObject.Id -match $regexGuid){
                             $obj_dict.Title = $Matches[1]
                         }
-                        $obj_dict.Path = $Object.ServerRelativeUrl;
-                        $obj_dict.Url = $Object.Url;
+                        $obj_dict.Path = $InputObject.ServerRelativeUrl;
+                        $obj_dict.Url = $InputObject.Url;
                     }
                     "SP.ListItem"{
-                        if($Object.FileSystemObjectType -eq [FileSystemObjectType]::Folder){
+                        if($InputObject.FileSystemObjectType -eq [FileSystemObjectType]::Folder){
                             $obj_dict.ObjectType = "Folder";
-                            if($null -ne $Object.PsObject.Properties.Item('Title') -and $null -ne $Object.Title){
-                                $obj_dict.Title = $Object.Title;
+                            if($null -ne $InputObject.PsObject.Properties.Item('Title') -and $null -ne $InputObject.Title){
+                                $obj_dict.Title = $InputObject.Title;
                             }
-                            elseif($null -ne $Object.PsObject.Properties.Item('FileLeafRef') -and $null -ne $Object.FileLeafRef){
-                                $obj_dict.Title = $object.FileLeafRef
+                            elseif($null -ne $InputObject.PsObject.Properties.Item('FileLeafRef') -and $null -ne $InputObject.FileLeafRef){
+                                $obj_dict.Title = $InputObject.FileLeafRef
                             }
-                            if($null -ne $Object.PsObject.Properties.Item('FileRef') -and $null -ne $Object.FileRef){
-                                $localPath = $Object.FileRef
+                            if($null -ne $InputObject.PsObject.Properties.Item('FileRef') -and $null -ne $InputObject.FileRef){
+                                $localPath = $InputObject.FileRef
                                 #Set path
                                 $obj_dict.Path = ("{0}" -f $localPath)
                             }
                         }
-                        elseif($Object.FileSystemObjectType -eq [FileSystemObjectType]::File){
+                        elseif($InputObject.FileSystemObjectType -eq [FileSystemObjectType]::File){
                             $obj_dict.ObjectType = "File";
-                            if($null -ne $Object.PsObject.Properties.Item('Title') -and $null -ne $Object.Title){
-                                $obj_dict.Title = $Object.Title;
+                            if($null -ne $InputObject.PsObject.Properties.Item('Title') -and $null -ne $InputObject.Title){
+                                $obj_dict.Title = $InputObject.Title;
                             }
-                            elseif($null -ne $Object.PsObject.Properties.Item('FileLeafRef') -and $null -ne $object.FileLeafRef){
-                                $obj_dict.Title = $object.FileLeafRef
+                            elseif($null -ne $InputObject.PsObject.Properties.Item('FileLeafRef') -and $null -ne $InputObject.FileLeafRef){
+                                $obj_dict.Title = $InputObject.FileLeafRef
                             }
-                            if($null -ne $Object.PsObject.Properties.Item('FileRef') -and $null -ne $object.FileRef){
-                                $localPath = $Object.FileRef
+                            if($null -ne $InputObject.PsObject.Properties.Item('FileRef') -and $null -ne $InputObject.FileRef){
+                                $localPath = $InputObject.FileRef
                                 #Set path
                                 $obj_dict.Path = ("{0}" -f $localPath)
                             }
@@ -108,28 +108,28 @@ Function Get-MonkeyCSOMObjectType{
                                 callStack = (Get-PSCallStack | Select-Object -First 1);
                                 logLevel = 'warning';
                                 InformationAction = $O365Object.InformationAction;
-                                Tags = @('SPSUnableToGetListItemInfoType');
+                                Tags = @('MonkeyCSOMUnableToGetListItemInfoType');
                             }
                             Write-Warning @msg
                         }
                     }
                     Default{
-                        if($null -ne $Object.PsObject.Properties.Item('BaseType')){
-                            if([enum]::IsDefined([System.Type]([BaseType]),[System.Int32]$Object.BaseType)){
+                        if($null -ne $InputObject.PsObject.Properties.Item('BaseType')){
+                            if([enum]::IsDefined([System.Type]([BaseType]),[System.Int32]$InputObject.BaseType)){
                                 $localPath = [string]::Empty
-                                $obj_dict.ObjectType = [BaseType]$Object.BaseType #List, DocumentLibrary, etc
-                                if($null -ne $Object.PsObject.Properties.Item('Title') -and $null -ne $Object.Title){
-                                    $obj_dict.Title = $Object.Title
+                                $obj_dict.ObjectType = [BaseType]$InputObject.BaseType #List, DocumentLibrary, etc
+                                if($null -ne $InputObject.PsObject.Properties.Item('Title') -and $null -ne $InputObject.Title){
+                                    $obj_dict.Title = $InputObject.Title
                                 }
                                 #Get Path
-                                if($null -ne $Object.PsObject.Properties.Item('ParentWebUrl') -and $null -ne $Object.ParentWebUrl){
-                                    $localPath = ("{0}{1}" -f $localPath, $Object.ParentWebUrl)
+                                if($null -ne $InputObject.PsObject.Properties.Item('ParentWebUrl') -and $null -ne $InputObject.ParentWebUrl){
+                                    $localPath = ("{0}{1}" -f $localPath, $InputObject.ParentWebUrl)
                                 }
-                                if($null -ne $Object.PsObject.Properties.Item('FileRef') -and $null -ne $Object.FileRef){
-                                    $localPath = ("{0}/{1}" -f $localPath, $Object.FileRef)
+                                if($null -ne $InputObject.PsObject.Properties.Item('FileRef') -and $null -ne $InputObject.FileRef){
+                                    $localPath = ("{0}/{1}" -f $localPath, $InputObject.FileRef)
                                 }
-                                elseif($null -ne $Object.PsObject.Properties.Item('EntityTypeName') -and $null -ne $Object.EntityTypeName){
-                                    $localPath = ("{0}/{1}" -f $localPath, $Object.EntityTypeName.Replace('OData__x005f','').Replace('_x002f_','/').Replace('_x0020_',' '))
+                                elseif($null -ne $InputObject.PsObject.Properties.Item('EntityTypeName') -and $null -ne $InputObject.EntityTypeName){
+                                    $localPath = ("{0}/{1}" -f $localPath, $InputObject.EntityTypeName.Replace('OData__x005f','').Replace('_x002f_','/').Replace('_x0020_',' '))
                                 }
                                 #Remove double slashes
                                 $localPath = [regex]::Replace($localPath,"/+","/")
@@ -140,9 +140,9 @@ Function Get-MonkeyCSOMObjectType{
                                 $msg = @{
                                     MessageData = ("Object not recognized");
                                     callStack = (Get-PSCallStack | Select-Object -First 1);
-                                    logLevel = 'warning';
+                                    logLevel = 'Warning';
                                     InformationAction = $O365Object.InformationAction;
-                                    Tags = @('SPSUnableToGetDefaultInfoType');
+                                    Tags = @('MonkeyCSOMUnableToGetDefaultInfoType');
                                 }
                                 Write-Warning @msg
                             }
@@ -153,7 +153,7 @@ Function Get-MonkeyCSOMObjectType{
                                 callStack = (Get-PSCallStack | Select-Object -First 1);
                                 logLevel = 'warning';
                                 InformationAction = $O365Object.InformationAction;
-                                Tags = @('SPSUnableToGetInfoType');
+                                Tags = @('MonkeyCSOMUnableToGetInfoType');
                             }
                             Write-Warning @msg
                         }
@@ -166,7 +166,7 @@ Function Get-MonkeyCSOMObjectType{
                     logLevel = 'verbose';
                     InformationAction = $O365Object.InformationAction;
                     Verbose = $O365Object.verbose;
-                    Tags = @('SPSObjectTypeInfo');
+                    Tags = @('MonkeyCSOMObjectTypeInfo');
                 }
                 Write-Verbose @msg
                 #Return Obj
@@ -174,11 +174,11 @@ Function Get-MonkeyCSOMObjectType{
             }
             else{
                 $msg = @{
-                    MessageData = ("Unable to cast SharePoint Object");
+                    MessageData = ("SharePoint Object not recognized");
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'warning';
                     InformationAction = $O365Object.InformationAction;
-                    Tags = @('SPSUnableToGetInfoType');
+                    Tags = @('MonkeyCSOMUnableToGetInfoType');
                 }
                 Write-Warning @msg
             }
@@ -190,7 +190,7 @@ Function Get-MonkeyCSOMObjectType{
                 logLevel = 'verbose';
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
-                Tags = @('SPSUnableToGetInfoType');
+                Tags = @('MonkeyCSOMUnableToGetInfoType');
             }
             Write-Verbose @msg
         }

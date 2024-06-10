@@ -39,26 +39,27 @@ Function New-MonkeyCSOMPermissionObject {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
 	[CmdletBinding()]
 	Param (
-        [parameter(Mandatory= $True, HelpMessage="SharePoint object")]
+        [parameter(Mandatory= $True, ValueFromPipeline = $True, HelpMessage="SharePoint object")]
         [Object]$Object
     )
     Process{
         try{
+            #[System.Uri]$uri = $Object.Url;
             #Create ordered dictionary
             $new_permission = [ordered]@{
-                ObjectType = $Object.ObjectType;
-		        Title = $Object.Title;
-                ObjectPath = $Object.Path;
-		        URL = $Object.Url;
-                HasUniquePermissions = $null;
-                Users = $null;
-                AppliedTo = $null;
-                Permissions = $null;
-                GrantedThrough = $null;
-		        RoleAssignment = $null;
-                Description = $null;
-                Members = $null;
-                raw_object = $null;
+                objectType = $Object.ObjectType;
+		        title = $Object.Title;
+                objectPath = $Object.Path;
+		        url = $Object.Url;
+                #rootSite = $uri.GetLeftPart([System.UriPartial]::Authority);
+                hasUniquePermissions = $null;
+                appliedTo = $null;
+                permissions = $null;
+                grantedThrough = $null;
+		        roleAssignment = $null;
+                description = $null;
+                members = $null;
+                rawObject = $null;
             }
             #Create PsObject
             $perm_obj = New-Object -TypeName PsObject -Property $new_permission
@@ -71,12 +72,12 @@ Function New-MonkeyCSOMPermissionObject {
 			    callStack = (Get-PSCallStack | Select-Object -First 1);
 			    logLevel = 'error';
 			    InformationAction = $O365Object.InformationAction;
-			    Tags = @('CSOMPermissionObjectError');
+			    Tags = @('MonkeyCSOMPermissionObjectError');
 		    }
 		    Write-Error @msg
             $msg.MessageData = $_
             $msg.LogLevel = "Verbose"
-            $msg.Tags+= "CSOMPermissionObjectError"
+            $msg.Tags+= "MonkeyCSOMPermissionObjectError"
             [void]$msg.Add('verbose',$O365Object.verbose)
 		    Write-Verbose @msg
         }

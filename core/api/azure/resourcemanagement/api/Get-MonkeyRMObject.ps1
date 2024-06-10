@@ -81,7 +81,7 @@ Function Get-MonkeyRMObject{
         [String]$ContentType = "application/json",
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [object]$Data,
+        [Object]$Data,
 
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
         [String]$OwnQuery,
@@ -107,6 +107,7 @@ Function Get-MonkeyRMObject{
              break
         }
         #Get Authorization Header
+        <#
         $methods = $Authentication | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
         if($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
             $AuthHeader = $Authentication.CreateAuthorizationHeader()
@@ -114,6 +115,8 @@ Function Get-MonkeyRMObject{
         else{
             $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
         }
+        #>
+        $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
         #set rm uri
         if($null -ne $Authentication.Psobject.Properties.Item('subscriptionId')){
             $base_uri = ("subscriptions/{0}" -f $Authentication.subscriptionId)
@@ -296,7 +299,7 @@ Function Get-MonkeyRMObject{
             else{
                 $nextLink = $null;
             }
-            if ($null -ne $nextLink){
+            if ($null -ne $nextLink -and -NOT $nextLink.EndsWith('__0')){
                 while ($null -ne $nextLink){
                     #Go to nextPage
                     $p = @{

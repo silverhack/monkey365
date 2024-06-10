@@ -35,23 +35,27 @@ Function Find-ID{
     #>
 
     [cmdletbinding()]
+    [OutputType([System.String])]
     Param (
-        [Parameter(Mandatory=$false, HelpMessage="String with potentially ID")]
-        [String]$string
+        [Parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="String with potentially ID")]
+        [String]$InputObject
     )
-    $guid = [string]::Empty
-    $regexGuid = '\{?(([0-9a-f]){8}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){12})\}?'
-    try{
-        if($string -match $regexGuid){
-            $guid = $Matches[1]
-        }
-        else{
+    Process{
+        Try{
             $guid = [string]::Empty
+            $regexGuid = '\{?(([0-9a-f]){8}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){4}-([0-9a-f]){12})\}?'
+            if($InputObject -match $regexGuid){
+                $guid = $Matches[1]
+            }
+            else{
+                $guid = [string]::Empty
+            }
+            #return object
+            return $guid
+        }
+        Catch{
+            Write-Verbose $_
+            return [string]::Empty
         }
     }
-    catch{
-        Write-Verbose $_
-        $guid = [string]::Empty
-    }
-    return $guid
 }

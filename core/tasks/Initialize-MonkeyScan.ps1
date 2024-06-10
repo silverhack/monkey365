@@ -64,6 +64,10 @@ Function Initialize-MonkeyScan {
         if(-NOT [System.IO.Directory]::Exists($azureLib)){
             throw ("Unable to locate Azure lib")
         }
+        $utilsLib = ("{0}{1}core{2}utils" -f $O365Object.Localpath,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar)
+        if(-NOT [System.IO.Directory]::Exists($utilsLib)){
+            throw ("Unable to locate utils directory")
+        }
         #Set vars
         try{
             $msg = @{
@@ -134,6 +138,8 @@ Function Initialize-MonkeyScan {
                     $libs = @($libs).Where({($_ -notmatch "helpers") -and ($_ -notmatch "utils") -and ($_ -notmatch "csom" -and $_ -notmatch "rest")})
                     #Remove duplicate
                     $libs = $libs | Select-Object -Unique
+                    #Add utils
+                    $libs+=$utilsLib
                     #Get files
                     $libs = $libs | Get-MonkeyFile -Recurse
                     #remove duplicate
@@ -209,6 +215,8 @@ Function Initialize-MonkeyScan {
                         $libs = @($libs).Where({($_ -notmatch "helpers") -and ($_ -notmatch "utils") -and ($_ -notmatch "csom" -and $_ -notmatch "rest")})
                         #Remove duplicate
                         $libs = $libs | Select-Object -Unique
+                        #Add utils
+                        $libs+=$utilsLib
                         #Get files
                         $libs = $libs | Get-MonkeyFile -Recurse
                         #remove duplicate

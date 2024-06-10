@@ -38,26 +38,23 @@ Function Get-MonkeyCSOMTenant{
     [cmdletbinding()]
     Param ()
     Begin{
-        $tenant = $null
-        #Get Admin Access Token from SPO
-		$sps_auth = $O365Object.auth_tokens.SharePointAdminOnline
-        #Tenant client sync restriction
+        #Tenant
         [xml]$body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="monkey365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="334" ObjectPathId="333" /><Query Id="335" ObjectPathId="333"><Query SelectAllProperties="true"><Properties><Property Name="HideDefaultThemes" ScalarProperty="true" /></Properties></Query></Query></Actions><ObjectPaths><Constructor Id="333" TypeId="{268004ae-ef6b-4e9b-8425-127220d84719}" /></ObjectPaths></Request>'
     }
     Process{
-        $p = @{
-            Authentication = $sps_auth;
-            Data = $body_data;
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
+        if($null -ne $O365Object.auth_tokens.SharePointAdminOnline){
+            $p = @{
+                Authentication = $O365Object.auth_tokens.SharePointAdminOnline;
+                Data = $body_data;
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            #Execute query
+            Invoke-MonkeyCSOMRequest @p
         }
-        #Execute query
-        $tenant = Invoke-MonkeyCSOMRequest @p
     }
     End{
-        if($tenant){
-            return $tenant
-        }
+        #Nothing to do here
     }
 }

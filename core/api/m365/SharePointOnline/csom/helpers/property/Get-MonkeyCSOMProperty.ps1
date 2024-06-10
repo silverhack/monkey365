@@ -36,43 +36,38 @@ Function Get-MonkeyCSOMProperty{
 
     [cmdletbinding()]
     Param (
-        [parameter(Mandatory=$True, HelpMessage="Authentication object")]
+        [parameter(Mandatory=$false, HelpMessage="Authentication object")]
         [Object]$Authentication,
 
-        [Parameter(Mandatory= $false, HelpMessage="Client Object")]
-        [object]$ClientObject,
+        [Parameter(Mandatory= $True, HelpMessage="Client Object")]
+        [Object]$ClientObject,
 
-        [Parameter(Mandatory= $false, HelpMessage="properties")]
-        [string[]]$Properties,
+        [Parameter(Mandatory= $True, HelpMessage="Properties")]
+        [String[]]$Properties,
 
         [parameter(Mandatory=$false, HelpMessage="Endpoint")]
         [String]$Endpoint
     )
     Begin{
+        $_data = $null
+        $objectType = $PSBoundParameters['ClientObject'] | Select-Object -ExpandProperty _ObjectType_ -ErrorAction Ignore
+        if($null -eq $objectType){
+            $msg = @{
+                MessageData = ($message.SPOInvalidObjectMessage);
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'Warning';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('MonkeyCSOMInvalidObject');
+            }
+            Write-Warning @msg
+            return
+        }
         #Check if clientObject has the property
         foreach($prop in $Properties){
             if($null -ne $ClientObject.Psobject.Properties.Item($prop)){
                 #Remove property
                 $ClientObject.PSObject.Properties.Remove($prop)
             }
-        }
-        #Set False
-        $Verbose = $Debug = $False;
-        $InformationAction = 'SilentlyContinue'
-        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
-            $Verbose = $True
-        }
-        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
-            $Debug = $True
-        }
-        if($PSBoundParameters.ContainsKey('InformationAction')){
-            $InformationAction = $PSBoundParameters['InformationAction']
-        }
-        if($Endpoint){
-            [uri]$sps_uri = $Endpoint
-        }
-        else{
-            [uri]$sps_uri = $Authentication.resource
         }
         $select_all_properties = @(
             'Folder','Lists',
@@ -219,35 +214,48 @@ Function Get-MonkeyCSOMProperty{
         $_data.Request.ObjectPaths.Identity.Name = $ClientObject._ObjectIdentity_
     }
     Process{
-        $p = @{
-            Authentication = $Authentication;
-            Endpoint = $sps_uri.AbsoluteUri;
-            Data = $_data;
-            Verbose = $Verbose;
-            Debug = $Debug;
-            InformationAction = $InformationAction;
-        }
-        $raw_data = Invoke-MonkeyCSOMRequest @p
-        if($raw_data){
-            $out_obj = New-Object PSObject
-            foreach($property in $properties){
-                if($null -ne $raw_data.psobject.properties.Item($property)){
-                    $element = $raw_data | Select-Object -ExpandProperty $property
-                    #Check if child items
-                    if($element.psobject.Properties.Item('_Child_Items_')){
-                        $values = $element._Child_Items_
-                    }
-                    else{
-                        $values = $element
-                    }
-                    $out_obj | Add-Member NoteProperty -name $property -value $values
+        if($null -ne $_data){
+            #Get params
+            $p = Set-CommandParameter -Command "Invoke-MonkeyCSOMRequest" -Params $PSBoundParameters
+            #Add Data
+            [void]$p.Add('Data', $_data);
+            #Add authentication header if missing
+            if(!$p.ContainsKey('Authentication')){
+                if($null -ne $O365Object.auth_tokens.SharePointOnline){
+                    [void]$p.Add('Authentication',$O365Object.auth_tokens.SharePointOnline);
                 }
+                Else{
+                    Write-Warning -Message ($message.NullAuthenticationDetected -f "SharePoint Online")
+                    break
+                }
+            }
+            #Add endpoint
+            if($null -eq $p.Item('Endpoint')){
+                [uri]$sps_uri = $O365Object.auth_tokens.SharePointOnline.resource
+                [void]$p.Add('Endpoint', $sps_uri.AbsoluteUri);
+            }
+            $raw_data = Invoke-MonkeyCSOMRequest @p
+            if($raw_data){
+                $out_obj = New-Object PSObject
+                foreach($property in $properties){
+                    if($null -ne $raw_data.psobject.properties.Item($property)){
+                        $element = $raw_data | Select-Object -ExpandProperty $property
+                        #Check if child items
+                        if($element.psobject.Properties.Item('_Child_Items_')){
+                            $values = $element._Child_Items_
+                        }
+                        else{
+                            $values = $element
+                        }
+                        $out_obj | Add-Member NoteProperty -name $property -value $values
+                    }
+                }
+                #return obj
+                $out_obj
             }
         }
     }
     End{
-        if($null -ne $out_obj){
-            return $out_obj
-        }
+        #Nothing to do here
     }
 }

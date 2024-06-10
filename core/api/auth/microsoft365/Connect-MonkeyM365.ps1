@@ -143,15 +143,15 @@ Function Connect-MonkeyM365{
                     continue;
                 }
                 #Get initial domain
-                if($null -ne $O365Object.Tenant.CompanyInfo){
-                    $initialDomain = $O365Object.Tenant.CompanyInfo.verifiedDomains.Where({$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.isInitial -eq $true}) | Select-Object -ExpandProperty name
-                }
-                Elseif($O365Object.isValidTenantGuid -eq $false){
+                If($O365Object.isValidTenantGuid -eq $false){
                     $initialDomain = $O365Object.TenantId
                 }
                 Elseif($O365Object.initParams.ContainsKey('ScanSites') -and @($O365Object.initParams.ScanSites).Count -gt 0){
                     [uri]$dnsName = $O365Object.initParams.ScanSites | Select-Object -First 1
                     $initialDomain = ("{0}" -f $dnsName.DnsSafeHost)
+                }
+                ElseIf($null -ne $O365Object.Tenant.CompanyInfo){
+                    $initialDomain = $O365Object.Tenant.CompanyInfo.verifiedDomains.Where({$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.isDefault -eq $true}) | Select-Object -ExpandProperty name
                 }
                 Else{
                     $msg = @{
@@ -204,9 +204,7 @@ Function Connect-MonkeyM365{
                     }
                     #Get config
                     try{
-                        $scanSites = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.ScanSites)
-                        $recurseScan = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Subsites.Recursive)
-                        $depthScan = $O365Object.internal_config.o365.SharePointOnline.Subsites.Depth
+                        $scanSites = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.sitePermissionsOptions.scanAllSites)
                     }
                     catch{
                         $msg = @{
@@ -219,33 +217,28 @@ Function Connect-MonkeyM365{
                         Write-Verbose @msg
                         #Set scanSites to false
                         $scanSites = $false
-                        $recurseScan = $false
-                        $depthScan = 1
                     }
                     #Check if ScanSites
                     if($O365Object.initParams.ContainsKey('ScanSites') -and @($O365Object.initParams.ScanSites).Count -gt 0){
                         $p = @{
-                            Sites = $O365Object.initParams.ScanSites;
-                            Recurse = $recurseScan;
-                            Limit = $depthScan;
                             InformationAction = $O365Object.InformationAction;
                             Verbose = $O365Object.verbose;
                             Debug = $O365Object.debug;
                         }
+                        #Execute command
+                        $O365Object.spoSites = ($O365Object.initParams.ScanSites.GetEnumerator() | ForEach-Object {Get-MonkeyCSOMSite @p -Endpoint $_}) | Sort-Object -Unique -Property Url
                     }
                     else{
                         $p = @{
-                            ScanSites = $scanSites;
-                            Recurse = $recurseScan;
-                            Limit = $depthScan;
+                            All = $scanSites;
                             InformationAction = $O365Object.InformationAction;
                             Verbose = $O365Object.verbose;
                             Debug = $O365Object.debug;
                         }
+                        #Get Webs for user
+                        $O365Object.spoSites = Get-MonkeyCSOMSite @p
                     }
-                    #Get Webs for user
-                    $O365Object.spoWebs = Get-MonkeyCSOMWebsForUser @p
-                    if($null -ne $O365Object.spoWebs){
+                    if($null -ne $O365Object.spoSites){
                         $O365Object.onlineServices.Item($service) = $true
                     }
                     else{

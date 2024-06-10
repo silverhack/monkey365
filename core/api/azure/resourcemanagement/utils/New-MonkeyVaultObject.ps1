@@ -48,11 +48,13 @@ Function New-MonkeyVaultObject {
             $KeyVaultObject = [ordered]@{
                 id = $KeyVault.Id;
 		        name = $KeyVault.Name;
+                type = $KeyVault.type;
                 location = $KeyVault.location;
 		        tags = $KeyVault.tags;
                 sku = $KeyVault.properties.sku;
                 tenantId = $KeyVault.properties.tenantId;
                 properties = $KeyVault.properties;
+                enableRbacAuthorization = $KeyVault.properties.enableRbacAuthorization;
                 locks = $null;
                 resourceGroupName = $KeyVault.Id.Split("/")[4];
                 networkAcls = if($null -ne $KeyVault.properties.PsObject.Properties.Item('networkAcls')){$KeyVault.properties.networkAcls}else{$null};

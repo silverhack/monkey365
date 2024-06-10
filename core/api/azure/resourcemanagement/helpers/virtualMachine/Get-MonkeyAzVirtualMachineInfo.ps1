@@ -45,10 +45,6 @@ Function Get-MonkeyAzVirtualMachineInfo {
         [parameter(Mandatory=$false, HelpMessage="API version")]
         [String]$APIVersion = "2021-07-01"
     )
-    Begin{
-        #Get Azure Storage Auth
-		$AzureDiskConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureDisk" } | Select-Object -ExpandProperty resource
-    }
     Process{
         try{
             $msg = @{
@@ -99,6 +95,28 @@ Function Get-MonkeyAzVirtualMachineInfo {
                         $vmObject.diagnosticSettings.properties = $diag.properties;
                         $vmObject.diagnosticSettings.rawData = $diag;
                     }
+                }
+                #Get Missing patches
+                $p = @{
+		            InputObject = $vmObject;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+	            }
+	            $updates = Get-MonkeyVMMissingKb @p
+                if($updates){
+                    $vmObject.updates = $updates;
+                }
+                #Get latest assessment result
+                $p = @{
+		            InputObject = $vmObject;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+	            }
+	            $latestAssessment = Get-MonkeyVMPatchAssessmentResult @p
+                if($latestAssessment){
+                    $vmObject.latestPatchResults = $latestAssessment;
                 }
                 #Return object
                 return $vmObject

@@ -124,11 +124,13 @@ Function Invoke-MonkeyScanner{
         try{
             #Set nested runspace
             $myscan = $all_scans | Select-Object -First 1
+            #Get all libs
+            $libs = $all_scans.libCommands | Select-Object -Unique
             if($null -ne $myscan){
                 $nestedParam = @{
                     ImportVariables = $myscan.vars;
                     ImportModules = $myscan.modules;
-                    ImportCommands = $myscan.libCommands;
+                    ImportCommands = $libs;
                     ApartmentState = $myscan.apartmentState;
                     Throttle = $myscan.threads;
                     StartUpScripts = $myscan.startUpScripts;

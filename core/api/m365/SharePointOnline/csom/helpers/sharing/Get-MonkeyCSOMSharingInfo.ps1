@@ -33,50 +33,61 @@ Function Get-MonkeyCSOMSharingInfo{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [cmdletbinding()]
     Param (
-        [parameter(Mandatory=$True, HelpMessage="Authentication object")]
+        [parameter(Mandatory=$True, position=0, ValueFromPipeline = $true, HelpMessage="ObjectId")]
+        [String]$ObjectId,
+
+        [parameter(Mandatory=$False, HelpMessage="Authentication object")]
         [Object]$Authentication,
 
         [parameter(Mandatory=$False, HelpMessage="Endpoint")]
-        [String]$Endpoint,
-
-        [parameter(Mandatory=$True, HelpMessage="ObjectId")]
-        [String]$ObjectId
+        [String]$Endpoint
     )
-    Begin{
-        $out_obj = $null
-        $body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="Monkey 365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="31905" ObjectPathId="32996" /><Query Id="31906" ObjectPathId="32996"><Query SelectAllProperties="true"><Properties /></Query></Query></Actions><ObjectPaths><StaticMethod Id="32996" Name="GetObjectSharingInformation" TypeId="{e7dae9f6-8ca5-4286-92c8-61941d774c44}"><Parameters><Parameter ObjectPathId="20" /><Parameter Type="Boolean">false</Parameter><Parameter Type="Boolean">false</Parameter><Parameter Type="Boolean">false</Parameter><Parameter Type="Boolean">true</Parameter><Parameter Type="Boolean">true</Parameter><Parameter Type="Boolean">true</Parameter><Parameter Type="Boolean">true</Parameter></Parameters></StaticMethod><Identity Id="20" Name="${objectId}" /></ObjectPaths></Request>' -replace '\${objectId}', $ObjectId
-        $objectMetadata = @{
-            "CheckValue"=1;
-            "isEqualTo"=31905;
-            "GetValue"=4;
-        }
-        $param = @{
-            Authentication = $Authentication;
-            Data = $body_data;
-            Endpoint= $Endpoint;
-            ObjectMetadata = $objectMetadata;
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
-        }
-        #Construct query
-        $raw_data = Invoke-MonkeyCSOMDefaultRequest @param
-    }
     Process{
-        if($raw_data){
-            if($null -ne $raw_data.psobject.Properties.Item('_Child_Items_')){
-                $out_obj = $raw_data._Child_Items_
+        Try{
+            $body_data = '<Request AddExpandoFieldTypeSuffix="true" SchemaVersion="15.0.0.0" LibraryVersion="16.0.0.0" ApplicationName="Monkey 365" xmlns="http://schemas.microsoft.com/sharepoint/clientquery/2009"><Actions><ObjectPath Id="31905" ObjectPathId="32996" /><Query Id="31906" ObjectPathId="32996"><Query SelectAllProperties="true"><Properties /></Query></Query></Actions><ObjectPaths><StaticMethod Id="32996" Name="GetObjectSharingInformation" TypeId="{e7dae9f6-8ca5-4286-92c8-61941d774c44}"><Parameters><Parameter ObjectPathId="20" /><Parameter Type="Boolean">false</Parameter><Parameter Type="Boolean">false</Parameter><Parameter Type="Boolean">false</Parameter><Parameter Type="Boolean">true</Parameter><Parameter Type="Boolean">true</Parameter><Parameter Type="Boolean">true</Parameter><Parameter Type="Boolean">true</Parameter></Parameters></StaticMethod><Identity Id="20" Name="${objectId}" /></ObjectPaths></Request>' -replace '\${objectId}', $ObjectId
+            $objectMetadata = @{
+                "CheckValue"=1;
+                "isEqualTo"=31905;
+                "GetValue"=4;
             }
-            else{
-                $out_obj = $raw_data
+            #Get params
+            $p = Set-CommandParameter -Command "Invoke-MonkeyCSOMDefaultRequest" -Params $PSBoundParameters
+            #Add authentication header if missing
+            if(!$p.ContainsKey('Authentication')){
+                if($null -ne $O365Object.auth_tokens.SharePointOnline){
+                    [void]$p.Add('Authentication',$O365Object.auth_tokens.SharePointOnline);
+                }
+                Else{
+                    Write-Warning -Message ($message.NullAuthenticationDetected -f "SharePoint Online")
+                    break
+                }
+            }
+            #Add Data
+            [void]$p.Add('Data',$body_data);
+            #Add Object metadata
+            [void]$p.Add('ObjectMetadata',$objectMetadata);
+            #Execute query
+            $raw_data = Invoke-MonkeyCSOMDefaultRequest @p
+            if($raw_data){
+                if($null -ne $raw_data.psobject.Properties.Item('_Child_Items_')){
+                    $raw_data._Child_Items_
+                }
+                else{
+                    $raw_data
+                }
             }
         }
-    }
-    End{
-        if($null -ne $out_obj){
-            return $out_obj
+        Catch{
+            $msg = @{
+                MessageData = $_;
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'Error';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365CSOMSharingLinkError');
+            }
+            Write-Error @msg
         }
     }
 }

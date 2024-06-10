@@ -35,16 +35,15 @@ Function Get-MonkeyCSOMList {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
-	[CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Current')]
 	Param (
-        [Parameter(Mandatory= $true, HelpMessage="Authentication Object")]
+        [Parameter(Mandatory= $false, HelpMessage="Authentication Object")]
         [Object]$Authentication,
 
-        [Parameter(Mandatory= $true, ParameterSetName = 'Web', HelpMessage="Sharepoint Web Object")]
+        [Parameter(Mandatory= $false, ValueFromPipeline = $true, ParameterSetName = 'Web', HelpMessage="Sharepoint Web Object")]
         [Object]$Web,
 
-        [Parameter(Mandatory=$True, ParameterSetName = 'Endpoint', HelpMessage="Url")]
+        [Parameter(Mandatory=$false, ParameterSetName = 'Endpoint',  HelpMessage="Url")]
         [String]$Endpoint,
 
         [Parameter(Mandatory=$false, HelpMessage="Lists to filter")]
@@ -54,7 +53,6 @@ Function Get-MonkeyCSOMList {
         [Switch]$ExcludeInternalLists
     )
     Begin{
-        $all_lists = $null
         #Set excluded lists
         $excluded_lists = @(
             "Access Requests","App Packages","appdata",
@@ -83,87 +81,68 @@ Function Get-MonkeyCSOMList {
         )
     }
     Process{
-        if($PSCmdlet.ParameterSetName -eq 'Endpoint'){
-            #Get Web
-            $p = @{
-                Authentication = $Authentication;
-                Endpoint = $Endpoint;
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-            }
-            $Web = Get-MonkeyCSOMWeb @p
-            if($Web){
-                #Getting all lists
-			    $msg = @{
-				    MessageData = ($message.SPSGetListsForWeb -f $Web.url);
-				    callStack = (Get-PSCallStack | Select-Object -First 1);
-				    logLevel = 'info';
-				    InformationAction = $O365Object.InformationAction;
-				    Tags = @('SPSListsInfo');
-			    }
-			    Write-Information @msg
-                #Get all lists
-                $p = @{
-                    ClientObject = $Web;
-                    Properties = "Lists";
-                    Authentication = $Authentication;
-                    Endpoint = $Web.Url;
-                    InformationAction = $O365Object.InformationAction;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                }
-                $all_lists = Get-MonkeyCSOMProperty @p
+        If($PSCmdlet.ParameterSetName -eq 'Current'){
+            $p = Set-CommandParameter -Command "Get-MonkeyCSOMWeb" -Params $PSBoundParameters
+            $_Web = Get-MonkeyCSOMWeb @p
+            if($_Web){
+                $_Web | Get-MonkeyCSOMList @PSBoundParameters
+                return
             }
         }
-        elseif($PSCmdlet.ParameterSetName -eq 'Web'){
-            #Check for objectType
-            if ($Web.psobject.properties.Item('_ObjectType_') -and $Web._ObjectType_ -eq 'SP.Web'){
-                $msg = @{
-				    MessageData = ($message.SPSGetListsForWeb -f $Web.url);
-				    callStack = (Get-PSCallStack | Select-Object -First 1);
-				    logLevel = 'info';
-				    InformationAction = $O365Object.InformationAction;
-				    Tags = @('SPSListsInfo');
-			    }
-			    Write-Information @msg
-                $p = @{
-                    ClientObject = $Web;
-                    Properties = "Lists";
-                    Authentication = $Authentication;
-                    Endpoint = $Web.Url;
-                    InformationAction = $O365Object.InformationAction;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                }
-                $all_lists = Get-MonkeyCSOMProperty @p
+        ElseIf($PSCmdlet.ParameterSetName -eq 'Endpoint'){
+            $p = Set-CommandParameter -Command "Get-MonkeyCSOMWeb" -Params $PSBoundParameters
+            $_Web = Get-MonkeyCSOMWeb @p
+            if($_Web){
+                #Remove Endpoint
+                [void]$PSBoundParameters.Remove('Endpoint')
+                $_Web | Get-MonkeyCSOMList @PSBoundParameters
+                return
             }
-            else{
-                $msg = @{
-                    MessageData = ($message.SPOInvalieWebObjectMessage);
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'Warning';
-                    InformationAction = $InformationAction;
-                    Tags = @('SPOInvalidWebObject');
+        }
+        Else{
+            foreach($_Web in @($PSBoundParameters['Web'])){
+                $objectType = $_Web | Select-Object -ExpandProperty _ObjectType_ -ErrorAction Ignore
+                if ($null -ne $objectType -and $objectType -eq 'SP.Web'){
+                    $p = Set-CommandParameter -Command "Get-MonkeyCSOMProperty" -Params $PSBoundParameters
+                    #Add endpoint
+                    if($null -eq $p.Item('Endpoint')){
+                        [void]$p.Add('Endpoint', $_Web.Url);
+                    }
+                    #Add ClientObject
+                    [void]$p.Add('ClientObject', $_Web);
+                    #Add Properties
+                    [void]$p.Add('Properties', 'Lists');
+                    #Get lists
+                    $all_lists = Get-MonkeyCSOMProperty @p
+                    #Check for lists
+                    If ($null -ne $all_lists){
+                        $all_lists = $all_lists.Lists
+                        if($PSBoundParameters.ContainsKey('ExcludeInternalLists') -and $PSBoundParameters.ExcludeInternalLists){
+                            #Remove excluded lists
+                            $all_lists = $all_lists.Where({$_.Hidden -eq $False -and $excluded_lists -notcontains $_.Title})
+                        }
+                        if($PSBoundParameters.ContainsKey('Filter') -and $PSBoundParameters['Filter'] -and $PSBoundParameters.Filter.Count -gt 0){
+                            #Filter lists
+                            $all_lists = $all_lists.Where({$PSBoundParameters['Filter'] -contains $_.Title});
+                        }
+                        #return object
+                        Write-Output $all_lists
+                    }
                 }
-                Write-Warning @msg
-                break;
+                Else{
+                    $msg = @{
+                        MessageData = ($message.SPOInvalidWebObjectMessage);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'Warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('MonkeyCSOMInvalidWebObject');
+                    }
+                    Write-Warning @msg
+                }
             }
         }
     }
     End{
-        if($null -ne $all_lists){
-            #Get lists
-            $all_lists = $all_lists.Lists
-            if($PSBoundParameters.ContainsKey('ExcludeInternalLists') -and $PSBoundParameters.ExcludeInternalLists){
-                #Remove excluded lists
-                $all_lists = $all_lists | Where-Object {$_.Hidden -eq $False -and $excluded_lists -notcontains $_.Title}
-            }
-            if($PSBoundParameters.ContainsKey('Filter') -and $PSBoundParameters.Filter.Count -gt 0){
-                #Filter lists
-                $all_lists = $all_lists | Where-Object {$PSBoundParameters['Filter'] -contains $_.Title}
-            }
-            return $all_lists
-        }
+        #Nothing to do here
     }
 }

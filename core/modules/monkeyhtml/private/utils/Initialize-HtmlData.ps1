@@ -51,12 +51,14 @@ Function Initialize-HtmlData{
             $goTo = [System.Convert]::ToBoolean($InputObject.actions.showGoToButton)
             $expand = $InputObject.actions.objectData | Select-Object -ExpandProperty expand -ErrorAction Ignore
             $format = $InputObject.actions.objectData.format
+            $expandObject = $InputObject | Select-Object -ExpandProperty expandObject -ErrorAction Ignore
         }
         catch{
             $showModal = $false
             $goTo = $false
             $expand = '*'
             $format = 'json'
+            $expandObject = $null
         }
         try{
             #Formatting object
@@ -69,10 +71,17 @@ Function Initialize-HtmlData{
                 else{
                     #Check if modal
                     if($showModal){
-                        foreach($element in $InputObject.affectedResources){
+                        if($null -ne $expandObject){
+                            $affectedResources = $InputObject.affectedResources | Select-Object -ExpandProperty $expandObject -ErrorAction Ignore
+                        }
+                        Else{
+                            $affectedResources = $InputObject.affectedResources;
+                        }
+                        foreach($element in @($affectedResources)){
                             $selected_elements = $null;
+                            $ExcludedProperties = ("Raw,RawData,raw_data,rawPolicy,rawObject").Split(",")
                             if($expand -eq '*'){
-                                $selected_elements = $element | Select-Object * -ExcludeProperty Raw -ErrorAction Ignore
+                                $selected_elements = $element | Select-Object * -ExcludeProperty $ExcludedProperties -ErrorAction Ignore
                             }
                             else{
                                 try{
@@ -85,7 +94,7 @@ Function Initialize-HtmlData{
                                             #check if PsObject
                                             $isPsObject = ([System.Management.Automation.PSObject]).IsAssignableFrom($value.GetType())
                                             if($isPsCustomObject -or $isPsObject){
-                                                $value = $value | Select-Object * -ExcludeProperty rawObject
+                                                $value = $value | Select-Object * -ExcludeProperty $ExcludedProperties -ErrorAction Ignore
                                             }
                                         }
                                         $value = $value | Format-PsObject

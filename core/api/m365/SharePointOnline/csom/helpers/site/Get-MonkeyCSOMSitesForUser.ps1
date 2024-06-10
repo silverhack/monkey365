@@ -70,7 +70,7 @@ Function Get-MonkeyCSOMSitesForUser{
                     $raw_sites = Get-MonkeyCSOMSiteProperty @p
                     if($null -ne $raw_sites){
                         #removing sites with search templates, onedrive templates, etc..
-                        $raw_sites = $raw_sites | Where-Object {$_.Template -notlike "SRCHCEN#0" -and $_.Template -notlike "SPSMSITEHOST*"}
+                        $raw_sites = @($raw_sites).Where({$_.Template -notlike "SRCHCEN#0" -and $_.Template -notlike "SPSMSITEHOST*" -and $_.Template -notlike "RedirectSite#0"})
                     }
                     #Get unit sites
                     $raw_sites = $raw_sites | Select-Object -ExpandProperty Url -ErrorAction Ignore

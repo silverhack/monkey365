@@ -37,97 +37,68 @@ Function Get-MonkeyCSOMSiteAccessRequest{
             https://github.com/silverhack/monkey365
     #>
 
-    [cmdletbinding()]
-    [OutputType([System.Collections.Generic.List[System.Management.Automation.PSObject]])]
+    [CmdletBinding(DefaultParameterSetName = 'Current')]
     Param (
-        [Parameter(Mandatory= $true, HelpMessage="Authentication Object")]
+        [parameter(Mandatory=$true, ParameterSetName = 'Web', ValueFromPipeline = $true, HelpMessage="Web Object")]
+        [Object]$Web,
+
+        [Parameter(Mandatory= $false, HelpMessage="Authentication Object")]
         [Object]$Authentication,
 
-        [Parameter(Mandatory= $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName  = $true, HelpMessage="SharePoint Web Object")]
-        [Object]$Web
+        [parameter(Mandatory=$true, ParameterSetName = 'Endpoint', HelpMessage="SharePoint Url")]
+        [Object]$Endpoint
     )
-    Begin{
-        #Set generic list
-        $siteAccessList = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-    }
     Process{
-        #Check for objectType
-        if ($Web.psobject.properties.Item('_ObjectType_') -and $Web._ObjectType_ -eq 'SP.Web'){
-            $access_request = $null;
-            #Get Lists
-            $p = @{
-				Authentication = $Authentication;
-				ClientObject = $Web;
-				Properties = 'Lists';
-				Endpoint = $Web.Url;
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-			}
-			$all_lists = Get-MonkeyCSOMProperty @p
-            if($all_lists){
-                #Get access request list
-                $access_request = $all_lists.Lists | Where-Object { $_.Title -eq 'Access Requests' }
+        try{
+            If($PSCmdlet.ParameterSetName -eq "Current" -or $PSCmdlet.ParameterSetName -eq "Endpoint"){
+                $p = Set-CommandParameter -Command "Get-MonkeyCSOMWeb" -Params $PSBoundParameters
+                $_Web = Get-MonkeyCSOMWeb @p
+                if($_Web){
+                    #Remove Endpoint if exists
+                    [void]$PSBoundParameters.Remove('Endpoint');
+                    $_Web | Get-MonkeyCSOMSiteAccessRequest @PSBoundParameters
+                    return
+                }
             }
-            if($null -ne $access_request){
-                foreach($ar in @($access_request)){
-                    #Getting access requests
-					$msg = @{
-						MessageData = ($message.SPSCheckSiteAccessRequests -f $Web.Url);
-						callStack = (Get-PSCallStack | Select-Object -First 1);
-						logLevel = 'verbose';
-						InformationAction = $O365Object.InformationAction;
-                        Verbose = $O365Object.verbose;
-						Tags = @('SPSAccessRequestInfo');
-					}
-					Write-Verbose @msg
-                    $p = @{
-                        Authentication = $Authentication;
-                        List = $ar;
-                        Endpoint = $Web.Url;
-                        InformationAction = $O365Object.InformationAction;
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
-                    }
-                    $access_list = Get-MonkeyCSOMListItem @p
-                    if($null -ne $access_list){
-                        foreach($access in @($access_list)){
-                            $access_dict = [ordered]@{
-                                Title = $access.Title;
-                                Message = $access.Conversation;
-							    RequestedObjectUrl = $access.RequestedObjectUrl.Url;
-							    RequestedObjectTitle = $access.RequestedObjectTitle;
-							    RequestedBy = $access.RequestedBy;
-							    RequestedFor = $access.RequestedFor;
-							    RequestDate = $access.RequestDate;
-							    Expires = $access.Expires;
-							    Status = [ChangeRequestStatus]$access.Status;
-							    PermissionType = $access.PermissionType;
-							    IsInvitation = $access.IsInvitation;
-                                RawObject = $access;
+            foreach($_Web in @($Web)){
+                #Check for objectType
+                $objectType = $_Web | Select-Object -ExpandProperty _ObjectType_ -ErrorAction Ignore
+                if ($null -ne $objectType -and $objectType -eq 'SP.Web'){
+                    If(($_Web | Test-HasUniqueRoleAssignment)){
+                        #Set command parameters
+                        $p = Set-CommandParameter -Command "Get-MonkeyCSOMList" -Params $PSBoundParameters
+                        #Add Filter
+                        [void]$p.Add('Filter','Access Requests');
+                        #Add Web
+                        $p.Item('Web') = $_Web
+                        #Execute query
+                        $arList = Get-MonkeyCSOMList @p
+                        if($null -ne $arList){
+                            #Set command parameters
+                            $p = Set-CommandParameter -Command "Get-MonkeyCSOMListItem" -Params $PSBoundParameters
+                            #Add List
+                            $p.Item('List') = $arList;
+                            $access_requests = Get-MonkeyCSOMListItem @p
+                            if($null -ne $access_requests){
+                                $access_requests | New-MonkeyCSOMSiteAccesRequestObject
                             }
-                            #Add to List
-                            $accessListObject = New-Object PSObject -Property $access_dict
-                            [void]$siteAccessList.Add($accessListObject)
                         }
                     }
                 }
+                Else{
+                    $msg = @{
+                        MessageData = ($message.SPOInvalidWebObjectMessage);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'Warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('MonkeyCSOMInvalidWebObject');
+                    }
+                    Write-Warning @msg
+                }
             }
         }
-        else{
-            $msg = @{
-                MessageData = ($message.SPOInvalieWebObjectMessage);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'Warning';
-                InformationAction = $InformationAction;
-                Tags = @('SPOInvalidWebObject');
-            }
-            Write-Warning @msg
+        Catch{
+            Write-Error $_
         }
-    }
-    End{
-        #return list
-        #return , $siteAccessList
-        Write-Output $siteAccessList -NoEnumerate
     }
 }

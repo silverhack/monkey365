@@ -84,7 +84,7 @@ Function Get-MonkeyMSGraphGroup {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $group = Get-MonkeyMSGraphObject @params
+            Get-MonkeyMSGraphObject @params
         }
         elseif($PSCmdlet.ParameterSetName -eq 'GroupName'){
             #Set filter
@@ -103,7 +103,7 @@ Function Get-MonkeyMSGraphGroup {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $group = Get-MonkeyMSGraphObject @params
+            Get-MonkeyMSGraphObject @params
         }
         else{
             $params = @{
@@ -122,11 +122,7 @@ Function Get-MonkeyMSGraphGroup {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $group = Get-MonkeyMSGraphObject @params
-        }
-        #return data
-        if($group){
-            return $group
+            Get-MonkeyMSGraphObject @params
         }
     }
     End{
