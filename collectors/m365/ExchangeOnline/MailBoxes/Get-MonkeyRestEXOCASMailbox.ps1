@@ -84,13 +84,17 @@ function Get-MonkeyRestEXOCASMailbox {
 			}
 			Write-Information @msg
 			#Get Mailboxes
-			$param = @{
-				Authentication = $exo_auth;
-				Environment = $Environment;
-				ObjectType = "CasMailbox";
-				ExtraParameters = "PropertySet=All";
-			}
-			$cas_mailBoxes = Get-PSExoAdminApiObject @param
+            $p = @{
+	            Authentication = $exo_auth;
+	            Environment = $Environment;
+	            ResponseFormat = 'clixml';
+	            Command = 'Get-CASMailbox -ResultSize unlimited';
+	            Method = "POST";
+	            InformationAction = $O365Object.InformationAction;
+	            Verbose = $O365Object.Verbose;
+	            Debug = $O365Object.Debug;
+            }
+			$cas_mailBoxes = Get-PSExoAdminApiObject @p
 		}
 	}
 	end {

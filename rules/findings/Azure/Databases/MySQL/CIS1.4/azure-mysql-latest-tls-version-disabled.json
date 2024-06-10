@@ -1,34 +1,49 @@
 {
-    "serviceType":  "MySQL Server",
-    "serviceName":  "Databases",
-    "displayName":  "Ensure TLS Version is set to TLSV1.2 for MySQL Database Server",
-    "description":  "Ensure TLS version on MySQL flexible servers is set to the default value.",
-    "rationale":  'TLS connectivity helps to provide a new layer of security, by connecting database server to client applications using Transport Layer Security (TLS). Enforcing TLS connections between database server and client applications helps protect against "man in the middle." attacks by encrypting the data stream between the server and application.',
-    "impact":  null,
-    "remediation":  null,
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/mysql/howto-configure-ssl"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "4.4.2"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_mysql_servers",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["properties.minimalTlsVersion","ne","TLSV1.2"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "mysql_tls_last_version_disabled"
+  "serviceType": "MySQL Server",
+  "serviceName": "Databases",
+  "displayName": "Ensure TLS Version is set to TLSV1.2 for MySQL Database Server",
+  "description": "Ensure TLS version on MySQL flexible servers is set to the default value.",
+  "rationale": "TLS connectivity helps to provide a new layer of security, by connecting database server to client applications using Transport Layer Security (TLS). Enforcing TLS connections between database server and client applications helps protect against \"man in the middle.\" attacks by encrypting the data stream between the server and application.",
+  "impact": null,
+  "remediation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/mysql/howto-configure-ssl"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "4.4.2"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_mysql_servers",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "properties.minimalTlsVersion",
+              "ne",
+              "TLSV1.2"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "mysql_tls_last_version_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

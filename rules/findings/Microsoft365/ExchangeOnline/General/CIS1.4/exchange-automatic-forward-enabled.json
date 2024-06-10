@@ -1,47 +1,51 @@
 {
-    "serviceType":  "Exchange Online",
-    "serviceName":  "Microsoft 365",
-    "displayName":  "Ensure automatic forwarding options are disabled",
-    "description":  "Consider to disable automatic forwarding to prevent users from auto-forwarding mail through Outlook and Outlook on the Web.",
-    "rationale":  "In the event that an attacker gains control of an end-user account they could create rules to ex-filtrate data from your environment.",
-    "impact":  "Care should be taken before implementation to ensure there is no business need for case-by-case auto-forwarding. Disabling auto-forwarding to remote domains will affect all users and in an organization.",
-    "remediation":  '
-					###### To perform remediation you may use the Exchange Online PowerShell Module:
-					1. Connect to Exchange Online using `Connect-ExchangeOnline`
-					2. Run the following PowerShell command:					
-					```powershell
-					Set-RemoteDomain Default -AutoForwardEnabled $false
-					```
-					3. To verify this worked you may re-run the audit command as follows:					
-					```powershell
-					Get-RemoteDomain Default | fl AllowedOOFType, AutoForwardEnabled
-					```
-	',
-    "references":  [
-		"https://docs.microsoft.com/en-gb/azure/app-service/app-service-web-tutorial-connect-msi"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft 365 Foundations",
-			"version":  "1.4.0",
-			"reference":  "4.3"
-		}
-	],
-    "tags":  [
-                 "Microsoft 365 CIS benchmark 4.4"
-	],
-	"level": "medium",
-    "path":  "o365_exo_remote_domain",
-    "conditions":  [
-		{
-			statements: [
-				{
-					conditions : [
-						["AutoForwardEnabled","eq","True"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "o365_exo_automatic_forward_enabled"
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure automatic forwarding options are disabled",
+  "description": "Consider to disable automatic forwarding to prevent users from auto-forwarding mail through Outlook and Outlook on the Web.",
+  "rationale": "In the event that an attacker gains control of an end-user account they could create rules to ex-filtrate data from your environment.",
+  "impact": "Care should be taken before implementation to ensure there is no business need for case-by-case auto-forwarding. Disabling auto-forwarding to remote domains will affect all users and in an organization.",
+  "remediation": "\r\n\t\t\t\t\t###### To perform remediation you may use the Exchange Online PowerShell Module:\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tSet-RemoteDomain Default -AutoForwardEnabled $false\r\n\t\t\t\t\t```\r\n\t\t\t\t\t3. To verify this worked you may re-run the audit command as follows:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tGet-RemoteDomain Default | fl AllowedOOFType, AutoForwardEnabled\r\n\t\t\t\t\t```\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-gb/azure/app-service/app-service-web-tutorial-connect-msi"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.4.0",
+      "reference": "4.3"
+    }
+  ],
+  "tags": [
+    "Microsoft 365 CIS benchmark 4.4"
+  ],
+  "level": "medium",
+  "path": "o365_exo_remote_domain",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "AutoForwardEnabled",
+              "eq",
+              "True"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "o365_exo_automatic_forward_enabled",
+  "status": {
+    "keyName": [],
+    "message": "Ensure automatic forwarding options are disabled"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

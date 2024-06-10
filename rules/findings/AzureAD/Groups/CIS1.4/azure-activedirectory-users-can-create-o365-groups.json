@@ -1,50 +1,63 @@
 {
-    "serviceType":  "Groups",
-    "serviceName":  "Microsoft Entra ID",
-    "displayName":  "Restrict Office 365 group creation to administrators only",
-    "description":  "Consider to limit that regular users the ability to create Office365 groups. When this settings is enabled, all users in the Azure directory are allowed to create new Office365 groupd and add members to these groups.",
-    "rationale":  "Restricting Microsoft 365 group creation to administrators only ensures that creation of Microsoft 365 groups is controlled by the administrator. Appropriate groups should be created and managed by the administrator and group creation rights should not be delegated to any other use.",
-    "impact":  "Enabling this setting could create a number of request that would need to be managed by an administrator.",
-    "remediation":  "
-					###### From Azure Console
-					1. Go to `Microsoft Entra ID`
-					2. Go to `Groups`
-					3. Go to `General`
-					4. Ensure that `Users can create Microsoft 365 groups in Azure Portals` is set to `No`
-	",
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/methods-for-assigning-users-and-groups",
-		"https://docs.microsoft.com/en-us/office365/admin/create-groups/manage-creation-of-groups",
-		"https://whitepages.unlimitedviz.com/2017/01/disable-office-365-groups-2/",
-		"https://support.office.com/en-us/article/Control-who-can-create-Office-365-Groups-4c46c8cb-17d0-44b5-9776-005fced8e618",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-5-automate-entitlement-management",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "1.18"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "aad_settings",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["templateId","eq","62375ab9-6b52-47ed-826b-58e47e0e304b"],
-						["properties.EnableGroupCreation","eq","True"]
-					],
-					operator:  "and"
-				}
-			]
-		}
-	],
-    "idSuffix":  "aad_restrict_o365_group_creation_admins"
+  "serviceType": "Groups",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Restrict Office 365 group creation to administrators only",
+  "description": "Consider to limit that regular users the ability to create Office365 groups. When this settings is enabled, all users in the Azure directory are allowed to create new Office365 groupd and add members to these groups.",
+  "rationale": "Restricting Microsoft 365 group creation to administrators only ensures that creation of Microsoft 365 groups is controlled by the administrator. Appropriate groups should be created and managed by the administrator and group creation rights should not be delegated to any other use.",
+  "impact": "Enabling this setting could create a number of request that would need to be managed by an administrator.",
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t2. Go to `Groups`\r\n\t\t\t\t\t3. Go to `General`\r\n\t\t\t\t\t4. Ensure that `Users can create Microsoft 365 groups in Azure Portals` is set to `No`\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/methods-for-assigning-users-and-groups",
+    "https://docs.microsoft.com/en-us/office365/admin/create-groups/manage-creation-of-groups",
+    "https://whitepages.unlimitedviz.com/2017/01/disable-office-365-groups-2/",
+    "https://support.office.com/en-us/article/Control-who-can-create-Office-365-Groups-4c46c8cb-17d0-44b5-9776-005fced8e618",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-5-automate-entitlement-management",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "1.18"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "aad_settings",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "templateId",
+              "eq",
+              "62375ab9-6b52-47ed-826b-58e47e0e304b"
+            ],
+            [
+              "properties.EnableGroupCreation",
+              "eq",
+              "True"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "aad_restrict_o365_group_creation_admins",
+  "status": {
+    "keyName": [],
+    "message": "Microsoft 365 group creation is not restricted"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

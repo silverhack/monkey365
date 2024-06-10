@@ -1,44 +1,56 @@
 {
-    "serviceType":  "SQL Server",
-    "serviceName":  "Databases",
-    "displayName":  "Ensure that 'Data encryption' is set to 'On' on a SQL Database",
-    "description":  "Enable Transparent Data Encryption on every SQL server.",
-    "rationale":  'Azure SQL Database transparent data encryption helps protect against the threat of malicious activity by performing real-time encryption and decryption of the database, associated backups, and transaction log files at rest without requiring changes to the application.
-	',
-    "impact":  null,
-    "remediation":  '
-					###### From Azure Console
-					1. Go to `SQL databases`.
-					2. For each DB instance
-					3. Click on `Transparent data encryption`
-					4. Set encryption to `On`
-	',
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/security/fundamentals/encryption-atrest",
-		"https://docs.microsoft.com/en-us/azure/sql-database/sql-database-security-overview"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "4.1.2"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_sql_servers",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["databases.name","ne","master"],
-						["databases.tdeSettings.enabled","eq","Disabled"]
-					],
-					operator:  "and"
-				}
-			]
-		}
-	],
-    "idSuffix":  "sql_server_db_encryption_disabled"
+  "serviceType": "SQL Server",
+  "serviceName": "Databases",
+  "displayName": "Ensure that 'Data encryption' is set to 'On' on a SQL Database",
+  "description": "Enable Transparent Data Encryption on every SQL server.",
+  "rationale": "Azure SQL Database transparent data encryption helps protect against the threat of malicious activity by performing real-time encryption and decryption of the database, associated backups, and transaction log files at rest without requiring changes to the application.\r\n\t",
+  "impact": null,
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `SQL databases`.\r\n\t\t\t\t\t2. For each DB instance\r\n\t\t\t\t\t3. Click on `Transparent data encryption`\r\n\t\t\t\t\t4. Set encryption to `On`\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/security/fundamentals/encryption-atrest",
+    "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-security-overview"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "4.1.2"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_sql_servers",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "databases.name",
+              "ne",
+              "master"
+            ],
+            [
+              "databases.tdeSettings.enabled",
+              "eq",
+              "Disabled"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "sql_server_db_encryption_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

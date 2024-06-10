@@ -1,46 +1,57 @@
 {
-	"serviceType":  "Microsoft Defender for Cloud",
-    "serviceName":  "Subscription",
-    "displayName":  "Ensure That Microsoft Defender for Resource Manager Is Set To 'On'",
-    "description":  "Microsoft Defender for Resource Manager scans incoming administrative requests to change your infrastructure from both CLI and the Azure portal.",
-	"rationale":  "Scanning resource requests lets you be alerted every time there is suspicious activity in order to prevent a security threat from being introduced.",
-    "impact":  "Enabling Microsoft Defender for Resource Manager requires enabling Microsoft Defender for your subscription. Both will incur additional charges.",
-    "remediation":  "
-					###### From Azure Console
-					1. Go to `Microsoft Defender for Cloud`
-					2. Select `Environment settings`
-					3. Click on the subscription name
-					4. Select the `Defender plans` blade
-					5. Review the chosen pricing tier. For the `Resource Manager` resource type the radial button should be set to `On`
-					6. Select `Save`
-	",
-    "references":  [
-		"https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql?view=azuresql",
-		"https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-enable-database-protections",
-		"https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.5.0",
-			"reference":  "2.1.13"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_pricing_tier",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["name","eq","Arm"],
-						["properties.pricingTier","eq","Free"]
-					],
-					operator: "and"
-				}
-			]
-		}
-	],
-    "idSuffix":  "azure_defender_missing_arm_protection"
+  "serviceType": "Microsoft Defender for Cloud",
+  "serviceName": "Subscription",
+  "displayName": "Ensure That Microsoft Defender for Resource Manager Is Set To 'On'",
+  "description": "Microsoft Defender for Resource Manager scans incoming administrative requests to change your infrastructure from both CLI and the Azure portal.",
+  "rationale": "Scanning resource requests lets you be alerted every time there is suspicious activity in order to prevent a security threat from being introduced.",
+  "impact": "Enabling Microsoft Defender for Resource Manager requires enabling Microsoft Defender for your subscription. Both will incur additional charges.",
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. Review the chosen pricing tier. For the `Resource Manager` resource type the radial button should be set to `On`\r\n\t\t\t\t\t6. Select `Save`\r\n\t",
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql?view=azuresql",
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-enable-database-protections",
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.5.0",
+      "reference": "2.1.13"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_pricing_tier",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "name",
+              "eq",
+              "Arm"
+            ],
+            [
+              "properties.pricingTier",
+              "eq",
+              "Free"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "azure_defender_missing_arm_protection",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

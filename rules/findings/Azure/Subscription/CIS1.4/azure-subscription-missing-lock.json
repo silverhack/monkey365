@@ -1,48 +1,51 @@
 {
-    "serviceType":  "Subscription Security",
-    "serviceName":  "Subscription",
-    "displayName":  "Ensure that Resource Locks are set for Mission Critical Azure Resources",
-    "description":  "Resource Manager Locks provide a way for administrators to lock down Azure resources to prevent deletion of, or modifications to, a resource. These locks sit outside of the Role Based Access Controls (RBAC) hierarchy and, when applied, will place restrictions on the resource for all users. These locks are very useful when there is an important resource in a subscription that users should not be able to delete or change. Locks can help prevent accidental and malicious changes or deletion.",
-    "rationale":  "
-					As an administrator, it may be necessary to lock a subscription, resource group, or resource to prevent other users in the organization from accidentally deleting or modifying critical resources. The lock level can be set to to CanNotDelete or ReadOnly to achieve this purpose.
-					
-					* `CanNotDelete` means authorized users can still read and modify a resource, but they can't delete the resource.
-					* `ReadOnly` means authorized users can read a resource, but they can't delete or update the resource. Applying this lock is similar to restricting all authorized users to the permissions granted by the Reader role.
-	",
-    "impact":  "",
-    "remediation":  '
-					###### From Azure Console
-					1. Navigate to the specific Azure Resource or Resource Group
-					2. For each of the mission critical resource, click on `Locks`
-					3. Click `Add`
-					4. Give the lock a name and a description, then select the type, `CanNotDelete` or `ReadOnly` as appropriate					
-					Assign the newly created role to the appropriate user.
-	',
-    "references":  [
-                       "https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/lock-resources?tabs=json"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft 365 Foundations",
-			"version":  "1.4.0",
-			"reference":  "8.5"
-		}
-	],
-	"level": "medium",
-    "tags":  [
-		"Microsoft 365 CIS benchmark 1.4.0"
-	],
-    "path":  "az_locks",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["locks.Count","eq","0"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "azure_subscription_missing_custom_lock_role"
+  "serviceType": "Subscription Security",
+  "serviceName": "Subscription",
+  "displayName": "Ensure that Resource Locks are set for Mission Critical Azure Resources",
+  "description": "Resource Manager Locks provide a way for administrators to lock down Azure resources to prevent deletion of, or modifications to, a resource. These locks sit outside of the Role Based Access Controls (RBAC) hierarchy and, when applied, will place restrictions on the resource for all users. These locks are very useful when there is an important resource in a subscription that users should not be able to delete or change. Locks can help prevent accidental and malicious changes or deletion.",
+  "rationale": "\r\n\t\t\t\t\tAs an administrator, it may be necessary to lock a subscription, resource group, or resource to prevent other users in the organization from accidentally deleting or modifying critical resources. The lock level can be set to to CanNotDelete or ReadOnly to achieve this purpose.\r\n\t\t\t\t\t\r\n\t\t\t\t\t* `CanNotDelete` means authorized users can still read and modify a resource, but they can't delete the resource.\r\n\t\t\t\t\t* `ReadOnly` means authorized users can read a resource, but they can't delete or update the resource. Applying this lock is similar to restricting all authorized users to the permissions granted by the Reader role.\r\n\t",
+  "impact": "",
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Navigate to the specific Azure Resource or Resource Group\r\n\t\t\t\t\t2. For each of the mission critical resource, click on `Locks`\r\n\t\t\t\t\t3. Click `Add`\r\n\t\t\t\t\t4. Give the lock a name and a description, then select the type, `CanNotDelete` or `ReadOnly` as appropriate\t\t\t\t\t\r\n\t\t\t\t\tAssign the newly created role to the appropriate user.\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/lock-resources?tabs=json"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.4.0",
+      "reference": "8.5"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "Microsoft 365 CIS benchmark 1.4.0"
+  ],
+  "path": "az_locks",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "locks.Count",
+              "eq",
+              "0"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "azure_subscription_missing_custom_lock_role",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

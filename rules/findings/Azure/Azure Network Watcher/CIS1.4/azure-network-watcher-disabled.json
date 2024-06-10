@@ -1,34 +1,49 @@
 {
-    "serviceType":  "Network Watcher",
-    "serviceName":  "Network",
-    "displayName":  "Enable Network Watcher for Azure subscriptions in all regions",
-    "description":  "Azure Network Watcher provides tools to monitor, diagnose, view metrics, and enable or disable logs for resources in an Azure virtual network. The security group view capability shows all security rules applied to the network interfaces, as well as the subnet the network interface is in, and the aggregate of both. An administrator can add, remove, or change rules.",
-    "rationale":  "Network diagnostic and visualization tools available with Network Watcher help users understand, diagnose, and gain insights to the network in Azure.",
-    "impact":  null,
-    "remediation":  "Opting-out of Network Watcher automatic enablement is a permanent change. Once you opt-out you cannot opt-in without contacting support.",
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "6.5"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_network_watcher",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["all_locations_enabled","eq","False"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "network_watcher_disabled"
+  "serviceType": "Network Watcher",
+  "serviceName": "Network",
+  "displayName": "Enable Network Watcher for Azure subscriptions in all regions",
+  "description": "Azure Network Watcher provides tools to monitor, diagnose, view metrics, and enable or disable logs for resources in an Azure virtual network. The security group view capability shows all security rules applied to the network interfaces, as well as the subnet the network interface is in, and the aggregate of both. An administrator can add, remove, or change rules.",
+  "rationale": "Network diagnostic and visualization tools available with Network Watcher help users understand, diagnose, and gain insights to the network in Azure.",
+  "impact": null,
+  "remediation": "Opting-out of Network Watcher automatic enablement is a permanent change. Once you opt-out you cannot opt-in without contacting support.",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "6.5"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_network_watcher",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "all_locations_enabled",
+              "eq",
+              "False"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "network_watcher_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

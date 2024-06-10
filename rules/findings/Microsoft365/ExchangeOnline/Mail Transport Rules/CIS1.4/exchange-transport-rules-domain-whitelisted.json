@@ -1,62 +1,73 @@
 {
-    "serviceType":  "Exchange Online",
-    "serviceName":  "Microsoft 365",
-    "displayName":  "Ensure mail transport rules do not whitelist specific domains",
-    "description":  "Consider to set Exchange Online mail transport rules so they do not whitelist any specific domains.",
-    "rationale":  "Whitelisting domains in transport rules bypasses regular malware and phishing scanning, which can enable an attacker to launch attacks against your users from a safe haven domain.",
-    "impact":  "Care should be taken before implementation to ensure there is no business need for case-by-case whitelisting. Removing all whitelisted domains could affect incoming mail flow to an organization although modern systems sending legitimate mail should have no issue with this.",
-    "remediation":  '
-					###### To alter the mail transport rules so they do not whitelist any specific domains, use the Microsoft 365 Admin Center
-					1. Select `Exchange`.
-					2. Select `Mail Flow` and `Rules`.
-					3. For each rule that whitelists specific domains, select the rule and click the *Delete* icon.
-					
-					###### To remove mail transport rules you may also use the Exchange Online PowerShell
-					1. Connect to Exchange Online using `Connect-ExchangeOnline`
-					2. Run the following PowerShell command:					
-					```powershell
-					Remove-TransportRule {RuleName}
-					```
-					3. To verify this worked you may re-run the audit command as follows:					
-					```powershell
-					Get-TransportRule | Where-Object {($_.setscl -eq -1 -and $null -ne $_.SenderDomainIs)} | ft Name,SenderDomainIs
-					```
-	',
-    "references":  [
-		"https://docs.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/conditions-and-exceptions",
-		"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/create-safe-sender-lists-in-office-365?view=o365-worldwide"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft 365 Foundations",
-			"version":  "1.3.0",
-			"reference":  "4.5"
-		}
-	],
-	"level": "medium",
-    "tags":  [
-		"Microsoft 365 CIS benchmark 4.5"
-	],
-    "path":  "o365_exo_transport_rules",
-    "conditions":  [
-		{
-			operator:  'and',
-			statements:  [
-				{
-					conditions:  [
-						["setscl","eq","-1"]
-					]
-				},
-				{
-					conditions:  [
-						["SenderDomainIs","ne",""],
-						["FromAddressContainsWords","ne",""],
-						["FromAddressMatchesPatterns","ne",""]
-					],
-					operator:  'or'
-				}				
-			]
-		}
-	],
-    "idSuffix":  "o365_exo_transport_rules_domain_whitelisted"
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure mail transport rules do not whitelist specific domains",
+  "description": "Consider to set Exchange Online mail transport rules so they do not whitelist any specific domains.",
+  "rationale": "Whitelisting domains in transport rules bypasses regular malware and phishing scanning, which can enable an attacker to launch attacks against your users from a safe haven domain.",
+  "impact": "Care should be taken before implementation to ensure there is no business need for case-by-case whitelisting. Removing all whitelisted domains could affect incoming mail flow to an organization although modern systems sending legitimate mail should have no issue with this.",
+  "remediation": "\r\n\t\t\t\t\t###### To alter the mail transport rules so they do not whitelist any specific domains, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Select `Exchange`.\r\n\t\t\t\t\t2. Select `Mail Flow` and `Rules`.\r\n\t\t\t\t\t3. For each rule that whitelists specific domains, select the rule and click the *Delete* icon.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To remove mail transport rules you may also use the Exchange Online PowerShell\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tRemove-TransportRule {RuleName}\r\n\t\t\t\t\t```\r\n\t\t\t\t\t3. To verify this worked you may re-run the audit command as follows:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tGet-TransportRule | Where-Object {($_.setscl -eq -1 -and $null -ne $_.SenderDomainIs)} | ft Name,SenderDomainIs\r\n\t\t\t\t\t```\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/conditions-and-exceptions",
+    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/create-safe-sender-lists-in-office-365?view=o365-worldwide"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.3.0",
+      "reference": "4.5"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "Microsoft 365 CIS benchmark 4.5"
+  ],
+  "path": "o365_exo_transport_rules",
+  "conditions": [
+    {
+      "operator": "and",
+      "statements": [
+        {
+          "conditions": [
+            [
+              "setscl",
+              "eq",
+              "-1"
+            ]
+          ]
+        },
+        {
+          "conditions": [
+            [
+              "SenderDomainIs",
+              "ne",
+              ""
+            ],
+            [
+              "FromAddressContainsWords",
+              "ne",
+              ""
+            ],
+            [
+              "FromAddressMatchesPatterns",
+              "ne",
+              ""
+            ]
+          ],
+          "operator": "or"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "o365_exo_transport_rules_domain_whitelisted",
+  "status": {
+    "keyName": [],
+    "message": "Ensure mail transport rules do not whitelist specific domains"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

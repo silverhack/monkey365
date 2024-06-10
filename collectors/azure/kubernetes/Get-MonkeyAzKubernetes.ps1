@@ -68,11 +68,11 @@ function Get-MonkeyAzKubernetes {
 			);
 		}
 		#Get kubernetes resources
-		$kubernetes = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.ContainerService/managedClusters' }
+		$kubernetes = $O365Object.all_resources.Where({$_.type -like 'Microsoft.ContainerService/managedClusters'});
 		if (-not $kubernetes) { continue }
 		$all_kubernetes = $null
 		#Get Config
-		$Kubernetes_Config = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureKubernetes" } | Select-Object -ExpandProperty resource
+		$Kubernetes_Config = $O365Object.internal_config.ResourceManager.Where({ $_.Name -eq "azureKubernetes" }) | Select-Object -ExpandProperty resource
 	}
 	process {
 		$msg = @{
@@ -83,7 +83,7 @@ function Get-MonkeyAzKubernetes {
 			Tags = @('AzureContainerInfo');
 		}
 		Write-Information @msg
-        if($null -ne $kubernetes){
+        if($kubernetes.Count -gt 0){
             $new_arg = @{
 			    APIVersion = $Kubernetes_Config.api_version;
 		    }

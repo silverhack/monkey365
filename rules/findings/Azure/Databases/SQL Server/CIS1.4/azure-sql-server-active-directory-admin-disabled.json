@@ -1,34 +1,49 @@
 {
-    "serviceType":  "SQL Server",
-    "serviceName":  "Databases",
-    "displayName":  "Use Microsoft Entra ID Authentication for authentication with SQL Database",
-    "description":  "Microsoft Entra ID authentication is a mechanism to connect to Microsoft Azure SQL Database and SQL Data Warehouse using identities in Microsoft Entra ID (Azure Active Directory). With Microsoft Entra ID authentication, identities of database users and other Microsoft services can be managed in one central location. Central ID management provides a single place to manage database users and simplifies permission management",
-    "rationale":  null,
-    "impact":  null,
-    "remediation":  null,
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/sql-database/sql-database-aad-authentication-configure"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "4.5"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_sql_servers",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["sqlAd.enabled","eq","False"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "sql_server_ad_admin_disabled"
+  "serviceType": "SQL Server",
+  "serviceName": "Databases",
+  "displayName": "Use Microsoft Entra ID Authentication for authentication with SQL Database",
+  "description": "Microsoft Entra ID authentication is a mechanism to connect to Microsoft Azure SQL Database and SQL Data Warehouse using identities in Microsoft Entra ID (Azure Active Directory). With Microsoft Entra ID authentication, identities of database users and other Microsoft services can be managed in one central location. Central ID management provides a single place to manage database users and simplifies permission management",
+  "rationale": null,
+  "impact": null,
+  "remediation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-aad-authentication-configure"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "4.5"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_sql_servers",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "sqlAd.enabled",
+              "eq",
+              "False"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "sql_server_ad_admin_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

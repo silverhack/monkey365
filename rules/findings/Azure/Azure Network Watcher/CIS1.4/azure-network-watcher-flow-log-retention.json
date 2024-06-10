@@ -1,45 +1,55 @@
 {
-    "serviceType":  "Network Watcher",
-    "serviceName":  "Network",
-    "displayName":  "Network Security Group Flow Logs should be enabled and the retention period is set to greater than or equal to 90 days",
-    "description":  "Flow logs enable capturing information about IP traffic flowing in and out of network security groups. Logs can be used to check for anomalies and give insight into suspected breaches.",
-    "rationale":  "Flow logs enable capturing information about IP traffic flowing in and out of network security groups. Logs can be used to check for anomalies and give insight into suspected breaches.",
-    "impact":  null,
-    "remediation":  '
-					###### From Azure Console
-					1. Go to `Network Watcher`
-					2. Select `NSG flow logs` blade in the Logs section
-					3. Select each Network Security Group from the list
-					4. Ensure `Status` is set to `On`
-					5. Ensure `Retention (days)` setting `greater than 90 days`
-					6. Select your storage account in the `Storage account` field
-					7. Select `Save`
-	',
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-nsg-flow-logging-overview"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "6.4"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_network_watcher_flow_logs",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["enabled","eq","true"],
-						["retentionPolicyDays","lt","90"]
-					],
-					operator:  "and"
-				}
-			]
-		}
-	],
-    "idSuffix":  "network_watcher_flowlogs_retention_days"
+  "serviceType": "Network Watcher",
+  "serviceName": "Network",
+  "displayName": "Network Security Group Flow Logs should be enabled and the retention period is set to greater than or equal to 90 days",
+  "description": "Flow logs enable capturing information about IP traffic flowing in and out of network security groups. Logs can be used to check for anomalies and give insight into suspected breaches.",
+  "rationale": "Flow logs enable capturing information about IP traffic flowing in and out of network security groups. Logs can be used to check for anomalies and give insight into suspected breaches.",
+  "impact": null,
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Network Watcher`\r\n\t\t\t\t\t2. Select `NSG flow logs` blade in the Logs section\r\n\t\t\t\t\t3. Select each Network Security Group from the list\r\n\t\t\t\t\t4. Ensure `Status` is set to `On`\r\n\t\t\t\t\t5. Ensure `Retention (days)` setting `greater than 90 days`\r\n\t\t\t\t\t6. Select your storage account in the `Storage account` field\r\n\t\t\t\t\t7. Select `Save`\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-nsg-flow-logging-overview"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "6.4"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_network_watcher_flow_logs",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "enabled",
+              "eq",
+              "true"
+            ],
+            [
+              "retentionPolicyDays",
+              "lt",
+              "90"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "network_watcher_flowlogs_retention_days",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

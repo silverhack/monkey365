@@ -1056,7 +1056,7 @@
 					"True",
 					"1.5.0",
 					"5.2.1",
-					"Monitoring for create policy assignment events gives insight into changes done in \"azure policy - assignments\" and may reduce the time it takes to detect unsolicited changes."
+					"Monitoring for create policy assignment events gives insight into changes done in 'azure policy - assignments' and may reduce the time it takes to detect unsolicited changes."
 				],
 				"enabled": true,
 				"level": "medium"
@@ -1068,7 +1068,7 @@
 					"True",
 					"1.5.0",
 					"5.2.2",
-					"Monitoring for delete policy assignment events gives insight into changes done in \"azure policy - assignments\" and may reduce the time it takes to detect unsolicited changes."
+					"Monitoring for delete policy assignment events gives insight into changes done in 'azure policy - assignments' and may reduce the time it takes to detect unsolicited changes."
 				],
 				"enabled": true,
 				"level": "medium"
@@ -1080,7 +1080,7 @@
 					"True",
 					"1.5.0",
 					"5.2.3",
-					"Monitoring for \"Create\" or \"Update Network Security Group\" events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
+					"Monitoring for 'Create' or 'Update Network Security Group' events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
 				"enabled": true,
 				"level": "medium"
@@ -1092,7 +1092,7 @@
 					"True",
 					"1.5.0",
 					"5.2.4",
-					"Monitoring for \"Delete Network Security Group\" events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
+					"Monitoring for 'Delete Network Security Group' events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
 				"enabled": true,
 				"level": "medium"
@@ -1104,7 +1104,7 @@
 					"True",
 					"1.5.0",
 					"5.2.5",
-					"Monitoring for Create or Update \"Network Security Group\" Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
+					"Monitoring for Create or Update 'Network Security Group' Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
 				"enabled": true,
 				"level": "medium"

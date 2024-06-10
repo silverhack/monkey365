@@ -1,42 +1,51 @@
 {
-    "serviceType":  "SQL Server",
-    "serviceName":  "Databases",
-    "displayName":  "Ensure that Advanced Threat Protection (ATP) on a SQL server is set to 'Enabled'",
-    "description":  "Advanced data security is a unified package for advanced SQL security capabilities. It includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database.",
-    "rationale":  "Microsoft Defender for Cloud for SQL is a unified package for advanced SQL security capabilities. Microsoft Defender for Cloud is available for Azure SQL Database, Azure SQL Managed Instance, and Azure Synapse Analytics. It includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database. It provides a single go-to location for enabling and managing these capabilities.",
-    "impact":  "Microsoft Defender for Cloud for SQL is a paid feature and will incur additional cost for each SQL server.",
-    "remediation":  '
-					###### From Azure Console
-					1. Go to `SQL servers`.
-					2. For each server instance
-					3. Click on `Microsoft Defender for Cloud` for SQL
-					4. Set Microsoft Defender for Cloud for SQL to `On`
-	',
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql",
-		"https://docs.microsoft.com/cs-cz/powershell/module/azurerm.sql/get-azurermsqlserverthreatdetectionpolicy?view=azurermps-5.2.0",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-3-monitor-for-unauthorized-transfer-of-sensitive-data"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "4.2.1"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_sql_servers",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["threatDetectionPolicy","eq","Disabled"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "sql_server_tdp_disabled"
+  "serviceType": "SQL Server",
+  "serviceName": "Databases",
+  "displayName": "Ensure that Advanced Threat Protection (ATP) on a SQL server is set to 'Enabled'",
+  "description": "Advanced data security is a unified package for advanced SQL security capabilities. It includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database.",
+  "rationale": "Microsoft Defender for Cloud for SQL is a unified package for advanced SQL security capabilities. Microsoft Defender for Cloud is available for Azure SQL Database, Azure SQL Managed Instance, and Azure Synapse Analytics. It includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database. It provides a single go-to location for enabling and managing these capabilities.",
+  "impact": "Microsoft Defender for Cloud for SQL is a paid feature and will incur additional cost for each SQL server.",
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `SQL servers`.\r\n\t\t\t\t\t2. For each server instance\r\n\t\t\t\t\t3. Click on `Microsoft Defender for Cloud` for SQL\r\n\t\t\t\t\t4. Set Microsoft Defender for Cloud for SQL to `On`\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql",
+    "https://docs.microsoft.com/cs-cz/powershell/module/azurerm.sql/get-azurermsqlserverthreatdetectionpolicy?view=azurermps-5.2.0",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-3-monitor-for-unauthorized-transfer-of-sensitive-data"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "4.2.1"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_sql_servers",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "threatDetectionPolicy",
+              "eq",
+              "Disabled"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "sql_server_tdp_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

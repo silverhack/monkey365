@@ -1,36 +1,55 @@
 {
-    "serviceType":  "MySQL Configuration",
-    "serviceName":  "Database Configuration",
-    "displayName":  "Ensure server parameter 'audit_log_events' has 'CONNECTION' set for MySQL Database Server",
-    "description":  "Enabling CONNECTION helps MySQL Database to log items such as successful and failed connection attempts to the server. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
-    "rationale":  null,
-    "impact":  null,
-    "remediation":  null,
-    "references":  [
-		"https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "4.3.3"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_mysql_servers",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["parameterName","eq","audit_log_events"],
-						["parameterValue","notcontains","CONNECTION"]
-					],
-					operator:  "and"
-				}
-			]
-		}
-	],
-    "idSuffix":  "mysql_log_connections_disabled"
+  "serviceType": "MySQL Configuration",
+  "serviceName": "Database Configuration",
+  "displayName": "Ensure server parameter 'audit_log_events' has 'CONNECTION' set for MySQL Database Server",
+  "description": "Enabling CONNECTION helps MySQL Database to log items such as successful and failed connection attempts to the server. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
+  "rationale": null,
+  "impact": null,
+  "remediation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "4.3.3"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_mysql_servers",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "parameterName",
+              "eq",
+              "audit_log_events"
+            ],
+            [
+              "parameterValue",
+              "notcontains",
+              "CONNECTION"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "mysql_log_connections_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

@@ -67,13 +67,22 @@ function Get-MonkeySharePointOnlineSitePermissionsInfo {
 
 			);
 		}
+        #Get config
 		try {
-			$scanFolders = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.ScanFolders)
-			$scanFiles = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.ScanFiles)
-			$inheritedForSite = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Permissions.Site.IncludeInheritedPermissions)
-			$inheritedForList = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Permissions.Lists.IncludeInheritedPermissions)
-			$inheritedForFolder = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Permissions.Folders.IncludeInheritedPermissions)
-			$inheritedForItem = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Permissions.Items.IncludeInheritedPermissions)
+            #Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline;
+                Recurse = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Subsites.Recursive);
+                Limit = $O365Object.internal_config.o365.SharePointOnline.Subsites.Depth;
+                Filter = $O365Object.internal_config.o365.SharePointOnline.SharingLinks.Include;
+                IncludeLists = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.sitePermissionsOptions.includeLists);
+                IncludeItems = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.sitePermissionsOptions.includeListItems);
+                ExcludeFolders = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.sitePermissionsOptions.excludeFolders);
+                IncludeInheritedPermission = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.sitePermissionsOptions.includeInheritedPermissions);
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
 		}
 		catch {
 			$msg = @{
@@ -84,51 +93,35 @@ function Get-MonkeySharePointOnlineSitePermissionsInfo {
 				Tags = @('Monkey365ConfigError');
 			}
 			Write-Verbose @msg
-			#Set to false
-			$scanFolders = $false
-			$scanFiles = $false
-			$inheritedForSite = $false
-			$inheritedForList = $false
-			$inheritedForFolder = $false
-			$inheritedForItem = $false
-		}
-		if ($null -eq $O365Object.spoWebs) {
-			break;
-		}
-		#Set generic list
-		$all_perms = New-Object System.Collections.Generic.List[System.Object]
-	}
-	process {
-		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online site permissions",$O365Object.TenantID);
-			callStack = (Get-PSCallStack | Select-Object -First 1);
-			logLevel = 'info';
-			InformationAction = $InformationAction;
-			Tags = @('SPSSitePermsInfo');
-		}
-		Write-Information @msg
-		foreach ($Web in $O365Object.spoWebs) {
-			$p = [ordered]@{
-				Authentication = $O365Object.auth_tokens.SharePointOnline;
-				Web = $web;
-				ScanFiles = $scanFiles;
-				ScanFolders = $scanFolders;
-				SiteInheritedPermission = $inheritedForSite;
-				ListInheritedPermission = $inheritedForList;
-				FolderInheritedPermission = $inheritedForFolder;
-				FileInheritedPermission = $inheritedForItem;
-				InformationAction = $O365Object.InformationAction;
+			#Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline
+                InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
-			}
-			$perms = Invoke-MonkeyCSOMSitePermission @p
-			if ($perms) {
-				[void]$all_perms.Add($perms)
-			}
+            }
 		}
+		#Set generic list
+		$all_perms = [System.Collections.Generic.List[System.Object]]::new()
 	}
-	end {
-		if ($all_perms) {
+	Process {
+        if($null -ne $O365Object.spoSites){
+		    $msg = @{
+			    MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online site permissions",$O365Object.TenantID);
+			    callStack = (Get-PSCallStack | Select-Object -First 1);
+			    logLevel = 'info';
+			    InformationAction = $InformationAction;
+			    Tags = @('SPSSitePermsInfo');
+		    }
+		    Write-Information @msg
+            $perms = $O365Object.spoSites | Get-MonkeyCSOMSitePermission @pWeb
+		    foreach($perm in @($perms).Where({$null -ne $_})){
+                [void]$all_perms.Add($perm);
+            }
+        }
+	}
+	End {
+		If ($all_perms) {
 			$all_perms.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Permissions')
 			[pscustomobject]$obj = @{
 				Data = $all_perms;

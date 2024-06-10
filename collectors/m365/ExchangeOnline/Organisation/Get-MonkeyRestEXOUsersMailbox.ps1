@@ -69,13 +69,11 @@ function Get-MonkeyRestEXOUsersMailbox {
 
 			);
 		}
-		$mailbox_permissions = [System.Collections.ArrayList]::Synchronized((New-Object System.Collections.ArrayList))
+		$mailbox_permissions = $null
 		#Getting environment
 		$Environment = $O365Object.Environment
 		#Get EXO authentication
 		$exo_auth = $O365Object.auth_tokens.ExchangeOnline
-		#Get libs for runspace
-		$rsOptions = Initialize-MonkeyScan -Provider Microsoft365 | Where-Object { $_.scanName -eq 'ExchangeOnline' }
 	}
 	process {
 		$msg = @{
@@ -88,39 +86,32 @@ function Get-MonkeyRestEXOUsersMailbox {
 		Write-Information @msg
 		#Get Mailboxes
 		$param = @{
-			Authentication = $exo_auth;
-			Environment = $Environment;
-			ObjectType = "Mailbox";
-			ExtraParameters = "PropertySet=All";
-			InformationAction = $O365Object.InformationAction;
-			Verbose = $O365Object.Verbose;
-			Debug = $O365Object.Debug;
-		}
+	        Authentication = $exo_auth;
+	        Environment = $Environment;
+	        ResponseFormat = 'clixml';
+	        Command = 'Get-MailBox -ResultSize unlimited';
+	        Method = "POST";
+	        InformationAction = $O365Object.InformationAction;
+	        Verbose = $O365Object.Verbose;
+	        Debug = $O365Object.Debug;
+        }
 		$mailBoxes = Get-PSExoAdminApiObject @param
 		if ($mailboxes) {
 			#Get mailbox Forwarding
 			$forwarding_mailboxes = $mailboxes | Select-Object UserPrincipalName,ForwardingSmtpAddress,DeliverToMailboxAndForward
 			#Getting mailbox permissions
-			#Generate vars
-			$vars = $O365Object.runspace_vars
-			$param = @{
-				ScriptBlock = { Get-PSExoMailBoxPermission -mailBox $_ };
-				ImportCommands = $rsOptions.libCommands;
-				ImportVariables = $vars;
-				ImportModules = $O365Object.runspaces_modules;
-				StartUpScripts = $O365Object.runspace_init;
-				ThrowOnRunspaceOpenError = $true;
-				Debug = $O365Object.Debug;
-				Verbose = $O365Object.Verbose;
-				<#
-				Throttle = $O365Object.nestedRunspaceMaxThreads;
-				MaxQueue = $O365Object.MaxQueue;
-				BatchSleep = $O365Object.BatchSleep;
-				BatchSize = $O365Object.BatchSize;
-                #>
-			}
+            $p = @{
+			    ScriptBlock = { Get-PSExoMailBoxPermission -MailBox $_ };
+			    Runspacepool = $O365Object.monkey_runspacePool;
+			    ReuseRunspacePool = $true;
+			    Debug = $O365Object.VerboseOptions.Debug;
+			    Verbose = $O365Object.VerboseOptions.Verbose;
+			    MaxQueue = $O365Object.MaxQueue;
+			    BatchSleep = $O365Object.BatchSleep;
+			    BatchSize = $O365Object.BatchSize;
+		    }
 			#Get objects
-			$mailbox_permissions = $mailboxes | Invoke-MonkeyJob @param
+			$mailbox_permissions = $mailboxes | Invoke-MonkeyJob @p
 		}
 	}
 	end {

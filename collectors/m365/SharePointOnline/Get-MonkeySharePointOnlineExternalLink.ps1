@@ -67,12 +67,26 @@ function Get-MonkeySharePointOnlineExternalLink {
 
 			);
 		}
-		if ($null -eq $O365Object.spoWebs) {
-			break;
-		}
 		#Get config
 		try {
-			$FilterList = $O365Object.internal_config.o365.SharePointOnline.SharingLinks.Include
+            #Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline;
+                Recurse = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Subsites.Recursive);
+                Limit = $O365Object.internal_config.o365.SharePointOnline.Subsites.Depth;
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
+            #Splat params
+            $pExternal = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline;
+                Filter = $O365Object.internal_config.o365.SharePointOnline.SharingLinks.Include;
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
+
 		}
 		catch {
 			$msg = @{
@@ -83,42 +97,50 @@ function Get-MonkeySharePointOnlineExternalLink {
 				Tags = @('Monkey365ConfigError');
 			}
 			Write-Verbose @msg
-			#Filter to documents
-			$FilterList = "Documents"
-		}
-		#Set generic list
-		$all_sharing_links = New-Object System.Collections.Generic.List[System.Object]
-		#Get auth
-		$sps_auth = $O365Object.auth_tokens.SharePointOnline
-	}
-	process {
-		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"SharePoint Online sharing links",$O365Object.TenantID);
-			callStack = (Get-PSCallStack | Select-Object -First 1);
-			logLevel = 'info';
-			InformationAction = $O365Object.InformationAction;
-			Tags = @('SPSSharingLinkInfo');
-		}
-		Write-Information @msg
-		foreach ($web in $O365Object.spoWebs) {
-			$p = @{
-				Web = $web;
-				Authentication = $sps_auth;
-				ListNames = $FilterList;
-				InformationAction = $O365Object.InformationAction;
+			#Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline
+                InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
-			}
-			$sharing_links = Get-MonkeyCSOMExternalLink @p
-			if ($sharing_links) {
-				foreach ($link in @($sharing_links)) {
-					#Add to list
-					[void]$all_sharing_links.Add($link)
-				}
-			}
+            }
+            #Splat params
+            $pExternal = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline;
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
 		}
+        #Set generic list
+		$all_sharing_links = [System.Collections.Generic.List[System.Object]]::new()
+        $allWebs = [System.Collections.Generic.List[System.Object]]::new()
 	}
-	end {
+	Process {
+        if($null -ne $O365Object.spoSites){
+		    $msg = @{
+			    MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"SharePoint Online sharing links",$O365Object.TenantID);
+			    callStack = (Get-PSCallStack | Select-Object -First 1);
+			    logLevel = 'info';
+			    InformationAction = $O365Object.InformationAction;
+			    Tags = @('SPSSharingLinkInfo');
+		    }
+		    Write-Information @msg
+            @($O365Object.spoSites).ForEach(
+                {
+                    $_Web = $_.Url | Get-MonkeyCSOMWeb @pWeb;
+                    if($_Web){
+                        [void]$allWebs.Add($_Web);
+                    }
+                }
+            )
+            $sharingLinks = $allWebs.GetEnumerator() | Get-MonkeyCSOMExternalLink @pExternal
+            foreach($eLink in @($sharingLinks)){
+                [void]$all_sharing_links.Add($eLink);
+            }
+        }
+	}
+	End {
 		if ($all_sharing_links) {
 			$all_sharing_links.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.SharingLinks')
 			[pscustomobject]$obj = @{

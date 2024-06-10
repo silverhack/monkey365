@@ -1,39 +1,55 @@
 {
-    "serviceType":  "MySQL Configuration",
-    "serviceName":  "Database Configuration",
-    "displayName":  "Ensure server parameter 'audit_log_enabled' is set to 'ON' for MySQL Database Server",
-    "description":  "Enable audit_log_enabled on MySQL Servers.",
-    "rationale":  '
-		Enabling audit_log_enabled helps MySQL Database to log items such as connection attempts to the server, DDL/DML access, and more. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.
-	',
-    "impact": "There are further costs incurred for storage of logs. For high traffic databases these logs will be significant. Determine your organization's needs before enabling.
-	",
-    "remediation":  null,
-    "references":  [
-		"https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.5.0",
-			"reference":  "4.4.3"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_mysql_servers",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["parameterName","eq","audit_log_enabled"],
-						["parameterValue","ne","off"]
-					],
-					operator:  "and"
-				}
-			]
-		}
-	],
-    "idSuffix":  "mysql_audit_log_disabled"
+  "serviceType": "MySQL Configuration",
+  "serviceName": "Database Configuration",
+  "displayName": "Ensure server parameter 'audit_log_enabled' is set to 'ON' for MySQL Database Server",
+  "description": "Enable audit_log_enabled on MySQL Servers.",
+  "rationale": "\r\n\t\tEnabling audit_log_enabled helps MySQL Database to log items such as connection attempts to the server, DDL/DML access, and more. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.\r\n\t",
+  "impact": "There are further costs incurred for storage of logs. For high traffic databases these logs will be significant. Determine your organization's needs before enabling.\r\n\t",
+  "remediation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.5.0",
+      "reference": "4.4.3"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_mysql_servers",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "parameterName",
+              "eq",
+              "audit_log_enabled"
+            ],
+            [
+              "parameterValue",
+              "ne",
+              "off"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "mysql_audit_log_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-function Get-MonkeySharePointOnlineSitesProperty {
+function Get-MonkeySharePointOnlineSiteProperty {
 <#
         .SYNOPSIS
 		Collector to extract information about O365 SharePoint Online site properties
@@ -30,7 +30,7 @@ function Get-MonkeySharePointOnlineSitesProperty {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeySharePointOnlineSitesProperty
+            File Name	: Get-MonkeySharePointOnlineSiteProperty
             Version     : 1.0
 
         .LINK
@@ -50,7 +50,7 @@ function Get-MonkeySharePointOnlineSitesProperty {
 			Resource = "SharePointOnline";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeySharePointOnlineSitesProperty";
+			collectorName = "Get-MonkeySharePointOnlineSiteProperty";
 			ApiType = "CSOM";
 			description = "Collector to extract information about SharePoint Online site properties";
 			Group = @(
@@ -67,26 +67,10 @@ function Get-MonkeySharePointOnlineSitesProperty {
 
 			);
 		}
-		#Get config
-		try {
-			$scanSites = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.ScanSites)
-		}
-		catch {
-			$msg = @{
-				MessageData = ($message.MonkeyInternalConfigError);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'verbose';
-				InformationAction = $O365Object.InformationAction;
-				Tags = @('Monkey365ConfigError');
-			}
-			Write-Verbose @msg
-			#Set scanSites to false
-			$scanSites = $false
-		}
 		#Set list
-		$all_site_properties = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
+		$all_site_properties = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
 	}
-	process {
+	Process {
 		$msg = @{
 			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"SharePoint Online Site Properties",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -95,56 +79,31 @@ function Get-MonkeySharePointOnlineSitesProperty {
 			Tags = @('SPSTenantSites');
 		}
 		Write-Information @msg
-		if ($O365Object.isSharePointAdministrator) {
-			if ($scanSites) {
-				$p = @{
-					InformationAction = $O365Object.InformationAction;
-					Verbose = $O365Object.Verbose;
-					Debug = $O365Object.Debug;
-				}
-				$site_properties = Get-MonkeyCSOMSiteProperty @p
-			}
-			else {
-				$p = @{
-					Site = $O365Object.auth_tokens.SharePointOnline.Resource
-					InformationAction = $O365Object.InformationAction;
-					Verbose = $O365Object.Verbose;
-					Debug = $O365Object.Debug;
-				}
-				$site_properties = Get-MonkeyCSOMSiteProperty @p
-			}
-			if ($site_properties) {
-				foreach ($site in @($site_properties)) {
-					#Add to list
-					[void]$all_site_properties.Add($site)
-				}
-			}
-		}
-		else {
-			$p = @{
-				ScanSites = $scanSites;
-				InformationAction = $O365Object.InformationAction;
+		If ($O365Object.isSharePointAdministrator){
+            #Splat params
+            $pSite = @{
+                Authentication = $O365Object.auth_tokens.SharePointAdminOnline;
+                InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
-			}
-			$sites = Get-MonkeyCSOMSitesForUser @p
-			if ($sites) {
-				foreach ($site in @($sites)) {
-					$p = @{
-						Site = $site.url
-						AsUser = $true;
-						InformationAction = $O365Object.InformationAction;
-						Verbose = $O365Object.Verbose;
-						Debug = $O365Object.Debug;
-					}
-					$site_properties = Get-MonkeyCSOMSiteProperty @p
-					if ($site_properties) {
-						#Add to list
-						[void]$all_site_properties.Add($site_properties)
-					}
-				}
-			}
+            }
 		}
+		Else {
+            #Splat params
+            $pSite = @{
+                Authentication = $O365Object.auth_tokens.SharePointAdminOnline;
+                AsUser = $true;
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
+		}
+        @($O365Object.spoSites).ForEach({
+            $sp = $_ | Get-MonkeyCSOMSiteProperty @pSite
+            if($sp){
+                [void]$all_site_properties.Add($sp)
+            }
+        });
 	}
 	end {
 		if ($all_site_properties) {

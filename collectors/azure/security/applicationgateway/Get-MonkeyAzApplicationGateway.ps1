@@ -61,69 +61,54 @@ function Get-MonkeyAZApplicationGateway {
 			};
 			Docs = "https://silverhack.github.io/monkey365/";
 			ruleSuffixes = @(
-				"az_app_gateway_properties"
+				"az_app_gateway"
 			);
 			dependsOn = @(
 
 			);
 		}
-		#Get Environment
-		$Environment = $O365Object.Environment
-		#Get Azure RM Auth
-		$rm_auth = $O365Object.auth_tokens.ResourceManager
 		#Get Config
-		$AzureAPPGTWConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureAppGateway" } | Select-Object -ExpandProperty resource
+		$AzureAPPGTWConfig = $O365Object.internal_config.ResourceManager.Where({$_.Name -eq "azureAppGateway"}) | Select-Object -ExpandProperty resource
 		#Get application gateways
-		$app_gateways = $O365Object.all_resources | Where-Object { $_.type -eq 'Microsoft.Network/applicationGateways' }
-		if (-not $app_gateways) { continue }
-		#set array
-		$all_app_gtws = @()
+		$app_gateways = $O365Object.all_resources.Where({ $_.type -eq 'Microsoft.Network/applicationGateways'});
+        #Set null
+        $all_appGateways = $null
 	}
 	process {
-		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure application gateway",$O365Object.current_subscription.displayName);
-			callStack = (Get-PSCallStack | Select-Object -First 1);
-			logLevel = 'info';
-			InformationAction = $InformationAction;
-			Tags = @('AzureAppGatewayInfo');
-		}
-		Write-Information @msg
-		if ($app_gateways) {
-			foreach ($app_gtw in $app_gateways) {
-				$msg = @{
-					MessageData = ($message.AzureUnitResourceMessage -f $app_gtw.Id,"application gateway");
-					callStack = (Get-PSCallStack | Select-Object -First 1);
-					logLevel = 'info';
-					InformationAction = $InformationAction;
-					Tags = @('AzureAppGatewayInfo');
-				}
-				Write-Information @msg
-				$URI = ("{0}{1}?api-version={2}" `
- 						-f $O365Object.Environment.ResourceManager,$app_gtw.Id,`
- 						$AzureAPPGTWConfig.api_version)
-
-				$params = @{
-					Authentication = $rm_auth;
-					OwnQuery = $URI;
-					Environment = $Environment;
-					ContentType = 'application/json';
-					Method = "GET";
-				}
-				$my_app_gtw = Get-MonkeyRMObject @params
-				if ($my_app_gtw) {
-					$all_app_gtws += $my_app_gtw
-				}
-			}
-		}
+        if($app_gateways.Count -gt 0){
+		    $msg = @{
+			    MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure application gateway",$O365Object.current_subscription.displayName);
+			    callStack = (Get-PSCallStack | Select-Object -First 1);
+			    logLevel = 'info';
+			    InformationAction = $O365Object.InformationAction;
+			    Tags = @('AzureAppGatewayInfo');
+		    }
+		    Write-Information @msg
+            $new_arg = @{
+			    APIVersion = $AzureAPPGTWConfig.api_version;
+		    }
+            $p = @{
+			    ScriptBlock = { Get-MonkeyApplicationGatewayInfo -InputObject $_ };
+                Arguments = $new_arg;
+			    Runspacepool = $O365Object.monkey_runspacePool;
+			    ReuseRunspacePool = $true;
+			    Debug = $O365Object.VerboseOptions.Debug;
+			    Verbose = $O365Object.VerboseOptions.Verbose;
+			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
+		    }
+            $all_appGateways = $app_gateways | Invoke-MonkeyJob @p
+        }
 	}
 	End {
-		if ($all_app_gtws) {
-			$all_app_gtws.PSObject.TypeNames.Insert(0,'Monkey365.Azure.application_gateways')
+		if ($null -ne $all_appGateways) {
+			$all_appGateways.PSObject.TypeNames.Insert(0,'Monkey365.Azure.application_gateways')
 			[pscustomobject]$obj = @{
-				Data = $all_app_gtws;
+				Data = $all_appGateways;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.az_app_gateway_properties = $obj
+			$returnData.az_app_gateway = $obj
 		}
 		else {
 			$msg = @{
@@ -138,10 +123,3 @@ function Get-MonkeyAZApplicationGateway {
 		}
 	}
 }
-
-
-
-
-
-
-

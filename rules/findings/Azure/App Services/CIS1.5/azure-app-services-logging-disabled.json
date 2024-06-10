@@ -1,53 +1,66 @@
 {
-    "serviceType":  "App Services",
-    "serviceName":  "Hosted Services",
-    "displayName":  "Ensure that logging for Azure AppService 'AppServiceHTTPLogs' is enabled",
-    "description":  "Enable AppServiceHTTPLogs diagnostic log category for Azure App Service instances to ensure all http requests are captured and centrally logged.",
-    "rationale":  "Capturing web requests can be important supporting information for security analysts performing monitoring and incident response activities. Once logging, these logs can be ingested into SIEM or other central aggregation point for the organization",
-    "impact":  "Log consumption and processing will incur additional cost.",
-    "remediation":  "
-					###### Using From Azure Portal
-					1. Go to the Azure Portal
-					2. Select `App Services`
-					3. For each `App Service`
-					3. Go to `Diagnostic Settings`
-					4. Click `Add Diagnostic Setting`
-					5. Check the checkbox next to 'AppServiceHTTPLogs'
-					6. Configure destination based on your specific logging consumption capability (for example Stream to an event hub and then consuming with SIEM integration for Event Hub logging)
-
-	",
-    "references":  [
-		"https://learn.microsoft.com/en-us/azure/app-service/troubleshoot-diagnostic-logs",
-		"https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.5.0",
-			"reference":  "5.1.7"
-		}
-	],
-	"level": "low",
-    "tags":  null,
-    "path":  "az_app_services",
-    "conditions":  [
-		{
-			operator:  'and',
-			statements:  [
-				{
-					conditions:  [
-						["diagnosticSettings.enabled","eq","false"],
-						["diagnosticSettings.properties.logs.categoryGroup","notcontains","allLogs"]
-					],
-					operator:  "or"
-				},
-				{
-					conditions:  [
-						["diagnosticSettings.properties.logs.category","notContains","AppServiceHTTPLogs"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "app_service_login_disabled"
+  "serviceType": "App Services",
+  "serviceName": "Hosted Services",
+  "displayName": "Ensure that logging for Azure AppService 'AppServiceHTTPLogs' is enabled",
+  "description": "Enable AppServiceHTTPLogs diagnostic log category for Azure App Service instances to ensure all http requests are captured and centrally logged.",
+  "rationale": "Capturing web requests can be important supporting information for security analysts performing monitoring and incident response activities. Once logging, these logs can be ingested into SIEM or other central aggregation point for the organization",
+  "impact": "Log consumption and processing will incur additional cost.",
+  "remediation": "\r\n\t\t\t\t\t###### Using From Azure Portal\r\n\t\t\t\t\t1. Go to the Azure Portal\r\n\t\t\t\t\t2. Select `App Services`\r\n\t\t\t\t\t3. For each `App Service`\r\n\t\t\t\t\t3. Go to `Diagnostic Settings`\r\n\t\t\t\t\t4. Click `Add Diagnostic Setting`\r\n\t\t\t\t\t5. Check the checkbox next to 'AppServiceHTTPLogs'\r\n\t\t\t\t\t6. Configure destination based on your specific logging consumption capability (for example Stream to an event hub and then consuming with SIEM integration for Event Hub logging)\r\n\r\n\t",
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/app-service/troubleshoot-diagnostic-logs",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.5.0",
+      "reference": "5.1.7"
+    }
+  ],
+  "level": "low",
+  "tags": null,
+  "path": "az_app_services",
+  "conditions": [
+    {
+      "operator": "and",
+      "statements": [
+        {
+          "conditions": [
+            [
+              "diagnosticSettings.enabled",
+              "eq",
+              "false"
+            ],
+            [
+              "diagnosticSettings.properties.logs.categoryGroup",
+              "notcontains",
+              "allLogs"
+            ]
+          ],
+          "operator": "or"
+        },
+        {
+          "conditions": [
+            [
+              "diagnosticSettings.properties.logs.category",
+              "notContains",
+              "AppServiceHTTPLogs"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "app_service_login_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

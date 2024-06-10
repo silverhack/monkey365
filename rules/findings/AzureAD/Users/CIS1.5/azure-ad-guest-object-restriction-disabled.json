@@ -1,53 +1,53 @@
 {
-    "serviceType":  "Users",
-    "serviceName":  "Microsoft Entra ID",
-    "displayName":  "Ensure That 'Guest users access restrictions' is set to 'Guest user access is restricted to properties and memberships of their own directory objects'",
-    "description":  "Limit guest user permissions.",
-    "rationale":  "
-		Limiting guest access ensures that guest accounts do not have permission for certain directory tasks, such as enumerating users, groups or other directory resources, and cannot be assigned to administrative roles in your directory. Guest access has three levels of restriction.
-				
-		1. Guest users have the same access as members (most inclusive)
-		2. Guest users have limited access to properties and memberships of directory objects (default value)
-		3. Guest user access is restricted to properties and memberships of their own directory objects (most restrictive)
-		
-		The recommended option is the 3rd, most restrictive: `Guest user access is restricted to their own directory object`.
-
-	",
-    "impact":  "This may create additional requests for permissions to access resources that administrators will need to approve.",
-    "remediation":  "
-						###### From Azure Console
-						1. Go to `Microsoft Entra ID`
-						2. Go to `External Identities`
-						3. Go to `External collaboration settings`
-						4. Under `Guest user access`, change `Guest user access restrictions` to be `Guest user access is restricted to properties and memberships of their own directory objects`
-	",
-    "references":  [
-		"https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions#member-and-guest-users",
-		"https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/users-restrict-guest-permissions",
-		"https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-privileged-access#pa-5-automate-entitlement-management",
-		"https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
-		"https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.5.0",
-			"reference":  "1.15"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "aad_authorization_policy",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["TenantAuthPolicy.guestUserRoleId","ne","2af84b1e-32c8-42b7-82bc-daa82404023b"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "aad_guest_access_object_restriction_disabled"
+  "serviceType": "Users",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure That 'Guest users access restrictions' is set to 'Guest user access is restricted to properties and memberships of their own directory objects'",
+  "description": "Limit guest user permissions.",
+  "rationale": "\r\n\t\tLimiting guest access ensures that guest accounts do not have permission for certain directory tasks, such as enumerating users, groups or other directory resources, and cannot be assigned to administrative roles in your directory. Guest access has three levels of restriction.\r\n\t\t\t\t\r\n\t\t1. Guest users have the same access as members (most inclusive)\r\n\t\t2. Guest users have limited access to properties and memberships of directory objects (default value)\r\n\t\t3. Guest user access is restricted to properties and memberships of their own directory objects (most restrictive)\r\n\t\t\r\n\t\tThe recommended option is the 3rd, most restrictive: `Guest user access is restricted to their own directory object`.\r\n\r\n\t",
+  "impact": "This may create additional requests for permissions to access resources that administrators will need to approve.",
+  "remediation": "\r\n\t\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t\t2. Go to `External Identities`\r\n\t\t\t\t\t\t3. Go to `External collaboration settings`\r\n\t\t\t\t\t\t4. Under `Guest user access`, change `Guest user access restrictions` to be `Guest user access is restricted to properties and memberships of their own directory objects`\r\n\t",
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions#member-and-guest-users",
+    "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/users-restrict-guest-permissions",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-privileged-access#pa-5-automate-entitlement-management",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.5.0",
+      "reference": "1.15"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "aad_authorization_policy",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "TenantAuthPolicy.guestUserRoleId",
+              "ne",
+              "2af84b1e-32c8-42b7-82bc-daa82404023b"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "aad_guest_access_object_restriction_disabled",
+  "status": {
+    "keyName": [],
+    "message": "Guest users access restrictions is not correctly set"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

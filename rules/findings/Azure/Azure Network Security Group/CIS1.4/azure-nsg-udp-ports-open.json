@@ -1,63 +1,94 @@
 {
-    "arg_names": [ "Network protocol name", "Port number", "description", "rationale", "compliance_version", "compliance_reference", "additional_compliance" ],
-	"serviceType":  "Network Security Groups",
-    "serviceName":  "Network",
-    "displayName":  "Ensure that _ARG_0_ access is restricted from the internet",
-    "description":  "_ARG_2_",
-    "rationale":  "_ARG_3_",
-    "impact":  null,
-    "remediation":  null,
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/virtual-network/security-overview"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "_ARG_4_",
-			"reference":  "_ARG_5_"
-		},
-		[
-			"_ARG_6_"
-		]
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_nsg_rules",
-    "conditions":  [
-		{
-			operator: 'and',
-			statements:  [
-				{
-					include: "allow-udp.json"
-				},
-				{
-					include: "exposed-to-the-internet.json"
-				}
-			]
-		},
-		{
-			connectOperator : 'and',
-			statements: [
-				{
-					conditions : [
-						["DestinationPortRange","like","*_ARG_1_*"],
-						["DestinationPortRanges","like","*_ARG_1_*"]
-					],
-					operator:  "or"
-				}
-			]
-		},
-		{
-			connectOperator : 'and',
-			statements: [
-				{
-					conditions : [
-						["Priority","notlike","65*"]
-					]
-				}
-			]
-		}
-	],
-	"removeIfNotExists": "true",
-    "idSuffix":  "azure_nsg_security_port_open_all"
+  "arg_names": [
+    "Network protocol name",
+    "Port number",
+    "description",
+    "rationale",
+    "compliance_version",
+    "compliance_reference",
+    "additional_compliance"
+  ],
+  "serviceType": "Network Security Groups",
+  "serviceName": "Network",
+  "displayName": "Ensure that _ARG_0_ access is restricted from the internet",
+  "description": "_ARG_2_",
+  "rationale": "_ARG_3_",
+  "impact": null,
+  "remediation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/virtual-network/security-overview"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "_ARG_4_",
+      "reference": "_ARG_5_"
+    },
+    [
+      "_ARG_6_"
+    ]
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_nsg_rules",
+  "conditions": [
+    {
+      "operator": "and",
+      "statements": [
+        {
+          "include": "allow-udp.json"
+        },
+        {
+          "include": "exposed-to-the-internet.json"
+        }
+      ]
+    },
+    {
+      "connectOperator": "and",
+      "statements": [
+        {
+          "conditions": [
+            [
+              "DestinationPortRange",
+              "like",
+              "*_ARG_1_*"
+            ],
+            [
+              "DestinationPortRanges",
+              "like",
+              "*_ARG_1_*"
+            ]
+          ],
+          "operator": "or"
+        }
+      ]
+    },
+    {
+      "connectOperator": "and",
+      "statements": [
+        {
+          "conditions": [
+            [
+              "Priority",
+              "notlike",
+              "65*"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "removeIfNotExists": "true",
+  "idSuffix": "azure_nsg_security_port_open_all",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

@@ -73,11 +73,14 @@ function Get-MonkeyAZNetworkWatcher {
 		#Get Azure RM Auth
 		$rm_auth = $O365Object.auth_tokens.ResourceManager
 		#Get Network Watcher locations
-		$network_watcher_locations = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.Network/networkWatchers' } | Select-Object -ExpandProperty location
+		$network_watcher_locations = @($O365Object.all_resources).Where({ $_.type -like 'Microsoft.Network/networkWatchers'}) | Select-Object -ExpandProperty location -ErrorAction Ignore
 		#Get Network watcher IDs
-		$network_watchers = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.Network/networkWatchers' } | Select-Object id,location
+		$network_watchers = @($O365Object.all_resources).Where({ $_.type -like 'Microsoft.Network/networkWatchers'}) | Select-Object id,location -ErrorAction Ignore
 		#Get Network Security groups
-		$network_security_groups = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.Network/networkSecurityGroups' -or $_.type -like 'Microsoft.ClassicNetwork/networkSecurityGroups' } | Select-Object id,location
+		$network_security_groups = @($O365Object.all_resources).Where({ $_.type -like 'Microsoft.Network/networkSecurityGroups' -or $_.type -like 'Microsoft.ClassicNetwork/networkSecurityGroups'}) | Select-Object id,location -ErrorAction Ignore
+        #Set array
+		$networkWatchersArr = [System.Collections.Generic.List[System.Object]]::new()
+        $all_nsg_flows = [System.Collections.Generic.List[System.Object]]::new()
 	}
 	process {
 		$msg = @{
@@ -100,24 +103,44 @@ function Get-MonkeyAZNetworkWatcher {
 		}
 		$azure_locations = Get-MonkeyRMObject @params
 		$locations = $azure_locations | Select-Object -ExpandProperty name
-		if ($network_watcher_locations -and $locations) {
-			#Compare objects
-			$effective_nw_locations = Compare-Object -ReferenceObject $network_watcher_locations -DifferenceObject $locations -PassThru
-			if ($effective_nw_locations) {
-				$network_watcher = New-Object -TypeName PSCustomObject
-				$network_watcher | Add-Member -Type NoteProperty -Name all_locations_enabled -Value $false
-				$network_watcher | Add-Member -Type NoteProperty -Name locations -Value (@($effective_nw_locations) -join ',')
-			}
-			else {
-				$network_watcher = New-Object -TypeName PSCustomObject
-				$network_watcher | Add-Member -Type NoteProperty -Name all_locations_enabled -Value $true
-				$network_watcher | Add-Member -Type NoteProperty -Name locations -Value (@($network_watcher_locations) -join ',')
-			}
+		if (@($network_watcher_locations).Count -gt 0) {
+            if($locations){
+			    #Compare objects
+			    $effective_nw_locations = Compare-Object -ReferenceObject $network_watcher_locations -DifferenceObject $locations -PassThru
+			    if ($effective_nw_locations) {
+                    foreach($loc in $effective_nw_locations){
+                        $nw = [PsCustomObject]@{
+                            location = $loc;
+                            enabled = $false;
+                        }
+                        [void]$networkWatchersArr.Add($nw);
+                    }
+			    }
+			    Else {
+                    Foreach ($loc in $network_watcher_locations){
+                        $nw = [PsCustomObject]@{
+                            location = $loc;
+                            enabled = $true;
+                        }
+                        [void]$networkWatchersArr.Add($nw);
+                    }
+			    }
+            }
 		}
+        Else{
+            if($locations){
+                Foreach($loc in @($locations)){
+                    $nw = [PsCustomObject]@{
+                        location = $loc;
+                        enabled = $false;
+                    }
+                    [void]$networkWatchersArr.Add($nw);
+                }
+            }
+        }
 		#Check if flow logs are enabled
-		if ($network_watchers) {
-			$all_nsg_flows = @()
-			foreach ($nw in $network_watchers) {
+		if ($network_watchers){
+			foreach ($nw in $network_watchers){
 				$region_nws = $network_security_groups | Where-Object { $_.location -eq $nw.location } | Select-Object -ExpandProperty id
 				if ($region_nws) {
 					foreach ($network in $region_nws) {
@@ -137,27 +160,39 @@ function Get-MonkeyAZNetworkWatcher {
 						$flow_log_cnf = Get-MonkeyRMObject @params
 						if ($flow_log_cnf) {
 							$network_flow = New-Object -TypeName PSCustomObject
-							$network_flow | Add-Member -Type NoteProperty -Name target_resource_id -Value $flow_log_cnf.targetResourceId
+							$network_flow | Add-Member -Type NoteProperty -Name targetResourceId -Value $flow_log_cnf.targetResourceId
 							$network_flow | Add-Member -Type NoteProperty -Name storageId -Value $flow_log_cnf.Properties.storageId
 							$network_flow | Add-Member -Type NoteProperty -Name enabled -Value $flow_log_cnf.Properties.enabled
 							$network_flow | Add-Member -Type NoteProperty -Name retentionPolicyEnabled -Value $flow_log_cnf.Properties.retentionPolicy.enabled
 							$network_flow | Add-Member -Type NoteProperty -Name retentionPolicyDays -Value $flow_log_cnf.Properties.retentionPolicy.Days
 							$network_flow | Add-Member -Type NoteProperty -Name rawObject -Value $flow_log_cnf
 							#Add to array
-							$all_nsg_flows += $network_flow;
+							[void]$all_nsg_flows.Add($network_flow);
 						}
 					}
-
 				}
-
 			}
 		}
+        Else{
+            foreach ($nsg in @($network_security_groups)){
+                $flowLog = [PsCustomObject]@{
+                    targetResourceId = $nsg.Id;
+                    storageId = $null;
+                    enabled = $false;
+                    retentionPolicyEnabled = $null;
+                    retentionPolicyDays = $null;
+                    rawObject = $null;
+                }
+                #Add to array
+				[void]$all_nsg_flows.Add($flowLog);
+            }
+        }
 	}
 	end {
-		if ($network_watcher) {
-			$network_watcher.PSObject.TypeNames.Insert(0,'Monkey365.Azure.NetworkWatcher')
+		if ($networkWatchersArr) {
+			$networkWatchersArr.PSObject.TypeNames.Insert(0,'Monkey365.Azure.NetworkWatcher')
 			[pscustomobject]$obj = @{
-				Data = $network_watcher;
+				Data = $networkWatchersArr;
 				Metadata = $monkey_metadata;
 			}
 			$returnData.az_network_watcher = $obj

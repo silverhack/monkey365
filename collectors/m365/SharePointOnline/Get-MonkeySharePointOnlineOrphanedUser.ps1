@@ -68,52 +68,78 @@ function Get-MonkeySharePointOnlineOrphanedUser {
 
 			);
 		}
-		if ($null -eq $O365Object.spoWebs) {
-			break
-		}
-		#Get Access Token for Sharepoint
-		$sps_auth = $O365Object.auth_tokens.SharePointOnline
-		#set generic lists
-		$sps_orphaned_users = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
-		$sps_orphaned_groups = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
-	}
-	process {
-		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online orphaned users",$O365Object.TenantID);
-			callStack = (Get-PSCallStack | Select-Object -First 1);
-			logLevel = 'info';
-			InformationAction = $O365Object.InformationAction;
-			Tags = @('SPSOrphanedUsersInfo');
-		}
-		Write-Information @msg
-		foreach ($web in $O365Object.spoWebs) {
-			$p = @{
-				Web = $web;
-				Authentication = $sps_auth;
-				InformationAction = $O365Object.InformationAction;
+        #Get config
+		try {
+            #Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline;
+                Recurse = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Subsites.Recursive);
+                Limit = $O365Object.internal_config.o365.SharePointOnline.Subsites.Depth;
+                InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
-			}
-			$orphan_objects = Get-MonkeyCSOMOrphanedUser @p
-			if ($orphan_objects) {
-				$orphaned_users = $orphan_objects | Where-Object { $_.principalType -eq [principalType]::User }
-				$orphaned_groups = $orphan_objects | Where-Object { $_.principalType -eq [principalType]::SecurityGroup }
-				if ($orphaned_users) {
-					#Add to list
-					foreach ($ou in $orphaned_users) {
-						[void]$sps_orphaned_users.Add($ou)
-					}
-				}
-				if ($orphaned_groups) {
-					#Add to list
-					foreach ($og in $orphaned_groups) {
-						[void]$sps_orphaned_groups.Add($og)
-					}
-				}
-			}
+            }
 		}
+		catch {
+			$msg = @{
+				MessageData = ($message.MonkeyInternalConfigError);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'verbose';
+				InformationAction = $O365Object.InformationAction;
+				Tags = @('Monkey365ConfigError');
+			}
+			Write-Verbose @msg
+			#Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
+		}
+		#set generic lists
+		$sps_orphaned_users = [System.Collections.Generic.List[System.Object]]::new()
+        $allWebs = [System.Collections.Generic.List[System.Object]]::new()
 	}
-	end {
+	Process {
+        if($null -ne $O365Object.spoSites){
+		    $msg = @{
+			    MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online orphaned users",$O365Object.TenantID);
+			    callStack = (Get-PSCallStack | Select-Object -First 1);
+			    logLevel = 'info';
+			    InformationAction = $O365Object.InformationAction;
+			    Tags = @('SPSOrphanedUsersInfo');
+		    }
+		    Write-Information @msg
+            #Splat params
+            $pExternal = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
+            @($O365Object.spoSites).ForEach(
+                {
+                    $_Web = $_.Url | Get-MonkeyCSOMWeb @pWeb;
+                    if($_Web){
+                        [void]$allWebs.Add($_Web);
+                    }
+                }
+            )
+            $orphanedIds = $allWebs.GetEnumerator() | Get-MonkeyCSOMOrphanedIdentity @pExternal
+            if($null -ne $orphanedIds){
+                foreach($orphaned in $orphanedIds.GetEnumerator()){
+                    If ($orphaned -is [System.Collections.IEnumerable] -and $orphaned -isnot [string]){
+                        [void]$sps_orphaned_users.AddRange($orphaned);
+                    }
+                    ElseIf ($orphaned.GetType() -eq [System.Management.Automation.PSCustomObject] -or $orphaned.GetType() -eq [System.Management.Automation.PSObject]) {
+                        [void]$sps_orphaned_users.Add($orphaned);
+                    }
+                }
+            }
+        }
+	}
+	End {
 		if ($sps_orphaned_users) {
 			$sps_orphaned_users.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Tenant.OrphanedUsers')
 			[pscustomobject]$obj = @{
@@ -130,25 +156,6 @@ function Get-MonkeySharePointOnlineOrphanedUser {
 				InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Tags = @('SPSOrphanedUsersEmptyResponse');
-			}
-			Write-Verbose @msg
-		}
-		if ($sps_orphaned_groups) {
-			$sps_orphaned_groups.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Tenant.OrphanedGroups')
-			[pscustomobject]$obj = @{
-				Data = $sps_orphaned_groups;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.o365_spo_orphaned_groups = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Orphaned Groups",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Tags = @('SPSOrphanedGroupsEmptyResponse');
 			}
 			Write-Verbose @msg
 		}

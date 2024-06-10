@@ -1,48 +1,55 @@
 {
-    "serviceType":  "Subscription Policies",
-    "serviceName":  "Subscription",
-    "displayName":  "Ensure that 'Automatic provisioning of monitoring agent' is set to 'On'",
-    "description":  "Consider to enable automatic provisioning of the monitoring agent to collect security data.",
-    "rationale":  "When `Automatic provisioning of monitoring agent` is turned on, Microsoft Defender for Cloud provisions the Microsoft Monitoring Agent on all existing supported Azure virtual machines and any new ones that are created. The Microsoft Monitoring Agent scans for various security-related configurations and events such as system updates, OS vulnerabilities, endpoint protection, and provides alerts.",
-    "impact":  null,
-    "remediation":  "
-					###### From Azure Console
-					1. Go to `Microsoft Defender for Cloud`
-					2. Select `Pricing & settings` blade
-					3. Click on the subscription name
-					4. Click on `Data Collection`
-					5. Set `Automatic provisioning` to `On`
-					6. Select `Save`
-	",
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/security-center/security-center-data-security",
-		"https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection",
-		"https://msdn.microsoft.com/en-us/library/mt704062.aspx",
-		"https://msdn.microsoft.com/en-us/library/mt704063.aspx",
-		"https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/list",
-		"https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/create",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "2.11"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_vm_provisioning_status",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["autoprovision","ne","On"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "azure_vm_autoprovision_disabled"
+  "serviceType": "Subscription Policies",
+  "serviceName": "Subscription",
+  "displayName": "Ensure that 'Automatic provisioning of monitoring agent' is set to 'On'",
+  "description": "Consider to enable automatic provisioning of the monitoring agent to collect security data.",
+  "rationale": "When `Automatic provisioning of monitoring agent` is turned on, Microsoft Defender for Cloud provisions the Microsoft Monitoring Agent on all existing supported Azure virtual machines and any new ones that are created. The Microsoft Monitoring Agent scans for various security-related configurations and events such as system updates, OS vulnerabilities, endpoint protection, and provides alerts.",
+  "impact": null,
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Pricing & settings` blade\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Click on `Data Collection`\r\n\t\t\t\t\t5. Set `Automatic provisioning` to `On`\r\n\t\t\t\t\t6. Select `Save`\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/security-center/security-center-data-security",
+    "https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection",
+    "https://msdn.microsoft.com/en-us/library/mt704062.aspx",
+    "https://msdn.microsoft.com/en-us/library/mt704063.aspx",
+    "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/list",
+    "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/create",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "2.11"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_vm_provisioning_status",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "autoprovision",
+              "ne",
+              "On"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "azure_vm_autoprovision_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

@@ -65,7 +65,6 @@ function Get-MonkeyEXOActiveSyncOrgInfo {
 				"o365_exo_activesync_settings"
 			);
 			dependsOn = @(
-
 			);
 		}
 		#Get instance

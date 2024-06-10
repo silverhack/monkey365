@@ -81,19 +81,19 @@ function Get-MonkeyEXOAdminAuditLogConfig {
 			Write-Information @msg
 			#Get Security and Compliance Auth token
 			$ExoAuth = $O365Object.auth_tokens.ComplianceCenter
-			#Get Backend Uri
-			$Uri = $O365Object.SecCompBackendUri
+            #Get instance
+		    $Environment = $O365Object.Environment
 			#InitParams
 			$p = @{
-				Authentication = $ExoAuth;
-				EndPoint = $Uri;
-				ResponseFormat = 'clixml';
-				Command = 'Get-AdminAuditLogConfig';
-				Method = "POST";
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Debug = $O365Object.Debug;
-			}
+	            Authentication = $ExoAuth;
+	            Environment = $Environment;
+	            ResponseFormat = 'clixml';
+	            Command = 'Get-AdminAuditLogConfig';
+	            Method = "POST";
+	            InformationAction = $O365Object.InformationAction;
+	            Verbose = $O365Object.Verbose;
+	            Debug = $O365Object.Debug;
+            }
 			#Get O365 log config
 			$O365_logConfig = Get-PSExoAdminApiObject @p
 		}

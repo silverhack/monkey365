@@ -1,48 +1,59 @@
 {
-    "serviceType":  "Microsoft Defender for Cloud",
-    "serviceName":  "Subscription",
-    "displayName":  "Ensure that Microsoft Defender for Cloud is set to On for Servers",
-    "description":  "Turning on Microsoft Defender for Cloud enables threat detection for Server, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
-    "rationale":  "Enabling Microsoft Defender for Cloud for Servers allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
-    "impact":  "Turning on Microsoft Defender for Cloud in Microsoft Defender for Cloud incurs an additional cost per resource.",
-    "remediation":  "
-					###### From Azure Console
-					1. Go to `Microsoft Defender for Cloud`
-					2. Select `Environment settings`
-					3. Click on the subscription name
-					4. Select the `Defender plans` blade
-					5. On the line in the table for `Servers` Select `On` under `Plan`.
-					6. Select `Save`
-	",
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview",
-		"https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
-		"https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/update",
-		"https://docs.microsoft.com/en-us/powershell/module/az.security/get-azsecuritypricing",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security#es-1-use-endpoint-detection-and-response-edr"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "2.1"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_pricing_tier",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["name","eq","VirtualMachines"],
-						["properties.pricingTier","eq","Free"]
-					],
-					operator: "and"
-				}
-			]
-		}
-	],
-    "idSuffix":  "azure_defender_missing_vm_protection"
+  "serviceType": "Microsoft Defender for Cloud",
+  "serviceName": "Subscription",
+  "displayName": "Ensure that Microsoft Defender for Cloud is set to On for Servers",
+  "description": "Turning on Microsoft Defender for Cloud enables threat detection for Server, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
+  "rationale": "Enabling Microsoft Defender for Cloud for Servers allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
+  "impact": "Turning on Microsoft Defender for Cloud in Microsoft Defender for Cloud incurs an additional cost per resource.",
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. On the line in the table for `Servers` Select `On` under `Plan`.\r\n\t\t\t\t\t6. Select `Save`\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview",
+    "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
+    "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/update",
+    "https://docs.microsoft.com/en-us/powershell/module/az.security/get-azsecuritypricing",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security#es-1-use-endpoint-detection-and-response-edr"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "2.1"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_pricing_tier",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "name",
+              "eq",
+              "VirtualMachines"
+            ],
+            [
+              "properties.pricingTier",
+              "eq",
+              "Free"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "azure_defender_missing_vm_protection",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

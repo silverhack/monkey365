@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyEntraRoleDefinition {
+function Get-MonkeyPIMRoleAssignment {
 <#
         .SYNOPSIS
-		Collector to get information about role definition from PIM
+		Collector to get information about role assignment from PIM
 
         .DESCRIPTION
-		Collector to get information about role definition from PIM
+		Collector to get information about role assignment from PIM
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyEntraRoleDefinition {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyEntraRoleDefinition
+            File Name	: Get-MonkeyPIMRoleAssignment
             Version     : 1.0
 
         .LINK
@@ -50,9 +50,9 @@ function Get-MonkeyEntraRoleDefinition {
 			Resource = "EntraID";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyEntraRoleDefinition";
+			collectorName = "Get-MonkeyPIMRoleAssignment";
 			ApiType = "PIM";
-			description = "Collector to get information about role definition from PIM";
+			description = "Collector to get information about role assignment from PIM";
 			Group = @(
 				"EntraID"
 			);
@@ -61,19 +61,14 @@ function Get-MonkeyEntraRoleDefinition {
 			};
 			Docs = "https://silverhack.github.io/monkey365/";
 			ruleSuffixes = @(
-				"aad_pim_roleDefinition",
-				"aad_pim_active_assignment",
-				"aad_pim_eligible_assignment"
+				"aad_pim_roleAssignment"
 			);
 			dependsOn = @(
 
 			);
 		}
 		#Set nulls
-		$role_definition = $null
-		#Set generic lists
-		$all_active_ra = New-Object System.Collections.Generic.List[System.Object]
-		$all_eligible_ra = New-Object System.Collections.Generic.List[System.Object]
+		$role_assignment = $null
 	}
 	process {
 		$msg = @{
@@ -84,63 +79,21 @@ function Get-MonkeyEntraRoleDefinition {
 			Tags = @('EntraIDPIMInfo');
 		}
 		Write-Information @msg
-		$p = @{
-			InformationAction = $O365Object.InformationAction;
-			Verbose = $O365Object.Verbose;
-			Debug = $O365Object.Debug;
-		}
-		$role_definition = Get-MonkeyMSPIMRoleDefinition @p
-		if ($null -ne $role_definition) {
-			#Get active Assignments
-			$activeAssignments = $role_definition | Where-Object { $_.activeAssignmentCount -gt 0 }
-			#Get eligible Assignments
-			$eligibleAssignments = $role_definition | Where-Object { $_.eligibleAssignmentCount -gt 0 }
-			if ($null -ne $activeAssignments) {
-				foreach ($activeAssignment in $activeAssignments) {
-					$p = @{
-						RoleDefinitionId = $activeAssignment.templateId;
-						AssignmentType = 'Active';
-						InformationAction = $O365Object.InformationAction;
-						Verbose = $O365Object.Verbose;
-						Debug = $O365Object.Debug;
-					}
-					$active_roles = Get-MonkeyMSPIMRoleAssignment @p
-					if ($active_roles) {
-						foreach ($arole in $active_roles) {
-							#Add to list
-							[void]$all_active_ra.Add($arole)
-						}
-					}
-				}
-			}
-			if ($null -ne $eligibleAssignments) {
-				foreach ($eligibleAssignment in $eligibleAssignments) {
-					$p = @{
-						RoleDefinitionId = $eligibleAssignment.templateId;
-						AssignmentType = 'Eligible';
-						InformationAction = $O365Object.InformationAction;
-						Verbose = $O365Object.Verbose;
-						Debug = $O365Object.Debug;
-					}
-					$eligible_roles = Get-MonkeyMSPIMRoleAssignment @p
-					if ($eligible_roles) {
-						foreach ($erole in $eligible_roles) {
-							#Add to list
-							[void]$all_eligible_ra.Add($erole)
-						}
-					}
-				}
-			}
-		}
+        $p = @{
+	        InformationAction = $O365Object.InformationAction;
+	        Verbose = $O365Object.Verbose;
+	        Debug = $O365Object.Debug;
+        }
+        $role_assignment = Invoke-MonkeyPrivilegedIdentityInfo @p
 	}
 	end {
-		if ($null -ne $role_definition) {
-			$role_definition.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.PIM.RoleDefinition')
+		if ($null -ne $role_assignment) {
+			$role_assignment.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.PIM.RoleAssignment')
 			[pscustomobject]$obj = @{
-				Data = $role_definition;
+				Data = $role_assignment;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.aad_pim_roleDefinition = $obj;
+			$returnData.aad_pim_roleAssignment = $obj;
 		}
 		else {
 			$msg = @{
@@ -150,44 +103,6 @@ function Get-MonkeyEntraRoleDefinition {
 				InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Tags = @('EntraIDPIMRoleAssignmentEmptyResponse')
-			}
-			Write-Verbose @msg
-		}
-		if ($all_active_ra.Count -gt 0) {
-			$all_active_ra.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.PIM.RoleDefinition')
-			[pscustomobject]$obj = @{
-				Data = $all_active_ra;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.aad_pim_active_assignment = $obj;
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID Privileged Identity Management active assignments",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Tags = @('EntraIDPIMActiveRoleAssignmentEmptyResponse')
-			}
-			Write-Verbose @msg
-		}
-		if ($all_eligible_ra.Count -gt 0) {
-			$all_eligible_ra.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.PIM.RoleDefinition')
-			[pscustomobject]$obj = @{
-				Data = $all_eligible_ra;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.aad_pim_eligible_assignment = $obj;
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID Privileged Identity Management eligible assignments",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Tags = @('EntraIDPIMEligibleRoleAssignmentEmptyResponse')
 			}
 			Write-Verbose @msg
 		}

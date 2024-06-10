@@ -68,8 +68,9 @@ function Get-MonkeySharePointOnlineTenantInfo {
 
 			);
 		}
+        $sps_tenant_details = $null
 	}
-	process {
+	Process {
 		$msg = @{
 			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online Tenant Info",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -85,7 +86,7 @@ function Get-MonkeySharePointOnlineTenantInfo {
 		}
 		$sps_tenant_details = Get-MonkeyCSOMOffice365Tenant @p
 	}
-	end {
+	End {
 		if ($sps_tenant_details) {
 			$sps_tenant_details.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.TenantDetails')
 			[pscustomobject]$obj = @{

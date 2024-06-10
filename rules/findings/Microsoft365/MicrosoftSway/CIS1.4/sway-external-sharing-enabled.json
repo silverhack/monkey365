@@ -1,42 +1,49 @@
 {
-    "serviceType":  "Microsoft Sway",
-    "serviceName":  "Microsoft 365",
-    "displayName":  "Ensure that Sways cannot be shared with people outside of your organization",
-    "description":  "Disable external sharing of Sway items such as reports, newsletters, presentations etc that could contain sensitive information.",
-    "rationale":  "Disable external sharing of Sway documents that can contain sensitive information to prevent accidental or arbitrary data leak.
-",
-    "impact":  "Interactive reports, presentations, newsletters and other items created in Sway will not be shared outside the organization by users.",
-    "remediation":  '
-					###### To ensure Sways cannot be viewed outside of your organization use the Microsoft 365 Admin Center
-					1. Expand `Settings` then select `Org settings`.
-					2. Under Services select `Sway`.
-					3. Under `Sharing` uncheck the following:
-					3.1 Let people in your organization share their sways with people outside your organization
-					4. Click `Save`
-	',
-    "references":  [
-		"https://support.microsoft.com/en-us/office/administrator-settings-for-sway-d298e79b-b6ab-44c6-9239-aa312f5784d4"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft 365 Foundations",
-			"version":  "1.4.0",
-			"reference":  "2.11"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "o365_sway_sharing_settings",
-    "conditions":  [
-		{
-			statements: [
-				{
-					conditions : [
-						["ExternalSharingEnabled","eq","true"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "o365_sway_external_sharing_enabled"
+  "serviceType": "Microsoft Sway",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure that Sways cannot be shared with people outside of your organization",
+  "description": "Disable external sharing of Sway items such as reports, newsletters, presentations etc that could contain sensitive information.",
+  "rationale": "Disable external sharing of Sway documents that can contain sensitive information to prevent accidental or arbitrary data leak.\r\n",
+  "impact": "Interactive reports, presentations, newsletters and other items created in Sway will not be shared outside the organization by users.",
+  "remediation": "\r\n\t\t\t\t\t###### To ensure Sways cannot be viewed outside of your organization use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Expand `Settings` then select `Org settings`.\r\n\t\t\t\t\t2. Under Services select `Sway`.\r\n\t\t\t\t\t3. Under `Sharing` uncheck the following:\r\n\t\t\t\t\t3.1 Let people in your organization share their sways with people outside your organization\r\n\t\t\t\t\t4. Click `Save`\r\n\t",
+  "references": [
+    "https://support.microsoft.com/en-us/office/administrator-settings-for-sway-d298e79b-b6ab-44c6-9239-aa312f5784d4"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.4.0",
+      "reference": "2.11"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "o365_sway_sharing_settings",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "ExternalSharingEnabled",
+              "eq",
+              "true"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "o365_sway_external_sharing_enabled",
+  "status": {
+    "keyName": [],
+    "message": "Ensure that Sways cannot be shared with people outside of your organization"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

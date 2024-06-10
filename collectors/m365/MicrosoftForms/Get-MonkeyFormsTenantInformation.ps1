@@ -74,7 +74,7 @@ function Get-MonkeyFormsTenantInformation {
 			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Forms. Tenant Settings",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
+			InformationAction = $O365Object.InformationAction;
 			Tags = @('FormsTenantInfo');
 		}
 		if ($null -ne $O365Object.auth_tokens.Forms) {
@@ -87,6 +87,8 @@ function Get-MonkeyFormsTenantInformation {
 				Method = 'Get';
 				ContentType = 'application/json';
 				Headers = $authHeader;
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.Verbose;
 			}
 			#call tenant settings
 			$forms_tenant_settings = Invoke-MonkeyWebRequest @params
@@ -96,7 +98,7 @@ function Get-MonkeyFormsTenantInformation {
 				MessageData = ("Unable to get tenant's information from Microsoft Forms");
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'warning';
-				InformationAction = $InformationAction;
+				InformationAction = $O365Object.InformationAction;;
 				Tags = @('FormsTenantInfoWarning');
 			}
 			Write-Warning @msg

@@ -1,35 +1,50 @@
 {
-    "serviceType":  "General",
-    "serviceName":  "Microsoft Entra ID",
-    "displayName":  "Ensure that LinkedIn contact synchronization is disabled",
-    "description":  "Consider to disable integration with LinkedIn as a measure to help prevent phishing scams.",
-    "rationale":  null,
-    "impact":  null,
-    "remediation":  null,
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/methods-for-assigning-users-and-groups",
-		"https://ezcloudinfo.com/2019/01/22/configure-access-panel-in-azure-active-directory/"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft 365 Foundations",
-			"version":  "1.4.0",
-			"reference":  "1.1.14"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "aad_directory_properties",
-	"conditions": [
-		{
-			statements: [
-				{
-					conditions : [
-						["enableLinkedInAppFamily","eq","0"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "aad_linkedin_sync_enabled"
+  "serviceType": "General",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure that LinkedIn contact synchronization is disabled",
+  "description": "Consider to disable integration with LinkedIn as a measure to help prevent phishing scams.",
+  "rationale": null,
+  "impact": null,
+  "remediation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/methods-for-assigning-users-and-groups",
+    "https://ezcloudinfo.com/2019/01/22/configure-access-panel-in-azure-active-directory/"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.4.0",
+      "reference": "1.1.14"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "aad_directory_properties",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "enableLinkedInAppFamily",
+              "eq",
+              "0"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "aad_linkedin_sync_enabled",
+  "status": {
+    "keyName": [],
+    "message": "LinkedIn contact synchronization is enabled"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

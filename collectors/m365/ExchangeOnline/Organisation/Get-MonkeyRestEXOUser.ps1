@@ -82,16 +82,17 @@ function Get-MonkeyRestEXOUser {
 		}
 		Write-Information @msg
 		#Get data
-		$param = @{
-			Authentication = $exo_auth;
-			Environment = $Environment;
-			ObjectType = "User";
-			ExtraParameters = "PropertySet=All";
-			InformationAction = $O365Object.InformationAction;
-			Verbose = $O365Object.Verbose;
-			Debug = $O365Object.Debug;
-		}
-		$exo_users = Get-PSExoAdminApiObject @param
+        $p = @{
+	        Authentication = $exo_auth;
+	        Environment = $Environment;
+	        ResponseFormat = 'clixml';
+	        Command = 'Get-User -ResultSize unlimited';
+	        Method = "POST";
+	        InformationAction = $O365Object.InformationAction;
+	        Verbose = $O365Object.Verbose;
+	        Debug = $O365Object.Debug;
+        }
+		$exo_users = Get-PSExoAdminApiObject @p
 	}
 	end {
 		if ($exo_users) {

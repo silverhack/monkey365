@@ -1,41 +1,49 @@
 {
-    "serviceType":  "Exchange Online",
-    "serviceName":  "Microsoft 365",
-    "displayName":  "Ensure modern authentication for Exchange Online is enabled",
-    "description":  "Modern authentication in Microsoft 365 enables authentication features like multifactor authentication (MFA) using smart cards, certificate-based authentication (CBA), and third party SAML identity providers. When you enable modern authentication in Exchange Online, Outlook 2016 and Outlook 2013 use modern authentication to log in to Microsoft 365 mailboxes. When you disable modern authentication in Exchange Online, Outlook 2016 and Outlook 2013 use basic authentication to log in to Microsoft 365 mailboxes.When users initially configure certain email clients, like Outlook 2013 and Outlook 2016, they may be required to authenticate using enhanced authentication mechanisms, such as multifactor authentication. Other Outlook clients that are available in Microsoft 365 (for example, Outlook Mobile and Outlook for Mac 2016) always use modern authentication to log in to Microsoft 365 mailboxes.",
-    "rationale":  "Strong authentication controls, such as the use of multifactor authentication, may be circumvented if basic authentication is used by Exchange Online email clients such as Outlook 2016 and Outlook 2013. Enabling modern authentication for Exchange Online ensures strong authentication mechanisms are used when establishing sessions between email clients and Exchange Online.",
-    "impact":  "Users of older email clients, such as Outlook 2013 and Outlook 2016, will no longer be able to authenticate to Exchange using Basic Authentication, which will necessitate migration to modern authentication practices.",
-    "remediation":  '
-					###### To disable basic authentication, use the Exchange Online PowerShell Module
-					1. Connect to Exchange Online using `Connect-ExchangeOnline`
-					2. Run the following PowerShell command:					
-					```powershell
-					Set-OrganizationConfig -OAuth2ClientProfileEnabled $True
-					```
-	',
-    "references":  [
-		"https://docs.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/enable-or-disable-modern-authentication-in-exchange-online"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft 365 Foundations",
-			"version":  "1.3.0",
-			"reference":  "1.2"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "o365_exo_org_config",
-    "conditions":  [
-		{
-			statements: [
-				{
-					conditions : [
-						["OAuth2ClientProfileEnabled","eq","false"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "o365_exo_modern_auth_disabled"
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure modern authentication for Exchange Online is enabled",
+  "description": "Modern authentication in Microsoft 365 enables authentication features like multifactor authentication (MFA) using smart cards, certificate-based authentication (CBA), and third party SAML identity providers. When you enable modern authentication in Exchange Online, Outlook 2016 and Outlook 2013 use modern authentication to log in to Microsoft 365 mailboxes. When you disable modern authentication in Exchange Online, Outlook 2016 and Outlook 2013 use basic authentication to log in to Microsoft 365 mailboxes.When users initially configure certain email clients, like Outlook 2013 and Outlook 2016, they may be required to authenticate using enhanced authentication mechanisms, such as multifactor authentication. Other Outlook clients that are available in Microsoft 365 (for example, Outlook Mobile and Outlook for Mac 2016) always use modern authentication to log in to Microsoft 365 mailboxes.",
+  "rationale": "Strong authentication controls, such as the use of multifactor authentication, may be circumvented if basic authentication is used by Exchange Online email clients such as Outlook 2016 and Outlook 2013. Enabling modern authentication for Exchange Online ensures strong authentication mechanisms are used when establishing sessions between email clients and Exchange Online.",
+  "impact": "Users of older email clients, such as Outlook 2013 and Outlook 2016, will no longer be able to authenticate to Exchange using Basic Authentication, which will necessitate migration to modern authentication practices.",
+  "remediation": "\r\n\t\t\t\t\t###### To disable basic authentication, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tSet-OrganizationConfig -OAuth2ClientProfileEnabled $True\r\n\t\t\t\t\t```\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/enable-or-disable-modern-authentication-in-exchange-online"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.3.0",
+      "reference": "1.2"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "o365_exo_org_config",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "OAuth2ClientProfileEnabled",
+              "eq",
+              "false"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "o365_exo_modern_auth_disabled",
+  "status": {
+    "keyName": [],
+    "message": "Ensure modern authentication for Exchange Online is enabled"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

@@ -1,54 +1,67 @@
 {
-    "serviceType":  "Exchange Online",
-    "serviceName":  "Microsoft 365",
-    "displayName":  "Ensure O365 ATP SafeLinks for Office Applications is Enabled",
-    "description":  "Enabling the Advanced Threat Protection (ATP) Safe Links policy for Office applications allows URL\u0027s that existing inside of Office documents opened by Office, Office Online and Office mobile to be processed against ATP time-of-click verification.",
-    "rationale":  "ATP Safe Links for Office applications extends phishing protection to documents that contain hyperlinks, even after they have been delivered to a user.",
-    "impact":  "User impact associated with this change is minor - users may experience a very short delay when clicking on URLs in Office documents before being directed to the requested site.",
-    "remediation":  '
-					###### To enable the ATP Safe Links policy for Office, use the Microsoft 365 Admin Center
-					1. Select `Admin Center` and Click to expand `Security`.
-					2. Navigate to `Threat management` and select `Policy`.
-					3. Select `Safe Links` followed by `Global Settings`.
-					4. Select `Use Safe Links in Office 365 apps and Do not let users click through to the original URL in Office 365 apps`.
-					5. Click `Save`.		
-					
-					###### To enable the ATP Safe Links policy for Office 365, use the Exchange Online PowerShell Module
-					1. Connect to Exchange Online using `Connect-ExchangeOnline`
-					2. Run the following PowerShell command:					
-					```powershell
-					Set-AtpPolicyForO365 -AllowClickThrough $False -EnableSafeLinksForClients $true
-					```
-	',
-    "references":  [
-		"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-links?view=o365-worldwide"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft 365 Foundations",
-			"version":  "1.4.0",
-			"reference":  "2.3"
-		}
-	],
-	"level": "medium",
-    "tags":  [
-                 "Microsoft 365 CIS benchmark 2.3"
-	],
-    "path":  "o365_exo_atp_policy",
-    "conditions":  [
-		{
-			statements: [
-				{
-					conditions : [
-						["AllowClickThrough","eq","false"],
-						["EnableSafeLinksForClients","eq","false"],
-						["EnableSafeLinksForO365Clients","eq","false"],
-						["EnableSafeLinksForWebAccessCompanion","eq","false"]
-					],
-					operator:  "or"
-				}
-			]
-		}
-	],
-    "idSuffix":  "o365_exo_safe_links_office_disabled"
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure O365 ATP SafeLinks for Office Applications is Enabled",
+  "description": "Enabling the Advanced Threat Protection (ATP) Safe Links policy for Office applications allows URL's that existing inside of Office documents opened by Office, Office Online and Office mobile to be processed against ATP time-of-click verification.",
+  "rationale": "ATP Safe Links for Office applications extends phishing protection to documents that contain hyperlinks, even after they have been delivered to a user.",
+  "impact": "User impact associated with this change is minor - users may experience a very short delay when clicking on URLs in Office documents before being directed to the requested site.",
+  "remediation": "\r\n\t\t\t\t\t###### To enable the ATP Safe Links policy for Office, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Select `Admin Center` and Click to expand `Security`.\r\n\t\t\t\t\t2. Navigate to `Threat management` and select `Policy`.\r\n\t\t\t\t\t3. Select `Safe Links` followed by `Global Settings`.\r\n\t\t\t\t\t4. Select `Use Safe Links in Office 365 apps and Do not let users click through to the original URL in Office 365 apps`.\r\n\t\t\t\t\t5. Click `Save`.\t\t\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To enable the ATP Safe Links policy for Office 365, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tSet-AtpPolicyForO365 -AllowClickThrough $False -EnableSafeLinksForClients $true\r\n\t\t\t\t\t```\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-links?view=o365-worldwide"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.4.0",
+      "reference": "2.3"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "Microsoft 365 CIS benchmark 2.3"
+  ],
+  "path": "o365_exo_atp_policy",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "AllowClickThrough",
+              "eq",
+              "false"
+            ],
+            [
+              "EnableSafeLinksForClients",
+              "eq",
+              "false"
+            ],
+            [
+              "EnableSafeLinksForO365Clients",
+              "eq",
+              "false"
+            ],
+            [
+              "EnableSafeLinksForWebAccessCompanion",
+              "eq",
+              "false"
+            ]
+          ],
+          "operator": "or"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "o365_exo_safe_links_office_disabled",
+  "status": {
+    "keyName": [],
+    "message": "Check if ATP SafeLinks for Office Applications is enabled"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

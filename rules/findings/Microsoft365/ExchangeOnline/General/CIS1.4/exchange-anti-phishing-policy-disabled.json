@@ -1,50 +1,56 @@
 {
-    "serviceType":  "Exchange Online",
-    "serviceName":  "Microsoft 365",
-    "displayName":  "Ensure that an anti-phishing policy has been created",
-    "description":  "By default, Microsoft 365 includes built-in features that help protect your users from phishing attacks. Set up anti-phishing polices to increase this protection, for example by refining settings to better detect and prevent impersonation and spoofing attacks. The default policy applies to all users within the organization, and is a single view where you can fine-tune anti-phishing protection. Custom policies can be created and configured for specific users, groups or domains within the organization and will take precedence over the default policy for the scoped users.",
-    "rationale":  "Protects users from phishing attacks (like impersonation and spoofing), and uses safety tips to warn users about potentially harmful messages.",
-    "impact":  "Turning on Anti-Phishing should not cause an impact, messages will be displayed when applicable.",
-    "remediation":  '
-					###### To set the anti-phishing policy, use the Microsoft 365 Admin Center
-					1. Select Security.
-					2. Expand `Threat Management`then select `Policy`.
-					3. Select `Anti-phishing`.
-					4. Click `Create` to create an anti-phishing policy.
-					
-					###### To create an anti-phishing policy, use the Exchange Online PowerShell Module
-					1. Connect to Exchange Online using `Connect-ExchangeOnline`
-					2. Run the following PowerShell command:					
-					```powershell
-					New-AntiPhishPolicy -Name "Microsoft 365 AntiPhish Policy"
-					```
-	',
-    "references":  [
-		"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/set-up-anti-phishing-policies?view=o365-worldwide",
-		"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/configure-mdo-anti-phishing-policies?view=o365-worldwide"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft 365 Foundations",
-			"version":  "1.3.0",
-			"reference":  "4.10"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "o365_exo_anti_phishing_info",
-    "conditions":  [
-		{
-			statements: [
-				{
-					conditions : [
-						["isEnabled","ne","true"],
-						["policyName","eq","Office365 AntiPhish Default"]
-					],
-					operator:  "and"
-				}
-			]
-		}
-	],
-    "idSuffix":  "o365_exo_anti_phishing_policy_disabled"
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure that an anti-phishing policy has been created",
+  "description": "By default, Microsoft 365 includes built-in features that help protect your users from phishing attacks. Set up anti-phishing polices to increase this protection, for example by refining settings to better detect and prevent impersonation and spoofing attacks. The default policy applies to all users within the organization, and is a single view where you can fine-tune anti-phishing protection. Custom policies can be created and configured for specific users, groups or domains within the organization and will take precedence over the default policy for the scoped users.",
+  "rationale": "Protects users from phishing attacks (like impersonation and spoofing), and uses safety tips to warn users about potentially harmful messages.",
+  "impact": "Turning on Anti-Phishing should not cause an impact, messages will be displayed when applicable.",
+  "remediation": "\r\n\t\t\t\t\t###### To set the anti-phishing policy, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Select Security.\r\n\t\t\t\t\t2. Expand `Threat Management`then select `Policy`.\r\n\t\t\t\t\t3. Select `Anti-phishing`.\r\n\t\t\t\t\t4. Click `Create` to create an anti-phishing policy.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To create an anti-phishing policy, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tNew-AntiPhishPolicy -Name \"Microsoft 365 AntiPhish Policy\"\r\n\t\t\t\t\t```\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/set-up-anti-phishing-policies?view=o365-worldwide",
+    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/configure-mdo-anti-phishing-policies?view=o365-worldwide"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.3.0",
+      "reference": "4.10"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "o365_exo_anti_phishing_info",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "isEnabled",
+              "ne",
+              "true"
+            ],
+            [
+              "policyName",
+              "eq",
+              "Office365 AntiPhish Default"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "o365_exo_anti_phishing_policy_disabled",
+  "status": {
+    "keyName": [],
+    "message": "Ensure that an anti-phishing policy has been created"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

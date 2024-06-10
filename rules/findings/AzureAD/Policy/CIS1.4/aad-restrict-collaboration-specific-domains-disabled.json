@@ -1,49 +1,61 @@
 {
-    "serviceType":  "Identity Protection",
-    "serviceName":  "Microsoft Entra ID",
-    "displayName":  "Ensure that collaboration invitations are sent to allowed domains only",
-    "description":  "Users should be able to send collaboration invitations to allowed domains only.",
-    "rationale":  "By specifying allowed domains for collaborations, external users companies are explicitly identified. Also, this prevents internal users from inviting unknown external users such as personal accounts and give them access to resources.",
-    "impact":  "This could make harder collaboration if the setting is not quickly updated when a new domain is identified as `allowed`.",
-    "remediation":  "
-					###### From Azure Portal
-					1. Go to `Microsoft Entra ID`
-					2. Go to `Users`
-					3. Go to `User settings`
-					4. Under `External users`, click on `Manage external collaboration settings` 
-					5. Under `Collaboration restrictions`, select `Allow invitations only to the specified domains (most restrictive)`, check the Target domains setting, and specify the domains allowed to collaborate.
-	",
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions",
-		"http://www.rebeladmin.com/2019/04/step-step-guide-restrict-azure-ad-administration-portal/",
-		"https://docs.microsoft.com/en-us/azure/active-directory/active-directory-assign-admin-roles-azure-portal",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft 365 Foundations",
-			"version":  "1.4.0",
-			"reference":  "1.1.13"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "aad_b2b_directory_policies",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["targetedDomains.Count","eq","0"],
-						["isAllowlist","eq","true"]
-					],
-					operator:  "and"					
-				}
-			]
-		}
-	],
-    "idSuffix":  "aad_restrict_collaboration_specific_domains_disabled"
+  "serviceType": "Identity Protection",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure that collaboration invitations are sent to allowed domains only",
+  "description": "Users should be able to send collaboration invitations to allowed domains only.",
+  "rationale": "By specifying allowed domains for collaborations, external users companies are explicitly identified. Also, this prevents internal users from inviting unknown external users such as personal accounts and give them access to resources.",
+  "impact": "This could make harder collaboration if the setting is not quickly updated when a new domain is identified as `allowed`.",
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Portal\r\n\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t2. Go to `Users`\r\n\t\t\t\t\t3. Go to `User settings`\r\n\t\t\t\t\t4. Under `External users`, click on `Manage external collaboration settings` \r\n\t\t\t\t\t5. Under `Collaboration restrictions`, select `Allow invitations only to the specified domains (most restrictive)`, check the Target domains setting, and specify the domains allowed to collaborate.\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions",
+    "http://www.rebeladmin.com/2019/04/step-step-guide-restrict-azure-ad-administration-portal/",
+    "https://docs.microsoft.com/en-us/azure/active-directory/active-directory-assign-admin-roles-azure-portal",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.4.0",
+      "reference": "1.1.13"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "aad_b2b_directory_policies",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "targetedDomains.Count",
+              "eq",
+              "0"
+            ],
+            [
+              "isAllowlist",
+              "eq",
+              "true"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "aad_restrict_collaboration_specific_domains_disabled",
+  "status": {
+    "keyName": [],
+    "message": "Collaboration invitations are open to all domains"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

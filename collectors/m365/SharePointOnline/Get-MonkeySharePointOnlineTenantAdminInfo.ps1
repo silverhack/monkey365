@@ -68,12 +68,9 @@ function Get-MonkeySharePointOnlineTenantAdminInfo {
 
 			);
 		}
-		#Check if user is sharepoint administrator
-		if ($O365Object.isSharePointAdministrator -eq $false) {
-			break;
-		}
+        $sps_tenant_admin_details = $null;
 	}
-	process {
+	Process {
 		$msg = @{
 			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online Tenant Admin Info",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -82,12 +79,14 @@ function Get-MonkeySharePointOnlineTenantAdminInfo {
 			Tags = @('SPSTenantInfo');
 		}
 		Write-Information @msg
-		$p = @{
-			InformationAction = $O365Object.InformationAction;
-			Verbose = $O365Object.Verbose;
-			Debug = $O365Object.Debug;
-		}
-		$sps_tenant_admin_details = Get-MonkeyCSOMTenant @p
+        If($O365Object.isSharePointAdministrator){
+		    $p = @{
+			    InformationAction = $O365Object.InformationAction;
+			    Verbose = $O365Object.Verbose;
+			    Debug = $O365Object.Debug;
+		    }
+		    $sps_tenant_admin_details = Get-MonkeyCSOMTenant @p
+        }
 	}
 	end {
 		if ($sps_tenant_admin_details) {

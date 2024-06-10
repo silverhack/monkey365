@@ -1,49 +1,64 @@
 {
-	"arg_names": [ "Policy Name","Policy"],
-	"serviceName": "Subscription",
-    "serviceType": "Subscription Policies",
-    "displayName": "Enable _ARG_1_ in Microsoft Defender for Cloud Default policy",
-	"description": '_ARG_1_ alert was not enabled at subscription level.',
-	"rationale": "A security policy defines the desired configuration of your workloads and helps ensure compliance with company or regulatory security requirements. ASC Default policy is associated with every subscription by default. ASC default policy assignment is set of security recommendations based on best practices. Enabling recommendations in ASC default policy ensures that Microsoft Defender for Cloud provides ability to monitor all of the supported recommendations and allow automated action optionally for few of the supported recommendations.",
-	"remediation":  '
-					###### From Azure Console
-					1. Navigate to `Azure Policy`
-					2. On Policy "Overview" blade, Click on Policy `ASC Default (Subscription:Subscription_ID)`
-					3. On "ASC Default" blade, Click on `Edit Assignments`
-					4. In section **parameters**, configure the impacted setting to any other available value than `Disabled` or `empty`
-					5. Click Save
-	',
-	"references": [
-		"https://docs.microsoft.com/en-us/azure/security-center/security-center-policies",
-		"https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-transparent-data-encryption",
-		"https://msdn.microsoft.com/en-us/library/mt704062.aspx",
-		"https://msdn.microsoft.com/en-us/library/mt704063.aspx",
-		"https://docs.microsoft.com/en-us/rest/api/resources/policyassignments/get",
-		"https://docs.microsoft.com/en-us/rest/api/resources/policyassignments/create",
-		"https://docs.microsoft.com/en-in/azure/security-center/tutorial-security-policy",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
-	],
-    "compliance": [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "2.12"
-		}
-    ],
-	"level": "medium",
-    "path": "az_asc_builtin_policies",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["PolicyName","eq","_ARG_0_"],
-						["Status","eq","Disabled"]
-					],
-					operator: "and"
-				}
-			]
-		}
-	],
-    "idSuffix":  "adaptive_app_whitelist_disabled"
+  "arg_names": [
+    "Policy Name",
+    "Policy"
+  ],
+  "serviceName": "Subscription",
+  "serviceType": "Subscription Policies",
+  "displayName": "Enable _ARG_1_ in Microsoft Defender for Cloud Default policy",
+  "description": "_ARG_1_ alert was not enabled at subscription level.",
+  "rationale": "A security policy defines the desired configuration of your workloads and helps ensure compliance with company or regulatory security requirements. ASC Default policy is associated with every subscription by default. ASC default policy assignment is set of security recommendations based on best practices. Enabling recommendations in ASC default policy ensures that Microsoft Defender for Cloud provides ability to monitor all of the supported recommendations and allow automated action optionally for few of the supported recommendations.",
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Navigate to `Azure Policy`\r\n\t\t\t\t\t2. On Policy \"Overview\" blade, Click on Policy `ASC Default (Subscription:Subscription_ID)`\r\n\t\t\t\t\t3. On \"ASC Default\" blade, Click on `Edit Assignments`\r\n\t\t\t\t\t4. In section **parameters**, configure the impacted setting to any other available value than `Disabled` or `empty`\r\n\t\t\t\t\t5. Click Save\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/security-center/security-center-policies",
+    "https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-transparent-data-encryption",
+    "https://msdn.microsoft.com/en-us/library/mt704062.aspx",
+    "https://msdn.microsoft.com/en-us/library/mt704063.aspx",
+    "https://docs.microsoft.com/en-us/rest/api/resources/policyassignments/get",
+    "https://docs.microsoft.com/en-us/rest/api/resources/policyassignments/create",
+    "https://docs.microsoft.com/en-in/azure/security-center/tutorial-security-policy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "2.12"
+    }
+  ],
+  "level": "medium",
+  "path": "az_asc_builtin_policies",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "PolicyName",
+              "eq",
+              "_ARG_0_"
+            ],
+            [
+              "Status",
+              "eq",
+              "Disabled"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "adaptive_app_whitelist_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

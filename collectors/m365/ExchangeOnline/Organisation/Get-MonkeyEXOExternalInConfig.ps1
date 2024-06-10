@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeySharePointOnlineSiteCollectionAdmin {
+function Get-MonkeyEXOExternalInConfig {
 <#
         .SYNOPSIS
-		Collector to get information about SPS site collection admins
+		Collector to get information about the configuration of external sender identification
 
         .DESCRIPTION
-		Collector to get information about SPS site collection admins
+		Collector to get information about the configuration of external sender identification
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeySharePointOnlineSiteCollectionAdmin {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeySharePointOnlineSiteCollectionAdmin
+            File Name	: Get-MonkeyEXOExternalInConfig
             Version     : 1.0
 
         .LINK
@@ -45,79 +45,71 @@ function Get-MonkeySharePointOnlineSiteCollectionAdmin {
 	begin {
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "sps0005";
+			Id = "exo0060";
 			Provider = "Microsoft365";
-			Resource = "SharePointOnline";
+			Resource = "ExchangeOnline";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeySharePointOnlineSiteCollectionAdmin";
-			ApiType = "CSOM";
-			description = "Collector to get information about SPS site collection admins";
+			collectorName = "Get-MonkeyEXOExternalInConfig";
+			ApiType = "ExoApi";
+			description = "Collector to get information about the configuration of external sender identification in Exchange Online";
 			Group = @(
-				"SharePointOnline"
+				"ExchangeOnline"
 			);
 			Tags = @{
 				"enabled" = $true
 			};
 			Docs = "https://silverhack.github.io/monkey365/";
 			ruleSuffixes = @(
-				"o365_spo_site_admins"
+				"o365_exo_org_config"
 			);
 			dependsOn = @(
 
 			);
 		}
-		if ($null -eq $O365Object.spoWebs) {
-			break
-		}
-		#Get Access Token from SPO
-		$sps_auth = $O365Object.auth_tokens.SharePointOnline
-		#set generic list
-		$all_site_admins = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
+		#Get instance
+		$Environment = $O365Object.Environment
+		#Get Exchange Online Auth token
+		$ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online site collection admins",$O365Object.TenantID);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Exchange Online external sender identification",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
 			InformationAction = $O365Object.InformationAction;
-			Tags = @('SPSSiteCollectionAdminInfo');
+			Tags = @('ExoOrgExternalInInfo');
 		}
 		Write-Information @msg
-		foreach ($web in $O365Object.spoWebs) {
-			$p = @{
-				Web = $web;
-				Authentication = $sps_auth;
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Debug = $O365Object.Debug;
-			}
-			$site_admins = Get-MonkeyCSOMSiteCollectionAdministrator @p
-			if ($site_admins) {
-				#Add to list
-				foreach ($site_admin in $site_admins) {
-					[void]$all_site_admins.Add($site_admin)
-				}
-			}
+		$p = @{
+			Authentication = $ExoAuth;
+			Environment = $Environment;
+			ResponseFormat = 'clixml';
+			Command = 'Get-ExternalInOutlook';
+			Method = "POST";
+			InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
 		}
+		$exo_externalInConfig = Get-PSExoAdminApiObject @p
 	}
 	end {
-		if ($all_site_admins) {
-			$all_site_admins.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.SiteCollection.Admins')
+		if ($null -ne $exo_externalInConfig) {
+			$exo_externalInConfig.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.ExternalInConfig')
 			[pscustomobject]$obj = @{
-				Data = $all_site_admins;
+				Data = $exo_externalInConfig;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.o365_spo_site_admins = $obj
+			$returnData.o365_exo_externalIn_config = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online External Users",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online external sender identification",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
+				Tags = @('ExoOrgExternalInEmptyResponse');
 				Verbose = $O365Object.Verbose;
-				Tags = @('SPSExternalUsersEmptyResponse');
 			}
 			Write-Verbose @msg
 		}

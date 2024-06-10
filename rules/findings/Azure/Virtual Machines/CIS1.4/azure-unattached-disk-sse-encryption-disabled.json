@@ -1,53 +1,61 @@
 {
-    "serviceType":  "Azure Disks",
-    "serviceName":  "Compute",
-    "displayName":  "Ensure that unassigned disks are encrypted with customer managed keys",
-    "description":  "Ensure that unattached disks in a subscription are encrypted with a Customer Managed Key (CMK).",
-    "rationale":  "Managed disks are encrypted by default with Platform-managed keys. Using Customer-managed keys may provide an additional level of security or meet an organization's regulatory requirements. Encrypting managed disks ensures that its entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads. Even if the disk is not attached to any of the VMs, there is always a risk where a compromised user account with administrative access to VM service can mount/attach these data disks which may lead to sensitive information disclosure and tampering.",
-    "impact":  "
-				Encryption is available only on Standard tier VMs. This might cost you more.
-				Utilizing and maintaining Customer-managed keys will require additional work to created, protect, and rotate keys.
-	",
-    "remediation":  "
-					If data stored in the disk is no longer useful, refer to Azure documentation to delete unattached data disks at:
-					* https://docs.microsoft.com/en-us/rest/api/compute/disks/delete
-					* https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-delete
-					If data stored in the disk is important, To encrypt the disk refer azure documentation at:
-					* https://docs.microsoft.com/en-us/azure/virtual-machines/disks-enable-customer-managed-keys-portal
-					* https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings
-	",
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/security/fundamentals/azure-disk-encryption-vms-vmss",
-		"https://docs.microsoft.com/en-us/azure/security-center/security-center-disk-encryption?toc=%2fazure%2fsecurity%2ftoc.json",
-		"https://docs.microsoft.com/en-us/rest/api/compute/disks/delete",
-		"https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-delete",
-		"https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings",
-		"https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-update",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-5-encrypt-sensitive-data-at-rest"
-
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "7.3"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_managed_disks",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["managedBy","eq",""],
-						["sse_encryption","ne","EncryptionAtRestWithCustomerKey"]
-					],
-					operator:  "and"
-				}
-			]
-		}
-	],
-    "idSuffix":  "unattached_disk_sse_encryption_disabled"
+  "serviceType": "Azure Disks",
+  "serviceName": "Compute",
+  "displayName": "Ensure that unassigned disks are encrypted with customer managed keys",
+  "description": "Ensure that unattached disks in a subscription are encrypted with a Customer Managed Key (CMK).",
+  "rationale": "Managed disks are encrypted by default with Platform-managed keys. Using Customer-managed keys may provide an additional level of security or meet an organization's regulatory requirements. Encrypting managed disks ensures that its entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads. Even if the disk is not attached to any of the VMs, there is always a risk where a compromised user account with administrative access to VM service can mount/attach these data disks which may lead to sensitive information disclosure and tampering.",
+  "impact": "\r\n\t\t\t\tEncryption is available only on Standard tier VMs. This might cost you more.\r\n\t\t\t\tUtilizing and maintaining Customer-managed keys will require additional work to created, protect, and rotate keys.\r\n\t",
+  "remediation": "\r\n\t\t\t\t\tIf data stored in the disk is no longer useful, refer to Azure documentation to delete unattached data disks at:\r\n\t\t\t\t\t* https://docs.microsoft.com/en-us/rest/api/compute/disks/delete\r\n\t\t\t\t\t* https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-delete\r\n\t\t\t\t\tIf data stored in the disk is important, To encrypt the disk refer azure documentation at:\r\n\t\t\t\t\t* https://docs.microsoft.com/en-us/azure/virtual-machines/disks-enable-customer-managed-keys-portal\r\n\t\t\t\t\t* https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/security/fundamentals/azure-disk-encryption-vms-vmss",
+    "https://docs.microsoft.com/en-us/azure/security-center/security-center-disk-encryption?toc=%2fazure%2fsecurity%2ftoc.json",
+    "https://docs.microsoft.com/en-us/rest/api/compute/disks/delete",
+    "https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-delete",
+    "https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings",
+    "https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-update",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-5-encrypt-sensitive-data-at-rest"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "7.3"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_managed_disks",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "managedBy",
+              "eq",
+              ""
+            ],
+            [
+              "sse_encryption",
+              "ne",
+              "EncryptionAtRestWithCustomerKey"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "unattached_disk_sse_encryption_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

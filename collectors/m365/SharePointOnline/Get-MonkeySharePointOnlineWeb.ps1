@@ -67,8 +67,34 @@ function Get-MonkeySharePointOnlineWeb {
 
 			);
 		}
-		if ($null -eq $O365Object.spoWebs) {
-			break
+        #Get config
+		try {
+            #Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline;
+                Recurse = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Subsites.Recursive);
+                Limit = $O365Object.internal_config.o365.SharePointOnline.Subsites.Depth;
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
+		}
+		catch {
+			$msg = @{
+				MessageData = ($message.MonkeyInternalConfigError);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'verbose';
+				InformationAction = $O365Object.InformationAction;
+				Tags = @('Monkey365ConfigError');
+			}
+			Write-Verbose @msg
+			#Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
 		}
 	}
 	process {
@@ -81,9 +107,9 @@ function Get-MonkeySharePointOnlineWeb {
 		}
 		Write-Information @msg
 		#Get all webs for user
-		$all_webs = $O365Object.spoWebs
+		$all_webs = @($O365Object.spoSites).ForEach({$_.Url | Get-MonkeyCSOMWeb @pWeb})
 	}
-	end {
+	End {
 		if ($all_webs) {
 			$all_webs.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Webs')
 			[pscustomobject]$obj = @{

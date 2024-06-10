@@ -1,41 +1,49 @@
 {
-    "serviceType":  "Azure Virtual Machines",
-    "serviceName":  "Compute",
-    "displayName":  "Ensure that only approved extensions are installed",
-    "description":  "Only install organization-approved extensions on VMs.",
-    "rationale":  "Azure virtual machine extensions are small applications that provide post-deployment configuration and automation tasks on Azure virtual machines. These extensions run with administrative privileges and could potentially access anything on a virtual machine. The Azure Portal and community provide several such extensions. Each organization should carefully evaluate these extensions and ensure that only those that are approved for use are actually implemented.",
-    "impact":  "",
-    "remediation": "
-					###### From Azure Console
-					1. Go to `Virtual machines`
-					2. For each virtual machine, go to `Settings`
-					3. Click on `Extensions`
-					4. Ensure that the listed extensions are approved for use.
-	",
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/virtual-machines/windows/extensions-features",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "7.4"
-		}	
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_virtual_machines",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["resources","ne"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "azure_os_allowed_extensions"
+  "serviceType": "Azure Virtual Machines",
+  "serviceName": "Compute",
+  "displayName": "Ensure that only approved extensions are installed",
+  "description": "Only install organization-approved extensions on VMs.",
+  "rationale": "Azure virtual machine extensions are small applications that provide post-deployment configuration and automation tasks on Azure virtual machines. These extensions run with administrative privileges and could potentially access anything on a virtual machine. The Azure Portal and community provide several such extensions. Each organization should carefully evaluate these extensions and ensure that only those that are approved for use are actually implemented.",
+  "impact": "",
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Virtual machines`\r\n\t\t\t\t\t2. For each virtual machine, go to `Settings`\r\n\t\t\t\t\t3. Click on `Extensions`\r\n\t\t\t\t\t4. Ensure that the listed extensions are approved for use.\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/virtual-machines/windows/extensions-features",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "7.4"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_virtual_machines",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "resources",
+              "ne"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "azure_os_allowed_extensions",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

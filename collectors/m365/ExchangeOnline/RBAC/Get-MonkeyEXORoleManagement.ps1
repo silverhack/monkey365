@@ -76,8 +76,6 @@ function Get-MonkeyEXORoleManagement {
 		$exo_role_groups = $null
 		#Set Empty GUID
 		$EmptyGuid = [System.Guid]::Empty
-		#Get libs for runspace
-		$rsOptions = Initialize-MonkeyScan -Provider Microsoft365 | Where-Object { $_.scanName -eq 'ExchangeOnline' }
 	}
 	process {
 		if ($ExoAuth -and $getExoGroups) {
@@ -104,9 +102,10 @@ function Get-MonkeyEXORoleManagement {
 			#Getting members
 			if ($exo_role_groups) {
 				#Set new vars
-				$vars = $O365Object.runspace_vars
+				<#
+                $vars = $O365Object.runspace_vars
 				$param = @{
-					ScriptBlock = { Get-PSExoUser -user $_ };
+					ScriptBlock = { Get-PSExoUser -User $_ };
 					ImportCommands = $rsOptions.libCommands;
 					ImportVariables = $vars;
 					ImportModules = $O365Object.runspaces_modules;
@@ -119,6 +118,17 @@ function Get-MonkeyEXORoleManagement {
 					BatchSleep = $O365Object.BatchSleep;
 					BatchSize = $O365Object.BatchSize;
 				}
+                #>
+                $param = @{
+			        ScriptBlock = { Get-PSExoUser -User $_ };
+			        Runspacepool = $O365Object.monkey_runspacePool;
+			        ReuseRunspacePool = $true;
+			        Debug = $O365Object.VerboseOptions.Debug;
+			        Verbose = $O365Object.VerboseOptions.Verbose;
+			        MaxQueue = $O365Object.MaxQueue;
+			        BatchSleep = $O365Object.BatchSleep;
+			        BatchSize = $O365Object.BatchSize;
+		        }
 				foreach ($role_group in $exo_role_groups) {
 					if ($role_group.members.Count -gt 0) {
 						#Clone values

@@ -67,42 +67,71 @@ function Get-MonkeySharePointOnlineSiteAccessRequest {
 
 			);
 		}
-		if ($null -eq $O365Object.spoWebs) {
-			break
-		}
-		#Get Access Token from SPO
-		$sps_auth = $O365Object.auth_tokens.SharePointOnline
-		#set generic list
-		$all_external_access = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
-	}
-	process {
-		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online site access requests",$O365Object.TenantID);
-			callStack = (Get-PSCallStack | Select-Object -First 1);
-			logLevel = 'info';
-			InformationAction = $O365Object.InformationAction;
-			Tags = @('SPSAccessRequestsInfo');
-		}
-		Write-Information @msg
-		foreach ($web in $O365Object.spoWebs) {
-			$p = @{
-				Web = $web;
-				Authentication = $sps_auth;
-				InformationAction = $O365Object.InformationAction;
+		#Get config
+		try {
+            #Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline;
+                Recurse = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Subsites.Recursive);
+                Limit = $O365Object.internal_config.o365.SharePointOnline.Subsites.Depth;
+                InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
-			}
-			$site_access = Get-MonkeyCSOMSiteAccessRequest @p
-			if ($site_access) {
-				#Add to list
-				foreach ($sa in $site_access) {
-					[void]$all_external_access.Add($sa)
-				}
-			}
+            }
 		}
-
+		catch {
+			$msg = @{
+				MessageData = ($message.MonkeyInternalConfigError);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'verbose';
+				InformationAction = $O365Object.InformationAction;
+				Tags = @('Monkey365ConfigError');
+			}
+			Write-Verbose @msg
+			#Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
+		}
+		#set generic list
+		$all_external_access = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+        $allWebs = [System.Collections.Generic.List[System.Object]]::new()
 	}
-	end {
+	Process {
+        if($null -ne $O365Object.spoSites){
+		    $msg = @{
+			    MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online site access requests",$O365Object.TenantID);
+			    callStack = (Get-PSCallStack | Select-Object -First 1);
+			    logLevel = 'info';
+			    InformationAction = $O365Object.InformationAction;
+			    Tags = @('SPSAccessRequestsInfo');
+		    }
+		    Write-Information @msg
+            #Splat params
+            $pExternal = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
+            @($O365Object.spoSites).ForEach(
+                {
+                    $_Web = $_.Url | Get-MonkeyCSOMWeb @pWeb;
+                    if($_Web){
+                        [void]$allWebs.Add($_Web);
+                    }
+                }
+            )
+            $accessRequests = $allWebs.GetEnumerator() | Get-MonkeyCSOMSiteAccessRequest @pExternal
+            foreach($request in $accessRequests){
+                [void]$all_external_access.Add($request);
+            }
+        }
+	}
+	End {
 		if ($all_external_access) {
 			$all_external_access.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Site.AccessRequests')
 			[pscustomobject]$obj = @{

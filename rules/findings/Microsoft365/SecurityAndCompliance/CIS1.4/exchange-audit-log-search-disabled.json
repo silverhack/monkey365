@@ -1,54 +1,57 @@
 {
-    "serviceType":  "Security and Compliance",
-    "serviceName":  "Microsoft 365",
-    "displayName":  "Ensure Microsoft 365 audit log search is Enabled",
-    "description":  "When audit log search in the Microsoft 365 Security \u0026 Compliance Center is enabled, user and admin activity from your organization is recorded in the audit log and retained for 90 days. However, your organization might be using a third-party security information and event management (SIEM) application to access your auditing data. In that case, a global admin can turn off audit log search in Microsoft 365.",
-    "rationale":  "Enabling Microsoft 365 audit log search helps Office 365 back office teams to investigate activities for regular security operational or forensic purposes",
-    "impact":  null,
-    "remediation":  '
-					###### To enable Microsoft 365 audit log search, use the Microsoft 365 Admin Center
-					1. Log in as an Global Administrator
-					2. Navigate to <a href="https://protection.office.com" target="_blank">Office 365 security & compliance center</a>.
-					3. In the `Security & Compliance Center`, expand `Search` then select `Audit log search`.
-					4. Click `Start recording user and admin activities` next to the information warning at the top.
-					5. Click `Yes` on the dialog box to confirm.
-					
-					###### To enable Microsoft 365 audit log search, use the Exchange Online PowerShell Module
-					1. Run Microsoft Exchange Online PowerShell Module.
-					2. Connect using `Connect-EXOPSSession`.
-					3. Run the following PowerShell command:
-					
-					```
-					Set-AdminAuditLogConfig -AdminAutidLogEnabled $true -UnifiedAuditLogIngestionEnabled $true
-					```
-	',
-    "references":  [
-		"https://docs.microsoft.com/en-us/office365/securitycompliance/turn-audit-log-search-on-or-off"
-	],
-    "compliance":  [
-		{
-		   "name":  "CIS Microsoft 365 Foundations",
-		   "version":  "1.4.0",
-		   "reference":  "5.1"
-		}
-	],
-	"level": "medium",
-    "tags":  [
-		"Microsoft 365 CIS benchmark 5.1"
-	],
-    "path":  "o365_secomp_log_config",
-    "conditions":  [
-		{
-			statements: [
-				{
-					conditions : [
-						["AdminAuditLogEnabled","ne","True"],
-						["UnifiedAuditLogIngestionEnabled","ne","True"]
-					],
-					operator:  "or"
-				}
-			]
-		}
-	],
-    "idSuffix":  "o365_exo_auditing_disabled"
+  "serviceType": "Security and Compliance",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure Microsoft 365 audit log search is Enabled",
+  "description": "When audit log search in the Microsoft 365 Security & Compliance Center is enabled, user and admin activity from your organization is recorded in the audit log and retained for 90 days. However, your organization might be using a third-party security information and event management (SIEM) application to access your auditing data. In that case, a global admin can turn off audit log search in Microsoft 365.",
+  "rationale": "Enabling Microsoft 365 audit log search helps Office 365 back office teams to investigate activities for regular security operational or forensic purposes",
+  "impact": null,
+  "remediation": "\r\n\t\t\t\t\t###### To enable Microsoft 365 audit log search, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Log in as an Global Administrator\r\n\t\t\t\t\t2. Navigate to <a href=\"https://protection.office.com\" target=\"_blank\">Office 365 security & compliance center</a>.\r\n\t\t\t\t\t3. In the `Security & Compliance Center`, expand `Search` then select `Audit log search`.\r\n\t\t\t\t\t4. Click `Start recording user and admin activities` next to the information warning at the top.\r\n\t\t\t\t\t5. Click `Yes` on the dialog box to confirm.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To enable Microsoft 365 audit log search, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Run Microsoft Exchange Online PowerShell Module.\r\n\t\t\t\t\t2. Connect using `Connect-EXOPSSession`.\r\n\t\t\t\t\t3. Run the following PowerShell command:\r\n\t\t\t\t\t\r\n\t\t\t\t\t```\r\n\t\t\t\t\tSet-AdminAuditLogConfig -AdminAutidLogEnabled $true -UnifiedAuditLogIngestionEnabled $true\r\n\t\t\t\t\t```\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/office365/securitycompliance/turn-audit-log-search-on-or-off"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.4.0",
+      "reference": "5.1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "Microsoft 365 CIS benchmark 5.1"
+  ],
+  "path": "o365_secomp_log_config",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "AdminAuditLogEnabled",
+              "ne",
+              "True"
+            ],
+            [
+              "UnifiedAuditLogIngestionEnabled",
+              "ne",
+              "True"
+            ]
+          ],
+          "operator": "or"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "o365_exo_auditing_disabled",
+  "status": {
+    "keyName": [],
+    "message": "Ensure Microsoft 365 audit log search is Enabled"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

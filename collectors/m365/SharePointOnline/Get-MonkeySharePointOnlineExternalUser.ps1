@@ -67,39 +67,72 @@ function Get-MonkeySharePointOnlineExternalUser {
 
 			);
 		}
-		if ($null -eq $O365Object.spoWebs) {
-			break
-		}
-		#set generic list
-		$all_external_users = New-Object System.Collections.Generic.List[System.Management.Automation.PSObject]
-	}
-	process {
-		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"SharePoint Online external users",$O365Object.TenantID);
-			callStack = (Get-PSCallStack | Select-Object -First 1);
-			logLevel = 'info';
-			InformationAction = $O365Object.InformationAction;
-			Tags = @('SPSExternalUsersInfo');
-		}
-		Write-Information @msg
-		foreach ($web in $O365Object.spoWebs) {
-			$p = @{
-				Web = $web;
-				InformationAction = $O365Object.InformationAction;
+		#Get config
+		try {
+            #Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline;
+                Recurse = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Subsites.Recursive);
+                Limit = $O365Object.internal_config.o365.SharePointOnline.Subsites.Depth;
+                InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
-			}
-			$ext_users = Get-MonkeyCSOMExternalUser @p
-			if ($ext_users) {
-				#Add to list
-				foreach ($ext_user in $ext_users) {
-					[void]$all_external_users.Add($ext_user)
-				}
-			}
+            }
 		}
+		catch {
+			$msg = @{
+				MessageData = ($message.MonkeyInternalConfigError);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'verbose';
+				InformationAction = $O365Object.InformationAction;
+				Tags = @('Monkey365ConfigError');
+			}
+			Write-Verbose @msg
+			#Splat params
+            $pWeb = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
+		}
+		#set generic list
+		$all_external_users = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+        $allWebs = [System.Collections.Generic.List[System.Object]]::new()
 	}
-	end {
-		if ($all_external_users) {
+	Process {
+        if($null -ne $O365Object.spoSites){
+		    $msg = @{
+			    MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"SharePoint Online external users",$O365Object.TenantID);
+			    callStack = (Get-PSCallStack | Select-Object -First 1);
+			    logLevel = 'info';
+			    InformationAction = $O365Object.InformationAction;
+			    Tags = @('SPSExternalUsersInfo');
+		    }
+            Write-Information @msg
+            #Splat params
+            $pExternal = @{
+                Authentication = $O365Object.auth_tokens.SharePointOnline
+                InformationAction = $O365Object.InformationAction;
+				Verbose = $O365Object.Verbose;
+				Debug = $O365Object.Debug;
+            }
+            @($O365Object.spoSites).ForEach(
+                {
+                    $_Web = $_.Url | Get-MonkeyCSOMWeb @pWeb;
+                    if($_Web){
+                        [void]$allWebs.Add($_Web);
+                    }
+                }
+            )
+            $externalUsers = $allWebs.GetEnumerator() | Get-MonkeyCSOMExternalUser @pExternal
+            foreach($externalUser in @($externalUsers)){
+                [void]$all_external_users.Add($externalUser);
+            }
+        }
+	}
+	End {
+		If ($all_external_users) {
 			$all_external_users.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Tenant.Externalusers')
 			[pscustomobject]$obj = @{
 				Data = $all_external_users;
@@ -107,7 +140,7 @@ function Get-MonkeySharePointOnlineExternalUser {
 			}
 			$returnData.o365_spo_external_users = $obj
 		}
-		else {
+		Else {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online External Users",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);

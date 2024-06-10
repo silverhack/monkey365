@@ -1,34 +1,49 @@
 {
-    "serviceType":  "MySQL Server",
-    "serviceName":  "Databases",
-    "displayName":  "Enable SSL connection on MYSQL Servers",
-    "description":  "SSL connectivity helps to provide a new layer of security, by connecting database server to client applications using Secure Sockets Layer (SSL). Enforcing SSL connections between database server and client applications helps protect against \"man in the middle\" attacks by encrypting the data stream between the server and application.",
-    "rationale":  null,
-    "impact":  null,
-    "remediation":  null,
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/mysql/howto-configure-ssl"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft Azure Foundations",
-			"version":  "1.4.0",
-			"reference":  "4.4.1"
-		}
-	],
-	"level": "medium",
-    "tags":  null,
-    "path":  "az_mysql_servers",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["properties.sslEnforcement","eq","Disabled"]
-					]
-				}
-			]
-		}
-	],
-    "idSuffix":  "mysql_enforcessl_disabled"
+  "serviceType": "MySQL Server",
+  "serviceName": "Databases",
+  "displayName": "Enable SSL connection on MYSQL Servers",
+  "description": "SSL connectivity helps to provide a new layer of security, by connecting database server to client applications using Secure Sockets Layer (SSL). Enforcing SSL connections between database server and client applications helps protect against \"man in the middle\" attacks by encrypting the data stream between the server and application.",
+  "rationale": null,
+  "impact": null,
+  "remediation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/mysql/howto-configure-ssl"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.4.0",
+      "reference": "4.4.1"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "az_mysql_servers",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "properties.sslEnforcement",
+              "eq",
+              "Disabled"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "idSuffix": "mysql_enforcessl_disabled",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

@@ -1,87 +1,69 @@
 {
-    "serviceType":  "Subscription Security",
-    "serviceName":  "Subscription",
-    "displayName":  "Ensure Custom Role is assigned for Administering Resource Locks",
-    "description":  "Resource locking is a powerful protection mechanism that can prevent inadvertent modification/deletion of resources within Azure subscriptions/Resource Groups and is a recommended NIST configuration.",
-    "rationale":  "Given the resource lock functionality is outside of standard Role Based Access Control(RBAC), it would be prudent to create a resource lock administrator role to prevent inadvertent unlocking of resources.",
-    "impact":  "By adding this role is you can have specific permissions granted for managing just resource locks rather than needing to provide the wide owner or contributor role reducing the risk of the user being able to do unintentional damage.",
-    "remediation":  '
-					###### From Azure Console
-					1. In the Azure portal, open a subscription or resource group where you want the custom role to be assignable.
-					2. Select `Access control (IAM)`
-					3. Click `Add`
-					4. Select `Add custom role`
-					5. In the Custom Role Name field enter `Resource Lock Administrator`
-					6. In the `Description` field enter appropiate description
-					7. For `Baseline permissions` select `Start from scratch`
-					8. Click `next`
-					9. In the `Permissions` tab select `Add permissions`
-					10. in the Search for a permission box, type in `Microsoft.Authorization/locks` to search for permissions.
-					11. Select the check box next to the permission called Microsoft.Authorization/locks
-					12. Click `add`
-					13. Click `Review+create`
-					14. Click `Create`
-					
-					Assign the newly created role to the appropriate user.
-
-					###### Using PowerShell:
-					Below is a power shell definition for a resource lock administrator role created at an Azure Management group level:
-					
-					```
-					Import-Module Az.Accounts
-					Connect-AzAccount
-					$role = Get-AzRoleDefinition "User Access Administrator"
-					$role.Id = $null
-					$role.Name = "Resource Lock Administrator"
-					$role.Description = "Can Administer Resource Locks"
-					$role.Actions.Clear()
-					$role.Actions.Add("Microsoft.Authorization/locks/*")
-					$role.AssignableScopes.Clear()
-					#Scope at the Management group level Management group
-					$role.AssignableScopes.Add("/providers/Microsoft.Management/managementGroups/MG-Name")
-					New-AzRoleDefinition -Role $role
-					Get-AzureRmRoleDefinition "Resource Lock Administrator"
-					```
-	',
-    "references":  [
-		"https://docs.microsoft.com/en-us/azure/role-based-access-control/custom-roles",
-		"https://docs.microsoft.com/en-us/azure/role-based-access-control/check-access",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-7-follow-just-enough-administration-least-privilege-principle",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-5-automate-entitlement-management",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
-		"https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft 365 Foundations",
-			"version":  "1.4.0",
-			"reference":  "1.22"
-		}
-	],
-	"level": "medium",
-    "tags":  [
-		"Microsoft 365 CIS benchmark 1.22"
-	],
-    "path":  "az_role_definitions",
-    "conditions":  [
-		{
-			statements:  [
-				{
-					conditions:  [
-						["properties.type","eq","CustomRole"],
-						["properties.permissions.actions","match","Microsoft.Authorization/locks/*"]
-					],
-					operator: "and"
-				}
-			]
-		}
-	],
-	"shouldExist":  "true",
-    "returnObject":  {
-		"Missing Role":  "Custom Resource Lock Administrator",
-		"Status":  "DoesNotExists"
-	},
-    "idSuffix":  "azure_subscription_missing_custom_lock_role"
+  "serviceType": "Subscription Security",
+  "serviceName": "Subscription",
+  "displayName": "Ensure Custom Role is assigned for Administering Resource Locks",
+  "description": "Resource locking is a powerful protection mechanism that can prevent inadvertent modification/deletion of resources within Azure subscriptions/Resource Groups and is a recommended NIST configuration.",
+  "rationale": "Given the resource lock functionality is outside of standard Role Based Access Control(RBAC), it would be prudent to create a resource lock administrator role to prevent inadvertent unlocking of resources.",
+  "impact": "By adding this role is you can have specific permissions granted for managing just resource locks rather than needing to provide the wide owner or contributor role reducing the risk of the user being able to do unintentional damage.",
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. In the Azure portal, open a subscription or resource group where you want the custom role to be assignable.\r\n\t\t\t\t\t2. Select `Access control (IAM)`\r\n\t\t\t\t\t3. Click `Add`\r\n\t\t\t\t\t4. Select `Add custom role`\r\n\t\t\t\t\t5. In the Custom Role Name field enter `Resource Lock Administrator`\r\n\t\t\t\t\t6. In the `Description` field enter appropiate description\r\n\t\t\t\t\t7. For `Baseline permissions` select `Start from scratch`\r\n\t\t\t\t\t8. Click `next`\r\n\t\t\t\t\t9. In the `Permissions` tab select `Add permissions`\r\n\t\t\t\t\t10. in the Search for a permission box, type in `Microsoft.Authorization/locks` to search for permissions.\r\n\t\t\t\t\t11. Select the check box next to the permission called Microsoft.Authorization/locks\r\n\t\t\t\t\t12. Click `add`\r\n\t\t\t\t\t13. Click `Review+create`\r\n\t\t\t\t\t14. Click `Create`\r\n\t\t\t\t\t\r\n\t\t\t\t\tAssign the newly created role to the appropriate user.\r\n\r\n\t\t\t\t\t###### Using PowerShell:\r\n\t\t\t\t\tBelow is a power shell definition for a resource lock administrator role created at an Azure Management group level:\r\n\t\t\t\t\t\r\n\t\t\t\t\t```\r\n\t\t\t\t\tImport-Module Az.Accounts\r\n\t\t\t\t\tConnect-AzAccount\r\n\t\t\t\t\t$role = Get-AzRoleDefinition \"User Access Administrator\"\r\n\t\t\t\t\t$role.Id = $null\r\n\t\t\t\t\t$role.Name = \"Resource Lock Administrator\"\r\n\t\t\t\t\t$role.Description = \"Can Administer Resource Locks\"\r\n\t\t\t\t\t$role.Actions.Clear()\r\n\t\t\t\t\t$role.Actions.Add(\"Microsoft.Authorization/locks/*\")\r\n\t\t\t\t\t$role.AssignableScopes.Clear()\r\n\t\t\t\t\t#Scope at the Management group level Management group\r\n\t\t\t\t\t$role.AssignableScopes.Add(\"/providers/Microsoft.Management/managementGroups/MG-Name\")\r\n\t\t\t\t\tNew-AzRoleDefinition -Role $role\r\n\t\t\t\t\tGet-AzureRmRoleDefinition \"Resource Lock Administrator\"\r\n\t\t\t\t\t```\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/role-based-access-control/custom-roles",
+    "https://docs.microsoft.com/en-us/azure/role-based-access-control/check-access",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-7-follow-just-enough-administration-least-privilege-principle",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-5-automate-entitlement-management",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.4.0",
+      "reference": "1.22"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "Microsoft 365 CIS benchmark 1.22"
+  ],
+  "path": "az_role_definitions",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "properties.type",
+              "eq",
+              "CustomRole"
+            ],
+            [
+              "properties.permissions.actions",
+              "match",
+              "Microsoft.Authorization/locks/*"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "shouldExist": "true",
+  "returnObject": {
+    "Missing Role": "Custom Resource Lock Administrator",
+    "Status": "DoesNotExists"
+  },
+  "idSuffix": "azure_subscription_missing_custom_lock_role",
+  "status": {
+    "keyName": [],
+    "message": ""
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }

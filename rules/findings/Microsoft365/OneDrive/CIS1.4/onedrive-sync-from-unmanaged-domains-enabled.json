@@ -1,45 +1,57 @@
 {
-    "serviceType":  "Microsoft OneDrive",
-    "serviceName":  "Microsoft 365",
-    "displayName":  "Block OneDrive for Business sync from unmanaged devices",
-    "description":  "Consider to prevent company data from OneDrive for Business from being synchronized to non-corporate managed devices.",
-    "rationale":  "Unmanaged devices pose a risk, since their security cannot be verified. Allowing users to sync data to these devices, takes that data out of the control of the organization. This increases the risk of the data either being intentionally or accidentally leaked",
-    "impact":  "Enabling this feature will prevent users from using the OneDrive for Business Sync client on devices that are not joined to the domains that were defined.",
-    "remediation":  '
-					###### To block the sync client on unmanaged devices, use the Microsoft 365 Admin Center
-					1. Navigate to <a href="https://admin.microsoft.com" target="_blank">Microsoft 365 administration portal</a>, Click on `All Admin Centers` and then `OneDrive`.
-					2. Click `Sync`.
-					3. Ensure that `Allow syncing only on PCs joined to specific domains` is checked.
-					4. Use the `Get-ADDomain` PowerShell command to obtain the GUID from each domain in your environment and add them to the box below.
-					5. Click `Save`
-	',
-    "references":  [
-		"https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps"
-	],
-    "compliance":  [
-		{
-			"name":  "CIS Microsoft 365 Foundations",
-			"version":  "1.3.0",
-			"reference":  "6.2"
-		}
-	],
-	"level": "medium",
-    "tags":  [
-		"Microsoft 365 CIS benchmark 6.2"
-	],
-    "path":  "o365_spo_tenant_sync_restrictions",
-    "conditions":  [
-		{
-			statements: [
-				{
-					conditions : [
-						["IsUnmanagedSyncClientForTenantRestricted","eq","false"],
-						["AllowedDomainListForSyncClient.Count","eq","0"]
-					],
-					operator:  "or"
-				}
-			]
-		}
-	],
-    "idSuffix":  "ofb_sync_from_unmanaged_devices_enabled"
+  "serviceType": "Microsoft OneDrive",
+  "serviceName": "Microsoft 365",
+  "displayName": "Block OneDrive for Business sync from unmanaged devices",
+  "description": "Consider to prevent company data from OneDrive for Business from being synchronized to non-corporate managed devices.",
+  "rationale": "Unmanaged devices pose a risk, since their security cannot be verified. Allowing users to sync data to these devices, takes that data out of the control of the organization. This increases the risk of the data either being intentionally or accidentally leaked",
+  "impact": "Enabling this feature will prevent users from using the OneDrive for Business Sync client on devices that are not joined to the domains that were defined.",
+  "remediation": "\r\n\t\t\t\t\t###### To block the sync client on unmanaged devices, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Navigate to <a href=\"https://admin.microsoft.com\" target=\"_blank\">Microsoft 365 administration portal</a>, Click on `All Admin Centers` and then `OneDrive`.\r\n\t\t\t\t\t2. Click `Sync`.\r\n\t\t\t\t\t3. Ensure that `Allow syncing only on PCs joined to specific domains` is checked.\r\n\t\t\t\t\t4. Use the `Get-ADDomain` PowerShell command to obtain the GUID from each domain in your environment and add them to the box below.\r\n\t\t\t\t\t5. Click `Save`\r\n\t",
+  "references": [
+    "https://docs.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "1.3.0",
+      "reference": "6.2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "Microsoft 365 CIS benchmark 6.2"
+  ],
+  "path": "o365_spo_tenant_sync_restrictions",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "IsUnmanagedSyncClientForTenantRestricted",
+              "eq",
+              "false"
+            ],
+            [
+              "AllowedDomainListForSyncClient.Count",
+              "eq",
+              "0"
+            ]
+          ],
+          "operator": "or"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "ofb_sync_from_unmanaged_devices_enabled",
+  "status": {
+    "keyName": [],
+    "message": "Block OneDrive for Business sync from unmanaged devices"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
 }
