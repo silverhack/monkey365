@@ -89,14 +89,14 @@
   "returnObject": null,
   "idSuffix": "aad_cap_block_basic_auth",
   "status": {
-    "keyName": [],
-    "message": "Lack of conditional access policy to block legacy authentication"
+    "keyName": ["policyName"],
+    "message": "The {policyName} policy is not configured to block legacy authentication"
   },
   "notes": [],
   "categories": [],
   "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
+    "resourceName": "policyName",
+    "resourceId": "policyId",
+    "resourceType": "conditionalAccess/policies"
   }
 }

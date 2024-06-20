@@ -80,6 +80,24 @@ Function New-MsalApplicationForSPO{
                 Environment = $Environment;
             }
         }
+        Else{
+            if(-NOT $app_params.ContainsKey('clientId')){
+                #Add clientId
+                [ref]$null = $app_params.Add('clientId',$clientId)
+            }
+            else{
+                $app_params.ClientId = $clientId
+            }
+            if($null -ne $redirectUri){
+                if(-NOT $app_params.ContainsKey('redirectUri')){
+                    #Add redirect uri
+                    [ref]$null = $app_params.Add('redirectUri',$redirectUri)
+                }
+                else{
+                    $app_params.redirectUri = $redirectUri
+                }
+            }
+        }
     }
     End{
         try{

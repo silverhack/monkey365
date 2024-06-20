@@ -102,8 +102,13 @@ Function Connect-MonkeySPO {
                     foreach ($param in $O365Object.msalAuthArgs.GetEnumerator()){
                         $new_params.add($param.Key, $param.Value)
                     }
-                    #Create a new MSAL application
+                    #Create a new msal client application
+                    $client_app = @{}
+                    foreach ($param in $O365Object.application_args.GetEnumerator()){
+                        $client_app.add($param.Key, $param.Value)
+                    }
                     $p = @{
+                        app_params = $client_app;
                         Environment = $O365Object.initParams.Environment;
                         Verbose = $O365Object.verbose;
                         Debug = $O365Object.debug;
