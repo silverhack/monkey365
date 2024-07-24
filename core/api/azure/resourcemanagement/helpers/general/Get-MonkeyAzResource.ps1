@@ -75,8 +75,13 @@ Function Get-MonkeyAzResource{
                     Debug = $O365Object.debug;
                 }
                 $resources = Get-MonkeyRMObject @p
-                if($resources){
-                    [void]$all_resources.AddRange($resources)
+                if($null -ne $resources){
+                    If ($resources -is [System.Collections.IEnumerable] -and $resources -isnot [string]){
+                        [void]$all_resources.AddRange($resources)
+                    }
+                    ElseIf ($resources.GetType() -eq [System.Management.Automation.PSCustomObject] -or $resources.GetType() -eq [System.Management.Automation.PSObject]) {
+                        [void]$all_resources.Add($resources)
+                    }
                 }
             }
         }
@@ -94,8 +99,13 @@ Function Get-MonkeyAzResource{
                 Debug = $O365Object.debug;
             }
             $resources = Get-MonkeyRMObject @params
-            if($resources){
-                [void]$all_resources.AddRange($resources)
+            if($null -ne $resources){
+                If ($resources -is [System.Collections.IEnumerable] -and $resources -isnot [string]){
+                    [void]$all_resources.AddRange($resources)
+                }
+                ElseIf ($resources.GetType() -eq [System.Management.Automation.PSCustomObject] -or $resources.GetType() -eq [System.Management.Automation.PSObject]) {
+                    [void]$all_resources.Add($resources)
+                }
             }
         }
     }
