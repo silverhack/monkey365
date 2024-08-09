@@ -49,7 +49,7 @@ Function Out-JSON{
         }
         catch{
             Write-Debug $_
-            Write-Error ($script:messages.UnableToExportObject -f $OutFile)
+            Write-Debug ($script:messages.UnableToExportObject -f $OutFile)
         }
     }
 }

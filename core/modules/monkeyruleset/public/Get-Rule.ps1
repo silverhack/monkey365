@@ -78,7 +78,7 @@ Function Get-Rule{
         [Switch]$Pretty
     )
     Begin{
-        $MyRules = $null;
+        $MyRules = $mrules = $null;
         $colors = [ordered]@{
             info = 36;
             low = 34;
@@ -107,35 +107,44 @@ Function Get-Rule{
         if($PSBoundParameters.ContainsKey('InformationAction')){
             $InformationAction = $PSBoundParameters['InformationAction']
         }
+        #Get Command metadata
+        $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Initialize-MonkeyRuleset")
+        $newPsboundParams = [ordered]@{}
+        if($null -ne $MetaData){
+            $param = $MetaData.Parameters.Keys
+            foreach($p in $param.GetEnumerator()){
+                if($PSBoundParameters.ContainsKey($p) -and $PSBoundParameters[$p]){
+                    $newPsboundParams.Add($p,$PSBoundParameters[$p])
+                }
+            }
+        }
+        #Add verbose, debug
+        $newPsboundParams.Add('Verbose',$Verbose)
+        $newPsboundParams.Add('Debug',$Debug)
+        $newPsboundParams.Add('InformationAction',$InformationAction)
     }
     Process{
-        If(($PSBoundParameters.ContainsKey('RulesPath') -and $PSBoundParameters['RulesPath']) -and ($PSBoundParameters.ContainsKey('RuleSet') -and $PSBoundParameters['RuleSet'])){
+        If($newPsboundParams.Count -eq 5){
             #Remove vars
             Remove-InternalVar
-            $p = @{
-                Ruleset = $PSBoundParameters['RuleSet'];
-                RulesPath = $PSBoundParameters['RulesPath'];
-                Verbose = $Verbose;
-                Debug = $Debug;
-                InformationAction = $InformationAction;
-            }
-            [void](Initialize-MonkeyRuleset @p)
+            #Initialize Ruleset
+            [void](Initialize-MonkeyRuleset @newPsboundParams)
         }
         try{
-            if($null -ne (Get-Variable -Name AllRules -ErrorAction Ignore)){
-                $MyRules = $Script:AllRules
-            }
-            Elseif($PSBoundParameters.ContainsKey('RulesPath') -and $PSBoundParameters['RulesPath']){
+            If($PSBoundParameters.ContainsKey('RulesPath') -and $PSBoundParameters['RulesPath'] -and !$PSBoundParameters.ContainsKey('RuleSet')){
                 if($RulesPath.GetDirectories('findings').Count -gt 0){
                     $findingsPath = $RulesPath.GetDirectories('findings')
                     $all_rules = Get-File -Filter "*json" -Rulepath $findingsPath.FullName.ToString()
                     $all_rules = $all_rules | Select-Object * -Unique
                     #Get rule info
-                    $MyRules = @($all_rules).ForEach({$r = (Get-Content $_.FullName -Raw) | ConvertFrom-Json; if ($r | Test-isValidRule){$r | Add-Member -Type NoteProperty -name File -value $_ -Force; $r}})
+                    $MyRules = $all_rules | Get-RuleFileContent #@($all_rules).ForEach({$r = (Get-Content $_.FullName -Raw) | ConvertFrom-Json; if ($r | Test-isValidRule){$r | Add-Member -Type NoteProperty -name File -value $_ -Force; $r}})
                 }
                 else{
                     Write-Warning ("Findings folder was not found on {0}" -f $RulesPath.FullName)
                 }
+            }
+            ElseIf($null -ne (Get-Variable -Name AllRules -ErrorAction Ignore)){
+                $MyRules = $Script:AllRules
             }
         }
         catch{
@@ -147,6 +156,7 @@ Function Get-Rule{
             if($null -ne $MyRules){
                 if($PSBoundParameters.ContainsKey('Full') -and $PSBoundParameters['Full'].IsPresent){
                     $MyRules
+                    return
                 }
                 elseif($PSBoundParameters.ContainsKey('RuleSet') -and $PSBoundParameters['RuleSet']){
                     $mrules = $MyRules | Select-Object displayName,serviceType,level,IdSuffix
@@ -172,7 +182,7 @@ Function Get-Rule{
                     $maxWidthType = $mrules | Select-Object -ExpandProperty serviceType | Group-Object {$_.Length} | Select-Object -ExpandProperty Name | Measure-Object -Maximum | Select-Object -ExpandProperty Maximum
                     $Name = @{label="Rule Name";expression={$_.displayName};Width = [int]$maxWidthName-50};
                     $ResourceName = @{label="Service";expression={$_.serviceType};Width = [int]$maxWidthType};
-                    $Level = @{label="Level";expression={$_.level};Width = 12}
+                    $Level = @{label="Risk";expression={$_.level};Width = 12}
                     $IdSuffix = @{label="Id";expression={$_.idSuffix}}
                     if($null -eq (Get-Variable -Name psISE -ErrorAction Ignore)){
                         foreach($r in $mrules){

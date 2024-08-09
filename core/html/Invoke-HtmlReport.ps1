@@ -45,7 +45,7 @@ Function Invoke-HtmlReport{
             $all_rules = Get-Rule
             if($null -ne (Get-Variable -Name monkeyExportObject -ErrorAction Ignore) -and $null -ne (Get-Variable -Name matchedRules -ErrorAction Ignore)){
                 $exec_info = [ordered]@{
-                    Ruleset = (Get-Framework -Current);
+                    Ruleset = (Get-Framework);
                     'Ruleset Description' = (Get-Ruleset -Info).about;
                     'Number of rules' = @($all_rules).Count;
                     'Executed Rules' = @($matchedRules).Count;

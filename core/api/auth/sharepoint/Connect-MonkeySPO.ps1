@@ -48,137 +48,135 @@ Function Connect-MonkeySPO {
         [Parameter(Mandatory=$false, ParameterSetName = 'oneDrive', HelpMessage="Connect OneDrive Url")]
         [Switch]$OneDrive
     )
-    try{
-        $sharepointUrl = $spo_app = $null;
-        #Get Environment
-        $CloudType = $O365Object.initParams.Environment
-        $sps_p = @{
-            Endpoint = $PSBoundParameters['Endpoint'];
-            Environment = $CloudType;
+    $sharepointUrl = $spo_app = $null;
+    #Get Environment
+    $CloudType = $O365Object.cloudEnvironment;
+    $sps_p = @{
+        Endpoint = $PSBoundParameters['Endpoint'];
+        Environment = $CloudType;
+        InformationAction = $O365Object.InformationAction;
+        Verbose = $O365Object.verbose;
+        Debug = $O365Object.debug;
+    }
+    #Get Endpoint
+    switch -Wildcard ($PSCmdlet.ParameterSetName) {
+        'Admin' {
+            $sharepointUrl = Get-SharepointAdminUrl @sps_p
+        }
+        'rootSite' {
+            $sharepointUrl = Get-SharepointUrl @sps_p
+        }
+        'oneDrive' {
+            $sharepointUrl = Get-OneDriveUrl @sps_p
+        }
+        Default {
+            $sharepointUrl = Get-SharepointUrl @sps_p
+        }
+    }
+    if($null -eq $sharepointUrl){
+        $msg = @{
+            MessageData = "Unable to get a valid URL for SharePoint Online";
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'Warning';
             InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
+            Tags = @('SharePointOnlineUrlError');
         }
-        #Get Endpoint
-        switch -Wildcard ($PSCmdlet.ParameterSetName) {
-            'Admin' {
-                $sharepointUrl = Get-SharepointAdminUrl @sps_p
-            }
-            'rootSite' {
-                $sharepointUrl = Get-SharepointUrl @sps_p
-            }
-            'oneDrive' {
-                $sharepointUrl = Get-OneDriveUrl @sps_p
-            }
-            Default {
-                $sharepointUrl = Get-SharepointUrl @sps_p
-            }
-        }
+        Write-Warning @msg
+        return
+    }
+    #Get default application args
+    $new_params = @{}
+    foreach ($param in $O365Object.msal_application_args.GetEnumerator()){
+        $new_params.add($param.Key, $param.Value)
+    }
+    if($O365Object.isConfidentialApp -eq $false){
         try{
             $usePnpManagementShell = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.UsePnPManagementShell)
         }
         catch{
             $usePnpManagementShell = $false
         }
-        if($null -ne $sharepointUrl){
+        #Check if application is present
+        if(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)})).Count -gt 0){
+            $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)}) | Select-Object -First 1
+        }
+        ElseIf(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)})).Count -gt 0){
+            $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)}) | Select-Object -First 1
+        }
+        Else{
+            #Potentially first time the user is authenticating, so we use original parameters
             #Set new params
             $new_params = @{}
-            foreach ($param in $O365Object.msal_application_args.GetEnumerator()){
+            foreach ($param in $O365Object.msalAuthArgs.GetEnumerator()){
                 $new_params.add($param.Key, $param.Value)
             }
-            #Check if confidential App
-            if($O365Object.isConfidentialApp -eq $false){
-                #Check if application is present
-                if(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)})).Count -gt 0){
-                    $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)}) | Select-Object -First 1
-                }
-                ElseIf(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)})).Count -gt 0){
-                    $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)}) | Select-Object -First 1
-                }
-                Else{
-                    #Potentially first time the user is authenticating, so we use original parameters
-                    #Set new params
-                    $new_params = @{}
-                    foreach ($param in $O365Object.msalAuthArgs.GetEnumerator()){
-                        $new_params.add($param.Key, $param.Value)
-                    }
-                    #Create a new msal client application
-                    $client_app = @{}
-                    foreach ($param in $O365Object.application_args.GetEnumerator()){
-                        $client_app.add($param.Key, $param.Value)
-                    }
-                    $p = @{
-                        app_params = $client_app;
-                        Environment = $O365Object.initParams.Environment;
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
-                        InformationAction = $O365Object.InformationAction;
-                    }
-                    if($usePnpManagementShell){
-                        $spo_app = New-MsalApplicationForPnP @p
-                    }
-                    else{
-                        #Check if force MSAL desktop
-                        if($null -ne $O365Object.SystemInfo -and $O365Object.SystemInfo.MsalType -eq 'Desktop'){
-                            $p.Item('ForceDesktop') = $true
-                        }
-                        #Get Application for SPO
-                        $spo_app = New-MsalApplicationForSPO @p
-                    }
-                    if($null -ne $spo_app){
-                        #Validate .net core conflicts
-                        try{
-                            if($spo_app.AppConfig.RedirectUri -match "localhost" -and $O365Object.SystemInfo.MsalType -eq "Core"){
-                                $dc = $new_params.Item('DeviceCode');
-                                if($null -eq $dc -or $dc -eq $false){
-                                    $msg = @{
-                                        MessageData = "Unable to connect SharePoint Online. SharePoint Online Management Shell is not supporting interactive authentication on .NET core. Use DeviceCode instead. For more info, please check the following url: https://silverhack.github.io/monkey365/authentication/limitations/";
-                                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                                        logLevel = 'Warning';
-                                        InformationAction = $O365Object.InformationAction;
-                                        Tags = @('MonkeySPOAuthenticationError');
-                                    }
-                                    Write-Warning @msg
-                                    return
-                                }
-                            }
-                            $new_params.publicApp = $spo_app
-                            #Add to Object
-                            [void]$O365Object.msal_public_applications.Add($spo_app)
-                        }
-                        Catch{
-                            Write-Error $_
-                            return
-                        }
-                    }
-                    else{
-                        $msg = @{
-                            MessageData = "Unable to get MSAL application for SharePoint Online";
-                            callStack = (Get-PSCallStack | Select-Object -First 1);
-                            logLevel = 'Warning';
-                            InformationAction = $O365Object.InformationAction;
-                            Tags = @('SPOPublicApplicationError');
-                        }
-                        Write-Warning @msg
-                        return
-                    }
-                }
+            #Create a new msal client application
+            $client_app = @{}
+            foreach ($param in $O365Object.application_args.GetEnumerator()){
+                $client_app.add($param.Key, $param.Value)
             }
-            else{
-                $new_params.confidentialApp = $O365Object.msalapplication;
+            $p = @{
+                app_params = $client_app;
+                Environment = $O365Object.initParams.Environment;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+                InformationAction = $O365Object.InformationAction;
             }
-            #Add SharePoint url to object
-            [void]$new_params.Add('Resource',$sharepointUrl);
-            #Add scopes if PnP application is used
-            if($usePnpManagementShell){
+            If($usePnpManagementShell){
+                $spo_app = New-MsalApplicationForPnP @p
+                #Add scopes
                 [string[]]$scope = "AllSites.Read"
                 [void]$new_params.Add('Scopes',$scope);
             }
-            #Connect to SharePoint Online
-            Get-MSALTokenForSharePointOnline @new_params
+            Else{
+                #Check if force MSAL desktop
+                if($null -ne $O365Object.SystemInfo -and $O365Object.SystemInfo.MsalType -eq 'Desktop'){
+                    $p.Item('ForceDesktop') = $true
+                }
+                #Get Application for SPO
+                try{
+                    $spo_app = New-MsalApplicationForSPO @p
+                    #Validate .net core conflicts
+                    if($spo_app.AppConfig.RedirectUri -match "localhost" -and $O365Object.SystemInfo.MsalType -eq "Core"){
+                        $dc = $new_params.Item('DeviceCode');
+                        if($null -eq $dc -or $dc -eq $false){
+                            $msg = @{
+                                MessageData = "Unable to connect SharePoint Online. SharePoint Online Management Shell is not supporting interactive authentication on .NET core. Use DeviceCode instead. For more info, please check the following url: https://silverhack.github.io/monkey365/authentication/limitations/";
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'Warning';
+                                InformationAction = $O365Object.InformationAction;
+                                Tags = @('MonkeySPOAuthenticationError');
+                            }
+                            Write-Warning @msg
+                            return
+                        }
+                    }
+                }
+                Catch{
+                    Write-Error $_
+                    return
+                }
+            }
+            if($null -ne $spo_app){
+                $new_params.publicApp = $spo_app
+                #Add to Object
+                [void]$O365Object.msal_public_applications.Add($spo_app)
+            }
+            Else{
+                $msg = @{
+                    MessageData = "Unable to get MSAL application for SharePoint Online";
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'Warning';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('SharePointOnlineApplicationError');
+                }
+                Write-Warning @msg
+                return
+            }
         }
     }
-    catch{
-        Write-Error $_
-    }
+    #Add SharePoint url to object
+    [void]$new_params.Add('Resource',$sharepointUrl);
+    #Try to get token
+    Get-MonkeyMSALToken @new_params
 }

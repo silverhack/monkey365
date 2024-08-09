@@ -104,11 +104,6 @@ Function Get-MonkeyCollector{
             if($O365Object.isConfidentialApp -eq $true){
                 #Load MSGraph plugins
                 $discovered_plugins = @($available_collectors).Where({$_.Provider -eq "EntraID" -and $_.ApiType -eq 'MSGraph'})
-                #Add PIM plugins
-                $PIM_plugins = @($available_collectors).Where({$_.Provider -eq "EntraID" -and ($_.ApiType -eq 'PIM')})
-                if($PIM_plugins){
-                    $discovered_plugins+=$PIM_plugins
-                }
             }
             elseif($useMsGraph -eq $false -and $O365Object.isConfidentialApp -eq $false){
                 #Load Old Graph collectors and Azure AD internal API collectors
@@ -131,11 +126,6 @@ Function Get-MonkeyCollector{
                 $ad_policy_plugin = @($available_collectors).Where({$_.Provider -eq "EntraID" -and ($_.ApiType -eq 'Graph' -and $_.collectorName -eq "Get-MonkeyADPolicy")})
                 if($ad_policy_plugin){
                     $discovered_plugins+=$ad_policy_plugin
-                }
-                #Add PIM collectors
-                $PIM_plugins = @($available_collectors).Where({$_.Provider -eq "EntraID" -and $_.ApiType -eq 'PIM'})
-                if($PIM_plugins){
-                    $discovered_plugins+=$PIM_plugins
                 }
             }
             else{

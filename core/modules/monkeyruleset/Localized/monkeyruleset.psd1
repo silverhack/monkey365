@@ -27,6 +27,7 @@
     BuildQueryErrorMessage           = Unable to build query for {0}
     ElementNotFound                  = Unable to find element {0} on object
     UpdatingComlianceMessage         = Updating compliance for {0} rule
+    UpdatingPropertyMessage          = Updating {0} for {1} rule
     FailedQueryMessage               = The "{0}" query failed to complete its execution on "{1}" rule
     UnitItemNotFound                 = Removing rules for "{0}" as it was not found on dataset
     FalsePositiveDetected            = Potentially false positive detected on "{0}"

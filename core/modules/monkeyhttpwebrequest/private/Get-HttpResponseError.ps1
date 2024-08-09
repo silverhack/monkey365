@@ -106,18 +106,8 @@ Function Get-HttpResponseError{
                     Write-Verbose @param
                 }
                 elseif($null -ne ($responseBody.psobject.properties.Item('error'))){
-                    try{
-                        $errorCode = $responseBody.error.code
-                    }
-                    catch{
-                        $errorCode = $null
-                    }
-                    try{
-                        $errorMessage = $responseBody.error.message
-                    }
-                    catch{
-                        $errorMessage = $null
-                    }
+                    $errorCode = $responseBody.error | Select-Object -ExpandProperty code -ErrorAction Ignore
+                    $errorMessage = $responseBody.error | Select-Object -ExpandProperty message -ErrorAction Ignore
                     if($null -ne $errorCode){
                         $param = @{
                             Message = $errorCode;
@@ -134,18 +124,8 @@ Function Get-HttpResponseError{
                     }
                 }
                 elseif($null -ne ($responseBody.psobject.properties.Item('message'))){
-                    try{
-                        $errorCode = $responseBody.code
-                    }
-                    catch{
-                        $errorCode = $null
-                    }
-                    try{
-                        $errorMessage = $responseBody.message
-                    }
-                    catch{
-                        $errorMessage = $null
-                    }
+                    $errorCode = $responseBody | Select-Object -ExpandProperty code -ErrorAction Ignore
+                    $errorMessage = $responseBody | Select-Object -ExpandProperty message -ErrorAction Ignore
                     if($null -ne $errorCode){
                         $param = @{
                             Message = $errorCode;

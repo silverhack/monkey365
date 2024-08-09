@@ -49,9 +49,6 @@ Function Get-MonkeyMSGraphGroupMember{
         [String]$APIVersion = "v1.0"
     )
     Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
         $Environment = $O365Object.Environment
         #Get Graph Auth
         $graphAuth = $O365Object.auth_tokens.MSGraph
@@ -97,10 +94,7 @@ Function Get-MonkeyMSGraphGroupMember{
             $group_members = Get-MonkeyMSGraphObject @params
             if($group_members){
                 foreach($member in $group_members){
-                    if($member.'@odata.type' -eq "#microsoft.graph.user"){
-                        $member
-                    }
-                    elseif($member.'@odata.type' -eq "#microsoft.graph.group"){
+                    If($member.'@odata.type' -eq "#microsoft.graph.group"){
                         if($member.id -notin $Parents){
                             $Parents +=$member.id
                             $p = @{
@@ -124,6 +118,9 @@ Function Get-MonkeyMSGraphGroupMember{
                             }
                             Write-Debug @msg
                         }
+                    }
+                    Else{
+                        $member
                     }
                 }
             }

@@ -72,34 +72,36 @@ Function Invoke-DLPValidation{
                 #Set var
                 $sits = $null
                 #Get Sits
-                $selected_sits = $element.Sits | Where-Object {$_.Geo -eq $O365Object.orgRegions -or $_.Geo -eq "INTL"} | Select-Object -ExpandProperty Name
+                $selected_sits = @($element.Sits).Where({$_.Geo -eq $O365Object.orgRegions -or $_.Geo -eq "INTL"}) | Select-Object -ExpandProperty Name -ErrorAction Ignore
                 #Get Sits from Dlp Object
                 $sitTypes = @()
                 foreach($sit in $all_rule_sits){
-                    $match = $element.Sits | Where-Object {$_.Name -eq $sit -and ($_.Geo -eq $O365Object.orgRegions -or $_.Geo -eq "INTL")}
-                    if($match){
+                    $match = @($element.Sits).Where({$_.Name -eq $sit -and ($_.Geo -eq $O365Object.orgRegions -or $_.Geo -eq "INTL")})
+                    if($match.Count -gt 0){
                         $sitTypes+=$match.Name
                     }
                 }
                 #Compare Object
-                $params = @{
-                    ReferenceObject = $selected_sits;
-                    DifferenceObject = $sitTypes;
-                    IncludeEqual= $false;
-                    ExcludeDifferent = $false;
+                if($null -ne $selected_sits){
+                    $p = @{
+                        ReferenceObject = $selected_sits;
+                        DifferenceObject = $sitTypes;
+                        IncludeEqual= $false;
+                        ExcludeDifferent = $false;
+                    }
+                    $results = Compare-Object @p
+                    if($null -ne $results){
+                        $sits = $results | Select-Object -ExpandProperty InputObject
+                    }
+                    #Create Dict
+                    $DLPObject = New-Object -TypeName PsObject -Property @{
+                        controlName = $element.Name;
+                        controlType = $element.Tag;
+                        Sits = $sits;
+                    }
+                    #Add to array
+                    [void]$dlp_analysis.Add($DLPObject)
                 }
-                $results = Compare-Object @params
-                if($null -ne $results){
-                    $sits = $results | Select-Object -ExpandProperty InputObject
-                }
-                #Create Dict
-                $DLPObject = New-Object -TypeName PsObject -Property @{
-                    controlName = $element.Name;
-                    controlType = $element.Tag;
-                    Sits = $sits;
-                }
-                #Add to array
-                [void]$dlp_analysis.Add($DLPObject)
             }
         }
     }
