@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyAADGroup {
+function Get-MonkeyCopilotForAzurePolicy {
 <#
         .SYNOPSIS
-		Collector to get information about groups from Microsoft Entra ID
+		Collector to get information about Copilot for Azure
 
         .DESCRIPTION
-		Collector to get information about groups from Microsoft Entra ID
+		Collector to get information about Copilot for Azure
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyAADGroup {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAADGroup
+            File Name	: Get-MonkeyCopilotForAzurePolicy
             Version     : 1.0
 
         .LINK
@@ -45,79 +45,66 @@ function Get-MonkeyAADGroup {
 	begin {
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "aad0007";
-			Provider = "EntraID";
-			Resource = "EntraID";
+			Id = "az00043";
+			Provider = "Azure";
+			Resource = "Copilot";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyAADGroup";
-			ApiType = "MSGraph";
-			description = "Collector to get information about groups from Microsoft Entra ID";
+			collectorName = "Get-MonkeyCopilotForAzurePolicy";
+			ApiType = "resourceManagement";
+			description = "Collector to get information about Copilot for Azure";
 			Group = @(
-				"EntraID"
+				"Subscription";
+				"General"
 			);
 			Tags = @{
 				"enabled" = $true
 			};
 			Docs = "https://silverhack.github.io/monkey365/";
 			ruleSuffixes = @(
-				"aad_groups"
+				"az_copilot_for_azure"
 			);
 			dependsOn = @(
 
 			);
 		}
-		#Get Config
-		try {
-			$aadConf = $O365Object.internal_config.entraId.Provider.msgraph
-		}
-		catch {
-			$msg = @{
-				MessageData = ($message.MonkeyInternalConfigError);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'verbose';
-				InformationAction = $O365Object.InformationAction;
-				Tags = @('Monkey365ConfigError');
-			}
-			Write-Verbose @msg
-			break
-		}
-		$groups = $null
 	}
 	process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID Groups Information",$O365Object.TenantID);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Copilot for Azure",$O365Object.current_subscription.displayName);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
 			InformationAction = $O365Object.InformationAction;
-			Tags = @('EntraIDGroupInfo');
+			Tags = @('AzureSubscriptionCopilotInfo');
 		}
 		Write-Information @msg
+		#Get Copilot For Azure
 		$p = @{
-			APIVersion = $aadConf.api_version;
-			InformationAction = $O365Object.InformationAction;
-			Verbose = $O365Object.Verbose;
-			Debug = $O365Object.Debug;
+			Id = 'providers/Microsoft.PortalServices/copilotSettings/default';
+            ApiVersion = '2024-04-01-preview';
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+            InformationAction = $O365Object.InformationAction;
 		}
-		$groups = Get-MonkeyMSGraphGroup @p
+		$copilotInfo = Get-MonkeyAzObjectById @p
 	}
 	end {
-		if ($null -ne $groups) {
-			$groups.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.GroupInfo')
+		if ($copilotInfo) {
+			$copilotInfo.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Copilot')
 			[pscustomobject]$obj = @{
-				Data = $groups;
+				Data = $copilotInfo;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.aad_groups = $obj;
+			$returnData.az_copilot_for_azure = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID Groups Info",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Copilot for Azure",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
+				Tags = @('AzureSubscriptionCopilotEmptyResponse');
 				Verbose = $O365Object.Verbose;
-				Tags = @('EntraIDGroupEmptyResponse')
 			}
 			Write-Verbose @msg
 		}

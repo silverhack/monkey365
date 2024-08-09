@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyAADGroup {
+function Get-MonkeyAADIdentityProtectionNotification {
 <#
         .SYNOPSIS
-		Collector to get information about groups from Microsoft Entra ID
+		Collector to get notification settings for Entra ID Identity Protection
 
         .DESCRIPTION
-		Collector to get information about groups from Microsoft Entra ID
+		Collector to get notification settings for Entra ID Identity Protection
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyAADGroup {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAADGroup
+            File Name	: Get-MonkeyAADIdentityProtectionNotification
             Version     : 1.0
 
         .LINK
@@ -42,17 +42,17 @@ function Get-MonkeyAADGroup {
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
 		[string]$collectorId
 	)
-	begin {
+	Begin {
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "aad0007";
+			Id = "aad0045";
 			Provider = "EntraID";
 			Resource = "EntraID";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyAADGroup";
+			collectorName = "Get-MonkeyAADIdentityProtectionNotification";
 			ApiType = "MSGraph";
-			description = "Collector to get information about groups from Microsoft Entra ID";
+			description = "Collector to get notification settings for Entra ID Identity Protection";
 			Group = @(
 				"EntraID"
 			);
@@ -61,63 +61,48 @@ function Get-MonkeyAADGroup {
 			};
 			Docs = "https://silverhack.github.io/monkey365/";
 			ruleSuffixes = @(
-				"aad_groups"
+				"aad_identityprotection_notifications"
 			);
 			dependsOn = @(
 
 			);
 		}
-		#Get Config
-		try {
-			$aadConf = $O365Object.internal_config.entraId.Provider.msgraph
-		}
-		catch {
-			$msg = @{
-				MessageData = ($message.MonkeyInternalConfigError);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'verbose';
-				InformationAction = $O365Object.InformationAction;
-				Tags = @('Monkey365ConfigError');
-			}
-			Write-Verbose @msg
-			break
-		}
-		$groups = $null
+		$notifications = $null
 	}
-	process {
+	Process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID Groups Information",$O365Object.TenantID);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID Identity Protection Notifications",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
 			InformationAction = $O365Object.InformationAction;
-			Tags = @('EntraIDGroupInfo');
+			Tags = @('EntraIDIdentityProtectionNotificationInfo');
 		}
 		Write-Information @msg
 		$p = @{
-			APIVersion = $aadConf.api_version;
+			APIVersion = 'beta';
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;
 		}
-		$groups = Get-MonkeyMSGraphGroup @p
+		$notifications = Get-MonkeyMSGraphIdentityProtectionNotification @p
 	}
-	end {
-		if ($null -ne $groups) {
-			$groups.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.GroupInfo')
+	End {
+		if ($null -ne $notifications) {
+			$notifications.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.IdentityProtection.Notifications')
 			[pscustomobject]$obj = @{
-				Data = $groups;
+				Data = $notifications;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.aad_groups = $obj;
+			$returnData.aad_identityprotection_notifications = $obj;
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID Groups Info",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID Identity Protection Notifications",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
-				Tags = @('EntraIDGroupEmptyResponse')
+				Tags = @('EntraIDIdentityProtectionNotificationEmptyResponse')
 			}
 			Write-Verbose @msg
 		}

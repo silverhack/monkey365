@@ -106,6 +106,15 @@ function Get-MonkeyADDirectoryProperty {
 		#Get Azure B2B directory policy
 		$params.Query = "B2B/b2bPolicy"
 		$azure_ad_b2b_directory_policies = Get-MonkeyAzurePortalObject @params
+        #Mock b2b directory policy if not exists
+        if($null -eq $azure_ad_b2b_directory_policies){
+            $azure_ad_b2b_directory_policies = [PsCustomObject]@{
+                targetedDomains = @();
+		        hasListEntries = $false;
+                adminConsentedForUsersIntoTenantIds = @();
+                noAADConsentForUsersFromTenantsIds = @();
+            }
+        }
 	}
 	end {
 		#Return directory properties

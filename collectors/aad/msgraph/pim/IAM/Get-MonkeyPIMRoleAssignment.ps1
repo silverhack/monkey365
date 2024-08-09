@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyAADGroup {
+function Get-MonkeyPIMRoleAssignment {
 <#
         .SYNOPSIS
-		Collector to get information about groups from Microsoft Entra ID
+		Collector to get information about role assignment from PIM
 
         .DESCRIPTION
-		Collector to get information about groups from Microsoft Entra ID
+		Collector to get information about role assignment from PIM
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyAADGroup {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAADGroup
+            File Name	: Get-MonkeyPIMRoleAssignment
             Version     : 1.0
 
         .LINK
@@ -45,14 +45,14 @@ function Get-MonkeyAADGroup {
 	begin {
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "aad0007";
+			Id = "aad0090";
 			Provider = "EntraID";
 			Resource = "EntraID";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyAADGroup";
+			collectorName = "Get-MonkeyPIMRoleAssignment";
 			ApiType = "MSGraph";
-			description = "Collector to get information about groups from Microsoft Entra ID";
+			description = "Collector to get information about role assignment from PIM";
 			Group = @(
 				"EntraID"
 			);
@@ -61,63 +61,48 @@ function Get-MonkeyAADGroup {
 			};
 			Docs = "https://silverhack.github.io/monkey365/";
 			ruleSuffixes = @(
-				"aad_groups"
+				"aad_pim_roleAssignment"
 			);
 			dependsOn = @(
 
 			);
 		}
-		#Get Config
-		try {
-			$aadConf = $O365Object.internal_config.entraId.Provider.msgraph
-		}
-		catch {
-			$msg = @{
-				MessageData = ($message.MonkeyInternalConfigError);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'verbose';
-				InformationAction = $O365Object.InformationAction;
-				Tags = @('Monkey365ConfigError');
-			}
-			Write-Verbose @msg
-			break
-		}
-		$groups = $null
+		#Set nulls
+		$role_assignment = $null
 	}
 	process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID Groups Information",$O365Object.TenantID);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID Privileged Identity Management",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
 			InformationAction = $O365Object.InformationAction;
-			Tags = @('EntraIDGroupInfo');
+			Tags = @('EntraIDPIMInfo');
 		}
 		Write-Information @msg
-		$p = @{
-			APIVersion = $aadConf.api_version;
-			InformationAction = $O365Object.InformationAction;
-			Verbose = $O365Object.Verbose;
-			Debug = $O365Object.Debug;
-		}
-		$groups = Get-MonkeyMSGraphGroup @p
+        $p = @{
+	        InformationAction = $O365Object.InformationAction;
+	        Verbose = $O365Object.Verbose;
+	        Debug = $O365Object.Debug;
+        }
+        $role_assignment = Get-MonkeyMSGraphPIMRoleAssignment @p
 	}
 	end {
-		if ($null -ne $groups) {
-			$groups.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.GroupInfo')
+		if ($null -ne $role_assignment) {
+			$role_assignment.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.PIM.RoleAssignment')
 			[pscustomobject]$obj = @{
-				Data = $groups;
+				Data = $role_assignment;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.aad_groups = $obj;
+			$returnData.aad_pim_roleAssignment = $obj;
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID Groups Info",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID Privileged Identity Management",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
-				Tags = @('EntraIDGroupEmptyResponse')
+				Tags = @('EntraIDPIMRoleAssignmentEmptyResponse')
 			}
 			Write-Verbose @msg
 		}

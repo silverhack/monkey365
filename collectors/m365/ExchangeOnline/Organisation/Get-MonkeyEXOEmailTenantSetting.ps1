@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyPIMRoleAssignment {
+function Get-MonkeyEXOEmailTenantSetting {
 <#
         .SYNOPSIS
-		Collector to get information about role assignment from PIM
+		Collector to get information about email tenant settings in Exchange Online
 
         .DESCRIPTION
-		Collector to get information about role assignment from PIM
+		Collector to get information about email tenant settings in Exchange Online
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyPIMRoleAssignment {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyPIMRoleAssignment
+            File Name	: Get-MonkeyEXOEmailTenantSetting
             Version     : 1.0
 
         .LINK
@@ -43,66 +43,74 @@ function Get-MonkeyPIMRoleAssignment {
 		[string]$collectorId
 	)
 	begin {
+		$exo_policy_config = $null;
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "aad0090";
-			Provider = "EntraID";
-			Resource = "EntraID";
+			Id = "exo0032";
+			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyPIMRoleAssignment";
-			ApiType = "PIM";
-			description = "Collector to get information about role assignment from PIM";
+			collectorName = "Get-MonkeyEXOEmailTenantSetting";
+			ApiType = "ExoApi";
+			description = "Collector to get information about email tenant settings in Exchange Online";
 			Group = @(
-				"EntraID"
+				"ExchangeOnline"
 			);
 			Tags = @{
 				"enabled" = $true
 			};
 			Docs = "https://silverhack.github.io/monkey365/";
 			ruleSuffixes = @(
-				"aad_pim_roleAssignment"
+				"o365_exo_email_tenant_settings"
 			);
 			dependsOn = @(
 
 			);
 		}
-		#Set nulls
-		$role_assignment = $null
+		#Get instance
+		$Environment = $O365Object.Environment
+		#Get Exchange Online Auth token
+		$ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID Privileged Identity Management",$O365Object.TenantID);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Exchange Online email tenant settings",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
 			InformationAction = $O365Object.InformationAction;
-			Tags = @('EntraIDPIMInfo');
+			Tags = @('ExoEmailTenantInfo');
 		}
 		Write-Information @msg
-        $p = @{
-	        InformationAction = $O365Object.InformationAction;
-	        Verbose = $O365Object.Verbose;
-	        Debug = $O365Object.Debug;
-        }
-        $role_assignment = Invoke-MonkeyPrivilegedIdentityInfo @p
+		$p = @{
+			Authentication = $ExoAuth;
+			Environment = $Environment;
+			ResponseFormat = 'clixml';
+			Command = 'Get-EmailTenantSettings';
+			Method = "POST";
+			InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
+		}
+		$exo_email_tenant_info = Get-PSExoAdminApiObject @p
 	}
 	end {
-		if ($null -ne $role_assignment) {
-			$role_assignment.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.PIM.RoleAssignment')
+		if ($null -ne $exo_email_tenant_info) {
+			$exo_email_tenant_info.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.EmailTenantSettings')
 			[pscustomobject]$obj = @{
-				Data = $role_assignment;
+				Data = $exo_email_tenant_info;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.aad_pim_roleAssignment = $obj;
+			$returnData.o365_exo_email_tenant_settings = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID Privileged Identity Management",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online email tenant settings",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
+				Tags = @('ExoEmailTenantEmptyResponse');
 				Verbose = $O365Object.Verbose;
-				Tags = @('EntraIDPIMRoleAssignmentEmptyResponse')
 			}
 			Write-Verbose @msg
 		}

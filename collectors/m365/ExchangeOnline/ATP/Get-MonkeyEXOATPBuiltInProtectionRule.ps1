@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyAADGroup {
+function Get-MonkeyEXOATPBuiltInProtectionRule {
 <#
         .SYNOPSIS
-		Collector to get information about groups from Microsoft Entra ID
+		Collector to get information about the rule for the Built-in protection preset security policy in Exchange Online
 
         .DESCRIPTION
-		Collector to get information about groups from Microsoft Entra ID
+		Collector to get information about the rule for the Built-in protection preset security policy in Exchange Online
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyAADGroup {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAADGroup
+            File Name	: Get-MonkeyEXOATPBuiltInProtectionRule
             Version     : 1.0
 
         .LINK
@@ -43,90 +43,76 @@ function Get-MonkeyAADGroup {
 		[string]$collectorId
 	)
 	begin {
+		$exo_policy_config = $null;
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "aad0007";
-			Provider = "EntraID";
-			Resource = "EntraID";
+			Id = "exo0033";
+			Provider = "Microsoft365";
+			Resource = "ExchangeOnline";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyAADGroup";
-			ApiType = "MSGraph";
-			description = "Collector to get information about groups from Microsoft Entra ID";
+			collectorName = "Get-MonkeyEXOATPBuiltInProtectionRule";
+			ApiType = "ExoApi";
+			description = "Collector to get information about the rule for the Built-in protection preset security policy in Exchange Online";
 			Group = @(
-				"EntraID"
+				"ExchangeOnline"
 			);
 			Tags = @{
 				"enabled" = $true
 			};
 			Docs = "https://silverhack.github.io/monkey365/";
 			ruleSuffixes = @(
-				"aad_groups"
+				"o365_exo_atp_builtin_protection_rule"
 			);
 			dependsOn = @(
 
 			);
 		}
-		#Get Config
-		try {
-			$aadConf = $O365Object.internal_config.entraId.Provider.msgraph
-		}
-		catch {
-			$msg = @{
-				MessageData = ($message.MonkeyInternalConfigError);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'verbose';
-				InformationAction = $O365Object.InformationAction;
-				Tags = @('Monkey365ConfigError');
-			}
-			Write-Verbose @msg
-			break
-		}
-		$groups = $null
+		#Get instance
+		$Environment = $O365Object.Environment
+		#Get Exchange Online Auth token
+		$ExoAuth = $O365Object.auth_tokens.ExchangeOnline
 	}
 	process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID Groups Information",$O365Object.TenantID);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Exchange Online Built-in protection preset security policy",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
 			InformationAction = $O365Object.InformationAction;
-			Tags = @('EntraIDGroupInfo');
+			Tags = @('ExoBuiltinProtectionInfo');
 		}
 		Write-Information @msg
 		$p = @{
-			APIVersion = $aadConf.api_version;
+			Authentication = $ExoAuth;
+			Environment = $Environment;
+			ResponseFormat = 'clixml';
+			Command = 'Get-ATPBuiltInProtectionRule';
+			Method = "POST";
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;
 		}
-		$groups = Get-MonkeyMSGraphGroup @p
+		$exo_builtin_protection_policy = Get-PSExoAdminApiObject @p
 	}
-	end {
-		if ($null -ne $groups) {
-			$groups.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.GroupInfo')
+	End {
+		if ($null -ne $exo_builtin_protection_policy) {
+			$exo_builtin_protection_policy.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.BuiltIn.Protection.Rule')
 			[pscustomobject]$obj = @{
-				Data = $groups;
+				Data = $exo_builtin_protection_policy;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.aad_groups = $obj;
+			$returnData.o365_exo_atp_builtin_protection_rule = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID Groups Info",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online Built-in protection preset security policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
+				Tags = @('ExoBuiltinProtectionEmptyResponse');
 				Verbose = $O365Object.Verbose;
-				Tags = @('EntraIDGroupEmptyResponse')
 			}
 			Write-Verbose @msg
 		}
 	}
 }
-
-
-
-
-
-
-

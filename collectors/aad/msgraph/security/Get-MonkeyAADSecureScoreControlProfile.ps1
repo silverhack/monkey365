@@ -61,7 +61,7 @@ function Get-MonkeyAADSecureScoreControlProfile {
 			};
 			Docs = "https://silverhack.github.io/monkey365/";
 			ruleSuffixes = @(
-				"aad_conditional_access_policy"
+				"aad_secureScore_controlProfile"
 			);
 			dependsOn = @(
 
@@ -101,14 +101,14 @@ function Get-MonkeyAADSecureScoreControlProfile {
 		}
 		$ss_control_profile = Get-MonkeyMSGraphSecureScoreControlProfile @p
 	}
-	end {
+	End {
 		if ($null -ne $ss_control_profile) {
 			$ss_control_profile.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.SecureScoreControlProfile')
 			[pscustomobject]$obj = @{
 				Data = $ss_control_profile;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.aad_conditional_access_policy = $obj;
+			$returnData.aad_secureScore_controlProfile = $obj;
 		}
 		else {
 			$msg = @{
