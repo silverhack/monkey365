@@ -1,0 +1,558 @@
+{
+    "about": "This ruleset contains a collection of rules for Microsoft Entra ID based on CISA benchmark. These rules perform static analysis on Microsoft Entra ID artifacts and are used as a mechanism to evaluate the configuration and provides specific policies to help secure Entra ID. Rules are also divided into categories and subcategories according to the rule's type. These rules are designed to determine whether controls within a standard are being adhered to. This will ensures that Microsoft Entra ID will meet the industry standards.",
+    "framework": {
+		"name" : "CISA Microsoft Entra ID",
+		"version" : "1.0.0"
+	},
+	"rules": {
+		"aad-cap-block-basic-authentication-not-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.1.1v1"
+                    }
+                ]
+            }
+        ],
+		"aad-cap-block-high-risk-users-not-enabled.json.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.2.1v1"
+                    }
+                ]
+            }
+        ],
+		"high-risk-users-notifications-not-set-to-admins.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.2.2v1"
+                    }
+                ]
+            }
+        ],
+        "aad-cap-block-sign-in-risk-not-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.2.3v1"
+                    }
+                ]
+            }
+        ],
+        "aad-ensure-phishing-resistant-mfa-for-all-users-missing-cap.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.3.1v1"
+                    }
+                ]
+            }
+        ],
+		"aad-ensure-mfa-for-users-missing-cap.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.3.2v1"
+                    }
+                ]
+			}
+		],
+        "microsoft-authenticator-lack-mfa-fatigue-protection-and-otp-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.3.3v1"
+                    }
+                ]
+            }
+        ],
+		"legacy-authentication-methods-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.3.5v1"
+                    }
+                ]
+            }
+        ],
+		"aad-ensure-phishing-resistant-mfa-for-high-privileged-users-missing-cap.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.3.6v1"
+                    }
+                ]
+            }
+        ],
+		"aad-require-device-compliant-all-apps-missing-cap.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.3.7v1"
+                    }
+                ]
+            }
+        ],
+        "aad-require-device-compliant-to-register-security-info-missing-cap.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.3.8v1"
+                    }
+                ]
+            }
+        ],
+        "azure-activedirectory-users-can-register-apps-enabled.json": [
+            {
+                "enabled": true,
+                "level": "low",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.5.1v1"
+                    }
+                ]
+            }
+        ],
+        "azure-activedirectory-users-can-consent-apps-data-access.json.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.5.2v1"
+                    }
+                ]
+            }
+        ],
+		"aad-password-expiring-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.6.1v1"
+                    }
+                ]
+            }
+        ],
+		"aad-iam-excessive-global-admins.json": [
+			{
+				"args": [
+                    "8"
+                ],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.7.1v1"
+                    }
+                ]
+			}
+		],
+        "aad-iam-only-one-global-admin.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.7.1v1"
+                    }
+                ]
+            }
+        ],
+        "entra-id-missing-cloud-only-administrative-account.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.7.3v1"
+                    }
+                ]
+            }
+        ],
+        "entra-id-pim-permanent-assignments.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CISA Microsoft Entra ID",
+                        "version": "1.0.0",
+                        "reference": "MS.AAD.7.4v1"
+                    }
+                ]
+            }
+        ],
+        "azure-activedirectory-users-can-register-apps-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "2.1"
+                    }
+                ]
+            }
+        ],
+        "exchange-calendar-sharing-external-user-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "2.3"
+                    }
+                ]
+            }
+        ],
+        "exchange-atp-safe-links-office-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "2.4"
+                    }
+                ]
+            }
+        ],
+		"exchange-atp-safe-links-office365-apps-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "2.5"
+                    }
+                ]
+            }
+        ],
+        "sharepoint-online-infected-files-download-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "2.6"
+                    }
+                ]
+            }
+        ],
+		"forms-internal-phishing-protection-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "2.10"
+                    }
+                ]
+            }
+        ],
+		"sway-external-sharing-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "2.11"
+                    }
+                ]
+            }
+        ],
+		"exchange-customer-lockout-feature-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "3.1"
+                    }
+                ]
+            }
+        ],
+		"teams-external-domain-allowed.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "3.3"
+                    }
+                ]
+            }
+        ],
+		"exchange-dlp-policies-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "3.4"
+                    }
+                ]
+            }
+        ],
+		"exchange-dlp-policies-Teams-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "3.5"
+                    }
+                ]
+            }
+        ],
+		"sharepoint-external-user-sharing-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "3.6"
+                    }
+                ]
+            }
+        ],
+		"teams-external-file-sharing-approved-storage.json": [
+            {
+                "enabled": true,
+                "level": "info",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "3.7"
+                    }
+                ]
+            }
+        ],
+		"exchange-common-attachment-type-filter-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "4.1"
+                    }
+                ]
+            }
+        ],
+		"exchange-transport-rules-domain-whitelisted.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "4.4"
+                    }
+                ]
+            }
+        ],
+		"exchange-atp-safe-attachments-policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "4.5"
+                    }
+                ]
+            }
+        ],
+		"exchange-anti-phishing-policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "4.6"
+                    }
+                ]
+            }
+        ],
+		"exchange-anti-malware-admin-notification-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "4.10"
+                    }
+                ]
+            }
+        ],
+		"exchange-mailtips-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "4.11"
+                    }
+                ]
+            }
+        ],
+		"exchange-audit-log-search-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "5.2"
+                    }
+                ]
+            }
+        ],
+		"sharepoint-document-sharing-enable-all.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "6.1"
+                    }
+                ]
+            }
+        ],
+		"onedrive-sync-from-unmanaged-domains-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "6.2"
+                    }
+                ]
+            }
+        ],
+		"sharepoint-sharing-links-missing-expiration.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "6.3"
+                    }
+                ]
+            }
+        ],
+		"exchange-owa-external-storage-allowed.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "CIS Microsoft 365 Foundations",
+                        "version": "2.0.0",
+                        "reference": "6.5"
+                    }
+                ]
+            }
+        ]
+    }
+}

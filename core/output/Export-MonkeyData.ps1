@@ -134,10 +134,6 @@ Function Export-MonkeyData{
                 }
             }
         }
-        'EXCEL'
-        {
-            Invoke-DumpExcel -ObjectData $MonkeyExportObject.Output
-        }
         "HTML"
         {
             $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())

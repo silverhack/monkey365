@@ -34,7 +34,7 @@ Function Get-Framework{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Current')]
     Param (
         [parameter(Mandatory= $true, ParameterSetName='RuleSet', HelpMessage= "json file with all rules")]
         [ValidateScript({
@@ -61,10 +61,7 @@ Function Get-Framework{
             }
             return $true
         })]
-        [System.IO.DirectoryInfo]$RulesPath,
-
-        [Parameter(Mandatory=$true, ParameterSetName='Current', HelpMessage="Current framework")]
-        [Switch]$Current
+        [System.IO.DirectoryInfo]$RulesPath
     )
     try{
         #Set colors

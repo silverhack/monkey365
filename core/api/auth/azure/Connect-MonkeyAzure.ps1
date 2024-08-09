@@ -47,12 +47,12 @@ Function Connect-MonkeyAzure{
             MSGraph =$O365Object.Environment.Graphv2;
             LogAnalytics = $O365Object.Environment.LogAnalytics;
         }
-        #Get new app params
-        if($null -ne $O365Object.msal_application_args){
-            $app_params = $O365Object.msal_application_args;
-        }
-        else{
-            $app_params = $null;
+        $app_params = @{
+            Resource = $null;
+            AzureService = "AzurePowershell";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
         }
     }
     Process{
@@ -78,9 +78,9 @@ Function Connect-MonkeyAzure{
                     $new_params.add($param.Key, $param.Value)
                 }
                 #Add resource parameter
-                $new_params.Add('Resource',$service.Value)
+                $new_params.Resource = $service.Value
                 try{
-                    $O365Object.auth_tokens.$($azure_service) = Get-MSALTokenForResource @new_params
+                    $O365Object.auth_tokens.$($azure_service) = Connect-MonkeyGenericApplication @new_params
                     $msg = @{
                         MessageData = ($message.TokenAcquiredInfoMessage -f $service.Name)
                         callStack = (Get-PSCallStack | Select-Object -First 1);

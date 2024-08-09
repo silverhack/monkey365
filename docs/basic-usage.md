@@ -42,7 +42,7 @@ $param = @{
 $assets = Invoke-Monkey365 @param
 ```
 
-This example retrieves information from specific Azure subscription and Tenant and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey-reports folder. The script will connect to Azure using the client credential flow.
+This example retrieves information from specific Azure subscription and Tenant and will export data driven to CSV, JSON, HTML, and XML format into monkey-reports folder. The script will connect to Azure using the client credential flow.
 ``` powershell
 $param = @{
     ClientId = '00000000-0000-0000-0000-000000000000';
@@ -51,12 +51,12 @@ $param = @{
     Analysis = 'All';
     Subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
-    ExportTo = @("CLIXML","EXCEL","CSV","JSON","HTML");
+    ExportTo = @("CLIXML","CSV","JSON","HTML");
 }
 $assets = Invoke-Monkey365 @param
 ```
 
-This example retrieves information from specific Azure subscription and Tenant and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey-reports folder. The script will connect to Azure using the client credential flow.
+This example retrieves information from specific Azure subscription and Tenant and will export data driven to CSV, JSON, HTML, and XML format into monkey-reports folder. The script will connect to Azure using the client credential flow.
 ``` powershell
 $param = @{
     ClientId = '00000000-0000-0000-0000-000000000000';
@@ -66,7 +66,7 @@ $param = @{
     Analysis = 'SharePointOnline';
     Subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
-    ExportTo = @("CLIXML","EXCEL","CSV","JSON","HTML");
+    ExportTo = @("CLIXML","CSV","JSON","HTML");
 }
 $assets = Invoke-Monkey365 @param
 ```

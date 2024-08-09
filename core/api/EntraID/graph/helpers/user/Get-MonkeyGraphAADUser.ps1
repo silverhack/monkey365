@@ -237,12 +237,18 @@ Function Get-MonkeyGraphAADUser {
                 $User | Add-Member -type NoteProperty -name mfaenabled -value $mfaenabled -Force
                 $User | Add-Member -type NoteProperty -name mfaStatus -value $mfaStatus -Force
                 $User | Add-Member -type NoteProperty -name mfaMethods -value ($methods -join ",") -Force
+                #Add id property
+                $User | Add-Member -type NoteProperty -name id -value $User.objectId -Force
                 #return User
                 $User
             }
         }
         else{
-            $allUsers
+            @($allUsers).ForEach({
+                #Add id property
+                $_ | Add-Member -type NoteProperty -name id -value $_.objectId -Force                
+                $_
+            })
         }
     }
     End{

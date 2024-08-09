@@ -132,7 +132,7 @@ SharepointSubSitesMessage        = Getting subsites for {0}
 SPSObjectErrorMessage            = Unable to get object type
 UnableToSitePropertiesForUser    = Unable to get site properties using {0} account
 GetSitesUsingSharePointSearchApi = Getting sites using SharePoint search api
-UnableToGetSubsites              = Unable to get sub-sites for {0}
+UnableToGetSubsites              = Unable to get sub sites for {0}
 UnableToProcessQuery             = Unable to process query on {0}
 SPSDetailedErrorMessage          = {0}
 SPSAdminErrorMessage             = User {0} does not have permission to access SharePoint Online
@@ -182,4 +182,5 @@ MSGraphDirectoryObjectError      = Unable to get directory objects
 NotConnectedTo                   = Not connected to {0}
 SPNotAllowedAuthFlowErrorMessage = Service principal authentication flow is not supported for {0}
 CompressingJob                   = Compressing Monkey data into {0}
+TokenAcquiredGenericMessage      = A new token was successfully acquired
 '@;

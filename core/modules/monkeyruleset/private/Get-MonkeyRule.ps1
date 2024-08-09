@@ -54,10 +54,20 @@ Function Get-MonkeyRule{
             if($ValidRule){
                 foreach ($element in $Rule.Value){
                     $raw_rule = (Get-Content $Rule.File.FullName -Raw)
+                    #Check for args
                     $found_args = $element | Select-Object -ExpandProperty args -ErrorAction Ignore
+                    #Check for level
                     $level = $element | Select-Object -ExpandProperty level -ErrorAction Ignore
+                    #Check if rule enabled
                     $is_rule_enabled = $element | Select-Object -ExpandProperty enabled -ErrorAction Ignore
+                    #Check for displayName
+                    $displayName = $element | Select-Object -ExpandProperty displayName -ErrorAction Ignore
+                    #Check for compliance
                     $compliance = $element | Select-Object -ExpandProperty compliance -ErrorAction Ignore
+                    #Check for description
+                    $description = $element | Select-Object -ExpandProperty description -ErrorAction Ignore
+                    #Check for rationale
+                    $rationale = $element | Select-Object -ExpandProperty rationale -ErrorAction Ignore
                     if($null -ne $is_rule_enabled -and $is_rule_enabled){
                         if($null -ne $found_args){
                             $count = 0;
@@ -88,10 +98,25 @@ Function Get-MonkeyRule{
                         else{
                             #nothing to do here
                         }
-                        #Updating Compliance
+                        #Update displayName
+                        if($null -ne $displayName){
+                            Write-Verbose -Message ($Script:messages.UpdatingPropertyMessage -f "displayName", $Rule.File.Name)
+                            $new_json_rule | Add-Member -Type NoteProperty -name displayName -value $displayName -Force
+                        }
+                        #Update Compliance
                         if($null -ne $compliance){
                             Write-Verbose -Message ($Script:messages.UpdatingComlianceMessage -f $Rule.File.Name)
                             $new_json_rule | Add-Member -Type NoteProperty -name compliance -value $compliance -Force
+                        }
+                        #Update description
+                        if($null -ne $description){
+                            Write-Verbose -Message ($Script:messages.UpdatingPropertyMessage -f "description", $Rule.File.Name)
+                            $new_json_rule | Add-Member -Type NoteProperty -name description -value $description -Force
+                        }
+                        #Update rationale
+                        if($null -ne $rationale){
+                            Write-Verbose -Message ($Script:messages.UpdatingPropertyMessage -f "rationale", $Rule.File.Name)
+                            $new_json_rule | Add-Member -Type NoteProperty -name rationale -value $rationale -Force
                         }
                         #Add file
                         $new_json_rule | Add-Member -Type NoteProperty -name File -value $Rule.File -Force

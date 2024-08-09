@@ -84,7 +84,7 @@ function Get-MonkeySeCompRoleManagement {
 				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security & Compliance role management",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $InformationAction;
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompRoleManagementInfo');
 			}
 			Write-Information @msg
@@ -193,7 +193,7 @@ function Get-MonkeySeCompRoleManagement {
 		}
 		elseif ($getExoGroups -eq $false) {
 			$msg = @{
-				MessageData = ("EXO groups for PurView disabled in configuration file for {0}",$O365Object.TenantID);
+				MessageData = ("EXO groups for PurView disabled in configuration file for {0}" -f $O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
@@ -204,7 +204,7 @@ function Get-MonkeySeCompRoleManagement {
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security \\u0026 Compliance role management",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security & Compliance role management",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;

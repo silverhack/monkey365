@@ -36,8 +36,14 @@ Function Get-MonkeyMSGraphcrossTenantAccessPolicy {
             https://github.com/silverhack/monkey365
     #>
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "", Scope="Function")]
-	[CmdletBinding()]
+	[CmdletBinding(DefaultParameterSetName = 'Basic')]
 	Param (
+        [parameter(Mandatory=$false, ParameterSetName = 'Default', HelpMessage="API version")]
+        [Switch]$Default,
+
+        [parameter(Mandatory=$false, ParameterSetName = 'Partner', HelpMessage="API version")]
+        [Switch]$Partner,
+
         [parameter(Mandatory=$false, HelpMessage="API version")]
         [ValidateSet("v1.0","beta")]
         [String]$APIVersion = "v1.0"
@@ -49,36 +55,66 @@ Function Get-MonkeyMSGraphcrossTenantAccessPolicy {
     }
     Process{
         try{
-            $p = @{
-                Authentication = $graphAuth;
-                ObjectType = 'policies/crossTenantAccessPolicy/partners';
-                Environment = $Environment;
-                ContentType = 'application/json';
-                Method = "GET";
-                APIVersion = "beta";
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-            }
-            $partners = Get-MonkeyMSGraphObject @p
-            if($null -ne $partners){
-                foreach($partner in @($partners)){
-                    $p = @{
-                        TenantId = $partner.TenantId;
-                        InformationAction = $O365Object.InformationAction;
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
-                    }
-                    $tenantInfo = Find-MonkeyMSGraphTenantInformationByTenantId @p
-                    if($null -ne $tenantInfo){
-                        $partner | Add-Member -type NoteProperty -name federationBrandName -value $tenantInfo.federationBrandName -Force
-                        $partner | Add-Member -type NoteProperty -name displayName -value $tenantInfo.displayName -Force
-                        $partner | Add-Member -type NoteProperty -name defaultDomainName -value $tenantInfo.defaultDomainName -Force
-                    }
-                    Start-Sleep -Milliseconds 200
+            if($PSCmdlet.ParameterSetName -eq 'Partner'){
+                $p = @{
+                    Authentication = $graphAuth;
+                    ObjectType = 'policies/crossTenantAccessPolicy/partners';
+                    Environment = $Environment;
+                    ContentType = 'application/json';
+                    Method = "GET";
+                    APIVersion = "beta";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
                 }
-                #return partners
-                return $partners
+                $partners = Get-MonkeyMSGraphObject @p
+                if($null -ne $partners){
+                    foreach($partner in @($partners)){
+                        $p = @{
+                            TenantId = $partner.TenantId;
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                        }
+                        $tenantInfo = Find-MonkeyMSGraphTenantInformationByTenantId @p
+                        if($null -ne $tenantInfo){
+                            $partner | Add-Member -type NoteProperty -name federationBrandName -value $tenantInfo.federationBrandName -Force
+                            $partner | Add-Member -type NoteProperty -name displayName -value $tenantInfo.displayName -Force
+                            $partner | Add-Member -type NoteProperty -name defaultDomainName -value $tenantInfo.defaultDomainName -Force
+                        }
+                        Start-Sleep -Milliseconds 200
+                    }
+                    #return partners
+                    return $partners
+                }
+            }
+            ElseIf($PSCmdlet.ParameterSetName -eq 'Default'){
+                $p = @{
+                    Authentication = $graphAuth;
+                    ObjectType = 'policies/crossTenantAccessPolicy/default';
+                    Environment = $Environment;
+                    ContentType = 'application/json';
+                    Method = "GET";
+                    APIVersion = "beta";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                Get-MonkeyMSGraphObject @p
+            }
+            Else{
+                $p = @{
+                    Authentication = $graphAuth;
+                    ObjectType = 'policies/crossTenantAccessPolicy';
+                    Environment = $Environment;
+                    ContentType = 'application/json';
+                    Method = "GET";
+                    APIVersion = "beta";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                Get-MonkeyMSGraphObject @p
             }
         }
         catch{

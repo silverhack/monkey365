@@ -83,6 +83,8 @@ function Get-MonkeyAADExternalCollaboration {
 			break
 		}
 		$externalCollaboration = $ctAccessPolicy = $null
+        #Set PsObject
+        $crossTenantAccessPolicyObj = New-MonkeyEntraCrossTenantAccessPolicyObject
 	}
 	process {
 		$msg = @{
@@ -101,27 +103,45 @@ function Get-MonkeyAADExternalCollaboration {
 			Debug = $O365Object.Debug;
 		}
 		$externalCollaboration = Get-MonkeyMSGraphExternalCollaborationSetting @p
+        #Get default cross-tenant access policy
+        $p = @{
+			APIVersion = $aadConf.api_version;
+            Default = $true;
+			InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
+		}
+		$crossTenantAccessPolicyObj.defaultCrossTenantAccessPolicy = Get-MonkeyMSGraphcrossTenantAccessPolicy @p
+        #Get cross-tenant access policies for partners
+        $p = @{
+			APIVersion = $aadConf.api_version;
+            Partner = $true;
+			InformationAction = $O365Object.InformationAction;
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
+		}
+		$crossTenantAccessPolicyObj.partnerCrossTenantAccessPolicy = Get-MonkeyMSGraphcrossTenantAccessPolicy @p
         #Get cross-tenant access policy
-		$p = @{
+        $p = @{
 			APIVersion = $aadConf.api_version;
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;
 		}
-		$ctAccessPolicy = Get-MonkeyMSGraphcrossTenantAccessPolicy @p
+		$crossTenantAccessPolicyObj.crossTenantAccessPolicy = Get-MonkeyMSGraphcrossTenantAccessPolicy @p
 	}
 	end {
-		if ($null -ne $ctAccessPolicy) {
-			$ctAccessPolicy.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.CrossTenantAccessPolicy')
+		if ($null -ne $crossTenantAccessPolicyObj) {
+			$crossTenantAccessPolicyObj.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.CrossTenantAccessPolicy')
 			[pscustomobject]$obj = @{
-				Data = $ctAccessPolicy;
+				Data = $crossTenantAccessPolicyObj;
 				Metadata = $monkey_metadata;
 			}
 			$returnData.aad_cross_tenant_accessPolicy = $obj;
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID Cross-Tenant access policy",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID cross-tenant access policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;

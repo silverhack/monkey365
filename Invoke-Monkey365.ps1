@@ -53,10 +53,6 @@ Function Invoke-Monkey365{
 
             With Monkey365, there is also support for exporting data driven to popular formats like CSV, XML or JSON.
 
-            Office Support
-            Support for exporting data driven to EXCEL format. The tool also support table style modification, chart creation, company logo or independent language support. At the moment Office Excel 2010, Office Excel 2013 and Office Excel 2016 are supported by the tool.
-            Note: EXCEL application must be installed on machine.
-
             .NOTES
 	            Author		: Juan Garrido
                 Twitter		: @tr1ana
@@ -77,12 +73,12 @@ Function Invoke-Monkey365{
             This example retrieves information of an Azure subscription and prints results to a local variable. If credentials are not supplied, Monkey365 will prompt for credentials.
 
         .EXAMPLE
-	        Invoke-Monkey365 -ClientId 00000000-0000-0000-0000-000000000000 -ClientSecret ("MySuperClientSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Azure -Analysis All -subscriptions 00000000-0000-0000-0000-000000000000 -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,EXCEL,CSV,JSON,HTML
+	        Invoke-Monkey365 -ClientId 00000000-0000-0000-0000-000000000000 -ClientSecret ("MySuperClientSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Azure -Analysis All -subscriptions 00000000-0000-0000-0000-000000000000 -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,CSV,JSON,HTML
 
             This example retrieves information of an Azure subscription and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey-reports folder. The script will connect to Azure using the client credential flow.
 
         .EXAMPLE
-            Invoke-Monkey365 -certificate C:\monkey365\testapp.pfx -ClientId 00000000-0000-0000-0000-000000000000 -CertFilePassword ("MySuperCertSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Microsoft365 -Analysis SharePointOnline -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,EXCEL,CSV,JSON,HTML
+            Invoke-Monkey365 -certificate C:\monkey365\testapp.pfx -ClientId 00000000-0000-0000-0000-000000000000 -CertFilePassword ("MySuperCertSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Microsoft365 -Analysis SharePointOnline -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,CSV,JSON,HTML
 	        This example retrieves information of an Microsoft 365 subscription and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey-reports folder. The script will connect to Azure using the certificate credential flow.
 
         .EXAMPLE
@@ -112,7 +108,7 @@ Function Invoke-Monkey365{
             All                          Extract all information about an Azure subscription
 
         .PARAMETER ExportTo
-	        Export data driven to specific formats. Accepted values are CSV, JSON, XML, PRINT, EXCEL, HTML.
+	        Export data driven to specific formats. Accepted values are CSV, JSON, XML, PRINT, HTML.
 
         .PARAMETER ExcludedResources
 	        Exclude unwanted azure resources from being scanned
@@ -198,7 +194,7 @@ Function Invoke-Monkey365{
         [string[]]$ExcludeCollector,
 
         [parameter(Mandatory= $false, HelpMessage= "Export data to multiple formats")]
-        [ValidateSet("CSV","JSON","CLIXML","PRINT","EXCEL", "HTML")]
+        [ValidateSet("CSV","JSON","CLIXML","PRINT","HTML")]
         [Array]$ExportTo=@(),
 
         [Parameter(HelpMessage="Compress Monkey365 output to a ZIP file")]

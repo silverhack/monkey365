@@ -36,7 +36,10 @@
         ],
         "aad-iam-excessive-global-admins.json": [
             {
-                "enabled": true,
+                "args": [
+                    "4"
+                ],
+				"enabled": true,
                 "level": "high",
                 "compliance": [
                     {

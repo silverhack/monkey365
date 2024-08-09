@@ -64,6 +64,7 @@ Describe 'MonkeyJob' {
             }
             #Start Job
             Start-MonkeyJob @p
+            Start-Sleep -Milliseconds 500
             $Job = Get-MonkeyJob
             #Get result
             $Job.Task.Result | Should -Be '5'
@@ -87,6 +88,7 @@ Describe 'MonkeyJob' {
             }
             #Start Job
             Start-MonkeyJob @p
+            Start-Sleep -Milliseconds 500
             $Job = Get-MonkeyJob
             #Get result
             $Job.Task | Should -BeOfType [System.Threading.Tasks.Task]

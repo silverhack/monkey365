@@ -61,8 +61,10 @@ Function Initialize-AuthenticationParam{
     End{
         if($O365Object.application_args){
             $app_param = $O365Object.application_args;
-            $O365Object.msalapplication = New-MonkeyMsalApplication @app_param
-            $O365Object.isConfidentialApp = -NOT $O365Object.msalapplication.isPublicApp;
+            $newApplication = New-MonkeyMsalApplication @app_param
+            $O365Object.isConfidentialApp = -NOT $newApplication.isPublicApp;
+            #$O365Object.msalapplication = New-MonkeyMsalApplication @app_param
+            #$O365Object.isConfidentialApp = -NOT $O365Object.msalapplication.isPublicApp;
             #Get Auth params
             $msalAppMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-MonkeyMSALToken")
             #Set new dict
@@ -75,14 +77,16 @@ Function Initialize-AuthenticationParam{
                 }
             }
             if($O365Object.isConfidentialApp){
-                #Add confidential client
+                #Add confidential application
+                $O365Object.msalapplication = $newApplication;
                 [void]$O365Object.msal_confidential_applications.Add($O365Object.msalapplication)
                 [ref]$null = $newPsboundParams.Add('confidentialApp',$O365Object.msalapplication);
             }
             else{
                 #Add public client
-                [void]$O365Object.msal_public_applications.Add($O365Object.msalapplication)
-                [ref]$null = $newPsboundParams.Add('publicApp',$O365Object.msalapplication);
+                #[void]$O365Object.msal_public_applications.Add($O365Object.msalapplication)
+                #[ref]$null = $newPsboundParams.Add('publicApp',$O365Object.msalapplication);
+                [ref]$null = $newPsboundParams.Add('publicApp',$null);
             }
             #Add Verbose, informationAction and Debug parameters
             [ref]$null = $newPsboundParams.Add('InformationAction',$O365Object.InformationAction);

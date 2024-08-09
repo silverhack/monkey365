@@ -1,0 +1,91 @@
+{
+  "serviceType": "Conditional Access",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure Multi-factor Authentication is Required for Azure Management",
+  "description": "For designated users, they will be prompted to use their multi-factor authentication (MFA) process on logins.\r\n\t",
+  "rationale": "Enabling multi-factor authentication is a recommended setting to limit the potential of accounts being compromised and limiting access to authenticated personnel.\r\n\t",
+  "impact": "\r\n\t\tThere is an increased cost, as Conditional Access policies require Microsoft Entra ID Premium. Similarly, this may require additional overhead to maintain if users lose access to their MFA.\r\n\t",
+  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`\r\n\t",
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa",
+    "https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access",
+    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/troubleshoot-conditional-access-what-if",
+    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/plan-conditional-access",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-7-restrict-resource-access-based-on--conditions"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "1.5.0",
+      "reference": "1.2.6"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "aad_conditional_access_policy",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "state",
+              "eq",
+              "true"
+            ],
+			[
+              "conditions.applications.includeApplications",
+              "imatch",
+              "797f4846-ba00-4fd7-ba43-dac1f8f63013"
+            ],
+			[
+              "conditions.users.includeUsers",
+              "eq",
+              "All"
+            ],
+			[
+              "conditions.users.includeUsers",
+              "eq",
+              "All"
+            ]
+          ],
+		  "operator": "and"
+        }
+      ]
+    },
+	{
+      "connectOperator": "and",
+      "statements": [
+        {
+          "conditions": [
+            [
+              "grantControls.operator",
+              "eq",
+              "OR"
+            ],
+			[
+              "grantControls.builtInControls",
+              "imatch",
+              "mfa"
+            ]
+          ],
+		  "operator": "and"
+        }
+      ]
+    }
+  ],
+  "shouldExist": "true",
+  "returnObject": null,
+  "idSuffix": "aad_cap_force_mfa_azure_management",
+  "status": {
+    "keyName": ["policyName"],
+    "message": "The {policyName} policy is not configured to require MFA for Azure Management"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
+}

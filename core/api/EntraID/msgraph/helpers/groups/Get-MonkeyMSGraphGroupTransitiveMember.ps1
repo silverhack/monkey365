@@ -79,13 +79,7 @@ Function Get-MonkeyMSGraphGroupTransitiveMember{
         $group_members = Get-MonkeyMSGraphObject @params
         if($group_members){
             foreach($member in $group_members){
-                if($member.'@odata.type' -eq "#microsoft.graph.user"){
-                    $member
-                }
-                elseif($member.'@odata.type' -eq "#microsoft.graph.directoryRole"){
-                    $member
-                }
-                elseif($member.'@odata.type' -eq "#microsoft.graph.group"){
+                If($member.'@odata.type' -eq "#microsoft.graph.group"){
                     if($member.id -notin $Parents){
                         $Parents +=$member.id
                         $p = @{
@@ -97,7 +91,7 @@ Function Get-MonkeyMSGraphGroupTransitiveMember{
                         }
                         Get-MonkeyMSGraphGroupTransitiveMember @p
                     }
-                    else{
+                    Else{
                         $msg = @{
                             MessageData = ($message.PotentialNestedGroupMessage -f $member.displayName, $GroupId);
                             callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -108,6 +102,9 @@ Function Get-MonkeyMSGraphGroupTransitiveMember{
                         }
                         Write-Verbose @msg
                     }
+                }
+                Else{
+                    $member
                 }
             }
         }

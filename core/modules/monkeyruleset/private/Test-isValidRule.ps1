@@ -75,6 +75,9 @@ Function Test-isValidRule{
         }
         else{
             $missing = @($missingElements) -join ','
+            if($null -ne $InputObject.PsObject.Properties.Item('displayName')){
+                Write-Warning ($Script:messages.InvalidRuleMessage -f $InputObject.displayName)
+            }
             Write-Warning ($Script:messages.MissingElementsMessage -f "rule", $missing)
             return $false
         }

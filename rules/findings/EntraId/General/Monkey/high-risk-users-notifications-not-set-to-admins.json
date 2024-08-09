@@ -1,0 +1,64 @@
+{
+  "serviceType": "General",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure notifications for high-risk users is Enabled for Administrators",
+  "description": "Notification enables administrators to monitor the event and remediate the risk. This helps the organization proactively respond to cyber intrusions as they occur.\r\n\t",
+  "rationale": "This setting alerts administrators that high-risk users are detected. This may indicate an account or machine compromise that would need to be investigated.\r\n\t",
+  "impact": "",
+  "remediation": "",
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-configure-notifications#configure-users-at-risk-detected-alerts"
+  ],
+  "compliance": [
+    {
+      "name": "Monkey365",
+      "version": "0.91.3"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "aad_identityprotection_notifications",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "minRiskLevel",
+              "ne",
+              "high"
+            ]
+          ]
+        }
+      ]
+    },
+	{
+      "connectOperator": "or",
+      "statements": [
+        {
+          "conditions": [
+            [
+              "isRiskyUsersAlertsRecipient",
+              "eq",
+              "false"
+            ]
+          ],
+          "whereObject": "notificationRecipients"
+        }
+      ]
+    }
+  ],
+  "returnObject": null,
+  "idSuffix": "aad_high_risk_users_notification_disabled",
+  "status": {
+    "keyName": ["email"],
+    "message": "{email} is not configured to receive detected alerts for high-risk users"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
+}

@@ -41,6 +41,14 @@ Function Connect-MonkeyM365{
         switch ($service.ToLower()) {
             #Connect to Exchange Online
             'exchangeonline'{
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Exchange Online")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
                 $O365Object.auth_tokens.ExchangeOnline = Get-TokenForEXO
                 if($null -ne $O365Object.auth_tokens.ExchangeOnline){
                     #Get ExchangeOnline module file
@@ -67,6 +75,14 @@ Function Connect-MonkeyM365{
             }
             #Connect to Microsoft Purview
             'purview'{
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Purview")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
                 #Add resource for ComplianceCenter
                 $O365Object.auth_tokens.ComplianceCenter = Get-TokenForEXO
                 #Get Backend URI
@@ -142,6 +158,8 @@ Function Connect-MonkeyM365{
                     Write-Warning @msg
                     continue;
                 }
+                #Set null
+                $initialDomain = $null;
                 #Get initial domain
                 If($O365Object.isValidTenantGuid -eq $false){
                     $initialDomain = $O365Object.TenantId
@@ -153,7 +171,7 @@ Function Connect-MonkeyM365{
                 ElseIf($null -ne $O365Object.Tenant.CompanyInfo){
                     $initialDomain = $O365Object.Tenant.CompanyInfo.verifiedDomains.Where({$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.isDefault -eq $true}) | Select-Object -ExpandProperty name
                 }
-                Else{
+                If($null -eq $initialDomain){
                     $msg = @{
                         MessageData = ($message.NotConnectedTo -f $service);
                         callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -179,10 +197,34 @@ Function Connect-MonkeyM365{
                     Verbose = $O365Object.verbose;
                     Debug = $O365Object.debug;
                 }
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "SharePoint Online")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
                 $O365Object.auth_tokens.SharePointOnline = Connect-MonkeySPO @p -RootSite
                 #Connect to the admin site
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "SharePoint Online admin")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
                 $O365Object.auth_tokens.SharePointAdminOnline = Connect-MonkeySPO @p -Admin
                 #Connect to OneDrive site
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "OneDrive For Business")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
                 $O365Object.auth_tokens.OneDrive = Connect-MonkeySPO @p -OneDrive
                 if($null -ne $O365Object.auth_tokens.SharePointOnline -and $null -ne $O365Object.auth_tokens.SharePointAdminOnline){
                     #Check if user is SharePoint administrator
@@ -255,7 +297,23 @@ Function Connect-MonkeyM365{
             }
             #Connect to Microsoft Teams
             'microsoftteams'{
-                $O365Object.auth_tokens.Teams = Connect-MonkeyTeamsForOffice
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Teams")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
+                $p = @{
+                    Resource = (Get-WellKnownAzureService -AzureService TeamsAdminApi);
+                    AzureService = "AzurePowershell";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                $O365Object.auth_tokens.Teams = Connect-MonkeyGenericApplication @p
+                #$O365Object.auth_tokens.Teams = Connect-MonkeyTeamsForOffice
                 if($null -ne $O365Object.auth_tokens.Teams){
                     #Get Backend URI
                     $p = @{
@@ -310,14 +368,47 @@ Function Connect-MonkeyM365{
                     Write-Warning @msg
                     continue;
                 }
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Forms")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
                 #Connect to Microsoft Forms
-                $O365Object.auth_tokens.Forms = Connect-MonkeyFormsForOffice
+                $p = @{
+                    Resource = (Get-WellKnownAzureService -AzureService MicrosoftForms);
+                    AzureService = "AzurePowershell";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                $O365Object.auth_tokens.Forms = Connect-MonkeyGenericApplication @p
+                #$O365Object.auth_tokens.Forms = Connect-MonkeyFormsForOffice
                 if($null -ne $O365Object.auth_tokens.Forms){
                     $O365Object.onlineServices.Item($service) = $true
                 }
                 Start-Sleep -Milliseconds 10
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Right Management Services")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
                 #Connect to Microsoft Rights Management Services
-                $O365Object.auth_tokens.AADRM = Connect-MonkeyAADRM
+                $p = @{
+                    Resource = $O365Object.Environment.AADRM;
+                    AzureService = "AzurePowershell";
+                    RedirectUri = "https://aadrm.com/adminpowershell";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                $O365Object.auth_tokens.AADRM = Connect-MonkeyGenericApplication @p
+                #$O365Object.auth_tokens.AADRM = Connect-MonkeyAADRM
                 if($null -ne $O365Object.auth_tokens.AADRM){
                     #Get Service locator url
                     $service_locator = Get-AADRMServiceLocatorUrl
@@ -331,8 +422,24 @@ Function Connect-MonkeyM365{
                     $O365Object.onlineServices.Item($service) = $true
                 }
                 Start-Sleep -Milliseconds 10
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft 365 Admin Portal")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
                 #Connect to Admin blade
-                $O365Object.auth_tokens.M365Admin = Connect-MonkeyM365AdminPortal
+                $p = @{
+                    Resource = $O365Object.Environment.OfficeAdminPortal;
+                    AzureService = "AzurePowershell";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                $O365Object.auth_tokens.M365Admin = Connect-MonkeyGenericApplication @p
+                #$O365Object.auth_tokens.M365Admin = Connect-MonkeyM365AdminPortal
                 if($null -ne $O365Object.auth_tokens.M365Admin){
                     #Test if connection to Admin blade is allowed
                     $p = @{
@@ -358,7 +465,24 @@ Function Connect-MonkeyM365{
             }
             #Connect to PowerBI
             'powerbi'{
-                $O365Object.auth_tokens.PowerBI = Connect-MonkeyPowerBI
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft PowerBI")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
+                #Connect to PowerBI
+                $p = @{
+                    Resource = $O365Object.Environment.PowerBI;
+                    AzureService = "AzurePowershell";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                $O365Object.auth_tokens.PowerBI = Connect-MonkeyGenericApplication @p
+                #$O365Object.auth_tokens.PowerBI = Connect-MonkeyPowerBI
                 if($null -ne $O365Object.auth_tokens.PowerBI){
                     #Get Backend URI
                     $O365Object.PowerBIBackendUri = Get-MonkeyPowerBIBackendUri
@@ -379,7 +503,23 @@ Function Connect-MonkeyM365{
             }
             #Connect to Microsoft Intune
             'intune'{
-                $O365Object.auth_tokens.Intune = Connect-MonkeyIntune
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Intune")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
+                $p = @{
+                    Resource = $O365Object.Environment.Graphv2;
+                    AzureService = "Intune";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                $O365Object.auth_tokens.Intune = Connect-MonkeyGenericApplication @p
+                #$O365Object.auth_tokens.Intune = Connect-MonkeyIntune
                 if($null -ne $O365Object.auth_tokens.Intune){
                     $O365Object.onlineServices.Item($service) = $true
                 }

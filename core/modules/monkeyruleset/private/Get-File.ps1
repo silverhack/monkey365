@@ -75,16 +75,16 @@ Function Get-File{
         if(@($file).Count -gt 0){
             if($PSCmdlet.ParameterSetName -eq 'Filename'){
                 If(@($file).Count -eq 1){
-                    return $file
+                    $file
                 }
                 else{
                     Write-Warning -Message ($Script:messages.DuplicateFileFound -f $fileName, $rulepath)
                     #return full name
-                    return ($file | Select-Object -First 1)
+                    ($file | Select-Object -First 1)
                 }
             }
             else{
-                return $file
+                $file
             }
         }
         else{

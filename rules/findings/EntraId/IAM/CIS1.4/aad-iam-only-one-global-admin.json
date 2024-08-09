@@ -1,0 +1,58 @@
+{
+  "serviceType": "Microsoft Entra ID Identity",
+  "serviceName": "IAM",
+  "displayName": "Low number of Global Administrators",
+  "description": "The total number of Global Administrators was lower than recommended. A tenancy should have more than two but fewer than five Global Administrators. Best practices recommend having at least 2 global admins in the organisation in case of account lockout or account breach.",
+  "rationale": "If there is only one global tenant administrator, he or she can perform malicious activity without the possibility of being discovered by another admin. If there are numerous global tenant administrators, the more likely it is that one of their accounts will be successfully breached by an external attacker.",
+  "impact": "The potential impact associated with ensuring compliance with this requirement is dependent upon the current number of global administrators configured in the tenant. If there is only one global administrator in a tenant, an additional global administrator will need to be identified and configured. If there are more than four global administrators, a review of role requirements for current global administrators will be required to identify which of the users require global administrator access.",
+  "remediation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-admin-roles-secure",
+    "https://docs.microsoft.com/en-us/windows-server/identity/securing-privileged-access/securing-privileged-access",
+    "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-assign-admin-roles"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Microsoft 365 Foundations",
+      "version": "1.4.0",
+      "reference": "1.1.3"
+    }
+  ],
+  "level": "medium",
+  "tags": null,
+  "path": "aad_role_assignment",
+  "conditions": [
+    {
+      "statements": [
+        {
+          "conditions": [
+            [
+              "templateId",
+              "eq",
+              "62e90394-69f5-4237-9190-012177145e10"
+            ],
+            [
+              "totalActiveusers",
+              "lt",
+              "2"
+            ]
+          ],
+          "operator": "and"
+        }
+      ]
+    }
+  ],
+  "idSuffix": "aad_only_one_global_admin",
+  "removeIfNotExists": "true",
+  "status": {
+    "keyName": [],
+    "message": "a low number of Global Administrators was detected"
+  },
+  "notes": [],
+  "categories": [],
+  "fields": {
+    "resourceName": null,
+    "resourceId": null,
+    "resourceType": null
+  }
+}

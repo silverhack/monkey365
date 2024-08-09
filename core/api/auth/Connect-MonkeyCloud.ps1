@@ -39,6 +39,14 @@ Function Connect-MonkeyCloud{
     #Using MSAL authentication
     if($null -ne $O365Object.msal_application_args){
         #Connect to MSGraph
+        $msg = @{
+            MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Graph V2")
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'info';
+            InformationAction = $O365Object.InformationAction;
+            Tags = @('TokenRequestInfoMessage');
+        }
+        Write-Information @msg
         $O365Object.auth_tokens.MSGraph = Connect-MonkeyMSGraph
         if($null -ne $O365Object.auth_tokens.MSGraph){
             #Check if valid TenantId
@@ -91,8 +99,23 @@ Function Connect-MonkeyCloud{
             #Probably cancelled connection
             return
         }
+        $msg = @{
+            MessageData = ($message.TokenRequestInfoMessage -f "Azure Resource Management API")
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'info';
+            InformationAction = $O365Object.InformationAction;
+            Tags = @('TokenRequestInfoMessage');
+        }
+        Write-Information @msg
         #Connect to Resource management
-        $O365Object.auth_tokens.ResourceManager = Connect-MonkeyResourceManagement
+        $p = @{
+            Resource = $O365Object.Environment.ResourceManager;
+            AzureService = "AzurePowershell";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+        $O365Object.auth_tokens.ResourceManager = Connect-MonkeyGenericApplication @p
     }
     #Select tenant
     if($null -eq $O365Object.TenantId -and $null -ne $O365Object.auth_tokens.ResourceManager){
@@ -113,14 +136,43 @@ Function Connect-MonkeyCloud{
     $O365Object.AuthType = $O365Object.auth_tokens.Values.GetEnumerator() | Select-Object -ExpandProperty AuthType -Unique -ErrorAction Ignore
     #Check if connected to MSGraph and Resource Manager
     if($null -ne $O365Object.auth_tokens.ResourceManager -and $null -ne $O365Object.auth_tokens.MSGraph){
-        #Connect to Microsoft old Graph
-        $O365Object.auth_tokens.Graph = Connect-MonkeyGraph
-        #Connect to Azure Portal
-        if($O365Object.isConfidentialApp -eq $false){
-            $O365Object.auth_tokens.AzurePortal = Connect-MonkeyAzurePortal
+        $msg = @{
+            MessageData = ($message.TokenRequestInfoMessage -f "Legacy Microsoft Graph")
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'info';
+            InformationAction = $O365Object.InformationAction;
+            Tags = @('TokenRequestInfoMessage');
         }
-        #Connect to PIM
-        $O365Object.auth_tokens.MSPIM = Connect-MonkeyPIM
+        Write-Information @msg
+        #Connect to Microsoft legacy Graph
+        $p = @{
+            Resource = $O365Object.Environment.Graph;
+            AzureService = "AzurePowershell";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+        $O365Object.auth_tokens.Graph = Connect-MonkeyGenericApplication @p
+        #Connect to Azure Portal
+        if($O365Object.isConfidentialApp -eq $false -and $O365Object.IncludeEntraID){
+            $msg = @{
+                MessageData = ($message.TokenRequestInfoMessage -f "Entra ID API")
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'info';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('TokenRequestInfoMessage');
+            }
+            Write-Information @msg
+            $p = @{
+                Resource = (Get-WellKnownAzureService -AzureService AzurePortal);
+                AzureService = "AzurePowershell";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $O365Object.auth_tokens.AzurePortal = Connect-MonkeyGenericApplication @p
+            #$O365Object.auth_tokens.AzurePortal = Connect-MonkeyAzurePortal
+        }
         #Get Tenant Information
         $O365Object.Tenant = Get-TenantInformation
     }
@@ -149,13 +201,13 @@ Function Connect-MonkeyCloud{
     }
     #Get Azure AD permissions
     if($O365Object.isConfidentialApp){
-        $user_permissions = Get-MonkeyMSGraphServicePrincipalDirectoryRole -principalId $O365Object.clientApplicationId
-        if($user_permissions){
-            $O365Object.aadPermissions = $user_permissions
+        $app_Permissions = Get-MonkeyMSGraphObjectDirectoryRole -ObjectId $O365Object.clientApplicationId -ObjectType servicePrincipal
+        if($app_Permissions){
+            $O365Object.aadPermissions = $app_Permissions
         }
     }
     else{
-        $user_permissions = Get-MonkeyMSGraphUserDirectoryRole -UserId $O365Object.userId
+        $user_permissions = Get-MonkeyMSGraphObjectDirectoryRole -ObjectId $O365Object.userId -ObjectType user
         if($user_permissions){
             $O365Object.aadPermissions = $user_permissions
         }
@@ -223,6 +275,26 @@ Function Connect-MonkeyCloud{
     }
     #Get AzureAD Licensing
     $O365Object.AADLicense = Get-M365AADLicense
+    if($null -ne $O365Object.AADLicense.azureADP2){
+        $msg = @{
+            MessageData = ($message.TokenRequestInfoMessage -f "Entra ID Privileged Managament Identity API")
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'info';
+            InformationAction = $O365Object.InformationAction;
+            Tags = @('TokenRequestInfoMessage');
+        }
+        Write-Information @msg
+        #Connect to PIM
+        $p = @{
+            Resource = (Get-WellKnownAzureService -AzureService MSPIM);
+            AzureService = "AzurePowershell";
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+        $O365Object.auth_tokens.MSPIM = Connect-MonkeyGenericApplication @p
+        #$O365Object.auth_tokens.MSPIM = Connect-MonkeyPIM
+    }
     #Get collectors
     $O365Object.Collectors = Get-MonkeyCollector
 }

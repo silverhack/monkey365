@@ -89,46 +89,20 @@ function Get-MonkeyAADDirectoryRole {
 			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID Directory Roles",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
+			InformationAction = $O365Object.InformationAction;
 			Tags = @('AzureMSGraphDirectoryRole');
 		}
 		Write-Information @msg
-		#Get Role Assignment
-		$p = @{
-			APIVersion = $aadConf.api_version;
-			InformationAction = $O365Object.InformationAction;
-			Verbose = $O365Object.Verbose;
-			Debug = $O365Object.Debug;
-		}
-		$directory_roles = Get-MonkeyMSGraphAADRoleAssignment @p
-		#Get AAD role assignment
+		#Get Entra ID role assignment
 		$p = @{
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;
 		}
-		$aad_role_assignment = Get-MonkeyMSGraphAADDirectoryRole @p
+		$aad_role_assignment = Get-MonkeyMSGraphEntraRoleAssignment @p
 	}
-	end {
-		if ($directory_roles) {
-			$directory_roles.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.DirectoryRoles')
-			[pscustomobject]$obj = @{
-				Data = $directory_roles;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.aad_directory_roles = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Directory roles",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = 'verbose';
-				Tags = @('AzureGraphUsersEmptyResponse');
-				Verbose = $O365Object.Verbose;
-			}
-			Write-Verbose @msg
-		}
-		if ($aad_role_assignment) {
+	End {
+		If ($aad_role_assignment) {
 			$aad_role_assignment.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.RoleAssignment')
 			[pscustomobject]$obj = @{
 				Data = $aad_role_assignment;

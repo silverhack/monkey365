@@ -36,6 +36,9 @@ Function New-MsalApplicationForPnP{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [CmdletBinding()]
     Param (
+        [Parameter(Mandatory=$False, ParameterSetName='application params')]
+        [System.Collections.Hashtable]$app_params,
+
         [parameter(Mandatory = $False)]
         [ValidateSet("AzurePublic","AzureGermany","AzureChina","AzureUSGovernment")]
         [String]$Environment= "AzurePublic"
@@ -61,13 +64,34 @@ Function New-MsalApplicationForPnP{
     }
     Process{
         #Create a new app
-        $app_params = @{
-            clientId = $clientId;
-            RedirectUri = $redirectUri;
-            Verbose = $Verbose;
-            Debug = $Debug;
-            InformationAction = $InformationAction;
-            Environment = $Environment;
+        if(-NOT $PSBoundParameters.ContainsKey('app_params')){
+            #Create new application hashtable
+            $app_params = @{
+                clientId = $clientId;
+                RedirectUri = $redirectUri;
+                Verbose = $Verbose;
+                Debug = $Debug;
+                InformationAction = $InformationAction;
+                Environment = $Environment;
+            }
+        }
+        Else{
+            if(-NOT $app_params.ContainsKey('clientId')){
+                #Add clientId
+                [ref]$null = $app_params.Add('clientId',$clientId)
+            }
+            else{
+                $app_params.ClientId = $clientId
+            }
+            if($null -ne $redirectUri){
+                if(-NOT $app_params.ContainsKey('redirectUri')){
+                    #Add redirect uri
+                    [ref]$null = $app_params.Add('redirectUri',$redirectUri)
+                }
+                else{
+                    $app_params.redirectUri = $redirectUri
+                }
+            }
         }
     }
     End{

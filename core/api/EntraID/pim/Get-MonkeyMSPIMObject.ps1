@@ -135,7 +135,14 @@ Function Get-MonkeyMSPIMObject{
              break
         }
         #Get Authorization Header
-        $AuthHeader = $Authentication.CreateAuthorizationHeader()
+        $methods = $Authentication | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
+        #Get Authorization Header
+        if($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
+            $AuthHeader = $Authentication.CreateAuthorizationHeader()
+        }
+        else{
+            $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
+        }
         #set msgraph uri
         $base_uri = ("/api/{0}" -f $APIVersion)
         #Get internal Path

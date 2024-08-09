@@ -90,7 +90,7 @@ Function Get-TokenForEXO {
         #Add Exo resource parameter
         $new_params.Add('Resource',$O365Object.Environment.Outlook)
         #Get token with new params
-        Get-MSALTokenForResource @new_params
+        Get-MonkeyMSALToken @new_params
     }
     catch{
         Write-Error $_
