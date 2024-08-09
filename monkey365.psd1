@@ -12,7 +12,7 @@
 RootModule = 'monkey365.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.91.3'
+ModuleVersion = '0.91.4'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
