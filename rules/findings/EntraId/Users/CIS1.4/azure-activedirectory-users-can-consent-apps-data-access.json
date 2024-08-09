@@ -34,9 +34,9 @@
         {
           "conditions": [
             [
-              "TenantAuthPolicy.defaultUserRolePermissions.permissionGrantPoliciesAssigned.Count",
-              "ne",
-              "0"
+              "TenantAuthPolicy.permissionGrantPolicyIdsAssignedToDefaultUserRole",
+              "match",
+              "ManagePermissionGrantsForSelf.microsoft-user-default-legacy"
             ]
           ]
         }

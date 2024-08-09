@@ -22,7 +22,7 @@
   ],
   "level": "medium",
   "tags": null,
-  "path": "aad_conditional_policies",
+  "path": "aad_conditional_access_policy",
   "conditions": [
     {
       "operator": "and",
@@ -30,19 +30,19 @@
         {
           "conditions": [
             [
-              "applyRule",
+              "state",
               "eq",
               "true"
             ],
             [
-              "rawPolicy.usersV2.allUsers",
+              "conditions.users.includeUsers",
               "eq",
-              "1"
+              "All"
             ],
             [
-              "rawPolicy.controls.blockAccess",
+              "conditions.applications.includeApplications",
               "eq",
-              "True"
+              "All"
             ]
           ],
           "operator": "and"
@@ -50,37 +50,26 @@
         {
           "conditions": [
             [
-              "rawPolicy.conditions.clientApps.exchangeActiveSync",
-              "eq",
-              "true"
+              "conditions.clientAppTypes",
+              "contains",
+              "exchangeActiveSync"
             ],
             [
-              "rawPolicy.conditions.clientApps.applyCondition",
-              "eq",
-              "true"
-            ],
-            [
-              "rawPolicy.conditions.clientAppsV2.mobileDesktop",
-              "eq",
-              "true"
-            ],
-            [
-              "rawPolicy.conditions.clientAppsV2.otherClients",
-              "eq",
-              "true"
-            ],
-            [
-              "rawPolicy.conditions.clientAppsV2.exchangeActiveSync",
-              "eq",
-              "true"
-            ],
-            [
-              "rawPolicy.conditions.clientAppsV2.applyCondition",
-              "eq",
-              "true"
+              "conditions.clientAppTypes",
+              "contains",
+              "other"
             ]
           ],
           "operator": "and"
+        },
+		{
+          "conditions": [
+            [
+              "grantControls.builtInControls",
+              "eq",
+              "block"
+            ]
+          ]
         }
       ]
     }
@@ -97,6 +86,6 @@
   "fields": {
     "resourceName": "policyName",
     "resourceId": "policyId",
-    "resourceType": "conditionalAccess/policies"
+    "resourceType": "@odata.context"
   }
 }

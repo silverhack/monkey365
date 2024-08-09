@@ -1,10 +1,10 @@
 {
   "serviceType": "Conditional Access",
   "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure Multi-factor Authentication is Required for Risky Sign-ins",
-  "description": "For designated users, they will be prompted to use their multi-factor authentication (MFA) process on logins.\r\n\t",
-  "rationale": "Enabling multi-factor authentication is a recommended setting to limit the potential of accounts being compromised and limiting access to authenticated personnel.\r\n\t",
-  "impact": "\r\n\t\tThere is an increased cost, as Conditional Access policies require Microsoft Entra ID Premium. Similarly, this may require additional overhead to maintain if users lose access to their MFA.\r\n\t",
+  "displayName": "Ensure that a Conditional Access Policy exists to require device marked as compliant when registering for security information.",
+  "description": "Use Conditional Access to require a user's device to be either Microsoft Entra hybrid joined or compliant during MFA registration.",
+  "rationale": "Reduce risk of an adversary using stolen user credentials and then registering their own MFA device to access the tenant by requiring a managed device provisioned and controlled by the agency to perform registration actions. This prevents the adversary from using their own unmanaged device to perform the registration.",
+  "impact": "",
   "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`\r\n\t",
   "references": [
     "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa",
@@ -14,17 +14,14 @@
     "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-7-restrict-resource-access-based-on--conditions"
   ],
   "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "1.5.0",
-      "reference": "1.2.5"
-    }
+    ["Monkey365"]
   ],
   "level": "medium",
   "tags": null,
   "path": "aad_conditional_access_policy",
   "conditions": [
     {
+      "operator": "and",
       "statements": [
         {
           "conditions": [
@@ -32,11 +29,6 @@
               "state",
               "eq",
               "true"
-            ],
-            [
-              "conditions.signInRiskLevels",
-              "match",
-              "high|medium"
             ],
             [
               "conditions.users.includeUsers",
@@ -59,31 +51,6 @@
         {
           "conditions": [
             [
-              "sessionControls.signInFrequency.authenticationType",
-              "eq",
-              "primaryAndSecondaryAuthentication"
-            ],
-			[
-              "sessionControls.signInFrequency.frequencyInterval",
-              "eq",
-              "everyTime"
-            ],
-			[
-              "sessionControls.signInFrequency.isEnabled",
-              "eq",
-              "true"
-            ]
-          ],
-		  "operator": "and"
-        }
-      ]
-    },
-	{
-      "connectOperator": "and",
-      "statements": [
-        {
-          "conditions": [
-            [
               "grantControls.operator",
               "eq",
               "OR"
@@ -91,7 +58,12 @@
 			[
               "grantControls.builtInControls",
               "match",
-              "mfa"
+              "compliantDevice"
+            ],
+			[
+              "grantControls.builtInControls",
+              "match",
+              "domainJoinedDevice"
             ]
           ],
 		  "operator": "and"
@@ -101,16 +73,16 @@
   ],
   "shouldExist": "true",
   "returnObject": null,
-  "idSuffix": "aad_cap_force_mfa_risky_signIns",
+  "idSuffix": "aad_cap_block_signIn_risk",
   "status": {
     "keyName": ["policyName"],
-    "message": "The {policyName} policy is not configured to require MFA for risky-sign ins"
+    "message": "The {policyName} policy is not configured to sign-Ins categorized as high risk"
   },
   "notes": [],
   "categories": [],
   "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
+    "resourceName": "policyName",
+    "resourceId": "policyId",
+    "resourceType": "@odata.context"
   }
 }

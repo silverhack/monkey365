@@ -22,65 +22,49 @@
   ],
   "level": "medium",
   "tags": null,
-  "path": "aad_conditional_policies",
+  "path": "aad_conditional_access_policy",
   "conditions": [
     {
-      "operator": "and",
       "statements": [
         {
           "conditions": [
             [
-              "applyRule",
+              "state",
               "eq",
               "true"
             ],
             [
-              "rawPolicy.controls.challengeWithMfa",
+              "conditions.users.includeUsers",
               "eq",
-              "true"
+              "All"
             ],
             [
-              "rawPolicy.usersV2.allUsers",
+              "conditions.applications.includeApplications",
               "eq",
-              "1"
-            ],
-            [
-              "rawPolicy.servicePrincipals.allServicePrincipals",
-              "eq",
-              "1"
+              "All"
             ]
           ],
           "operator": "and"
-        },
+        }
+      ]
+    },
+	{
+      "connectOperator": "and",
+      "statements": [
         {
           "conditions": [
             [
-              "rawPolicy.conditions.minSigninRisk.mediumRisk",
+              "grantControls.operator",
               "eq",
-              "false"
+              "OR"
             ],
-            [
-              "rawPolicy.conditions.minSigninRisk.highRisk",
-              "eq",
-              "false"
-            ],
-            [
-              "rawPolicy.conditions.minSigninRisk.lowRisk",
-              "eq",
-              "false"
-            ],
-            [
-              "rawPolicy.conditions.minSigninRisk.noRisk",
-              "eq",
-              "false"
-            ],
-            [
-              "rawPolicy.conditions.minSigninRisk.applyCondition",
-              "eq",
-              "false"
+			[
+              "grantControls.builtInControls",
+              "imatch",
+              "mfa"
             ]
           ],
-          "operator": "and"
+		  "operator": "and"
         }
       ]
     }
@@ -89,14 +73,14 @@
   "returnObject": null,
   "idSuffix": "aad_cap_force_mfa_all_users",
   "status": {
-    "keyName": [],
-    "message": "Lack of MFA policy for all users"
+    "keyName": ["policyName"],
+    "message": "The {policyName} policy is not configured to require MFA for all users"
   },
   "notes": [],
   "categories": [],
   "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
+    "resourceName": "policyName",
+    "resourceId": "policyId",
+    "resourceType": "@odata.context"
   }
 }

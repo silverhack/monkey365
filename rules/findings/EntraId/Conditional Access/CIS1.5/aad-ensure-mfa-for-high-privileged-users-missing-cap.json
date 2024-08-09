@@ -22,29 +22,44 @@
   ],
   "level": "medium",
   "tags": null,
-  "path": "aad_conditional_policies",
+  "path": "aad_conditional_access_policy",
   "conditions": [
     {
       "statements": [
         {
           "conditions": [
             [
-              "applyRule",
+              "state",
               "eq",
               "true"
             ],
             [
-              "rawPolicy.controls.challengeWithMfa",
+              "conditions.applications.includeApplications",
               "eq",
-              "true"
-            ],
-            [
-              "rawPolicy.servicePrincipals.allServicePrincipals",
-              "eq",
-              "1"
+              "All"
             ]
           ],
           "operator": "and"
+        }
+      ]
+    },
+	{
+      "connectOperator": "and",
+      "statements": [
+        {
+          "conditions": [
+            [
+              "grantControls.operator",
+              "eq",
+              "OR"
+            ],
+			[
+              "grantControls.builtInControls",
+              "match",
+              "mfa"
+            ]
+          ],
+		  "operator": "and"
         }
       ]
     },

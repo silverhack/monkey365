@@ -32,9 +32,9 @@
               "62e90394-69f5-4237-9190-012177145e10"
             ],
             [
-              "effectiveMembers.Count",
+              "totalActiveusers",
               "gt",
-              "4"
+              "_ARG_0_"
             ]
           ],
           "operator": "and"

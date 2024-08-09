@@ -11,7 +11,7 @@
   "serviceType": "Azure Alerts",
   "displayName": "_ARG_0_ disabled alert",
   "description": "_ARG_0_ alert was not enabled at subscription level.",
-  "rationale": "_ARG_5_",
+  "rationale": '_ARG_5_',
   "references": [
     "https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-collect"
   ],

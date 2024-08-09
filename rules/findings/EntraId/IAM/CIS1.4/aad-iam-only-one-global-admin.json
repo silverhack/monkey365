@@ -32,7 +32,7 @@
               "62e90394-69f5-4237-9190-012177145e10"
             ],
             [
-              "effectiveMembers.Count",
+              "totalActiveusers",
               "lt",
               "2"
             ]

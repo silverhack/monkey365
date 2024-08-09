@@ -58,8 +58,8 @@
   "removeIfNotExists": "true",
   "idSuffix": "aad_privileged_users_with_mfa_disabled",
   "status": {
-    "keyName": [],
-    "message": "MFA is not enabled for all privileged users"
+    "keyName": ["effectiveMembers.userPrincipalName"],
+    "message": "MFA is not enabled for {effectiveMembers.userPrincipalName}"
   },
   "notes": [],
   "categories": [],
