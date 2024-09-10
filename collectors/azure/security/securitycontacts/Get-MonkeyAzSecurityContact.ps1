@@ -79,7 +79,7 @@ function Get-MonkeyAzSecurityContact {
 			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Security Contacts",$O365Object.current_subscription.displayName);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
+			InformationAction = $O365Object.InformationAction;
 			Tags = @('AzureSecContactInfo');
 		}
 		Write-Information @msg
@@ -101,6 +101,7 @@ function Get-MonkeyAzSecurityContact {
 				Id = $account.Id;
 				location = $account.Id;
 				Name = $account.Name;
+                Type = $account.type;
 				Properties = $account.Properties;
 				email = $account.Properties.emails;
 				phone = $account.Properties.phone;
