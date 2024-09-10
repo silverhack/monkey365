@@ -15,13 +15,13 @@
         <link rel="canonical" href="https://silverhack.github.io/monkey365/exporting/export-html/">
       
       
-        <link rel="prev" href="../exporting-data/">
+        <link rel="prev" href="../export-clixml/">
       
       
         <link rel="next" href="../../logging/introduction/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.1.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.1.2">
     
     
       
@@ -877,6 +877,12 @@
         
           
         
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
@@ -899,6 +905,48 @@
     <li class="md-nav__item">
       <a href="../exporting-data/" class="md-nav__link">
         Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export-csv/" class="md-nav__link">
+        CSV
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export-json/" class="md-nav__link">
+        JSON
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export-clixml/" class="md-nav__link">
+        CLIXML
       </a>
     </li>
   
@@ -1387,77 +1435,79 @@
     <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
     <span class="n">ExportTo</span> <span class="p">=</span> <span class="s1">&#39;HTML&#39;</span><span class="p">;</span>
 <span class="p">}</span>
-<span class="nv">$assets</span> <span class="p">=</span> <span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
+<span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
 </code></pre></div>
 <h2 id="customize-html">Customize HTML</h2>
-<p>A Monkey365 report uses JSON configuration files to visualize data in a variety of ways. This approach makes it easy to modify and combine tables, style them, and make them interactive with buttons. You can use your favorite text editor in order to modify these configuration files.</p>
+<p>A Monkey365 report uses JSON-like configuration objects to visualize data in a variety of ways. This approach makes it easy to modify and combine tables, style them, and make them interactive with buttons. You can use your favorite text editor in order to modify these configuration files.</p>
 <h2 id="html-configuration-files-location">HTML Configuration Files Location</h2>
-<p>All the table formats are stored under <code>Monkey365/core/utils/dataMappings</code>. Internal data is rendered with <code>JQuery DataTables</code>. Basic table and table <code>as list</code> are the available formats. Please, note that not all features of HTML tables are supported.</p>
+<p>All the table formats are stored within JSON rules and data is rendered with <code>JQuery DataTables</code>. Basic table and table <code>as list</code> are the available formats. Please, note that not all features of HTML tables are supported.</p>
 <h2 id="html-table-examples">HTML Table examples</h2>
 <h3 id="table-as-list">Table As List</h3>
-<p>For example, table elements for Azure app services can be formatted to display complex structured data in the <code>app_services.json</code> file.</p>
+<p>Take for example the following code extracted from the <a href='https://github.com/silverhack/monkey365/blob/main/rules/findings/Azure/App%20Services/CIS1.4/azure-app-services-ad-managed-identity-missing.json' target='_blank'>azure-app-services-ad-managed-identity-missing.json</a> Monkey365 rule.</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;app_service_missing_identity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;translate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Application Name&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Kind&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;properties.defaultHostName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HostName&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;properties.httpsOnly&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Https Only&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;identity.principalId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Principal ID&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;configuration.properties.ftpsState&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SSL FTP&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;configuration.properties.minTlsVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TLS Version&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;configuration.properties.siteAuthSettings.Enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Site Auth Enabled&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;asList&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;emphasis&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Principal ID&quot;</span><span class="p">]</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Application Name&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Kind&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;properties.defaultHostName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HostName&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;properties.httpsOnly&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Https Only&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;identity.principalId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Principal ID&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;appConfig.properties.ftpsState&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SSL FTP&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;appConfig.properties.minTlsVersion&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TLS Version&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;appConfig.properties.siteAuthSettings.Enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Site Auth Enabled&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;expandObject&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;asList&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;decorate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;emphasis&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;Principal ID&quot;</span>
+<span class="w">      </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>In the above example, this will result in the data being rendered in a single table formatted <code>as list</code>.</p>
 <p><img alt="" src="../../assets/images/tableAsList.png" /></p>
 <h3 id="normal-table">Normal Table</h3>
-<p>In this example, table elements for Storage accounts missing key rotation can be formatted to display complex structured data in the <code>storage.json</code> file.</p>
-<p><div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;storage_accounts_https_traffic_disabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;translate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;CreationTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Creation Time&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;supportsHttpsTrafficOnly&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Https Only&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Normal&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">],</span>
+<p>In this example, the following code that was extracted from the <a href='https://github.com/silverhack/monkey365/blob/main/rules/findings/Azure/Storage%20Accounts/CIS1.4/azure-storage-accounts-https-traffic-enabled.json' target='_blank'>azure-storage-accounts-https-traffic-enabled.json</a> Monkey365 rule is used to render data for <em>Storage accounts missing key rotation</em> finding into a default table.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;CreationTime&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Creation Time&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;supportsHttpsTrafficOnly&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Https Only&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;expandObject&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;decorate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;emphasis&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+
+<span class="w">      </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-The above example will result in the data being rendered in a single table formatted as normal table.</p>
 <p><img alt="" src="../../assets/images/NormalTable.png" /></p>
 <h3 id="add-raw-data-button">Add Raw data button</h3>
 <p>Table elements can be configured to show raw data on Bootstrap Modal. In order to route for showing raw data with modals, the <code>showModalButton</code> should be set to <code>True</code>, as shown below:</p>
 <p><div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;storage_accounts_missing_key_rotation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;translate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;ResourceGroupName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ResourceGroupName&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;isKeyRotated&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Key Rotated&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;actions&quot;</span><span class="p">:{</span>
-<span class="w">                </span><span class="nt">&quot;objectData&quot;</span><span class="p">:{</span>
-<span class="w">                    </span><span class="nt">&quot;expand&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
-<span class="w">                    </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;json&quot;</span>
-<span class="w">                </span><span class="p">},</span>
-<span class="w">                </span><span class="nt">&quot;showGoToButton&quot;</span><span class="p">:</span><span class="s2">&quot;True&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;showModalButton&quot;</span><span class="p">:</span><span class="s2">&quot;True&quot;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="nt">&quot;actions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;objectData&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;expand&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;location&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;ResourceGroupName&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;CreationTime&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;supportsHttpsTrafficOnly&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="nt">&quot;limit&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;showModalButton&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span>
+<span class="w">      </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 The above example will result in the data being rendered in a single table formatted as normal table, and a modal button in last column.</p>
@@ -1466,25 +1516,20 @@ The above example will result in the data being rendered in a single table forma
 <h3 id="add-direct-link-button">Add direct link button</h3>
 <p>Table elements can be configured to add a direct link to the Azure console section associated with the finding in the report. In order to route for showing raw data with modals, the <code>showGoToButton</code> should be set to <code>True</code> along with the <code>actions</code>, as shown below:</p>
 <p><div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;storage_accounts_missing_key_rotation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;translate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Name&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Location&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;ResourceGroupName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ResourceGroupName&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;isKeyRotated&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Key Rotated&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Normal&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;actions&quot;</span><span class="p">:{</span>
-<span class="w">                </span><span class="nt">&quot;objectData&quot;</span><span class="p">:{</span>
-<span class="w">                    </span><span class="nt">&quot;expand&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span>
-<span class="w">                    </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;json&quot;</span>
-<span class="w">                </span><span class="p">},</span>
-<span class="w">                </span><span class="nt">&quot;showGoToButton&quot;</span><span class="p">:</span><span class="s2">&quot;True&quot;</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;showModalButton&quot;</span><span class="p">:</span><span class="s2">&quot;True&quot;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
+<span class="w">    </span><span class="nt">&quot;actions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;objectData&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;expand&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;location&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;ResourceGroupName&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;CreationTime&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;supportsHttpsTrafficOnly&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="nt">&quot;limit&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;showGoToButton&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;showModalButton&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;True&quot;</span>
+<span class="w">      </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 The above example will result in the data being rendered in a single table formatted as normal table, and a direct link button in last column.</p>

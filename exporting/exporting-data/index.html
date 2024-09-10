@@ -18,10 +18,10 @@
         <link rel="prev" href="../../docker/docker/">
       
       
-        <link rel="next" href="../export-html/">
+        <link rel="next" href="../export-csv/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.1.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.1.2">
     
     
       
@@ -877,6 +877,12 @@
         
           
         
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
@@ -948,6 +954,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#import-clixml-data-in-powershell" class="md-nav__link">
+    Import CLIXML data in PowerShell
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -957,6 +970,48 @@
   
 </nav>
       
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export-csv/" class="md-nav__link">
+        CSV
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export-json/" class="md-nav__link">
+        JSON
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export-clixml/" class="md-nav__link">
+        CLIXML
+      </a>
     </li>
   
 
@@ -1295,6 +1350,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#import-clixml-data-in-powershell" class="md-nav__link">
+    Import CLIXML data in PowerShell
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1320,14 +1382,20 @@
 
   <h1>Overview</h1>
 
-<p>Monkey365 has built-in support for exporting data to a large variety of formats, including CSV and JSON. For example, the CSV output format is a comma-separated output that can be imported into i.e., Excel spreadsheets. The JSON format is pretty similar to JavaScript object, so it can be used as a data format by any programming language. This section page documents how Monkey365's data may be exported to these formats.</p>
+<p>Monkey365 has built-in support for exporting data to a large variety of formats, including CSV, CLIXML and JSON. For example, the CSV output format is a comma-separated output that can be imported into i.e., Excel spreadsheets. The JSON format is pretty similar to JavaScript object, so it can be used as a data format by any programming language. Finally, CLIXML will create an XML-based representation of all findings and will store it in a file. This section page documents how Monkey365's data may be exported to these formats.</p>
+<ul>
+<li><a href="../export-csv">Export Data to CSV</a> </li>
+<li><a href="../export-html">Export Data to HTML</a></li>
+<li><a href="../export-clixml">Export Data to CLIXML</a></li>
+<li><a href="../export-json">Export Data to JSON</a></li>
+</ul>
 <h2 id="data-location">Data Location</h2>
 <p>Depending on what format you are exporting to, the <code>-ExportTo</code> parameter presents you with slightly different options. Once Monkey365 has finished running, all the exported data are stored under Monkey365/monkey-reports/$GUID/$FORMAT/$FILE. The following demonstrates some examples in which the data may be programmatically accessed using various common languages.</p>
 <h3 id="import-json-data-in-python">Import JSON data in Python</h3>
 <p>The following code snippet illustrates how one may load the Monkey365 data in a Python script (assuming that report data was previously exported to JSON format):</p>
 <div class="highlight"><pre><span></span><code><span class="err">impor</span><span class="kc">t</span><span class="w"> </span><span class="err">jso</span><span class="kc">n</span>
 
-<span class="kc">f</span><span class="err">ile</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">&#39;C</span><span class="p">:</span><span class="err">/</span><span class="kc">te</span><span class="err">mp/mo</span><span class="kc">n</span><span class="err">key</span><span class="mi">365</span><span class="err">/mo</span><span class="kc">n</span><span class="err">key</span><span class="mi">-</span><span class="err">repor</span><span class="kc">ts</span><span class="err">/</span><span class="mi">00000000-0000-0000-0000-000000000000</span><span class="err">/jso</span><span class="kc">n</span><span class="err">/aad_domai</span><span class="kc">n</span><span class="err">_users.jso</span><span class="kc">n</span><span class="err">&#39;</span>
+<span class="kc">f</span><span class="err">ile</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">&#39;C</span><span class="p">:</span><span class="err">/</span><span class="kc">te</span><span class="err">mp/mo</span><span class="kc">n</span><span class="err">key</span><span class="mi">365</span><span class="err">/mo</span><span class="kc">n</span><span class="err">key</span><span class="mi">-</span><span class="err">repor</span><span class="kc">ts</span><span class="err">/</span><span class="mi">00000000-0000-0000-0000-000000000000</span><span class="err">/jso</span><span class="kc">n</span><span class="err">/mo</span><span class="kc">n</span><span class="err">key</span><span class="mf">3650000000000000000000000000000000020240902155926.</span><span class="err">jso</span><span class="kc">n</span><span class="err">&#39;</span>
 
 <span class="err">wi</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">ope</span><span class="kc">n</span><span class="err">(</span><span class="kc">f</span><span class="err">ile)</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="kc">f</span><span class="p">:</span>
 
@@ -1337,7 +1405,11 @@
 </code></pre></div>
 <h3 id="import-json-data-in-powershell">Import JSON data in PowerShell</h3>
 <p>The following code snippet illustrates how one may load the Monkey365 data in a PowerShell script (assuming that report data was previously exported to JSON format):</p>
-<div class="highlight"><pre><span></span><code><span class="nb">PS </span><span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">monkey365</span><span class="p">&gt;</span> <span class="nv">$json_data</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Content</span> <span class="n">-Raw</span> <span class="p">.\</span><span class="n">monkey-reports</span><span class="p">\</span><span class="n">00000000</span><span class="p">-</span><span class="n">0000</span><span class="p">-</span><span class="n">0000</span><span class="p">-</span><span class="n">0000</span><span class="p">-</span><span class="n">000000000000</span><span class="p">\</span><span class="n">json</span><span class="p">\</span><span class="n">aad_domain_users</span><span class="p">.</span><span class="n">json</span><span class="p">)</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span>
+<div class="highlight"><pre><span></span><code><span class="nb">PS </span><span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">monkey365</span><span class="p">&gt;</span> <span class="nv">$json_data</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Content</span> <span class="n">-Raw</span> <span class="p">.\</span><span class="n">monkey-reports</span><span class="p">\</span><span class="n">00000000</span><span class="p">-</span><span class="n">0000</span><span class="p">-</span><span class="n">0000</span><span class="p">-</span><span class="n">0000</span><span class="p">-</span><span class="n">000000000000</span><span class="p">\</span><span class="n">json</span><span class="p">\</span><span class="n">monkey3650000000000000000000000000000000020240902155926</span><span class="p">.</span><span class="n">json</span><span class="p">)</span> <span class="p">|</span> <span class="nb">ConvertFrom-Json</span>
+</code></pre></div>
+<h3 id="import-clixml-data-in-powershell">Import CLIXML data in PowerShell</h3>
+<p>The following code snippet illustrates how one may load the Monkey365 data in a PowerShell script (assuming that report data was previously exported to CLIXML format):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">PS </span><span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">monkey365</span><span class="p">&gt;</span> <span class="nv">$clixml_data</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Content</span> <span class="n">-Raw</span> <span class="p">.\</span><span class="n">monkey-reports</span><span class="p">\</span><span class="n">00000000</span><span class="p">-</span><span class="n">0000</span><span class="p">-</span><span class="n">0000</span><span class="p">-</span><span class="n">0000</span><span class="p">-</span><span class="n">000000000000</span><span class="p">\</span><span class="n">clixml</span><span class="p">\</span><span class="n">monkey3650000000000000000000000000000000020240902155926</span><span class="p">.</span><span class="n">clixml</span><span class="p">)</span>
 </code></pre></div>
 
 

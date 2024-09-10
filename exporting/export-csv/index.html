@@ -12,20 +12,20 @@
         <meta name="author" content="Juan Garrido">
       
       
-        <link rel="canonical" href="https://silverhack.github.io/monkey365/security_checks/custom-rule/">
+        <link rel="canonical" href="https://silverhack.github.io/monkey365/exporting/export-csv/">
       
       
-        <link rel="prev" href="../overview/">
+        <link rel="prev" href="../exporting-data/">
       
       
-        <link rel="next" href="../custom-ruleset/">
+        <link rel="next" href="../export-json/">
       
       <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.1.2">
     
     
       
-        <title>Create a custom rule - Monkey365</title>
+        <title>CSV - Monkey365</title>
       
     
     
@@ -91,7 +91,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#create-a-rule" class="md-skip">
+        <a href="#export-to-csv" class="md-skip">
           Skip to content
         </a>
       
@@ -123,7 +123,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Create a custom rule
+              CSV
             
           </span>
         </div>
@@ -860,14 +860,16 @@
               
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" checked>
       
       
         
@@ -888,7 +890,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_2_5">
           <span class="md-nav__icon md-icon"></span>
           Export Data
@@ -901,7 +903,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../exporting/exporting-data/" class="md-nav__link">
+      <a href="../exporting-data/" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -913,11 +915,55 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../exporting/export-csv/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          CSV
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         CSV
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#export-to-csv" class="md-nav__link">
+    Export To CSV
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#csv-headers" class="md-nav__link">
+    CSV Headers
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -929,7 +975,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../exporting/export-json/" class="md-nav__link">
+      <a href="../export-json/" class="md-nav__link">
         JSON
       </a>
     </li>
@@ -943,7 +989,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../exporting/export-clixml/" class="md-nav__link">
+      <a href="../export-clixml/" class="md-nav__link">
         CLIXML
       </a>
     </li>
@@ -957,7 +1003,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../exporting/export-html/" class="md-nav__link">
+      <a href="../export-html/" class="md-nav__link">
         HTML
       </a>
     </li>
@@ -1092,16 +1138,14 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
       
       
         
@@ -1118,7 +1162,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_2_7">
           <span class="md-nav__icon md-icon"></span>
           Security Checks
@@ -1131,7 +1175,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../overview/" class="md-nav__link">
+      <a href="../../security_checks/overview/" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -1143,69 +1187,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Create a custom rule
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../security_checks/custom-rule/" class="md-nav__link">
         Create a custom rule
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#create-a-rule" class="md-nav__link">
-    Create a rule
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rule-body" class="md-nav__link">
-    Rule Body
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scenario-check-for-remote-powershell-enabled-users" class="md-nav__link">
-    Scenario - Check for remote PowerShell enabled users
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-rules" class="md-nav__link">
-    Testing rules
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1217,7 +1203,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../custom-ruleset/" class="md-nav__link">
+      <a href="../../security_checks/custom-ruleset/" class="md-nav__link">
         Custom ruleset
       </a>
     </li>
@@ -1323,29 +1309,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-a-rule" class="md-nav__link">
-    Create a rule
+  <a href="#export-to-csv" class="md-nav__link">
+    Export To CSV
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#rule-body" class="md-nav__link">
-    Rule Body
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scenario-check-for-remote-powershell-enabled-users" class="md-nav__link">
-    Scenario - Check for remote PowerShell enabled users
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing-rules" class="md-nav__link">
-    Testing rules
+  <a href="#csv-headers" class="md-nav__link">
+    CSV Headers
   </a>
   
 </li>
@@ -1368,69 +1340,79 @@
   
 
 
-  <h1>Create a custom rule</h1>
+  <h1>CSV</h1>
 
-<h2 id="create-a-rule">Create a rule</h2>
-<p>Monkey365 enable users to create rules, both simple and complex, to tell Monkey365 which objects to check, the conditions to check, and the corresponding actions to perform when conditions occur. You can use Monkey365 to create rules for internal data objects piped to Monkey365 for validation.</p>
-<h2 id="rule-body">Rule Body</h2>
-<p>A rule is described in JSON. A single rule can be used to represent complex rules. A rule has an <code>DisplayName</code> and a list of conditions that are evaluated when the rule is triggered.</p>
-<p><img alt="" src="../../assets/images/rule_example.PNG" /></p>
-<h2 id="scenario-check-for-remote-powershell-enabled-users">Scenario - Check for remote PowerShell enabled users</h2>
-<p>In this quickstart scenario, we have been tasked with creating a rule to check for the presence of remote PowerShell enabled users in Exchange Online. When a user with the <code>RemotePowerShellEnabled</code> enabled attribute is found the rule should fail.</p>
-<p>To check the remote PowerShell access status for users, create a JSON rule with the following contents. This file can be created in any text editor, such as Notepad++ or Visual Studio Code. Please, note that you must save the new rule at <code>$monkey365_DIR/rules/findings</code> directory. </p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;serviceType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Exchange Online&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;serviceName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Microsoft 365&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;displayName&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Exchange Online Remote PowerShell Access Enabled&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;It was possible for users to access the Exchange Online Remote PowerShell on the Microsoft 365 environment.&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;references&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="s2">&quot;https://docs.microsoft.com/en-us/powershell/exchange/disable-access-to-exchange-online-powershell?view=exchange-ps&quot;</span>
-<span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;compliance&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">[</span>
-<span class="w">            </span><span class="s2">&quot;Monkey365 rule&quot;</span>
-<span class="w">        </span><span class="p">]</span>
-<span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;o365_exo_users&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;conditions&quot;</span><span class="p">:</span><span class="w">  </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="err">s</span><span class="kc">tate</span><span class="err">me</span><span class="kc">nts</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="err">co</span><span class="kc">n</span><span class="err">di</span><span class="kc">t</span><span class="err">io</span><span class="kc">ns</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                        </span><span class="p">[</span><span class="s2">&quot;RemotePowerShellEnabled&quot;</span><span class="p">,</span><span class="s2">&quot;ne&quot;</span><span class="p">,</span><span class="s2">&quot;False&quot;</span><span class="p">]</span>
-<span class="w">                    </span><span class="p">]</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">            </span><span class="p">]</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;idsuffix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;o365_exo_users_remote_ps_enabled&quot;</span>
+<h2 id="export-to-csv">Export To CSV</h2>
+<p>You can easily export reports as a CSV file. Simply select <code>-ExportTo CSV</code> as shown below:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$p</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Azure&#39;</span><span class="p">;</span>
+    <span class="n">Analysis</span> <span class="p">=</span> <span class="s1">&#39;All&#39;</span><span class="p">;</span>
+    <span class="n">PromptBehavior</span> <span class="p">=</span> <span class="s1">&#39;SelectAccount&#39;</span><span class="p">;</span>
+    <span class="n">AllSubscriptions</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">;</span>
+    <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
+    <span class="n">ExportTo</span> <span class="p">=</span> <span class="s1">&#39;CSV&#39;</span><span class="p">;</span>
 <span class="p">}</span>
+<span class="nb">Invoke-Monkey365</span> <span class="nv">@p</span>
 </code></pre></div>
-<p>1.- <code>serviceType</code>: This is the friendly name of the application/service that is checked, displayed on the HTML dashboard.</p>
-<p>2.- <code>serviceName</code>: This is the friendly name of the provider, which is displayed on the HTML sidebar.</p>
-<p>3.- <code>displayName</code>: The rule name.</p>
-<p>4.- <code>description</code>: The rule description. Rule description supports <a href='https://en.wikipedia.org/wiki/Markdown' target='_blank'>Markdown</a>. That way you can add links and apply minor text styles.</p>
-<p>5.- <code>references</code>: This parameter is optional. You can add external links in order to help consultants find more information about findings. Result output will sometimes be more than enough to explain what the issue is, but it can also be beneficial to explain why an issue exists, and this is a great place to do that. Additional elements such as remediation or rationale can be added to existing JSON rule. Both of them supports <a href='https://en.wikipedia.org/wiki/Markdown' target='_blank'>Markdown</a>.</p>
-<p>6.- The <code>condition</code> property determines the checks Monkey365 will use to test each user returned in Exchange Online. Specifically, the <code>RemotePowerShellEnabled</code> property of each user object will be evaluated. The value of <code>RemotePowerShellEnabled</code> should not be <em>False</em>. Multiple PowerShell comparison operators are supported. The following <a href='https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators?view=powershell-7.2' target='_blank'>link</a> is a list of comparison operators supported by PowerShell. </p>
-<p>7.-  <code>idSuffix</code>: UniqueID for the rule.</p>
-<p>8.- Name your rule with a unique name .Json.</p>
-<h2 id="testing-rules">Testing rules</h2>
-<p>You can either create a new JSON ruleset from scratch or edit an existing one and add your custom rule. The following is an example of a custom ruleset with one rule. </p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;about&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;My custom ruleset&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;exchange-users-remote-powershell-enabled.json&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;medium&quot;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">]</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
+<h2 id="csv-headers">CSV Headers</h2>
+<p>The following columns are included for Microsoft 365:</p>
+<div class="highlight"><pre><span></span><code>TIMESTAMP
+TENANTID
+TENANTNAME
+UNIQUEID
+PROVIDER
+FINDINGID
+FINDINGTITLE
+FINDINGTYPE
+FINDINGTAGS
+SERVICENAME
+SEVERITYID
+SEVERITY
+FINDINGDESCRIPTION
+FINDINGRATIONALE
+FINDINGREMEDIATION
+FINDINGREFERENCEURL
+RESOURCELOCATION
+STATUS
+RESOURCETYPE
+RESOURCEID
+RESOURCENAME
+RESOURCEGROUP
+RESOURCETAGS
+COMPLIANCE
+NOTES
+MONKEY365VERSION
 </code></pre></div>
-<p>If users with remote PowerShell session are discovered, results will be displayed in the HTML report, as shown below:</p>
-<p><img alt="" src="../../assets/images/formatted_rule.PNG" /></p>
-<p>You can customize HTML tables in order to visualize data in a variety of ways. More information about how to customize data can be found <a href="../../exporting/export-html/">here</a>.</p>
+<p>For Azure scans, the following columns are included:</p>
+<div class="highlight"><pre><span></span><code>TIMESTAMP
+TENANTID
+TENANTNAME
+SUBSCRIPTIONID
+SUBSCRIPTIONNAME
+UNIQUEID
+PROVIDER
+FINDINGID
+FINDINGTITLE
+FINDINGTYPE
+FINDINGTAGS
+SERVICENAME
+SEVERITYID
+SEVERITY
+FINDINGDESCRIPTION
+FINDINGRATIONALE
+FINDINGREMEDIATION
+FINDINGREFERENCEURL
+RESOURCELOCATION
+STATUS
+RESOURCETYPE
+RESOURCEID
+RESOURCENAME
+RESOURCEGROUP
+RESOURCETAGS
+COMPLIANCE
+NOTES
+MONKEY365VERSION
+</code></pre></div>
 
 
   
