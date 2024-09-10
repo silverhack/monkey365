@@ -35,116 +35,52 @@ Function Export-MonkeyData{
     #>
 
     Param (
-        [Parameter(Mandatory = $true, HelpMessage = 'Output format')]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $True, HelpMessage = 'Output format')]
         [String]$ExportTo
     )
-    #Export data
-    switch ($ExportTo) {
-        'CSV'
-        {
-            Write-Warning "CSV RAW output has been deprecated and will be upgraded two releases later (0.91.4). Please, check https://github.com/silverhack/monkey365/issues/76"
+    Process{
+        If($ExportTo.ToLower() -in @('json','csv','clixml')){
             $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())
             $OutDir = New-MonkeyFolder -destination $out_folder
-            if($OutDir){
-                foreach($unit_element in $MonkeyExportObject.Output.GetEnumerator()){
-                    if($unit_element.Name -and $unit_element.value.Data){
-                        $csv_file = ("{0}/{1}.csv" -f $OutDir,$unit_element.Name)
-                        $msg = @{
-                            MessageData = ($message.ExportDataToInfo -f $csv_file,'csv');
-                            callStack = (Get-PSCallStack | Select-Object -First 1);
-                            logLevel = 'verbose';
-                            InformationAction = $O365Object.InformationAction;
-                            Verbose = $O365Object.verbose;
-                            Tags = @('NewCSVFile');
-                        }
-                        Write-Verbose @msg
-                        $params = @{
-                            Object = $unit_element.value.Data;
-                            OutFile = $csv_file;
-                        }
-                        Out-CSV @params
+            If($null -ne $OutDir){
+                If($O365Object.Instance.ToLower() -eq 'azure'){
+                    $p = @{
+                        InputObject = $matchedRules;
+                        ProductName = 'Monkey365';
+                        ProductVersion = Get-MonkeyVersion;
+                        ProductVendorName = 'Monkey365';
+                        TenantId = $O365Object.executionInfo.Tenant.TenantId;
+                        TenantName = $O365Object.executionInfo.Tenant.TenantName;
+                        SubscriptionId = $O365Object.executionInfo.subscription.subscriptionId;
+                        SubscriptionName = $O365Object.executionInfo.subscription.subscriptionId;
+                        Provider = $O365Object.Instance;
+                        ExportTo = $ExportTo;
+                        OutDir = $OutDir;
                     }
                 }
-            }
-        }
-        'JSON'
-        {
-            Write-Warning "JSON RAW output has been deprecated and will be upgraded two releases later (0.91.4). Please, check https://github.com/silverhack/monkey365/issues/76"
-            $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())
-            $OutDir = New-MonkeyFolder -destination $out_folder
-            if($OutDir){
-                foreach($unit_element in $MonkeyExportObject.Output.GetEnumerator()){
-                    if($unit_element.Name -and $unit_element.value.Data){
-                        $json_file = ("{0}/{1}.json" -f $OutDir,$unit_element.Name)
-                        $msg = @{
-                            MessageData = ($message.ExportDataToInfo -f $json_file,'json');
-                            callStack = (Get-PSCallStack | Select-Object -First 1);
-                            logLevel = 'verbose';
-                            InformationAction = $O365Object.InformationAction;
-                            Verbose = $O365Object.verbose;
-                            Tags = @('NewJSONFile');
-                        }
-                        Write-Verbose @msg
-                        try{
-                            $params = @{
-                                Object = $unit_element.value.Data;
-                                OutFile = $json_file;
-                            }
-                            Out-JSON @params
-                        }
-                        catch{
-                            $msg = @{
-                                MessageData = ($message.UnableToExport -f $json_file,'json');
-                                callStack = (Get-PSCallStack | Select-Object -First 1);
-                                logLevel = 'debug';
-                                InformationAction = $O365Object.InformationAction;
-                                Debug = $O365Object.debug;
-                                Tags = @('UnableToExport');
-                            }
-                            Write-Debug @msg
-                        }
+                Else{
+                    $p = @{
+                        InputObject = $matchedRules;
+                        ProductName = 'Monkey365';
+                        ProductVersion = Get-MonkeyVersion;
+                        ProductVendorName = 'Monkey365';
+                        TenantId = $O365Object.executionInfo.Tenant.TenantId;
+                        TenantName = $O365Object.executionInfo.Tenant.TenantName;
+                        Provider = $O365Object.Instance;
+                        ExportTo = $ExportTo;
+                        OutDir = $OutDir;
                     }
                 }
+                #Export Data
+                Invoke-MonkeyOutput @p
             }
         }
-        'CLIXML'
-        {
-            Write-Warning "CLIXML RAW output has been deprecated and will be removed two releases later (0.91.4). Please, check https://github.com/silverhack/monkey365/issues/76"
-            $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())
-            $OutDir = New-MonkeyFolder -destination $out_folder
-            if($OutDir){
-                foreach($unit_element in $MonkeyExportObject.Output.GetEnumerator()){
-                    if($unit_element.Name -and $unit_element.value.Data){
-                        $xml_file = ("{0}/{1}.xml" -f $OutDir,$unit_element.Name)
-                        $msg = @{
-                            MessageData = ($message.ExportDataToInfo -f $xml_file,'xml');
-                            callStack = (Get-PSCallStack | Select-Object -First 1);
-                            logLevel = 'verbose';
-                            InformationAction = $O365Object.InformationAction;
-                            Verbose = $O365Object.verbose;
-                            Tags = @('NewXMLFile');
-                        }
-                        Write-Verbose @msg
-                        $params = @{
-                            Object = $unit_element.value.Data;
-                            OutFile = $xml_file;
-                        }
-                        Out-XML @params
-                    }
-                }
-            }
-        }
-        "HTML"
-        {
+        ElseIf($ExportTo.ToLower() -eq "html"){
             $out_folder = ('{0}/{1}' -f $Script:Report, $ExportTo.ToLower())
             $OutDir = New-MonkeyFolder -destination $out_folder
             if($OutDir){
                 Invoke-HtmlReport -OutDir $OutDir
-            }
-        }
-        "PRINT"
-        {
-            return $MonkeyExportObject.Output
+            }            
         }
     }
 }

@@ -53,8 +53,8 @@ Function Invoke-HtmlReport{
                     'Monkey Version' = Get-MonkeyVersion;
                 }
                 #Check if hashtable
-                if($MonkeyExportObject.Output -is [hashtable]){
-                    $monkeyData = $MonkeyExportObject.Output | Convert-HashTableToPsObject -psName "Monkey365.Output"
+                If($MonkeyExportObject.Output -is [hashtable]){
+                    $monkeyData = New-Object -TypeName PsObject -Property $MonkeyExportObject.Output;
                 }
                 else{
                     $monkeyData = $MonkeyExportObject.Output

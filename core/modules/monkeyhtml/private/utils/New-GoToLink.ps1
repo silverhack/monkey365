@@ -40,9 +40,6 @@ Function New-GoToLink{
             [Parameter(Mandatory=$true, HelpMessage="Issue")]
             [Object]$issue,
 
-            [Parameter(Mandatory=$true, HelpMessage="actions")]
-            [Object]$actions,
-
             [Parameter(Mandatory=$true, HelpMessage="Instance")]
             [string]$instance,
 
@@ -77,8 +74,8 @@ Function New-GoToLink{
                     $link = ("{0}//#@{1}/resource/{2}" -f $portal_url,$tenant_id,$id_resource)
                 }
             }
-            if($null -eq $link -and $null -ne $actions.psobject.Properties.Item('directLink')){
-                $link = $actions.directLink
+            if($null -eq $link -and $null -ne $issue.output.html.actions.psobject.Properties.Item('directLink')){
+                $link = $issue.output.html.actions.directLink
             }
         }
         catch{

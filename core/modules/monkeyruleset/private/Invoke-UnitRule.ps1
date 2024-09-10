@@ -37,7 +37,7 @@ Function Invoke-UnitRule{
     #>
     [CmdletBinding()]
     Param (
-        [parameter(Mandatory=$True, HelpMessage="Ruleset Object")]
+        [parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="Ruleset Object")]
         [Object]$InputObject,
 
         [parameter(Mandatory=$True, HelpMessage="Objects to check")]
@@ -47,53 +47,55 @@ Function Invoke-UnitRule{
         $matched_elements = $null
     }
     Process{
-        if($null -ne $InputObject.query){
+        If($null -ne $InputObject.query){
             #Get Matched elements
             $matched_elements = Get-QueryResult -InputObject $ObjectsToCheck -Query $InputObject.query
+            #Get extra validation
+            $moreThan = $InputObject.rule | Select-Object -ExpandProperty moreThan -ErrorAction Ignore
+            $lessThan = $InputObject.rule | Select-Object -ExpandProperty lessThan -ErrorAction Ignore
+            $shouldExist = $InputObject.rule | Select-Object -ExpandProperty shouldExist -ErrorAction Ignore
+            $returnObject = $InputObject.rule | Select-Object -ExpandProperty returnObject -ErrorAction Ignore
+            $showAll = $InputObject.rule | Select-Object -ExpandProperty showAll -ErrorAction Ignore
             #Check for moreThan exception rule
-            if([bool]$InputObject.PSObject.Properties['moreThan']){
+            If($null -ne $moreThan){
                 $count = @($matched_elements).Count
-                if($count -le $InputObject.moreThan){
+                if($count -le $moreThan){
                     $matched_elements = $null
                 }
             }
             #Check for lessThan exception rule
-            Elseif([bool]$InputObject.PSObject.Properties['lessThan']){
+            ElseIf($null -ne $lessThan){
                 $count = @($matched_elements).Count
-                if($null -eq $count){$count = 1}
-                if($count -gt $InputObject.lessThan){
+                If($null -eq $count){$count = 1}
+                If($count -gt $lessThan){
                     $matched_elements = $null
                 }
             }
             #Check for shouldExists exception rule
-            if([bool]$InputObject.PSObject.Properties['shouldExist']){
-                if($InputObject.shouldExist.ToString().ToLower() -eq "true"){
-                    if($null -eq $matched_elements){
-                        if([bool]$InputObject.PSObject.Properties['returnObject'] -and $null -ne $InputObject.returnObject){
-                            $_retObj = New-Object -TypeName PSCustomObject
-                            foreach($element in $InputObject.returnObject.psObject.Properties){
-                                $_retObj | Add-Member -Type NoteProperty -name $element.Name -value $element.Value
-                            }
-                            $matched_elements = $_retObj
+            If($null -ne $shouldExist){
+                If($null -eq $matched_elements){
+                    If($null -ne $returnObject){
+                        $_retObj = New-Object -TypeName PSCustomObject
+                        Foreach($element in $returnObject.psObject.Properties){
+                            $_retObj | Add-Member -Type NoteProperty -name $element.Name -value $element.Value
                         }
-                        elseif([bool]$InputObject.PSObject.Properties['returnObject'] -and $null -eq $InputObject.returnObject){
-                            $matched_elements = $ObjectsToCheck
-                        }
-                        elseif([bool]$InputObject.PSObject.Properties['showAll']){
-                            if($InputObject.showAll.ToString().ToLower() -eq "true"){
-                                $matched_elements = $ObjectsToCheck
-                            }
-                        }
+                        $matched_elements = $_retObj
                     }
-                    else{
-                        #Set matched element to null
-                        $matched_elements= $null;
+                    Elseif($null -eq $returnObject){
+                        $matched_elements = $ObjectsToCheck
                     }
+                    Elseif($null -ne $showAll -and $showAll){
+                        $matched_elements = $ObjectsToCheck
+                    }
+                }
+                Else{
+                    #Set matched element to null
+                    $matched_elements= $null;
                 }
             }
         }
-        else{
-            Write-Warning ("Empty rule in {0}" -f $InputObject.idSuffix)
+        Else{
+            Write-Warning -Message ($Script:messages.EmptyRuleGenericMessage -f $InputObject.idSuffix)
         }
     }
     End{

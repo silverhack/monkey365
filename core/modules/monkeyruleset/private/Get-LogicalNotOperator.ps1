@@ -45,7 +45,7 @@ function Get-LogicalNotOperator{
         Try{
             $obj = @($InputObject)
             [array]$logicalNot_operators = [Linq.Enumerable]::Where(
-                [Linq.Enumerable]::Range(0, $obj.Length),
+                [Linq.Enumerable]::Range(0, $obj.Count),
                 [Func[int, bool]] { param($i)
                     $obj[$i] -eq 'not' -or $obj[$i] -eq '!'
                 }

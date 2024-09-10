@@ -73,13 +73,13 @@ function ConvertFrom-Condition{
             [void]$tmp.Add($Conditions)
             $Conditions = $tmp
         }
-        foreach($condition in $Conditions){
+        Foreach($condition in $Conditions.GetEnumerator()){
             $validcmpOperator = Get-ComparisonOperator -InputObject $condition
-            if($null -ne $validcmpOperator -and $validcmpOperator -eq 1){
-                if($condition.Length -eq 2){
+            If($null -ne $validcmpOperator -and $validcmpOperator -eq 1){
+                If($condition.Count -eq 2){
                     $condition+=$null
                 }
-                if($condition[0] -eq [String]::Empty){$condition[0]= $null}
+                If($condition[0] -eq [String]::Empty){$condition[0]= $null}
                 $filter = [ordered]@{
                     LeftItem = $condition[0];
                     Operator = $condition[1];
@@ -88,26 +88,27 @@ function ConvertFrom-Condition{
                 $q = Get-NewFilter @filter
                 [void]$arrQuery.Add($q)
             }
-            else{
+            Else{
                 $op = $condition[1];
                 $invalidQuery = (@($condition) -join ' ')
-                Write-Warning ("Wrong statement. The {0} operator in the {1} statement is not recognized as a valid operator." -f $op,$invalidQuery)
+                Write-Warning -Message ($Script:messages.StatementErrorMessage -f $op,$invalidQuery)
             }
         }
     }
     End{
-        if(!$PSBoundParameters.ContainsKey('Operator') -and $arrQuery.Count -gt 0){
-            Write-Warning "Invalid query. Logical operator was not found."
-            return $null
+        <#
+        If((!$PSBoundParameters.ContainsKey('Operator') -or [System.String]::IsNullOrEmpty($PSBoundParameters['Operator'])) -and $arrQuery.Count -gt 0){
+            Write-Warning -Message $Script:messages.OperatorNotFoundErrorMessage
         }
-        elseif($PSBoundParameters.ContainsKey('Operator') -and $null -ne $opCheck -and $arrQuery.Count -gt 0){
+        #>
+        If(($PSBoundParameters.ContainsKey('Operator') -and $PSBoundParameters['Operator']) -and $null -ne $opCheck -and $arrQuery.Count -gt 0){
             $query = (@($arrQuery) -join (' -{0} ' -f $PSBoundParameters['Operator']))
         }
-        elseif($arrQuery.Count -eq 1){
+        Elseif($arrQuery.Count -eq 1){
             $query = (@($arrQuery) -join ' ')
         }
-        else{
-            Write-Warning "Unable to convert to query"
+        Else{
+            Write-Warning -Message $Script:messages.ConditionErrorGenericMessage
             return $null
         }
         #Check if logical Not

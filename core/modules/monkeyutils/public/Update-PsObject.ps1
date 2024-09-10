@@ -54,7 +54,7 @@ Function Update-PsObject{
   }
   Process{
       if ($PSCmdlet.ShouldProcess('PsObjects','Add GetPropertyByPath method')){
-          foreach($t in $Types){
+        foreach($t in $Types){
               Update-TypeData -TypeName $t -MemberType ScriptMethod -MemberName GetPropertyByPath -Value {
                   param($propPath)
                   Set-StrictMode -Version 1

@@ -45,7 +45,7 @@ function Get-LogicalOperator{
         Try{
             $obj = @($InputObject)
             [array]$indexed_operators = [Linq.Enumerable]::Where(
-                [Linq.Enumerable]::Range(0, $obj.Length),
+                [Linq.Enumerable]::Range(0, $obj.Count),
                 [Func[int, bool]] { param($i)
                     $obj[$i] -eq 'or' -or $obj[$i] -eq 'and' -or $obj[$i] -eq 'xor'
                 }
