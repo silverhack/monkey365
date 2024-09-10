@@ -36,7 +36,6 @@ function Get-ComparisonOperator{
             https://github.com/silverhack/monkey365
     #>
     [CmdletBinding()]
-    [OutputType([System.Management.Automation.ScriptBlock])]
     Param (
         [parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Conditions")]
         [Object]$InputObject
@@ -44,7 +43,7 @@ function Get-ComparisonOperator{
     Process{
         Try{
             [array]$comparison_operators = [Linq.Enumerable]::Where(
-                [Linq.Enumerable]::Range(0, $InputObject.Length),
+                [Linq.Enumerable]::Range(0, @($InputObject).Count),
                 [Func[int, bool]] { param($i)
                     $InputObject[$i] -eq 'eq' `
                     -or $InputObject[$i] -eq 'ieq' `

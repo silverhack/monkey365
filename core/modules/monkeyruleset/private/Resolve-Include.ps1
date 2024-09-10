@@ -37,47 +37,55 @@ Function Resolve-Include{
     #>
     [CmdletBinding()]
     Param (
-        [parameter(Mandatory=$True,HelpMessage="Statement")]
-        [Object]$Statement
+        [parameter(Mandatory=$True, ValueFromPipeline = $True,HelpMessage="Include Object")]
+        [Object]$InputObject
     )
-    try{
-        $includeFile = $Statement.include
+    Process{
+        $ruleObj = $null;
+        $includeFile = $InputObject.include
         $isRoot = [System.IO.Path]::IsPathRooted($includeFile);
-        if($isRoot){
-            if([System.IO.File]::Exists($includeFile)){
+        If($isRoot){
+            If([System.IO.File]::Exists($includeFile)){
+                #Get rule file object
                 try{
-                    $new_condition = (Get-Content $includeFile -Raw) | ConvertFrom-Json
-                    ConvertTo-Query -Conditions $new_condition
+                    $ruleObj = (Get-Content $includeFile -Raw) | ConvertFrom-Json
                 }
-                catch{
+                Catch{
                     Write-Warning $_.Exception.Message
                     Write-Verbose $_.Exception
                 }
             }
-            else{
-                Write-Warning ("The file {0} does not exists" -f $includeFile)
+            Else{
+                Write-Warning -Message ($Script:messages.FileNotFoundGenericMessage -f $includeFile)
             }
         }
-        else{
-            if($null -ne (Get-Variable -Name ConditionsPath -Scope Script -ErrorAction Ignore)){
-                $rule = Get-File -FileName $includeFile -Rulepath $Script:ConditionsPath
-                if($rule){
-                    try{
-                        $new_condition = (Get-Content $rule.FullName -Raw) | ConvertFrom-Json
-                        ConvertTo-Query -Conditions $new_condition
-                    }
-                    catch{
-                        Write-Warning $_.Exception.Message
-                        Write-Verbose $_.Exception
-                    }
+        Else{
+            If($null -ne (Get-Variable -Name ConditionsPath -Scope Script -ErrorAction Ignore)){
+                Try{
+                    $rule = Get-File -FileName $includeFile -Rulepath $Script:ConditionsPath
+                    $ruleObj = (Get-Content $rule.FullName -Raw) | ConvertFrom-Json
+                }
+                Catch{
+                    Write-Warning $_.Exception.Message
+                    Write-Verbose $_.Exception
                 }
             }
-            else{
-                Write-Warning ("Unable to resolve include file {0}" -f $includeFile)
+            Else{
+                Write-Warning -Message ($Script:messages.IncludeObjectErrorMessage -f $includeFile)
             }
         }
-    }
-    catch{
-        Write-Error $_
+        #Evaluate condition
+        If($null -ne $ruleObj){
+            #Set stringBuilder
+            $finalquery = [System.Text.StringBuilder]::new()
+            #Convert to query
+            $newQuery = $ruleObj | ConvertTo-Query
+            foreach($q in @($newQuery)){
+                [void]$finalquery.Append((" {0}" -f $q));
+            }
+            If($finalquery.Length -gt 0){
+                $finalquery.ToString()
+            }
+        }
     }
 }

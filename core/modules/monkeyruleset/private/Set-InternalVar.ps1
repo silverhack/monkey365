@@ -39,35 +39,37 @@ Function Set-InternalVar{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [CmdletBinding()]
     Param (
-        [parameter(Mandatory=$true, HelpMessage="Rules Path")]
-        [String]$RulesPath
+        [parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Rules Path")]
+        [String]$InputObject
     )
-    $findingsPath = $conditionsPath = $rulesetsPath = $null
-    try{
-        $initPath = [System.IO.DirectoryInfo]::new($RulesPath);
-        if($null -ne $initPath.GetDirectories('findings')){
-            Write-Verbose -Message ($Script:messages.DirectoryFoundMessage -f "findings", $initPath.FullName)
-            $findingsPath = $initPath.GetDirectories('findings')
+    Process{
+        $findingsPath = $conditionsPath = $rulesetsPath = $null
+        Try{
+            $initPath = [System.IO.DirectoryInfo]::new($InputObject);
+            If($null -ne $initPath.GetDirectories('findings')){
+                Write-Verbose -Message ($Script:messages.DirectoryFoundMessage -f "findings", $initPath.FullName)
+                $findingsPath = $initPath.GetDirectories('findings')
+            }
+            If($null -ne $initPath.GetDirectories('conditions')){
+                Write-Verbose -Message ($Script:messages.DirectoryFoundMessage -f "conditions", $initPath.FullName)
+                $conditionsPath = $initPath.GetDirectories('conditions')
+            }
+            If($null -ne $initPath.GetDirectories('rulesets')){
+                Write-Verbose -Message ($Script:messages.DirectoryFoundMessage -f "rulesets", $initPath.FullName)
+                $rulesetsPath = $initPath.GetDirectories('rulesets')
+            }
+            If($null -ne $findingsPath -and $null -ne $conditionsPath -and $null -ne $rulesetsPath){
+                New-Variable -Name FindingsPath -Value $findingsPath.FullName.ToString() -Scope Script -Force
+                New-Variable -Name ConditionsPath -Value $conditionsPath.FullName.ToString() -Scope Script -Force
+                New-Variable -Name RulesetsPath -Value $rulesetsPath.FullName.ToString() -Scope Script -Force
+            }
+            Else{
+                Write-Warning $Script:messages.UnableToInitializeVars
+            }
         }
-        if($null -ne $initPath.GetDirectories('conditions')){
-            Write-Verbose -Message ($Script:messages.DirectoryFoundMessage -f "conditions", $initPath.FullName)
-            $conditionsPath = $initPath.GetDirectories('conditions')
-        }
-        if($null -ne $initPath.GetDirectories('rulesets')){
-            Write-Verbose -Message ($Script:messages.DirectoryFoundMessage -f "rulesets", $initPath.FullName)
-            $rulesetsPath = $initPath.GetDirectories('rulesets')
-        }
-        if($null -ne $findingsPath -and $null -ne $conditionsPath -and $null -ne $rulesetsPath){
-            New-Variable -Name FindingsPath -Value $findingsPath.FullName.ToString() -Scope Script -Force
-            New-Variable -Name ConditionsPath -Value $conditionsPath.FullName.ToString() -Scope Script -Force
-            New-Variable -Name RulesetsPath -Value $rulesetsPath.FullName.ToString() -Scope Script -Force
-        }
-        else{
+        Catch{
             Write-Warning $Script:messages.UnableToInitializeVars
+            Write-Verbose $_.Exception.Message
         }
-    }
-    catch{
-        Write-Warning $Script:messages.UnableToInitializeVars
-        Write-Verbose $_.Exception.Message
     }
 }

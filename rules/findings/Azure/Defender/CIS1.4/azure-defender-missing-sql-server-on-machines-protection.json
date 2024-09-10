@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Microsoft Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure that Microsoft Defender for Cloud is set to On for SQL servers on machines",
   "description": "Turning on Microsoft Defender for Cloud enables threat detection for SQL servers on machines, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
   "rationale": "Enabling Microsoft Defender for Cloud for SQL servers on machines allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
   "impact": "Turning on Microsoft Defender for Cloud in Microsoft Defender for Cloud incurs an additional cost per resource.",
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. On the line in the table for `SQL Servers on machines` Select `On` under `Plan`.\r\n\t\t\t\t\t6. Select `Save`\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. On the line in the table for `SQL Servers on machines` Select `On` under `Plan`.\r\n\t\t\t\t\t6. Select `Save`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview",
     "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
@@ -21,39 +34,92 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_pricing_tier",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "name",
-              "eq",
-              "SqlServerVirtualMachines"
-            ],
-            [
-              "properties.pricingTier",
-              "eq",
-              "Free"
-            ]
-          ],
-          "operator": "and"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "azure_defender_missing_sql_server_vm_protection",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_pricing_tier",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "name",
+                "eq",
+                "SqlServerVirtualMachines"
+              ],
+              [
+                "properties.pricingTier",
+                "eq",
+                "Free"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Resource Name",
+          "properties.pricingTier": "Pricing Tier"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Pricing Tier"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_defender_missing_sql_server_vm_protection",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

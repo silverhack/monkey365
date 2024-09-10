@@ -1,4 +1,5 @@
 ﻿ConvertFrom-StringData @'
+    UnableToConvertToScriptBlock     = Unable to convert {0} to a valid ScriptBlock
     InvalidDirectoryPathError        = Path {0} is not a valid directory path
     DuplicateFileFound               = Duplicate file {0} found
     FileNotFound                     = File {0} was not found

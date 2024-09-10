@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Subscription Security",
   "serviceName": "Subscription",
-  "displayName": "Ensure That 'Notify about alerts with the following severity' is Set to 'High'",
+  "displayName": "Ensure That \u0027Notify about alerts with the following severity\u0027 is Set to \u0027High\u0027",
   "description": "Enables emailing security alerts to the subscription owner or other designated security contact.",
   "rationale": "Enabling security alert emails ensures that security alert emails are received from Microsoft. This ensures that the right people are aware of any potential security issues and are able to mitigate the risk.",
   "impact": null,
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Navigate to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Click on Pricing & settings\r\n\t\t\t\t\t3. Click on the appropriate Management Group, Subscription, or Workspace\r\n\t\t\t\t\t4. Click on `Email notifications`\r\n\t\t\t\t\t5. Under \"Notification types\", check the check box next to `Notify about alerts with the following severity (or higher):` and select `High` from the drop down menu\r\n\t\t\t\t\t6. Click Save\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Navigate to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Click on Pricing \u0026 settings\r\n\t\t\t\t\t3. Click on the appropriate Management Group, Subscription, or Workspace\r\n\t\t\t\t\t4. Click on `Email notifications`\r\n\t\t\t\t\t5. Under \"Notification types\", check the check box next to `Notify about alerts with the following severity (or higher):` and select `High` from the drop down menu\r\n\t\t\t\t\t6. Click Save",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details",
     "https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/list",
@@ -20,39 +33,95 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_security_contacts",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "alertNotifications.state",
-              "ne",
-              "On"
-            ],
-            [
-              "alertNotifications.minimalSeverity",
-              "ne",
-              "High"
-            ]
-          ],
-          "operator": "or"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "security_contact_high_severity_notification_disabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_security_contacts",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "alertNotifications.state",
+                "ne",
+                "On"
+              ],
+              [
+                "alertNotifications.minimalSeverity",
+                "ne",
+                "High"
+              ]
+            ],
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "email": "Email",
+          "phone": "Phone",
+          "alertNotifications.state": "Alert notification status",
+          "alertNotifications.minimalSeverity": "Minimal severity alert"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Minimal severity alert"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "security_contact_high_severity_notification_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

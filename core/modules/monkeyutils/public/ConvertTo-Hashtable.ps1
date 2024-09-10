@@ -54,7 +54,7 @@ Function ConvertTo-Hashtable{
                         $hashtable[$key.Name.ToString()] = $key.Value
                     }
                     elseif($key.Value -is [array]){
-                        $hashtable[$key.Name.ToString()] = Convert-ToHashtable $key.Value
+                        $hashtable[$key.Name.ToString()] = ConvertTo-Hashtable $key.Value
                     }
                     else{
                         $hashtable[$key.Name.ToString()] = $key.Value

@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
   "serviceType": "Security and Compliance",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure DLP policies are enabled",
   "description": "Enabling Data Loss Prevention (DLP) policies allows Exchange Online and SharePoint Online content to be scanned for specific types of data like social security numbers, credit card numbers, or passwords.",
   "rationale": null,
   "impact": null,
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/microsoft-365/compliance/dlp-learn-about-dlp?view=o365-worldwide"
   ],
@@ -20,37 +33,87 @@
   "tags": [
     "Microsoft 365 CIS benchmark 3.4"
   ],
-  "path": "o365_secomp_dlp_compliance_info",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "isEnabled",
-              "eq",
-              "True"
+  "rule": {
+    "path": "o365_secomp_dlp_compliance_info",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "isEnabled",
+                "eq",
+                "True"
+              ]
             ]
-          ]
-        }
-      ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": "true",
+    "returnObject": {
+      "Feature": "Enabled DLP Policies",
+      "Status": "DoesNotExists"
+    },
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure DLP policies are enabled",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
     }
-  ],
+  },
   "idSuffix": "o365_exo_dlp_disabled",
-  "shouldExist": "true",
-  "returnObject": {
-    "Feature": "Enabled DLP Policies",
-    "Status": "DoesNotExists"
-  },
-  "status": {
-    "keyName": [],
-    "message": "Ensure DLP policies are enabled"
-  },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

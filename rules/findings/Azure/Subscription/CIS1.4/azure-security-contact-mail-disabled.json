@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Subscription Security",
   "serviceName": "Subscription",
   "displayName": "Provide a security contact email address",
-  "description": "Microsoft Defender for Cloud best practices recommend that security contact details for the affected Azure subscription should be added. This information will be used by Microsoft to contact subscription's owner if the Microsoft Security Response Center (MSRC) discovers that the subscription data has potentially been accessed by an unlawful or unauthorized party.",
-  "rationale": "Microsoft Defender for Cloud emails the Subscription Owner to notify them about security alerts. Adding your Security Contact's email address to the 'Additional email addresses' field ensures that your organization's Security Team is included in these alerts. This ensures that the proper people are aware of any potential compromise in order to mitigate the risk in a timely fashion.",
+  "description": "Microsoft Defender for Cloud best practices recommend that security contact details for the affected Azure subscription should be added. This information will be used by Microsoft to contact subscription\u0027s owner if the Microsoft Security Response Center (MSRC) discovers that the subscription data has potentially been accessed by an unlawful or unauthorized party.",
+  "rationale": "Microsoft Defender for Cloud emails the Subscription Owner to notify them about security alerts. Adding your Security Contact\u0027s email address to the \u0027Additional email addresses\u0027 field ensures that your organization\u0027s Security Team is included in these alerts. This ensures that the proper people are aware of any potential compromise in order to mitigate the risk in a timely fashion.",
   "impact": null,
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Navigate to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Click on Pricing & settings\r\n\t\t\t\t\t3. Click on the appropriate Management Group, Subscription, or Workspace\r\n\t\t\t\t\t4. Click on `Email notifications`\r\n\t\t\t\t\t5. Enter a valid security contact email address (or multiple addresses separated by\tcommas) in the `Additional email addresses` field\r\n\t\t\t\t\t6. Click Save\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Navigate to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Click on Pricing \u0026 settings\r\n\t\t\t\t\t3. Click on the appropriate Management Group, Subscription, or Workspace\r\n\t\t\t\t\t4. Click on `Email notifications`\r\n\t\t\t\t\t5. Enter a valid security contact email address (or multiple addresses separated by\tcommas) in the `Additional email addresses` field\r\n\t\t\t\t\t6. Click Save",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details",
     "https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/list",
@@ -20,33 +33,89 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_security_contacts",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "email.Length",
-              "eq",
-              0
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "security_contact_mail_disabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_security_contacts",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "email.Length",
+                "eq",
+                0
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "email": "Email",
+          "phone": "Phone",
+          "alertNotifications.state": "Alert notification status",
+          "alertNotifications.minimalSeverity": "Minimal severity alert"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Email"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "security_contact_mail_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

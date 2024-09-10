@@ -44,95 +44,67 @@ Function Initialize-HtmlData{
         [Object]$InputObject
     )
     Process{
-        #extendedData Generic List
-        $extendedData = New-Object System.Collections.Generic.List[System.Object]
-        try{
-            $showModal = [System.Convert]::ToBoolean($InputObject.actions.showModalButton)
-            $goTo = [System.Convert]::ToBoolean($InputObject.actions.showGoToButton)
-            $expand = $InputObject.actions.objectData | Select-Object -ExpandProperty expand -ErrorAction Ignore
-            $format = $InputObject.actions.objectData.format
-            $expandObject = $InputObject | Select-Object -ExpandProperty expandObject -ErrorAction Ignore
-        }
-        catch{
-            $showModal = $false
-            $goTo = $false
-            $expand = '*'
-            $format = 'json'
-            $expandObject = $null
-        }
-        try{
-            #Formatting object
-            If($null -ne $InputObject.affectedResources){
-                $returnObject = $InputObject | ConvertTo-PsTableObject
-                if($null -eq $returnObject){
-                    #convert objects
-                    $returnObject = $InputObject.affectedResources | Format-PsObject
+        Try{
+            If($null -ne $InputObject.PsObject.Properties.Item('affectedResources')){
+                #Set generic list
+                $extendedData = [System.Collections.Generic.List[System.Object]]::new();
+                [int]$intMinValue = [int32]::MinValue;
+                Try{
+                    [bool]$limit = [int]::TryParse($InputObject.output.html.actions.objectData.limit, [ref]$intMinValue);
+                    If($limit){
+                        $InputObject.output.html.out = $InputObject.output.html.out | Select-Object -First $InputObject.output.html.actions.objectData.limit -ErrorAction Ignore
+                        $affectedResources = $InputObject.affectedResources | Select-Object -First $InputObject.output.html.actions.objectData.limit -ErrorAction Ignore
+                    }
+                    Else{
+                        $affectedResources = $InputObject.affectedResources;
+                    }
+                    $showModal = [System.Convert]::ToBoolean($InputObject.output.html.actions.showModalButton);
+                    $goTo = [System.Convert]::ToBoolean($InputObject.output.html.actions.showGoToButton);
+                    $expand = $InputObject.output.html.actions.objectData.expand;
+                    $expandObject = $InputObject.output.html.data.expandObject;
+                    #Get table output
+                    $returnObject = $InputObject.output.html.out;
                 }
-                else{
-                    #Check if modal
-                    if($showModal){
-                        if($null -ne $expandObject){
-                            $affectedResources = $InputObject.affectedResources | Select-Object -ExpandProperty $expandObject -ErrorAction Ignore
+                Catch{
+                    $showModal = $false
+                    $goTo = $false
+                    $expand = '*'
+                    $expandObject = $null
+                    $returnObject = $null;
+                    $affectedResources = $null;
+                }
+                #Check if modal
+                If($showModal -and $null -ne $affectedResources){
+                    $p = @{
+                        ExpandObject = $expandObject;
+                        ExcludedProperties = @("Raw","RawData","raw_data","rawPolicy","rawObject");
+                        ExpandProperties = $expand;
+                    }
+                    $objs = $affectedResources | Resize-PsObject @p
+                    Foreach($obj in @($objs)){
+                        $id = ("rawObject_{0}" -f [System.Guid]::NewGuid().Guid.Replace('-','').ToString())
+                        $new_obj = [psobject]@{
+                            raw_data = $obj;
+                            format = "json";
+                            id = $id;
                         }
-                        Else{
-                            $affectedResources = $InputObject.affectedResources;
-                        }
-                        foreach($element in @($affectedResources)){
-                            $selected_elements = $null;
-                            $ExcludedProperties = ("Raw,RawData,raw_data,rawPolicy,rawObject").Split(",")
-                            if($expand -eq '*'){
-                                $selected_elements = $element | Select-Object * -ExcludeProperty $ExcludedProperties -ErrorAction Ignore
-                            }
-                            else{
-                                try{
-                                    $selected_elements = New-Object -TypeName PSCustomObject
-                                    foreach($key in @($expand)){
-                                        $value = $element.GetPropertyByPath($key)
-                                        #Update psObject (escape values, convert to URI format, etc..)
-                                        if($null -ne $value){
-                                            $isPsCustomObject = ([System.Management.Automation.PSCustomObject]).IsAssignableFrom($value.GetType())
-                                            #check if PsObject
-                                            $isPsObject = ([System.Management.Automation.PSObject]).IsAssignableFrom($value.GetType())
-                                            if($isPsCustomObject -or $isPsObject){
-                                                $value = $value | Select-Object * -ExcludeProperty $ExcludedProperties -ErrorAction Ignore
-                                            }
-                                        }
-                                        $value = $value | Format-PsObject
-                                        $selected_elements | Add-Member -type NoteProperty -name ($key.Split('.')[-1]) -value $value -Force
-                                    }
-                                }
-                                catch{
-                                    Write-Error $_
-                                    $selected_elements = $null;
-                                }
-                            }
-                            if($null -ne $selected_elements){
-                                if($format -eq "json"){
-                                    $id = ("rawObject_{0}" -f [System.Guid]::NewGuid().Guid.Replace('-','').ToString())
-                                }
-                                else{
-                                    $id = ("{0}" -f [System.Guid]::NewGuid().Guid.Replace('-','').ToString())
-                                }
-                                $new_obj = [psobject]@{
-                                    raw_data = $selected_elements;
-                                    format = $format;
-                                    id = $id;
-                                }
-                                #Add to array
-                                [void]$extendedData.Add($new_obj);
-                            }
-                        }
+                        #Add to array
+                        [void]$extendedData.Add($new_obj);
                     }
                 }
+                #Append psObject
+                $InputObject.output.html | Add-Member -type NoteProperty -name extendedData -value $extendedData -Force
+                #Format out
+                $InputObject.output.html.out = $InputObject.output.html.out | Format-PsObject
+                ## Return the object but don't enumerate it
+                $InputObject
             }
-            #Update PsObject
-            $InputObject | Add-Member -type NoteProperty -name data -value $returnObject -Force
-            $InputObject | Add-Member -type NoteProperty -name extended_data -value $extendedData -Force
-            ## Return the object but don't enumerate it
-            $InputObject
+            Else{
+                Write-Warning "Property not found"
+            }
         }
-        catch{
-            Write-Error $_
+        Catch{
+            Write-Warning $_.Exception
         }
     }
 }

@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "App Services",
   "serviceName": "Hosted Services",
-  "displayName": "Ensure that 'Java version' is the latest, if used to run the web app",
+  "displayName": "Ensure that \u0027Java version\u0027 is the latest, if used to run the web app",
   "description": "Periodically, newer versions are released for Java software either due to security flaws or to include additional functionality. Using the latest Java version for web apps is recommended in order to take advantage of security fixes, if any, and/or new functionalities of the newer version.",
   "rationale": null,
   "impact": null,
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl"
   ],
@@ -17,49 +30,115 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_app_services",
-  "conditions": [
-    {
-      "operator": "and",
-      "statements": [
-        {
-          "conditions": [
-            [
-              "kind",
-              "ne",
-              "functionapp"
-            ],
-            [
-              "appConfig.properties.javaVersion",
-              "ne",
-              ""
-            ]
-          ],
-          "operator": "and"
-        },
-        {
-          "conditions": [
-            [
-              "appConfig.properties.javaVersion",
-              "ne",
-              "1.11"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "app_service_latest_java_missing",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_app_services",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "operator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "kind",
+                "ne",
+                "functionapp"
+              ],
+              [
+                "appConfig.properties.javaVersion",
+                "ne",
+                ""
+              ]
+            ],
+            "operator": "and"
+          },
+          {
+            "conditions": [
+              [
+                "appConfig.properties.javaVersion",
+                "ne",
+                "1.11"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Application Name",
+          "kind": "Kind",
+          "location": "Location",
+          "properties.defaultHostName": "HostName",
+          "properties.httpsOnly": "Https Only",
+          "appConfig.properties.minTlsVersion": "TLS Version",
+          "appConfig.properties.javaVersion": "Java Version"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "name",
+            "kind",
+            "location",
+            "properties.defaultHostName",
+            "properties.httpsOnly",
+            "appConfig.properties.minTlsVersion",
+            "appConfig.properties.javaVersion"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "app_service_latest_java_missing",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

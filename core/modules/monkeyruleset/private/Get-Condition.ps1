@@ -39,27 +39,32 @@ function Get-Condition{
     [OutputType([System.Collections.Specialized.OrderedDictionary])]
     Param (
         [parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Conditions")]
-        [Object]$Condition
+        [Object]$InputObject
     )
     Process{
         try{
+            #Set null
+            $conditions = $null;
             #Get RightToleft
-            $RightToLeft = $Condition | Select-Object -ExpandProperty rightToLeft -ErrorAction Ignore
+            $RightToLeft = $InputObject | Select-Object -ExpandProperty rightToLeft -ErrorAction Ignore
             $RightToLeft = Convert-Value -Value $RightToLeft
             if($null -eq $RightToLeft -or $RightToLeft -isnot [bool]){
                 $RightToLeft = $false;
             }
+            If($null -ne ($InputObject | Select-Object -ExpandProperty conditions -ErrorAction Ignore)){
+                $conditions = $InputObject.conditions;
+            }
             $conditionht = [ordered]@{
-                Conditions = $Condition | Select-Object -ExpandProperty conditions -ErrorAction Ignore
-                Operator = $Condition | Select-Object -ExpandProperty operator -ErrorAction Ignore
-                LogicalNotOperator = $Condition | Select-Object -ExpandProperty logicalNot -ErrorAction Ignore
+                Conditions = $conditions
+                Operator = $InputObject | Select-Object -ExpandProperty operator -ErrorAction Ignore
+                LogicalNotOperator = $InputObject | Select-Object -ExpandProperty logicalNot -ErrorAction Ignore
                 RightToLeft = $RightToLeft
             }
             if($null -ne $conditionht.Conditions){
                 return $conditionht
             }
             else{
-                Write-Warning "Unable to get conditions"
+                Write-Warning $Script:messages.ConditionErrorMessage
             }
         }
         catch{

@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
   "serviceType": "SharePoint Online",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure document sharing is being controlled by domains with allowlist or denylist",
   "description": "Consider to control sharing of documents to external domains by either blocking domains or only allowing sharing with specific named domains.",
   "rationale": "Attackers will often attempt to expose sensitive information to external entities through sharing, and restricting the domains that your users can share documents with will reduce that surface area.",
   "impact": "Enabling this feature will prevent users from sharing documents with domains outside of the organization unless allowed.",
-  "remediation": "\r\n\t\t\t\t\t###### To configure document sharing restrictions, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Log in as an SharePoint Administrator\r\n\t\t\t\t\t2. Navigate to <a href=\"https://admin.microsoft.com\" target=\"_blank\">Microsoft 365 administration portal</a>, Click on Admin Centers and then SharePoint.\r\n\t\t\t\t\t3. Expand `Policies` then click `Sharing`.\r\n\t\t\t\t\t4. Expand `More external sharing settings` and check `Limit external sharing by domain`..\r\n\t\t\t\t\t5. Select `Add domains` to add a list of approved domains.\r\n\t\t\t\t\t6. Click `Save` at the bottom of the page.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To configure document sharing restrictions, you can also use SharePoint Online PowerShell\r\n\t\t\t\t\t1. Connect to SharePoint Online using Connect-SPOService\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```\r\n\t\t\t\t\tSet-SPOTenant -SharingDomainRestrictionMode AllowList -SharingAllowedDomainList \"domain1.com domain2.com\"\r\n\t\t\t\t\t```\r\n\t",
+  "remediation": {
+    "text": "###### To configure document sharing restrictions, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Log in as an SharePoint Administrator\r\n\t\t\t\t\t2. Navigate to \u003ca href=\"https://admin.microsoft.com\" target=\"_blank\"\u003eMicrosoft 365 administration portal\u003c/a\u003e, Click on Admin Centers and then SharePoint.\r\n\t\t\t\t\t3. Expand `Policies` then click `Sharing`.\r\n\t\t\t\t\t4. Expand `More external sharing settings` and check `Limit external sharing by domain`..\r\n\t\t\t\t\t5. Select `Add domains` to add a list of approved domains.\r\n\t\t\t\t\t6. Click `Save` at the bottom of the page.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To configure document sharing restrictions, you can also use SharePoint Online PowerShell\r\n\t\t\t\t\t1. Connect to SharePoint Online using Connect-SPOService\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```\r\n\t\t\t\t\tSet-SPOTenant -SharingDomainRestrictionMode AllowList -SharingAllowedDomainList \"domain1.com domain2.com\"\r\n\t\t\t\t\t```",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/sharepoint/turn-external-sharing-on-or-off",
     "https://docs.microsoft.com/en-us/microsoft-365/solutions/microsoft-365-limit-sharing?view=o365-worldwide"
@@ -21,32 +34,87 @@
   "tags": [
     "Microsoft 365 CIS benchmark 6.1"
   ],
-  "path": "o365_spo_tenant_details",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "SharingDomainRestrictionMode",
-              "eq",
-              "0"
+  "rule": {
+    "path": "o365_spo_tenant_details",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "SharingDomainRestrictionMode",
+                "eq",
+                "0"
+              ]
             ]
-          ]
-        }
-      ]
-    }
-  ],
-  "idSuffix": "sps_document_sharing_all_enabled",
-  "status": {
-    "keyName": [],
-    "message": "Ensure document sharing is being controlled by domains with allowlist or denylist"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "AllowEditing": "Allow Editing",
+          "AnyoneLinkTrackUsers": "Link Track Users",
+          "ConditionalAccessPolicy": "Conditional Access Policy",
+          "SharingDomainRestrictionMode": "Sharing Domain Restriction Mode"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure document sharing is being controlled by domains with allowlist or denylist",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "sps_document_sharing_all_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

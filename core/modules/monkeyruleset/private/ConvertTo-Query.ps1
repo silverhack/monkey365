@@ -38,42 +38,65 @@ function ConvertTo-Query{
     [CmdletBinding()]
     [OutputType([System.Management.Automation.ScriptBlock])]
     Param (
-        [parameter(Mandatory=$true, HelpMessage="Conditions")]
-        [Object]$Conditions
+        [parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Query object")]
+        [Object]$InputObject
     )
-    $finalquery = [System.String]::Empty
-    foreach($nquery in $Conditions){
-        if($null -ne $nquery.Psobject.Properties.Item('statements')){
-            $statements = @()
-            #Check if operator
-            $operator = $nquery | Select-Object -ExpandProperty operator -ErrorAction Ignore
-            #Check if connect operator
-            $connectOperator = $nquery | Select-Object -ExpandProperty connectOperator -ErrorAction Ignore
-            foreach($statement in $nquery.statements){
-                $query = Resolve-Statement -Statement $statement
-                if($query){
-                    $statements+=$query
-                }
-            }
-            if(@($statements).Count -eq 1 -and $null -eq $operator){
-                $q = (@($statements) -join ' ')
-                if($null -ne $connectOperator -and $null -ne (Get-LogicalOperator $connectOperator)){
-                    $q = ("-{0} ({1})" -f $connectOperator,$q)
-                }
-                $finalquery = ("{0} {1}" -f $finalquery,$q)
-            }
-            elseif($null -ne $operator -and $null -ne (Get-LogicalOperator $operator)){
-                $q = (@($statements).ForEach({"($_)"}) -join (' -{0} ' -f $operator))
+    Process{
+        $operator = $connectOperator = $null;
+        #$finalquery = [System.String]::Empty
+        $finalquery = [System.Text.StringBuilder]::new()
+        Foreach($query in @($InputObject)){
+            If($null -ne $query -and $null -ne $query.Psobject.Properties.Item('filter') -and $null -ne $query.filter){
+                #$filters = @()
+                $filters = [System.Collections.Generic.List`1[String]]::new()
+                #Check if operator
+                $operator = $query | Select-Object -ExpandProperty operator -ErrorAction Ignore
                 #Check if connect operator
-                if($null -ne $connectOperator -and $null -ne (Get-LogicalOperator $connectOperator)){
-                    $q = ("-{0} ({1})" -f $connectOperator,$q)
+                $connectOperator = $query | Select-Object -ExpandProperty connectOperator -ErrorAction Ignore
+                foreach($filter in $query.filter){
+                    $newFilter = $filter | Resolve-Filter
+                    If($newFilter){
+                        #$filters+=$newFilter
+                        [void]$filters.Add($newFilter);
+                    }
                 }
-                $finalquery = ("{0} {1}" -f $finalquery,$q)
+                If(@($filters).Count -eq 1 -and $null -eq $operator){
+                    $q = (@($filters) -join ' ')
+                    if($null -ne $connectOperator -and $null -ne (Get-LogicalOperator $connectOperator)){
+                        $q = ("-{0} ({1})" -f $connectOperator,$q)
+                    }
+                    If($q.Length -gt 0){
+                        #$finalquery = ("{0} {1}" -f $finalquery,$q)
+                        [void]$finalquery.Append($q);
+                    }
+                }
+                Elseif($null -ne $operator -and $null -ne (Get-LogicalOperator $operator)){
+                    #$q = (@($filters).ForEach({"($_)"}) -join (' -{0} ' -f $operator))
+                    $q = $filters -join (' -{0} ' -f $operator)
+                    #Check if connect operator
+                    If($null -ne $connectOperator -and $null -ne (Get-LogicalOperator $connectOperator)){
+                        $q = ("-{0} ({1})" -f $connectOperator,$q)
+                    }
+                    If($q.Length -gt 0){
+                        #$finalquery = ("{0} {1}" -f $finalquery,$q)
+                        [void]$finalquery.Append($q);
+                    }
+                }
+                Else{
+                    Write-Warning -Message $Script:messages.BuildQueryGenericErrorMessage
+                }
             }
-            else{
-                Write-Warning "Unable to convert query"
+            Else{
+                Write-Warning -Message ($Script:messages.UnableToGetObjectProperty -f 'filter')
             }
         }
+        If($null -ne (Get-Variable -Name queryIsOpen -ErrorAction Ignore) -and $queryIsOpen){
+            #$finalquery = ("{0}}})" -f $finalquery,$q)
+            [void]$finalquery.Append('})');
+            Remove-Variable -Name queryIsOpen -Scope Script -Force -ErrorAction Ignore
+        }
+        If($finalquery.Length -gt 0){
+            $finalquery.ToString().Trim();
+        }
     }
-    $finalquery.Trim()
 }

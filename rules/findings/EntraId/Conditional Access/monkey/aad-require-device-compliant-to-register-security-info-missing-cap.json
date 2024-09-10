@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
   "serviceType": "Conditional Access",
   "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure that a Conditional Access Policy exists to require device marked as compliant when registering for security information.",
-  "description": "Use Conditional Access to require a user's device to be either Microsoft Entra hybrid joined or compliant during MFA registration.",
+  "description": "Use Conditional Access to require a user\u0027s device to be either Microsoft Entra hybrid joined or compliant during MFA registration.",
   "rationale": "Reduce risk of an adversary using stolen user credentials and then registering their own MFA device to access the tenant by requiring a managed device provisioned and controlled by the agency to perform registration actions. This prevents the adversary from using their own unmanaged device to perform the registration.",
   "impact": "",
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa",
     "https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access",
@@ -14,75 +27,132 @@
     "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-7-restrict-resource-access-based-on--conditions"
   ],
   "compliance": [
-    ["Monkey365"]
+    "Monkey365"
   ],
   "level": "medium",
-  "tags": null,
-  "path": "aad_conditional_access_policy",
-  "conditions": [
-    {
-      "operator": "and",
-      "statements": [
-        {
-          "conditions": [
-            [
-              "state",
-              "eq",
-              "true"
-            ],
-            [
-              "conditions.users.includeUsers",
-              "eq",
-              "All"
-            ],
-			[
-              "conditions.applications.includeApplications",
-              "eq",
-              "All"
-            ]
-          ],
-          "operator": "and"
-        }
-      ]
-    },
-	{
-      "connectOperator": "and",
-      "statements": [
-        {
-          "conditions": [
-            [
-              "grantControls.operator",
-              "eq",
-              "OR"
-            ],
-			[
-              "grantControls.builtInControls",
-              "match",
-              "compliantDevice"
-            ],
-			[
-              "grantControls.builtInControls",
-              "match",
-              "domainJoinedDevice"
-            ]
-          ],
-		  "operator": "and"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "shouldExist": "true",
-  "returnObject": null,
-  "idSuffix": "aad_cap_block_signIn_risk",
-  "status": {
-    "keyName": ["policyName"],
-    "message": "The {policyName} policy is not configured to sign-Ins categorized as high risk"
+  "rule": {
+    "path": "aad_conditional_access_policy",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "operator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "state",
+                "eq",
+                "true"
+              ],
+              [
+                "conditions.users.includeUsers",
+                "eq",
+                "All"
+              ],
+              [
+                "conditions.applications.includeApplications",
+                "eq",
+                "All"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "grantControls.operator",
+                "eq",
+                "OR"
+              ],
+              [
+                "grantControls.builtInControls",
+                "match",
+                "compliantDevice"
+              ],
+              [
+                "grantControls.builtInControls",
+                "match",
+                "domainJoinedDevice"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": "true",
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": "policyName",
-    "resourceId": "policyId",
-    "resourceType": "@odata.context"
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "displayName": "Name",
+          "state": "Status",
+          "conditions.applications.includeApplications": "Applications",
+          "conditions.users.includeUsers": "Users",
+          "grantControls.operator": "Operator",
+          "grantControls.builtInControls": "BuiltIn Controls"
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "displayName"
+        ],
+      "message": "The {displayName} policy is not configured to require a compliant or hybrid Entra ID joined device",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "@odata.context"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "aad_cap_block_signIn_risk",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

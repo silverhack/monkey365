@@ -9,22 +9,24 @@ $LocalizedDataParams = @{
 #Import localized data
 Import-LocalizedData @LocalizedDataParams;
 
-$internal_modules = @(
-    'core/modules/monkeyhttpwebrequest'
-    'core/modules/monkeyutils',
-    'core/modules/monkeylogger'
-    'core/modules/psmarkdig',
-    'core/modules/monkeyruleset',
-    'core/modules/monkeyhtml',
-    'core/modules/monkeyast',
-    'core/modules/monkeyjob'
-)
-$internal_modules.ForEach({Import-Module ("{0}{1}{2}" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar, $_.ToString()) -Force})
-
 $msal_modules = @(
     'core/modules/monkeycloudutils'
 )
 $msal_modules.ForEach({Import-Module ("{0}{1}{2}" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar, $_.ToString()) -Scope Global -Force})
+
+$internal_modules = @(
+    'core/modules/monkeyutils',
+    'core/modules/monkeyhttpwebrequest'
+    'core/modules/monkeylogger',
+    'core/modules/psmarkdig',
+    'core/modules/monkeyhtml',
+    'core/modules/monkeyast',
+    'core/modules/monkeyjob',
+    'core/modules/monkeyruleset',
+    'core/modules/psocsf',
+    'core/modules/monkeyOutput'
+)
+$internal_modules.ForEach({Import-Module ("{0}{1}{2}" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar, $_.ToString()) -Force})
 
 New-Variable -Name ScriptPath -Value $PSScriptRoot -Scope Script -Force
 

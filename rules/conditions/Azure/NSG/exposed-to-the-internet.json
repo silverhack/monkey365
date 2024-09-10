@@ -1,6 +1,6 @@
 {
 	operator: 'and',
-	statements: [
+	filter: [
 		{
 			conditions : [
 				["direction", "eq", "Inbound"],

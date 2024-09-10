@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Public IP addresses",
   "serviceName": "Network",
   "displayName": "Ensure that Public IP addresses are Evaluated on a Periodic Basis",
   "description": "Public IP Addresses provide tenant accounts with Internet connectivity for resources contained within the tenant. During the creation of certain resources in Azure, a Public IP Address may be created. All Public IP Addresses within the tenant should be periodically reviewed for accuracy and necessity.",
   "rationale": "Public IP Addresses allocated to the tenant should be periodically reviewed for necessity. Public IP Addresses that are not intentionally assigned and controlled present a publicly facing vector for threat actors and significant risk to the tenant.",
   "impact": "Public IP Addresses that are not intentionally assigned and controlled present a publicly facing vector for threat actors and significant risk to the tenant.",
-  "remediation": "Remediation will vary significantly depending on your organization's security requirements for the resources attached to each individual Public IP address. \r\n\t\t\t\t\t###### From Azure Portal\r\n\t\t\t\t\t1. Open the `All Resources blade`\r\n\t\t\t\t\t2. Click on `Add Filter`\r\n\t\t\t\t\t3. In the Add Filter window, select the following:\r\n\t\t\t\t\tFilter: `Type`\r\nOperator: `Equals`\r\nValue: `Public IP address`\r\n\t\t\t\t\t4. Click the `Apply` button\r\n\r\n\t\t\t\t\t5. For each Public IP address in the list, use Overview (or Properties) to review the `Associated to:` field and determine if the associated resource is still relevant to your tenant environment. If the associated resource is relevant, ensure that additional controls exist to mitigate risk (e.g. Firewalls, VPNs, Traffic Filtering, Virtual Gateway Appliances, Web Application Firewalls, etc.) on all subsequently attached resources.",
+  "remediation": {
+    "text": "Remediation will vary significantly depending on your organization\u0027s security requirements for the resources attached to each individual Public IP address. \r\n\t\t\t\t\t###### From Azure Portal\r\n\t\t\t\t\t1. Open the `All Resources blade`\r\n\t\t\t\t\t2. Click on `Add Filter`\r\n\t\t\t\t\t3. In the Add Filter window, select the following:\r\n\t\t\t\t\tFilter: `Type`\r\nOperator: `Equals`\r\nValue: `Public IP address`\r\n\t\t\t\t\t4. Click the `Apply` button\r\n\r\n\t\t\t\t\t5. For each Public IP address in the list, use Overview (or Properties) to review the `Associated to:` field and determine if the associated resource is still relevant to your tenant environment. If the associated resource is relevant, ensure that additional controls exist to mitigate risk (e.g. Firewalls, VPNs, Traffic Filtering, Virtual Gateway Appliances, Web Application Firewalls, etc.) on all subsequently attached resources.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://learn.microsoft.com/en-us/cli/azure/network/public-ip?view=azure-cli-latest",
     "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-network-security"
@@ -18,32 +31,96 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_publicIPAddress",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-			  "associatedTo",	
-			  "eq"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "azure_unassigned_public_ip_address",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_publicIPAddress",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "associatedTo",
+                "eq"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Public IP",
+          "location": "Location",
+          "resourceGroupName": "Resource Group",
+          "ipAddress": "IP Address",
+          "publicIPAllocationMethod": "Allocation Method",
+          "associatedTo": "Associated To"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "name",
+            "location",
+            "resourceGroupName",
+            "ipAddress",
+            "publicIPAllocationMethod",
+            "associatedTo"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_unassigned_public_ip_address",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

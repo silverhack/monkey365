@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
   "serviceType": "SharePoint Online",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure Office 365 SharePoint infected files are disallowed for download",
-  "description": "Office 365 ATP for SharePoint, OneDrive, and Microsoft Teams protects your organization from inadvertently sharing malicious files. When an infected file is detected, that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization's security team.",
-  "rationale": "Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams protects your organization from inadvertently sharing malicious files. When an infected file is detected, that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization's security team.",
+  "description": "Office 365 ATP for SharePoint, OneDrive, and Microsoft Teams protects your organization from inadvertently sharing malicious files. When an infected file is detected, that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization\u0027s security team.",
+  "rationale": "Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams protects your organization from inadvertently sharing malicious files. When an infected file is detected, that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization\u0027s security team.",
   "impact": "The only potential impact associated with implementation of this setting is potential inconvenience associated with the small percentage of false positive detections that may occur.",
-  "remediation": "\r\n\t\t\t\t\t###### To set O365 SharePoint to disallow download of infected files, use Powershell:\r\n\t\t\t\t\t1. Connect using `Connect-SPOService`, you will need to enter the URL for your Sharepoint Online admin page https://*-admin.sharepoint.com as well as a Global Admin account.\r\n\t\t\t\t\t2. Run the following Powershell command to set the value to True\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tSet-SPOTenant –DisallowInfectedFileDownload $true\r\n\t\t\t\t\t```\r\n\t\t\t\t\t3. After several minutes run the following to verify the value for `DisallowInfectedFileDownload` has been set to True.\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tGet-SPOTenant | Select-Object DisallowInfectedFileDownload\r\n\t\t\t\t\t```\r\n\t",
+  "remediation": {
+    "text": "###### To set O365 SharePoint to disallow download of infected files, use Powershell:\r\n\t\t\t\t\t1. Connect using `Connect-SPOService`, you will need to enter the URL for your Sharepoint Online admin page https://*-admin.sharepoint.com as well as a Global Admin account.\r\n\t\t\t\t\t2. Run the following Powershell command to set the value to True\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tSet-SPOTenant â€“DisallowInfectedFileDownload $true\r\n\t\t\t\t\t```\r\n\t\t\t\t\t3. After several minutes run the following to verify the value for `DisallowInfectedFileDownload` has been set to True.\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tGet-SPOTenant | Select-Object DisallowInfectedFileDownload\r\n\t\t\t\t\t```",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/turn-on-atp-for-spo-odb-and-teams",
     "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/virus-detection-in-spo?view=o365-worldwide"
@@ -18,33 +31,90 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "o365_spo_tenant_admin_details",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "DisallowInfectedFileDownload",
-              "eq",
-              "false"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "o365_spo_infected_files_allowed_download",
-  "status": {
-    "keyName": [],
-    "message": "Ensure Office 365 SharePoint infected files are disallowed for download"
+  "rule": {
+    "path": "o365_spo_tenant_admin_details",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "DisallowInfectedFileDownload",
+                "eq",
+                "false"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "RootSiteUrl": "Root Site",
+          "SharingCapability": "Sharing Capability",
+          "ConditionalAccessPolicy": "Conditional Access Policy",
+          "DisallowInfectedFileDownload": "Disallow Infected File Download"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure Office 365 SharePoint infected files are disallowed for download",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "o365_spo_infected_files_allowed_download",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

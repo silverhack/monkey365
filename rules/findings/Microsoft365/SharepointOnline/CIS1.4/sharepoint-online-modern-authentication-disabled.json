@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
   "serviceType": "SharePoint Online",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure modern authentication for SharePoint applications is required",
   "description": "Modern authentication in Microsoft 365 enables authentication features like multifactor authentication (MFA) using smart cards, certificate-based authentication (CBA), and third party SAML identity provider.",
   "rationale": "Strong authentication controls, such as the use of multifactor authentication, may be circumvented if basic authentication is used by SharePoint applications. Requiring modern authentication for SharePoint applications ensures strong authentication mechanisms are used when establishing sessions between these applications, SharePoint, and connecting users.",
   "impact": "Implementation of modern authentication for SharePoint will require users to authenticate to SharePoint using modern authentication. This may cause a minor impact to typical user behavior.",
-  "remediation": "\r\n\t\t\t\t\t###### To set SharePoint settings, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Under `Admin centers` select `SharePoint`.\r\n\t\t\t\t\t2. Expand `Policies` then select `Access Control`.\r\n\t\t\t\t\t3. Select `Apps that don't use modern authentication`.\r\n\t\t\t\t\t4. Select the radio button for `Block`.\r\n\t\t\t\t\t5. Click `Save`\r\n\t\t\t\t\t###### To set Apps that don't use modern authentication is set to Block, use the SharePoint Online PowerShell Module:\r\n\t\t\t\t\t1. Connect to SharePoint Online using `Connect-SPOService` -Url https://tenant-admin.sharepoint.com replacing `tenant` with your value.\r\n\t\t\t\t\t2. Run the following SharePoint Online PowerShell command:\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tSet-SPOTenant -LegacyAuthProtocolsEnabled $false\r\n\t\t\t\t\t```\r\n\t",
+  "remediation": {
+    "text": "###### To set SharePoint settings, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Under `Admin centers` select `SharePoint`.\r\n\t\t\t\t\t2. Expand `Policies` then select `Access Control`.\r\n\t\t\t\t\t3. Select `Apps that don\u0027t use modern authentication`.\r\n\t\t\t\t\t4. Select the radio button for `Block`.\r\n\t\t\t\t\t5. Click `Save`\r\n\t\t\t\t\t###### To set Apps that don\u0027t use modern authentication is set to Block, use the SharePoint Online PowerShell Module:\r\n\t\t\t\t\t1. Connect to SharePoint Online using `Connect-SPOService` -Url https://tenant-admin.sharepoint.com replacing `tenant` with your value.\r\n\t\t\t\t\t2. Run the following SharePoint Online PowerShell command:\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tSet-SPOTenant -LegacyAuthProtocolsEnabled $false\r\n\t\t\t\t\t```",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/block-legacy-authentication",
     "https://stealthbits.com/blog/how-to-harden-you-sharepoint-online-environment-by-disabling-legacy-authentication/"
@@ -21,32 +34,87 @@
   "tags": [
     "Microsoft 365 CIS benchmark 1.4"
   ],
-  "path": "o365_spo_tenant_admin_details",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "LegacyAuthProtocolsEnabled",
-              "eq",
-              "true"
+  "rule": {
+    "path": "o365_spo_tenant_admin_details",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "LegacyAuthProtocolsEnabled",
+                "eq",
+                "true"
+              ]
             ]
-          ]
-        }
-      ]
-    }
-  ],
-  "idSuffix": "o365_spo_modern_auth_disabled",
-  "status": {
-    "keyName": [],
-    "message": "Ensure modern authentication for SharePoint applications is required"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "RootSiteUrl": "Root Site",
+          "SharingCapability": "Sharing Capability",
+          "ConditionalAccessPolicy": "Conditional Access Policy",
+          "LegacyAuthProtocolsEnabled": "Legacy Auth Enabled"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure modern authentication for SharePoint applications is required",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "o365_spo_modern_auth_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

@@ -54,8 +54,7 @@ Function Invoke-RuleScan{
     )
     Begin{
         $validRules = $null;
-        $Verbose = $False;
-        $Debug = $False;
+        $Verbose = $Debug = $False;
         $InformationAction = 'SilentlyContinue'
         if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
             $Verbose = $True
@@ -81,54 +80,50 @@ Function Invoke-RuleScan{
         $isActive = Initialize-MonkeyRuleset @newPsboundParams
         if($isActive){
             New-Variable -Name Dataset -Value $InputObject -Scope Script -Force
-            #Build query for all rules
             $p = @{
                 InformationAction = $InformationAction;
                 Verbose = $Verbose;
                 Debug = $Debug;
             }
-            Build-Query @p
             $validRules = Get-ValidRule @p
         }
     }
     Process{
         if($null -ne $validRules -and @($validRules).Count -gt 0){
             foreach($rule in @($validRules)){
-                #Get element
-                $ObjectsToCheck = Get-ElementsToCheck -Path $rule.path
-                if($null -ne $ObjectsToCheck){
-                    if($null -ne $ObjectsToCheck.PsObject.Properties.Item('Data')){
-                        $matched_elements = Invoke-UnitRule -InputObject $rule -ObjectsToCheck $ObjectsToCheck.Data
+                #Build query
+                $rule = $rule | Build-Query
+                If($null -ne $rule){
+                    #Get element
+                    $ObjectsToCheck = $rule | Get-ObjectFromDataset
+                    If($null -ne $ObjectsToCheck){
+                        $matched_elements = $rule | Invoke-UnitRule -ObjectsToCheck $ObjectsToCheck
                     }
                     Else{
-                        $matched_elements = Invoke-UnitRule -InputObject $rule -ObjectsToCheck $ObjectsToCheck
+                        Write-Warning ("{0} was not found on dataset or query was invalid" -f $rule.rule.path)
+                        continue
                     }
-                }
-                else{
-                    Write-Warning ("{0} was not found on dataset or query was invalid" -f $rule.path)
-                    $matched_elements = $null
-                }
-                #Check for removeIfNotExists exception rule
-                if([bool]$rule.PSObject.Properties['removeIfNotExists']){
-                    if($rule.removeIfNotExists.ToString().ToLower() -eq "true"){
-                        if($null -eq $matched_elements){
+                    #Check for removeIfNotExists exception rule
+                    $removeIfNotExists = $rule.rule | Select-Object -ExpandProperty removeIfNotExists -ErrorAction Ignore
+                    If($null -ne $removeIfNotExists -and $removeIfNotExists){
+                        If($null -eq $matched_elements){
                             continue
                         }
                     }
+                    $p =  @{
+                        InputObject = $rule;
+                        AffectedObjects = $matched_elements;
+                        Resources = $ObjectsToCheck;
+                        UnixTimestamp = $PSBoundParameters['UnixTimestamp'];
+                    }
+                    $findingObj = New-MonkeyFindingObject @p
+                    if(!$matched_elements){
+                        $findingObj.level = "Good"
+                    }
+                    #Add status code
+                    $findingObj.statusCode = $findingObj.level | Get-StatusCode
+                    Write-Output $findingObj
                 }
-                $p =  @{
-                    InputObject = $rule;
-                    affectedObjects = $matched_elements;
-                    Resources = $ObjectsToCheck;
-                    UnixTimestamp = $PSBoundParameters['UnixTimestamp'];
-                }
-                $findingObj = New-MonkeyFindingObject @p
-                if(!$matched_elements){
-                    $findingObj.level = "Good"
-                }
-                #Add status code
-                $findingObj.statusCode = $findingObj.level | Get-StatusCode
-                Write-Output $findingObj
             }
         }
     }

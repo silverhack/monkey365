@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Subscription Security",
   "serviceName": "Subscription",
   "displayName": "Ensure that no custom owner roles are created",
   "description": "Subscription ownership should not include permission to create custom owner roles. The principle of least privilege should be followed and only necessary privileges should be assigned instead of allowing full administrative access.",
   "rationale": "Classic subscription admin roles offer basic access management and include Account Administrator, Service Administrator, and Co-Administrators. It is recommended the least necessary permissions be given initially. Permissions can be added as needed by the account holder. This ensures the account holder cannot perform actions which were not intended.",
   "impact": null,
-  "remediation": "\r\n\t\t\t\t\t###### Using Azure Command Line Interface 2.0\r\n\t\t\t\t\t`az role definition list`\r\n\t\t\t\t\tCheck for entries with `assignableScope` of **/** or a `subscription`, and an action of `*`.  \r\n\t\t\t\t\tVerify the usage and impact of removing the role identified:\r\n\t\t\t\t\t`az role definition delete --name 'rolename'`\r\n\t",
+  "remediation": {
+    "text": "###### Using Azure Command Line Interface 2.0\r\n\t\t\t\t\t`az role definition list`\r\n\t\t\t\t\tCheck for entries with `assignableScope` of **/** or a `subscription`, and an action of `*`.  \r\n\t\t\t\t\tVerify the usage and impact of removing the role identified:\r\n\t\t\t\t\t`az role definition delete --name \u0027rolename\u0027`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/billing/billing-add-change-azure-subscription-administrator",
     "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
@@ -25,37 +38,94 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_role_definitions",
-  "conditions": [
-    {
-      "operator": "and",
-      "statements": [
-        {
-          "include": "subscription-role-permissions.json"
-        },
-        {
-          "conditions": [
-            [
-              "properties.type",
-              "eq",
-              "CustomRole"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "azure_subscription_custom_role_definition",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_role_definitions",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "operator": "and",
+        "filter": [
+          {
+            "include": "subscription-role-permissions.json"
+          },
+          {
+            "conditions": [
+              [
+                "properties.type",
+                "eq",
+                "CustomRole"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "properties.roleName": "Role Name",
+          "properties.type": "Type",
+          "properties.description": "Description",
+          "properties.createdOn": "Created"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_subscription_custom_role_definition",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

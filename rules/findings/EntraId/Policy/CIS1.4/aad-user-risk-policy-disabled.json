@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
   "serviceType": "Identity Protection",
   "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure Microsoft Entra ID Identity Protection user risk policy is enabled",
   "description": "Microsoft Entra ID Identity Protection user risk policies detect the probability that a user account has been compromised.",
   "rationale": "With the user risk policy turned on, Microsoft Entra ID detects the probability that a user account has been compromised. As an administrator, you can configure a user risk conditional access policy to automatically respond to a specific user risk level. For example, you can block access to your resources or require a password change to get a user account back into a clean state.",
-  "impact": "When the policy triggers, access to the account will either be blocked or the user would be required to use multi-factor authentication and change their password. Users who haven't registered MFA on their account will be blocked from accessing it. If account access is blocked, an admin would need to recover the account. It is therefore recommended that the MFA registration policy be configured for all users who are a part of the User Risk policy.",
-  "remediation": "\r\n\t\t\t\t\t###### From Microsoft Entra ID Portal\r\n\t\t\t\t\t1. Log in to <a href='https://aad.portal.azure.com' target='_blank'>https://aad.portal.azure.com</a> as a Global Administrator.\r\n\t\t\t\t\t2. Select `Security`.\r\n\t\t\t\t\t3. Select `Identity Protection`.\r\n\t\t\t\t\t4. Select `User risk policy`.\r\n\t\t\t\t\t5. Set the following conditions within the policy.\r\n\t\t\t\t\t\t* Under Users or workload identities choose `All users`\r\n\t\t\t\t\t\t* Under `User risk` set the appropriate level.\r\n\t\t\t\t\t\t* Under `Access` select `Allow access` then in the right pane select `Require password change`.\r\n\t\t\t\t\t6. Click `Done`\r\n\t\t\t\t\t7. In `Enforce Policy` set `On`.\r\n\t",
+  "impact": "When the policy triggers, access to the account will either be blocked or the user would be required to use multi-factor authentication and change their password. Users who haven\u0027t registered MFA on their account will be blocked from accessing it. If account access is blocked, an admin would need to recover the account. It is therefore recommended that the MFA registration policy be configured for all users who are a part of the User Risk policy.",
+  "remediation": {
+    "text": "###### From Microsoft Entra ID Portal\r\n\t\t\t\t\t1. Log in to \u003ca href=\u0027https://aad.portal.azure.com\u0027 target=\u0027_blank\u0027\u003ehttps://aad.portal.azure.com\u003c/a\u003e as a Global Administrator.\r\n\t\t\t\t\t2. Select `Security`.\r\n\t\t\t\t\t3. Select `Identity Protection`.\r\n\t\t\t\t\t4. Select `User risk policy`.\r\n\t\t\t\t\t5. Set the following conditions within the policy.\r\n\t\t\t\t\t\t* Under Users or workload identities choose `All users`\r\n\t\t\t\t\t\t* Under `User risk` set the appropriate level.\r\n\t\t\t\t\t\t* Under `Access` select `Allow access` then in the right pane select `Require password change`.\r\n\t\t\t\t\t6. Click `Done`\r\n\t\t\t\t\t7. In `Enforce Policy` set `On`.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/active-directory/authentication/tutorial-risk-based-sspr-mfa"
   ],
@@ -20,37 +33,87 @@
   "tags": [
     "Microsoft 365 CIS benchmark 1.1.8"
   ],
-  "path": "aad_domain_policies",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "displayName",
-              "eq",
-              "User Risk and MFA Registration Policy"
+  "rule": {
+    "path": "aad_domain_policies",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "displayName",
+                "eq",
+                "User Risk and MFA Registration Policy"
+              ]
             ]
-          ]
-        }
-      ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": "true",
+    "returnObject": {
+      "PolicyName": "User Risk and MFA Registration Policy",
+      "Status": "DoesNotExists"
+    },
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Entra Id user risk policy is not enabled",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
     }
-  ],
-  "shouldExist": "true",
-  "returnObject": {
-    "PolicyName": "User Risk and MFA Registration Policy",
-    "Status": "DoesNotExists"
   },
   "idSuffix": "aad_user_risk_policy_disabled",
-  "status": {
-    "keyName": [],
-    "message": "Entra Id user risk policy is not enabled"
-  },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

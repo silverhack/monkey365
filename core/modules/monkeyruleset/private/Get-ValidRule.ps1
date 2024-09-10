@@ -41,8 +41,8 @@ Function Get-ValidRule{
         #Create new array
         $all_rules = @()
         #Remove elements that are not present in dataset
-        $all_paths = $Script:AllRules | Select-Object -ExpandProperty path | Select-Object -Unique
-        foreach($elem in $all_paths){
+        $all_paths = $Script:AllRules.rule | Select-Object -ExpandProperty path | Select-Object -Unique
+        ForEach($elem in $all_paths){
             $exists = $Script:Dataset | Select-Object -ExpandProperty $elem -ErrorAction Ignore
             if($null -eq $exists){
                 #removing rule
@@ -50,7 +50,7 @@ Function Get-ValidRule{
                 $all_rules += $elem
             }
         }
-        $Script:AllRules | Where-Object {$_.path -notin $all_rules}
+        @($Script:AllRules).Where({$_.rule.path -notin $all_rules})
     }
     catch{
         Write-Error $_

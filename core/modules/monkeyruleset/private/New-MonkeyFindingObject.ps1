@@ -45,7 +45,7 @@ Function New-MonkeyFindingObject {
         [parameter(Mandatory= $false, HelpMessage="affected objects")]
         [AllowNull()]
         [AllowEmptyString()]
-        [Object]$affectedObjects,
+        [Object]$AffectedObjects,
 
         [parameter(Mandatory= $false, HelpMessage="objects to check")]
         [AllowNull()]
@@ -57,29 +57,51 @@ Function New-MonkeyFindingObject {
     )
     Process{
         try{
-            #Set new obj
-            $tmp_object = [ordered]@{}
-            foreach($elem in $InputObject.Psobject.Properties){
-                [void]$tmp_object.Add($elem.Name,$elem.Value)
-            }
-            $InputObject = New-Object -TypeName PSCustomObject -Property $tmp_object
             #Check level
             if($null -eq $InputObject.PsObject.Properties.Item('level')){
                 $InputObject | Add-Member -Type NoteProperty -name level -value $null -Force
-            }
+            }            
             #Add metadata
-            If($null -ne $Resources -and ([System.Collections.IDictionary]).IsAssignableFrom($Resources.GetType())){
-                $Metadata = $Resources.Item('Metadata')
-            }
-            ElseIf(($Resources.GetType() -eq [System.Management.Automation.PSCustomObject] -or $Resources.GetType() -eq [System.Management.Automation.PSObject])){
-                $Metadata = $Resources | Select-Object -ExpandProperty 'Metadata' -ErrorAction Ignore
-            }
-            Else{##Object isn't an hashtable, collection, etc...
-                $Metadata = $null
-            }
-            $InputObject | Add-Member -Type NoteProperty -name metadata -value $Metadata -Force
-            $InputObject | Add-Member -Type NoteProperty -name affectedResources -value $affectedObjects -Force
+            $Metadata = $InputObject | Get-ObjectFromDataset -Metadata
+            $InputObject | Add-Member -Type NoteProperty -name metadata -value $Metadata -Forc
+            $InputObject | Add-Member -Type NoteProperty -name affectedResources -value $AffectedObjects -Force
             $InputObject | Add-Member -Type NoteProperty -name resources -value $Resources -Force
+            #Format html and text output if exists
+            If($PSBoundParameters.ContainsKey('AffectedObjects') -and $PSBoundParameters['AffectedObjects']){
+                #Format HTML if exists
+                Try{
+                    $p = @{
+                        Expressions = $InputObject.output.html.data.properties;
+                        ExpandObject = $InputObject.output.html.data.expandObject ;
+                    }
+                    $dataOut = $PSBoundParameters['AffectedObjects'] | Format-DataFromExpression @p
+                    #Add to object
+                    $InputObject.output.html | Add-Member -Type NoteProperty -name out -value $dataOut -Force
+                }
+                Catch{
+                    Write-Warning -Message ($Script:messages.UnableToFormatErrorMessage -f "HTML")
+                    $InputObject.output.html | Add-Member -Type NoteProperty -name out -value $null -Force
+                }
+                #Format text if exists
+                Try{
+                    $p = @{
+                        Expressions = $InputObject.output.text.data.properties;
+                        ExpandObject = $InputObject.output.text.data.expandObject ;
+                    }
+                    $dataOut = $PSBoundParameters['AffectedObjects'] | Format-DataFromExpression @p
+                    #Add to object
+                    $InputObject.output.text | Add-Member -Type NoteProperty -name out -value $dataOut -Force
+                }
+                Catch{
+                    Write-Warning -Message ($Script:messages.UnableToFormatErrorMessage -f "text")
+                    $InputObject.output.text | Add-Member -Type NoteProperty -name out -value $null -Force
+                }
+            }
+            Else{
+                Set-StrictMode -Off
+                $InputObject.output.html | Add-Member -Type NoteProperty -name out -value $null -Force
+                $InputObject.output.text | Add-Member -Type NoteProperty -name out -value $null -Force
+            }
             #Add timestamp
             if($PSBoundParameters.ContainsKey('UnixTimestamp') -and $PSBoundParameters['UnixTimestamp'].IsPresent){
                 $timestamp = ([System.DateTime]::UtcNow).ToString("yyyy-MM-ddTHH:mm:ssK")
@@ -92,25 +114,25 @@ Function New-MonkeyFindingObject {
             $InputObject | Add-Member -Type NoteProperty -name statusCode -value $null -Force
             #Add method to count resources
             $InputObject | Add-Member -Type ScriptMethod -Name affectedResourcesCount -Value {
-                if($null -ne $this.affectedResources){
+                If($null -ne $this.affectedResources){
                     return @($this.affectedResources).Count
                 }
-                else{
+                Else{
                     return 0
                 }
             } -Force
             #Add method to count resources
             $InputObject | Add-Member -Type ScriptMethod -Name resourcesCount -Value {
-                if($null -ne $this.resources){
+                If($null -ne $this.resources){
                     return @($this.resources).Count
                 }
-                else{
+                Else{
                     return 0
                 }
             } -Force
             #Add method to generate id suffix numbers
             $InputObject | Add-Member -Type ScriptMethod -Name getNewIdSuffix -Value {
-                if($null -ne $this.idSuffix.Replace(' ','_')){
+                If($null -ne $this.idSuffix.Replace(' ','_')){
                     $guid = [System.Guid]::NewGuid().ToString('N')
                     return ("{0}_{1}" -f $this.idSuffix, $guid)
                 }

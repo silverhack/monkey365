@@ -49,8 +49,7 @@ Function Initialize-MonkeyRuleset{
     Begin{
         #Remove vars
         Remove-InternalVar
-        $Verbose = $False;
-        $Debug = $False;
+        $Verbose = $Debug = $False;
         $InformationAction = 'SilentlyContinue'
         if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
             $Verbose = $True
@@ -64,25 +63,25 @@ Function Initialize-MonkeyRuleset{
     }
     Process{
         #Get rules path
-        if(!$PSBoundParameters.ContainsKey('RulesPath') -and $PSBoundParameters.ContainsKey('Ruleset')){
+        If(!$PSBoundParameters.ContainsKey('RulesPath') -and $PSBoundParameters.ContainsKey('Ruleset')){
             try{
                 $initPath = [System.IO.DirectoryInfo]::new($Ruleset);
                 if($initPath){
                     $initPath = $initPath.Parent.Parent
-                    Set-InternalVar -RulesPath $initPath.FullName.ToString()
+                    $initPath.FullName.ToString() | Set-InternalVar
                 }
             }
             catch{
                 Write-Verbose ($Script:messages.UnableToLoad -f "init path", $_.Exception.Message)
             }
         }
-        elseif($PSBoundParameters.ContainsKey('RulesetObject') -and $PSBoundParameters.ContainsKey('RulesPath')){
-            Set-InternalVar -RulesPath $RulesPath
+        ElseIf($PSCmdlet.ParameterSetName -eq 'RuleSetObject' -and ($PSBoundParameters.ContainsKey('RulesPath') -and $PSBoundParameters['RulesPath'])){
+            $RulesPath |Set-InternalVar
         }
-        elseif($PSBoundParameters.ContainsKey('Ruleset') -and $PSBoundParameters.ContainsKey('RulesPath')){
-            Set-InternalVar -RulesPath $RulesPath
+        ElseIf($PSCmdlet.ParameterSetName -eq 'Ruleset' -and ($PSBoundParameters.ContainsKey('RulesPath') -and $PSBoundParameters['RulesPath'])){
+            $RulesPath |Set-InternalVar
         }
-        else{
+        Else{
             Write-Warning ($Script:messages.NotEnoughInformation -f "rules")
         }
         #Get Rules

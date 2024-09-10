@@ -1,20 +1,24 @@
-{
-  "arg_names": [
-    "Alert name",
-    "Operation Name",
-    "additional_reference",
-    "compliance_version",
-    "compliance_reference",
-    "rationale",
-    "additional_compliance"
+﻿{
+  "args": [
+    
   ],
+  "provider": "Azure",
   "serviceType": "Azure Alerts",
   "serviceName": "Subscription",
   "displayName": "_ARG_0_ missing alert",
   "description": "_ARG_0_ alert was missing. Consider to add and enable this alert.",
-  "rationale": " _ARG_5_ ",
+  "rationale": "_ARG_5_",
   "impact": null,
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-collect",
     "_ARG_2_"
@@ -27,38 +31,90 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_monitor_alerts",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "operationName",
-              "eq",
-              "_ARG_1_"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
+  "rule": {
+    "path": "az_monitor_alerts",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "operationName",
+                "eq",
+                "_ARG_1_"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": "true",
+    "returnObject": {
+      "operationName": "_ARG_1_",
+      "Status": "DoesNotExists"
+    },
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "The _ARG_1_ alert was not found",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "operationName",
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
   "idSuffix": "azure_monitor_alert_missing_rule",
-  "shouldExist": "true",
-  "returnObject": {
-    "operationName": "_ARG_1_",
-    "Status": "DoesNotExists"
-  },
-  "status": {
-    "keyName": [],
-    "message": "The _ARG_1_ alert was not found"
-  },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": "operationName",
-    "resourceId": null,
-    "resourceType": null
-  }
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

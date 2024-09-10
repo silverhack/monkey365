@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
   "serviceType": "Identity Protection",
   "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure Microsoft Entra ID Identity Protection sign-in risk policy is enabled",
   "description": "Microsoft Entra ID Identity Protection sign-in risk detects risks in real-time and offline. A risky sign-in is an indicator for a sign-in attempt that might not have been performed by the legitimate owner of a user account.",
   "rationale": "Turning on the sign-in risk policy ensures that suspicious sign-ins are challenged for multi-factor authentication.",
-  "impact": "When the policy triggers, the user will need MFA to access the account. In the case of a user who hasn't registered MFA on their account, they would be blocked from accessing their account. It is therefore recommended that the MFA registration policy be configured for all users who are a part of the Sign-in Risk policy.",
-  "remediation": "\r\n\t\t\t\t\t###### From Microsoft Entra ID Portal\r\n\t\t\t\t\t1. Log in to <a href='https://aad.portal.azure.com' target='_blank'>https://aad.portal.azure.com</a> as a Global Administrator.\r\n\t\t\t\t\t2. Select `Security`.\r\n\t\t\t\t\t3. Select `Identity Protection`.\r\n\t\t\t\t\t4. Select `Sign-in risk policy`.\r\n\t\t\t\t\t5. Set the following conditions within the policy.\r\n\t\t\t\t\t\t* Under Users or workload identities choose `All users`\r\n\t\t\t\t\t\t* Under `Sign-in risk` set the appropriate level.\r\n\t\t\t\t\t\t* Under `Access` select `Allow access` then in the right pane select `Require multi-factor authentication`.\r\n\t\t\t\t\t6. Click `Done`\r\n\t\t\t\t\t7. In `Enforce Policy` set `On`.\r\n\t",
+  "impact": "When the policy triggers, the user will need MFA to access the account. In the case of a user who hasn\u0027t registered MFA on their account, they would be blocked from accessing their account. It is therefore recommended that the MFA registration policy be configured for all users who are a part of the Sign-in Risk policy.",
+  "remediation": {
+    "text": "###### From Microsoft Entra ID Portal\r\n\t\t\t\t\t1. Log in to \u003ca href=\u0027https://aad.portal.azure.com\u0027 target=\u0027_blank\u0027\u003ehttps://aad.portal.azure.com\u003c/a\u003e as a Global Administrator.\r\n\t\t\t\t\t2. Select `Security`.\r\n\t\t\t\t\t3. Select `Identity Protection`.\r\n\t\t\t\t\t4. Select `Sign-in risk policy`.\r\n\t\t\t\t\t5. Set the following conditions within the policy.\r\n\t\t\t\t\t\t* Under Users or workload identities choose `All users`\r\n\t\t\t\t\t\t* Under `Sign-in risk` set the appropriate level.\r\n\t\t\t\t\t\t* Under `Access` select `Allow access` then in the right pane select `Require multi-factor authentication`.\r\n\t\t\t\t\t6. Click `Done`\r\n\t\t\t\t\t7. In `Enforce Policy` set `On`.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/active-directory/authentication/tutorial-risk-based-sspr-mfa"
   ],
@@ -20,37 +33,87 @@
   "tags": [
     "Microsoft 365 CIS benchmark 1.1.8"
   ],
-  "path": "aad_domain_policies",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "displayName",
-              "eq",
-              "Sign-In Risk Policy"
+  "rule": {
+    "path": "aad_domain_policies",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "displayName",
+                "eq",
+                "Sign-In Risk Policy"
+              ]
             ]
-          ]
-        }
-      ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": "true",
+    "returnObject": {
+      "PolicyName": "Sign-In risk policy",
+      "Status": "DoesNotExists"
+    },
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Entra Id sign-in risk policy is not enabled",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "objectId",
+        "resourceType": null
+      },
+      "onlyStatus": false
     }
-  ],
-  "shouldExist": "true",
-  "returnObject": {
-    "PolicyName": "Sign-In risk policy",
-    "Status": "DoesNotExists"
   },
   "idSuffix": "aad_signIn_Policy_disabled",
-  "status": {
-    "keyName": [],
-    "message": "Entra Id sign-in risk policy is not enabled"
-  },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": "displayName",
-    "resourceId": "objectId",
-    "resourceType": null
-  }
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Storage Accounts",
   "serviceName": "Storage",
   "displayName": "Ensure the Minimum TLS version is set to 1.2",
   "description": "Azure Storage sets the minimum TLS version to be version 1.0 by default. TLS 1.0 is a legacy version and has known vulnerabilities. This minimum TLS version can be configured to be later protocols such as TLS 1.2.",
   "rationale": "TLS 1.0 has known vulnerabilities and has been replaced by later versions of the TLS protocol. Continued use of this legacy protocol affects the security of data in transit.",
   "impact": "When set to TLS 1.2 all requests must leverage this version of the protocol. Applications leveraging legacy versions of the protocol will fail.",
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Storage Accounts`\r\n\t\t\t\t\t2. For each storage account, go to `Configuration`\r\n\t\t\t\t\t3. Under `Setting` section, Click on `Configuration`\r\n\t\t\t\t\t3. Ensure that the `minimum TLS version` to `1.2`\r\n\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Storage Accounts`\r\n\t\t\t\t\t2. For each storage account, go to `Configuration`\r\n\t\t\t\t\t3. Under `Setting` section, Click on `Configuration`\r\n\t\t\t\t\t3. Ensure that the `minimum TLS version` to `1.2`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer",
     "https://docs.microsoft.com/en-us/azure/storage/common/storage-security-guide",
@@ -22,33 +35,90 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_storage_accounts",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "properties.minimumTlsVersion",
-              "ne",
-              "TLS1_2"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "storage_accounts_minimum_tls_version_disabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_storage_accounts",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "properties.minimumTlsVersion",
+                "ne",
+                "TLS1_2"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "location": "Location",
+          "ResourceGroupName": "ResourceGroupName",
+          "properties.minimumTlsVersion": "TLS version"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "properties"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "storage_accounts_minimum_tls_version_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

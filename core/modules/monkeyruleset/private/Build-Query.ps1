@@ -15,10 +15,10 @@
 Function Build-Query{
     <#
         .SYNOPSIS
-        Resolve statement
+        Build query
 
         .DESCRIPTION
-        Resolve statement
+        Build query
 
         .INPUTS
 
@@ -38,55 +38,82 @@ Function Build-Query{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseApprovedVerbs", "", Scope="Function")]
     [CmdletBinding()]
     Param (
-        [parameter(Mandatory=$false, ParameterSetName = 'RuleObject', HelpMessage="Rule object")]
+        [parameter(Mandatory=$false, ValueFromPipeline = $True, HelpMessage="Rule object")]
         [Object]$InputObject
     )
-    try{
-        if($PSCmdlet.ParameterSetName -eq 'RuleObject' -and $PSBoundParameters['InputObject']){
-            #Set new obj
-            $tmp_object = [ordered]@{}
-            foreach($elem in $InputObject.Psobject.Properties){
-                [void]$tmp_object.Add($elem.Name,$elem.Value)
-            }
-            $InputObject = New-Object -TypeName PSCustomObject -Property $tmp_object
-            $unitCondition = $InputObject.conditions;
-            if($unitCondition){
-                $newQuery = ConvertTo-Query -Conditions $unitCondition
-                if($newQuery){
-                    $safeQuery = $newQuery | ConvertTo-ScriptBlock
+    Process{
+        Try{
+            If($PSBoundParameters.ContainsKey('InputObject') -and $PSBoundParameters['InputObject']){
+                $ruleObj = $null;
+                $shadowObj = $InputObject | Copy-PsObject
+                #Get query object
+                If(($shadowObj.psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){
+                    $ruleObj = $shadowObj.GetPropertyByPath('rule.query')
+                    if($null -eq $ruleObj){
+                        Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $shadowObj.displayName)
+                        return
+                    }
+                }
+                Else{
+                    Write-Warning -Message $Script:messages.MethodNotFound
+                    return
+                }
+                #set new stringbuilder
+                $finalquery = [System.Text.StringBuilder]::new()
+                $newQuery = $ruleObj | ConvertTo-Query
+                foreach($q in @($newQuery)){
+                    [void]$finalquery.Append((" {0}" -f $q));
+                }
+                If($finalquery.Length -gt 0){
+                    $safeQuery = $finalquery | ConvertTo-SecureScriptBlock
                     if($safeQuery){
-                        $InputObject | Add-Member -type NoteProperty -name query -value $safeQuery
-                        return $InputObject
+                        $shadowObj | Add-Member -type NoteProperty -name query -value $safeQuery
+                        return $shadowObj
                     }
                     else{
-                        Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $rule.displayName)
+                        Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $shadowObj.displayName)
                     }
                 }
             }
-        }
-        elseif($null -ne (Get-Variable -Name AllRules -ErrorAction Ignore)){
-            foreach($unitRule in $Script:AllRules){
-                Write-Verbose -Message ($Script:messages.BuildQueryMessage -f $unitRule.displayName)
-                $unitCondition = $unitRule.conditions;
-                if($unitCondition){
-                    $newQuery = ConvertTo-Query -Conditions $unitCondition
-                    if($newQuery){
-                        $safeQuery = $newQuery | ConvertTo-ScriptBlock
+            Elseif($null -ne (Get-Variable -Name AllRules -ErrorAction Ignore)){
+                foreach($unitRule in $Script:AllRules){
+                    $ruleObj = $null;
+                    Write-Verbose -Message ($Script:messages.BuildQueryMessage -f $unitRule.displayName)
+                    #Get query object
+                    If(($unitRule.psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){
+                        $ruleObj = $unitRule.GetPropertyByPath('rule.query')
+                        If($null -eq $ruleObj){
+                            Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $unitRule.displayName)
+                            return
+                        }
                     }
-                    if($safeQuery){
-                        $unitRule | Add-Member -type NoteProperty -name query -value $safeQuery
+                    Else{
+                        Write-Warning -Message $Script:messages.MethodNotFound
+                        return
                     }
-                    else{
-                        Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $unitRule.displayName)
+                    #Set new stringbuilder
+                    $finalquery = [System.Text.StringBuilder]::new()
+                    $newQuery = $ruleObj | ConvertTo-Query
+                    foreach($q in @($newQuery)){
+                        [void]$finalquery.Append((" {0}" -f $q));
+                    }
+                    If($finalquery.Length -gt 0){
+                        $safeQuery = $finalquery.ToString() | ConvertTo-SecureScriptBlock
+                        If($safeQuery){
+                            $unitRule | Add-Member -type NoteProperty -name query -value $safeQuery
+                        }
+                        Else{
+                            Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $unitRule.displayName)
+                        }
                     }
                 }
             }
+            Else{
+                Write-Warning $Script:messages.UnableToGetRules
+            }
         }
-        else{
-            Write-Warning $Script:messages.UnableToGetRules
+        Catch{
+            Write-Error $_
         }
-    }
-    catch{
-        Write-Error $_
     }
 }

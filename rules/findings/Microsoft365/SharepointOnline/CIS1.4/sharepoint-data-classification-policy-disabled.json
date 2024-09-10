@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
   "serviceType": "SharePoint Online",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure SharePoint Online Information Protection policies are set up and used",
   "description": "Consider to set up and use SharePoint Online data classification policies on data stored in your SharePoint Online sites.",
   "rationale": "The policies will help categorize your most important data so you can effectively protect it from illicit access, and will help make it easier to investigate discovered breaches.",
   "impact": "Creation of data classification policies will not cause a significant impact to an organization. However, ensuring long term adherence with policies can potentially be a significant training and ongoing compliance effort across an organization. Organizations should ensure that training and compliance planning is part of the classification policy creation process.",
-  "remediation": "\r\n\t\t\t\t\t###### To set up data classification policies, use the Microsoft 365 Admin Center:\r\n\t\t\t\t\t1. Under `Admin centers` select `Compliance` to open the `Microsoft 365 compliance center`.\r\n\t\t\t\t\t2. Under `Solutions` click `Information protection`\r\n\t\t\t\t\t3. Select `Labels` tab\r\n\t\t\t\t\t4. Click `Create a label` to create a label.\r\n\t\t\t\t\t5. Select the label and click on the `Publish` label\r\n\t\t\t\t\t6. Fill out the forms to create the policy\r\n\t",
+  "remediation": {
+    "text": "###### To set up data classification policies, use the Microsoft 365 Admin Center:\r\n\t\t\t\t\t1. Under `Admin centers` select `Compliance` to open the `Microsoft 365 compliance center`.\r\n\t\t\t\t\t2. Under `Solutions` click `Information protection`\r\n\t\t\t\t\t3. Select `Labels` tab\r\n\t\t\t\t\t4. Click `Create a label` to create a label.\r\n\t\t\t\t\t5. Select the label and click on the `Publish` label\r\n\t\t\t\t\t6. Fill out the forms to create the policy",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/microsoft-365/compliance/create-apply-retention-labels?view=o365-worldwide",
     "https://docs.microsoft.com/en-us/microsoft-365/compliance/retention?view=o365-worldwide"
@@ -21,43 +34,93 @@
   "tags": [
     "Microsoft 365 CIS benchmark 3.2"
   ],
-  "path": "o365_exo_label_policy",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "Name",
-              "ne",
-              "Global sensitivity label policy"
+  "rule": {
+    "path": "o365_exo_label_policy",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "Name",
+                "ne",
+                "Global sensitivity label policy"
+              ],
+              [
+                "Enabled",
+                "eq",
+                "false"
+              ]
             ],
-            [
-              "Enabled",
-              "eq",
-              "false"
-            ]
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": "true",
+    "returnObject": {
+      "operationName": "Sensitivity Label Policy",
+      "Status": "DoesNotExists"
+    },
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
           ],
-          "operator": "or"
-        }
-      ]
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure SharePoint Online Information Protection policies are set up and used",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
     }
-  ],
-  "shouldExist": "true",
-  "returnObject": {
-    "operationName": "Sensitivity Label Policy",
-    "Status": "DoesNotExists"
   },
   "idSuffix": "sps_data_classification_policy_disabled",
-  "status": {
-    "keyName": [],
-    "message": "Ensure SharePoint Online Information Protection policies are set up and used"
-  },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

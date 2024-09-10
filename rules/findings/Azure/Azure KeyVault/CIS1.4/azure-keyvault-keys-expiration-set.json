@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Azure KeyVault",
   "serviceName": "Storage",
   "displayName": "Ensure that the expiration date is set on all keys",
   "description": "Ensure that all keys in Azure Key Vault have an expiration time set.",
   "rationale": "Azure Key Vault enables users to store and use cryptographic keys within the Microsoft Azure environment. The `exp` (expiration time) attribute identifies the expiration time on or after which the key MUST NOT be used for a cryptographic operation. By default, keys never expire. It is thus recommended that keys be rotated in the key vault and set an explicit expiration time for all keys. This ensures that the keys cannot be used beyond their assigned lifetimes.",
   "impact": "Keys cannot be used beyond their assigned expiration times respectively. Keys need to be rotated periodically wherever they are used.",
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Key vaults`\r\n\t\t\t\t\t2. For each Key vault, click on `Keys`.\r\n\t\t\t\t\t3. Under the `Settings` section, Make sure `Enabled?` is set to Yes\r\n\t\t\t\t\t4. Set an appropriate **expiration date** on all keys.\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Key vaults`\r\n\t\t\t\t\t2. For each Key vault, click on `Keys`.\r\n\t\t\t\t\t3. Under the `Settings` section, Make sure `Enabled?` is set to Yes\r\n\t\t\t\t\t4. Set an appropriate **expiration date** on all keys.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/key-vault/about-keys-secrets-and-certificates"
   ],
@@ -17,38 +30,94 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_keyvault",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "objects.keys",
-              "ne"
-            ],
-            [
-              "objects.keys.attributes.exp",
-              "eq",
-              ""
-            ]
-          ],
-          "operator": "and"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "azure_key_vault_keys_notexpire",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_keyvault",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "objects.keys",
+                "ne"
+              ],
+              [
+                "objects.keys.attributes.exp",
+                "eq",
+                ""
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "KeyVault",
+          "objects.keys.attributes.enabled": "Enabled",
+          "objects.keys.attributes.created": "Creation time",
+          "objects.keys.attributes.updated": "Updated",
+          "objects.keys.attributes.exp": "Expires"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Expires"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_key_vault_keys_notexpire",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

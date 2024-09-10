@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
   "serviceType": "General",
   "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure 'Restrict non-admin users from creating tenants' is set to 'Yes'",
-  "description": "Non-privileged users can create tenants in the Azure AD and Entra administration portal under Manage tenant. The creation of a tenant is recorded in the Audit log as category DirectoryManagement and activity Create Company. Anyone who creates a tenant becomes the Global Administrator of that tenant. The newly created tenant doesn't inherit any settings or configurations.",
-  "rationale": "Restricting tenant creation prevents unauthorized or uncontrolled deployment of resources and ensures that the organization retains control over its infrastructure. User generation of shadow IT could lead to multiple, disjointed environments that can make it difficult for IT to manage and secure the organization's data, especially if other users in the organization began using these tenants for business purposes under the misunderstanding that they were secured by the organization's security team.",
+  "displayName": "Ensure \u0027Restrict non-admin users from creating tenants\u0027 is set to \u0027Yes\u0027",
+  "description": "Non-privileged users can create tenants in the Azure AD and Entra administration portal under Manage tenant. The creation of a tenant is recorded in the Audit log as category DirectoryManagement and activity Create Company. Anyone who creates a tenant becomes the Global Administrator of that tenant. The newly created tenant doesn\u0027t inherit any settings or configurations.",
+  "rationale": "Restricting tenant creation prevents unauthorized or uncontrolled deployment of resources and ensures that the organization retains control over its infrastructure. User generation of shadow IT could lead to multiple, disjointed environments that can make it difficult for IT to manage and secure the organization\u0027s data, especially if other users in the organization began using these tenants for business purposes under the misunderstanding that they were secured by the organization\u0027s security team.",
   "impact": null,
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/methods-for-assigning-users-and-groups",
     "https://ezcloudinfo.com/2019/01/22/configure-access-panel-in-azure-active-directory/"
@@ -18,33 +31,87 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "aad_authorization_policy",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateTenants",
-              "eq",
-              "true"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "aad_non_admin_allowed_tenant_creation",
-  "status": {
-    "keyName": [],
-    "message": "Restrict non-admin users from creating tenants is disabled"
+  "rule": {
+    "path": "aad_authorization_policy",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateTenants",
+                "eq",
+                "true"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Restrict non-admin users from creating tenants is disabled",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "aad_non_admin_allowed_tenant_creation",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

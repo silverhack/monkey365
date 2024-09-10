@@ -66,6 +66,9 @@ nav:
       - Overview: docker/docker.md
     - Export Data:
       - Overview: exporting/exporting-data.md
+      - CSV: exporting/export-csv.md
+      - JSON: exporting/export-json.md
+      - CLIXML: exporting/export-clixml.md
       - HTML: exporting/export-html.md
     - Logging:
       - Introduction: logging/introduction.md

@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Storage Accounts",
   "serviceName": "Storage",
   "displayName": "Ensure soft delete is enabled for Azure Storage",
-  "description": "The Azure Storage blobs contain data like ePHI, Financial, secret or personal. Erroneously modified or deleted accidentally by an application or other storage account user cause data loss or data unavailability.  \r\n\t\t\t\t\tIt is recommended the Azure Storage be made recoverable by enabling **soft delete** configuration. This is to save and recover data when blobs or blob snapshots are deleted.\r\n\t",
-  "rationale": "There could be scenarios where users accidentally run delete commands on Azure Storage blobs or blob snapshot or attacker/malicious user does it deliberately to cause disruption. Deleting an Azure Storage blob leads to immediate data loss / non-accessible data.  \r\n\t\t\t\t   There is a property of Azure Storage blob service to make recoverable blobs.\r\n\t\t\t\t   \r\n\t\t\t\t   * Soft Delete\r\n\t\t\t\t   Enabling this configuration for azure storage ensures that even if blobs/data were deleted from the storage account, Blobs/data objects remain recoverable for a particular time which set in the `Retention policies` [Retention policies can be 7 days to 365 days]\r\n\t\r\n\t",
+  "description": "The Azure Storage blobs contain data like ePHI, Financial, secret or personal. Erroneously modified or deleted accidentally by an application or other storage account user cause data loss or data unavailability.  \r\n\t\t\t\t\tIt is recommended the Azure Storage be made recoverable by enabling **soft delete** configuration. This is to save and recover data when blobs or blob snapshots are deleted.",
+"rationale": "There could be scenarios where users accidentally run delete commands on Azure Storage blobs or blob snapshot or attacker/malicious user does it deliberately to cause disruption. Deleting an Azure Storage blob leads to immediate data loss / non-accessible data.  \r\n\t\t\t\t   There is a property of Azure Storage blob service to make recoverable blobs.\r\n\t\t\t\t   \r\n\t\t\t\t   * Soft Delete\r\n\t\t\t\t   Enabling this configuration for azure storage ensures that even if blobs/data were deleted from the storage account, Blobs/data objects remain recoverable for a particular time which set in the `Retention policies` [Retention policies can be 7 days to 365 days]",
   "impact": null,
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Storage Accounts`.\r\n\t\t\t\t\t2. For each Storage Account, navigate to `Data Protection`\r\n\t\t\t\t\t3. Select set soft delete enabled and enter a number of days you want to retain soft deleted data.\r\n\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Storage Accounts`.\r\n\t\t\t\t\t2. For each Storage Account, navigate to `Data Protection`\r\n\t\t\t\t\t3. Select set soft delete enabled and enter a number of days you want to retain soft deleted data.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-soft-delete"
   ],
@@ -17,33 +30,93 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_storage_accounts",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "dataProtection.properties.deleteRetentionPolicy.enabled",
-              "eq",
-              "False"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "storage_accounts_missing_blob_data_protection",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_storage_accounts",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "dataProtection.properties.deleteRetentionPolicy.enabled",
+                "eq",
+                "False"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "location": "Location",
+          "ResourceGroupName": "ResourceGroupName",
+          "dataProtection.properties.deleteRetentionPolicy.enabled": "SoftDelete Enabled"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "name",
+            "location",
+            "ResourceGroupName",
+            "dataProtection"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "storage_accounts_missing_blob_data_protection",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

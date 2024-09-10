@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
   "serviceType": "SharePoint Online",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure expiration time for external sharing links is set",
   "description": "Consider to restrict the length of time that anonymous access links are valid.",
   "rationale": "An attacker can compromise a user account for a short period of time, send anonymous sharing links to an external account, then take their time accessing the data. They can also compromise external accounts and steal the anonymous sharing links sent to those external entities well after the data has been shared. Restricting how long the links are valid can reduce the window of opportunity for attackers.",
   "impact": "Enabling this feature will ensure that link expire within the defined number of days. This will have an affect on links that were previously not set with an expiration.",
-  "remediation": "\r\n\t\t\t\t\t###### To set expiration for anonymous access links, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Log in as an SharePoint Administrator\r\n\t\t\t\t\t2. Navigate to <a href=\"https://admin.microsoft.com\" target=\"_blank\">Microsoft 365 administration portal</a>, Click on Admin Centers and then SharePoint.\r\n\t\t\t\t\t3. Expand `Policies` then click `Sharing`.\r\n\t\t\t\t\t4. Check `These links must expire within this many days`.\r\n\t\t\t\t\t5. Set to the desired number of days, such as `30`.\r\n\t\t\t\t\t6. Click `OK`.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To set expiration for anonymous access links, you can also use SharePoint Online PowerShell\r\n\t\t\t\t\t1. Connect to SharePoint Online using Connect-SPOService -Url https://tenant-admin.sharepoint.com and replacing `tenant` with your value.\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tset-SPOTenant -RequireAnonymousLinksExpireInDays 30\r\n\t\t\t\t\t```\r\n\t",
+  "remediation": {
+    "text": "###### To set expiration for anonymous access links, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Log in as an SharePoint Administrator\r\n\t\t\t\t\t2. Navigate to \u003ca href=\"https://admin.microsoft.com\" target=\"_blank\"\u003eMicrosoft 365 administration portal\u003c/a\u003e, Click on Admin Centers and then SharePoint.\r\n\t\t\t\t\t3. Expand `Policies` then click `Sharing`.\r\n\t\t\t\t\t4. Check `These links must expire within this many days`.\r\n\t\t\t\t\t5. Set to the desired number of days, such as `30`.\r\n\t\t\t\t\t6. Click `OK`.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To set expiration for anonymous access links, you can also use SharePoint Online PowerShell\r\n\t\t\t\t\t1. Connect to SharePoint Online using Connect-SPOService -Url https://tenant-admin.sharepoint.com and replacing `tenant` with your value.\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tset-SPOTenant -RequireAnonymousLinksExpireInDays 30\r\n\t\t\t\t\t```",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/sharepoint/turn-external-sharing-on-or-off",
     "https://docs.microsoft.com/en-us/microsoft-365/solutions/microsoft-365-limit-sharing?view=o365-worldwide"
@@ -21,32 +34,87 @@
   "tags": [
     "Microsoft 365 CIS benchmark 6.3"
   ],
-  "path": "o365_spo_tenant_details",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "RequireAnonymousLinksExpireInDays",
-              "eq",
-              "-1"
+  "rule": {
+    "path": "o365_spo_tenant_details",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "RequireAnonymousLinksExpireInDays",
+                "eq",
+                "-1"
+              ]
             ]
-          ]
-        }
-      ]
-    }
-  ],
-  "idSuffix": "sps_sharing_links_missing_expiration",
-  "status": {
-    "keyName": [],
-    "message": "Ensure expiration time for external sharing links is set"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "AllowEditing": "Allow Editing",
+          "AnyoneLinkTrackUsers": "Link Track Users",
+          "ConditionalAccessPolicy": "Conditional Access Policy",
+          "RequireAnonymousLinksExpireInDays": "Require Anonymous Links Expire In Days"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure expiration time for external sharing links is set",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "sps_sharing_links_missing_expiration",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

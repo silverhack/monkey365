@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "App Services",
   "serviceName": "Hosted Services",
   "displayName": "Ensure FTP deployments are Disabled",
   "description": "By default, Azure Functions, Web and API Services can be deployed over FTP. If FTP is required for an essential deployment workflow, FTPS should be required for FTP login for all App Service Apps and Functions.",
   "rationale": "Azure FTP deployment endpoints are public. An attacker listening to traffic on a wifi network used by a remote employee or a corporate network could see login traffic in clear-text which would then grant them full control of the code base of the app or service. This finding is more severe if User Credentials for deployment are set at the subscription level rather than using the default Application Credentials which are unique per App.",
   "impact": "Any deployment workflows that rely on FTP or FTPs rather than the WebDeploy or HTTPs endpoints may be affected.",
-  "remediation": "\r\n\t\t\t\t\t###### Using From Azure Portal\r\n\t\t\t\t\t1. Go to the Azure Portal\r\n\t\t\t\t\t2. Select `App Services`\r\n\t\t\t\t\t3. Click on an `app`\r\n\t\t\t\t\t4. Select `Settings` and then `Configuration`\r\n\t\t\t\t\t5. Under `General Settings`, for the `Platform Settings`, the FTP state should be set to `Disabled` or `FTPS Only`\r\n\r\n\t",
+  "remediation": {
+    "text": "###### Using From Azure Portal\r\n\t\t\t\t\t1. Go to the Azure Portal\r\n\t\t\t\t\t2. Select `App Services`\r\n\t\t\t\t\t3. Click on an `app`\r\n\t\t\t\t\t4. Select `Settings` and then `Configuration`\r\n\t\t\t\t\t5. Under `General Settings`, for the `Platform Settings`, the FTP state should be set to `Disabled` or `FTPS Only`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/app-service/deploy-ftp?tabs=portal"
   ],
@@ -17,33 +30,95 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_app_services",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "appConfig.properties.ftpsState",
-              "eq",
-              "AllAllowed"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "app_service_ftp_allowed",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_app_services",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "appConfig.properties.ftpsState",
+                "eq",
+                "AllAllowed"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Application Name",
+          "kind": "Kind",
+          "location": "Location",
+          "properties.defaultHostName": "HostName",
+          "appConfig.properties.ftpsState": "FTPS State"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "name",
+            "kind",
+            "location",
+            "properties.defaultHostName",
+            "appConfig.properties.ftpsState"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "app_service_ftp_allowed",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

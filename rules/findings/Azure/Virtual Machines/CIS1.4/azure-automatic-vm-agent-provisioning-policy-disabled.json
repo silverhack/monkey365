@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Subscription Policies",
   "serviceName": "Subscription",
-  "displayName": "Ensure that 'Automatic provisioning of monitoring agent' is set to 'On'",
+  "displayName": "Ensure that \u0027Automatic provisioning of monitoring agent\u0027 is set to \u0027On\u0027",
   "description": "Consider to enable automatic provisioning of the monitoring agent to collect security data.",
   "rationale": "When `Automatic provisioning of monitoring agent` is turned on, Microsoft Defender for Cloud provisions the Microsoft Monitoring Agent on all existing supported Azure virtual machines and any new ones that are created. The Microsoft Monitoring Agent scans for various security-related configurations and events such as system updates, OS vulnerabilities, endpoint protection, and provides alerts.",
   "impact": null,
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Pricing & settings` blade\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Click on `Data Collection`\r\n\t\t\t\t\t5. Set `Automatic provisioning` to `On`\r\n\t\t\t\t\t6. Select `Save`\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Pricing \u0026 settings` blade\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Click on `Data Collection`\r\n\t\t\t\t\t5. Set `Automatic provisioning` to `On`\r\n\t\t\t\t\t6. Select `Save`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/security-center/security-center-data-security",
     "https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection",
@@ -23,33 +36,87 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_vm_provisioning_status",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "autoprovision",
-              "ne",
-              "On"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "azure_vm_autoprovision_disabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_vm_provisioning_status",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "autoprovision",
+                "ne",
+                "On"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_vm_autoprovision_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

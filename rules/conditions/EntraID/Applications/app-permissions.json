@@ -1,5 +1,5 @@
 {
-	statements: [
+	filter: [
 		{
 			conditions : [
 				["ClaimValue", "eq", "Application.ReadWrite.All"],

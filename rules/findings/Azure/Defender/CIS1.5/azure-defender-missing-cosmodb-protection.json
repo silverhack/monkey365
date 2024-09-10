@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Microsoft Defender for Cloud",
   "serviceName": "Subscription",
-  "displayName": "Ensure That Microsoft Defender for Cosmos DB Is Set To 'On'",
+  "displayName": "Ensure That Microsoft Defender for Cosmos DB Is Set To \u0027On\u0027",
   "description": "Microsoft Defender for Cosmos DB scans all incoming network requests for changes to your virtual machine.",
   "rationale": "In scanning Cosmos DB requests within a subscription, requests are compared to a heuristic list of potential security threats. These threats could be a result of a security breach within your services, thus scanning for them could prevent a potential security threat from being introduced.",
   "impact": "Enabling Microsoft Defender for Cosmos requires enabling Microsoft Defender for your subscription. Both will incur additional charges.",
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. Review the chosen pricing tier. For the `Cosmos DB` resource type the radial button should be set to `On`\r\n\t\t\t\t\t6. Select `Save`\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. Review the chosen pricing tier. For the `Cosmos DB` resource type the radial button should be set to `On`\r\n\t\t\t\t\t6. Select `Save`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql?view=azuresql",
     "https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-enable-database-protections",
@@ -19,39 +32,92 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_pricing_tier",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "name",
-              "eq",
-              "CosmosDbs"
-            ],
-            [
-              "properties.pricingTier",
-              "eq",
-              "Free"
-            ]
-          ],
-          "operator": "and"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "azure_defender_missing_cosmodb_protection",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_pricing_tier",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "name",
+                "eq",
+                "CosmosDbs"
+              ],
+              [
+                "properties.pricingTier",
+                "eq",
+                "Free"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Resource Name",
+          "properties.pricingTier": "Pricing Tier"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Pricing Tier"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_defender_missing_cosmodb_protection",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

@@ -51,71 +51,66 @@ Function Invoke-Rule{
         [Switch]$UnixTimestamp
     )
     Begin{
-        $Verbose = $False;
-        $Debug = $False;
+        $Verbose = $Debug = $False;
         $InformationAction = 'SilentlyContinue'
-        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+        If($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
             $Verbose = $True
         }
-        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+        If($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
             $Debug = $True
         }
-        if($PSBoundParameters.ContainsKey('InformationAction')){
+        If($PSBoundParameters.ContainsKey('InformationAction')){
             $InformationAction = $PSBoundParameters['InformationAction']
         }
-        if($PSBoundParameters.ContainsKey('InputObject') -and $PSBoundParameters['InputObject']){
-            New-Dataset -InputObject $InputObject
+        If($PSBoundParameters.ContainsKey('InputObject') -and $PSBoundParameters['InputObject']){
+            $InputObject | New-Dataset
         }
         If($PSBoundParameters.ContainsKey('RulesPath')){
-            Set-InternalVar -RulesPath $PSBoundParameters['RulesPath']
+            $PSBoundParameters['RulesPath'] | Set-InternalVar
         }
     }
     Process{
         if(($Rule | Test-isValidRule) -and $null -ne (Get-Variable -Name Dataset -ErrorAction Ignore)){
-            #Set new obj
-            $tmp_object = [ordered]@{}
-            foreach($elem in $Rule.Psobject.Properties){
-                [void]$tmp_object.Add($elem.Name,$elem.Value)
+            $ShadowRule = $Rule | Copy-PsObject
+            $ShadowRule = $ShadowRule | Build-Query
+            #Find elements to check
+            $ObjectsToCheck = $ShadowRule | Get-ObjectFromDataset
+            If($null -eq $ObjectsToCheck){
+                return
             }
-            $ShadowRule = New-Object -TypeName PSCustomObject -Property $tmp_object
-            $ShadowRule = Build-Query -InputObject $ShadowRule
-            #Get element
-            $ObjectsToCheck = Get-ElementsToCheck -Path $ShadowRule.path
-            if($null -ne $ObjectsToCheck -and $null -ne $ShadowRule){
-                if($null -ne $ObjectsToCheck.PsObject.Properties.Item('Data')){
-                    $matched_elements = Invoke-UnitRule -InputObject $ShadowRule -ObjectsToCheck $ObjectsToCheck.Data
-                }
-                Else{
-                    $matched_elements = Invoke-UnitRule -InputObject $ShadowRule -ObjectsToCheck $ObjectsToCheck
-                }
+            #Get objects to check
+            If($null -ne $ShadowRule){
+                #$matched_elements = $ShadowRule | Invoke-UnitRule -ObjectsToCheck $dataObjects
+                $matched_elements = $ShadowRule | Invoke-UnitRule -ObjectsToCheck $ObjectsToCheck
             }
-            else{
-                Write-Warning ("{0} was not found on dataset or query was invalid" -f $ShadowRule.path)
+            Else{
+                Write-Warning -Message ($Script:messages.InvalidQueryGenericMessage -f $Rule.displayName)
                 $matched_elements = $null
             }
             #Check for removeIfNotExists exception rule
-            if($null -ne $ShadowRule -and [bool]$ShadowRule.PSObject.Properties['removeIfNotExists']){
-                if($ShadowRule.removeIfNotExists.ToString().ToLower() -eq "true"){
-                    if($null -eq $matched_elements){
-                        continue
-                    }
+            $removeIfNotExists = $ShadowRule.rule | Select-Object -ExpandProperty removeIfNotExists -ErrorAction Ignore
+            If($null -ne $removeIfNotExists -and $removeIfNotExists){
+                If($null -eq $matched_elements){
+                    return
                 }
             }
-            if($null -ne $ShadowRule){
+            If($null -ne $ShadowRule){
                 #Create finding object
                 $p =  @{
                     InputObject = $ShadowRule;
-                    affectedObjects = $matched_elements;
+                    AffectedObjects = $matched_elements;
                     Resources = $ObjectsToCheck;
                     UnixTimestamp = $PSBoundParameters['UnixTimestamp'];
                 }
                 $findingObj = New-MonkeyFindingObject @p
-                if(!$matched_elements -and $null -ne $findingObj){
-                    $findingObj.level = "Good"
+                if($null -ne $findingObj){
+                    if(!$matched_elements){
+                        $findingObj.level = "Good"
+                    }
+                    #Add status code
+                    $findingObj.statusCode = $findingObj.level | Get-StatusCode
+                    Write-Output $findingObj
                 }
-                #Add status code
-                $findingObj.statusCode = $findingObj.level | Get-StatusCode
-                Write-Output $findingObj
             }
         }
         Else{

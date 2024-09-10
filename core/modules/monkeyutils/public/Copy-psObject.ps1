@@ -41,10 +41,10 @@ Function Copy-PsObject {
             Mandatory = $true,
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
-        )] [object] $InputObject
+        )] [Object] $InputObject
     )
     Process{
-        $obj_serializer = [System.Management.Automation.PSSerializer]::Serialize($InputObject, [int32]::MaxValue)
+        $obj_serializer = [System.Management.Automation.PSSerializer]::Serialize($InputObject)
         return [System.Management.Automation.PSSerializer]::Deserialize($obj_serializer)
     }
 }

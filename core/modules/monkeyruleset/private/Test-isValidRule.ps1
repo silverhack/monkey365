@@ -40,46 +40,51 @@ Function Test-isValidRule{
         [Object]$InputObject
     )
     Process{
-        $missingElements = @();
-        #Rule valid keys
-        $skeleton = @(
-            'serviceType',
-            'serviceName',
-            'displayName',
-            'description',
-            'rationale',
-            'references',
-            'path',
-            'conditions',
-            'idSuffix'
-        )
-        try{
-            foreach ($key in $skeleton){
-                if ($null -ne $InputObject.psobject.Properties.Item($key)){
+        Try{
+            $missingElements = @()
+            #Rule valid keys
+            $properties = @(
+                'serviceType',
+                'serviceName',
+                'displayName',
+                'description',
+                'rationale',
+                'references',
+                'idSuffix'
+            )
+            $inputProperties = $InputObject | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name -ErrorAction Ignore
+            Foreach ($key in $properties){
+                If ($key -in $inputProperties){
                     #passed test
                     continue;
                 }
-                else{
+                Else{
                     #no element was found
                     $missingElements+=$key
                 }
             }
+            #Check if rule is present
+            $ruleObj = $InputObject | Select-Object -ExpandProperty rule -ErrorAction Ignore
+            If($null -eq $ruleObj){
+                $missingElements+='rule'                                
+            }
+            If($missingElements.Count -eq 0){
+                Write-Verbose ($Script:messages.ValidObjectMessage -f "rule")
+                return $true
+            }
+            Else{
+                $missing = @($missingElements) -join ','
+                If($null -ne $InputObject.PsObject.Properties.Item('displayName')){
+                    Write-Warning ($Script:messages.InvalidRuleMessage -f $InputObject.displayName)
+                }
+                Write-Warning ($Script:messages.MissingElementsMessage -f "rule", $missing)
+                return $false
+            }
         }
-        catch{
+        Catch{
+            Write-Error $_
             #Invalid rule
             return $false;
-        }
-        if($missingElements.Count -eq 0){
-            Write-Verbose ($Script:messages.ValidObjectMessage -f "rule")
-            return $true
-        }
-        else{
-            $missing = @($missingElements) -join ','
-            if($null -ne $InputObject.PsObject.Properties.Item('displayName')){
-                Write-Warning ($Script:messages.InvalidRuleMessage -f $InputObject.displayName)
-            }
-            Write-Warning ($Script:messages.MissingElementsMessage -f "rule", $missing)
-            return $false
         }
     }
 }

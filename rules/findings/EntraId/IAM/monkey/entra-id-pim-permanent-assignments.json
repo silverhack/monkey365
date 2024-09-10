@@ -1,17 +1,30 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
   "serviceType": "Microsoft Entra ID Identity",
   "serviceName": "IAM",
   "displayName": "Ensure active role assignments are not permanent",
   "description": "Instead of giving users permanent assignments to privileged roles, provisioning access just in time lessens exposure if those accounts become compromised. In Azure AD PIM or an alternative PAM system, just in time access can be provisioned by assigning users to roles as eligible instead of perpetually active.",
-  "rationale": "Ensuring administrative accounts are cloud-only, will reduce the attack surface of high privileged identities in your environment. In order to participate in Microsoft 365 security services such as Identity protection, PIM and Conditional Access an administrative account will need a license attached to it. In a hybrid environment, having separate accounts will help ensure that in the event of a breach in the cloud, that the breach does not affect the on-prem environment and vice versa. ",
+  "rationale": "Ensuring administrative accounts are cloud-only, will reduce the attack surface of high privileged identities in your environment. In order to participate in Microsoft 365 security services such as Identity protection, PIM and Conditional Access an administrative account will need a license attached to it. In a hybrid environment, having separate accounts will help ensure that in the event of a breach in the cloud, that the breach does not affect the on-prem environment and vice versa.",
   "impact": "",
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-admin-roles-secure",
     "https://docs.microsoft.com/en-us/windows-server/identity/securing-privileged-access/securing-privileged-access",
     "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-assign-admin-roles",
-	"https://learn.microsoft.com/en-us/dotnet/api/microsoft.azure.powershell.cmdlets.resources.msgraph.models.apiv10.microsoftgraphuser.onpremisessyncenabled?view=az-ps-latest",
-	"https://practical365.com/listing-azure-ad-office-365-user-accounts-directory-sync-status/"
+    "https://learn.microsoft.com/en-us/dotnet/api/microsoft.azure.powershell.cmdlets.resources.msgraph.models.apiv10.microsoftgraphuser.onpremisessyncenabled?view=az-ps-latest",
+    "https://practical365.com/listing-azure-ad-office-365-user-accounts-directory-sync-status/"
   ],
   "compliance": [
     {
@@ -21,42 +34,96 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "aad_pim_roleAssignment",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "include": "aad-m365-privileged-roles.json"
-        }
-      ]
-    },
-	{
-      "connectOperator": "and",
-      "statements": [
-        {
-          "conditions": [
-            [
-              "endDateTime",
-              "eq"
-            ]
-          ],
-          "whereObject": "activeAssignment.users",
-		  "operator": "or"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "aad_pim_permanent_high_level_users",
-  "status": {
-    "keyName": ["userPrincipalName"],
-    "message": "The {userPrincipalName} user account is configured as a permanent role"
+  "rule": {
+    "path": "aad_pim_roleAssignment",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "include": "aad-m365-privileged-roles.json"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "endDateTime",
+                "eq"
+              ]
+            ],
+            "whereObject": "activeAssignment.users",
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": "displayName",
-    "resourceId": "id",
-    "resourceType": "user"
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "userPrincipalName"
+        ],
+      "message": "The {userPrincipalName} user account is configured as a permanent role",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "user"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "aad_pim_permanent_high_level_users",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

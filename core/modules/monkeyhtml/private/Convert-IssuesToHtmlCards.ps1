@@ -62,12 +62,13 @@ Function Convert-IssuesToHtmlCards{
         foreach($issue in $resource.Group){
             $table = $null;
             if($issue.level -ne 'Good'){
-                $data = $issue | New-PsHtmlObject
+                #$data = $issue | New-PsHtmlObject
+                $data = $issue | Initialize-HtmlData
                 if($data){
-                    if($data.table -eq 'asList'){
+                    if($data.output.html.table -eq 'asList'){
                         $params = @{
-                            issue = $data.data;
-                            emphasis = $data.emphasis;
+                            issue = $data.output.html.out;
+                            emphasis = $data.output.html.emphasis;
                         }
                         $table = Get-HtmlTableAsListFromObject @params
                     }
@@ -90,8 +91,8 @@ Function Convert-IssuesToHtmlCards{
                     #Add to array
                     $all_detailed_issues+=$new_html_issue
                     #Add here modal objects
-                    if($null -ne $data.psobject.Properties.Item('extended_data')){
-                        $extended_data = $data.extended_data;
+                    if($null -ne $data.output.html.psobject.Properties.Item('extendedData')){
+                        $extended_data = $data.output.html.extendedData;
                         foreach($modal_object in $extended_data){
                             $params = @{
                                 raw_data= $modal_object.raw_data;

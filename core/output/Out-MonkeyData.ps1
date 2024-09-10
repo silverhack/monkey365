@@ -127,25 +127,23 @@ Function Out-MonkeyData{
             if($null -ne $O365Object.exportTo){
                 #Get matched rules
                 if($null -ne $O365Object.ruleset -and $null -ne $O365Object.rulesPath){
-                    #Flat internal object
-                    $dataset = [ordered]@{}
-                    foreach($elem in $MonkeyExportObject.Output.GetEnumerator()){
-                        [void]$dataset.Add($elem.Key,$elem.Value.Data)
-                    }
-                    $dataset = New-Object -TypeName PSCustomObject -Property $dataset
-                    if($dataset){
+                    #Evaluate rules
+                    If($null -ne $MonkeyExportObject.Output){
                         $p = @{
+                            InputObject = $MonkeyExportObject.Output;
                             Ruleset = $O365Object.ruleset;
                             RulesPath = $O365Object.rulesPath;
                             Verbose = $O365Object.verbose;
                             InformationAction = $O365Object.InformationAction;
                             Debug = $O365Object.debug;
                         }
-                        $matchedRules = Invoke-RuleScan -InputObject $dataset @p
+                        $matchedRules = Invoke-RuleScan @p
+                        If($null -ne $matchedRules){
+                            Foreach($exportTo in $O365Object.exportTo.GetEnumerator()){
+                                Export-MonkeyData -ExportTo $exportTo
+                            }
+                        }
                     }
-                }
-                foreach($exportTo in $O365Object.exportTo.GetEnumerator()){
-                    Export-MonkeyData -ExportTo $exportTo
                 }
             }
             if($MyParams.Compress -and $null -ne (Get-Variable -Name Report -Scope Script -ErrorAction Ignore)){

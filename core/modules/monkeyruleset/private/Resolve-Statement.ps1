@@ -45,7 +45,7 @@ Function Resolve-Statement{
         $option = $null
     }
     Process{
-        if($null -ne $Statement.PsObject.Properties.Item('conditions') -and $null -ne $Statement.PsObject.Properties.Item('whereObject')){
+        If($null -ne $Statement.PsObject.Properties.Item('conditions') -and $null -ne $Statement.PsObject.Properties.Item('whereObject')){
             $option = 'whereObject'
         }
         elseif($null -ne $Statement.PsObject.Properties.Item('conditions') -and $null -ne $Statement.PsObject.Properties.Item('getValue')){
@@ -59,6 +59,9 @@ Function Resolve-Statement{
         }
         elseif($null -ne $Statement.PsObject.Properties.Item('getValue')){
             $option = 'getValue'
+        }
+        elseif($null -eq $Statement.PsObject.Properties.Item('conditions') -and $null -ne $Statement.PsObject.Properties.Item('whereObject')){
+            $option = 'whereObjectPipelineOut'
         }
         else{
             Write-Warning "Statement not recognized"
@@ -77,6 +80,13 @@ Function Resolve-Statement{
             {
                 Resolve-Include -Statement $Statement
             }
+            'whereObjectPipelineOut'
+            {
+                $whereObject = $Statement.whereObject
+                New-Variable -Name queryIsOpen -Value $True -Scope Script -Force
+                #Potential where Object outside pipeline
+                ('$_.{0}.Where({{' -f $whereObject)
+            }
             'whereObject'
             {
                 $whereObject = $Statement.whereObject
@@ -86,6 +96,11 @@ Function Resolve-Statement{
                     if($null -ne $whereObject -and $null -ne $query){
                         ('$_.{0}.Where({{{1}}})' -f $whereObject,$query)
                     }
+                }
+                Else{
+                    New-Variable -Name queryIsOpen -Value $True -Scope Script -Force
+                    #Potential where Object outside pipeline
+                    ('${0}.Where({' -f $whereObject)
                 }
             }
             'getValue'
@@ -102,7 +117,7 @@ Function Resolve-Statement{
                     $query = ConvertFrom-Condition @condition
                 }
                 if($null -ne $query){
-                    $safeQuery = $query | ConvertTo-ScriptBlock
+                    $safeQuery = $query | ConvertTo-SecureScriptBlock
                 }
                 if($null -ne $safeQuery -and $null -ne $objectsToCheck){
                     $rst = Get-QueryResult -InputObject $objectsToCheck -Query $safeQuery
