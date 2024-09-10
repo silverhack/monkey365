@@ -1,13 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
   "serviceType": "Microsoft 365 Admin",
   "serviceName": "Microsoft 365",
-  "displayName": "Ensure 'third-party storage services' are restricted in 'Microsoft 365 on the web'",
-  "description": "Third-party storage can be enabled for users in Microsoft 365, allowing them to store and share documents using services such as Dropbox, alongside OneDrive and team sites.
-				  Ensure `Microsoft 365 on the web` third-party storage services are restricted.		
-  ",
+  "displayName": "Ensure \u0027third-party storage services\u0027 are restricted in \u0027Microsoft 365 on the web\u0027",
+  "description": "Third-party storage can be enabled for users in Microsoft 365, allowing them to store and share documents using services such as Dropbox, alongside OneDrive and team sites.\r\n\t\t\t\t  Ensure `Microsoft 365 on the web` third-party storage services are restricted.",
   "rationale": "By using external storage services an organization may increases the risk of data breaches and unauthorized access to confidential information. Additionally, third-party services may not adhere to the same security standards as the organization, making it difficult to maintain data privacy and security.",
   "impact": "Impact associated with this change is highly dependent upon current practices in the tenant. If users do not use other storage providers, then minimal impact is likely. However, if users do regularly utilize providers outside of the tenant this will affect their ability to continue to do so.",
-  "remediation": "1. Navigate to Microsoft 365 admin center\r\n\t\t\t\t\t2. Go to `Settings` > `Org Settings` > `Services` > `Microsoft 365 on the webt` \r\n\t\t\t\t\t3. Ensure `Let users open files stored in third-party storage services in Microsoft 365 on the web` is not checked.\r\n\t",
+  "remediation": {
+    "text": "1. Navigate to Microsoft 365 admin center\r\n\t\t\t\t\t2. Go to `Settings` \u003e `Org Settings` \u003e `Services` \u003e `Microsoft 365 on the webt` \r\n\t\t\t\t\t3. Ensure `Let users open files stored in third-party storage services in Microsoft 365 on the web` is not checked.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://learn.microsoft.com/en-us/microsoft-365/admin/setup/set-up-file-storage-and-sharing?view=o365-worldwide#enable-or-disable-third-party-storage-services"
   ],
@@ -18,36 +29,88 @@
       "reference": "6.4"
     }
   ],
+  "level": "low",
   "tags": [
     "Microsoft 365 CIS benchmark 2.0 reference 6.4"
   ],
-  "level": "low",
-  "path": "o365_exo_owa_mbox_policy",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "AdditionalStorageProvidersAvailable",
-              "eq",
-              "true"
+  "rule": {
+    "path": "o365_exo_owa_mbox_policy",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "AdditionalStorageProvidersAvailable",
+                "eq",
+                "true"
+              ]
             ]
-          ]
-        }
-      ]
-    }
-  ],
-  "idSuffix": "o365_admin_thirdparty_storage_allowed",
-  "status": {
-    "keyName": [],
-    "message": "Ensure external storage providers available in Outlook on the Web are restricted"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure external storage providers available in Outlook on the Web are restricted",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "o365_admin_thirdparty_storage_allowed",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

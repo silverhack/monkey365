@@ -1,20 +1,24 @@
-{
-  "arg_names": [
-    "Network protocol name",
-    "Port number",
-    "description",
-    "rationale",
-    "compliance_version",
-    "compliance_reference",
-    "additional_compliance"
+﻿{
+  "args": [
+    
   ],
+  "provider": "Azure",
   "serviceType": "Network Security Groups",
   "serviceName": "Network",
   "displayName": "Ensure that _ARG_0_ access is restricted from the internet",
   "description": "_ARG_2_",
   "rationale": "_ARG_3_",
   "impact": null,
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/virtual-network/security-overview"
   ],
@@ -29,66 +33,119 @@
     ]
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_nsg_rules",
-  "conditions": [
-    {
-      "operator": "and",
-      "statements": [
-        {
-          "include": "allow-tcp.json"
-        },
-        {
-          "include": "exposed-to-the-internet.json"
-        }
-      ]
-    },
-    {
-      "connectOperator": "and",
-      "statements": [
-        {
-          "conditions": [
-            [
-              "DestinationPortRange",
-              "like",
-              "*_ARG_1_*"
-            ],
-            [
-              "DestinationPortRanges",
-              "like",
-              "*_ARG_1_*"
-            ]
-          ],
-          "operator": "or"
-        }
-      ]
-    },
-    {
-      "connectOperator": "and",
-      "statements": [
-        {
-          "conditions": [
-            [
-              "Priority",
-              "notlike",
-              "65*"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "removeIfNotExists": "true",
-  "idSuffix": "azure_nsg_security_port_open_all",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_nsg_rules",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "operator": "and",
+        "filter": [
+          {
+            "include": "allow-tcp.json"
+          },
+          {
+            "include": "exposed-to-the-internet.json"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "DestinationPortRange",
+                "like",
+                "*_ARG_1_*"
+              ],
+              [
+                "DestinationPortRanges",
+                "like",
+                "*_ARG_1_*"
+              ]
+            ],
+            "operator": "or"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "Priority",
+                "notlike",
+                "65*"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": "true"
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_nsg_security_port_open_all",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

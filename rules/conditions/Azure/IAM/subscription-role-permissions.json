@@ -1,5 +1,5 @@
 {
-	statements: [
+	filter: [
 		{
 			conditions : [
 				["properties.permissions.actions", "match", "Microsoft.Compute/virtualMachines/delete"],

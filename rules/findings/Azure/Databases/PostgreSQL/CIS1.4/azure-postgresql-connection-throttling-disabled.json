@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "PostgreSQL Configuration",
   "serviceName": "Database Configuration",
   "displayName": "Enable connection_throttling on PostgreSQL Servers",
   "description": "Enabling connection_throttling helps the PostgreSQL Database to Set the verbosity of logged messages which in turn generates query and error logs with respect to concurrent connections, that could lead to a successful Denial of Service (DoS) attack by exhausting connection resources. A system can also fail or be degraded by an overload of legitimate users. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
   "rationale": null,
   "impact": null,
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
   ],
@@ -17,39 +30,96 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_postgresql_servers",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "parameterName",
-              "eq",
-              "connection_throttling"
-            ],
-            [
-              "parameterValue",
-              "eq",
-              "off"
-            ]
-          ],
-          "operator": "and"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "postgresql_conn_throttling_disabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_postgresql_servers",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "parameterName",
+                "eq",
+                "connection_throttling"
+              ],
+              [
+                "parameterValue",
+                "eq",
+                "off"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "serverName": "Server Name",
+          "parameterName": "Parameter Name",
+          "parameterDescription": "Description",
+          "parameterValue": "value",
+          "parameterDefaultValue": "Default value"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "value",
+        "Parameter Name"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "postgresql_conn_throttling_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

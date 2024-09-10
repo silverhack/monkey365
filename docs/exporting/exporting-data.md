@@ -3,7 +3,12 @@ author: Juan Garrido
 ---
 
 
-Monkey365 has built-in support for exporting data to a large variety of formats, including CSV and JSON. For example, the CSV output format is a comma-separated output that can be imported into i.e., Excel spreadsheets. The JSON format is pretty similar to JavaScript object, so it can be used as a data format by any programming language. This section page documents how Monkey365's data may be exported to these formats.
+Monkey365 has built-in support for exporting data to a large variety of formats, including CSV, CLIXML and JSON. For example, the CSV output format is a comma-separated output that can be imported into i.e., Excel spreadsheets. The JSON format is pretty similar to JavaScript object, so it can be used as a data format by any programming language. Finally, CLIXML will create an XML-based representation of all findings and will store it in a file. This section page documents how Monkey365's data may be exported to these formats.
+
+* [Export Data to CSV](../export-csv) 
+* [Export Data to HTML](../export-html)
+* [Export Data to CLIXML](../export-clixml)
+* [Export Data to JSON](../export-json)
 
 ## Data Location
 
@@ -16,7 +21,7 @@ The following code snippet illustrates how one may load the Monkey365 data in a 
 ``` json
 import json
 
-file = 'C:/temp/monkey365/monkey-reports/00000000-0000-0000-0000-000000000000/json/aad_domain_users.json'
+file = 'C:/temp/monkey365/monkey-reports/00000000-0000-0000-0000-000000000000/json/monkey3650000000000000000000000000000000020240902155926.json'
 
 with open(file) as f:
 
@@ -30,6 +35,14 @@ with open(file) as f:
 The following code snippet illustrates how one may load the Monkey365 data in a PowerShell script (assuming that report data was previously exported to JSON format):
 
 ``` powershell
-PS C:\temp\monkey365> $json_data = (Get-Content -Raw .\monkey-reports\00000000-0000-0000-0000-000000000000\json\aad_domain_users.json) | ConvertFrom-Json
+PS C:\temp\monkey365> $json_data = (Get-Content -Raw .\monkey-reports\00000000-0000-0000-0000-000000000000\json\monkey3650000000000000000000000000000000020240902155926.json) | ConvertFrom-Json
+```
+
+### Import CLIXML data in PowerShell
+
+The following code snippet illustrates how one may load the Monkey365 data in a PowerShell script (assuming that report data was previously exported to CLIXML format):
+
+``` powershell
+PS C:\temp\monkey365> $clixml_data = (Get-Content -Raw .\monkey-reports\00000000-0000-0000-0000-000000000000\clixml\monkey3650000000000000000000000000000000020240902155926.clixml)
 ```
 

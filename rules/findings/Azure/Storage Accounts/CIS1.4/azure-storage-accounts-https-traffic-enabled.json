@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Storage Accounts",
   "serviceName": "Storage",
   "displayName": "Enable the Secure transfer option",
   "description": "Consider to enable the Secure transfer option in all storage accounts. The Secure transfer option enhances the security of storage accounts by only allowing requests to the accounts from secure connections. By default, the Secure transfer option is disabled when the storage account is created with SDK. This option is enabled by default when the storage account is created in Azure Portal.",
-  "rationale": "The secure transfer option enhances the security of a storage account by only allowing requests to the storage account by a secure connection. For example, when calling REST APIs to access storage accounts, the connection must use HTTPS. Any requests using HTTP will be rejected when 'secure transfer required' is enabled. When using the Azure files service, connection without encryption will fail, including scenarios using SMB 2.1, SMB 3.0 without encryption, and some flavors of the Linux SMB client. Because Azure storage does not support HTTPS for custom domain names, this option is not applied when using a custom domain name.",
+  "rationale": "The secure transfer option enhances the security of a storage account by only allowing requests to the storage account by a secure connection. For example, when calling REST APIs to access storage accounts, the connection must use HTTPS. Any requests using HTTP will be rejected when \u0027secure transfer required\u0027 is enabled. When using the Azure files service, connection without encryption will fail, including scenarios using SMB 2.1, SMB 3.0 without encryption, and some flavors of the Linux SMB client. Because Azure storage does not support HTTPS for custom domain names, this option is not applied when using a custom domain name.",
   "impact": null,
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Storage Accounts`\r\n\t\t\t\t\t2. For each storage account, go to `Configuration`\r\n\t\t\t\t\t3. Set `Secure transfer required` to `Enabled`\r\n\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Storage Accounts`\r\n\t\t\t\t\t2. For each storage account, go to `Configuration`\r\n\t\t\t\t\t3. Set `Secure transfer required` to `Enabled`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer",
     "https://docs.microsoft.com/en-us/azure/storage/common/storage-security-guide",
@@ -22,33 +35,94 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_storage_accounts",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "supportsHttpsTrafficOnly",
-              "eq",
-              "False"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "storage_accounts_https_traffic_disabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_storage_accounts",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "supportsHttpsTrafficOnly",
+                "eq",
+                "False"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "CreationTime": "Creation Time",
+          "location": "Location",
+          "supportsHttpsTrafficOnly": "Https Only"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "name",
+            "location",
+            "ResourceGroupName",
+            "CreationTime",
+            "supportsHttpsTrafficOnly"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "storage_accounts_https_traffic_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

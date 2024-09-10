@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
   "serviceType": "Conditional Access",
   "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure that a Conditional Access Policy exists to block legacy authentication",
   "description": "Use Conditional Access to block legacy authentication protocols in Office 365.",
-  "rationale": "Legacy authentication protocols do not support multi-factor authentication. These protocols are often used by attackers because of this deficiency. Blocking legacy authentication makes it harder for attackers to gain access.\r\n\t",
-  "impact": "\r\n\t\tEnablig this setting will prevent users from connecting with older versions of Office, ActiveSync or using protocols like IMAP, POP or SMTP and may require upgrades to older versions of Office, and use of mobile mail clients that support modern authentication.\r\n\t\tThere is also an increased cost, as Conditional Access policies require Microsoft Entra ID Premium. Similarly, MFA may require additional overhead to maintain. There is also a potential scenario in which the multi-factor authentication method can be lost, and administrative users are no longer able to log in. For this scenario, there should be an emergency access account. Please see References for creating this.\t",
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`\r\n\t",
+  "rationale": "Legacy authentication protocols do not support multi-factor authentication. These protocols are often used by attackers because of this deficiency. Blocking legacy authentication makes it harder for attackers to gain access.",
+  "impact": "Enablig this setting will prevent users from connecting with older versions of Office, ActiveSync or using protocols like IMAP, POP or SMTP and may require upgrades to older versions of Office, and use of mobile mail clients that support modern authentication.\r\n\t\tThere is also an increased cost, as Conditional Access policies require Microsoft Entra ID Premium. Similarly, MFA may require additional overhead to maintain. There is also a potential scenario in which the multi-factor authentication method can be lost, and administrative users are no longer able to log in. For this scenario, there should be an emergency access account. Please see References for creating this.",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa",
     "https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access",
@@ -21,71 +34,127 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "aad_conditional_access_policy",
-  "conditions": [
-    {
-      "operator": "and",
-      "statements": [
-        {
-          "conditions": [
-            [
-              "state",
-              "eq",
-              "true"
-            ],
-            [
-              "conditions.users.includeUsers",
-              "eq",
-              "All"
-            ],
-            [
-              "conditions.applications.includeApplications",
-              "eq",
-              "All"
-            ]
-          ],
-          "operator": "and"
-        },
-        {
-          "conditions": [
-            [
-              "conditions.clientAppTypes",
-              "contains",
-              "exchangeActiveSync"
-            ],
-            [
-              "conditions.clientAppTypes",
-              "contains",
-              "other"
-            ]
-          ],
-          "operator": "and"
-        },
-		{
-          "conditions": [
-            [
-              "grantControls.builtInControls",
-              "eq",
-              "block"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "shouldExist": "true",
-  "returnObject": null,
-  "idSuffix": "aad_cap_block_basic_auth",
-  "status": {
-    "keyName": ["policyName"],
-    "message": "The {policyName} policy is not configured to block legacy authentication"
+  "rule": {
+    "path": "aad_conditional_access_policy",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "operator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "state",
+                "eq",
+                "true"
+              ],
+              [
+                "conditions.users.includeUsers",
+                "eq",
+                "All"
+              ],
+              [
+                "conditions.applications.includeApplications",
+                "eq",
+                "All"
+              ]
+            ],
+            "operator": "and"
+          },
+          {
+            "conditions": [
+              [
+                "conditions.clientAppTypes",
+                "contains",
+                "exchangeActiveSync"
+              ],
+              [
+                "conditions.clientAppTypes",
+                "contains",
+                "other"
+              ]
+            ],
+            "operator": "and"
+          },
+          {
+            "conditions": [
+              [
+                "grantControls.builtInControls",
+                "eq",
+                "block"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": "true",
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": "policyName",
-    "resourceId": "policyId",
-    "resourceType": "@odata.context"
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "displayName": "Name",
+          "state": "Status",
+          "conditions.clientAppTypes": "Client App Types",
+		  "grantControls.operator": "Operator",
+          "grantControls.builtInControls": "BuiltIn Controls"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "displayName"
+        ],
+      "message": "The {displayName} policy is not configured to block legacy authentication",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "Id",
+        "resourceType": "@odata.context"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "aad_cap_block_basic_auth",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

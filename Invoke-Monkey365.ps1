@@ -51,7 +51,7 @@ Function Invoke-Monkey365{
                 SharePoint Online
                 OneDrive for Business
 
-            With Monkey365, there is also support for exporting data driven to popular formats like CSV, XML or JSON.
+            With Monkey365, there is also support for exporting data driven to popular formats like CSV, CLIXML or JSON.
 
             .NOTES
 	            Author		: Juan Garrido
@@ -63,14 +63,14 @@ Function Invoke-Monkey365{
                 https://github.com/silverhack/monkey365
 
         .EXAMPLE
-	        $assets = Invoke-Monkey365 -ExportTo PRINT -PromptBehavior SelectAccount -IncludeEntraID -Instance Microsoft365 -Analysis SharePointOnline
+	        $assets = Invoke-Monkey365 -ExportTo CSV -PromptBehavior SelectAccount -IncludeEntraID -Instance Microsoft365 -Analysis SharePointOnline
 
-            This example retrieves information of both Azure AD and SharePoint Online and print results. If credentials are not supplied, Monkey365 will prompt for credentials.
+            This example retrieves information of both Azure AD and SharePoint Online and will save results into a CSV file. If credentials are not supplied, Monkey365 will prompt for credentials.
 
         .EXAMPLE
-	        $data = Invoke-Monkey365 -PromptBehavior SelectAccount -Instance Azure -Analysis All -subscriptions 00000000-0000-0000-0000-000000000000 -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo PRINT
+	        Invoke-Monkey365 -PromptBehavior SelectAccount -Instance Azure -Analysis All -subscriptions 00000000-0000-0000-0000-000000000000 -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML
 
-            This example retrieves information of an Azure subscription and prints results to a local variable. If credentials are not supplied, Monkey365 will prompt for credentials.
+            This example retrieves information of an Azure subscription and will export data to a XML-based file. If credentials are not supplied, Monkey365 will prompt for credentials.
 
         .EXAMPLE
 	        Invoke-Monkey365 -ClientId 00000000-0000-0000-0000-000000000000 -ClientSecret ("MySuperClientSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Azure -Analysis All -subscriptions 00000000-0000-0000-0000-000000000000 -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,CSV,JSON,HTML
@@ -108,7 +108,7 @@ Function Invoke-Monkey365{
             All                          Extract all information about an Azure subscription
 
         .PARAMETER ExportTo
-	        Export data driven to specific formats. Accepted values are CSV, JSON, XML, PRINT, HTML.
+	        Export data driven to specific formats. Accepted values are CSV, JSON, XML, HTML.
 
         .PARAMETER ExcludedResources
 	        Exclude unwanted azure resources from being scanned
@@ -194,7 +194,7 @@ Function Invoke-Monkey365{
         [string[]]$ExcludeCollector,
 
         [parameter(Mandatory= $false, HelpMessage= "Export data to multiple formats")]
-        [ValidateSet("CSV","JSON","CLIXML","PRINT","HTML")]
+        [ValidateSet("CSV","JSON","CLIXML","HTML")]
         [Array]$ExportTo=@(),
 
         [Parameter(HelpMessage="Compress Monkey365 output to a ZIP file")]

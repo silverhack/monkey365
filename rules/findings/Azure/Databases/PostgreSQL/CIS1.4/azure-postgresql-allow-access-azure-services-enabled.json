@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "PostgreSQL Server",
   "serviceName": "Databases",
-  "displayName": "Ensure 'Allow access to Azure services' for PostgreSQL Database Server is disabled",
+  "displayName": "Ensure \u0027Allow access to Azure services\u0027 for PostgreSQL Database Server is disabled",
   "description": "Disable access from Azure services to PostgreSQL Database Server.",
-  "rationale": "If access from Azure services is enabled, the server's firewall will accept connections from all Azure resources, including resources not in your subscription. This is usually not a desired configuration. Instead, setup firewall rules to allow access from specific network ranges or VNET rules to allow access from specific virtual networks.",
+  "rationale": "If access from Azure services is enabled, the server\u0027s firewall will accept connections from all Azure resources, including resources not in your subscription. This is usually not a desired configuration. Instead, setup firewall rules to allow access from specific network ranges or VNET rules to allow access from specific virtual networks.",
   "impact": null,
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com\r\n\t\t\t\t\t2. Go to `Azure Database for PostgreSQL server`\r\n\t\t\t\t\t3. For each database, click on `Connection security`\r\n\t\t\t\t\t4. In `Firewall rules`\r\n\t\t\t\t\t5. Ensure `Allow access to Azure services is set to OFF`.\r\n\t\t\t\t\t6. Click Save to apply the changed rule\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com\r\n\t\t\t\t\t2. Go to `Azure Database for PostgreSQL server`\r\n\t\t\t\t\t3. For each database, click on `Connection security`\r\n\t\t\t\t\t4. In `Firewall rules`\r\n\t\t\t\t\t5. Ensure `Allow access to Azure services is set to OFF`.\r\n\t\t\t\t\t6. Click Save to apply the changed rule",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/postgresql/concepts-firewall-rules",
     "https://docs.microsoft.com/en-us/azure/postgresql/howto-manage-firewall-using-cli",
@@ -21,44 +34,98 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_postgresql_servers",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "fwRules.RuleName",
-              "eq",
-              "AllowAllWindowsAzureIps"
-            ],
-            [
-              "fwRules.StartIpAddress",
-              "eq",
-              "0.0.0.0"
-            ],
-            [
-              "fwRules.EndIpAddress",
-              "eq",
-              "0.0.0.0"
-            ]
-          ],
-          "operator": "and"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "postgresql_allow_azure_services_enabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_postgresql_servers",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "fwRules.RuleName",
+                "eq",
+                "AllowAllWindowsAzureIps"
+              ],
+              [
+                "fwRules.StartIpAddress",
+                "eq",
+                "0.0.0.0"
+              ],
+              [
+                "fwRules.EndIpAddress",
+                "eq",
+                "0.0.0.0"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "postgresql_allow_azure_services_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

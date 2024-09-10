@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "MySQL Configuration",
   "serviceName": "Database Configuration",
-  "displayName": "Ensure server parameter 'audit_log_events' has 'CONNECTION' set for MySQL Database Server",
+  "displayName": "Ensure server parameter \u0027audit_log_events\u0027 has \u0027CONNECTION\u0027 set for MySQL Database Server",
   "description": "Enabling CONNECTION helps MySQL Database to log items such as successful and failed connection attempts to the server. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
   "rationale": null,
   "impact": null,
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
   ],
@@ -17,39 +30,95 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_mysql_servers",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "parameterName",
-              "eq",
-              "audit_log_events"
-            ],
-            [
-              "parameterValue",
-              "notcontains",
-              "CONNECTION"
-            ]
-          ],
-          "operator": "and"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "mysql_log_connections_disabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_mysql_servers",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "parameterName",
+                "eq",
+                "audit_log_events"
+              ],
+              [
+                "parameterValue",
+                "notcontains",
+                "CONNECTION"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "serverName": "Name",
+          "parameterName": "Parameter Name",
+          "parameterDescription": "Description",
+          "parameterValue": "value",
+          "parameterDefaultValue": "Default value"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Value"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "mysql_log_connections_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

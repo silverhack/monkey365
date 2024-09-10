@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Azure Virtual Machines",
   "serviceName": "Compute",
   "displayName": "Ensure that the latest Critical OS patches for all virtual machines are applied",
   "description": "The Microsoft Defender for Cloud retrieves a list of available security and critical updates from Windows Update or Windows Server Update Services (WSUS), depending on which service is configured on a Windows VM. The Microsoft Defender for Cloud also checks for the latest updates in Linux systems. If a VM is missing a system update, the Microsoft Defender for Cloud will recommend system updates be applied.",
   "rationale": null,
   "impact": null,
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/security-center/security-center-apply-system-updates",
     "https://docs.microsoft.com/en-us/azure/security/fundamentals/iaas"
@@ -18,33 +31,88 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_vm_missing_patches",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "MSRCSeverity",
-              "eq",
-              "Critical"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "azure_vm_missing_critical_updates",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_vm_missing_patches",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "MSRCSeverity",
+                "eq",
+                "Critical"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "ServerName": "Server Name",
+          "Title": "Title",
+          "MSRCSeverity": "Severity",
+          "KBID": "KBID"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_vm_missing_critical_updates",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

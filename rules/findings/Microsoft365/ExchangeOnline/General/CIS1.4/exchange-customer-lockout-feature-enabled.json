@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
   "serviceType": "Exchange Online",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure the customer lockbox feature is enabled",
   "description": "Consider to enable the Customer Lockbox feature. It requires Microsoft to get your approval for any datacenter operation that grants a Microsoft support engineer or other employee direct access to any of your data. For example, in some cases a Microsoft support engineer might need access to your Microsoft 365 content in order to help troubleshoot and fix an issue for you. Customer lockbox requests also have an expiration time, and content access is removed after the support engineer has fixed the issue.",
   "rationale": "Enabling this feature protects your data against data spillage and exfiltration.",
   "impact": "The impact associated with this setting is a requirement to grant Microsoft access to the tenant environment prior to a Microsoft engineer accessing the environment for support or troubleshooting.",
-  "remediation": "\r\n\t\t\t\t\t###### To enable the Customer Lockbox feature, use the Microsoft 365 Admin Portal\r\n\t\t\t\t\t1. Browse to the `Microsoft 365 admin center`.\r\n\t\t\t\t\t2. Expand `Settings` and then select `Org Settings`.\r\n\t\t\t\t\t3. Choose `Security & privacy` in the right pane.\r\n\t\t\t\t\t4. Click `Customer Lockbox`.\r\n\t\t\t\t\t5. Check the the box `Require approval for all data access requests`.\r\n\t\t\t\t\t6. Click `Save changes`.\t\t\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To set the Customer Lockbox feature to enabled, use the Microsoft Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tSet-OrganizationConfig -CustomerLockBoxEnabled $true\r\n\t\t\t\t\t```\r\n\t",
+  "remediation": {
+    "text": "###### To enable the Customer Lockbox feature, use the Microsoft 365 Admin Portal\r\n\t\t\t\t\t1. Browse to the `Microsoft 365 admin center`.\r\n\t\t\t\t\t2. Expand `Settings` and then select `Org Settings`.\r\n\t\t\t\t\t3. Choose `Security \u0026 privacy` in the right pane.\r\n\t\t\t\t\t4. Click `Customer Lockbox`.\r\n\t\t\t\t\t5. Check the the box `Require approval for all data access requests`.\r\n\t\t\t\t\t6. Click `Save changes`.\t\t\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To set the Customer Lockbox feature to enabled, use the Microsoft Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tSet-OrganizationConfig -CustomerLockBoxEnabled $true\r\n\t\t\t\t\t```",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/microsoft-365/compliance/customer-lockbox-requests?view=o365-worldwide"
   ],
@@ -17,33 +30,89 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "o365_exo_org_config",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "CustomerLockBoxEnabled",
-              "eq",
-              "false"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "o365_exo_customer_lockout_disabled",
-  "status": {
-    "keyName": [],
-    "message": "Ensure the customer lockbox feature is enabled"
+  "rule": {
+    "path": "o365_exo_org_config",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "CustomerLockBoxEnabled",
+                "eq",
+                "false"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "Name": "Name",
+          "GuestsEnabled": "Guest Enabled",
+          "CustomerLockBoxEnabled": "Customer LockBox"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure the customer lockbox feature is enabled",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "o365_exo_customer_lockout_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

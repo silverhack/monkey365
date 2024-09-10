@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Microsoft Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure that Windows Defender ATP (WDATP) integration with Microsoft Defender for Cloud is selected",
   "description": "This setting enables Windows Defender ATP (WDATP) integration with Microsoft Defender for Cloud.",
-  "rationale": "WDATP integration brings comprehensive Endpoint Detection and Response (EDR) capabilities within Microsoft Defender for Cloud. This integration helps to spot abnormalities, detect and respond to advanced attacks on Windows server endpoints monitored by Microsoft Defender for Cloud. Windows Defender ATP in Microsoft Defender for Cloud supports detection on Windows Server 2016, 2012 R2, and 2008 R2 SP1 operating systems in a Standard service subscription.  \r\n\t\t\t\t   WDATP works only with Standard Tier subscriptions.\t\r\n\t",
+  "rationale": "WDATP integration brings comprehensive Endpoint Detection and Response (EDR) capabilities within Microsoft Defender for Cloud. This integration helps to spot abnormalities, detect and respond to advanced attacks on Windows server endpoints monitored by Microsoft Defender for Cloud. Windows Defender ATP in Microsoft Defender for Cloud supports detection on Windows Server 2016, 2012 R2, and 2008 R2 SP1 operating systems in a Standard service subscription.  \r\n\t\t\t\t   WDATP works only with Standard Tier subscriptions.",
   "impact": "WDATP works with Standard pricing tier Subscription.Choosing the Standard pricing tier of Microsoft Defender for Cloud incurs an additional cost per resource.",
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Security policy` blade\r\n\t\t\t\t\t3. Click on `Edit Settings` to alter the the security policy for a subscription\r\n\t\t\t\t\t4. Select the `Threat Detection` blade\r\n\t\t\t\t\t5. Check/Enable option `Allow Windows Defender ATP to access my data`\r\n\t\t\t\t\t6. Select `Save`\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Security policy` blade\r\n\t\t\t\t\t3. Click on `Edit Settings` to alter the the security policy for a subscription\r\n\t\t\t\t\t4. Select the `Threat Detection` blade\r\n\t\t\t\t\t5. Check/Enable option `Allow Windows Defender ATP to access my data`\r\n\t\t\t\t\t6. Select `Save`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-in/azure/security-center/security-center-wdatp",
     "https://docs.microsoft.com/en-us/rest/api/securitycenter/settings/list",
@@ -21,39 +34,92 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_security_center_config",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "name",
-              "eq",
-              "WDATP"
-            ],
-            [
-              "properties.pricingTier",
-              "eq",
-              "Free"
-            ]
-          ],
-          "operator": "and"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "windows_defender_atp_missing_integration",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_security_center_config",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "name",
+                "eq",
+                "WDATP"
+              ],
+              [
+                "properties.pricingTier",
+                "eq",
+                "Free"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Resource Name",
+          "properties.pricingTier": "Pricing Tier"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Pricing Tier"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "windows_defender_atp_missing_integration",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

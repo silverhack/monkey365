@@ -1,5 +1,5 @@
 {
-	statements: [
+	filter: [
 		{
 			conditions : [
 				["displayName", "imatch", "Demo"],

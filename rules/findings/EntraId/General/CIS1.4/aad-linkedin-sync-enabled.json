@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
   "serviceType": "General",
   "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure that LinkedIn contact synchronization is disabled",
   "description": "Consider to disable integration with LinkedIn as a measure to help prevent phishing scams.",
   "rationale": null,
   "impact": null,
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/methods-for-assigning-users-and-groups",
     "https://ezcloudinfo.com/2019/01/22/configure-access-panel-in-azure-active-directory/"
@@ -18,33 +31,87 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "aad_directory_properties",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "enableLinkedInAppFamily",
-              "eq",
-              "0"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "aad_linkedin_sync_enabled",
-  "status": {
-    "keyName": [],
-    "message": "LinkedIn contact synchronization is enabled"
+  "rule": {
+    "path": "aad_directory_properties",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "enableLinkedInAppFamily",
+                "eq",
+                "0"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "displayName": "Display Name",
+          "usersCanRegisterApps": "User can register apps",
+          "enableLinkedInAppFamily": "Linkedin Sync enabled"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Linkedin Sync enabled"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "LinkedIn contact synchronization is enabled",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "aad_linkedin_sync_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

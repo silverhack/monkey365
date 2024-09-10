@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
   "serviceType": "General",
   "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure that 'Users can register applications' is set to 'No'",
+  "displayName": "Ensure that \u0027Users can register applications\u0027 is set to \u0027No\u0027",
   "description": "Consider to require that only administrators can register third-party applications.",
   "rationale": "It is recommended to only allow an administrator to register custom-developed applications. This ensures that the application undergoes a formal security review and approval process prior to exposing Microsoft Entra ID data to the application.",
   "impact": "Enforcing this setting will create additional requests for approval that will need to be addressed by an administrator.",
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t2. Go to `Users`\r\n\t\t\t\t\t3. Go to `User settings`\r\n\t\t\t\t\t4. Ensure that `Users can register applications` is set to `No`\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t2. Go to `Users`\r\n\t\t\t\t\t3. Go to `User settings`\r\n\t\t\t\t\t4. Ensure that `Users can register applications` is set to `No`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/active-directory/roles/delegate-app-roles#restrict-who-can-create-applications",
     "https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added#who-has-permission-to-add-applications-to-my-azure-ad-instance",
@@ -23,33 +36,88 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "aad_authorization_policy",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateApps",
-              "eq",
-              "True"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "aad_users_can_register_apps_enabled",
-  "status": {
-    "keyName": [],
-    "message": "Users can register applications"
+  "rule": {
+    "path": "aad_authorization_policy",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateApps",
+                "eq",
+                "True"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "displayName": "Display Name",
+          "description": "Description",
+          "TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateApps": "Allowed to Create apps",
+          "blockMsolPowerShell": "Block Msol PowerShell"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Allowed to Create apps"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Users can register applications",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "aad_users_can_register_apps_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

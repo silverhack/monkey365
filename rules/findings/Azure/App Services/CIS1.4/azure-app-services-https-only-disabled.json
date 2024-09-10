@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "App Services",
   "serviceName": "Hosted Services",
   "displayName": "Enable HTTPS-Only on Application Service",
   "description": "Azure Web Apps allows sites to run under both HTTP and HTTPS by default. Web apps can be accessed by anyone using non-secure HTTP links by default. Non-secure HTTP requests can be restricted and all HTTP requests redirected to the secure HTTPS port. It is recommended to enforce HTTPS-only traffic. Enabling HTTPS-only traffic will redirect all non-secure HTTP request to HTTPS ports. HTTPS uses the SSL/TLS protocol to provide a secure connection, which is both encrypted and authenticated. So it is important to support HTTPS for the security benefits.",
   "rationale": null,
   "impact": null,
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl"
   ],
@@ -17,33 +30,91 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_app_services",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "properties.httpsOnly",
-              "eq",
-              "False"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "app_service_httpsonly_disabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_app_services",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "properties.httpsOnly",
+                "eq",
+                "False"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Application Name",
+          "kind": "Kind",
+          "location": "Location",
+          "properties.defaultHostName": "HostName",
+          "properties.httpsOnly": "Https Only",
+          "appConfig.properties.ftpsState": "SSL FTP",
+          "appConfig.properties.minTlsVersion": "TLS Version"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Https Only"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "app_service_httpsonly_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

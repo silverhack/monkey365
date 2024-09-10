@@ -1,18 +1,24 @@
-{
-  "arg_names": [
-    "Rule name",
-    "Start IP",
-    "End IP",
-    "Rationale",
-    "compliance_version"
+﻿{
+  "args": [
+    
   ],
+  "provider": "Azure",
   "serviceType": "Azure SQL Firewall",
   "serviceName": "Network",
   "displayName": "_ARG_0_ allow ingress from _ARG_1_ to _ARG_2_",
   "description": "_ARG_3_",
   "rationale": null,
   "impact": null,
-  "remediation": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure"
   ],
@@ -24,39 +30,93 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_sql_servers",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "fwRules.StartIpAddress",
-              "eq",
-              "_ARG_1_"
-            ],
-            [
-              "fwRules.EndIpAddress",
-              "eq",
-              "_ARG_2_"
-            ]
-          ],
-          "operator": "and"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "azure_sql_fw_rule_enabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_sql_servers",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "fwRules.StartIpAddress",
+                "eq",
+                "_ARG_1_"
+              ],
+              [
+                "fwRules.EndIpAddress",
+                "eq",
+                "_ARG_2_"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_sql_fw_rule_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

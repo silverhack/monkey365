@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "Azure Log Profile",
   "serviceName": "Subscription",
   "displayName": "Ensure the storage account containing the container with activity logs is encrypted using own key",
   "description": "The storage account with the activity log export container is configured to use BYOK (Use Your Own Key).",
   "rationale": "Configuring the storage account with the activity log export container to use BYOK (Use Your Own Key) provides additional confidentiality controls on log data as a given user must have read permission on the corresponding storage account and must be granted decrypt permission by the CMK.",
   "impact": null,
-  "remediation": "\r\n\t\t\t\t\t###### From Azure Console\r\n\t\t\t\t\t1. Go to `Activity log`\r\n\t\t\t\t\t2. Select `Export`\r\n\t\t\t\t\t3. Select `Subscription`\r\n\t\t\t\t\t4. In section `Storage Account`, note the name of the Storage account\r\n\t\t\t\t\t5. Close the `Export Audit Logs` blade. Close the `Monitor - Activity Log` blade.\r\n\t\t\t\t\t6. In right column, Click service `Storage Accounts` to access Storage account blade\r\n\t\t\t\t\t7. Click on the storage account name noted in step 4. This will open blade specific to that storage account\r\n\t\t\t\t\t8. In Section `settings` click `Encryption`. It will show `Storage service encryption` configuration pane.\r\n\t\t\t\t\t9. Ensure `Use your own key` is checked and `Key URI` is set.\r\n\r\n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Activity log`\r\n\t\t\t\t\t2. Select `Export`\r\n\t\t\t\t\t3. Select `Subscription`\r\n\t\t\t\t\t4. In section `Storage Account`, note the name of the Storage account\r\n\t\t\t\t\t5. Close the `Export Audit Logs` blade. Close the `Monitor - Activity Log` blade.\r\n\t\t\t\t\t6. In right column, Click service `Storage Accounts` to access Storage account blade\r\n\t\t\t\t\t7. Click on the storage account name noted in step 4. This will open blade specific to that storage account\r\n\t\t\t\t\t8. In Section `settings` click `Encryption`. It will show `Storage service encryption` configuration pane.\r\n\t\t\t\t\t9. Ensure `Use your own key` is checked and `Key URI` is set.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-logs-overview"
   ],
@@ -17,33 +30,88 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_log_profile",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "storageAccountUsingOwnKey",
-              "eq",
-              "false"
-            ]
-          ]
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "azure_log_profile_storage_byok_disabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_log_profile",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "storageAccountUsingOwnKey",
+                "eq",
+                "false"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Log Profile",
+          "properties.retentionPolicy.enabled": "Retention Policy",
+          "properties.retentionPolicy.days": "Retention Policy days",
+          "storageAccountUsingOwnKey": "Encrypted Using Own Key"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Encrypted Using Own Key"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_log_profile_storage_byok_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

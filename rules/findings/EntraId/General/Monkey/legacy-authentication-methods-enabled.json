@@ -1,98 +1,157 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
   "serviceType": "General",
   "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure legacy authentication methods are disabled",
   "description": "Microsoft Entra ID was not configured to block legacy authentication protocols for MFA. SMS or voice calls are considered insecure methods and could potentially be used to compromise accounts.",
   "rationale": "SMS, voice call, and email OTP are the weakest authenticators. Authentication policies should be configured to force users to use stronger MFA methods.",
-  "impact": '',
-  "remediation": "
-				1. In Microsoft Entra ID, click Security > Authentication methods. 
-				2. Click on the SMS, Voice Call, and Email OTP authentication methods and disable each of them.
-				3. Their statuses should be Enabled > No on the Authentication methods > Policies page.  ",
+  "impact": "",
+  "remediation": {
+    "text": "1. In Microsoft Entra ID, click Security \u003e Authentication methods. \r\n\t\t\t\t2. Click on the SMS, Voice Call, and Email OTP authentication methods and disable each of them.\r\n\t\t\t\t3. Their statuses should be Enabled \u003e No on the Authentication methods \u003e Policies page.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://skotheimsvik.no/entra-ids-mfa-evolution-your-sms-backdoor-is-now-obsolete",
     "https://techcommunity.microsoft.com/t5/microsoft-entra-blog/it-s-time-to-hang-up-on-phone-transports-for-authentication/ba-p/1751752"
   ],
   "compliance": [
-    ["Monkey365"]
+    "Monkey365"
   ],
   "level": "medium",
-  "tags": null,
-  "path": "aad_auth_method_policies",
-  "subPath": "authenticationMethodConfigurations",
-  "conditions": [
-	{
-      "statements": [
-        {
-          "conditions": [
-            [
-              "id",
-              "eq",
-              "Sms"
-            ],
-			[
-              "state",
-              "eq",
-              "disabled"
-            ]
-          ],
-		  "operator": "and"
-        }
-      ]
-    },
-	{
-      "connectOperator": "and",
-      "statements": [
-        {
-          "conditions": [
-            [
-              "id",
-              "eq",
-              "Voice"
-            ],
-			[
-              "state",
-              "eq",
-              "disabled"
-            ]
-          ],
-		  "operator": "and"
-        }
-      ]
-    },
-	{
-      "connectOperator": "and",
-      "statements": [
-        {
-          "conditions": [
-            [
-              "id",
-              "eq",
-              "Email"
-            ],
-			[
-              "state",
-              "eq",
-              "disabled"
-            ]
-          ],
-		  "operator": "and"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "shouldExist": "true",
-  "returnObject": null,
-  "idSuffix": "aad_legacy_auth_methods_enabled",
-  "status": {
-    "keyName": "",
-    "message": "Legacy authentication options such as SMS or voice calls were enabled"
+  "rule": {
+    "path": "aad_auth_method_policies",
+    "subPath": "authenticationMethodConfigurations",
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "id",
+                "eq",
+                "Sms"
+              ],
+              [
+                "state",
+                "eq",
+                "disabled"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "id",
+                "eq",
+                "Voice"
+              ],
+              [
+                "state",
+                "eq",
+                "disabled"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "id",
+                "eq",
+                "Email"
+              ],
+              [
+                "state",
+                "eq",
+                "disabled"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": "true",
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": "Id",
-    "resourceId": "Id",
-    "resourceType": "@odata.type"
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": "",
+        "message": "Legacy authentication options such as SMS or voice calls were enabled",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "Id",
+        "resourceId": "Id",
+        "resourceType": "@odata.type"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "aad_legacy_auth_methods_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

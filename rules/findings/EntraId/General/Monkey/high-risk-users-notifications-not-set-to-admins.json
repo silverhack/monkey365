@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
   "serviceType": "General",
   "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure notifications for high-risk users is Enabled for Administrators",
-  "description": "Notification enables administrators to monitor the event and remediate the risk. This helps the organization proactively respond to cyber intrusions as they occur.\r\n\t",
-  "rationale": "This setting alerts administrators that high-risk users are detected. This may indicate an account or machine compromise that would need to be investigated.\r\n\t",
+  "description": "Notification enables administrators to monitor the event and remediate the risk. This helps the organization proactively respond to cyber intrusions as they occur.",
+  "rationale": "This setting alerts administrators that high-risk users are detected. This may indicate an account or machine compromise that would need to be investigated.",
   "impact": "",
-  "remediation": "",
+  "remediation": {
+    "text": "",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-configure-notifications#configure-users-at-risk-detected-alerts"
   ],
@@ -16,49 +29,102 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "aad_identityprotection_notifications",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "minRiskLevel",
-              "ne",
-              "high"
-            ]
-          ]
-        }
-      ]
-    },
-	{
-      "connectOperator": "or",
-      "statements": [
-        {
-          "conditions": [
-            [
-              "isRiskyUsersAlertsRecipient",
-              "eq",
-              "false"
-            ]
-          ],
-          "whereObject": "notificationRecipients"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "returnObject": null,
-  "idSuffix": "aad_high_risk_users_notification_disabled",
-  "status": {
-    "keyName": ["email"],
-    "message": "{email} is not configured to receive detected alerts for high-risk users"
+  "rule": {
+    "path": "aad_identityprotection_notifications",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "minRiskLevel",
+                "ne",
+                "high"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "connectOperator": "or",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "isRiskyUsersAlertsRecipient",
+                "eq",
+                "false"
+              ]
+            ],
+            "whereObject": "notificationRecipients"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expand": [
+            "*"
+          ],
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "email"
+        ],
+      "message": "{email} is not configured to receive detected alerts for high-risk users",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "aad_high_risk_users_notification_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

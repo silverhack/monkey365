@@ -1,11 +1,24 @@
-{
+﻿{
+  "args": [
+    
+  ],
+  "provider": "Azure",
   "serviceType": "MySQL Configuration",
   "serviceName": "Database Configuration",
-  "displayName": "Ensure server parameter 'audit_log_enabled' is set to 'ON' for MySQL Database Server",
+  "displayName": "Ensure server parameter \u0027audit_log_enabled\u0027 is set to \u0027ON\u0027 for MySQL Database Server",
   "description": "Enable audit_log_enabled on MySQL Servers.",
-  "rationale": "\r\n\t\tEnabling audit_log_enabled helps MySQL Database to log items such as connection attempts to the server, DDL/DML access, and more. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.\r\n\t",
-  "impact": "There are further costs incurred for storage of logs. For high traffic databases these logs will be significant. Determine your organization's needs before enabling.\r\n\t",
-  "remediation": null,
+  "rationale": "Enabling audit_log_enabled helps MySQL Database to log items such as connection attempts to the server, DDL/DML access, and more. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
+  "impact": "There are further costs incurred for storage of logs. For high traffic databases these logs will be significant. Determine your organization\u0027s needs before enabling.",
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
   "references": [
     "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver"
   ],
@@ -17,39 +30,95 @@
     }
   ],
   "level": "medium",
-  "tags": null,
-  "path": "az_mysql_servers",
-  "conditions": [
-    {
-      "statements": [
-        {
-          "conditions": [
-            [
-              "parameterName",
-              "eq",
-              "audit_log_enabled"
-            ],
-            [
-              "parameterValue",
-              "ne",
-              "off"
-            ]
-          ],
-          "operator": "and"
-        }
-      ]
-    }
+  "tags": [
+    
   ],
-  "idSuffix": "mysql_audit_log_disabled",
-  "status": {
-    "keyName": [],
-    "message": ""
+  "rule": {
+    "path": "az_mysql_servers",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "parameterName",
+                "eq",
+                "audit_log_enabled"
+              ],
+              [
+                "parameterValue",
+                "ne",
+                "off"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
   },
-  "notes": [],
-  "categories": [],
-  "fields": {
-    "resourceName": null,
-    "resourceId": null,
-    "resourceType": null
-  }
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "serverName": "Name",
+          "parameterName": "Parameter Name",
+          "parameterDescription": "Description",
+          "parameterValue": "value",
+          "parameterDefaultValue": "Default value"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Value"
+      ],
+      "actions": {
+        "objectData": {
+          "expand": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "mysql_audit_log_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
 }

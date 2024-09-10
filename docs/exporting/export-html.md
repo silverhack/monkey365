@@ -17,42 +17,46 @@ $param = @{
     TenantID = '00000000-0000-0000-0000-000000000000';
     ExportTo = 'HTML';
 }
-$assets = Invoke-Monkey365 @param
+Invoke-Monkey365 @param
 ```
 
 ## Customize HTML
 
-A Monkey365 report uses JSON configuration files to visualize data in a variety of ways. This approach makes it easy to modify and combine tables, style them, and make them interactive with buttons. You can use your favorite text editor in order to modify these configuration files.
+A Monkey365 report uses JSON-like configuration objects to visualize data in a variety of ways. This approach makes it easy to modify and combine tables, style them, and make them interactive with buttons. You can use your favorite text editor in order to modify these configuration files.
 
 ## HTML Configuration Files Location
 
-All the table formats are stored under ```Monkey365/core/utils/dataMappings```. Internal data is rendered with ```JQuery DataTables```. Basic table and table ```as list ``` are the available formats. Please, note that not all features of HTML tables are supported.
+All the table formats are stored within JSON rules and data is rendered with ```JQuery DataTables```. Basic table and table ```as list ``` are the available formats. Please, note that not all features of HTML tables are supported.
 
 ## HTML Table examples
 
 ### Table As List
 
-For example, table elements for Azure app services can be formatted to display complex structured data in the ``app_services.json`` file.
+Take for example the following code extracted from the <a href='https://github.com/silverhack/monkey365/blob/main/rules/findings/Azure/App%20Services/CIS1.4/azure-app-services-ad-managed-identity-missing.json' target='_blank'>azure-app-services-ad-managed-identity-missing.json</a> Monkey365 rule.
 
 ``` json
 {
-	"app_service_missing_identity": [
-        {
-            "translate": {
-                "name": "Application Name",
-                "kind": "Kind",
-                "location": "Location",
-                "properties.defaultHostName": "HostName",
-                "properties.httpsOnly": "Https Only",
-                "identity.principalId": "Principal ID",
-                "configuration.properties.ftpsState": "SSL FTP",
-                "configuration.properties.minTlsVersion": "TLS Version",
-                "configuration.properties.siteAuthSettings.Enabled": "Site Auth Enabled"
-            },
-            "table": "asList",
-            "emphasis": ["Principal ID"]
-        }
-    ]
+	"data": {
+        "properties": {
+          "name": "Application Name",
+          "kind": "Kind",
+          "location": "Location",
+          "properties.defaultHostName": "HostName",
+          "properties.httpsOnly": "Https Only",
+          "identity.principalId": "Principal ID",
+          "appConfig.properties.ftpsState": "SSL FTP",
+          "appConfig.properties.minTlsVersion": "TLS Version",
+          "appConfig.properties.siteAuthSettings.Enabled": "Site Auth Enabled"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Principal ID"
+      ]
 }
 ```
 
@@ -62,24 +66,28 @@ In the above example, this will result in the data being rendered in a single ta
 
 ### Normal Table
 
-In this example, table elements for Storage accounts missing key rotation can be formatted to display complex structured data in the ``storage.json`` file.
+In this example, the following code that was extracted from the <a href='https://github.com/silverhack/monkey365/blob/main/rules/findings/Azure/Storage%20Accounts/CIS1.4/azure-storage-accounts-https-traffic-enabled.json' target='_blank'>azure-storage-accounts-https-traffic-enabled.json</a> Monkey365 rule is used to render data for *Storage accounts missing key rotation* finding into a default table.
 
 ``` json
 {
-	"storage_accounts_https_traffic_disabled": [
-        {
-            "translate": {
-                "name": "Name",
-                "CreationTime": "Creation Time",
-                "location": "Location",
-                "supportsHttpsTrafficOnly": "Https Only"
-            },
-            "table": "Normal"
-        }
-    ],
+	"data": {
+        "properties": {
+          "name": "Name",
+          "CreationTime": "Creation Time",
+          "location": "Location",
+          "supportsHttpsTrafficOnly": "Https Only"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ]
 }
 ```
-The above example will result in the data being rendered in a single table formatted as normal table.
 
 ![](../assets/images/NormalTable.png)
 
@@ -89,25 +97,19 @@ Table elements can be configured to show raw data on Bootstrap Modal. In order t
 
 ``` json
 {
-	"storage_accounts_missing_key_rotation": [
-        {
-            "translate": {
-                "name": "Name",
-                "location": "Location",
-                "ResourceGroupName": "ResourceGroupName",
-				"isKeyRotated": "Key Rotated"
-            },
-            "table": "Normal",
-			"actions":{
-				"objectData":{
-					"expand": ["*"],
-					"format": "json"
-				},
-				"showGoToButton":"True",
-				"showModalButton":"True"
-			}
-        }
-    ]
+	"actions": {
+        "objectData": {
+          "expand": [
+            "name",
+            "location",
+            "ResourceGroupName",
+            "CreationTime",
+            "supportsHttpsTrafficOnly"
+          ],
+          "limit": null
+        },
+        "showModalButton": "True"
+      }
 }
 ```
 The above example will result in the data being rendered in a single table formatted as normal table, and a modal button in last column.
@@ -122,25 +124,20 @@ Table elements can be configured to add a direct link to the Azure console secti
 
 ``` json
 {
-	"storage_accounts_missing_key_rotation": [
-        {
-            "translate": {
-                "name": "Name",
-                "location": "Location",
-                "ResourceGroupName": "ResourceGroupName",
-				"isKeyRotated": "Key Rotated"
-            },
-            "table": "Normal",
-			"actions":{
-				"objectData":{
-					"expand": ["*"],
-					"format": "json"
-				},
-				"showGoToButton":"True",
-				"showModalButton":"True"
-			}
-        }
-    ]
+	"actions": {
+        "objectData": {
+          "expand": [
+            "name",
+            "location",
+            "ResourceGroupName",
+            "CreationTime",
+            "supportsHttpsTrafficOnly"
+          ],
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True"
+      }
 }
 ```
 The above example will result in the data being rendered in a single table formatted as normal table, and a direct link button in last column.
