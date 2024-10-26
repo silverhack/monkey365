@@ -5,10 +5,10 @@
   "provider": "EntraID",
   "serviceType": "Microsoft Entra ID Identity",
   "serviceName": "IAM",
-  "displayName": "Excessive number of Global Administrators",
-  "description": "The total number of Global Administrators was higher than recommended. A tenancy should have more than two but fewer than five Global Administrators. Having an excessive number of Global Administrators has an increased risk that one of those accounts will be successfully breached by an external attacker.",
-  "rationale": "If there is only one global tenant administrator, he or she can perform malicious activity without the possibility of being discovered by another admin. If there are numerous global tenant administrators, the more likely it is that one of their accounts will be successfully breached by an external attacker.",
-  "impact": "The potential impact associated with ensuring compliance with this requirement is dependent upon the current number of global administrators configured in the tenant. If there is only one global administrator in a tenant, an additional global administrator will need to be identified and configured. If there are more than four global administrators, a review of role requirements for current global administrators will be required to identify which of the users require global administrator access.",
+  "displayName": "Nombre excessif d'administrateurs généraux",
+  "description": "Le nombre total d'administrateurs généraux est supérieur au nombre recommandé. Un locataire devrait avoir plus de deux, mais moins de cinq administrateurs généraux. Avoir un nombre excessif d'administrateurs généraux augmente le risque qu'un de ces comptes soit compromis par un attaquant externe.",
+  "rationale": "S'il n'y a qu'un seul administrateur général du locataire, celui-ci peut effectuer des activités malveillantes sans possibilité de détection par un autre administrateur. S'il y a plusieurs administrateurs généraux du locataire, il est plus probable qu'un des comptes soit compromis par un attaquant externe.",
+  "impact": "L'impact potentiel associé au respect de cette exigence dépend du nombre actuel d'administrateurs généraux configurés dans le locataire. S'il n'y a qu'un seul administrateur général dans un locataire, un administrateur général supplémentaire devra être identifié et configuré. S'il y a plus de quatre administrateurs généraux, une révision des exigences de rôle pour les administrateurs généraux actuels sera nécessaire afin d'identifier les utilisateurs nécessitant un accès d'administrateur général.",
   "remediation": {
     "text": null,
     "code": {
@@ -20,9 +20,9 @@
   },
   "recommendation": null,
   "references": [
-    "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-admin-roles-secure",
-    "https://docs.microsoft.com/en-us/windows-server/identity/securing-privileged-access/securing-privileged-access",
-    "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-assign-admin-roles"
+    "https://docs.microsoft.com/fr-fr/azure/active-directory/users-groups-roles/directory-admin-roles-secure",
+    "https://docs.microsoft.com/fr-fr/windows-server/identity/securing-privileged-access/securing-privileged-access",
+    "https://docs.microsoft.com/fr-fr/azure/active-directory/users-groups-roles/directory-assign-admin-roles"
   ],
   "compliance": [
     {

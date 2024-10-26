@@ -5,22 +5,22 @@
   "provider": "Microsoft365",
   "serviceType": "Exchange Online",
   "serviceName": "Microsoft 365",
-  "displayName": "Ensure O365 ATP SafeLinks for Office Applications is Enabled",
-  "description": "Enabling the Advanced Threat Protection (ATP) Safe Links policy for Office applications allows URL\u0027s that existing inside of Office documents opened by Office, Office Online and Office mobile to be processed against ATP time-of-click verification.",
-  "rationale": "ATP Safe Links for Office applications extends phishing protection to documents that contain hyperlinks, even after they have been delivered to a user.",
-  "impact": "User impact associated with this change is minor - users may experience a very short delay when clicking on URLs in Office documents before being directed to the requested site.",
+  "displayName": "Assurez-vous que O365 ATP SafeLinks pour les applications Office est activé",
+  "description": "L'activation de la politique de liens sûrs (Safe Links) de la protection avancée contre les menaces (ATP) pour les applications Office permet de vérifier les URL contenues dans les documents Office ouverts par Office, Office Online et Office mobile, via la vérification ATP au moment du clic.",
+  "rationale": "La fonctionnalité ATP Safe Links pour les applications Office étend la protection contre le phishing aux documents contenant des hyperliens, même après qu'ils ont été livrés à un utilisateur.",
+  "impact": "L'impact pour l'utilisateur est mineur - il peut y avoir un très court délai lorsque l'utilisateur clique sur les URLs dans les documents Office avant d'être redirigé vers le site demandé.",
   "remediation": {
-    "text": "###### To enable the ATP Safe Links policy for Office, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Select `Admin Center` and Click to expand `Security`.\r\n\t\t\t\t\t2. Navigate to `Threat management` and select `Policy`.\r\n\t\t\t\t\t3. Select `Safe Links` followed by `Global Settings`.\r\n\t\t\t\t\t4. Select `Use Safe Links in Office 365 apps and Do not let users click through to the original URL in Office 365 apps`.\r\n\t\t\t\t\t5. Click `Save`.\t\t\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To enable the ATP Safe Links policy for Office 365, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tSet-AtpPolicyForO365 -AllowClickThrough $False -EnableSafeLinksForClients $true\r\n\t\t\t\t\t```",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
+      "text": "###### Pour activer la politique Safe Links ATP pour Office, utilisez le Centre d'administration Microsoft 365\r\n\t\t\t\t\t1. Sélectionnez `Centre d'administration` et développez `Sécurité`.\r\n\t\t\t\t\t2. Accédez à `Gestion des menaces` et sélectionnez `Politique`.\r\n\t\t\t\t\t3. Sélectionnez `Liens sûrs`, puis `Paramètres globaux`.\r\n\t\t\t\t\t4. Cochez `Utiliser les liens sûrs dans les applications Office 365 et ne pas permettre aux utilisateurs de cliquer vers l'URL d'origine dans les applications Office 365`.\r\n\t\t\t\t\t5. Cliquez sur `Enregistrer`.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### Pour activer la politique Safe Links ATP pour Office 365, utilisez le module PowerShell Exchange Online\r\n\t\t\t\t\t1. Connectez-vous à Exchange Online en utilisant `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Exécutez la commande PowerShell suivante :\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tSet-AtpPolicyForO365 -AllowClickThrough $False -EnableSafeLinksForClients $true\r\n\t\t\t\t\t```",
+      "code": {
+        "powerShell": null,
+        "iac": null,
+        "terraform": null,
+        "other": null
+      }
+    },
   "recommendation": null,
   "references": [
-    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-links?view=o365-worldwide"
+      "https://docs.microsoft.com/fr-fr/microsoft-365/security/office-365-security/safe-links?view=o365-worldwide"
   ],
   "compliance": [
     {

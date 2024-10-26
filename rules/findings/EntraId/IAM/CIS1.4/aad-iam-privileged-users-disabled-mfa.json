@@ -5,24 +5,24 @@
   "provider": "EntraID",
   "serviceType": "Microsoft Entra ID Identity",
   "serviceName": "IAM",
-  "displayName": "Ensure that multi-factor authentication is enabled for all privileged users",
-  "description": "Enable multi-factor authentication for all user credentials who have write access to Azure resources. These include roles like:\r\n\t\t\t\t\t\r\n\t\t\t\t\t* Service Co-Administrators\r\n\t\t\t\t\t* Subscription Owners\r\n\t\t\t\t\t* Contributors",
-  "rationale": "Multi-factor authentication requires an individual to present a minimum of two separate forms of authentication before access is granted. Multi-factor authentication provides additional assurance that the individual attempting to gain access is who they claim to be. With multi-factor authentication, an attacker would need to compromise at least two different authentication mechanisms, increasing the difficulty of compromise and thus reducing the risk.",
-  "impact": "Users would require two forms of authentication before any action is granted. Also, this requires an overhead for managing dual forms of authentication.",
+  "displayName": "Assurez-vous que l'authentification multi-facteurs est activée pour tous les utilisateurs privilégiés",
+  "description": "Activez l'authentification multi-facteurs pour tous les utilisateurs ayant des droits d'écriture sur les ressources Azure. Cela inclut des rôles tels que :\r\n\t\t\t\t\t\r\n\t\t\t\t\t* Co-administrateurs de service\r\n\t\t\t\t\t* Propriétaires de l'abonnement\r\n\t\t\t\t\t* Contributeurs",
+  "rationale": "L'authentification multi-facteurs exige qu'un individu présente au moins deux formes distinctes d'authentification avant que l'accès ne soit accordé. Elle offre une assurance supplémentaire que l'individu tentant d'accéder est bien celui qu'il prétend être. Avec l'authentification multi-facteurs, un attaquant devrait compromettre au moins deux mécanismes d'authentification différents, augmentant ainsi la difficulté de compromission et réduisant le risque.",
+  "impact": "Les utilisateurs devront fournir deux formes d'authentification avant qu'une action ne soit accordée. Cela implique également une gestion supplémentaire pour administrer les deux formes d'authentification.",
   "remediation": {
-    "text": "Follow Microsoft Azure documentation and setup multi-factor authentication in your environment.\r\n\t\t\t\t\t\u003ca class=\u0027external-link\u0027 href=\u0027https://docs.microsoft.com/en-us/azure/active-directory/authentication/tutorial-enable-azure-mfa\u0027 target=\u0027_blank\u0027\u003eSecure user sign-in events with Microsoft Entra ID Multi-Factor Authentication\u003c/a\u003e",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
+      "text": "Suivez la documentation de Microsoft Azure et configurez l'authentification multi-facteurs dans votre environnement.\r\n\t\t\t\t\t\u003ca class=\u0027external-link\u0027 href=\u0027https://docs.microsoft.com/fr-fr/azure/active-directory/authentication/tutorial-enable-azure-mfa\u0027 target=\u0027_blank\u0027\u003eSécurisez les événements de connexion des utilisateurs avec l'authentification multi-facteurs de Microsoft Entra ID\u003c/a\u003e",
+      "code": {
+        "powerShell": null,
+        "iac": null,
+        "terraform": null,
+        "other": null
+      }
+    },
   "recommendation": null,
   "references": [
-    "https://docs.microsoft.com/en-us/azure/multi-factor-authentication/multi-factor-authentication",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-4-use-strong-authentication-controls-for-all-azure-active-directory-based-access",
-    "https://docs.microsoft.com/en-us/azure/security/fundamentals/identity-management-best-practices"
+      "https://docs.microsoft.com/fr-fr/azure/multi-factor-authentication/multi-factor-authentication",
+      "https://docs.microsoft.com/fr-fr/azure/security/benchmarks/security-controls-v2-identity-management#im-4-utilisez-des-contrôles-dauthentification-fort-pour-tout-accès-basé-sur-azure-active-directory",
+      "https://docs.microsoft.com/fr-fr/azure/security/fundamentals/identity-management-best-practices"
   ],
   "compliance": [
     {
