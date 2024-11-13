@@ -11,7 +11,7 @@ The following example will fetch data from specific Azure subscription and Tenan
 ``` powershell
 $param = @{
     Instance = 'Azure';
-    Analysis = 'All';
+    Collect = 'All';
     PromptBehavior = 'SelectAccount';
     subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';

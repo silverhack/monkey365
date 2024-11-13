@@ -10,7 +10,7 @@ Monkey365 requires the use of first-party Microsoft registered applications to c
 
 You may receive multiple authentication prompts depending on:
 
-* When multiple services are selected within the -Analysis flag
+* When multiple services are selected within the -Collect flag
 
 * If a conditional access policy is configured to require an extra multi-factor authentication
 
@@ -49,4 +49,4 @@ The authentication prompt experience that you can expect is described in the fol
 </table>
 </center>
 
-That means that if a user is selecting for example Exchange Online, Purview and SharePoint Online in the -Analysis flag, the user will see multiple authentication prompts. New authentication prompt is needed when the application has its own OAuth Refresh Token and is not shared with other client apps. 
+That means that if a user is selecting for example Exchange Online, Purview and SharePoint Online in the -Collect flag, the user will see multiple authentication prompts. New authentication prompt is needed when the application has its own OAuth Refresh Token and is not shared with other client apps. 

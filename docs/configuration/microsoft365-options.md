@@ -4,7 +4,7 @@ author: Juan Garrido
 
 This section covers the supported options to help customize and automate scans for Microsoft 365 environments. General options include:
 
- ```--Analysis```
+ ```--Collect```
 
 Select the Microsoft 365 resources used to gather data. Valid values are:
 

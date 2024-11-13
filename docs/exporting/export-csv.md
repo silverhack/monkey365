@@ -10,7 +10,7 @@ You can easily export reports as a CSV file. Simply select `-ExportTo CSV` as sh
 ``` PowerShell
 $p = @{
     Instance = 'Azure';
-    Analysis = 'All';
+    Collect = 'All';
     PromptBehavior = 'SelectAccount';
     AllSubscriptions = $true;
     TenantID = '00000000-0000-0000-0000-000000000000';

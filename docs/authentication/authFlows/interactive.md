@@ -12,7 +12,7 @@ Interactive browser authentication enables the `Monkey365` PowerShell module for
 
 $param = @{
     Instance = 'Microsoft365';
-    Analysis = 'SharePointOnline','ExchangeOnline';
+    Collect = 'SharePointOnline','ExchangeOnline';
     PromptBehavior = 'SelectAccount';
     ExportTo = 'PRINT';
 }

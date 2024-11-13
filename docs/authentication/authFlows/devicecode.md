@@ -12,7 +12,7 @@ Interactive authentication with Microsoft Entra ID requires a web browser. Howev
 
 $param = @{
     Instance = 'Microsoft365';
-    Analysis = 'SharePointOnline';
+    Collect = 'SharePointOnline';
     DeviceCode = $true;
     IncludeEntraID = $true;
     ExportTo = 'PRINT';

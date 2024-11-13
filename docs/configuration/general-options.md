@@ -34,7 +34,7 @@ Use this flag to scan a Microsoft Entra ID tenant:
 
 $param = @{
     Instance = 'Microsoft365';
-    Analysis = 'ExchangeOnline';
+    Collect = 'ExchangeOnline';
     PromptBehavior = 'SelectAccount';
 	IncludeEntraID = $true;
     ExportTo = 'HTML';
@@ -52,7 +52,7 @@ This flag will compress all the output data into a single zip file (Default fold
 
 ``` powershell
 
-Invoke-Monkey365 -Instance Microsoft365 -Analysis ExchangeOnline -ExportTo HTML -Compress
+Invoke-Monkey365 -Instance Microsoft365 -Collect ExchangeOnline -ExportTo HTML -Compress
 
 ```
 
@@ -83,7 +83,7 @@ This option can be used to exclude collectors from being executed. For example, 
 ``` powershell
 $param = @{
     Instance = 'Microsoft365';
-    Analysis = 'ExchangeOnline';
+    Collect = 'ExchangeOnline';
     PromptBehavior = 'SelectAccount';
     TenantID = '00000000-0000-0000-0000-000000000000';
 	ExcludeCollector = exo0003, exo0004, exo0005;

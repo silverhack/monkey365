@@ -16,7 +16,7 @@ $param = @{
     ClientId = '00000000-0000-0000-0000-000000000000';
     ClientSecret = ("MySuperClientSecret" | ConvertTo-SecureString -AsPlainText -Force)
     Instance = 'Azure';
-    Analysis = 'All';
+    Collect = 'All';
     subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
     ExportTo = @("HTML");
@@ -34,7 +34,7 @@ $param = @{
     certificate = 'C:\monkey365\testapp.pfx';
     CertFilePassword = ("MySuperCertSecret" | ConvertTo-SecureString -AsPlainText -Force);
     Instance = 'Microsoft365';
-    Analysis = 'SharePointOnline';
+    Collect = 'SharePointOnline';
     TenantID = '00000000-0000-0000-0000-000000000000';
     ExportTo = @("HTML");
 }

@@ -12,7 +12,7 @@ You can easily export all findings as a JSON file. Simply select `-ExportTo JSON
 ``` PowerShell
 $p = @{
     Instance = 'Azure';
-    Analysis = 'All';
+    Collect = 'All';
     PromptBehavior = 'SelectAccount';
     AllSubscriptions = $true;
     TenantID = '00000000-0000-0000-0000-000000000000';

@@ -1,13 +1,13 @@
-﻿{
+{
   "args": [
     
   ],
   "provider": "EntraID",
   "serviceType": "Microsoft Entra ID Identity",
   "serviceName": "IAM",
-  "displayName": "Ensure active role assignments are not permanent",
+  "displayName": "Ensure permanent and eligible role assignments are not assigned outside PIM",
   "description": "Instead of giving users permanent assignments to privileged roles, provisioning access just in time lessens exposure if those accounts become compromised. In Azure AD PIM or an alternative PAM system, just in time access can be provisioned by assigning users to roles as eligible instead of perpetually active.",
-  "rationale": "Ensuring administrative accounts are cloud-only, will reduce the attack surface of high privileged identities in your environment. In order to participate in Microsoft 365 security services such as Identity protection, PIM and Conditional Access an administrative account will need a license attached to it. In a hybrid environment, having separate accounts will help ensure that in the event of a breach in the cloud, that the breach does not affect the on-prem environment and vice versa.",
+  "rationale": "Provisioning users to privileged roles within a PAM system enables enforcement of numerous privileged access policies and monitoring. If privileged users are assigned directly to roles in the M365 admin center or via PowerShell outside of the context of a PAM system, a significant set of critical security capabilities are bypassed.",
   "impact": "",
   "remediation": {
     "text": null,
@@ -54,15 +54,14 @@
       {
         "connectOperator": "and",
         "filter": [
-          {
+		  {
             "conditions": [
               [
-                "endDateTime",
+                "startDateTime",
                 "eq"
               ]
             ],
-            "whereObject": "activeAssignment.users",
-            "operator": "or"
+            "whereObject": "eligibleAssignment.users"
           }
         ]
       }
@@ -75,12 +74,12 @@
     "html": {
       "data": {
         "properties": {
-          "activeAssignment.users.userPrincipalName": "User Principal Name",
-          "activeAssignment.users.startDateTime": "Start Date",
-          "activeAssignment.users.userType": "User Type",
+          "eligibleAssignment.users.userPrincipalName": "User Principal Name",
+          "eligibleAssignment.users.startDateTime": "Start Date",
+          "eligibleAssignment.users.userType": "User Type",
           "displayName": "Role Name"
         },
-        "expandObject": "activeAssignment.users"
+        "expandObject": "eligibleAssignment.users"
       },
       "table": null,
       "decorate": [
@@ -103,24 +102,24 @@
     "text": {
       "data": {
         "properties": {
-          "activeAssignment.users.userPrincipalName": "userPrincipalName",
-          "activeAssignment.users.userType": "userType",
-		  "activeAssignment.users.id": "Id",
+          "eligibleAssignment.users.userPrincipalName": "userPrincipalName",
+          "eligibleAssignment.users.userType": "userType",
+		  "eligibleAssignment.users.id": "Id",
           "displayName": "Role Name"
         },
-        "expandObject": "activeAssignment.users"
+        "expandObject": "eligibleAssignment.users"
       },
       "status": {
         "keyName": [
           "userPrincipalName"
         ],
-      "message": "The {userPrincipalName} user account is configured as a permanent role",
+      "message": "The {userPrincipalName} user account is configured outside PIM",
         "defaultMessage": null
       },
       "properties": {
-        "resourceName": "displayName",
+        "resourceName": "userPrincipalName",
         "resourceId": "id",
-        "resourceType": "user"
+        "resourceType": "userType"
       },
       "onlyStatus": false
     }
