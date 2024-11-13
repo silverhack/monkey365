@@ -35,6 +35,7 @@ Function Format-DataFromExpression {
         .LINK
             https://github.com/silverhack/monkey365
     #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
     [CmdletBinding()]
     Param (
         [Parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="data object")]

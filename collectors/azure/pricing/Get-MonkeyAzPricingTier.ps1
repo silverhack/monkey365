@@ -56,17 +56,21 @@ function Get-MonkeyAzPricingTier {
 			Group = @(
 				"Subscription"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
-				"az_pricing_tier",
+				"az_pricing_tier";
 				"az_legacy_pricing_tier"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Environment
 		$Environment = $O365Object.Environment
@@ -149,6 +153,7 @@ function Get-MonkeyAzPricingTier {
 		}
 	}
 }
+
 
 
 

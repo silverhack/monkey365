@@ -56,7 +56,7 @@ Function Initialize-MonkeyScan {
         #Set lib path
         $_path = ("{0}{1}core{2}api{3}" -f $O365Object.Localpath,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar)
         #Get all dirs
-        $all_dirs = Get-MonkeyDirectory -Path $_path -Level 2
+        $all_dirs = Get-MonkeyDirectory -Path $_path -Recurse
         #Get aad lib
         $aadlibs = @($all_dirs).Where({$_ -like "*EntraID*"})
         #Get Azure lib

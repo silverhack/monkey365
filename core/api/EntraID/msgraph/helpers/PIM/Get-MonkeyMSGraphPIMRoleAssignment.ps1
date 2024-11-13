@@ -38,9 +38,9 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
     #>
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "", Scope="Function")]
     [CmdletBinding()]
+    [OutputType([System.Collections.Generic.List[System.Management.Automation.PsObject]])]
     Param ()
     try{
-        $useOldApi = $true
         #Set Job params
         If($O365Object.isConfidentialApp){
             $jobParam = @{
@@ -53,7 +53,6 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
 	            BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
 	            BatchSize = $O365Object.nestedRunspaces.BatchSize;
             }
-            $useOldApi = $false
         }
         Else{
             If($O365Object.useOldAADAPIForUsers){
@@ -68,7 +67,6 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
 	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
 	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
                     }
-                    $useOldApi = $true
                 }
                 Else{
                     #Set job params
@@ -82,7 +80,6 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
 	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
 	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
                     }
-                    $useOldApi = $false
                 }
             }
             Else{
@@ -98,7 +95,6 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
 	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
 	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
                     }
-                    $useOldApi = $false
                 }
                 Else{
                     #Set job params
@@ -112,7 +108,6 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
 	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
 	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
                     }
-                    $useOldApi = $false
                 }
             }
         }
@@ -179,185 +174,120 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
         foreach($activeRole in $active_objects){
             #Get the role
             $myRole = $allroleAssignments.Where({$_.id -eq $activeRole.Name}) | Select-Object -First 1
-            $msg = @{
-			    MessageData = ("Getting active role assignments for {0}" -f $myRole.Name);
-			    callStack = (Get-PSCallStack | Select-Object -First 1);
-			    logLevel = 'info';
-			    InformationAction = $O365Object.InformationAction;
-			    Tags = @('EntraIDPIMInfo');
-		    }
-		    Write-Information @msg
-            #update object
-            $myRole.activeAssignment.isUsed = $true;
-            $myRole.roleInUse = $true;
-            $activeMembers = $activeRole.Group | Select-Object principalId,startDateTime,endDateTime,assignmentType,memberType -ErrorAction Ignore
-            if($null -ne $activeMembers){
-                #Set array
-                $allMembers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                $allUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                $allServicePrincipals = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                #Get ids
-                $ids = $activeMembers | Select-Object -ExpandProperty principalId
-                $identities = Get-MonkeyMSGraphDirectoryObjectById -Ids $ids
-                #Get groups
-                $groups = @($identities).Where({$_.'@odata.type' -match '#microsoft.graph.group'})
-                #Get users
-                $users = @($identities).Where({$_.'@odata.type' -match '#microsoft.graph.user'})
-                #Get service Principals
-                $allSP = @($identities).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
-                #get Real members
-                foreach($grp in $groups){
-                    $objMetadata = @($activeMembers).Where({$_.principalId -eq $grp.id}) | Select-Object * -First 1 -ErrorAction Ignore
-                    $groupMember = Get-MonkeyMSGraphGroupTransitiveMember -GroupId $grp.id -Parents @($grp.id)
-                    if($groupMember){
-                        $ids = @($groupMember).Where({$_.'@odata.type' -match '#microsoft.graph.user'}) | Select-Object -ExpandProperty Id
-                        #Invoke job
-                        $members = $ids | Invoke-MonkeyJob @jobParam
-                        if($members){
-                            foreach($member in @($members)){
-                                if($null -ne $objMetadata){
-                                    $member | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
-                                    $member | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
-                                    $member | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
-                                    $member | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+            If($null -ne $myRole){
+                $msg = @{
+			        MessageData = ("Getting active role assignments for {0}" -f $myRole.Name);
+			        callStack = (Get-PSCallStack | Select-Object -First 1);
+			        logLevel = 'info';
+			        InformationAction = $O365Object.InformationAction;
+			        Tags = @('EntraIDPIMInfo');
+		        }
+		        Write-Information @msg
+                #update object
+                $myRole.activeAssignment.isUsed = $true;
+                $myRole.roleInUse = $true;
+                $activeMembers = $activeRole.Group | Select-Object principalId,startDateTime,endDateTime,assignmentType,memberType -ErrorAction Ignore
+                if($null -ne $activeMembers){
+                    #Set array
+                    $allUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+                    $allServicePrincipals = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+                    #Get ids
+                    $ids = $activeMembers | Select-Object -ExpandProperty principalId
+                    $identities = Get-MonkeyMSGraphDirectoryObjectById -Ids $ids
+                    #Get groups
+                    $groups = @($identities).Where({$_.'@odata.type' -match '#microsoft.graph.group'})
+                    #Get users
+                    $users = @($identities).Where({$_.'@odata.type' -match '#microsoft.graph.user'})
+                    #Get service Principals
+                    $allSP = @($identities).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
+                    #get Real members
+                    foreach($grp in $groups){
+                        $objMetadata = @($activeMembers).Where({$_.principalId -eq $grp.id}) | Select-Object * -First 1 -ErrorAction Ignore
+                        $groupMember = Get-MonkeyMSGraphGroupTransitiveMember -GroupId $grp.id -Parents @($grp.id)
+                        if($groupMember){
+                            $ids = @($groupMember).Where({$_.'@odata.type' -match '#microsoft.graph.user'}) | Select-Object -ExpandProperty Id
+                            #Invoke job
+                            $members = $ids | Invoke-MonkeyJob @jobParam
+                            if($members){
+                                foreach($member in @($members)){
+                                    if($null -ne $objMetadata){
+                                        $member | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                                        $member | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                                        $member | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                                        $member | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                                    }
+                                    [void]$allUsers.Add($member)
                                 }
-                                [void]$allUsers.Add($member)
+                            }
+                            #Get Service Principals
+                            $sps = @($groupMember).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
+                            foreach($sp in $sps){
+                                if($null -ne $objMetadata){
+                                    $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                                    $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                                    $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                                    $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                                }
+                                [void]$allServicePrincipals.Add($sp);
                             }
                         }
-                        #Get Service Principals
-                        $sps = @($groupMember).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
-                        foreach($sp in $sps){
+                    }
+                    #Add users
+                    $ids = $users| Select-Object -ExpandProperty Id
+                    #Invoke job
+                    $members = $ids | Invoke-MonkeyJob @jobParam
+                    if($null -ne $members){
+                        foreach($member in @($members)){
+                            $objMetadata = @($activeMembers).Where({$_.principalId -eq $member.id}) | Select-Object * -First 1 -ErrorAction Ignore
                             if($null -ne $objMetadata){
-                                $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
-                                $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
-                                $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
-                                $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                                $member | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                                $member | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                                $member | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                                $member | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
                             }
-                            [void]$allServicePrincipals.Add($sp);
+                            [void]$allUsers.Add($member)
                         }
                     }
-                }
-                #Add users
-                $ids = $users| Select-Object -ExpandProperty Id
-                #Invoke job
-                $members = $ids | Invoke-MonkeyJob @jobParam
-                if($null -ne $members){
-                    foreach($member in @($members)){
-                        $objMetadata = @($activeMembers).Where({$_.principalId -eq $member.id}) | Select-Object * -First 1 -ErrorAction Ignore
+                    #Populate Service principals
+                    foreach($sp in @($allSP)){
+                        $objMetadata = @($activeMembers).Where({$_.principalId -eq $sp.id}) | Select-Object * -First 1 -ErrorAction Ignore
                         if($null -ne $objMetadata){
-                            $member | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
-                            $member | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
-                            $member | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
-                            $member | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                            $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                            $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                            $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                            $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
                         }
-                        [void]$allUsers.Add($member)
+                        [void]$allServicePrincipals.Add($sp)
                     }
-                }
-                #Populate Service principals
-                foreach($sp in @($allSP)){
-                    $objMetadata = @($activeMembers).Where({$_.principalId -eq $sp.id}) | Select-Object * -First 1 -ErrorAction Ignore
-                    if($null -ne $objMetadata){
-                        $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
-                        $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
-                        $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
-                        $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
-                    }
-                    [void]$allServicePrincipals.Add($sp)
-                }
-                #Populate Groups
-                $myRole.activeAssignment.groups = $groups;
-                #Get effective users and remove duplicate members
-                $uniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                $alluniqueUsers = $allUsers | Sort-Object -Property Id -Unique -ErrorAction Ignore
-                if($null -ne $alluniqueUsers){
-                    foreach($usr in @($alluniqueUsers)){
-                        [void]$uniqueUsers.Add($usr);
-                    }
-                }
-                #Populate members
-                $myRole.activeAssignment.users = $uniqueUsers;
-                #Populate Service Principals
-                $myRole.activeAssignment.servicePrincipals = $allServicePrincipals;
-                #Count objects
-                $myRole.activeAssignment.totalActiveMembers = ($myRole.activeAssignment.users.Count + $myRole.activeAssignment.servicePrincipals.Count)
-                #Get duplicate users
-                if($allUsers.Count -gt 0){
-                    $myRole.activeAssignment.duplicateUsers = Get-MonkeyDuplicateObjectsByProperty -ReferenceObject $allUsers -Property Id
-                }
-                Else{
-                    #Set empty collection
-                    $myRole.activeAssignment.duplicateUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                }
-                <#
-                Foreach($identity in @($identities)){
-                    $obj = @($activeMembers).Where({$_.principalId -eq $identity.id}) | Select-Object * -First 1 -ErrorAction Ignore
-                    if($null -ne $obj){
-                        $identity | Add-Member -MemberType NoteProperty -Name startDateTime -Value $obj.startDateTime
-                        $identity | Add-Member -MemberType NoteProperty -Name endDateTime -Value $obj.endDateTime
-                        $identity | Add-Member -MemberType NoteProperty -Name assignmentType -Value $obj.assignmentType
-                        $identity | Add-Member -MemberType NoteProperty -Name memberType -Value $obj.memberType
-                    }
-                    [void]$allMembers.Add($identity)
-                }
-                $groups = @($allMembers).Where({$_.'@odata.type' -match '#microsoft.graph.group'})
-                #get Real members
-                foreach($grp in $groups){
-                    $groupMember = Get-MonkeyMSGraphGroupTransitiveMember -GroupId $grp.id -Parents @($grp.id)
-                    if($groupMember){
-                        foreach($member in $groupMember){
-                            #Update object
-                            $member | Add-Member -MemberType NoteProperty -Name startDateTime -Value $grp.startDateTime
-                            $member | Add-Member -MemberType NoteProperty -Name endDateTime -Value $grp.endDateTime
-                            $member | Add-Member -MemberType NoteProperty -Name assignmentType -Value $grp.assignmentType
-                            $member | Add-Member -MemberType NoteProperty -Name memberType -Value "Group"
-                            [void]$allMembers.Add($member)
+                    #Populate Groups
+                    $myRole.activeAssignment.groups = $groups;
+                    #Get effective users and remove duplicate members
+                    $uniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+                    $alluniqueUsers = $allUsers | Sort-Object -Property Id -Unique -ErrorAction Ignore
+                    if($null -ne $alluniqueUsers){
+                        foreach($usr in @($alluniqueUsers)){
+                            [void]$uniqueUsers.Add($usr);
                         }
                     }
-                }
-                #Get effective users and remove duplicate members
-                $uniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                $alluniqueUsers = @($allMembers).Where({$_.'@odata.type' -match '#microsoft.graph.user'}) | Sort-Object -Property Id -Unique -ErrorAction Ignore
-                if($null -ne $alluniqueUsers){
-                    foreach($usr in @($alluniqueUsers)){
-                        [void]$uniqueUsers.Add($usr);
+                    #Populate members
+                    $myRole.activeAssignment.users = $uniqueUsers;
+                    #Populate Service Principals
+                    $myRole.activeAssignment.servicePrincipals = $allServicePrincipals;
+                    #Count objects
+                    $myRole.activeAssignment.totalActiveMembers = ($myRole.activeAssignment.users.Count + $myRole.activeAssignment.servicePrincipals.Count)
+                    #Get duplicate users
+                    if($allUsers.Count -gt 0){
+                        $myRole.activeAssignment.duplicateUsers = Get-MonkeyDuplicateObjectsByProperty -ReferenceObject $allUsers -Property Id
+                    }
+                    Else{
+                        #Set empty collection
+                        $myRole.activeAssignment.duplicateUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
                     }
                 }
-                #Get user's id
-                $allIds = $uniqueUsers | Select-Object -ExpandProperty Id -ErrorAction Ignore
-                #Invoke job
-                $members = $allIds | Invoke-MonkeyJob @jobParam
-                $extendedUniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                if($null -ne $members){
-                    foreach($member in $members){
-                        [void]$extendedUniqueUsers.Add($member);
-                    }    
-                }
-                #>
-                <#
-                #Populate members
-                $myRole.activeAssignment.users = $extendedUniqueUsers;
-                #Get service principals
-                $servicePrincipals = @($allMembers).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
-                #Populate Service Principals
-                $myRole.activeAssignment.servicePrincipals = $servicePrincipals;
-                #Populate Groups
-                $myRole.activeAssignment.groups = $groups;
-                #Count objects
-                $myRole.activeAssignment.totalActiveMembers = ($myRole.activeAssignment.users.Count + $myRole.activeAssignment.servicePrincipals.Count)
-                #Get duplicate users
-                $allUsers = (@($allMembers).Where({$_.'@odata.type' -match '#microsoft.graph.user'}))
-                if($allUsers.Count -gt 0){
-                    $myRole.activeAssignment.duplicateUsers = Get-MonkeyDuplicateObjectsByProperty -ReferenceObject $allUsers -Property Id
-                }
                 Else{
-                    #Set empty collection
+                    $myRole.activeAssignment.totalActiveMembers = 0;
                     $myRole.activeAssignment.duplicateUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
                 }
-                #>
-            }
-            Else{
-                $myRole.activeAssignment.totalActiveMembers = 0;
-                $myRole.activeAssignment.duplicateUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
             }
         }
         #Get eligible assignments
@@ -375,80 +305,124 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
         foreach($eligibleRole in $eligible_objects){
             #Get the role
             $myRole = $allroleAssignments.Where({$_.id -eq $eligibleRole.Name}) | Select-Object -First 1
-            $msg = @{
-			    MessageData = ("Getting eligible role assignments for {0}" -f $myRole.Name);
-			    callStack = (Get-PSCallStack | Select-Object -First 1);
-			    logLevel = 'info';
-			    InformationAction = $O365Object.InformationAction;
-			    Tags = @('EntraIDPIMInfo');
-		    }
-		    Write-Information @msg
-            #update object
-            $myRole.eligibleAssignment.isUsed = $true;
-            $myRole.roleInUse = $true;
-            $ids = $eligibleRole.Group | Select-Object -ExpandProperty principalId -ErrorAction Ignore
-            if($null -ne $ids){
-                $identities = Get-MonkeyMSGraphDirectoryObjectById -Ids $ids
-                #Set array
-                $allMembers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                foreach($identity in @($identities)){
-                    [void]$allMembers.Add($identity)
-                }
-                #Get groups
-                $groups = @($allMembers).Where({$_.'@odata.type' -match '#microsoft.graph.group'})
-                #get Real members
-                foreach($grp in $groups){
-                    $groupMember = Get-MonkeyMSGraphGroupTransitiveMember -GroupId $grp.id -Parents @($grp.id)
-                    if($groupMember){
-                        foreach($member in $groupMember){
-                            [void]$allMembers.Add($member);
+            If($null -ne $myRole){
+                $msg = @{
+			        MessageData = ("Getting eligible role assignments for {0}" -f $myRole.Name);
+			        callStack = (Get-PSCallStack | Select-Object -First 1);
+			        logLevel = 'info';
+			        InformationAction = $O365Object.InformationAction;
+			        Tags = @('EntraIDPIMInfo');
+		        }
+		        Write-Information @msg
+                #update object
+                $myRole.eligibleAssignment.isUsed = $true;
+                $myRole.roleInUse = $true;
+                #$ids = $eligibleRole.Group | Select-Object -ExpandProperty principalId -ErrorAction Ignore
+                $eligibleMembers = $eligibleRole.Group | Select-Object principalId,startDateTime,endDateTime,assignmentType,memberType -ErrorAction Ignore
+                If($null -ne $eligibleMembers){
+                    #Set array
+                    $allUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+                    $allServicePrincipals = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+                    #Get ids
+                    $ids = $eligibleMembers | Select-Object -ExpandProperty principalId
+                    $identities = Get-MonkeyMSGraphDirectoryObjectById -Ids $ids
+                    #Get groups
+                    $groups = @($identities).Where({$_.'@odata.type' -match '#microsoft.graph.group'})
+                    #Get users
+                    $users = @($identities).Where({$_.'@odata.type' -match '#microsoft.graph.user'})
+                    #Get service Principals
+                    $allSP = @($identities).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
+                    #get Real members
+                    foreach($grp in $groups){
+                        $objMetadata = @($eligibleMembers).Where({$_.principalId -eq $grp.id}) | Select-Object * -First 1 -ErrorAction Ignore
+                        $groupMember = Get-MonkeyMSGraphGroupTransitiveMember -GroupId $grp.id -Parents @($grp.id)
+                        if($groupMember){
+                            $ids = @($groupMember).Where({$_.'@odata.type' -match '#microsoft.graph.user'}) | Select-Object -ExpandProperty Id
+                            #Invoke job
+                            $members = $ids | Invoke-MonkeyJob @jobParam
+                            if($members){
+                                foreach($member in @($members)){
+                                    if($null -ne $objMetadata){
+                                        $member | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                                        $member | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                                        $member | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                                        $member | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                                    }
+                                    [void]$allUsers.Add($member)
+                                }
+                            }
+                            #Get Service Principals
+                            $sps = @($groupMember).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
+                            foreach($sp in $sps){
+                                if($null -ne $objMetadata){
+                                    $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                                    $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                                    $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                                    $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                                }
+                                [void]$allServicePrincipals.Add($sp);
+                            }
                         }
                     }
-                }
-                #Get effective users and remove duplicate members
-                $uniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                $alluniqueUsers = @($allMembers).Where({$_.'@odata.type' -match '#microsoft.graph.user'}) | Sort-Object -Property Id -Unique -ErrorAction Ignore
-                if($null -ne $alluniqueUsers){
-                    foreach($usr in @($alluniqueUsers)){
-                        [void]$uniqueUsers.Add($usr);
+                    #Add users
+                    $ids = $users| Select-Object -ExpandProperty Id
+                    #Invoke job
+                    $members = $ids | Invoke-MonkeyJob @jobParam
+                    if($null -ne $members){
+                        foreach($member in @($members)){
+                            $objMetadata = @($eligibleMembers).Where({$_.principalId -eq $member.id}) | Select-Object * -First 1 -ErrorAction Ignore
+                            if($null -ne $objMetadata){
+                                $member | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                                $member | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                                $member | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                                $member | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                            }
+                            [void]$allUsers.Add($member)
+                        }
+                    }
+                    #Populate Service principals
+                    foreach($sp in @($allSP)){
+                        $objMetadata = @($eligibleMembers).Where({$_.principalId -eq $sp.id}) | Select-Object * -First 1 -ErrorAction Ignore
+                        if($null -ne $objMetadata){
+                            $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                            $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                            $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                            $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                        }
+                        [void]$allServicePrincipals.Add($sp)
+                    }
+                    #Populate Groups
+                    $myRole.eligibleAssignment.groups = $groups;
+                    #Get effective users and remove duplicate members
+                    $uniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+                    $alluniqueUsers = $allUsers | Sort-Object -Property Id -Unique -ErrorAction Ignore
+                    if($null -ne $alluniqueUsers){
+                        foreach($usr in @($alluniqueUsers)){
+                            [void]$uniqueUsers.Add($usr);
+                        }
+                    }
+                    #Populate members
+                    $myRole.eligibleAssignment.users = $uniqueUsers;
+                    #Populate Service Principals
+                    $myRole.eligibleAssignment.servicePrincipals = $allServicePrincipals;
+                    #Count objects
+                    $myRole.eligibleAssignment.totalEligibleMembers = ($myRole.eligibleAssignment.users.Count + $myRole.eligibleAssignment.servicePrincipals.Count)
+                    #Get duplicate users
+                    if($allUsers.Count -gt 0){
+                        $myRole.eligibleAssignment.duplicateUsers = Get-MonkeyDuplicateObjectsByProperty -ReferenceObject $allUsers -Property Id
+                    }
+                    Else{
+                        #Set empty collection
+                        $myRole.eligibleAssignment.duplicateUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
                     }
                 }
-                #Get user's id
-                $allIds = $uniqueUsers | Select-Object -ExpandProperty Id -ErrorAction Ignore
-                #Invoke job
-                $members = $allIds | Invoke-MonkeyJob @jobParam
-                $extendedUniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                if($null -ne $members){
-                    foreach($member in $members){
-                        [void]$extendedUniqueUsers.Add($member);
-                    }    
-                }
-                #Populate members
-                $myRole.eligibleAssignment.users = $extendedUniqueUsers;
-                #Get service principals
-                $servicePrincipals = @($allMembers).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
-                #Populate Service Principals
-                $myRole.eligibleAssignment.servicePrincipals = $servicePrincipals;
-                #Populate Groups
-                $myRole.eligibleAssignment.groups = $groups;
-                #Count objects
-                $myRole.eligibleAssignment.totalEligibleMembers = ($myRole.eligibleAssignment.users.Count + $myRole.eligibleAssignment.servicePrincipals.Count)
-                #Get duplicate users
-                $allUsers = (@($allMembers).Where({$_.'@odata.type' -match '#microsoft.graph.user'}))
-                if($allUsers.Count -gt 0){
-                    $myRole.eligibleAssignment.duplicateUsers = Get-MonkeyDuplicateObjectsByProperty -ReferenceObject $allUsers -Property Id
-                }
                 Else{
-                    #Set empty collection
+                    $myRole.eligibleAssignment.totalEligibleMembers = 0;
                     $myRole.eligibleAssignment.duplicateUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
                 }
+                #Calculate eligible and active members
+                $myRole.totalMembers = $myRole.eligibleAssignment.totalEligibleMembers + $myRole.activeAssignment.totalActiveMembers
             }
-            Else{
-                $myRole.eligibleAssignment.totalEligibleMembers = 0;
-                $myRole.eligibleAssignment.duplicateUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-            }
-            #Calculate eligible and active members
-            $myRole.totalMembers = $myRole.eligibleAssignment.totalEligibleMembers + $myRole.activeAssignment.totalActiveMembers
         }
         #return data
         $allroleAssignments

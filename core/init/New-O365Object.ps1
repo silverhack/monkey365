@@ -56,7 +56,7 @@ Function New-O365Object{
                 'AuditorName','Threads',
                 'PromptBehavior','Environment',
                 'Instance', 'Ruleset','RulesPath','ExportTo',
-                'Analysis','WriteLog','TenantId','ClientId',
+                'Collect','WriteLog','TenantId','ClientId',
                 'IncludeEntraID','ImportJob',
                 'SaveProject','ResolveTenantDomainName',
                 'ResolveTenantUserName','ExcludeCollector',
@@ -179,19 +179,19 @@ Function New-O365Object{
             if (Test-Path env:MONKEY_ENV_SUBSCRIPTIONS){
                 $MyParams.Subscriptions = $env:MONKEY_ENV_SUBSCRIPTIONS
             }
-            #Check if analysis
-            if (Test-Path env:MONKEY_ENV_ANALYSIS){
-                $analysis = @()
-                foreach($element in $env:MONKEY_ENV_ANALYSIS.Split(',')){
-                    $analysis+=$element
+            #Check if collect
+            if (Test-Path env:MONKEY_ENV_COLLECT){
+                $collect = @()
+                foreach($element in $env:MONKEY_ENV_COLLECT.Split(',')){
+                    $collect+=$element
                 }
-                if('all' -in $analysis){
-                    [void]$analysis.Clear();
-                    $analysis+='all'
+                if('all' -in $collect){
+                    [void]$collect.Clear();
+                    $collect+='all'
                 }
-                if($analysis.Count -gt 0){
+                if($collect.Count -gt 0){
                     #Remove duplicate before adding data to analysis var
-                    $MyParams.Analysis = $analysis | Sort-Object -Property @{Expression={$_.Trim()}} -Unique
+                    $MyParams.Collect = $collect | Sort-Object -Property @{Expression={$_.Trim()}} -Unique
                 }
             }
             #Check if exportTo
@@ -362,7 +362,6 @@ Function New-O365Object{
             $runspaces_modules = @(
                 ('{0}/core/modules/monkeyhttpwebrequest' -f $ScriptPath),
                 ('{0}/core/modules/monkeylogger' -f $ScriptPath),
-                ('{0}/core/modules/monkeyast' -f $ScriptPath),
                 ('{0}/core/modules/monkeyjob' -f $ScriptPath),
                 ('{0}/core/modules/monkeyutils' -f $ScriptPath),
                 ('{0}/core/api/m365/SharePointOnline/utils/enum.ps1' -f $ScriptPath)

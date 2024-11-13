@@ -20,7 +20,7 @@
     InvalidRuleMessage               = The rule '{0}' is not valid
     IncludeObjectErrorMessage        = Include file present in '{0}' is not valid
     ValidObjectMessage               = The {0} is valid
-    MissingElementsMessage           = The {0} is not valid. The following properties were not found: {1} 
+    MissingElementsMessage           = The {0} is not valid. The following properties were not found: {1}
     LevelNotSet                      = Level was not set for {0}. Setting INFO level
     UnableToGetConditionsFile        = Unable to get conditions file from {0}
     UnableToParseFilter              = Unable to parse filter for {0}

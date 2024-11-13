@@ -34,18 +34,36 @@ Function Get-MonkeyCollector{
             https://github.com/silverhack/monkey365
     #>
     [CmdletBinding()]
-    Param ()
+    [OutputType([System.Collections.Generic.List[System.Management.Automation.PSObject]])]
+    Param (
+        [parameter(Mandatory=$false, HelpMessage="Provider")]
+        [ValidateSet("Azure","EntraID","Microsoft365")]
+        [String]$Provider,
+
+        [Parameter(Mandatory=$false, HelpMessage="Cloud resource")]
+        [String[]]$Service
+    )
     Begin{
-        #Set arrays
-        $selected_collectors = @()
-        $available_collectors = @()
-        #Get all plugin metadata
-        try{
-            $all_collector_metadata = Get-MetadataFromCollector
+        $collectors = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+        Try{
+            $services = $null;
+            If($PSBoundParameters.ContainsKey('Service') -and $PSBoundParameters['Service']){
+                If(!$PSBoundParameters['Service'].Contains('All')){
+                    $services = $PSBoundParameters['Service']
+                }
+            }
+            $p = @{
+                Provider = $PSBoundParameters['Provider'];
+                Service = $services;
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $allCollectors = Get-MetadataFromCollector @p
             #Remove disabled plugins
-            $all_collector_metadata = @($all_collector_metadata).Where({$null -ne $_.Tags -and $null -ne $_.Tags.Item('enabled') -and $_.Tags.Item('enabled') -eq $true})
+            $allCollectors = @($allCollectors).Where({$_.enabled})
         }
-        catch{
+        Catch{
             $errorMessage = @{
                 Message      = $_.Exception.Message
                 Category     = [System.Management.Automation.ErrorCategory]::InvalidData
@@ -56,85 +74,122 @@ Function Get-MonkeyCollector{
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'error';
                 InformationAction = $O365Object.InformationAction;
-                Tags = @('Monkey365PluginError');
+                Tags = @('Monkey365ConnectorError');
             }
             Write-Error @msg
-            $all_collector_metadata = @()
+            #Set empty array
+            $allCollectors = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
         }
-        $targeted_analysis = $O365Object.initParams.Analysis
-        #Remove collectors for services that are not available
-        foreach($service in $O365Object.onlineServices.GetEnumerator().Where({$_.Value -eq $true})){
-            if($service.Name.ToLower() -eq 'azure' -or $service.Name.ToLower() -eq 'entraid'){
-                $_plugins = $all_collector_metadata | Where-Object {$_.Provider -eq $service.Name}
-            }
-            else{
-                $_plugins = $all_collector_metadata | Where-Object {$_.Group.Contains($service.Name)}
-            }
-            if($_plugins){
-                $available_collectors+=$_plugins
-            }
-        }
-        try{
+        #Get Api Type
+        Try{
             $useMsGraph = [System.Convert]::ToBoolean($O365Object.internal_config.entraId.useMsGraph)
             $useAADOldAPIForUsers = [System.Convert]::ToBoolean($O365Object.internal_config.entraId.getUsersWithAADInternalAPI)
         }
-        catch{
+        Catch{
             $useMsGraph = $true;
             $useAADOldAPIForUsers = $false;
         }
     }
     Process{
-        if($available_collectors.Count -gt 0 -and $null -ne $targeted_analysis){
-            foreach($element in $targeted_analysis.GetEnumerator()){
-                if($element -eq 'All'){
-                    $selected_collectors = @($available_collectors).Where({$_.Provider -eq $O365Object.Instance})
-                    break;
+        If($allCollectors.Count -gt 0){
+            #Remove collectors if connection is not available
+            Foreach($resource in $O365Object.onlineServices.GetEnumerator().Where({$_.Value -eq $false})){
+                If($resource.Name.ToLower() -eq 'azure' -or $resource.Name.ToLower() -eq 'entraid'){
+                    $allCollectors = @($allCollectors).Where({$_.Provider -ne $resource.Name});
                 }
-                else{
-                    $discovered_plugins = @($available_collectors).Where({$_.Provider -eq $O365Object.Instance -and $_.Group.Tolower().Contains($element.Tolower())})
-                    if($discovered_plugins){
-                        $selected_collectors+=$discovered_plugins
-                    }
+                Else{
+                    $allCollectors = @($allCollectors).Where({$_.Group -notcontains $resource.Name});
                 }
+            }
+            #Add collectors to main array
+            If ($allCollectors -is [System.Collections.IEnumerable] -and $allCollectors -isnot [string]){
+                [void]$collectors.AddRange($allCollectors)
+            }
+            ElseIf ($allCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $allCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
+                [void]$collectors.Add($allCollectors)
             }
         }
-        #Check if should load EntraID collectors
-        $discovered_plugins = $null
-        if($available_collectors.Count -gt 0 -and $O365Object.IncludeEntraID -eq $true -and $O365Object.onlineServices.EntraID -eq $true){
-            if($O365Object.isConfidentialApp -eq $true){
-                #Load MSGraph plugins
-                $discovered_plugins = @($available_collectors).Where({$_.Provider -eq "EntraID" -and $_.ApiType -eq 'MSGraph'})
+        #Check if EntraID collectors should be added
+        If($O365Object.IncludeEntraID -eq $true -and $O365Object.onlineServices.EntraID -eq $true){
+            $entraIdCollectors = [System.Collections.Generic.List[System.Object]]::new()
+            $graphCollectors = Get-MetadataFromCollector -Provider EntraID -Service Graph
+            $msGraphCollectors = Get-MetadataFromCollector -Provider EntraID -Service MSGraph
+            $apiPortalCollectors = Get-MetadataFromCollector -Provider EntraID -Service EntraIDPortal
+            If($O365Object.isConfidentialApp -eq $true){
+                #Only MSGraph is supported for confidential apps
+                If ($msGraphCollectors -is [System.Collections.IEnumerable] -and $msGraphCollectors -isnot [string]){
+                    [void]$entraIdCollectors.AddRange($msGraphCollectors)
+                }
+                ElseIf ($msGraphCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $msGraphCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
+                    [void]$entraIdCollectors.Add($msGraphCollectors)
+                }
             }
-            elseif($useMsGraph -eq $false -and $O365Object.isConfidentialApp -eq $false){
-                #Load Old Graph collectors and Azure AD internal API collectors
-                $discovered_plugins = @($available_collectors).Where({$_.Provider -eq "EntraID" -and ($_.ApiType -eq 'Graph' -or $_.ApiType -eq 'EntraIDPortal')})
+            ElseIf($useMsGraph -eq $false -and $O365Object.isConfidentialApp -eq $false){
+                #Load Old Graph collectors
+                If ($graphCollectors -is [System.Collections.IEnumerable] -and $graphCollectors -isnot [string]){
+                    [void]$entraIdCollectors.AddRange($graphCollectors)
+                }
+                ElseIf ($graphCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $graphCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
+                    [void]$entraIdCollectors.Add($graphCollectors)
+                }
+                #Load Entra ID internal API collectors
+                If ($apiPortalCollectors -is [System.Collections.IEnumerable] -and $apiPortalCollectors -isnot [string]){
+                    [void]$entraIdCollectors.AddRange($apiPortalCollectors)
+                }
+                ElseIf ($apiPortalCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $apiPortalCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
+                    [void]$entraIdCollectors.Add($apiPortalCollectors)
+                }
             }
-            elseif($useMsGraph -and $O365Object.isConfidentialApp -eq $false){
-                #Load Old Graph collectors and Azure AD internal API collectors
-                $discovered_plugins = @($available_collectors).Where({$_.Provider -eq "EntraID" -and ($_.ApiType -eq 'MSGraph' -or $_.ApiType -eq 'EntraIDPortal')})
+            ElseIf($useMsGraph -and $O365Object.isConfidentialApp -eq $false){
+                Foreach($_collector in $entraIdCollectors.GetEnumerator()){
+                    [void]$collectors.Add($eidCollector);
+                }
+                #Load MSGraph collectors
+                If ($msGraphCollectors -is [System.Collections.IEnumerable] -and $msGraphCollectors -isnot [string]){
+                    [void]$entraIdCollectors.AddRange($msGraphCollectors)
+                }
+                ElseIf ($msGraphCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $msGraphCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
+                    [void]$entraIdCollectors.Add($msGraphCollectors)
+                }
+                #Load Entra ID internal API collectors
+                If ($apiPortalCollectors -is [System.Collections.IEnumerable] -and $apiPortalCollectors -isnot [string]){
+                    [void]$entraIdCollectors.AddRange($apiPortalCollectors)
+                }
+                ElseIf ($apiPortalCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $apiPortalCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
+                    [void]$entraIdCollectors.Add($apiPortalCollectors)
+                }
                 #Check if should load old AAD collector for users
-                if($useAADOldAPIForUsers){
+                If($useAADOldAPIForUsers){
                     #Remove MSGraph user collector
-                    $discovered_plugins = @($discovered_plugins).Where({$_.collectorName -ne "Get-MonkeyAADUser"})
+                    $entraIdCollectors = $entraIdCollectors.Where({$_.collectorName -ne "Get-MonkeyAADUser"});
                     #Add graph users collector
-                    $ad_users_plugin = @($available_collectors).Where({$_.Provider -eq "EntraID" -and ($_.ApiType -eq 'Graph' -and $_.collectorName -eq "Get-MonkeyADUser")})
-                    if($ad_users_plugin){
-                        $discovered_plugins+=$ad_users_plugin
+                    $OlduserCollector = @($graphCollectors).Where({$_.collectorName -eq "Get-MonkeyADUser"});
+                    If($OlduserCollector.Count -gt 0){
+                        Foreach($_collector in $OlduserCollector){
+                            [void]$entraIdCollectors.Add($_collector)
+                        }
+                    }
+                    #Add policies
+                    $policiesCollector = @($graphCollectors).Where({$_.collectorName -eq "Get-MonkeyADPolicy"});
+                    If($policiesCollector.Count -gt 0){
+                        Foreach($_collector in $policiesCollector){
+                            [void]$entraIdCollectors.Add($_collector)
+                        }
                     }
                 }
-                #Add graph ad policy collector
-                $ad_policy_plugin = @($available_collectors).Where({$_.Provider -eq "EntraID" -and ($_.ApiType -eq 'Graph' -and $_.collectorName -eq "Get-MonkeyADPolicy")})
-                if($ad_policy_plugin){
-                    $discovered_plugins+=$ad_policy_plugin
+            }
+            Else{
+                #Load MSGraph collectors
+                If ($msGraphCollectors -is [System.Collections.IEnumerable] -and $msGraphCollectors -isnot [string]){
+                    [void]$entraIdCollectors.AddRange($msGraphCollectors)
+                }
+                ElseIf ($msGraphCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $msGraphCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
+                    [void]$entraIdCollectors.Add($msGraphCollectors)
                 }
             }
-            else{
-                #Load MSGraph collectors
-                $discovered_plugins = @($available_collectors).Where({$_.Provider -eq "EntraID" -and $_.ApiType -eq 'MSGraph'})
-            }
             #Add discovered collectors
-            if($null -ne $discovered_plugins){
-                $selected_collectors+=$discovered_plugins
+            Foreach($eidCollector in $entraIdCollectors.GetEnumerator()){
+                [void]$collectors.Add($eidCollector);
             }
         }
     }
@@ -148,11 +203,12 @@ Function Get-MonkeyCollector{
                 logLevel = 'verbose';
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
-                Tags = @('ExcludeAzureResourceFromScanning');
+                Tags = @('ExcludingCollectors');
             }
             Write-Verbose @msg
-            $selected_collectors = @($selected_collectors).Where({$_.Id -notin $O365Object.excludeCollectors})
+            $collectors = @($collectors).Where({$_.Id -notin $O365Object.excludeCollectors})
         }
-        return $selected_collectors | Sort-Object -Property Id -Unique
+        #TODO: Add include option to execute only specific collectors
+        return $collectors | Sort-Object -Property id -Unique
     }
 }

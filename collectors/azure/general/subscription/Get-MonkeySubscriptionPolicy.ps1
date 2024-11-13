@@ -57,16 +57,20 @@ function Get-MonkeySubscriptionPolicy {
 				"Subscription";
 				"General"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_subscription_policies"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 	}
 	process {
@@ -108,6 +112,7 @@ function Get-MonkeySubscriptionPolicy {
 		}
 	}
 }
+
 
 
 

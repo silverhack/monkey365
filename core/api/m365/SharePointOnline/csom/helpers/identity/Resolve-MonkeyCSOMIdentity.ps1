@@ -52,7 +52,7 @@ Function Resolve-MonkeyCSOMIdentity{
             if($O365Object.canRequestUsersFromMsGraph){
                 $obj = $InputObject.loginName.Split('|')[-1]
                 $msg = @{
-                    MessageData = ("Getting user details from {0}" -f $obj);
+                    MessageData = ("Getting user details for {0}" -f $obj);
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'info';
                     InformationAction = $O365Object.InformationAction;

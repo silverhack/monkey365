@@ -36,7 +36,7 @@ function Get-MonkeyAzClassicDisk {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions","",Scope = "Function")]
 	[CmdletBinding()]
 	param(
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
@@ -56,16 +56,20 @@ function Get-MonkeyAzClassicDisk {
 			Group = @(
 				"VirtualMachines"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_classic_disks"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Import Localized data
 		$LocalizedDataParams = $O365Object.LocalizedDataParams
@@ -119,6 +123,7 @@ function Get-MonkeyAzClassicDisk {
 		}
 	}
 }
+
 
 
 

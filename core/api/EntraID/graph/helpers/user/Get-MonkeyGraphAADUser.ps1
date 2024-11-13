@@ -246,7 +246,7 @@ Function Get-MonkeyGraphAADUser {
         else{
             @($allUsers).ForEach({
                 #Add id property
-                $_ | Add-Member -type NoteProperty -name id -value $_.objectId -Force                
+                $_ | Add-Member -type NoteProperty -name id -value $_.objectId -Force
                 $_
             })
         }

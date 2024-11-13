@@ -59,16 +59,20 @@ function Get-MonkeyAzCognitiveService {
 			Group = @(
 				"CognitiveServices"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_cognitive_accounts"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$CognitiveAPI = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureCognitive" } | Select-Object -ExpandProperty resource
@@ -134,6 +138,7 @@ function Get-MonkeyAzCognitiveService {
 		}
 	}
 }
+
 
 
 

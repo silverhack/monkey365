@@ -59,16 +59,20 @@ function Get-MonkeyAZCloudStorageAccount {
 			Group = @(
 				"StorageAccounts"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_storage_accounts"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$strConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureStorage" } | Select-Object -ExpandProperty resource
@@ -88,23 +92,23 @@ function Get-MonkeyAZCloudStorageAccount {
 		}
 		Write-Information @msg
 		#Check storage accounts
-        if($storage_accounts.Count -gt 0){
-            $new_arg = @{
+		if ($storage_accounts.Count -gt 0) {
+			$new_arg = @{
 				APIVersion = $strConfig.api_version;
 			}
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzStorageAccountInfo -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.MaxQueue;
-			    BatchSleep = $O365Object.BatchSleep;
-			    BatchSize = $O365Object.BatchSize;
-		    }
-            $all_str_accounts = $storage_accounts | Invoke-MonkeyJob @p
-        }
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzStorageAccountInfo -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.MaxQueue;
+				BatchSleep = $O365Object.BatchSleep;
+				BatchSize = $O365Object.BatchSize;
+			}
+			$all_str_accounts = $storage_accounts | Invoke-MonkeyJob @p
+		}
 	}
 	end {
 		if ($all_str_accounts) {
@@ -128,5 +132,6 @@ function Get-MonkeyAZCloudStorageAccount {
 		}
 	}
 }
+
 
 

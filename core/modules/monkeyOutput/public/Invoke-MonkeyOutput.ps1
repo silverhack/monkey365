@@ -168,7 +168,7 @@ Function Invoke-MonkeyOutput{
                     $xmlFile = ("{0}/monkey365{1}{2}.xml" -f $OutDir, $PSBoundParameters['TenantId'].Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
                     $allObjects | Export-DataToCliXml -Path $xmlFile
                 }
-            }            
+            }
         }
     }
 }

@@ -37,7 +37,7 @@ Function Connect-MonkeyM365{
     #>
     [CmdletBinding()]
     Param ()
-    foreach ($service in $O365Object.initParams.Analysis){
+    foreach ($service in $O365Object.initParams.Collect){
         switch ($service.ToLower()) {
             #Connect to Exchange Online
             'exchangeonline'{
@@ -226,7 +226,7 @@ Function Connect-MonkeyM365{
                 }
                 Write-Information @msg
                 $O365Object.auth_tokens.OneDrive = Connect-MonkeySPO @p -OneDrive
-                if($null -ne $O365Object.auth_tokens.SharePointOnline -and $null -ne $O365Object.auth_tokens.SharePointAdminOnline){
+                If($null -ne $O365Object.auth_tokens.SharePointOnline -and $null -ne $O365Object.auth_tokens.SharePointAdminOnline){
                     #Check if user is SharePoint administrator
                     $p = @{
                         InformationAction = $O365Object.InformationAction;

@@ -56,16 +56,20 @@ function Get-MonkeyAzClassicVM {
 			Group = @(
 				"VirtualMachines"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_classic_vm"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Classic VMs
 		$classic_vms = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.ClassicCompute/virtualMachines' }
@@ -158,6 +162,7 @@ function Get-MonkeyAzClassicVM {
 		}
 	}
 }
+
 
 
 

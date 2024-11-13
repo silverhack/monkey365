@@ -66,7 +66,7 @@ Function Test-isValidRule{
             #Check if rule is present
             $ruleObj = $InputObject | Select-Object -ExpandProperty rule -ErrorAction Ignore
             If($null -eq $ruleObj){
-                $missingElements+='rule'                                
+                $missingElements+='rule'
             }
             If($missingElements.Count -eq 0){
                 Write-Verbose ($Script:messages.ValidObjectMessage -f "rule")

@@ -59,16 +59,20 @@ function Get-MonkeyAzContainer {
 			Group = @(
 				"Containers"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_containers"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$cntAPI = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureContainers" } | Select-Object -ExpandProperty resource
@@ -127,6 +131,7 @@ function Get-MonkeyAzContainer {
 		}
 	}
 }
+
 
 
 

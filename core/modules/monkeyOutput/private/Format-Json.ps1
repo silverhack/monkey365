@@ -35,6 +35,7 @@ Function Format-Json {
         .LINK
             https://github.com/silverhack/monkey365
     #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "", Scope="Function")]
 	[CmdletBinding()]
     [OutputType([System.String])]
 	Param (

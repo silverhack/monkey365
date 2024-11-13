@@ -55,18 +55,22 @@ function Get-MonkeyAZRecoveryServicesVault {
 			Group = @(
 				"RecoveryServicesVault"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_recovery_services_vault"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
-        #Get Config
+		#Get Config
 		$vaultConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureVault" } | Select-Object -ExpandProperty resource
 		#Get vaults
 		$vaults = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.RecoveryServices/vaults' }
@@ -84,23 +88,23 @@ function Get-MonkeyAZRecoveryServicesVault {
 		}
 		Write-Information @msg
 		#Check storage accounts
-        if($vaults.Count -gt 0){
-            $new_arg = @{
+		if ($vaults.Count -gt 0) {
+			$new_arg = @{
 				APIVersion = $vaultConfig.api_version;
 			}
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzRecoveryServiceVaultInfo -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.MaxQueue;
-			    BatchSleep = $O365Object.BatchSleep;
-			    BatchSize = $O365Object.BatchSize;
-		    }
-            $all_vaults = $vaults | Invoke-MonkeyJob @p
-        }
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzRecoveryServiceVaultInfo -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.MaxQueue;
+				BatchSleep = $O365Object.BatchSleep;
+				BatchSize = $O365Object.BatchSize;
+			}
+			$all_vaults = $vaults | Invoke-MonkeyJob @p
+		}
 	}
 	end {
 		if ($all_vaults) {
@@ -124,5 +128,6 @@ function Get-MonkeyAZRecoveryServicesVault {
 		}
 	}
 }
+
 
 

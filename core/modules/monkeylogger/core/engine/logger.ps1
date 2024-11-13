@@ -106,21 +106,24 @@ Function New-Logger{
             $output_callers = [System.IO.Directory]::EnumerateFiles($conf_path,"*.ps1",[System.IO.SearchOption]::TopDirectoryOnly)
             #$output_callers = Get-ChildItem -Path $conf_path -Filter '*.ps1'
             if($null -ne $output_callers){
-                $this.func_definitions = Get-AstFunctionsFromFile -Files $output_callers
+                #$this.func_definitions = Get-AstFunctionsFromFile -Files $output_callers
+                $this.func_definitions = Get-AstFunction -Objects $output_callers
             }
             #Add validation functions
             $validators_path = ("{0}/core/init" -f $this.path)
             $validator_functions = [System.IO.Directory]::EnumerateFiles($validators_path,"*.ps1",[System.IO.SearchOption]::TopDirectoryOnly)
             #$validator_functions = Get-ChildItem -Path $validators_path -Filter '*.ps1'
             if($null -ne $validator_functions){
-                $this.validation_functions = Get-AstFunctionsFromFile -Files $validator_functions
+                #$this.validation_functions = Get-AstFunctionsFromFile -Files $validator_functions
+                $this.validation_functions = Get-AstFunction -Objects $validator_functions
             }
             #Add helpers functions
             $helpers_path = ("{0}/core/helpers" -f $this.path)
             $helpers_functions = [System.IO.Directory]::EnumerateFiles($helpers_path,"*.ps1",[System.IO.SearchOption]::TopDirectoryOnly)
             #$helpers_functions = Get-ChildItem -Path $helpers_path -Filter '*.ps1'
             if($null -ne $helpers_functions){
-                $this.helper_functions = Get-AstFunctionsFromFile -Files $helpers_functions
+                #$this.helper_functions = Get-AstFunctionsFromFile -Files $helpers_functions
+                $this.helper_functions = Get-AstFunction -Objects $helpers_functions
             }
         }
         #Add init loggers method
@@ -137,31 +140,42 @@ Function New-Logger{
                 Write-Information @msg
                 foreach($new_logger in $this.loggers.GetEnumerator()){
                     #Check if should validate conf
-                    $should_validate = $this.Callers | `
-                                             Where-Object {$_.name -eq $new_logger.type} | `
-                                             Select-Object -ExpandProperty validate `
-                                             -ErrorAction SilentlyContinue
-                    if($null -ne $should_validate){
-                        $_function = $logger.validation_functions | Where-Object {$_.Name -eq $should_validate} -ErrorAction SilentlyContinue
-                        if($null -ne $_function){
-                            $validate_function = $_function.Body.GetScriptBlock()
-                        }
-                    }
-                    if($new_logger.configuration -and $null -ne $validate_function){
-                        $config = Initialize-Configuration -Configuration $new_logger.configuration
-                        if($null -ne $config){
-                            $status = Invoke-Command -ScriptBlock $validate_function -ArgumentList $config
-                            if($status -eq $false){
-                                continue;
+                    Try{
+                        $should_validate = @($this.Callers).Where({$null -ne $_ -and $_.name -eq $new_logger.type}) | `
+                                                 Select-Object -ExpandProperty validate `
+                                                 -ErrorAction SilentlyContinue
+                        If($null -ne $should_validate){
+                            $_function = @($logger.validation_functions).Where({$null -ne $_ -and $_.Name -eq $should_validate})
+                            If($_function.Count -gt 0){
+                                $validate_function = $_function.Body.GetScriptBlock()
                             }
                         }
+                        If($new_logger.configuration -and $null -ne $validate_function){
+                            $config = Initialize-Configuration -Configuration $new_logger.configuration
+                            if($null -ne $config){
+                                $status = Invoke-Command -ScriptBlock $validate_function -ArgumentList $config
+                                if($status -eq $false){
+                                    continue;
+                                }
+                            }
+                        }
+                        $internal_func = @($this.Callers).Where({$_.name -eq $new_logger.type}) | Select-Object -ExpandProperty function
+                        #check if internal function exists
+                        $exists = @($this.func_definitions).Where({$_.name -eq $internal_func})
+                        If($internal_func -and $exists.Count -gt 0){
+                            $new_logger | Add-Member -Type NoteProperty -name function -value $internal_func -Force
+                            $enabled_loggers+=$new_logger
+                        }
                     }
-                    $internal_func = $this.Callers | Where-Object {$_.name -eq $new_logger.type} | Select-Object -ExpandProperty function
-                    #check if internal function exists
-                    $exists = $this.func_definitions | Where-Object {$_.name -eq $internal_func}
-                    if($internal_func -and $exists){
-                        $new_logger | Add-Member -Type NoteProperty -name function -value $internal_func -Force
-                        $enabled_loggers+=$new_logger
+                    Catch{
+                        $msg = [hashtable] @{
+                            MessageData = $_.Exception.Message
+                            InformationAction = $this.informationAction
+                            CallStack = $this.CallStack
+                            ForeGroundColor = "Red"
+                            tags = @('MonkeyLog')
+                        }
+                        Write-Debug @msg
                     }
                 }
             }
@@ -222,27 +236,43 @@ Function New-Logger{
             if($PSBoundParameters.ContainsKey('InitialPath') -and $PSBoundParameters['InitialPath']){
                 $Script:MonkeyLogRunspace.Runspace.SessionStateProxy.Path.SetLocation($InitialPath);
             }
-            # Add the functions into the runspace
-            $this.func_definitions | ForEach-Object {
-                [void]$Script:MonkeyLogRunspace.Runspace.SessionStateProxy.InvokeProvider.Item.Set(
-                    'function:\{0}' -f $_.Name,
-                    $_.Body.GetScriptBlock())
-            }
-            #Add the Write-Information/Debug/Warning/Verbose functions to sessionStateProxy
-            $proxy_fncs = @('Write-Information','Write-Warning','Write-Debug','Write-Verbose','Write-Error')
-            foreach($p_fnc in $proxy_fncs){
-                $_fnc = Get-Content ("function:\{0}" -f $p_fnc)
-                if($null -ne $_fnc){
-                    [void]$Script:MonkeyLogRunspace.Runspace.SessionStateProxy.InvokeProvider.Item.Set(
-                        'function:\{0}' -f $_fnc.Ast.Name,
-                        $_fnc.Ast.Body.GetScriptBlock())
+            Try{
+                # Add the functions into the runspace
+                @($this.func_definitions).Where({$null -ne $_}).Foreach(
+                    {
+                        [void]$Script:MonkeyLogRunspace.Runspace.SessionStateProxy.InvokeProvider.Item.Set(
+                        'function:\{0}' -f $_.Name,
+                        $_.Body.GetScriptBlock())
+                    }
+                )
+                #Add the Write-Information/Debug/Warning/Verbose functions to sessionStateProxy
+                $proxy_fncs = @('Write-Information','Write-Warning','Write-Debug','Write-Verbose','Write-Error')
+                foreach($p_fnc in $proxy_fncs){
+                    $_fnc = Get-Content ("function:\{0}" -f $p_fnc)
+                    if($null -ne $_fnc){
+                        [void]$Script:MonkeyLogRunspace.Runspace.SessionStateProxy.InvokeProvider.Item.Set(
+                            'function:\{0}' -f $_fnc.Ast.Name,
+                            $_fnc.Ast.Body.GetScriptBlock())
+                    }
                 }
+                # Add helper functions into the runspace
+                @($this.helper_functions).Where({$null -ne $_}).Foreach(
+                    {
+                        [void]$Script:MonkeyLogRunspace.Runspace.SessionStateProxy.InvokeProvider.Item.Set(
+                        'function:\{0}' -f $_.Name,
+                        $_.Body.GetScriptBlock())
+                    }
+                )
             }
-            # Add helper functions into the runspace
-            $this.helper_functions | ForEach-Object {
-                [void]$Script:MonkeyLogRunspace.Runspace.SessionStateProxy.InvokeProvider.Item.Set(
-                    'function:\{0}' -f $_.Name,
-                    $_.Body.GetScriptBlock())
+            Catch{
+                $msg = [hashtable] @{
+                        MessageData = $_.Exception.Message
+                        InformationAction = $this.informationAction
+                        CallStack = $this.CallStack
+                        ForeGroundColor = "Red"
+                        tags = @('MonkeyLog')
+                    }
+                    Write-Error @msg
             }
             $_handle.Set(); #
             # Spawn Logging Consumer

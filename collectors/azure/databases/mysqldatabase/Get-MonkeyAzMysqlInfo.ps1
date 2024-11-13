@@ -56,16 +56,20 @@ function Get-MonkeyAzMysqlInfo {
 			Group = @(
 				"Databases"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_mysql_servers"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$configForMySql = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureForMySQL" } | Select-Object -ExpandProperty resource
@@ -87,53 +91,53 @@ function Get-MonkeyAzMysqlInfo {
 		}
 		Write-Information @msg
 		#Check if single servers
-        if ($DatabaseServers.Count -gt 0) {
-            $new_arg = @{
+		if ($DatabaseServers.Count -gt 0) {
+			$new_arg = @{
 				APIVersion = $configForMySql.api_version;
 			}
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzMySQlServer -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $myServers = $DatabaseServers | Invoke-MonkeyJob @p
-            if($myServers){
-                foreach($mysql in $myServers){
-                    [void]$all_servers.Add($mysql)
-                }
-            }
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzMySQlServer -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$myServers = $DatabaseServers | Invoke-MonkeyJob @p
+			if ($myServers) {
+				foreach ($mysql in $myServers) {
+					[void]$all_servers.Add($mysql)
+				}
+			}
 		}
 		#Check if flexible servers
-        if ($flexservers.Count -gt 0) {
-            $new_arg = @{
+		if ($flexservers.Count -gt 0) {
+			$new_arg = @{
 				APIVersion = $flexibleConfigForMySQL.api_version;
 			}
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzMySQlServer -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $myFlexServers = $flexservers | Invoke-MonkeyJob @p
-            if($myFlexServers){
-                foreach($mysql in $myFlexServers){
-                    [void]$all_servers.Add($mysql)
-                }
-            }
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzMySQlServer -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$myFlexServers = $flexservers | Invoke-MonkeyJob @p
+			if ($myFlexServers) {
+				foreach ($mysql in $myFlexServers) {
+					[void]$all_servers.Add($mysql)
+				}
+			}
 		}
 	}
-	End {
+	end {
 		if ($all_servers) {
 			$all_servers.PSObject.TypeNames.Insert(0,'Monkey365.Azure.AzureMySQLServer')
 			[pscustomobject]$obj = @{
@@ -155,6 +159,7 @@ function Get-MonkeyAzMysqlInfo {
 		}
 	}
 }
+
 
 
 

@@ -56,16 +56,20 @@ function Get-MonkeyAZAutoProvisioning {
 			Group = @(
 				"VirtualMachines"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_vm_provisioning_status"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Environment
 		$Environment = $O365Object.Environment
@@ -122,6 +126,7 @@ function Get-MonkeyAZAutoProvisioning {
 		}
 	}
 }
+
 
 
 

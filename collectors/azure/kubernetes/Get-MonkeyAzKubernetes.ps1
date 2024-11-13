@@ -36,7 +36,7 @@ function Get-MonkeyAzKubernetes {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "", Scope="Function")]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns","",Scope = "Function")]
 	[CmdletBinding()]
 	param(
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
@@ -56,19 +56,23 @@ function Get-MonkeyAzKubernetes {
 			Group = @(
 				"Kubernetes"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_kubernetes"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get kubernetes resources
-		$kubernetes = $O365Object.all_resources.Where({$_.type -like 'Microsoft.ContainerService/managedClusters'});
+		$kubernetes = $O365Object.all_resources.Where({ $_.type -like 'Microsoft.ContainerService/managedClusters' });
 		if (-not $kubernetes) { continue }
 		$all_kubernetes = $null
 		#Get Config
@@ -83,23 +87,23 @@ function Get-MonkeyAzKubernetes {
 			Tags = @('AzureContainerInfo');
 		}
 		Write-Information @msg
-        if($kubernetes.Count -gt 0){
-            $new_arg = @{
-			    APIVersion = $Kubernetes_Config.api_version;
-		    }
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzKubernetesInfo -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $all_kubernetes = $kubernetes | Invoke-MonkeyJob @p
-        }
+		if ($kubernetes.Count -gt 0) {
+			$new_arg = @{
+				APIVersion = $Kubernetes_Config.api_version;
+			}
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzKubernetesInfo -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$all_kubernetes = $kubernetes | Invoke-MonkeyJob @p
+		}
 	}
 	end {
 		if ($all_kubernetes) {
@@ -123,6 +127,7 @@ function Get-MonkeyAzKubernetes {
 		}
 	}
 }
+
 
 
 

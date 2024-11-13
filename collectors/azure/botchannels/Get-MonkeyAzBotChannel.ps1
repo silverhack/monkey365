@@ -62,16 +62,20 @@ function Get-MonkeyAzBotChannel {
 			Group = @(
 				"BotChannels"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_bots"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Import Localized data
 		$LocalizedDataParams = $O365Object.LocalizedDataParams
@@ -126,6 +130,7 @@ function Get-MonkeyAzBotChannel {
 		}
 	}
 }
+
 
 
 

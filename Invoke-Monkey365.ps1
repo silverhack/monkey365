@@ -459,48 +459,6 @@ Function Invoke-Monkey365{
             }
             return
         }
-        #Check if list collectors
-        If($PSBoundParameters.ContainsKey('ListRule') -and $PSBoundParameters['ListRule'].IsPresent){
-            #Get command Metadata
-            $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-Rule")
-            $newPsboundParams = [ordered]@{}
-            if($null -ne $MetaData){
-                $param = $MetaData.Parameters.Keys
-                foreach($p in $param.GetEnumerator()){
-                    if($PSBoundParameters.ContainsKey($p)){
-                        $newPsboundParams.Add($p,$PSBoundParameters[$p])
-                    }
-                }
-                #Add verbose, debug
-                $newPsboundParams.Add('Verbose',$O365Object.verbose)
-                $newPsboundParams.Add('Debug',$O365Object.debug)
-                $newPsboundParams.Add('InformationAction',$O365Object.InformationAction)
-                #Add pretty print
-                [void]$newPsboundParams.Add('Pretty',$true);
-                #Add RulesPath
-                If($newPsboundParams.Contains('RulesPath')){
-                    $newPsboundParams.RulesPath = $O365Object.rulesPath;
-                }
-                Else{
-                    [void]$newPsboundParams.Add('RulesPath',$O365Object.rulesPath);
-                }
-                #Remove RuleSet if null
-                If($newPsboundParams.Contains('RuleSet') -and $null -eq $newPsboundParams['RuleSet']){
-                    [void]$newPsboundParams.Remove('RuleSet');
-                }
-                #Remove instance if EntraID is selected
-                If($newPsboundParams.Contains('Instance') -and $newPsboundParams['Instance'] -eq 'EntraID'){
-                    [void]$newPsboundParams.Remove('Instance');
-                }
-                #Remove Instance if null
-                If($newPsboundParams.Contains('Instance') -and $null -eq $newPsboundParams['Instance']){
-                    [void]$newPsboundParams.Remove('Instance');
-                }
-                #Execute command
-                Get-Rule @newPsboundParams
-            }
-            return
-        }
         #Check for mandatory params
         Test-MandatoryParameter
         #Import MSAL module

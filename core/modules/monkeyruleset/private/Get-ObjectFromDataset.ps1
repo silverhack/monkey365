@@ -52,7 +52,7 @@ Function Get-ObjectFromDataset{
                     $Script:Dataset
                 }
                 Else{
-                    $objectsToCheck = $dataObjects = $path = $subPath = $selectCondition = $null;
+                    $objectsToCheck = $dataObjects = $subPath = $selectCondition = $null;
                     #Get first path
                     If($InputObject.rule.path.Trim().ToString().Contains('.')){
                         If(($Script:Dataset.psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){

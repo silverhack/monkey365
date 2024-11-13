@@ -60,7 +60,7 @@ Function New-MonkeyFindingObject {
             #Check level
             if($null -eq $InputObject.PsObject.Properties.Item('level')){
                 $InputObject | Add-Member -Type NoteProperty -name level -value $null -Force
-            }            
+            }
             #Add metadata
             $Metadata = $InputObject | Get-ObjectFromDataset -Metadata
             $InputObject | Add-Member -Type NoteProperty -name metadata -value $Metadata -Forc

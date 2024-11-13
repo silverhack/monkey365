@@ -55,21 +55,25 @@ function Get-MonkeyAZAPIM {
 			Group = @(
 				"APIM"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_APIM"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$APIMConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "APIManagement" } | Select-Object -ExpandProperty resource
 		#Get Storage accounts
-		$APIM_objects = $O365Object.all_resources.Where({$_.type -like 'Microsoft.ApiManagement/service'})
+		$APIM_objects = $O365Object.all_resources.Where({ $_.type -like 'Microsoft.ApiManagement/service' })
 		if (-not $APIM_objects) { continue }
 		#Set array
 		$all_APIM = $null
@@ -83,25 +87,25 @@ function Get-MonkeyAZAPIM {
 			Tags = @('AzureAPIManagementInfo');
 		}
 		Write-Information @msg
-        if($APIM_objects.Count -gt 0){
-            $new_arg = @{
-			    APIVersion = $APIMConfig.api_version;
-		    }
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzAPIMInfo -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $all_APIM = $APIM_objects | Invoke-MonkeyJob @p
-        }
+		if ($APIM_objects.Count -gt 0) {
+			$new_arg = @{
+				APIVersion = $APIMConfig.api_version;
+			}
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzAPIMInfo -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$all_APIM = $APIM_objects | Invoke-MonkeyJob @p
+		}
 	}
-	End {
+	end {
 		if ($all_APIM) {
 			$all_APIM.PSObject.TypeNames.Insert(0,'Monkey365.Azure.APIM')
 			[pscustomobject]$obj = @{
@@ -123,5 +127,6 @@ function Get-MonkeyAZAPIM {
 		}
 	}
 }
+
 
 

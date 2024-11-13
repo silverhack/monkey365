@@ -77,7 +77,7 @@ Function Connect-MonkeyMSGraph {
                     #Add public app to param
                     $new_params.publicApp = $publicApp
                     #Add to Object
-                    [void]$O365Object.msal_public_applications.Add($publicApp)    
+                    [void]$O365Object.msal_public_applications.Add($publicApp)
                 }
                 Else{
                     $msg = @{
@@ -121,7 +121,7 @@ Function Connect-MonkeyMSGraph {
                     #Add public app to param
                     $new_params.publicApp = $publicApp
                     #Add to Object
-                    [void]$O365Object.msal_public_applications.Add($publicApp)    
+                    [void]$O365Object.msal_public_applications.Add($publicApp)
                 }
                 Else{
                     $msg = @{

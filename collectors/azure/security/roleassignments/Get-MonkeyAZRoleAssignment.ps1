@@ -56,18 +56,22 @@ function Get-MonkeyAzRoleAssignment {
 			Group = @(
 				"RoleAssignment"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
-				"az_rbac_users",
-				"az_classic_admins",
+				"az_rbac_users";
+				"az_classic_admins";
 				"az_role_definitions"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 	}
 	process {
@@ -146,6 +150,7 @@ function Get-MonkeyAzRoleAssignment {
 		}
 	}
 }
+
 
 
 

@@ -43,7 +43,7 @@ Function Get-RuleFileContent{
         Try{
             if($InputObject -isnot [System.IO.FileSystemInfo]){
                 If ($InputObject.GetType() -eq [System.Management.Automation.PSCustomObject] -or $InputObject.GetType() -eq [System.Management.Automation.PSObject] -and $null -ne $InputObject.Psobject.Properties.Item('FullName')){
-                    $fContent = (Get-Content $InputObject.FullName -Raw) | ConvertFrom-Json;    
+                    $fContent = (Get-Content $InputObject.FullName -Raw) | ConvertFrom-Json;
                 }
                 Else{
                     #Content is not valid

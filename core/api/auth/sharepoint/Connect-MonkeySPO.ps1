@@ -73,7 +73,7 @@ Function Connect-MonkeySPO {
             $sharepointUrl = Get-SharepointUrl @sps_p
         }
     }
-    if($null -eq $sharepointUrl){
+    If($null -eq $sharepointUrl){
         $msg = @{
             MessageData = "Unable to get a valid URL for SharePoint Online";
             callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -97,7 +97,7 @@ Function Connect-MonkeySPO {
             $usePnpManagementShell = $false
         }
         #Check if application is present
-        if(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)})).Count -gt 0){
+        If(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)})).Count -gt 0){
             $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)}) | Select-Object -First 1
         }
         ElseIf(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)})).Count -gt 0){

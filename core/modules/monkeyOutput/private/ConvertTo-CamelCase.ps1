@@ -43,8 +43,8 @@ Function ConvertTo-CamelCase {
     )
     Process{
         $myStr = [regex]::Replace(
-            $InputObject, 
-            '[-_](\p{L})', 
+            $InputObject,
+            '[-_](\p{L})',
             { $args[0].Groups[1].Value.ToUpper() }
         )
         $camelCaseStr = $myStr[0].ToString().ToLower(), $myStr.TrimStart($myStr[0]) -join ''

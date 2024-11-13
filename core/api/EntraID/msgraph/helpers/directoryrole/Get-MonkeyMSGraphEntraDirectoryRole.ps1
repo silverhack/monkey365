@@ -88,6 +88,7 @@ Function Get-MonkeyMSGraphEntraDirectoryRole{
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
+                APIVersion = $aadConf.api_version;
             }
             Get-MonkeyMSGraphObjectDirectoryRole @p
         }
@@ -106,6 +107,7 @@ Function Get-MonkeyMSGraphEntraDirectoryRole{
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
+                APIVersion = $aadConf.api_version;
             }
             Get-MonkeyMSGraphObjectDirectoryRole @p
         }
@@ -123,6 +125,7 @@ Function Get-MonkeyMSGraphEntraDirectoryRole{
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
+                APIVersion = $aadConf.api_version;
             }
             Get-MonkeyMSGraphGroupDirectoryRoleMemberOf @p
         }
@@ -162,6 +165,7 @@ Function Get-MonkeyMSGraphEntraDirectoryRole{
                     InformationAction = $O365Object.InformationAction;
                     Verbose = $O365Object.verbose;
                     Debug = $O365Object.debug;
+                    APIVersion = $aadConf.api_version;
                 }
                 Get-MonkeyMSGraphObjectDirectoryRole @p
             }
@@ -171,6 +175,7 @@ Function Get-MonkeyMSGraphEntraDirectoryRole{
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
+                APIVersion = $aadConf.api_version;
             }
             Get-MonkeyMSGraphEntraRoleAssignment @p
         }
