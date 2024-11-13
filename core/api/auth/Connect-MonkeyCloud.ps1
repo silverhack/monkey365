@@ -296,5 +296,12 @@ Function Connect-MonkeyCloud{
         #$O365Object.auth_tokens.MSPIM = Connect-MonkeyPIM
     }
     #Get collectors
-    $O365Object.Collectors = Get-MonkeyCollector
+    $p = @{
+        Provider = $O365Object.Instance;
+        Service = $O365Object.initParams.Collect;
+        InformationAction = $O365Object.InformationAction;
+        Verbose = $O365Object.verbose;
+        Debug = $O365Object.debug;
+    }
+    $O365Object.Collectors = Select-MonkeyCollector @p
 }

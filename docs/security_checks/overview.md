@@ -18,8 +18,8 @@ By default, the HTML report shows you the CIS (Center for Internet Security) Ben
 
 The following standards are supported by Monkey365:
 
-* CIS Microsoft Azure Foundations Benchmark v1.4.0, v1.5.0
-* CIS Microsoft 365 Foundations Benchmark v1.4.0, v1.5.0
+* CIS Microsoft Azure Foundations Benchmark v2.0.0, v3.0.0
+* CIS Microsoft 365 Foundations Benchmark v2.0.0, v3.0.0
 
 More standards will be added in next releases (NIST, HIPAA, GDPR, PCI-DSS, etc..) as they are available.
 

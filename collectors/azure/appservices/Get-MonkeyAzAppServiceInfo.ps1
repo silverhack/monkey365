@@ -56,16 +56,20 @@ function Get-MonkeyAzAppServiceInfo {
 			Group = @(
 				"AppServices"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_app_services"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#config
 		$config = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureWebApps" } | Select-Object -ExpandProperty resource
@@ -85,21 +89,21 @@ function Get-MonkeyAzAppServiceInfo {
 		}
 		Write-Information @msg
 		if ($app_services.Count -gt 0) {
-            $new_arg = @{
+			$new_arg = @{
 				APIVersion = $config.api_version;
 			}
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzAppService -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $all_apps = $app_services | Invoke-MonkeyJob @p
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzAppService -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$all_apps = $app_services | Invoke-MonkeyJob @p
 		}
 	}
 	end {
@@ -124,6 +128,7 @@ function Get-MonkeyAzAppServiceInfo {
 		}
 	}
 }
+
 
 
 

@@ -69,7 +69,7 @@ Function Get-MonkeyMSGraphObjectDirectoryRole{
             }
             'servicePrincipal'{
                 $myObjectType = ('servicePrincipals/{0}/transitiveMemberOf' -f $ObjectId)
-            }            
+            }
         }
         if($null -ne $myObjectType){
             $p = @{

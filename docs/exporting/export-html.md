@@ -11,7 +11,7 @@ The following example can be used to export all data to an HTML file.
 ``` powershell
 $param = @{
     Instance = 'Azure';
-    Analysis = 'All';
+    Collect = 'All';
     PromptBehavior = 'SelectAccount';
     AllSubscriptions = $true;
     TenantID = '00000000-0000-0000-0000-000000000000';

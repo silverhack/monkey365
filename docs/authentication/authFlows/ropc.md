@@ -17,7 +17,7 @@ $cred = Get-Credential
 
 $param = @{
     Instance = 'Microsoft365';
-    Analysis = 'SharePointOnline','ExchangeOnline';
+    Collect = 'SharePointOnline','ExchangeOnline';
     UserCredentials = $cred;
 	TenantId = '00000000-0000-0000-0000-000000000000';
     ExportTo = 'PRINT';

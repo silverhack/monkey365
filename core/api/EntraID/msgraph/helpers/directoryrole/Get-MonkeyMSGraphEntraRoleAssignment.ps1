@@ -35,8 +35,9 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
 	[CmdletBinding()]
+    [OutputType([System.Collections.Generic.List[System.Management.Automation.PSObject]])]
 	Param (
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
         [ValidateSet("v1.0","beta")]
@@ -53,7 +54,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
         #Set Job params
         If($O365Object.isConfidentialApp){
             $jobParam = @{
-	            ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_ -APIVersion 'beta'};
+	            ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_ -APIVersion $APIVersion};
 	            Runspacepool = $O365Object.monkey_runspacePool;
 	            ReuseRunspacePool = $true;
 	            Debug = $O365Object.VerboseOptions.Debug;
@@ -67,7 +68,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
             If($O365Object.useOldAADAPIForUsers){
                 If($O365Object.canRequestMFAForUsers){
                     $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyGraphAADUser -UserId $_ };
+	                    ScriptBlock = { Get-MonkeyGraphAADUser -UserId $_ -APIVersion $APIVersion };
 	                    Runspacepool = $O365Object.monkey_runspacePool;
 	                    ReuseRunspacePool = $true;
 	                    Debug = $O365Object.VerboseOptions.Debug;
@@ -80,7 +81,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                 Else{
                     #Set job params
                     $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck -APIVersion 'beta' };
+	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck -APIVersion $APIVersion };
 	                    Runspacepool = $O365Object.monkey_runspacePool;
 	                    ReuseRunspacePool = $true;
 	                    Debug = $O365Object.VerboseOptions.Debug;
@@ -95,7 +96,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                 If($O365Object.auth_tokens.MSGraph.clientId -eq (Get-WellKnownAzureService -AzureService MicrosoftGraph)){
                     #Set job params
                     $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_ -APIVersion 'beta'};
+	                    ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_ -APIVersion $APIVersion};
 	                    Runspacepool = $O365Object.monkey_runspacePool;
 	                    ReuseRunspacePool = $true;
 	                    Debug = $O365Object.VerboseOptions.Debug;
@@ -108,7 +109,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                 Else{
                     #Set job params
                     $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck -APIVersion 'beta' };
+	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck -APIVersion $APIVersion };
 	                    Runspacepool = $O365Object.monkey_runspacePool;
 	                    ReuseRunspacePool = $true;
 	                    Debug = $O365Object.VerboseOptions.Debug;
@@ -158,7 +159,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                     If($null -ne $roleObject.groups){
                         #get Real members
                         foreach($grp in $roleObject.groups){
-                            $groupMember = Get-MonkeyMSGraphGroupTransitiveMember -GroupId $grp.id -Parents @($grp.id) -APIVersion beta
+                            $groupMember = Get-MonkeyMSGraphGroupTransitiveMember -GroupId $grp.id -Parents @($grp.id) -APIVersion $APIVersion
                             if($groupMember){
                                 foreach($member in $groupMember){
                                     [void]$users.Add($member);
@@ -182,7 +183,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                     if($null -ne $members){
                         foreach($member in $members){
                             [void]$extendedUniqueUsers.Add($member);
-                        }    
+                        }
                     }
                     $roleObject.effectiveUsers = $extendedUniqueUsers;
                     #Get servicePrincipals

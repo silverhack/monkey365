@@ -56,16 +56,20 @@ function Get-MonkeyAzSQLInfo {
 			Group = @(
 				"Databases"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_sql_servers"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$AzureSQLConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureForSQL" } | Select-Object -ExpandProperty resource
@@ -83,22 +87,22 @@ function Get-MonkeyAzSQLInfo {
 			Tags = @('AzureSQLInfo');
 		}
 		Write-Information @msg
-        if ($DatabaseServers.Count -gt 0) {
-            $new_arg = @{
+		if ($DatabaseServers.Count -gt 0) {
+			$new_arg = @{
 				APIVersion = $AzureSQLConfig.api_version;
 			}
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzSQlServer -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $AllServers = $DatabaseServers | Invoke-MonkeyJob @p
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzSQlServer -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$AllServers = $DatabaseServers | Invoke-MonkeyJob @p
 		}
 	}
 	end {
@@ -123,6 +127,7 @@ function Get-MonkeyAzSQLInfo {
 		}
 	}
 }
+
 
 
 

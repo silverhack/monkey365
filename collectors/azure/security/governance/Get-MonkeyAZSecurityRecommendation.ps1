@@ -57,16 +57,20 @@ function Get-MonkeyAZSecurityRecommendation {
 				"Subscription";
 				"DefenderForCloud"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_security_tips"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$AzureAdvisorConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureRecommendations" } | Select-Object -ExpandProperty resource
@@ -113,6 +117,7 @@ function Get-MonkeyAZSecurityRecommendation {
 		}
 	}
 }
+
 
 
 

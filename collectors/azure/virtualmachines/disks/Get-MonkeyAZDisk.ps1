@@ -56,16 +56,20 @@ function Get-MonkeyAZDisk {
 			Group = @(
 				"VirtualMachines"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_managed_disks"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Environment
 		$Environment = $O365Object.Environment
@@ -116,8 +120,8 @@ function Get-MonkeyAZDisk {
 					$new_disk = New-Object -TypeName PSCustomObject
 					$new_disk | Add-Member -Type NoteProperty -Name id -Value $managed_disk.Id
 					$new_disk | Add-Member -Type NoteProperty -Name name -Value $managed_disk.Name
-                    $new_disk | Add-Member -Type NoteProperty -Name type -Value $managed_disk.type
-                    $new_disk | Add-Member -Type NoteProperty -Name resourceGroupName -Value $managed_disk.Id.Split("/")[4];
+					$new_disk | Add-Member -Type NoteProperty -Name Get-Content -Value $managed_disk.type
+					$new_disk | Add-Member -Type NoteProperty -Name resourceGroupName -Value $managed_disk.Id.Split("/")[4];
 					$new_disk | Add-Member -Type NoteProperty -Name location -Value $managed_disk.location
 					$new_disk | Add-Member -Type NoteProperty -Name skuname -Value $managed_disk.SKU.Name
 					$new_disk | Add-Member -Type NoteProperty -Name skutier -Value $managed_disk.SKU.tier
@@ -172,6 +176,7 @@ function Get-MonkeyAZDisk {
 		}
 	}
 }
+
 
 
 

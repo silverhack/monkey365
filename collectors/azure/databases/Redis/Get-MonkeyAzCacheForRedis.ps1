@@ -36,7 +36,7 @@ function Get-MonkeyAzCacheForRedis {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "", Scope="Function")]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns","",Scope = "Function")]
 	[CmdletBinding()]
 	param(
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
@@ -56,21 +56,25 @@ function Get-MonkeyAzCacheForRedis {
 			Group = @(
 				"Databases"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_redis"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$AzureRedisConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureRedis" } | Select-Object -ExpandProperty resource
 		#Get redis instances
-		$redisInstances = $O365Object.all_resources.Where({$_.id -like '*Microsoft.Cache/Redis*'})
+		$redisInstances = $O365Object.all_resources.Where({ $_.Id -like '*Microsoft.Cache/Redis*' })
 		if (-not $redisInstances) { continue }
 		$AllRedis = $null
 	}
@@ -84,21 +88,21 @@ function Get-MonkeyAzCacheForRedis {
 		}
 		Write-Information @msg
 		if ($redisInstances.Count -gt 0) {
-            $new_arg = @{
+			$new_arg = @{
 				APIVersion = $AzureRedisConfig.api_version;
 			}
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzRedisInfo -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $AllRedis = $redisInstances | Invoke-MonkeyJob @p
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzRedisInfo -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$AllRedis = $redisInstances | Invoke-MonkeyJob @p
 		}
 	}
 	end {
@@ -123,6 +127,7 @@ function Get-MonkeyAzCacheForRedis {
 		}
 	}
 }
+
 
 
 

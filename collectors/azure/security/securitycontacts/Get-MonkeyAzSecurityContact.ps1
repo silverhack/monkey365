@@ -56,16 +56,20 @@ function Get-MonkeyAzSecurityContact {
 			Group = @(
 				"Subscription"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_security_contacts"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Environment
 		$Environment = $O365Object.Environment
@@ -101,7 +105,7 @@ function Get-MonkeyAzSecurityContact {
 				Id = $account.Id;
 				location = $account.Id;
 				Name = $account.Name;
-                Type = $account.type;
+				type = $account.type;
 				Properties = $account.Properties;
 				email = $account.Properties.emails;
 				phone = $account.Properties.phone;
@@ -138,6 +142,7 @@ function Get-MonkeyAzSecurityContact {
 		}
 	}
 }
+
 
 
 

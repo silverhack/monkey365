@@ -56,53 +56,57 @@ function Get-MonkeyAZPublicIPAddress {
 			Group = @(
 				"publicIPAddress"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_publicIPAddress"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
-		$AzPUblicIpConfig = $O365Object.internal_config.ResourceManager.Where({$_.Name -eq "azurePublicIPAddress"}) | Select-Object -ExpandProperty resource
+		$AzPUblicIpConfig = $O365Object.internal_config.ResourceManager.Where({ $_.Name -eq "azurePublicIPAddress" }) | Select-Object -ExpandProperty resource
 		#Get public Ips
-		$publicIPs = $O365Object.all_resources.Where({ $_.type -eq 'Microsoft.Network/publicIPAddresses'});
-        #Set null
-        $all_publicIPs = $null
+		$publicIPs = $O365Object.all_resources.Where({ $_.type -eq 'Microsoft.Network/publicIPAddresses' });
+		#Set null
+		$all_publicIPs = $null
 	}
 	process {
-        if($publicIPs.Count -gt 0){
-		    $msg = @{
-			    MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Public IP addresses",$O365Object.current_subscription.displayName);
-			    callStack = (Get-PSCallStack | Select-Object -First 1);
-			    logLevel = 'info';
-			    InformationAction = $O365Object.InformationAction;
-			    Tags = @('AzurePublicIpInfo');
-		    }
-		    Write-Information @msg
-            $new_arg = @{
-			    APIVersion = $AzPUblicIpConfig.api_version;
-		    }
-            $p = @{
-			    ScriptBlock = { Get-MonkeyPublicIpInfo -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $all_publicIPs = $publicIPs | Invoke-MonkeyJob @p
-        }
+		if ($publicIPs.Count -gt 0) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Public IP addresses",$O365Object.current_subscription.displayName);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $O365Object.InformationAction;
+				Tags = @('AzurePublicIpInfo');
+			}
+			Write-Information @msg
+			$new_arg = @{
+				APIVersion = $AzPUblicIpConfig.api_version;
+			}
+			$p = @{
+				ScriptBlock = { Get-MonkeyPublicIpInfo -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$all_publicIPs = $publicIPs | Invoke-MonkeyJob @p
+		}
 	}
-	End {
-		If ($null -ne $all_publicIPs) {
+	end {
+		if ($null -ne $all_publicIPs) {
 			$all_publicIPs.PSObject.TypeNames.Insert(0,'Monkey365.Azure.publicIpAddress')
 			[pscustomobject]$obj = @{
 				Data = $all_publicIPs;

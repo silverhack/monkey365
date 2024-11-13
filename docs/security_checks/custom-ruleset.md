@@ -29,9 +29,11 @@ In some cases you might want to apply a limited number of rules from another rul
 To customize the behavior of an specific rule, you can override the ruleset at deployment. When you override a rule you specify changes to be modified on top of the default ruleset. These changes will take precedence over the rule’s default behavior.
 
 ### Working with overrides
-You can override a rule at two levels:
+You can override a rule at various levels:
 
 * args
+* level
+* enabled/disabled rule
 * compliance
 
 For example overrides provide a way to replace the compliance value in your rule with another version.
@@ -49,7 +51,7 @@ After you have finished creating the ruleset file, you will need to use the ```R
 ``` powershell
 $param = @{
     Instance = 'Microsoft365';
-    Analysis = 'ExchangeOnline';
+    Collect = 'ExchangeOnline';
     PromptBehavior = 'SelectAccount';
     TenantID = '00000000-0000-0000-0000-000000000000';
 	RuleSet = C:\temp\myruleset.json;

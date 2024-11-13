@@ -33,35 +33,37 @@ Function Get-MonkeySupportedService{
         .LINK
             https://github.com/silverhack/monkey365
     #>
-    [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "", Scope="Function")]
-	param(
+    [CmdletBinding(DefaultParameterSetName = 'EntraID')]
+	Param(
 		[Parameter(Mandatory = $true, ParameterSetName = 'Azure', HelpMessage = "Azure supported services")]
 		[Switch]$Azure,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'M365', HelpMessage = "Microsoft 365 supported services")]
-		[Switch]$M365
+        [Parameter(Mandatory = $true, ParameterSetName = 'Microsoft365', HelpMessage = "Microsoft 365 supported services")]
+		[Switch]$Microsoft365
 	)
-    Begin{
-        $selectedCollectors = $null
-        $collectorsMetadata = Get-MetadataFromCollector
-    }
     Process{
-        if($PSCmdlet.ParameterSetName -eq 'Azure'){
-            #Get all supported services based on Azure plugins
-            $unsortedCollectors = $collectorsMetadata | Where-Object {$_.Provider -eq 'Azure'}
-            $selectedCollectors = $unsortedCollectors | Select-Object -ExpandProperty Group | Sort-Object -Unique
-            $selectedCollectors =, "All" + $selectedCollectors
-            $selectedCollectors = $selectedCollectors -replace '"', ""
+        Try{
+            $p = @{
+                Provider = $PSCmdlet.ParameterSetName;
+            }
+            $collectorsMetadata = Get-MetadataFromCollector @p
+            If($null -ne $collectorsMetadata){
+                If($PSCmdlet.ParameterSetName -eq 'Azure'){
+                    $selectedCollectors = $collectorsMetadata | Select-Object -ExpandProperty Group | Sort-Object -Unique
+                    $selectedCollectors =, "All" + $selectedCollectors
+                    $selectedCollectors = $selectedCollectors -replace '"', ""
+                    return $selectedCollectors
+                }
+                Else{
+                    $selectedCollectors = $collectorsMetadata | Select-Object -ExpandProperty Group | Sort-Object -Unique
+                    $selectedCollectors = $selectedCollectors -replace '"', ""
+                    return $selectedCollectors
+                }
+            }
         }
-        else{
-            #Get all supported services based on Microsoft 365 plugins
-            $unsortedCollectors = $collectorsMetadata | Where-Object {$_.Provider -eq 'Microsoft365'}
-            $selectedCollectors = $unsortedCollectors | Select-Object -ExpandProperty Group | Sort-Object -Unique
-            $selectedCollectors = $selectedCollectors -replace '"', ""
+        Catch{
+            Write-Error $_
         }
-    }
-    End{
-        return $selectedCollectors
     }
 }

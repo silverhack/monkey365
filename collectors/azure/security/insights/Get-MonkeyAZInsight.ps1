@@ -56,16 +56,20 @@ function Get-MonkeyAZInsight {
 			Group = @(
 				"Subscription"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_monitor_alerts"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Set list
 		$all_alerts = New-Object System.Collections.Generic.List[System.Object]
@@ -142,6 +146,7 @@ function Get-MonkeyAZInsight {
 		}
 	}
 }
+
 
 
 

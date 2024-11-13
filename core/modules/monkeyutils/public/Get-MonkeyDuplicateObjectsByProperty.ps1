@@ -36,7 +36,9 @@ Function Get-MonkeyDuplicateObjectsByProperty{
         .LINK
             https://github.com/silverhack/monkey365
     #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
     [CmdletBinding()]
+    [OutputType([System.Collections.Generic.List[System.Management.Automation.PSObject]])]
     Param (
         [parameter(Mandatory=$true, HelpMessage="Reference Object")]
         [System.Collections.Generic.List[System.Management.Automation.PSObject]]$ReferenceObject,

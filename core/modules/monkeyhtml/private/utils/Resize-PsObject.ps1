@@ -88,7 +88,7 @@ Function Resize-PsObject{
                             }
                             #return object
                             $selected_elements
-                        }                    
+                        }
                     }
                 }
             }

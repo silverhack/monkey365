@@ -80,7 +80,7 @@ Function Export-MonkeyData{
             $OutDir = New-MonkeyFolder -destination $out_folder
             if($OutDir){
                 Invoke-HtmlReport -OutDir $OutDir
-            }            
+            }
         }
     }
 }

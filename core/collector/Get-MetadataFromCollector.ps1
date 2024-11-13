@@ -35,59 +35,83 @@ Function Get-MetadataFromCollector{
     #>
     [CmdletBinding()]
     [OutputType([System.Collections.Generic.List[System.Management.Automation.PSObject]])]
-    Param()
+    Param (
+        [parameter(Mandatory=$false, HelpMessage="Provider")]
+        [ValidateSet("Azure","EntraID","Microsoft365")]
+        [String]$Provider,
+
+        [Parameter(Mandatory=$false, HelpMessage="Cloud resource")]
+        [String[]]$Service
+    )
     Begin{
-        #Set vars
-        $localPath = $all_collectors = $all_ast_collectors = $null
+        $AstCollectors = $null;
         $collectors = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-        if($null -ne (Get-Variable -Name O365Object -ErrorAction Ignore)){
+        If($null -ne (Get-Variable -Name O365Object -ErrorAction Ignore)){
             $localPath = $O365Object.Localpath;
         }
-        elseif($null -ne (Get-Variable -Name ScriptPath -ErrorAction Ignore)){
+        ElseIf($null -ne (Get-Variable -Name ScriptPath -ErrorAction Ignore)){
             $localPath = $ScriptPath;
         }
-        else{
+        Else{
             $localPath = $MyInvocation.MyCommand.Path
         }
-        if($null -eq $localPath){
+        If($null -eq $localPath){
             break
         }
-        try{
-            $all_collectors = [System.IO.Directory]::EnumerateFiles(("{0}/collectors" -f $localPath),"*.ps1","AllDirectories")
-            $all_ast_collectors = Get-AstFunction $all_collectors
-        }
-        Catch{
-            Write-Warning $_.Exception.Message
-        }
+        $_path = ("{0}{1}collectors{2}{3}" -f $localPath,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar,$Provider)
     }
     Process{
-        if($null -ne $all_ast_collectors){
-            #Get all supported services based on plugins
-            foreach($ast_plugin in $all_ast_collectors){
+        If([System.IO.Directory]::Exists($_path)){
+            $allDirs = [System.Collections.Generic.List[System.String]]::new()
+            If($PSBoundParameters.ContainsKey('Service') -and $PSBoundParameters['Service']){
+                $directories = @($_path).GetEnumerator()| ForEach-Object {Get-MonkeyDirectory -Path $_ -Pattern $Service -Recurse -First}
+                Foreach($dir in @($directories)){
+                    [void]$allDirs.Add($dir);
+                }
+            }
+            Else{
+                [void]$allDirs.Add($_path);
+            }
+            If($allDirs.Count -gt 0){
+                Try{
+                    $allCollectors = $allDirs.GetEnumerator() | ForEach-Object {[System.IO.Directory]::EnumerateFiles($_,"*.ps1",[System.IO.SearchOption]::AllDirectories)}
+                    $AstCollectors = Get-AstFunction $allCollectors
+                }
+                Catch{
+                    Write-Warning $_.Exception.Message
+                }
+            }
+        }
+        Else{
+            Write-Warning ("Directory {0} was not found" -f $_path)
+        }
+    }
+    End{
+        If($null -ne $AstCollectors){
+            Foreach($collector in $AstCollectors){
                 #Get internal Var
-                $monkey_var = $ast_plugin.Body.BeginBlock.Statements | Where-Object {($null -ne $_.Psobject.Properties.Item('Left')) -and $_.Left.VariablePath.UserPath -eq 'monkey_metadata'}
+                $monkey_var = $collector.Body.BeginBlock.Statements | Where-Object {($null -ne $_.Psobject.Properties.Item('Left')) -and $_.Left.VariablePath.UserPath -eq 'monkey_metadata'}
                 if($monkey_var -and [bool]($monkey_var.Right.Expression.StaticType.ImplementedInterfaces.Where({$_.FullName -eq "System.Collections.IDictionary"}))){
-                    try{
+                    Try{
                         #Get Safe value
                         $new_dict = [ordered]@{}
                         foreach ($entry in $monkey_var.Right.Expression.KeyValuePairs.GetEnumerator()){
                             $new_dict.Add($entry.Item1, $entry.Item2.SafeGetValue())
                         }
                         #Add file properties
-                        $new_dict.Add('File',[System.IO.fileinfo]::new($ast_plugin.Extent.File))
+                        $new_dict.Add('File',[System.IO.fileinfo]::new($collector.Extent.File))
                         #Create PsObject
                         $obj = New-Object -TypeName PSCustomObject -Property $new_dict
                         #Add to array
                         [void]$collectors.Add($obj)
                     }
-                    catch{
+                    Catch{
                         Write-Error $_
                     }
                 }
             }
         }
-    }
-    End{
-        return $collectors
+        #return collectors
+        $collectors
     }
 }

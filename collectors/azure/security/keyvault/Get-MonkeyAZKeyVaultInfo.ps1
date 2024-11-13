@@ -56,16 +56,20 @@ function Get-MonkeyAZKeyVaultInfo {
 			Group = @(
 				"KeyVault"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_keyvault"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$keyvault_Config = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureKeyVault" } | Select-Object -ExpandProperty resource
@@ -83,25 +87,25 @@ function Get-MonkeyAZKeyVaultInfo {
 			Tags = @('AzureKeyVaultInfo');
 		}
 		Write-Information @msg
-        if($KeyVaults.Count -gt 0){
-            $new_arg = @{
-			    APIVersion = $keyvault_Config.api_version;
-		    }
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzKeyVault -KeyVault $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $all_keyvault = $KeyVaults | Invoke-MonkeyJob @p
-        }
+		if ($KeyVaults.Count -gt 0) {
+			$new_arg = @{
+				APIVersion = $keyvault_Config.api_version;
+			}
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzKeyVault -KeyVault $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$all_keyvault = $KeyVaults | Invoke-MonkeyJob @p
+		}
 	}
-	End {
+	end {
 		if ($all_keyvault) {
 			$all_keyvault.PSObject.TypeNames.Insert(0,'Monkey365.Azure.KeyVault')
 			[pscustomobject]$obj = @{
@@ -123,6 +127,7 @@ function Get-MonkeyAZKeyVaultInfo {
 		}
 	}
 }
+
 
 
 

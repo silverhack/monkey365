@@ -75,9 +75,12 @@
     "html": {
       "data": {
         "properties": {
-          
+          "activeAssignment.users.userPrincipalName": "User Principal Name",
+          "activeAssignment.users.startDateTime": "Start Date",
+          "activeAssignment.users.userType": "User Type",
+          "displayName": "Role Name"
         },
-        "expandObject": null
+        "expandObject": "activeAssignment.users"
       },
       "table": null,
       "decorate": [
@@ -100,9 +103,12 @@
     "text": {
       "data": {
         "properties": {
-          
+          "activeAssignment.users.userPrincipalName": "userPrincipalName",
+          "activeAssignment.users.userType": "userType",
+		  "activeAssignment.users.id": "Id",
+          "displayName": "Role Name"
         },
-        "expandObject": null
+        "expandObject": "activeAssignment.users"
       },
       "status": {
         "keyName": [

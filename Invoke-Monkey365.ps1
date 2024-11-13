@@ -63,26 +63,26 @@ Function Invoke-Monkey365{
                 https://github.com/silverhack/monkey365
 
         .EXAMPLE
-	        $assets = Invoke-Monkey365 -ExportTo CSV -PromptBehavior SelectAccount -IncludeEntraID -Instance Microsoft365 -Analysis SharePointOnline
+	        $assets = Invoke-Monkey365 -ExportTo CSV -PromptBehavior SelectAccount -IncludeEntraID -Instance Microsoft365 -Collect SharePointOnline
 
-            This example retrieves information of both Azure AD and SharePoint Online and will save results into a CSV file. If credentials are not supplied, Monkey365 will prompt for credentials.
-
-        .EXAMPLE
-	        Invoke-Monkey365 -PromptBehavior SelectAccount -Instance Azure -Analysis All -subscriptions 00000000-0000-0000-0000-000000000000 -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML
-
-            This example retrieves information of an Azure subscription and will export data to a XML-based file. If credentials are not supplied, Monkey365 will prompt for credentials.
+            This example will collect information of both Azure AD and SharePoint Online and will save results into a CSV file. If credentials are not supplied, Monkey365 will prompt for credentials.
 
         .EXAMPLE
-	        Invoke-Monkey365 -ClientId 00000000-0000-0000-0000-000000000000 -ClientSecret ("MySuperClientSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Azure -Analysis All -subscriptions 00000000-0000-0000-0000-000000000000 -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,CSV,JSON,HTML
+	        Invoke-Monkey365 -PromptBehavior SelectAccount -Instance Azure -Collect All -subscriptions 00000000-0000-0000-0000-000000000000 -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML
+
+            This example will collect information of an Azure subscription and will export data to a XML-based file. If credentials are not supplied, Monkey365 will prompt for credentials.
+
+        .EXAMPLE
+	        Invoke-Monkey365 -ClientId 00000000-0000-0000-0000-000000000000 -ClientSecret ("MySuperClientSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Azure -Collect All -subscriptions 00000000-0000-0000-0000-000000000000 -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,CSV,JSON,HTML
 
             This example retrieves information of an Azure subscription and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey-reports folder. The script will connect to Azure using the client credential flow.
 
         .EXAMPLE
-            Invoke-Monkey365 -certificate C:\monkey365\testapp.pfx -ClientId 00000000-0000-0000-0000-000000000000 -CertFilePassword ("MySuperCertSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Microsoft365 -Analysis SharePointOnline -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,CSV,JSON,HTML
+            Invoke-Monkey365 -certificate C:\monkey365\testapp.pfx -ClientId 00000000-0000-0000-0000-000000000000 -CertFilePassword ("MySuperCertSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Microsoft365 -Collect SharePointOnline -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,CSV,JSON,HTML
 	        This example retrieves information of an Microsoft 365 subscription and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey-reports folder. The script will connect to Azure using the certificate credential flow.
 
         .EXAMPLE
-	        Invoke-Monkey365 -PromptBehavior SelectAccount -Instance Azure -Analysis All -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo HTML
+	        Invoke-Monkey365 -PromptBehavior SelectAccount -Instance Azure -Collect All -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo HTML
 
             This example retrieves information of an Azure subscription and will export data driven to HTML format into monkey-reports folder. If credentials are not supplied, Monkey365 will prompt for credentials.
 
@@ -92,7 +92,7 @@ Function Invoke-Monkey365{
         .PARAMETER Instance
 	        Select the instance to scan. Valid options are Azure or Microsoft365
 
-        .PARAMETER Analysis
+        .PARAMETER Collect
 	        Collect data from specified assets. Depending of what instance was selected, the following values are accepted:
 
             Value                        Description
@@ -303,7 +303,13 @@ Function Invoke-Monkey365{
         [Switch]$DeviceCode,
 
         [Parameter(Mandatory=$false, HelpMessage="Force to load MSAL Desktop PowerShell Core on Windows")]
-        [Switch]$ForceMSALDesktop
+        [Switch]$ForceMSALDesktop,
+
+        [Parameter(Mandatory=$false, HelpMessage="List available collectors")]
+        [Switch]$ListCollector,
+
+        [Parameter(Mandatory=$false, HelpMessage="List available rules")]
+        [Switch]$ListRule
     )
     dynamicparam{
         # Set available instance class
@@ -318,15 +324,15 @@ Function Invoke-Monkey365{
             $attributeCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
             # define a new parameter attribute
             $analysis_attr_name = New-Object System.Management.Automation.ParameterAttribute
-            $analysis_attr_name.Mandatory = $true
+            $analysis_attr_name.Mandatory = $false
             $attributeCollection.Add($analysis_attr_name)
 
             # set the ValidateSet attribute
             $token_attr_name = New-Object System.Management.Automation.ValidateSetAttribute($instance_class.Item($Instance))
             $attributeCollection.Add($token_attr_name)
 
-            # create the dynamic -Analysis parameter
-            $analysis_pname = 'Analysis'
+            # create the dynamic -Collect parameter
+            $analysis_pname = 'Collect'
             $analysis_type_dynParam = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter($analysis_pname,
             [Array], $attributeCollection)
             $paramDictionary.Add($analysis_pname, $analysis_type_dynParam)
@@ -416,8 +422,41 @@ Function Invoke-Monkey365{
         #Initialize Logger
         Initialize-MonkeyLogger
         #Check if import job
-        if($PSBoundParameters.ContainsKey('ImportJob') -and $PSBoundParameters.ImportJob){
+        If($PSBoundParameters.ContainsKey('ImportJob') -and $PSBoundParameters.ImportJob){
             Import-MonkeyJob
+            return
+        }
+        #Check if list collectors
+        If($PSBoundParameters.ContainsKey('ListCollector') -and $PSBoundParameters['ListCollector'].IsPresent){
+            #Get command Metadata
+            $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-MonkeyCollector")
+            $newPsboundParams = [ordered]@{}
+            if($null -ne $MetaData){
+                $param = $MetaData.Parameters.Keys
+                foreach($p in $param.GetEnumerator()){
+                    if($PSBoundParameters.ContainsKey($p)){
+                        $newPsboundParams.Add($p,$PSBoundParameters[$p])
+                    }
+                }
+                #Add verbose, debug
+                $newPsboundParams.Add('Verbose',$O365Object.verbose)
+                $newPsboundParams.Add('Debug',$O365Object.debug)
+                $newPsboundParams.Add('InformationAction',$O365Object.InformationAction)
+                #Add services if exists
+                If($null -ne $O365Object.initParams.Collect -and $O365Object.initParams.Collect.Count -gt 0){
+                    #Remove all option
+                    $collect = $O365Object.initParams.Collect.Where({$_.ToLower() -ne 'all'})
+                    [void]$newPsboundParams.Add('Service',$collect);
+                }
+                #Add pretty print
+                [void]$newPsboundParams.Add('Pretty',$true);
+                #Add Provider
+                If($PSBoundParameters.ContainsKey('Instance') -and $PSBoundParameters['Instance']){
+                    [void]$newPsboundParams.Add('Provider',$PSBoundParameters['Instance']);
+                }
+                #Execute command
+                Get-MonkeyCollector @newPsboundParams
+            }
             return
         }
         #Check for mandatory params

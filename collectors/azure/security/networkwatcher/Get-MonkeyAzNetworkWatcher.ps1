@@ -56,31 +56,35 @@ function Get-MonkeyAZNetworkWatcher {
 			Group = @(
 				"NetworkWatcher"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
-				"az_network_watcher",
+				"az_network_watcher";
 				"az_network_watcher_flow_logs"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Environment
 		$Environment = $O365Object.Environment
 		#Get Azure RM Auth
 		$rm_auth = $O365Object.auth_tokens.ResourceManager
 		#Get Network Watcher locations
-		$network_watcher_locations = @($O365Object.all_resources).Where({ $_.type -like 'Microsoft.Network/networkWatchers'}) | Select-Object -ExpandProperty location -ErrorAction Ignore
+		$network_watcher_locations = @($O365Object.all_resources).Where({ $_.type -like 'Microsoft.Network/networkWatchers' }) | Select-Object -ExpandProperty location -ErrorAction Ignore
 		#Get Network watcher IDs
-		$network_watchers = @($O365Object.all_resources).Where({ $_.type -like 'Microsoft.Network/networkWatchers'}) | Select-Object id,location -ErrorAction Ignore
+		$network_watchers = @($O365Object.all_resources).Where({ $_.type -like 'Microsoft.Network/networkWatchers' }) | Select-Object id,location -ErrorAction Ignore
 		#Get Network Security groups
-		$network_security_groups = @($O365Object.all_resources).Where({ $_.type -like 'Microsoft.Network/networkSecurityGroups' -or $_.type -like 'Microsoft.ClassicNetwork/networkSecurityGroups'}) | Select-Object id,location -ErrorAction Ignore
-        #Set array
+		$network_security_groups = @($O365Object.all_resources).Where({ $_.type -like 'Microsoft.Network/networkSecurityGroups' -or $_.type -like 'Microsoft.ClassicNetwork/networkSecurityGroups' }) | Select-Object id,location -ErrorAction Ignore
+		#Set array
 		$networkWatchersArr = [System.Collections.Generic.List[System.Object]]::new()
-        $all_nsg_flows = [System.Collections.Generic.List[System.Object]]::new()
+		$all_nsg_flows = [System.Collections.Generic.List[System.Object]]::new()
 	}
 	process {
 		$msg = @{
@@ -104,43 +108,43 @@ function Get-MonkeyAZNetworkWatcher {
 		$azure_locations = Get-MonkeyRMObject @params
 		$locations = $azure_locations | Select-Object -ExpandProperty name
 		if (@($network_watcher_locations).Count -gt 0) {
-            if($locations){
-			    #Compare objects
-			    $effective_nw_locations = Compare-Object -ReferenceObject $network_watcher_locations -DifferenceObject $locations -PassThru
-			    if ($effective_nw_locations) {
-                    foreach($loc in $effective_nw_locations){
-                        $nw = [PsCustomObject]@{
-                            location = $loc;
-                            enabled = $false;
-                        }
-                        [void]$networkWatchersArr.Add($nw);
-                    }
-			    }
-			    Else {
-                    Foreach ($loc in $network_watcher_locations){
-                        $nw = [PsCustomObject]@{
-                            location = $loc;
-                            enabled = $true;
-                        }
-                        [void]$networkWatchersArr.Add($nw);
-                    }
-			    }
-            }
+			if ($locations) {
+				#Compare objects
+				$effective_nw_locations = Compare-Object -ReferenceObject $network_watcher_locations -DifferenceObject $locations -PassThru
+				if ($effective_nw_locations) {
+					foreach ($loc in $effective_nw_locations) {
+						$nw = [pscustomobject]@{
+							location = $loc;
+							enabled = $false;
+						}
+						[void]$networkWatchersArr.Add($nw);
+					}
+				}
+				else {
+					foreach ($loc in $network_watcher_locations) {
+						$nw = [pscustomobject]@{
+							location = $loc;
+							enabled = $true;
+						}
+						[void]$networkWatchersArr.Add($nw);
+					}
+				}
+			}
 		}
-        Else{
-            if($locations){
-                Foreach($loc in @($locations)){
-                    $nw = [PsCustomObject]@{
-                        location = $loc;
-                        enabled = $false;
-                    }
-                    [void]$networkWatchersArr.Add($nw);
-                }
-            }
-        }
+		else {
+			if ($locations) {
+				foreach ($loc in @($locations)) {
+					$nw = [pscustomobject]@{
+						location = $loc;
+						enabled = $false;
+					}
+					[void]$networkWatchersArr.Add($nw);
+				}
+			}
+		}
 		#Check if flow logs are enabled
-		if ($network_watchers){
-			foreach ($nw in $network_watchers){
+		if ($network_watchers) {
+			foreach ($nw in $network_watchers) {
 				$region_nws = $network_security_groups | Where-Object { $_.location -eq $nw.location } | Select-Object -ExpandProperty id
 				if ($region_nws) {
 					foreach ($network in $region_nws) {
@@ -173,20 +177,20 @@ function Get-MonkeyAZNetworkWatcher {
 				}
 			}
 		}
-        Else{
-            foreach ($nsg in @($network_security_groups)){
-                $flowLog = [PsCustomObject]@{
-                    targetResourceId = $nsg.Id;
-                    storageId = $null;
-                    enabled = $false;
-                    retentionPolicyEnabled = $null;
-                    retentionPolicyDays = $null;
-                    rawObject = $null;
-                }
-                #Add to array
+		else {
+			foreach ($nsg in @($network_security_groups)) {
+				$flowLog = [pscustomobject]@{
+					targetResourceId = $nsg.Id;
+					storageId = $null;
+					enabled = $false;
+					retentionPolicyEnabled = $null;
+					retentionPolicyDays = $null;
+					rawObject = $null;
+				}
+				#Add to array
 				[void]$all_nsg_flows.Add($flowLog);
-            }
-        }
+			}
+		}
 	}
 	end {
 		if ($networkWatchersArr) {
@@ -230,6 +234,7 @@ function Get-MonkeyAZNetworkWatcher {
 		}
 	}
 }
+
 
 
 

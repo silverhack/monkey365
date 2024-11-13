@@ -20,7 +20,6 @@ $internal_modules = @(
     'core/modules/monkeylogger',
     'core/modules/psmarkdig',
     'core/modules/monkeyhtml',
-    'core/modules/monkeyast',
     'core/modules/monkeyjob',
     'core/modules/monkeyruleset',
     'core/modules/psocsf',
@@ -31,11 +30,14 @@ $internal_modules.ForEach({Import-Module ("{0}{1}{2}" -f $PSScriptRoot,[System.I
 New-Variable -Name ScriptPath -Value $PSScriptRoot -Scope Script -Force
 
 #Get Azure plugins
-$cmds = [System.IO.Directory]::EnumerateFiles(("{0}/core/collector" -f $PSScriptRoot),"*.ps1","AllDirectories")
+$cmds = [System.IO.Directory]::EnumerateFiles(("{0}/core/collector" -f $PSScriptRoot),"*.ps1",[System.IO.SearchOption]::AllDirectories)
+$modules = @(
+    ("{0}/core/modules/monkeyutils" -f $PSScriptRoot)
+)
 $p = @{
     ScriptBlock = {Get-MonkeySupportedService -Azure};
-    ImportModules = ("{0}/core/modules/monkeyast" -f $PSScriptRoot);
     ImportCommands = $cmds;
+    ImportModules = $modules;
     ImportVariables = @{"ScriptPath" = $PSScriptRoot};
 }
 [void](Start-MonkeyJob @p)
@@ -46,8 +48,8 @@ Get-MonkeyJob | Remove-MonkeyJob
 New-Variable -Name azure_plugins -Value $azure_plugins -Scope Script -Force
 #Get Microsoft 365 plugins
 $p = @{
-    ScriptBlock = {Get-MonkeySupportedService -M365};
-    ImportModules = ("{0}/core/modules/monkeyast" -f $PSScriptRoot);
+    ScriptBlock = {Get-MonkeySupportedService -Microsoft365};
+    ImportModules = $modules;
     ImportCommands = $cmds;
     ImportVariables = @{"ScriptPath" = $PSScriptRoot};
 }

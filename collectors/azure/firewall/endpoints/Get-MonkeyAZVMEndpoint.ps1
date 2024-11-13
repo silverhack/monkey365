@@ -57,16 +57,20 @@ function Get-MonkeyAZVMEndpoint {
 				"Firewall";
 				"VirtualMachines"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_classic_endpoints"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$AzureClassicVMConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureClassicVM" } | Select-Object -ExpandProperty resource
@@ -144,6 +148,7 @@ function Get-MonkeyAZVMEndpoint {
 		}
 	}
 }
+
 
 
 

@@ -56,52 +56,56 @@ function Get-MonkeyAZFirewall {
 			Group = @(
 				"Firewall"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_firewall"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
-		$AzureFirewallConfig = $O365Object.internal_config.ResourceManager.Where({$_.Name -eq "azureFirewall"}) | Select-Object -ExpandProperty resource
+		$AzureFirewallConfig = $O365Object.internal_config.ResourceManager.Where({ $_.Name -eq "azureFirewall" }) | Select-Object -ExpandProperty resource
 		#Get firewalls
-		$firewalls = $O365Object.all_resources.Where({ $_.type -eq 'Microsoft.Network/azureFirewalls'});
-        #Set null
-        $all_firewalls = $null
+		$firewalls = $O365Object.all_resources.Where({ $_.type -eq 'Microsoft.Network/azureFirewalls' });
+		#Set null
+		$all_firewalls = $null
 	}
 	process {
-        if($app_gateways.Count -gt 0){
-		    $msg = @{
-			    MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Firewall",$O365Object.current_subscription.displayName);
-			    callStack = (Get-PSCallStack | Select-Object -First 1);
-			    logLevel = 'info';
-			    InformationAction = $O365Object.InformationAction;
-			    Tags = @('AzureFirewallInfo');
-		    }
-		    Write-Information @msg
-            $new_arg = @{
-			    APIVersion = $AzureFirewallConfig.api_version;
-		    }
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzFirewallInfo -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $all_firewalls = $firewalls | Invoke-MonkeyJob @p
-        }
+		if ($app_gateways.Count -gt 0) {
+			$msg = @{
+				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Firewall",$O365Object.current_subscription.displayName);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = 'info';
+				InformationAction = $O365Object.InformationAction;
+				Tags = @('AzureFirewallInfo');
+			}
+			Write-Information @msg
+			$new_arg = @{
+				APIVersion = $AzureFirewallConfig.api_version;
+			}
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzFirewallInfo -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$all_firewalls = $firewalls | Invoke-MonkeyJob @p
+		}
 	}
-	End {
+	end {
 		if ($null -ne $all_firewalls) {
 			$all_firewalls.PSObject.TypeNames.Insert(0,'Monkey365.Azure.firewall')
 			[pscustomobject]$obj = @{

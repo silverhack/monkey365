@@ -12,7 +12,7 @@
 RootModule = 'monkey365.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.92'
+ModuleVersion = '0.93'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -67,7 +67,8 @@ RequiredModules = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
 NestedModules = @(
-    'core/modules/monkeylogger/monkeylogger.psm1'
+    #'core/modules/monkeyutils/monkeyutils.psm1',
+    #'core/modules/monkeylogger/monkeylogger.psm1'
 )
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -83,7 +84,8 @@ FunctionsToExport = @(
     'Convert-MarkDownToPlainText',
     'Copy-PsObject',
     'ConvertTo-SecureScriptBlock',
-    'Update-PsObject'
+    'Update-PsObject',
+    'Get-AstFunction'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -130,7 +132,7 @@ PrivateData = @{
         # A URL to an icon representing this module.
         IconUri = 'https://user-images.githubusercontent.com/5271640/181045413-1d17333c-0533-404a-91be-2070ccc6ee29.png'
 
-        Prerelease = 'alpha'
+        Prerelease = 'beta'
 
         # ReleaseNotes of this module
         ReleaseNotes = '*'

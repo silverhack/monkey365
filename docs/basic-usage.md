@@ -21,7 +21,7 @@ This example retrieves information from Azure AD and SharePoint Online and then 
 ``` powershell
 $param = @{
     Instance = 'Microsoft365';
-    Analysis = 'SharePointOnline';
+    Collect = 'SharePointOnline';
     PromptBehavior = 'SelectAccount';
     IncludeEntraID = $true;
     ExportTo = 'PRINT';
@@ -33,7 +33,7 @@ This example retrieves information from specific Azure subscription and Tenant a
 ``` powershell
 $param = @{
     Instance = 'Azure';
-    Analysis = 'All';
+    Collect = 'All';
     PromptBehavior = 'SelectAccount';
     Subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
@@ -48,7 +48,7 @@ $param = @{
     ClientId = '00000000-0000-0000-0000-000000000000';
     ClientSecret = ("MySuperClientSecret" | ConvertTo-SecureString -AsPlainText -Force)
     Instance = 'Azure';
-    Analysis = 'All';
+    Collect = 'All';
     Subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
     ExportTo = @("CLIXML","CSV","JSON","HTML");
@@ -63,7 +63,7 @@ $param = @{
     certificate = 'C:\monkey365\testapp.pfx';
     CertFilePassword = ("MySuperCertSecret" | ConvertTo-SecureString -AsPlainText -Force);
     Instance = 'Microsoft365';
-    Analysis = 'SharePointOnline';
+    Collect = 'SharePointOnline';
     Subscriptions = '00000000-0000-0000-0000-000000000000';
     TenantID = '00000000-0000-0000-0000-000000000000';
     ExportTo = @("CLIXML","CSV","JSON","HTML");

@@ -56,20 +56,25 @@ function Get-MonkeyAzVMScaleSet {
 			Group = @(
 				"VirtualMachines"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_vm_scaleset"
 			);
 			dependsOn = @(
+
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$AzureVMScaleConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureVMScaleSet" } | Select-Object -ExpandProperty resource
 		#Get vm instances
-		$vms = $O365Object.all_resources.Where({$_.id -like "*Microsoft.Compute/virtualMachineScaleSets*"})
+		$vms = $O365Object.all_resources.Where({ $_.Id -like "*Microsoft.Compute/virtualMachineScaleSets*" })
 		if (-not $vms) { continue }
 		$AllVMs = $null
 	}
@@ -83,21 +88,21 @@ function Get-MonkeyAzVMScaleSet {
 		}
 		Write-Information @msg
 		if ($vms) {
-            $new_arg = @{
+			$new_arg = @{
 				APIVersion = $AzureVMScaleConfig.api_version;
 			}
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzVMScaleSetInfo -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $AllVMs = $vms | Invoke-MonkeyJob @p
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzVMScaleSetInfo -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$AllVMs = $vms | Invoke-MonkeyJob @p
 		}
 	}
 	end {
@@ -122,6 +127,7 @@ function Get-MonkeyAzVMScaleSet {
 		}
 	}
 }
+
 
 
 

@@ -4,7 +4,7 @@ author: Juan Garrido
 
 This section covers the supported options to help customize and automate scans for Azure environments. General options include:
 
- ```-Analysis```
+ ```-Collect```
 
 Select the Azure resources used to gather data. Valid values are:
 
@@ -20,7 +20,7 @@ Select the Azure resources used to gather data. Valid values are:
 | RoleAssignment | Retrieves information from Azure RBAC      |
 | All | Retrieves all metadata from Azure subscription      |
 
-Currently, you can use tab completion in Monkey365 to complete `Analysis`, `Instance` and `PromptBehavior` names. You can autocomplete by pressing the `[TAB]` and the option will fill in. If more than one option is available, you can press `[TAB]` twice to display the next possible choice.
+Currently, you can use tab completion in Monkey365 to complete `Collect`, `Instance` and `PromptBehavior` names. You can autocomplete by pressing the `[TAB]` and the option will fill in. If more than one option is available, you can press `[TAB]` twice to display the next possible choice.
 
 ## Subscriptions
 
@@ -34,7 +34,7 @@ The ```-Subscriptions``` option can be used to scan a number of subscriptions in
 ``` powershell
 $param = @{
     Instance = 'Azure';
-    Analysis = 'All';
+    Collect = 'All';
     PromptBehavior = 'SelectAccount';
     subscriptions = '00000000-0000-0000-0000-000000000000 11111111-1111-1111-1111-111111111111';
     TenantID = '00000000-0000-0000-0000-000000000000';
@@ -48,7 +48,7 @@ The ```-AllSubscriptions``` option can be used to scan all the subscriptions.
 ``` powershell
 $param = @{
     Instance = 'Azure';
-    Analysis = 'All';
+    Collect = 'All';
     PromptBehavior = 'SelectAccount';
     AllSubscriptions = $true;
     TenantID = '00000000-0000-0000-0000-000000000000';
@@ -66,7 +66,7 @@ The ```-ExcludedResources``` option can be used to exclude unwanted azure resour
 ``` powershell
 $param = @{
     Instance = 'Azure';
-    Analysis = 'All';
+    Collect = 'All';
     PromptBehavior = 'SelectAccount';
     AllSubscriptions = $true;
     TenantID = '00000000-0000-0000-0000-000000000000';

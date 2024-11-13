@@ -56,16 +56,20 @@ function Get-MonkeyAzPostgreSQLInfo {
 			Group = @(
 				"Databases"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_postgresql_servers"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 		#Get Config
 		$configForPostgreSQL = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureForPostgreSQL" } | Select-Object -ExpandProperty resource
@@ -88,53 +92,53 @@ function Get-MonkeyAzPostgreSQLInfo {
 		}
 		Write-Information @msg
 		#Check if single servers
-        if ($DatabaseServers.Count -gt 0) {
-            $new_arg = @{
+		if ($DatabaseServers.Count -gt 0) {
+			$new_arg = @{
 				APIVersion = $configForPostgreSQL.api_version;
 			}
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzPostgreSQlServer -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $psqlServers = $DatabaseServers | Invoke-MonkeyJob @p
-            if($psqlServers){
-                foreach($psql in $psqlServers){
-                    [void]$all_servers.Add($psql)
-                }
-            }
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzPostgreSQlServer -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$psqlServers = $DatabaseServers | Invoke-MonkeyJob @p
+			if ($psqlServers) {
+				foreach ($psql in $psqlServers) {
+					[void]$all_servers.Add($psql)
+				}
+			}
 		}
 		#Check if flexible servers
-        if ($FlexibleServers.Count -gt 0) {
-            $new_arg = @{
+		if ($FlexibleServers.Count -gt 0) {
+			$new_arg = @{
 				APIVersion = $flexibleConfigForPostgreSQL.api_version;
 			}
-            $p = @{
-			    ScriptBlock = { Get-MonkeyAzPostgreSQlServer -InputObject $_ };
-                Arguments = $new_arg;
-			    Runspacepool = $O365Object.monkey_runspacePool;
-			    ReuseRunspacePool = $true;
-			    Debug = $O365Object.VerboseOptions.Debug;
-			    Verbose = $O365Object.VerboseOptions.Verbose;
-			    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-			    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-			    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-		    }
-            $flexiblePsql = $FlexibleServers | Invoke-MonkeyJob @p
-            if($flexiblePsql){
-                foreach($psql in $flexiblePsql){
-                    [void]$all_servers.Add($psql)
-                }
-            }
+			$p = @{
+				ScriptBlock = { Get-MonkeyAzPostgreSQlServer -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$flexiblePsql = $FlexibleServers | Invoke-MonkeyJob @p
+			if ($flexiblePsql) {
+				foreach ($psql in $flexiblePsql) {
+					[void]$all_servers.Add($psql)
+				}
+			}
 		}
 	}
-	End {
+	end {
 		if ($all_servers.Count -gt 0) {
 			$all_servers.PSObject.TypeNames.Insert(0,'Monkey365.Azure.AzurePostgreSQLServer')
 			[pscustomobject]$obj = @{
@@ -156,6 +160,7 @@ function Get-MonkeyAzPostgreSQLInfo {
 		}
 	}
 }
+
 
 
 

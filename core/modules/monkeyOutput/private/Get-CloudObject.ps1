@@ -74,7 +74,7 @@ Function Get-CloudObject{
                     $cloudObject.Organization.Name = $PSBoundParameters['TenantName']
                     $cloudObject.Organization.Id = $PSBoundParameters['TenantId']
                     $cloudObject.Provider = $Provider
-                    $cloudObject.Region = 'global'                    
+                    $cloudObject.Region = 'global'
                 }
                 #return object
                 return $cloudObject

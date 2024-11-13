@@ -57,16 +57,20 @@ function Get-MonkeyCopilotForAzurePolicy {
 				"Subscription";
 				"General"
 			);
-			Tags = @{
-				"enabled" = $true
-			};
-			Docs = "https://silverhack.github.io/monkey365/";
+			Tags = @(
+
+			);
+			references = @(
+				"https://silverhack.github.io/monkey365/"
+			);
 			ruleSuffixes = @(
 				"az_copilot_for_azure"
 			);
 			dependsOn = @(
 
 			);
+			enabled = $true;
+			supportClientCredential = $true
 		}
 	}
 	process {
@@ -81,10 +85,10 @@ function Get-MonkeyCopilotForAzurePolicy {
 		#Get Copilot For Azure
 		$p = @{
 			Id = 'providers/Microsoft.PortalServices/copilotSettings/default';
-            ApiVersion = '2024-04-01-preview';
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
-            InformationAction = $O365Object.InformationAction;
+			APIVersion = '2024-04-01-preview';
+			Verbose = $O365Object.Verbose;
+			Debug = $O365Object.Debug;
+			InformationAction = $O365Object.InformationAction;
 		}
 		$copilotInfo = Get-MonkeyAzObjectById @p
 	}
@@ -110,6 +114,7 @@ function Get-MonkeyCopilotForAzurePolicy {
 		}
 	}
 }
+
 
 
 
