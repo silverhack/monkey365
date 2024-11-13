@@ -1456,9 +1456,11 @@
 <h2 id="overrides">Overrides</h2>
 <p>To customize the behavior of an specific rule, you can override the ruleset at deployment. When you override a rule you specify changes to be modified on top of the default ruleset. These changes will take precedence over the rule’s default behavior.</p>
 <h3 id="working-with-overrides">Working with overrides</h3>
-<p>You can override a rule at two levels:</p>
+<p>You can override a rule at various levels:</p>
 <ul>
 <li>args</li>
+<li>level</li>
+<li>enabled/disabled rule</li>
 <li>compliance</li>
 </ul>
 <p>For example overrides provide a way to replace the compliance value in your rule with another version.</p>
@@ -1469,7 +1471,7 @@
 <p>After you have finished creating the ruleset file, you will need to use the <code>RuleSet</code> parameter to load the ruleset, as shown below:</p>
 <p><div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
     <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Microsoft365&#39;</span><span class="p">;</span>
-    <span class="n">Analysis</span> <span class="p">=</span> <span class="s1">&#39;ExchangeOnline&#39;</span><span class="p">;</span>
+    <span class="n">Collect</span> <span class="p">=</span> <span class="s1">&#39;ExchangeOnline&#39;</span><span class="p">;</span>
     <span class="n">PromptBehavior</span> <span class="p">=</span> <span class="s1">&#39;SelectAccount&#39;</span><span class="p">;</span>
     <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
     <span class="n">RuleSet</span> <span class="p">=</span> <span class="n">C</span><span class="p">:\</span><span class="n">temp</span><span class="p">\</span><span class="n">myruleset</span><span class="p">.</span><span class="n">json</span><span class="p">;</span>

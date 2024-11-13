@@ -1343,7 +1343,7 @@
   <h1>Azure Options</h1>
 
 <p>This section covers the supported options to help customize and automate scans for Azure environments. General options include:</p>
-<p><code>-Analysis</code></p>
+<p><code>-Collect</code></p>
 <p>Select the Azure resources used to gather data. Valid values are:</p>
 <table>
 <thead>
@@ -1391,14 +1391,14 @@
 </tr>
 </tbody>
 </table>
-<p>Currently, you can use tab completion in Monkey365 to complete <code>Analysis</code>, <code>Instance</code> and <code>PromptBehavior</code> names. You can autocomplete by pressing the <code>[TAB]</code> and the option will fill in. If more than one option is available, you can press <code>[TAB]</code> twice to display the next possible choice.</p>
+<p>Currently, you can use tab completion in Monkey365 to complete <code>Collect</code>, <code>Instance</code> and <code>PromptBehavior</code> names. You can autocomplete by pressing the <code>[TAB]</code> and the option will fill in. If more than one option is available, you can press <code>[TAB]</code> twice to display the next possible choice.</p>
 <h2 id="subscriptions">Subscriptions</h2>
 <p>By default, Monkey365 will show the subscriptions to which the provided identity have access to. A user can select all the subscriptions to which the provided identity have access.</p>
 <p><img alt="" src="../../assets/images/subscription.png" /></p>
 <p>The <code>-Subscriptions</code> option can be used to scan a number of subscriptions in one execution.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
     <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Azure&#39;</span><span class="p">;</span>
-    <span class="n">Analysis</span> <span class="p">=</span> <span class="s1">&#39;All&#39;</span><span class="p">;</span>
+    <span class="n">Collect</span> <span class="p">=</span> <span class="s1">&#39;All&#39;</span><span class="p">;</span>
     <span class="n">PromptBehavior</span> <span class="p">=</span> <span class="s1">&#39;SelectAccount&#39;</span><span class="p">;</span>
     <span class="n">subscriptions</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000 11111111-1111-1111-1111-111111111111&#39;</span><span class="p">;</span>
     <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
@@ -1409,7 +1409,7 @@
 <p>The <code>-AllSubscriptions</code> option can be used to scan all the subscriptions.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
     <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Azure&#39;</span><span class="p">;</span>
-    <span class="n">Analysis</span> <span class="p">=</span> <span class="s1">&#39;All&#39;</span><span class="p">;</span>
+    <span class="n">Collect</span> <span class="p">=</span> <span class="s1">&#39;All&#39;</span><span class="p">;</span>
     <span class="n">PromptBehavior</span> <span class="p">=</span> <span class="s1">&#39;SelectAccount&#39;</span><span class="p">;</span>
     <span class="n">AllSubscriptions</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">;</span>
     <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
@@ -1422,7 +1422,7 @@
 <p>The <code>-ExcludedResources</code> option can be used to exclude unwanted azure resources from being scanned.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
     <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Azure&#39;</span><span class="p">;</span>
-    <span class="n">Analysis</span> <span class="p">=</span> <span class="s1">&#39;All&#39;</span><span class="p">;</span>
+    <span class="n">Collect</span> <span class="p">=</span> <span class="s1">&#39;All&#39;</span><span class="p">;</span>
     <span class="n">PromptBehavior</span> <span class="p">=</span> <span class="s1">&#39;SelectAccount&#39;</span><span class="p">;</span>
     <span class="n">AllSubscriptions</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">;</span>
     <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
