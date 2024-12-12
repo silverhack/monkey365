@@ -71,7 +71,7 @@ Function New-AzureOutputPsObject {
                 resourceName = $null;
                 resourceGroup = $null;
                 resourceTags = $null;
-                compliance = $InputObject.compliance | Get-MonkeyCompliance;
+                compliance = $InputObject.compliance | Get-ObjectCompliance;
                 notes = (@($InputObject.notes) -join ',');
                 monkey365Version = $null;
             }
