@@ -12,7 +12,7 @@
 RootModule = 'monkey365.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.93'
+ModuleVersion = '0.94'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -85,7 +85,8 @@ FunctionsToExport = @(
     'Copy-PsObject',
     'ConvertTo-SecureScriptBlock',
     'Update-PsObject',
-    'Get-AstFunction'
+    'Get-AstFunction',
+    'Get-ObjectPropertyByPath'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -117,10 +118,12 @@ PrivateData = @{
             "Microsoft 365 security",
             "Azure",
             "AzureAD",
+            "Entra ID security assessment",
             "Microsoft Entra",
             "CSPM",
             "Office 365",
-            "Office 365 Security"
+            "Office 365 Security",
+            "CIS Benchmark"
         )
 
         # A URL to the license for this module.
@@ -151,4 +154,5 @@ HelpInfoURI = 'https://silverhack.github.io/monkey365/'
 # DefaultCommandPrefix = ''
 
 }
+
 

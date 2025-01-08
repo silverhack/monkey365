@@ -1,4 +1,4 @@
-﻿# PSScriptAnalyzer - ignore test file
+# PSScriptAnalyzer - ignore test file
 Import-Module Pester
 Set-StrictMode -Version Latest
 

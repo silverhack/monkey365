@@ -65,14 +65,14 @@ The following example will retrieve data and metadata from Azure AD and SharePoi
 
 
 ``` powershell
-$param = @{
+$options = @{
     Instance = 'Microsoft365';
-    Analysis = 'SharePointOnline';
+    Collect = 'ExchangeOnline';
     PromptBehavior = 'SelectAccount';
     IncludeEntraID = $true;
-    ExportTo = 'PRINT';
+    ExportTo = 'CSV';
 }
-$assets = Invoke-Monkey365 @param
+Invoke-Monkey365 @options
 ```
 
 # Regulatory compliance checks
@@ -93,9 +93,7 @@ By default, the HTML report shows you the CIS (Center for Internet Security) Ben
 
 The following standards are supported by Monkey365:
 
-* CIS Microsoft Azure Foundations Benchmark v2.0.0
 * CIS Microsoft Azure Foundations Benchmark v3.0.0
-* CIS Microsoft 365 Foundations Benchmark v2.0.0
 * CIS Microsoft 365 Foundations Benchmark v3.0.0
 
 More standards will be added in next releases (NIST, HIPAA, GDPR, PCI-DSS, etc..) as they are available.
