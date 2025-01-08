@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -80,6 +80,7 @@ Function Get-HtmlIcon{
             'Microsoft Teams'='assets/inc-officeicons/64x64/Microsoft_Office_Teams.svg'
             'Microsoft OneDrive'='assets/inc-officeicons/64x64/Microsoft_Office_OneDrive.svg'
             'Security and Compliance'='assets/inc-officeicons/64x64/microsoft-365-security-&-compliance.svg'
+            'Purview'='assets/inc-officeicons/64x64/microsoft-365-security-&-compliance.svg'
             'Diagnostic Settings'='assets/inc-azicons/management + governance/00008-icon-service-Diagnostics-Settings.svg'
             'Public Ip Addresses'='assets/inc-azicons/networking/10069-icon-service-Public-IP-Addresses.svg'
         }
@@ -95,3 +96,4 @@ Function Get-HtmlIcon{
         return $icon
     }
 }
+

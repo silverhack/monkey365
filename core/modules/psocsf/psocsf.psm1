@@ -1,4 +1,4 @@
-﻿Set-StrictMode -Version Latest
+Set-StrictMode -Version Latest
 
 $monkeyPath = ("{0}/public" -f $PSScriptRoot)
 

@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -52,12 +52,15 @@ Function Select-MonkeyCollector{
                     $services = $PSBoundParameters['Service']
                 }
             }
+            #Set params
             $p = @{
-                Provider = $PSBoundParameters['Provider'];
                 Service = $services;
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
+            }
+            IF($PSBoundParameters.ContainsKey('Provider') -and $PSBoundParameters['Provider']){
+                [void]$p.Add('Provider',$PSBoundParameters['Provider']);
             }
             $allCollectors = Get-MetadataFromCollector @p
             #Remove disabled plugins
@@ -112,9 +115,9 @@ Function Select-MonkeyCollector{
         #Check if EntraID collectors should be added
         If($O365Object.IncludeEntraID -eq $true -and $O365Object.onlineServices.EntraID -eq $true){
             $entraIdCollectors = [System.Collections.Generic.List[System.Object]]::new()
-            $graphCollectors = Get-MetadataFromCollector -Provider EntraID -Service graphlegacy
-            $msGraphCollectors = Get-MetadataFromCollector -Provider EntraID -Service MSGraph
-            $apiPortalCollectors = Get-MetadataFromCollector -Provider EntraID -Service EntraIDPortal
+            $graphCollectors = Get-MetadataFromCollector -Provider EntraID -ApiType graphlegacy
+            $msGraphCollectors = Get-MetadataFromCollector -Provider EntraID -ApiType MSGraph
+            $apiPortalCollectors = Get-MetadataFromCollector -Provider EntraID -ApiType EntraIDPortal
             If($O365Object.isConfidentialApp -eq $true){
                 #Only MSGraph is supported for confidential apps
                 If ($msGraphCollectors -is [System.Collections.IEnumerable] -and $msGraphCollectors -isnot [string]){

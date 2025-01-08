@@ -1,4 +1,4 @@
-﻿ConvertFrom-StringData @'
+ConvertFrom-StringData @'
     UnableToConvertToScriptBlock     = Unable to convert {0} to a valid ScriptBlock
     InvalidDirectoryPathError        = Path {0} is not a valid directory path
     DuplicateFileFound               = Duplicate file {0} found
@@ -11,4 +11,6 @@
     JsonFilesNotFound                = No valid Json files were found on {0}
     InvalidJsonErrorMessage          = Invalid Json detected on {0}
     UnableToExportObject             = Unable to export {0}
+    InvalidPsObject                  = Unable to query object. Invalid PsObject
+    MethodNotFound                   = Unable to query object. Method GetPropertyByPath not found
 '@

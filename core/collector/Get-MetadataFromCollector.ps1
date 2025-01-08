@@ -41,11 +41,15 @@ Function Get-MetadataFromCollector{
         [String]$Provider,
 
         [Parameter(Mandatory=$false, HelpMessage="Cloud resource")]
-        [String[]]$Service
+        [String[]]$Service,
+
+        [Parameter(Mandatory=$false, HelpMessage="Api Type")]
+        [String[]]$ApiType
     )
     Begin{
         $AstCollectors = $null;
         $collectors = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+        $selectedCollectors = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
         If($null -ne (Get-Variable -Name O365Object -ErrorAction Ignore)){
             $localPath = $O365Object.Localpath;
         }
@@ -62,24 +66,69 @@ Function Get-MetadataFromCollector{
     }
     Process{
         If([System.IO.Directory]::Exists($_path)){
-            $allDirs = [System.Collections.Generic.List[System.String]]::new()
-            If($PSBoundParameters.ContainsKey('Service') -and $PSBoundParameters['Service']){
-                $directories = @($_path).GetEnumerator()| ForEach-Object {Get-MonkeyDirectory -Path $_ -Pattern $Service -Recurse -First}
-                Foreach($dir in @($directories)){
-                    [void]$allDirs.Add($dir);
+            Try{
+                $allCollectors = [System.IO.Directory]::EnumerateFiles($_path,"*.ps1",[System.IO.SearchOption]::AllDirectories).Where({$_.EndsWith('.ps1')})
+                $astCollectors = Get-AstFunction $allCollectors
+                If($null -ne $astCollectors){
+                    Foreach($collector in @($astCollectors)){
+                        #Get internal Var
+                        $monkey_var = $collector.Body.BeginBlock.Statements | Where-Object {($null -ne $_.Psobject.Properties.Item('Left')) -and $_.Left.VariablePath.UserPath -eq 'monkey_metadata'}
+                        if($monkey_var -and [bool]($monkey_var.Right.Expression.StaticType.ImplementedInterfaces.Where({$_.FullName -eq "System.Collections.IDictionary"}))){
+                            Try{
+                                #Get Safe value
+                                $new_dict = [ordered]@{}
+                                foreach ($entry in $monkey_var.Right.Expression.KeyValuePairs.GetEnumerator()){
+                                    $new_dict.Add($entry.Item1, $entry.Item2.SafeGetValue())
+                                }
+                                #Add file properties
+                                $new_dict.Add('File',[System.IO.fileinfo]::new($collector.Extent.File))
+                                #Create PsObject
+                                $obj = New-Object -TypeName PSCustomObject -Property $new_dict
+                                #Add to array
+                                [void]$collectors.Add($obj)
+                            }
+                            Catch{
+                                Write-Error $_
+                            }
+                        }
+                    }
+                }
+                #Filter data
+                If($collectors.Count -gt 0){
+                    If($PSBoundParameters.ContainsKey('Service') -and $PSBoundParameters['Service']){
+                        Foreach($srv in $PSBoundParameters['Service'].GetEnumerator()){
+                            $_collectors = $collectors.Where({$srv -in $_.Group})
+                            foreach($collector in @($_collectors)){
+                                If($selectedCollectors.Where({$_.Id -eq $collector.Id}).Count -eq 0){
+                                    [void]$selectedCollectors.Add($collector);
+                                }
+                            }
+                        }
+                    }
+                    ElseIf($PSBoundParameters.ContainsKey('ApiType') -and $PSBoundParameters['ApiType']){
+                        Foreach($_api in $PSBoundParameters['ApiType'].GetEnumerator()){
+                            $_collectors = $collectors.Where({$_.ApiType.ToLower() -eq $_api.ToLower()})
+                            foreach($collector in @($_collectors)){
+                                If($selectedCollectors.Where({$_.Id -eq $collector.Id}).Count -eq 0){
+                                    [void]$selectedCollectors.Add($collector);
+                                }
+                            }
+                        }
+                    }
+                    Else{
+                        Foreach($collector in $collectors){
+                            [void]$selectedCollectors.Add($collector);
+                        }
+                    }
+                    #return collectors
+                    $selectedCollectors
+                }
+                Else{
+                    Write-Warning "Collectors were not found"
                 }
             }
-            Else{
-                [void]$allDirs.Add($_path);
-            }
-            If($allDirs.Count -gt 0){
-                Try{
-                    $allCollectors = $allDirs.GetEnumerator() | ForEach-Object {[System.IO.Directory]::EnumerateFiles($_,"*.ps1",[System.IO.SearchOption]::AllDirectories)}
-                    $AstCollectors = Get-AstFunction $allCollectors
-                }
-                Catch{
-                    Write-Warning $_.Exception.Message
-                }
+            Catch{
+                Write-Warning $_.Exception.Message
             }
         }
         Else{
@@ -87,31 +136,6 @@ Function Get-MetadataFromCollector{
         }
     }
     End{
-        If($null -ne $AstCollectors){
-            Foreach($collector in $AstCollectors){
-                #Get internal Var
-                $monkey_var = $collector.Body.BeginBlock.Statements | Where-Object {($null -ne $_.Psobject.Properties.Item('Left')) -and $_.Left.VariablePath.UserPath -eq 'monkey_metadata'}
-                if($monkey_var -and [bool]($monkey_var.Right.Expression.StaticType.ImplementedInterfaces.Where({$_.FullName -eq "System.Collections.IDictionary"}))){
-                    Try{
-                        #Get Safe value
-                        $new_dict = [ordered]@{}
-                        foreach ($entry in $monkey_var.Right.Expression.KeyValuePairs.GetEnumerator()){
-                            $new_dict.Add($entry.Item1, $entry.Item2.SafeGetValue())
-                        }
-                        #Add file properties
-                        $new_dict.Add('File',[System.IO.fileinfo]::new($collector.Extent.File))
-                        #Create PsObject
-                        $obj = New-Object -TypeName PSCustomObject -Property $new_dict
-                        #Add to array
-                        [void]$collectors.Add($obj)
-                    }
-                    Catch{
-                        Write-Error $_
-                    }
-                }
-            }
-        }
-        #return collectors
-        $collectors
+        #Nothing to do here
     }
 }

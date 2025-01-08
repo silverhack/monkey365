@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -128,7 +128,7 @@ Function New-InitialSessionState{
                 foreach($module in $ImportModules){
                     $moduleToImport = Resolve-Path -Path $module -ErrorAction Ignore
                     if($null -ne $moduleToImport){
-                        Write-Verbose ("Importing module: {0}" -f $module)
+                        Write-Debug ("Importing module: {0}" -f $module)
                         $moduleToImport = $moduleToImport.Path.TrimEnd('\')
                         If (Test-Path -Path $moduleToImport -PathType Container){
                             #folder containing one or more scripts/modules
@@ -142,7 +142,7 @@ Function New-InitialSessionState{
                     else{
                         #Check if file or module exists
                         if (Test-Path -Path $module){
-                            Write-Verbose ("Importing module: {0}" -f $module)
+                            Write-Debug ("Importing module: {0}" -f $module)
                             [void]$sessionstate.ImportPSModule($module);
                         }
                         else{
@@ -156,7 +156,7 @@ Function New-InitialSessionState{
                 if($null -ne $CommandsToImport){
                     foreach($fnc in $CommandsToImport){
                         if($fnc -is [System.Management.Automation.Language.FunctionDefinitionAst]){
-                            Write-Verbose ("Importing command: {0}" -f $fnc.Name)
+                            Write-Debug ("Importing command: {0}" -f $fnc.Name)
                             $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $fnc.Name, $fnc.Body.GetScriptBlock()
                             #Create a SessionStateFunction
                             $sessionstate.Commands.Add($SessionStateFunction)
@@ -168,7 +168,7 @@ Function New-InitialSessionState{
                 foreach($fnc in $ImportCommandsAst){
                     if($fnc -is [System.Management.Automation.Language.StatementAst]){
                         $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $fnc.Name, $fnc.Body.GetScriptBlock()
-                        Write-Verbose ("Importing AST command: {0}" -f $fnc.Name)
+                        Write-Debug ("Importing AST command: {0}" -f $fnc.Name)
                         #Create a SessionStateFunction
                         $sessionstate.Commands.Add($SessionStateFunction)
                     }

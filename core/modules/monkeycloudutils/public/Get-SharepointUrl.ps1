@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ Function Get-SharepointUrl{
         [ValidateSet("AzurePublic","AzureGermany","AzureChina","AzureUSGovernment")]
         [String]$Environment = "AzurePublic"
     )
-    try{
+    Try{
         $sharePointUrl = $null
         switch ($Environment) {
             "AzurePublic"
@@ -65,7 +65,8 @@ Function Get-SharepointUrl{
         }
         return $sharePointUrl
     }
-    catch{
+    Catch{
         Write-Debug $_
     }
 }
+

@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ Function Get-PublicTenantInformation{
                         NameSpaceType = $metadata.NameSpaceType;
                         FederationBrandName = $metadata.FederationBrandName;
                         CloudInstanceName = $metadata.CloudInstanceName;
-                        TenantID = $domain_metadata.token_endpoint.Split(‘/’)[3]
+                        TenantID = $domain_metadata.token_endpoint.Split('/')[3]
                     }
                 }
             }
@@ -92,7 +92,7 @@ Function Get-PublicTenantInformation{
                         CloudInstanceName = if($fake_metadata.psobject.properties.Item('CloudInstanceName')){$fake_metadata.CloudInstanceName}else{$null};
                         TenantRegionScope = if($metadata.psobject.properties.Item('tenant_region_scope')){$metadata.tenant_region_scope}else{$null};
                         TenantRegionSubScope = if($metadata.psobject.properties.Item('tenant_region_sub_scope')){$metadata.tenant_region_sub_scope}else{$null};
-                        TenantID = $metadata.token_endpoint.Split(‘/’)[3]
+                        TenantID = $metadata.token_endpoint.Split('/')[3]
                     }
                 }
             }
@@ -105,4 +105,5 @@ Function Get-PublicTenantInformation{
         Write-Information "Unable to get information"
     }
 }
+
 

@@ -1,4 +1,4 @@
-﻿Function Remove-TabAndNewLine {
+Function Remove-TabAndNewLine {
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [OutputType([System.String])]

@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,7 +63,10 @@ Function New-MonkeyFindingObject {
             }
             #Add metadata
             $Metadata = $InputObject | Get-ObjectFromDataset -Metadata
-            $InputObject | Add-Member -Type NoteProperty -name metadata -value $Metadata -Forc
+            If($null -eq $Metadata){
+                $Metadata = New-EmptyMetadataObject
+            }
+            $InputObject | Add-Member -Type NoteProperty -name metadata -value $Metadata -Force
             $InputObject | Add-Member -Type NoteProperty -name affectedResources -value $AffectedObjects -Force
             $InputObject | Add-Member -Type NoteProperty -name resources -value $Resources -Force
             #Format html and text output if exists
@@ -96,11 +99,44 @@ Function New-MonkeyFindingObject {
                     Write-Warning -Message ($Script:messages.UnableToFormatErrorMessage -f "text")
                     $InputObject.output.text | Add-Member -Type NoteProperty -name out -value $null -Force
                 }
+                #Format extended data if exists
+                Try{
+                    $extendedData = [System.Collections.Generic.List[System.Object]]::new();
+                    [int]$intMinValue = [int32]::MinValue;
+                    [bool]$limit = [int]::TryParse($InputObject.output.html.actions.objectData.limit, [ref]$intMinValue);
+                    $expressions = $InputObject.output.html.actions.objectData.properties;
+                    $expandObject = $InputObject.output.html.actions.objectData.expandObject;
+                    $p = @{
+                        Expressions = $expressions;
+                        ExpandObject = $expandObject;
+                    }
+                    If($limit){
+                        [void]$p.Add('Limit',$InputObject.output.html.actions.objectData.limit)
+                    }
+                    $dataOut = $PSBoundParameters['AffectedObjects'] | Format-DataFromExpression @p
+                    Foreach($obj in @($dataOut)){
+                        $id = ("MonkeyRawObject_{0}" -f [System.Guid]::NewGuid().Guid.Replace('-','').ToString())
+                        $newObj = [psobject]@{
+                            rawData = $obj;
+                            format = "json";
+                            id = $id;
+                        }
+                        #Add to array
+                        [void]$extendedData.Add($newObj);
+                    }
+                    #Append psObject
+                    $InputObject.output.html | Add-Member -type NoteProperty -name extendedData -value $extendedData -Force
+                }
+                Catch{
+                    Write-Warning -Message ($Script:messages.UnableToFormatErrorMessage -f "extended data")
+                    $InputObject.output.html | Add-Member -Type NoteProperty -name extendedData -value $null -Force
+                }
             }
             Else{
                 Set-StrictMode -Off
                 $InputObject.output.html | Add-Member -Type NoteProperty -name out -value $null -Force
                 $InputObject.output.text | Add-Member -Type NoteProperty -name out -value $null -Force
+                $InputObject.output.html | Add-Member -Type NoteProperty -name extendedData -value $null -Force
             }
             #Add timestamp
             if($PSBoundParameters.ContainsKey('UnixTimestamp') -and $PSBoundParameters['UnixTimestamp'].IsPresent){

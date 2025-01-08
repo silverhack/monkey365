@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -74,6 +74,7 @@ Function Initialize-HtmlData{
                     $affectedResources = $null;
                 }
                 #Check if modal
+                <#
                 If($showModal -and $null -ne $affectedResources){
                     $p = @{
                         ExpandObject = $expandObject;
@@ -92,8 +93,9 @@ Function Initialize-HtmlData{
                         [void]$extendedData.Add($new_obj);
                     }
                 }
+                #>
                 #Append psObject
-                $InputObject.output.html | Add-Member -type NoteProperty -name extendedData -value $extendedData -Force
+                #$InputObject.output.html | Add-Member -type NoteProperty -name extendedData -value $extendedData -Force
                 #Format out
                 $InputObject.output.html.out = $InputObject.output.html.out | Format-PsObject
                 ## Return the object but don't enumerate it

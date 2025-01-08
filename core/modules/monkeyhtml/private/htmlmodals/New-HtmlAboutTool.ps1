@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,8 +44,8 @@ Function New-HtmlAboutTool{
             [ordered]@{
                 class = "social-icon text-xs-center"
                 target = "_blank"
-                href = "https://twitter.com/tr1ana"
-                i_object = "bi bi-twitter"
+                href = "https://x.com/tr1ana"
+                i_object = "bi bi-twitter-x"
             },
             [ordered]@{
                 class = "social-icon text-xs-center"
@@ -56,9 +56,9 @@ Function New-HtmlAboutTool{
         )
         $paragraphs = @(
             'Monkey365 is an open-source security tool designed to allow detection of security flaws not only in Azure accounts, but also in Microsoft 365.',
-            'It follows guidelines of the CIS Microsoft Azure Benchmark and CIS Microsoft 365 Benchmark. Additionally, the tool has additional checks including related to GDPR, HIPAA, PCI-DSS, and others.',
+            'It follows guidelines of the CIS Microsoft Azure Benchmark and CIS Microsoft 365 Benchmark.',
             'These modules are designed to return a series of potential security-related misconfigurations.',
-            'For more information about Monkey365, please check out our GitHub.'
+            'For more information about Monkey365, please check out our <a class="modal-link" href="https://github.com/silverhack/monkey365" target="_blank">GitHub</a>.'
         )
         #Tool image
         $img_src = 'assets/inc-monkey/logo/MonkeyLogo.png'
@@ -158,3 +158,4 @@ Function New-HtmlAboutTool{
         return $modal_tool
     }
 }
+

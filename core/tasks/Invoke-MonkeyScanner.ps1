@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -118,115 +118,127 @@ Function Invoke-MonkeyScanner{
         }
     }
     End{
-        #Set runspaces array
-        $all_runspaces = [System.Collections.Generic.List[System.Management.Automation.Runspaces.RunspacePool]]::new();
-        #Launch scans
-        try{
-            #Set nested runspace
-            $myscan = $all_scans | Select-Object -First 1
-            #Get all libs
-            $libs = $all_scans.libCommands | Select-Object -Unique
-            if($null -ne $myscan){
-                $nestedParam = @{
-                    ImportVariables = $myscan.vars;
-                    ImportModules = $myscan.modules;
-                    ImportCommands = $libs;
-                    ApartmentState = $myscan.apartmentState;
-                    Throttle = $myscan.threads;
-                    StartUpScripts = $myscan.startUpScripts;
-                    ThrowOnRunspaceOpenError = $true;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                    InformationAction = $O365Object.InformationAction;
-                }
-                #Set a second runspace for nested executions
-                $nestedRunspace = New-RunspacePool @nestedParam
-                if($null -ne $nestedRunspace -and $nestedRunspace -is [System.Management.Automation.Runspaces.RunspacePool]){
-                    #Add to array
-                    [void]$all_runspaces.Add($nestedRunspace)
-                    #Add to object
-                    $O365Object.monkey_runspacePool = $nestedRunspace;
-                }
-            }
-            foreach($scan in $all_scans.GetEnumerator()){
-                $msg = @{
-                    MessageData = ("Starting new scan for {0}" -f $scan.scanName);
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'info';
-                    InformationAction = $O365Object.InformationAction;
-                    Tags = @('Monkey365Scanner');
-                }
-                Write-Information @msg
-                #Set Generic list
-                $commands = [System.Collections.Generic.List[System.Object]]::new();
-                #Add collectors to libcommands
-                foreach($collector in @($scan.collectors)){
-                    [void]$commands.Add($collector.File);
-                }
-                #Add commands
-                foreach($command in @($scan.libCommands)){
-                    [void]$commands.Add($command);
-                }
-                $rsParam = @{
-                    ImportVariables = $scan.vars;
-                    ImportModules = $scan.modules;
-                    ImportCommands = $commands;
-                    ApartmentState = $scan.apartmentState;
-                    Throttle = $scan.threads;
-                    StartUpScripts = $scan.startUpScripts;
-                    ThrowOnRunspaceOpenError = $true;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                    InformationAction = $O365Object.InformationAction;
-                }
-                #Get runspace pool
-                $runspacepool = New-RunspacePool @rsParam
-                if($null -ne $runspacepool -and $runspacepool -is [System.Management.Automation.Runspaces.RunspacePool]){
-                    $runspacepool.Open()
-                    #Add to array
-                    [void]$all_runspaces.Add($runspacepool)
-                }
-                if($null -ne $runspacepool -and $runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::Opened){
-                    foreach($collector in $scan.collectors){
-                        $p = @{
-			                Runspacepool = $runspacepool;
-			                ReuseRunspacePool = $true;
-                            MaxQueue = $MaxQueue;
-			                Debug = $O365Object.Debug;
-			                Verbose = $O365Object.Verbose;
-			                BatchSleep = $O365Object.BatchSleep;
-			                BatchSize = $O365Object.BatchSize;
-                            InformationAction = $O365Object.InformationAction;
-		                }
-                        $Id = ([System.Guid]::NewGuid()).ToString()
-                        $argument = @{CollectorId = $Id}
-                        #$sb = [ScriptBlock]::Create('{0}' -f $collector.File.FullName)
-                        Invoke-MonkeyJob -Command $collector.collectorName -Arguments $argument @p
+        If($null -ne $all_scans -and @($all_scans).Count -gt 0){
+            #Set runspaces array
+            $all_runspaces = [System.Collections.Generic.List[System.Management.Automation.Runspaces.RunspacePool]]::new();
+            #Launch scans
+            try{
+                #Set nested runspace
+                $myscan = $all_scans | Select-Object -First 1
+                #Get all libs
+                $libs = $all_scans.libCommands | Select-Object -Unique
+                if($null -ne $myscan){
+                    $nestedParam = @{
+                        ImportVariables = $myscan.vars;
+                        ImportModules = $myscan.modules;
+                        ImportCommands = $libs;
+                        ApartmentState = $myscan.apartmentState;
+                        Throttle = $myscan.threads;
+                        StartUpScripts = $myscan.startUpScripts;
+                        ThrowOnRunspaceOpenError = $true;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        InformationAction = $O365Object.InformationAction;
+                    }
+                    #Set a second runspace for nested executions
+                    $nestedRunspace = New-RunspacePool @nestedParam
+                    if($null -ne $nestedRunspace -and $nestedRunspace -is [System.Management.Automation.Runspaces.RunspacePool]){
+                        #Add to array
+                        [void]$all_runspaces.Add($nestedRunspace)
+                        #Add to object
+                        $O365Object.monkey_runspacePool = $nestedRunspace;
                     }
                 }
-                else{
-                    if($null -ne $runspacepool -and $runspacepool.RunspacePoolStateInfo.State -ne [System.Management.Automation.Runspaces.RunspaceState]::Opened){
-                        Write-Error ($message.RunspaceError)
-                        return
+                foreach($scan in $all_scans.GetEnumerator()){
+                    $msg = @{
+                        MessageData = ("Starting new scan for {0}" -f $scan.scanName);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'info';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('Monkey365Scanner');
+                    }
+                    Write-Information @msg
+                    #Set Generic list
+                    $commands = [System.Collections.Generic.List[System.Object]]::new();
+                    #Add collectors to libcommands
+                    foreach($collector in @($scan.collectors)){
+                        [void]$commands.Add($collector.File);
+                    }
+                    #Add commands
+                    foreach($command in @($scan.libCommands)){
+                        [void]$commands.Add($command);
+                    }
+                    $rsParam = @{
+                        ImportVariables = $scan.vars;
+                        ImportModules = $scan.modules;
+                        ImportCommands = $commands;
+                        ApartmentState = $scan.apartmentState;
+                        Throttle = $scan.threads;
+                        StartUpScripts = $scan.startUpScripts;
+                        ThrowOnRunspaceOpenError = $true;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        InformationAction = $O365Object.InformationAction;
+                    }
+                    #Get runspace pool
+                    $runspacepool = New-RunspacePool @rsParam
+                    if($null -ne $runspacepool -and $runspacepool -is [System.Management.Automation.Runspaces.RunspacePool]){
+                        $runspacepool.Open()
+                        #Add to array
+                        [void]$all_runspaces.Add($runspacepool)
+                    }
+                    if($null -ne $runspacepool -and $runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::Opened){
+                        foreach($collector in $scan.collectors){
+                            $p = @{
+			                    Runspacepool = $runspacepool;
+			                    ReuseRunspacePool = $true;
+                                MaxQueue = $MaxQueue;
+			                    Debug = $O365Object.Debug;
+			                    Verbose = $O365Object.Verbose;
+			                    BatchSleep = $O365Object.BatchSleep;
+			                    BatchSize = $O365Object.BatchSize;
+                                InformationAction = $O365Object.InformationAction;
+		                    }
+                            $Id = ([System.Guid]::NewGuid()).ToString()
+                            $argument = @{CollectorId = $Id}
+                            #$sb = [ScriptBlock]::Create('{0}' -f $collector.File.FullName)
+                            Invoke-MonkeyJob -Command $collector.collectorName -Arguments $argument @p
+                        }
                     }
                     else{
-                        Write-Error ($message.UnknownError)
-                        return
+                        if($null -ne $runspacepool -and $runspacepool.RunspacePoolStateInfo.State -ne [System.Management.Automation.Runspaces.RunspaceState]::Opened){
+                            Write-Error ($message.RunspaceError)
+                            return
+                        }
+                        else{
+                            Write-Error ($message.UnknownError)
+                            return
+                        }
                     }
                 }
             }
-        }
-        Catch{
-            Write-Error $_
-        }
-        Finally{
-            #Dispose all runspacepool
-            foreach($rs in $all_runspaces){
-                $rs.Dispose()
+            Catch{
+                Write-Error $_
             }
-            #collect garbage
-            #[gc]::Collect()
-            [System.GC]::GetTotalMemory($true) | out-null
+            Finally{
+                #Dispose all runspacepool
+                foreach($rs in $all_runspaces){
+                    $rs.Dispose()
+                }
+                #collect garbage
+                #[gc]::Collect()
+                [System.GC]::GetTotalMemory($true) | out-null
+            }
+        }
+        Else{
+            $msg = @{
+                MessageData = ("Unable to start Monkey365. Collectors are empty");
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'warning';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365Scanner');
+            }
+            Write-Warning @msg
         }
     }
 }

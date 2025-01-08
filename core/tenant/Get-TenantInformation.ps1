@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -9,7 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the specIfic language governing permissions and
 # limitations under the License.
 
 Function Get-TenantInformation{
@@ -37,15 +37,16 @@ Function Get-TenantInformation{
     Param()
     #Create hashtable
     $tenantInfo= [PsCustomObject]@{
-        TenantName = $null;
-        TenantId = $null;
-        CompanyInfo = $null;
-        SKU = $null;
-        Domains = $null;
-        MyDomain = $null;
+        tenantName = $null;
+        tenantId = $null;
+        companyInfo = $null;
+        sku = $null;
+        domains = $null;
+        myDomain = $null;
+        licensing = $null;
     }
-    if($O365Object.auth_tokens.MSGraph -and $O365Object.TenantId){
-        try{
+    If($O365Object.auth_tokens.MSGraph -and $O365Object.TenantId){
+        Try{
             #Write message
             $msg = @{
                 MessageData = ($message.AADTenantInfoMessage -f $O365Object.TenantId);
@@ -57,24 +58,24 @@ Function Get-TenantInformation{
             #Get Auth from old graph
             $msgraph_auth = $O365Object.auth_tokens.MSGraph
             #Get Tenant Origin
-            if($O365Object.isValidTenantGuid -eq $false){
+            If($O365Object.isValidTenantGuid -eq $false){
                 $tid = Read-JWTtoken -token $O365Object.auth_tokens.MSGraph.AccessToken | Select-Object -ExpandProperty tid -ErrorAction Ignore
             }
-            else{
+            Else{
                 $tid = $O365Object.TenantId
             }
             #Get tenant details
             $Tenant = Get-MonkeyMSGraphOrganization -TenantId $tid
-            if($Tenant){
+            If($Tenant){
                 #Set Tenant info var
                 Set-Variable Tenant -Value $Tenant -Scope Script -Force
-                if($O365Object.isConfidentialApp){
+                If($O365Object.isConfidentialApp){
                     #Set Userprincipalname var
-                    if($msgraph_auth.psobject.Properties.Item('clientId')){
+                    If($msgraph_auth.psobject.Properties.Item('clientId')){
                         Set-Variable userPrincipalName -Value $msgraph_auth.clientId.ToString() -Scope Script -Force
                         $O365Object.userPrincipalName = $msgraph_auth.clientId.ToString()
                     }
-                    else{
+                    Else{
                         $msg = @{
                             MessageData = $message.AADUserErrorMessage;
                             callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -86,21 +87,21 @@ Function Get-TenantInformation{
                         $O365Object.userPrincipalName = $O365Object.initParams.ClientId
                     }
                 }
-                else{
+                Else{
                     #Set Userprincipalname var
-                    if($msgraph_auth.psobject.Properties.Item('UserInfo')){
+                    If($msgraph_auth.psobject.Properties.Item('UserInfo')){
                         $O365Object.userPrincipalName = $msgraph_auth.UserInfo.DisplayableId.ToString()
                         Set-Variable userPrincipalName -Value $msgraph_auth.UserInfo.DisplayableId.ToString() -Scope Script -Force
                     }
-                    elseif($msgraph_auth.psobject.Properties.Item('userPrincipalName')){
+                    ElseIf($msgraph_auth.psobject.Properties.Item('userPrincipalName')){
                         $O365Object.userPrincipalName = $msgraph_auth.userPrincipalName
                         Set-Variable userPrincipalName -Value $msgraph_auth.userPrincipalName -Scope Script -Force
                     }
-                    elseif($msgraph_auth.psobject.Properties.Item('Account')){
+                    ElseIf($msgraph_auth.psobject.Properties.Item('Account')){
                         $O365Object.userPrincipalName = $msgraph_auth.Account.Username
                         Set-Variable userPrincipalName -Value $msgraph_auth.Account.Username -Scope Script -Force
                     }
-                    else{
+                    Else{
                         $msg = @{
                             MessageData = $message.AADUserErrorMessage;
                             callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -113,26 +114,30 @@ Function Get-TenantInformation{
                     }
                 }
                 #Set properties
-                $tenantInfo.TenantName = $Tenant.displayName
-                $tenantInfo.CompanyInfo = $Tenant
-                $tenantInfo.TenantId = $Tenant.Id
+                $tenantInfo.tenantName = $Tenant.displayName
+                $tenantInfo.companyInfo = $Tenant
+                $tenantInfo.tenantId = $Tenant.Id
             }
             #Get subscribed SKUs
             $SKus = Get-MonkeyMSGraphSuscribedSku
-            if($SKus){
+            If($SKus){
                 #Set property
-                $tenantInfo.SKU = $SKus
+                $tenantInfo.sku = $SKus
+                #Get licensing info from current tenant
+                $licensingInfo = Get-TenantLicensingInfo -SKU $SKus
+                #Set property
+                $tenantInfo.licensing = $licensingInfo;
             }
             #Get Domains
-            $tenantInfo.Domains = Get-MonkeyMSGraphDomain
-            if($null -ne $tenantInfo.Domains){
+            $tenantInfo.domains = Get-MonkeyMSGraphDomain
+            If($null -ne $tenantInfo.domains){
                 #Set property
-                $tenantInfo.MyDomain = $tenantInfo.Domains | Where-Object {$_.IsDefault -eq $true}
+                $tenantInfo.myDomain = $tenantInfo.domains | Where-Object {$_.IsDefault -eq $true}
             }
             #return Obj
             return $tenantInfo
         }
-        catch{
+        Catch{
             $msg = @{
                 MessageData = $message.O365TenantInfoError;
                 callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -149,7 +154,7 @@ Function Get-TenantInformation{
             Write-Debug @msg
         }
     }
-    else{
+    Else{
         $msg = @{
             MessageData = $message.O365TenantInfoError;
             callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -159,3 +164,4 @@ Function Get-TenantInformation{
         Write-Warning @msg
     }
 }
+

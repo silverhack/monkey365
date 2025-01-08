@@ -1,4 +1,4 @@
-﻿# en-US
+# en-US
 ConvertFrom-StringData @'
 GraphV2ErrorMessage              = Identity was not granted permissions to access Microsoft Graph
 EntraIDTenantNameError           = Unable to get Tenant name

@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -333,6 +333,79 @@ Function New-IssueCard{
         [void]$ul.AppendChild($flagged)
         #Add to right div
         [void]$div_issue_right.AppendChild($ul)
+        #Add severity and status
+        $div_element = @{
+            tagname = 'div';
+            classname = "row";
+            own_template = $issue_skeleton;
+        }
+        $newRow = New-HtmlTag @div_element;
+        #Create Severity
+        $div_ = @{
+            tagname = 'div';
+            classname = "col-md-6 basic-label";
+            createTextNode = "Severity";
+            own_template = $issue_skeleton;
+        }
+        $Severity = New-HtmlTag @div_;
+        [void]$newRow.AppendChild($Severity);
+        #Create span level
+        $span_ = @{
+            tagname = 'span';
+            classname = ("badge {0}" -f ($issue.level | Get-BadgeClass));
+            createTextNode = $issue.level;
+            own_template = $issue_skeleton;
+        }
+        $SeverityLevel = New-HtmlTag @span_;
+        #Create div and append child
+        $div_ = @{
+            tagname = 'div';
+            classname = "col-md-6 text-align-left";
+            appendObject = $SeverityLevel;
+            own_template = $issue_skeleton;
+        }
+        $divSeverity = New-HtmlTag @div_;
+        #Add to row
+        [void]$newRow.AppendChild($divSeverity);
+        #Create Severity
+        $div_ = @{
+            tagname = 'div';
+            classname = "col-md-6 basic-label";
+            createTextNode = "Status";
+            own_template = $issue_skeleton;
+        }
+        $Status = New-HtmlTag @div_;
+        #Add to row
+        [void]$newRow.AppendChild($Status);
+        If($issue.StatusCode.ToLower() -eq "pass"){
+            $badge = "bg-success";
+        }
+        ElseIf($issue.StatusCode.ToLower() -eq "fail"){
+            $badge = "bg-danger";
+        }
+        Else{
+            $badge = "bg-secondary";
+        }
+        #Create span level
+        $span_ = @{
+            tagname = 'span';
+            classname = ("badge {0}" -f $badge);
+            createTextNode = $issue.StatusCode;
+            own_template = $issue_skeleton;
+        }
+        $StatusLevel = New-HtmlTag @span_;
+        #Create div and append child
+        $div_ = @{
+            tagname = 'div';
+            classname = "col-md-6 text-align-left";
+            appendObject = $StatusLevel;
+            own_template = $issue_skeleton;
+        }
+        $divStatus = New-HtmlTag @div_;
+        #Add to row
+        [void]$newRow.AppendChild($divStatus);
+        #Add to right div
+        [void]$div_issue_right.AppendChild($newRow)
         #Get new Issue Card
         $params = @{
             collapsibleCard = $True;
@@ -362,7 +435,7 @@ Function New-IssueCard{
             #Add Card footer
             $card_footer = $my_card.SelectSingleNode('//div[contains(@class,"card-footer")]')
             #Add button
-            if($issue.level -ne 'Good'){
+            if($issue.level -ne 'Good' -and $issue.statusCode -ne "manual"){
                 $new_span_params = $span_element.Clone()
                 $new_span_params.attributes.class = 'btn-label'
                 #Create i element
@@ -401,3 +474,4 @@ Function New-IssueCard{
         }
     }
 }
+

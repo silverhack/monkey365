@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,12 +36,12 @@ Function Invoke-M365Scanner{
     [CmdletBinding()]
     Param()
     try{
-        if($null -ne $O365Object.Collectors -and @($O365Object.Collectors).Count -gt 0){
+        If($null -ne $O365Object.Collectors -and @($O365Object.Collectors).Count -gt 0){
             #Get Execution Info
             $O365Object.executionInfo = Get-ExecutionInfo
             #Set synchronized hashtable
             Set-Variable returnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
-            if($O365Object.IncludeEntraID){
+            If($O365Object.IncludeEntraID){
                 #Set params
                 $p = @{
                     Provider = 'EntraID';
@@ -66,11 +66,11 @@ Function Invoke-M365Scanner{
             }
             #Launch collectors
             Invoke-MonkeyScanner @p
-            if($Script:ReturnData.Count -gt 0){
+            If($Script:ReturnData.Count -gt 0){
                 #Prepare output
                 Out-MonkeyData -OutData $returnData
             }
-            else{
+            Else{
                 $msg = @{
                     MessageData = "There is no data to export";
                     callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -90,3 +90,4 @@ Function Invoke-M365Scanner{
         [gc]::Collect()
     }
 }
+

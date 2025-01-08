@@ -1,4 +1,4 @@
-﻿ConvertFrom-StringData @'
+ConvertFrom-StringData @'
     EndpointNotFound            = Instance {0} not found
     UnknownEnvironment          = Environment {0} was not found
     UnknownResource             = Resource {0} was not found

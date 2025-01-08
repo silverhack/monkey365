@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -61,14 +61,14 @@ Function Get-HttpResponseError{
                 Message = ($script:messages.UnableToProcessUrl -f $Url);
                 Verbose = $Verbose;
             }
-            Write-Verbose @param
+            Write-Debug @param
         }
         #Write error message
         $param = @{
             Message = ("[{0}]: {1}" -f $StatusCode, $Reason);
             Verbose = $Verbose;
         }
-        Write-Verbose @param
+        Write-Debug @param
         #Get response message
         $rawData = $ErrorResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult()
         if($null -eq $ErrorResponse.Content.Headers.ContentType){
@@ -88,14 +88,14 @@ Function Get-HttpResponseError{
                             Message = $errorCode;
                             Verbose = $Verbose;
                         }
-                        Write-Verbose @param
+                        Write-Debug @param
                     }
                     if($null -ne $errorMessage){
                         $param = @{
                             Message = $errorMessage;
                             Verbose = $Verbose;
                         }
-                        Write-Verbose @param
+                        Write-Debug @param
                     }
                 }
                 elseif($null -ne ($responseBody.psobject.properties.Item('error_description'))){
@@ -103,7 +103,7 @@ Function Get-HttpResponseError{
                         Message = $responseBody.error_description;
                         Verbose = $Verbose;
                     }
-                    Write-Verbose @param
+                    Write-Debug @param
                 }
                 elseif($null -ne ($responseBody.psobject.properties.Item('error'))){
                     $errorCode = $responseBody.error | Select-Object -ExpandProperty code -ErrorAction Ignore
@@ -113,14 +113,14 @@ Function Get-HttpResponseError{
                             Message = $errorCode;
                             Verbose = $Verbose;
                         }
-                        Write-Verbose @param
+                        Write-Debug @param
                     }
                     if($null -ne $errorMessage){
                         $param = @{
                             Message = $errorMessage;
                             Verbose = $Verbose;
                         }
-                        Write-Verbose @param
+                        Write-Debug @param
                     }
                 }
                 elseif($null -ne ($responseBody.psobject.properties.Item('message'))){
@@ -131,14 +131,14 @@ Function Get-HttpResponseError{
                             Message = $errorCode;
                             Verbose = $Verbose;
                         }
-                        Write-Verbose @param
+                        Write-Debug @param
                     }
                     if($null -ne $errorMessage){
                         $param = @{
                             Message = $errorMessage;
                             Verbose = $Verbose;
                         }
-                        Write-Verbose @param
+                        Write-Debug @param
                     }
                 }
             }
@@ -148,7 +148,7 @@ Function Get-HttpResponseError{
                     Message = ($script:messages.DetailedErrorMessage -f $responseBody);
                     Verbose = $Verbose;
                 }
-                Write-Verbose @param
+                Write-Debug @param
             }
         }
         else{
@@ -157,7 +157,7 @@ Function Get-HttpResponseError{
                 Message = $script:messages.UnableToGetDetailedError;
                 Verbose = $Verbose;
             }
-            Write-Verbose @param
+            Write-Debug @param
         }
     }
     catch{
@@ -166,7 +166,7 @@ Function Get-HttpResponseError{
             Message = $script:messages.UnableToProcessErrorMessage;
             Verbose = $Verbose;
         }
-        Write-Verbose @param
+        Write-Debug @param
         #Write detailed error message
         $param = @{
             Message = $_;
@@ -175,3 +175,4 @@ Function Get-HttpResponseError{
         Write-Debug @param
     }
 }
+

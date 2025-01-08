@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ Function ConvertTo-OCSFObject{
     Process{
         Try{
             Foreach($finding in @($InputObject)){
-                If($finding.statusCode.Trim().ToLower() -eq 'pass' -or $finding.output.text.onlyStatus){
+                If($finding.statusCode.Trim().ToLower() -eq 'pass' -or $finding.statusCode.Trim().ToLower() -eq 'manual' -or $finding.output.text.onlyStatus -or $null -eq $finding.output.text.out){
                     $newFinding = $finding | Get-OcsfDetectionFindingObject @newPsboundParams
                     If($null -ne $newFinding){
                         $newFinding.StatusDetail = $finding.output.text.status.defaultMessage
@@ -123,3 +123,4 @@ Function ConvertTo-OCSFObject{
         }
     }
 }
+

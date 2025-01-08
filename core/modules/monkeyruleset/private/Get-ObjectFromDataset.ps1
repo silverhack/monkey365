@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -52,75 +52,56 @@ Function Get-ObjectFromDataset{
                     $Script:Dataset
                 }
                 Else{
-                    $objectsToCheck = $dataObjects = $subPath = $selectCondition = $null;
-                    #Get first path
-                    If($InputObject.rule.path.Trim().ToString().Contains('.')){
-                        If(($Script:Dataset.psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){
-                            $objectsToCheck = $Script:Dataset.GetPropertyByPath($InputObject.rule.path.Trim().ToString())
+                    If($InputObject.rule.path -is [System.String] -and $InputObject.rule.path.Length -gt 0){
+                        $objectsToCheck = $dataObjects = $subPath = $selectCondition = $null;
+                        #Get first path
+                        $objectsToCheck = Get-ObjectPropertyByPath -InputObject $Script:Dataset -Property $InputObject.rule.path
+                        If($null -ne $objectsToCheck){
+                            #Check if metadata only
+                            If($PSBoundParameters.ContainsKey('Metadata') -and $PSBoundParameters['Metadata'].IsPresent){
+                                If(([System.Collections.IDictionary]).IsAssignableFrom($objectsToCheck.GetType())){
+                                    $objectsToCheck.Item('Metadata')
+                                    return
+                                }
+                                ElseIf(($objectsToCheck.GetType() -eq [System.Management.Automation.PSCustomObject] -or $objectsToCheck.GetType() -eq [System.Management.Automation.PSObject])){
+                                    $objectsToCheck | Select-Object -ExpandProperty 'Metadata' -ErrorAction Ignore
+                                    return
+                                }
+                                Else{##Object isn't an hashtable, collection, etc...
+                                    Write-Warning -Message ($Script:messages.UnableToGetMetadataInfo -f $InputObject.displayName)
+                                    return $null
+                                }
+                            }
+                            #Check if subPath exists
+                            $subPath = $InputObject.rule | Select-Object -ExpandProperty subPath -ErrorAction Ignore
+                            #Check if Select condition is present
+                            $selectCondition = $InputObject.rule | Select-Object -ExpandProperty selectCondition -ErrorAction Ignore
+                            #Check if Data property exists
+                            $dataObjects = $objectsToCheck | Select-Object -ExpandProperty Data -ErrorAction Ignore
+                            If($null -eq $dataObjects){
+                                $dataObjects = $objectsToCheck
+                            }
+                            If($null -ne $dataObjects){
+                                If($null -ne $subPath){
+                                    #Get Subpath
+                                    $dataObjects = Get-ObjectPropertyByPath -InputObject $dataObjects -Property $subPath.Trim()
+                                }
+                                If($null -ne $selectCondition -and $selectCondition.PsObject.Properties.GetEnumerator().MoveNext()){
+                                    $queryTxt = convertFrom-Condition -Conditions $selectCondition -Operator "or"
+                                    If($null -ne $queryTxt){
+                                        $query = $queryTxt | ConvertTo-SecureScriptBlock
+                                        If($null -ne $query){
+                                            $dataObjects = @($dataObjects).Where($query)
+                                        }
+                                    }
+                                }
+                                #return dataObjects
+                                return $dataObjects
+                            }
                         }
                         Else{
-                            Write-Warning -Message $Script:messages.MethodNotFound
+                            Write-Warning -Message ($Script:messages.PathNotFoundErrorMessage -f $InputObject.rule.path.Trim().ToString())
                         }
-                    }
-                    Else{
-                        #Get element
-                        $objectsToCheck =  $Script:Dataset | Select-Object -ExpandProperty $InputObject.rule.path.Trim().ToString() -ErrorAction Ignore
-                    }
-                    If($null -ne $objectsToCheck){
-                        #Check if metadata only
-                        If($PSBoundParameters.ContainsKey('Metadata') -and $PSBoundParameters['Metadata'].IsPresent){
-                            If(([System.Collections.IDictionary]).IsAssignableFrom($objectsToCheck.GetType())){
-                                $objectsToCheck.Item('Metadata')
-                                return
-                            }
-                            ElseIf(($objectsToCheck.GetType() -eq [System.Management.Automation.PSCustomObject] -or $objectsToCheck.GetType() -eq [System.Management.Automation.PSObject])){
-                                $objectsToCheck | Select-Object -ExpandProperty 'Metadata' -ErrorAction Ignore
-                                return
-                            }
-                            Else{##Object isn't an hashtable, collection, etc...
-                                Write-Warning -Message ($Script:messages.UnableToGetMetadataInfo -f $InputObject.displayName)
-                                return $null
-                            }
-                        }
-                        #Check if subPath exists
-                        $subPath = $InputObject.rule | Select-Object -ExpandProperty subPath -ErrorAction Ignore
-                        #Check if Select condition is present
-                        $selectCondition = $InputObject.rule | Select-Object -ExpandProperty selectCondition -ErrorAction Ignore
-                        #Check if Data property exists
-                        $dataObjects = $objectsToCheck | Select-Object -ExpandProperty Data -ErrorAction Ignore
-                        If($null -eq $dataObjects){
-                            $dataObjects = $objectsToCheck
-                        }
-                        If($null -ne $dataObjects){
-                            If($null -ne $subPath){
-                                If($subPath.Trim().ToString().Contains('.')){
-                                    If(($dataObjects.psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){
-                                        $dataObjects = $dataObjects.GetPropertyByPath($subPath.Trim())
-                                    }
-                                    Else{
-                                        Write-Warning -Message $Script:messages.MethodNotFound
-                                    }
-                                }
-                                Else{
-                                    #Get element
-                                    $dataObjects = $dataObjects | Select-Object -ExpandProperty $subPath.Trim() -ErrorAction Ignore
-                                }
-                            }
-                            If($null -ne $selectCondition -and $selectCondition.PsObject.Properties.GetEnumerator().MoveNext()){
-                                $queryTxt = convertFrom-Condition -Conditions $selectCondition -Operator "or"
-                                If($null -ne $queryTxt){
-                                    $query = $queryTxt | ConvertTo-SecureScriptBlock
-                                    If($null -ne $query){
-                                        $dataObjects = @($dataObjects).Where($query)
-                                    }
-                                }
-                            }
-                            #return dataObjects
-                            return $dataObjects
-                        }
-                    }
-                    Else{
-                        Write-Warning -Message ($Script:messages.PathNotFoundErrorMessage -f $InputObject.rule.path.Trim().ToString())
                     }
                 }
             }

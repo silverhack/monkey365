@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -82,6 +82,32 @@ Function Get-MonkeyAzAppService {
                     if($app_auth){
                         #Add to object
                         $app_service.authSettings = $app_auth;
+                    }
+                    #Get app auth settings V2
+                    $p = @{
+		                App = $app_service;
+                        ApiVersion = $APIVersion;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        InformationAction = $O365Object.InformationAction;
+	                }
+	                $app_authV2 = Get-MonkeyAzAppServiceAuthSettingV2 @p
+                    if($app_authV2){
+                        #Add to object
+                        $app_service.authSettingsV2 = $app_authV2;
+                    }
+                    #Get app basic publishing credentials policies
+                    $p = @{
+		                App = $app_service;
+                        ApiVersion = $APIVersion;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        InformationAction = $O365Object.InformationAction;
+	                }
+	                $app_basicAuthPolicies = Get-MonkeyAzAppServiceBasicPublishingCredentialsPolicy @p
+                    if($app_basicAuthPolicies){
+                        #Add to object
+                        $app_service.basicPublishingCredentialsPolicies = $app_basicAuthPolicies;
                     }
                     #Get app backup
                     $p = @{

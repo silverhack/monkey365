@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -89,16 +89,18 @@ Function Invoke-UnitRule{
                     }
                 }
                 Else{
-                    #Set matched element to null
-                    $matched_elements= $null;
+                    #return null
+                    return $null
                 }
             }
+            #Return matched elements
+            return $matched_elements
         }
         Else{
             Write-Warning -Message ($Script:messages.EmptyRuleGenericMessage -f $InputObject.idSuffix)
         }
     }
     End{
-        return $matched_elements
+        #Nothing to do here
     }
 }

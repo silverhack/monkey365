@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ Function Convert-IssuesToHtmlCards{
         #Get detailed issues
         foreach($issue in $resource.Group){
             $table = $null;
-            if($issue.level -ne 'Good'){
+            if($issue.level -ne 'Good' -and $issue.statusCode -ne "manual"){
                 #$data = $issue | New-PsHtmlObject
                 $data = $issue | Initialize-HtmlData
                 if($data){
@@ -95,7 +95,7 @@ Function Convert-IssuesToHtmlCards{
                         $extended_data = $data.output.html.extendedData;
                         foreach($modal_object in $extended_data){
                             $params = @{
-                                raw_data= $modal_object.raw_data;
+                                raw_data= $modal_object.rawData;
                                 format = $modal_object.format;
                                 id = $modal_object.id;
                             }
@@ -117,3 +117,4 @@ Function Convert-IssuesToHtmlCards{
     #return data
     return $all_ps_elements
 }
+

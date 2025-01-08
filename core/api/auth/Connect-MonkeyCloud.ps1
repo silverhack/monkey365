@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -273,9 +273,8 @@ Function Connect-MonkeyCloud{
     else{
         $O365Object.onlineServices.EntraID = $true
     }
-    #Get AzureAD Licensing
-    $O365Object.AADLicense = Get-M365AADLicense
-    if($null -ne $O365Object.AADLicense.azureADP2){
+    #Check if EntraID P2 is enabled
+    if($null -ne $O365Object.Tenant.licensing.EntraIDP2){
         $msg = @{
             MessageData = ($message.TokenRequestInfoMessage -f "Entra ID Privileged Managament Identity API")
             callStack = (Get-PSCallStack | Select-Object -First 1);

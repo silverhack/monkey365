@@ -1,4 +1,4 @@
-﻿Set-StrictMode -Version Latest
+Set-StrictMode -Version Latest
 
 $mj_path = ("{0}/helpers/MonkeyJob.cs" -f $PSScriptRoot)
 $exists = [System.IO.File]::Exists($mj_path)

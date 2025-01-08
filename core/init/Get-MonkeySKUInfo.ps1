@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -69,32 +69,43 @@ Function Get-MonkeySKUInfo{
         }
     }
     Process{
-        if($null -ne $O365Object.Tenant -and $null -ne $O365Object.Tenant.psobject.Properties.Item('SKU') -and $null -ne $O365Object.Tenant.SKU){
-            $current_licenses = $O365Object.Tenant.SKU | Copy-PsObject
-            foreach($license in $current_licenses){
-                $match = $licenses | Where-Object {$_.Guid -eq $license.skuId} -ErrorAction Ignore
-                if($null -ne $match){
-                    $license | Add-Member -Type NoteProperty -name ProductName -value $match.ProductName
+        If($null -ne $licenses){
+            If($null -ne $O365Object.Tenant -and $null -ne $O365Object.Tenant.psobject.Properties.Item('SKU') -and $null -ne $O365Object.Tenant.SKU){
+                $current_licenses = $O365Object.Tenant.SKU | Copy-PsObject
+                ForEach($license in $current_licenses){
+                    $match = $licenses | Where-Object {$_.Guid -eq $license.skuId} -ErrorAction Ignore
+                    If($null -ne $match){
+                        $license | Add-Member -Type NoteProperty -name ProductName -value $match.ProductName
+                    }
+                    Else{
+                        $license | Add-Member -Type NoteProperty -name ProductName -value $license.skuPartNumber
+                    }
                 }
-                else{
-                    $license | Add-Member -Type NoteProperty -name ProductName -value $license.skuPartNumber
-                }
+                #return licenses
+                return $current_licenses
             }
-            #return licenses
-            return $current_licenses
+            Else{
+                $msg = @{
+                    MessageData = $message.M365LicenseInfoError;
+                    functionName = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'debug';
+                    Tags = @('M365LicenseSKUError');
+                }
+                Write-Debug @msg
+            }
         }
-        else{
+        Else{
             $msg = @{
                 MessageData = $message.M365LicenseInfoError;
                 functionName = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'debug';
+                logLevel = 'warning';
                 Tags = @('M365LicenseSKUError');
             }
-            Write-Debug @msg
+            Write-Warning @msg
         }
-
     }
     End{
         #Nothing to do here
     }
 }
+

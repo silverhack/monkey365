@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,12 +47,12 @@ Function Get-SKUProduct{
         #Convert To CSV
         $csv = [System.Text.Encoding]::UTF8.GetString($metadata.Content) | ConvertFrom-Csv
         #Convert to RAW object
-        $rawObject = $csv | Select-Object @{Label=”ProductName”;Expression={($_.Product_Display_Name)}}, `
-                                  @{Label=”StringId”;Expression={($_.String_Id)}}, `
-                                  @{Label=”Guid”;Expression={($_.GUID)}}, `
-                                  @{Label=”ServicePlanName”;Expression={($_.Service_Plan_Name)}},`
-                                  @{Label=”ServicePlanId”;Expression={($_.Service_Plan_Id)}},`
-                                  @{Label=”ServicePlanFriendlyName”;Expression={($_.Service_Plans_Included_Friendly_Names)}}
+        $rawObject = $csv | Select-Object @{Label="ProductName";Expression={($_.Product_Display_Name)}}, `
+                                  @{Label="StringId";Expression={($_.String_Id)}}, `
+                                  @{Label="Guid";Expression={($_.GUID)}}, `
+                                  @{Label="ServicePlanName";Expression={($_.Service_Plan_Name)}},`
+                                  @{Label="ServicePlanId";Expression={($_.Service_Plan_Id)}},`
+                                  @{Label="ServicePlanFriendlyName";Expression={($_.Service_Plans_Included_Friendly_Names)}}
         #Return JSON object
         $rawObject | ConvertTo-Json
     }
@@ -66,4 +66,5 @@ Function Get-SKUProduct{
         }
     }
 }
+
 
