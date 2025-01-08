@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,28 +38,33 @@ function Convert-MarkDownToHtml {
     [OutputType([String])]
     param (
         [Parameter(ValueFromPipeline=$true, Mandatory = $false, ParameterSetName = 'Path', position=1)]
-        [string] $Path,
+        [String]$Path,
+
         [Parameter(ValueFromPipeline=$true, Mandatory = $false, ParameterSetName = 'InputObject', position=0)]
-        [string] $InputObject,
+        [String]$InputObject,
+
         [Parameter(Mandatory=$false, HelpMessage="Use advanced extensions")]
-        [switch] $UseAdvancedExtensions
+        [Switch]$UseAdvancedExtensions,
+
+        [Parameter(Mandatory=$false, HelpMessage="Remove blank and tabs from text")]
+        [Switch]$RemoveBlankAndTabs
     )
     Begin{
         $raw_markdown = $outHtml = $null
-        if($PSCmdlet.ParameterSetName -eq 'Path'){
-            if (-not(Test-Path -Path $Path)) {
+    }
+    Process{
+        If($PSCmdlet.ParameterSetName -eq 'Path'){
+            If (-not(Test-Path -Path $Path)) {
                 Write-Warning $messages.InvalidDirectoryPathError
                 break
             }
             $raw_markdown = Get-Content -Path $Path -Raw
         }
-        else {
+        Else {
             $raw_markdown = $InputObject
         }
-    }
-    Process{
-        try{
-            if($null -ne $raw_markdown){
+        Try{
+            If($null -ne $raw_markdown){
                 #Create pipeline builder
                 $pipelineBuilder = [Markdig.MarkdownPipelineBuilder]::new()
                 #Add markdig extensions
@@ -73,17 +78,26 @@ function Convert-MarkDownToHtml {
                 }
                 # build the pipeline
                 $pipeline = $pipelineBuilder.Build()
+                #Check to remove blank and tabs
+                If($RemoveBlankAndTabs.IsPresent){
+                    $pattern = "[ \t]*\n[ \t]*"
+                    $options = [text.regularexpressions.regexoptions]::Multiline
+                    $text = [regex]::Replace($raw_markdown,$pattern,[system.environment]::NewLine,$options)
+                    $raw_markdown = $text.Trim();
+                }
                 # Convert to html
                 $outHtml = [Markdig.Markdown]::ToHtml($raw_markdown,$pipeline)
+                If($null -ne $outHtml){
+                    return $outHtml.Trim()
+                }
             }
         }
-        catch{
+        Catch{
             Write-Error $_.Exception.Message
         }
     }
     End{
-        if($null -ne $outHtml){
-            return $outHtml
-        }
+        #Nothing to do here
     }
 }
+

@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ Function Get-HtmlTableFromObject{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
     [CmdletBinding()]
     Param (
-            [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+            [parameter(Mandatory= $true)]
             [Object]$issue,
 
             [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
@@ -47,10 +47,14 @@ Function Get-HtmlTableFromObject{
             [String]$table_id
         )
     Begin{
-        try{
-            #table class monkey-table nowrap table-striped responsive
-            $data = $extended_data = $null
-            $tmp_table = '<table class="" id="" style="width:100%;">${data}</table>'
+        #table class monkey-table nowrap table-striped responsive
+        $data = $xmlTable = $extended_data = $null
+        $tmp_table = '<table class="" id="" style="width:100%;">${data}</table>'
+    }
+    Process{
+        Try{
+            #Get Format from issue
+            $format = $issue.output.html.decorate;
             $data = $issue.output.html.out
             $extended_data = $issue.output.html.extendedData
             $table = $data | Microsoft.PowerShell.Utility\ConvertTo-Html -As Table -Fragment
@@ -74,15 +78,11 @@ Function Get-HtmlTableFromObject{
                 attributes = $btn_attr;
                 own_template = $xmlTable;
             }
-            #Get Format from issue
-            $format = $issue.output.html.decorate;
         }
         catch{
             Write-Verbose $_
             $xmlTable = $null;
         }
-    }
-    Process{
         if($null -ne $xmlTable){
             try{
                 #Process Table ID
@@ -225,6 +225,7 @@ Function Get-HtmlTableFromObject{
                         $i_tags | ForEach-Object {$_.InnerText = [string]::Empty}
                     }
                 }
+                return $xmlTable
             }
             catch{
                 Write-Warning ($script:messages.unableToCreateTable)
@@ -233,8 +234,6 @@ Function Get-HtmlTableFromObject{
         }
     }
     End{
-        if($xmlTable){
-            return $xmlTable
-        }
     }
 }
+

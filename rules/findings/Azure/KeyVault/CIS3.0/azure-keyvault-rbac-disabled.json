@@ -1,0 +1,123 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Azure KeyVault",
+  "serviceName": "Storage",
+  "displayName": "Enable Role Based Access Control for Azure Key Vault",
+  "description":'
+			The recommended way to access Key Vaults is to use the Azure Role-Based Access Control (RBAC) permissions model. 
+			Azure RBAC is an authorization system built on Azure Resource Manager that provides fine-grained access management of Azure resources. It allows users to manage Key, Secret, and Certificate permissions. It provides one place to manage all permissions across all key vaults. 
+  ',
+  "rationale": "The new RBAC permissions model for Key Vaults enables a much finer grained access control for key vault secrets, keys, certificates, etc., than the vault access policy. This in turn will permit the use of privileged identity management over these roles, thus securing the key vaults with JIT Access management.",
+  "impact": "Implementation needs to be properly designed from the ground up, as this is a fundamental change to the way key vaults are accessed/managed. Changing permissions to key vaults will result in loss of service as permissions are re-applied. For the least amount of downtime, map your current groups and users to their corresponding permission needs.",
+  "remediation": {
+    "text": '
+			###### Remediate from Azure Portal 
+			Key Vaults can be configured to use Azure role-based access control on creation. 
+			For existing Key Vaults: 
+			1. From Azure Home open the Portal Menu in the top left corner 
+			2. Select Key Vaults 
+			3. Select a Key Vault to audit 
+			4. Select Access configuration 
+			5. Set the Permission model radio button to Azure role-based access control, 
+			taking note of the warning message 
+			6. Click Save 
+			7. Select Access Control (IAM) 
+			8. Select the Role Assignments tab 
+			9. Reapply permissions as needed to groups or users 
+	',
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-gb/azure/key-vault/general/rbac-migration#vault-access-policy-to-azure-rbac-migration-steps",
+	"https://docs.microsoft.com/en-gb/azure/role-based-access-control/role-assignments-portal?tabs=current",
+	"https://docs.microsoft.com/en-gb/azure/role-based-access-control/overview",
+	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-8-ensure-security-of-key-and-certificate-repository"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "3.3.3",
+	  "profile":"Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_key_vault_rbac_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

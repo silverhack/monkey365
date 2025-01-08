@@ -1,0 +1,119 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "SharePoint Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure OneDrive sync is restricted for unmanaged devices",
+  "description": "
+		Microsoft OneDrive allows users to sign in their cloud tenant account and begin syncing select folders or the entire contents of OneDrive to a local computer. By default, this includes any computer with OneDrive already installed, whether it is Azure Domain Joined or Active Directory Domain joined. 
+		The recommended state for this setting is `Allow syncing only on computers joined to specific domains Enabled: Specify the AD domain GUID(s)`.
+  ",
+  "rationale": "
+		Unmanaged devices pose a risk, since their security cannot be verified through existing security policies, brokers or endpoint protection. Allowing users to sync data to these devices takes that data out of the control of the organization. This increases the risk of the data either being intentionally or accidentally leaked. 
+		**Note** : This setting is only applicable to Active Directory domains when operating in a hybrid configuration. It does not apply to Entra ID domains. If there are devices which are only Entra ID joined, consider using a Conditional Access Policy instead. 
+  ",
+  "impact": "Enabling this feature will prevent users from using the OneDrive for Business Sync client on devices that are not joined to the domains that were defined.",
+  "remediation": {
+    "text": "
+			###### To remediate using the UI: 
+			1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint 
+			2. Click Settings then select OneDrive - Sync. 
+			3. Check the Allow syncing only on computers joined to specific domains. 
+			4. Use the Get-ADDomain PowerShell command on the on-premises server to obtain 
+			the GUID for each on-premises domain. 
+			5. Click Save. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/turn-on-atp-for-spo-odb-and-teams",
+    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/virus-detection-in-spo?view=o365-worldwide"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "7.3.2",
+	  "profile": "E3 Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure OneDrive sync is restricted for unmanaged devices",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "spo_onedrive_sync_restricted_for_unmanaged_devices",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

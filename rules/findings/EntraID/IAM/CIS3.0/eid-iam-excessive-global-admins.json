@@ -1,0 +1,131 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "Microsoft Entra ID Identity",
+  "serviceName": "IAM",
+  "displayName": "Ensure fewer than _ARG_0_ users have global administrator assignment",
+  "description": "This recommendation aims to maintain a balance between security and operational efficiency by ensuring that a minimum of 2 and a maximum of 4 users are assigned the Global Administrator role in Microsoft Entra ID. Having at least two Global Administrators ensures redundancy, while limiting the number to four reduces the risk of excessive privileged access.",
+  "rationale": "The Global Administrator role has extensive privileges across all services in Microsoft Entra ID. The Global Administrator role should never be used in regular daily activities; administrators should have a regular user account for daily activities, and a separate account for administrative responsibilities. Limiting the number of Global Administrators helps mitigate the risk of unauthorized access, reduces the potential impact of human error, and aligns with the principle of least privilege to reduce the attack surface of an Azure tenant. Conversely, having at least two Global Administrators ensures that administrative functions can be performed without interruption in case of unavailability of a single admin.",
+  "impact": "Implementing this recommendation may require changes in administrative workflows or the redistribution of roles and responsibilities. Adequate training and awareness should be provided to all Global Administrators.",
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-admin-roles-secure",
+    "https://docs.microsoft.com/en-us/windows-server/identity/securing-privileged-access/securing-privileged-access",
+    "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/directory-assign-admin-roles"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Microsoft 365 Foundations",
+      "version": "3.0.0",
+      "reference": "2.2.6",
+	  "profile":"Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "aad_role_assignment",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "templateId",
+                "eq",
+                "62e90394-69f5-4237-9190-012177145e10"
+              ],
+              [
+                "totalActiveusers",
+                "gt",
+                "_ARG_0_"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": "true"
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "effectiveMembers.userPrincipalName": "User Principal Name",
+          "effectiveMembers.objectType": "Object Type",
+          "effectiveMembers.userType": "User Type",
+          "effectiveMembers.mfaenabled": "MFA enabled"
+        },
+        "expandObject": "effectiveMembers"
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": "effectiveMembers",
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "An excessive number of Global Administrators were detected",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_excessive_global_admins",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

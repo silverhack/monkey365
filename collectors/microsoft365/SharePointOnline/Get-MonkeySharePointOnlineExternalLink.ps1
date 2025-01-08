@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ function Get-MonkeySharePointOnlineExternalLink {
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
 		[string]$collectorId
 	)
-	begin {
+	Begin {
 		#Collector metadata
 		$monkey_metadata = @{
 			Id = "sps0001";
@@ -72,7 +72,7 @@ function Get-MonkeySharePointOnlineExternalLink {
 			supportClientCredential = $true
 		}
 		#Get config
-		try {
+		Try {
 			#Splat params
 			$pWeb = @{
 				Authentication = $O365Object.auth_tokens.SharePointOnline;
@@ -92,7 +92,7 @@ function Get-MonkeySharePointOnlineExternalLink {
 			}
 
 		}
-		catch {
+		Catch {
 			$msg = @{
 				MessageData = ($message.MonkeyInternalConfigError);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -119,9 +119,13 @@ function Get-MonkeySharePointOnlineExternalLink {
 		#Set generic list
 		$all_sharing_links = [System.Collections.Generic.List[System.Object]]::new()
 		$allWebs = [System.Collections.Generic.List[System.Object]]::new()
+        $abort = $true
 	}
 	process {
-		if ($null -ne $O365Object.spoSites) {
+		If ($null -ne $O365Object.spoSites) {
+            #Set abort to false
+            $abort = $false
+            #set message
 			$msg = @{
 				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"SharePoint Online sharing links",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -144,28 +148,31 @@ function Get-MonkeySharePointOnlineExternalLink {
 			}
 		}
 	}
-	end {
-		if ($all_sharing_links) {
-			$all_sharing_links.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.SharingLinks')
-			[pscustomobject]$obj = @{
-				Data = $all_sharing_links;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.o365_spo_sharing_links = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "SharePoint Online sharing links",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Tags = @('SPSSharingLinkEmptyResponse');
-			}
-			Write-Verbose @msg
-		}
+	End {
+        If($abort -eq $false){
+		    If ($all_sharing_links) {
+			    $all_sharing_links.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.SharingLinks')
+			    [pscustomobject]$obj = @{
+				    Data = $all_sharing_links;
+				    Metadata = $monkey_metadata;
+			    }
+			    $returnData.o365_spo_sharing_links = $obj
+		    }
+		    Else {
+			    $msg = @{
+				    MessageData = ($message.MonkeyEmptyResponseMessage -f "SharePoint Online sharing links",$O365Object.TenantID);
+				    callStack = (Get-PSCallStack | Select-Object -First 1);
+				    logLevel = "verbose";
+				    InformationAction = $O365Object.InformationAction;
+				    Verbose = $O365Object.Verbose;
+				    Tags = @('SPSSharingLinkEmptyResponse');
+			    }
+			    Write-Verbose @msg
+		    }
+        }
 	}
 }
+
 
 
 

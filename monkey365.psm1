@@ -1,4 +1,4 @@
-﻿#Set-StrictMode -Off #-Version Latest
+#Set-StrictMode -Off #-Version Latest
 Set-StrictMode -Version Latest
 
 $LocalizedDataParams = @{

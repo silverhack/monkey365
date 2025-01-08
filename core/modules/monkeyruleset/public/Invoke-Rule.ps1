@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,7 +48,10 @@ Function Invoke-Rule{
         [String]$RulesPath,
 
         [Parameter(Mandatory=$false, HelpMessage="Set the output timestamp format as unix timestamps instead of iso format")]
-        [Switch]$UnixTimestamp
+        [Switch]$UnixTimestamp,
+
+        [Parameter(Mandatory=$false, HelpMessage="Convert pass finding to good finding")]
+        [Switch]$ConvertPassFindingToGood
     )
     Begin{
         $Verbose = $Debug = $False;
@@ -70,46 +73,72 @@ Function Invoke-Rule{
         }
     }
     Process{
-        if(($Rule | Test-isValidRule) -and $null -ne (Get-Variable -Name Dataset -ErrorAction Ignore)){
+        If(($Rule | Test-isValidRule) -and $null -ne (Get-Variable -Name Dataset -ErrorAction Ignore)){
             $ShadowRule = $Rule | Copy-PsObject
-            $ShadowRule = $ShadowRule | Build-Query
-            #Find elements to check
-            $ObjectsToCheck = $ShadowRule | Get-ObjectFromDataset
-            If($null -eq $ObjectsToCheck){
-                return
-            }
-            #Get objects to check
-            If($null -ne $ShadowRule){
-                #$matched_elements = $ShadowRule | Invoke-UnitRule -ObjectsToCheck $dataObjects
-                $matched_elements = $ShadowRule | Invoke-UnitRule -ObjectsToCheck $ObjectsToCheck
-            }
-            Else{
-                Write-Warning -Message ($Script:messages.InvalidQueryGenericMessage -f $Rule.displayName)
-                $matched_elements = $null
-            }
-            #Check for removeIfNotExists exception rule
-            $removeIfNotExists = $ShadowRule.rule | Select-Object -ExpandProperty removeIfNotExists -ErrorAction Ignore
-            If($null -ne $removeIfNotExists -and $removeIfNotExists){
-                If($null -eq $matched_elements){
-                    return
-                }
-            }
-            If($null -ne $ShadowRule){
-                #Create finding object
+            #Check if rule has a query
+            $definedQuery = Get-ObjectPropertyByPath -InputObject $ShadowRule -Property "rule.query"
+            If($null -eq $definedQuery){
+                #Query is empty. Set rule as a manual
                 $p =  @{
                     InputObject = $ShadowRule;
-                    AffectedObjects = $matched_elements;
-                    Resources = $ObjectsToCheck;
+                    AffectedObjects = $null;
+                    Resources = $null;
                     UnixTimestamp = $PSBoundParameters['UnixTimestamp'];
                 }
                 $findingObj = New-MonkeyFindingObject @p
-                if($null -ne $findingObj){
-                    if(!$matched_elements){
-                        $findingObj.level = "Good"
-                    }
+                If($null -ne $findingObj){
                     #Add status code
-                    $findingObj.statusCode = $findingObj.level | Get-StatusCode
+                    $findingObj.statusCode = "manual"
                     Write-Output $findingObj
+                }
+            }
+            Else{
+                $ShadowRule = $ShadowRule | Build-Query
+                #Find elements to check
+                $ObjectsToCheck = $ShadowRule | Get-ObjectFromDataset
+                If($null -eq $ObjectsToCheck){
+                    return
+                }
+                #Get objects to check
+                If($null -ne $ShadowRule){
+                    #$matched_elements = $ShadowRule | Invoke-UnitRule -ObjectsToCheck $dataObjects
+                    $matched_elements = $ShadowRule | Invoke-UnitRule -ObjectsToCheck $ObjectsToCheck
+                }
+                Else{
+                    Write-Warning -Message ($Script:messages.InvalidQueryGenericMessage -f $Rule.displayName)
+                    $matched_elements = $null
+                }
+                #Check for removeIfNotExists exception rule
+                $removeIfNotExists = $ShadowRule.rule | Select-Object -ExpandProperty removeIfNotExists -ErrorAction Ignore
+                If($null -ne $removeIfNotExists -and $removeIfNotExists){
+                    If($null -eq $matched_elements){
+                        return
+                    }
+                }
+                If($null -ne $ShadowRule){
+                    #Create finding object
+                    $p =  @{
+                        InputObject = $ShadowRule;
+                        AffectedObjects = $matched_elements;
+                        Resources = $ObjectsToCheck;
+                        UnixTimestamp = $PSBoundParameters['UnixTimestamp'];
+                    }
+                    $findingObj = New-MonkeyFindingObject @p
+                    If($null -ne $findingObj){
+                        If($PSBoundParameters.ContainsKey('ConvertPassFindingToGood') -and $PSBoundParameters['ConvertPassFindingToGood'].IsPresent){
+                            If(!$matched_elements){
+                                $findingObj.level = "Good"
+                            }
+                        }
+                        #Add status code
+                        If($matched_elements){
+                            $findingObj.statusCode = "fail"
+                        }
+                        Else{
+                            $findingObj.statusCode = "pass"
+                        }
+                        Write-Output $findingObj
+                    }
                 }
             }
         }

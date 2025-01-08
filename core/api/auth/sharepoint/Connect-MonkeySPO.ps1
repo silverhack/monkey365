@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,18 +59,23 @@ Function Connect-MonkeySPO {
         Debug = $O365Object.debug;
     }
     #Get Endpoint
-    switch -Wildcard ($PSCmdlet.ParameterSetName) {
-        'Admin' {
-            $sharepointUrl = Get-SharepointAdminUrl @sps_p
-        }
-        'rootSite' {
-            $sharepointUrl = Get-SharepointUrl @sps_p
-        }
-        'oneDrive' {
-            $sharepointUrl = Get-OneDriveUrl @sps_p
-        }
-        Default {
-            $sharepointUrl = Get-SharepointUrl @sps_p
+    If($PSBoundParameters['EndPoint'].StartsWith('https')){
+        $sharepointUrl = $PSBoundParameters['EndPoint']
+    }
+    Else{
+        switch -Wildcard ($PSCmdlet.ParameterSetName) {
+            'Admin' {
+                $sharepointUrl = Get-SharepointAdminUrl @sps_p
+            }
+            'rootSite' {
+                $sharepointUrl = Get-SharepointUrl @sps_p
+            }
+            'oneDrive' {
+                $sharepointUrl = Get-OneDriveUrl @sps_p
+            }
+            Default {
+                $sharepointUrl = Get-SharepointUrl @sps_p
+            }
         }
     }
     If($null -eq $sharepointUrl){

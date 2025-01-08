@@ -1,4 +1,4 @@
-﻿ConvertFrom-StringData @'
+ConvertFrom-StringData @'
     UnableToGetRules                 = No rules were loaded
     InitDataset                      = Dataset was created
     DatasetNotCreated                = Dataset was not created

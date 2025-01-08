@@ -1,0 +1,109 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Microsoft Defender for Cloud",
+  "serviceName": "Subscription",
+  "displayName": "Ensure that Microsoft Cloud Security Benchmark policies are not set to 'Disabled'",
+  "description": "The Microsoft Cloud Security Benchmark (or `MCSB`) is an Azure Policy Initiative containing many security policies to evaluate resource configuration against best practice recommendations. If a policy in the MCSB is set with effect type Disabled, it is not evaluated and may prevent administrators from being informed of valuable security recommendations.",
+  "rationale":'A security policy defines the desired configuration of resources in your environment and helps ensure compliance with company or regulatory security requirements. The MCSB Policy Initiative a set of security recommendations based on best practices and is associated with every subscription by default. When a policy `Effect` is set to `Audit`, policies in the MCSB ensure that Defender for Cloud evaluates relevant resources for supported recommendations. To ensure that policies within the MCSB are not being missed when the Policy Initiative is evaluated, none of the policies should have an Effect of `Disabled`.',
+  "impact": "Policies within the MCSB default to an effect of `Audit` and will evaluate - but not enforce - policy recommendations. Ensuring these policies are set to `Audit` simply ensures that the evaluation occurs to allow administrators to understand where an improvement may be possible. Administrators will need to determine if the recommendations are relevant and desirable for their environment, then manually take action to resolve the status if desired.",
+  "remediation": {
+    "text":'Follow Microsoft Azure documentation to apply security patches from the security center. Alternatively, you can employ your own patch assessment and management tool to periodically assess, report, and install the required security patches for your OS.' ,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+		"https://docs.microsoft.com/en-us/azure/security-center/security-center-policies",
+		"https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-transparent-data-encryption",
+		"https://msdn.microsoft.com/en-us/library/mt704062.aspx", 
+		"https://msdn.microsoft.com/en-us/library/mt704063.aspx", 
+		"https://docs.microsoft.com/en-us/rest/api/policy/policy-assignments/get", 
+		"https://docs.microsoft.com/en-us/rest/api/policy/policy-assignments/create",
+		"https://docs.microsoft.com/en-in/azure/security-center/tutorial-security-policy"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "3.1.11",
+	  "profile":"Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_defender_recommendation_apply_system_updates_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

@@ -1,0 +1,134 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "SQL Server",
+  "serviceName": "Databases",
+  "displayName": "Ensure that 'Auditing' Retention is 'greater than 90 days'",
+  "description": "SQL Server Audit Retention should be configured to be greater than 90 days.",
+  "rationale": "Audit Logs can be used to check for anomalies and give insight into suspected breaches or misuse of information and access.",
+  "impact": null,
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `SQL servers`.\r\n\t\t\t\t\t2. For each server instance\r\n\t\t\t\t\t3. Click on `Auditing`\r\n\t\t\t\t\t4. Select `Storage Details`\r\n\t\t\t\t\t5. Set `Retention (days)` setting greater than `90 days`\r\n\t\t\t\t\t6. Select `OK`\r\n\t\t\t\t\t7. Select `Save`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions?view=sql-server-2017"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "5.1.6",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_sql_servers",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "auditing.retentionDays",
+                "eq"
+              ],
+              [
+                "auditing.retentionDays",
+                "le",
+                "90"
+              ],
+              [
+                "auditing.retentionDays",
+                "eq",
+                "-1"
+              ]
+            ],
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Server Name",
+          "location": "Location",
+          "resourceGroupName": "Resource group name",
+          "fqdn": "FQDN",
+          "auditing.retentionDays": "Auditing policy state"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Auditing retention days"
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "sql_server_audit_retention",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

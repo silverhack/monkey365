@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -53,25 +53,25 @@ Function Resolve-ObjectToCheck {
             $selectCondition = $InputObject | Select-Object -ExpandProperty selectCondition -ErrorAction Ignore
             #Check if Data property exists
             $dataObjects = $ObjectsToCheck | Select-Object -ExpandProperty Data -ErrorAction Ignore
-            if($null -eq $dataObjects){
+            If($null -eq $dataObjects){
                 $dataObjects = $ObjectsToCheck
             }
-            if($null -ne $dataObjects){
-                if($null -ne $subPath){
+            If($null -ne $dataObjects){
+                If($null -ne $subPath){
                     If($subPath.Trim().ToString().Contains('.')){
-                        if(($dataObjects.psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){
+                        If(($dataObjects.psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){
                             $dataObjects = $dataObjects.GetPropertyByPath($subPath.Trim())
                         }
-                        else{
+                        Else{
                             Write-Warning "GetPropertyByPath method was not loaded"
                         }
                     }
-                    else{
+                    Else{
                         #Get element
                         $dataObjects = $dataObjects | Select-Object -ExpandProperty $subPath.Trim() -ErrorAction Ignore
                     }
                 }
-                if($null -ne $selectCondition){
+                If($null -ne $selectCondition){
                     $queryTxt = convertFrom-Condition -Conditions $selectCondition -Operator "or"
                     if($null -ne $queryTxt){
                         $query = $queryTxt | ConvertTo-SecureScriptBlock

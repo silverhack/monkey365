@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ function Get-MonkeySharePointOnlineSiteProperty {
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
 		[string]$collectorId
 	)
-	begin {
+	Begin {
 		#Collector metadata
 		$monkey_metadata = @{
 			Id = "sps0010";
@@ -74,7 +74,7 @@ function Get-MonkeySharePointOnlineSiteProperty {
 		#Set list
 		$all_site_properties = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
 	}
-	process {
+	Process {
 		$msg = @{
 			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"SharePoint Online Site Properties",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -83,7 +83,7 @@ function Get-MonkeySharePointOnlineSiteProperty {
 			Tags = @('SPSTenantSites');
 		}
 		Write-Information @msg
-		if ($O365Object.isSharePointAdministrator) {
+		If ($O365Object.isSharePointAdministrator) {
 			#Splat params
 			$pSite = @{
 				Authentication = $O365Object.auth_tokens.SharePointAdminOnline;
@@ -92,7 +92,7 @@ function Get-MonkeySharePointOnlineSiteProperty {
 				Debug = $O365Object.Debug;
 			}
 		}
-		else {
+		Else {
 			#Splat params
 			$pSite = @{
 				Authentication = $O365Object.auth_tokens.SharePointAdminOnline;
@@ -102,15 +102,23 @@ function Get-MonkeySharePointOnlineSiteProperty {
 				Debug = $O365Object.Debug;
 			}
 		}
-		@($O365Object.spoSites).ForEach({
-				$sp = $_ | Get-MonkeyCSOMSiteProperty @pSite
-				if ($sp) {
-					[void]$all_site_properties.Add($sp)
-				}
-			});
+        If($null -ne $O365Object.spoSites){
+		    @($O365Object.spoSites).ForEach({
+				    $sp = $_ | Get-MonkeyCSOMSiteProperty @pSite
+				    If ($sp) {
+					    [void]$all_site_properties.Add($sp)
+				    }
+			    });
+        }
+        Else{
+            $sp = Get-MonkeyCSOMSiteProperty @pSite
+            If ($sp) {
+				[void]$all_site_properties.Add($sp)
+			}
+        }
 	}
-	end {
-		if ($all_site_properties) {
+	End {
+		If ($all_site_properties) {
 			$all_site_properties.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Sites')
 			[pscustomobject]$obj = @{
 				Data = $all_site_properties;
@@ -118,7 +126,7 @@ function Get-MonkeySharePointOnlineSiteProperty {
 			}
 			$returnData.o365_spo_sites_properties = $obj
 		}
-		else {
+		Else {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "SharePoint Online Site Properties",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -131,6 +139,7 @@ function Get-MonkeySharePointOnlineSiteProperty {
 		}
 	}
 }
+
 
 
 

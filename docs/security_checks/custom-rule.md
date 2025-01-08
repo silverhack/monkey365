@@ -31,18 +31,27 @@ To check the remote PowerShell access status for users, create a JSON rule with 
             "Monkey365 rule"
         ]
     ],
-    "path": "o365_exo_users",
-	"conditions":  [
-		{
-			statements: [
-				{
-					conditions : [
-						["RemotePowerShellEnabled","ne","False"]
-					]
-				}
+	"rule": {
+		"path": "o365_exo_users",
+		"subPath": null,
+		"selectCondition": {
+		},
+		"query": [
+		  {
+			"filter": [
+			  {
+				"conditions": [
+				  [
+					"RemotePowerShellEnabled",
+					"ne",
+					"False"
+				  ]
+				]
+			  }
 			]
-		}
-	],
+		  }
+		]
+	},
     "idsuffix": "o365_exo_users_remote_ps_enabled"
 }
 
@@ -58,7 +67,7 @@ To check the remote PowerShell access status for users, create a JSON rule with 
 
 5.- ```references```: This parameter is optional. You can add external links in order to help consultants find more information about findings. Result output will sometimes be more than enough to explain what the issue is, but it can also be beneficial to explain why an issue exists, and this is a great place to do that. Additional elements such as remediation or rationale can be added to existing JSON rule. Both of them supports <a href='https://en.wikipedia.org/wiki/Markdown' target='_blank'>Markdown</a>.
 
-6.- The ```condition``` property determines the checks Monkey365 will use to test each user returned in Exchange Online. Specifically, the ```RemotePowerShellEnabled``` property of each user object will be evaluated. The value of ```RemotePowerShellEnabled``` should not be *False*. Multiple PowerShell comparison operators are supported. The following <a href='https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators?view=powershell-7.2' target='_blank'>link</a> is a list of comparison operators supported by PowerShell. 
+6.- The ```rule``` property determines the checks Monkey365 will use to test each user returned in Exchange Online. Specifically, the ```RemotePowerShellEnabled``` property of each user object will be evaluated. The value of ```RemotePowerShellEnabled``` should not be *False*. Multiple PowerShell comparison operators are supported. The following <a href='https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators?view=powershell-7.2' target='_blank'>link</a> is a list of comparison operators supported by PowerShell. 
 
 7.-  ```idSuffix```: UniqueID for the rule.
 

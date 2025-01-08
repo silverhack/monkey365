@@ -1,0 +1,135 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "PostgreSQL Server",
+  "serviceName": "Databases",
+  "displayName": "Ensure 'Allow public access from any Azure service within Azure to this server' for PostgreSQL flexible server is disabled",
+  "description": "Disable access from Azure services to PostgreSQL Database Server.",
+  "rationale": "If access from Azure services is enabled, the server\u0027s firewall will accept connections from all Azure resources, including resources not in your subscription. This is usually not a desired configuration. Instead, setup firewall rules to allow access from specific network ranges or VNET rules to allow access from specific virtual networks.",
+  "impact": null,
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com\r\n\t\t\t\t\t2. Go to `Azure Database for PostgreSQL server`\r\n\t\t\t\t\t3. For each database, click on `Connection security`\r\n\t\t\t\t\t4. In `Firewall rules`\r\n\t\t\t\t\t5. Ensure `Allow access to Azure services is set to OFF`.\r\n\t\t\t\t\t6. Click Save to apply the changed rule",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/postgresql/concepts-firewall-rules",
+    "https://docs.microsoft.com/en-us/azure/postgresql/howto-manage-firewall-using-cli",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-4-protect-applications-and-services-from-external-network-attacks",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "5.2.5",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_postgresql_servers",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "fwRules.RuleName",
+                "eq",
+                "AllowAllWindowsAzureIps"
+              ],
+              [
+                "fwRules.StartIpAddress",
+                "eq",
+                "0.0.0.0"
+              ],
+              [
+                "fwRules.EndIpAddress",
+                "eq",
+                "0.0.0.0"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "postgresql_allow_azure_services_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ Function New-HttpRequestMessage{
             #Check if uncommon headers present
             if($UncommonHeaders.Count -gt 0){
                 foreach($header in $UncommonHeaders.GetEnumerator()){
-                    Write-Verbose ($script:messages.AddUncommonHeaderInfo -f $header.Key)
+                    Write-Debug ($script:messages.AddUncommonHeaderInfo -f $header.Key)
                     [void]$request.Headers.TryAddWithoutValidation($header.Key,$header.Value.ToString())
                 }
             }

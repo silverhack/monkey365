@@ -1,4 +1,4 @@
-﻿Set-StrictMode -Version Latest #-Version 1.0
+Set-StrictMode -Version Latest #-Version 1.0
 
 $LocalizedDataParams = @{
     BindingVariable = 'messages';

@@ -1,0 +1,136 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Azure Virtual Machines",
+  "serviceName": "Compute",
+  "displayName": "Ensure Virtual Machines are utilizing Managed Disks",
+  "description": "
+			Migrate blob-based VHDs to Managed Disks on Virtual Machines to exploit the default features of this configuration. The features include: 
+			1. Default Disk Encryption 
+			2. Resilience, as Microsoft will managed the disk storage and move around if underlying hardware goes faulty 
+			3. Reduction of costs over storage accounts
+  ",
+  "rationale": "
+			Managed disks are by default encrypted on the underlying hardware, so no additional encryption is required for basic protection. It is available if additional encryption is required. Managed disks are by design more resilient that storage accounts. 
+			For ARM-deployed Virtual Machines, Azure Adviser will at some point recommend moving VHDs to managed disks both from a security and cost management perspective. 
+  ",
+  "impact": "There are additional costs for managed disks based off of disk space allocated. When converting to managed disks, VMs will be powered off and back on.",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Using the search feature, go to `Virtual Machines`\r\n\t\t\t\t\t2. Select the virtual machine you would like to convert\r\n\t\t\t\t\t3. Select `Disks` in the menu for the VM\r\n\t\t\t\t\t4. At the top select `Migrate to managed disks`\r\n\t\t\t\t\t5. You may follow the prompts to convert the disk and finish by selecting `Migrate` to start the process\r\n\t\t\t\t\t\r\n\t\t\t\t\t**NOTE** VMs will be stopped and restarted after migration is complete.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/virtual-machines/windows/convert-unmanaged-to-managed-disks", 
+	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-4-enable-data-at-rest-encryption-by-default",
+	"https://docs.microsoft.com/en-us/azure/virtual-machines/faq-for-disks",
+	"https://azure.microsoft.com/en-us/pricing/details/managed-disks/"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "8.2",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_virtual_machines",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "osDisk.isManagedDisk",
+                "ne",
+                "true"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "VM Name",
+          "location": "Location",
+          "os_managed_disk": "Managed Disk"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "name",
+            "location",
+            "tags",
+            "osDisk"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_os_managed_disk_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

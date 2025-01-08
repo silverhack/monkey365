@@ -1,4 +1,4 @@
-﻿ConvertFrom-StringData @'
+ConvertFrom-StringData @'
     AppendDocElementTo             = Append document element into {0}
     AppendXmlElementTo             = Append Xml element into {0}
     EmptyDiv                       = Empty div found in {0}

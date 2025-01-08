@@ -1,0 +1,114 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Microsoft Fabric",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure guest user access is restricted",
+  "description": "This setting allows business-to-business (B2B) guests access to Microsoft Fabric, and contents that they have permissions to. With the setting turned off, B2B guest users receive an error when trying to access Power BI. The recommended state is Enabled for a subset of the organization or Disabled.",
+  "rationale": "Establishing and enforcing a dedicated security group prevents unauthorized access to Microsoft Fabric for guests collaborating in Azure that are new or assigned guest status from other applications. This upholds the principle of least privilege and uses role-based access control (RBAC). These security groups can also be used for tasks like conditional access, enhancing risk management and user accountability across the organization.",
+  "impact": "Security groups will need to be more closely tended to and monitored.",
+  "remediation": {
+    "text": "
+			###### Restrict guest user access: 
+			1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal 
+			2. Select Tenant settings. 
+			3. Scroll to Export and Sharing settings. 
+			4. Set Guest users can access Microsoft Fabric to one of these states: 
+			  * State 1: Disabled 
+			  * State 2: Enabled with Specific security groups selected and defined. 
+
+			**Important** : If the organization doesn't actively use this feature it is recommended to keep it Disabled. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/fabric/admin/service-admin-portal-export-sharing"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "9.1.1",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure guest user access is restricted",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "fabric_guest_user_access_not_restricted",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

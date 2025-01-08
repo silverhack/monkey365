@@ -5,7 +5,7 @@
 		"version" : "3.0.0"
 	},
 	"rules": {
-		"aad-security-defaults-disabled.json": [
+		"entra-security-defaults-enabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -18,7 +18,7 @@
 				]
 			}
 		],
-		"aad-iam-privileged-users-disabled-mfa.json": [
+		"entra-iam-privileged-users-disabled-mfa.json": [
 			{
 				"args": [
 					"aad-privileged-roles.json"
@@ -34,7 +34,7 @@
 				]
 			}
 		],
-		"aad-iam-users-disabled-mfa.json": [
+		"entra-iam-users-disabled-mfa.json": [
 			{
 				"enabled": true,
 				"level": "high",
@@ -47,7 +47,59 @@
 				]
 			}
 		],
-		"aad-ensure-mfa-for-high-privileged-users-missing-cap.json": [
+		"entra-users-remember-mfa-on-devices-disabled.json": [
+			{
+				"enabled": true,
+				"level": "low",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "2.1.4"
+					}
+				]
+			}
+		],
+		"entra-trusted-location-enabled..json": [
+			{
+				"enabled": true,
+				"level": "low",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "2.2.1"
+					}
+				]
+			}
+		],
+		"entra-exclusionary-geograhic-cap-exists.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "2.2.2"
+					}
+				]
+			}
+		],
+		"eid-exclusionary-device-code-flow-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "2.2.3"
+					}
+				]
+			}
+		],
+		"eid-ensure-mfa-for-high-privileged-users-missing-cap.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -60,7 +112,7 @@
 				]
 			}
 		],
-		"aad-ensure-mfa-for-users-missing-cap.json": [
+		"eid-ensure-mfa-for-users-missing-cap.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -73,10 +125,10 @@
 				]
 			}
 		],
-		"aad-ensure-mfa-for-risky-signs-missing-cap.json": [
+		"eid-ensure-mfa-for-risky-signs-missing-cap.json": [
 			{
 				"enabled": true,
-				"level": "medium",
+				"level": "low",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -86,10 +138,10 @@
 				]
 			}
 		],
-		"aad-ensure-mfa-for-azure-management-missing-cap.json": [
+		"eid-ensure-mfa-for-azure-management-missing-cap.json": [
 			{
 				"enabled": true,
-				"level": "medium",
+				"level": "low",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -99,10 +151,23 @@
 				]
 			}
 		],
-		"non-admin-users-allowedto-create-tenants.json": [
+		"eid-ensure-mfa-admin-portals-missing-cap.json": [
 			{
 				"enabled": true,
-				"level": "medium",
+				"level": "low",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "2.2.8"
+					}
+				]
+			}
+		],
+		"eid-non-admin-users-allowedto-create-tenants.json": [
+			{
+				"enabled": true,
+				"level": "low",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -112,10 +177,23 @@
 				]
 			}
 		],
-		"azure-activedirectory-sspr-reset-methods.json": [
+		"eid-ensure-guest-users-are-reviewed.json": [
 			{
 				"enabled": true,
 				"level": "low",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "2.4"
+					}
+				]
+			}
+		],
+		"eid-sspr-reset-number-of-methods.json": [
+			{
+				"enabled": true,
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -125,7 +203,33 @@
 				]
 			}
 		],
-		"aad-bad-password-list-disabled.json": [
+		"eid-account-lockout-threshold-policy.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "2.6"
+					}
+				]
+			}
+		],
+		"eid-account-lockout-seconds-policy.json": [
+			{
+				"enabled": true,
+				"level": "info",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "2.7"
+					}
+				]
+			}
+		],
+		"eid-custom-banned-password-list-disabled.json": [
 			{
 				"enabled": true,
 				"level": "low",
@@ -138,7 +242,7 @@
 				]
 			}
 		],
-		"azure-activedirectory-sspr-mfa-reconfirm-days.json": [
+		"eid-sspr-number-of-days-mfa-reconfirm-days.json": [
 			{
 				"enabled": true,
 				"level": "low",
@@ -151,10 +255,10 @@
 				]
 			}
 		],
-		"azure-activedirectory-sspr-notify-users-disabled.json": [
+		"eid-sspr-notify-users-on-password-reset-disabled.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -164,7 +268,7 @@
 				]
 			}
 		],
-		"azure-activedirectory-sspr-notify-admin-disabled.json": [
+		"eid-sspr-notify-admin-other-admins-on-password-reset-disabled.json": [
 			{
 				"enabled": true,
 				"level": "low",
@@ -177,7 +281,7 @@
 				]
 			}
 		],
-		"azure-activedirectory-users-can-consent-apps-data-access.json": [
+		"eid-users-can-consent-apps-data-access.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -190,10 +294,10 @@
 				]
 			}
 		],
-		"azure-activedirectory-users-can-consent-apps-data-access-trusted-publishers-disabled.json": [
+		"eid-users-can-consent-apps-data-access-trusted-publishers-disabled.json": [
 			{
 				"enabled": true,
-				"level": "medium",
+				"level": "low",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -203,10 +307,10 @@
 				]
 			}
 		],
-		"azure-activedirectory-users-can-register-apps-enabled.json": [
+		"eid-users-can-register-apps-enabled.json": [
 			{
 				"enabled": true,
-				"level": "info",
+				"level": "low",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -216,10 +320,10 @@
 				]
 			}
 		],
-		"azure-ad-guest-object-restriction-disabled.json": [
+		"eid-guest-object-restriction-disabled.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -229,10 +333,10 @@
 				]
 			}
 		],
-		"azure-ad-guest-invite-restriction-disabled.json": [
+		"eid-guest-invite-restriction-disabled.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -242,7 +346,7 @@
 				]
 			}
 		],
-		"azure-activedirectory-restrict-users-ad-portal.json": [
+		"eid-restrict-users-entra-portal.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -255,7 +359,7 @@
 				]
 			}
 		],
-		"azure-ad-group-features-disabled.json": [
+		"eid-user-ability-to access-group-features-disabled.json": [
 			{
 				"enabled": true,
 				"level": "low",
@@ -268,10 +372,10 @@
 				]
 			}
 		],
-		"azure-ad-users-can-create-security-groups.json": [
+		"eid-users-can-create-security-groups.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -281,10 +385,10 @@
 				]
 			}
 		],
-		"azure-activedirectory-owners-can-manage-group-membership-enabled.json": [
+		"eid-owners-can-manage-group-membership-enabled.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -294,10 +398,10 @@
 				]
 			}
 		],
-		"azure-activedirectory-users-can-create-o365-groups.json": [
+		"eid-users-can-create-m365-groups.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -307,7 +411,7 @@
 				]
 			}
 		],
-		"azure-activedirectory-devices-require-mfa-settings.json": [
+		"eid-register-or-joined-devices-require-mfa-settings.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -349,12 +453,28 @@
 		"azure-subscription-permit-no-one-disabled.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "3.0.0",
 						"reference": "2.25"
+					}
+				]
+			}
+		],
+		"eid-iam-excessive-global-admins.json": [
+			{
+				"args": [
+					5
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "2.26"
 					}
 				]
 			}
@@ -372,7 +492,7 @@
 				]
 			}
 		],
-		"cloud-app-security-missing-security-center-integration.json": [
+		"azure-defender-for-mcas-enabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -385,7 +505,7 @@
 				]
 			}
 		],
-		"azure-defender-missing-vm-protection.json": [
+		"azure-defender-missing-server-protection.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -394,6 +514,58 @@
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "3.0.0",
 						"reference": "3.1.3.1"
+					}
+				]
+			}
+		],
+		"azure-vulnerability-assessment-on-servers-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.1.3.2"
+					}
+				]
+			}
+		],
+		"azure-endpoint-protection-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.1.3.3"
+					}
+				]
+			}
+		],
+		"azure-agentless-scanning-for-machines-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.1.3.4"
+					}
+				]
+			}
+		],
+		"azure-file-integrity-monitoring-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.1.3.5"
 					}
 				]
 			}
@@ -407,6 +579,32 @@
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "3.0.0",
 						"reference": "3.1.4.1"
+					}
+				]
+			}
+		],
+		"azure-agentless-discovery-for-kubernetes-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.1.4.2"
+					}
+				]
+			}
+		],
+		"azure-agentless-container-vulnerability-assessment-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.1.4.3"
 					}
 				]
 			}
@@ -437,39 +635,21 @@
 				]
 			}
 		],
-		"azure-defender-missing-sql-database-protection.json": [
+		"azure-defender-missing-cosmodb-protection.json": [
 			{
-				"args": [
-					"SqlServers"
-				],
 				"enabled": true,
 				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "3.0.0",
-						"reference": "3.1.7.4"
+						"reference": "3.1.7.1"
 					}
 				]
-			},
+			}
+		],
+		"azure-defender-missing-osrd-protection.json": [
 			{
-				"args": [
-					"SqlServerVirtualMachines"
-				],
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Foundations",
-						"version": "3.0.0",
-						"reference": "3.1.7.3"
-					}
-				]
-			},
-			{
-				"args": [
-					"OpenSourceRelationalDatabases"
-				],
 				"enabled": true,
 				"level": "medium",
 				"compliance": [
@@ -479,18 +659,30 @@
 						"reference": "3.1.7.2"
 					}
 				]
-			},
+			}
+		],
+		"azure-defender-missing-managed-sql-database-protection.json": [
 			{
-				"args": [
-					"CosmosDbs"
-				],
 				"enabled": true,
 				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "3.0.0",
-						"reference": "3.1.7.1"
+						"reference": "3.1.7.3"
+					}
+				]
+			}
+		],
+		"azure-defender-missing-sql-server-on-machines-protection.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.1.7.4"
 					}
 				]
 			}
@@ -508,7 +700,7 @@
 				]
 			}
 		],
-		"azure-defender-missing-rm-protection.json": [
+		"azure-defender-missing-resource-manager-protection.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -521,7 +713,46 @@
 				]
 			}
 		],
-		"azure-security-contact-mail-disabled.json": [
+		"azure-defender-recommendation-apply-system-updates-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.1.10"
+					}
+				]
+			}
+		],
+		"azure-cloud-security-benchmark-policies-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.1.11"
+					}
+				]
+			}
+		],
+		"azure-security-contact-send-email-to-owners-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.1.12"
+					}
+				]
+			}
+		],
+		"azure-security-contact-additional-email-not-configured.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -543,6 +774,19 @@
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "3.0.0",
 						"reference": "3.1.14"
+					}
+				]
+			}
+		],
+		"azure-defender-easm-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.1.15"
 					}
 				]
 			}
@@ -573,7 +817,7 @@
 				]
 			}
 		],
-		"azure-keyvault-keys-expiration-set.json": [
+		"azure-expiration-date-for-all-keys-in-rbac-keyvault-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -586,7 +830,20 @@
 				]
 			}
 		],
-		"azure-keyvault-secrets-expiration-set.json": [
+		"azure-expiration-date-for-all-keys-in-non-rbac-keyvault-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.3.2"
+					}
+				]
+			}
+		],
+		"azure-expiration-date-for-all-secrets-in-rbac-keyvault-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -595,6 +852,19 @@
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "3.0.0",
 						"reference": "3.3.3"
+					}
+				]
+			}
+		],
+		"azure-expiration-date-for-all-secrets-in-non-rbac-keyvault-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.3.4"
 					}
 				]
 			}
@@ -612,7 +882,46 @@
 				]
 			}
 		],
-		"azure-storage-accounts-https-traffic-enabled.json": [
+		"azure-keyvault-rbac-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.3.6"
+					}
+				]
+			}
+		],
+		"azure-keyvault-private-endpoint-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.3.7"
+					}
+				]
+			}
+		],
+		"azure-keyvault-automatic-key-rotation-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "3.3.8"
+					}
+				]
+			}
+		],
+		"azure-storage-accounts-secure-transfer-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -628,7 +937,7 @@
 		"azure-storage-accounts-infrastructure-encryption-disabled.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -651,7 +960,7 @@
 				]
 			}
 		],
-		"azure-storage-accounts-key-rotation-disabled.json": [
+		"azure-storage-accounts-access-key-rotation-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -664,7 +973,20 @@
 				]
 			}
 		],
-		"azure-storage-accounts-public-access-level.json": [
+		"azure-storage-account-shared-access-signature-tokens-expiration.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "4.5"
+					}
+				]
+			}
+		],
+		"azure-storage-accounts-public-network-access-enabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -677,7 +999,7 @@
 				]
 			}
 		],
-		"azure-storage-accounts-access-all-networks.json": [
+		"azure-storage-account-default-network-access-rule-allow.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -703,7 +1025,20 @@
 				]
 			}
 		],
-		"azure-storage-accounts-blob-data-protection-missing.json": [
+		"azure-storage-account-private-endpoints-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "4.9"
+					}
+				]
+			}
+		],
+		"azure-storage-accounts-soft-delete-for-containers-and-blob-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -729,7 +1064,7 @@
 				]
 			}
 		],
-		"azure-storage-accounts-queue-logging-disabled.json": [
+		"azure-storage-accounts-queue-storage-logging-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -742,10 +1077,10 @@
 				]
 			}
 		],
-		"azure-storage-accounts-blob-logging-disabled.json": [
+		"azure-storage-account-logging-disabled-for-blob-service.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -755,10 +1090,10 @@
 				]
 			}
 		],
-		"azure-storage-accounts-table-logging-disabled.json": [
+		"azure-storage-account-logging-disabled-for-table-service.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -768,10 +1103,10 @@
 				]
 			}
 		],
-		"azure-storage-accounts-minimum-tls-disabled.json": [
+		"azure-storage-accounts-minimum-tls-not-configured.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -781,10 +1116,36 @@
 				]
 			}
 		],
+		"azure-storage-account-cross-tenant-replication-not-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "4.16"
+					}
+				]
+			}
+		],
+		"azure-storage-account-blob-anonymous-access-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "4.17"
+					}
+				]
+			}
+		],
 		"azure-sql-server-auditing-disabled.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -820,7 +1181,7 @@
 				"level": "medium"
 			}
 		],
-		"azure-sql-server-tdp-own-key-enabled.json": [
+		"azure-sql-server-tde-protector-lack-cmk-encryption.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -833,7 +1194,7 @@
 				]
 			}
 		],
-		"azure-sql-server-active-directory-admin-disabled.json": [
+		"azure-sql-server-entra-id-auth-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -846,10 +1207,10 @@
 				]
 			}
 		],
-		"azure-sql-server-data-encryption-disabled.json": [
+		"azure-sql-database-data-encryption-disabled.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -862,7 +1223,7 @@
 		"azure-sql-server-auditing-retention.json": [
 			{
 				"enabled": true,
-				"level": "low",
+				"level": "medium",
 				"compliance": [
 					{
 						"name": "CIS Microsoft Azure Foundations",
@@ -872,7 +1233,20 @@
 				]
 			}
 		],
-		"azure-postgresql-enforcessl-disabled.json": [
+		"azure-sql-server-public-network-access-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "5.1.7"
+					}
+				]
+			}
+		],
+		"azure-postgresql-secure-transport-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -911,7 +1285,7 @@
 				]
 			}
 		],
-		"azure-postgresql-log-retention-days.json": [
+		"azure-postgresql-log-low-retention-days.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -963,7 +1337,7 @@
 				]
 			}
 		],
-		"azure-postgresql-infrastructure-encryption-disabled.json": [
+		"azure-postgresql-infrastructure-double-encryption-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -976,7 +1350,7 @@
 				]
 			}
 		],
-		"azure-mysql-enforcessl-disabled.json": [
+		"azure-mysql-secure-transport-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -1002,7 +1376,7 @@
 				]
 			}
 		],
-		"azure-mysql-audit-log-parameter-disabled.json": [
+		"azure-mysql-audit-log-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -1015,7 +1389,7 @@
 				]
 			}
 		],
-		"azure-mysql-audit-log-events-parameter-disabled.json": [
+		"azure-mysql-audit-log-connection-events-parameter-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -1028,7 +1402,59 @@
 				]
 			}
 		],
-		"azure-diagnostic-settings-missing-categories.json": [
+		"azure-cosmosdb-all-networks-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "5.4.1"
+					}
+				]
+			}
+		],
+		"azure-cosmosdb-private-endpoints-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "5.4.2"
+					}
+				]
+			}
+		],
+		"azure-cosmosdb-entraid-authentication-and-rbac-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "5.4.3"
+					}
+				]
+			}
+		],
+		"azure-diagnostic-settings-for-subscription-not-configured.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "6.1.1"
+					}
+				]
+			}
+		],
+		"azure-diagnostic-settings-for-subscription-missing-categories.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -1041,7 +1467,20 @@
 				]
 			}
 		],
-		"azure-keyvault-logging-enabled.json": [
+		"azure-activity-logs-storage-account-missing-cmk.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "6.1.3"
+					}
+				]
+			}
+		],
+		"azure-keyvault-logging-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -1054,12 +1493,38 @@
 				]
 			}
 		],
-		"azure-activity-log-disabled-alerts.json": [
+		"azure-network-security-group-flow-logs-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "6.1.5"
+					}
+				]
+			}
+		],
+		"azure-app-services-logging-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "6.1.6"
+					}
+				]
+			}
+		],
+		"azure-activity-log-missing-alerts.json": [
 			{
 				"args": [
 					"Create Policy Assignment",
 					"Microsoft.Authorization/policyAssignments/write",
-					"True",
+					"",
 					"3.0.0",
 					"6.2.1",
 					"Monitoring for create policy assignment events gives insight into changes done in 'azure policy - assignments' and may reduce the time it takes to detect unsolicited changes."
@@ -1071,7 +1536,7 @@
 				"args": [
 					"Delete Policy Assignment",
 					"Microsoft.Authorization/policyAssignments/delete",
-					"True",
+					"",
 					"3.0.0",
 					"6.2.2",
 					"Monitoring for delete policy assignment events gives insight into changes done in 'azure policy - assignments' and may reduce the time it takes to detect unsolicited changes."
@@ -1083,7 +1548,7 @@
 				"args": [
 					"Create or Update Network Security Group",
 					"Microsoft.Network/networkSecurityGroups/write",
-					"True",
+					"",
 					"3.0.0",
 					"6.2.3",
 					"Monitoring for 'Create' or 'Update Network Security Group' events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
@@ -1095,7 +1560,7 @@
 				"args": [
 					"Delete Network Security Group",
 					"Microsoft.Network/networkSecurityGroups/delete",
-					"True",
+					"",
 					"3.0.0",
 					"6.2.4",
 					"Monitoring for 'Delete Network Security Group' events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
@@ -1107,7 +1572,7 @@
 				"args": [
 					"Create or Update Security Solution",
 					"Microsoft.Security/securitySolutions/write",
-					"True",
+					"",
 					"3.0.0",
 					"6.2.5",
 					"Monitoring for Create or Update Security Solution events gives insight into changes to the active security solutions and may reduce the time it takes to detect suspicious activity."
@@ -1119,7 +1584,7 @@
 				"args": [
 					"Delete Security Solution",
 					"Microsoft.Security/securitySolutions/delete",
-					"True",
+					"",
 					"3.0.0",
 					"6.2.6",
 					"Monitoring for Delete Security Solution events gives insight into changes to the active security solutions and may reduce the time it takes to detect suspicious activity."
@@ -1131,139 +1596,10 @@
 				"args": [
 					"Create or Update SQL Server Firewall Rule",
 					"Microsoft.Sql/servers/firewallRules/write",
-					"True",
-					"3.0.0",
-					"6.2.7",
-					"Monitoring for Create or Update SQL Server Firewall Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Delete SQL Server Firewall Rule",
-					"Microsoft.Sql/servers/firewallRules/delete",
-					"True",
-					"3.0.0",
-					"6.2.8",
-					"Monitoring for Delete SQL Server Firewall Rule events gives insight into SQL network access changes and may reduce the time it takes to detect suspicious activity."
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Create or Update Public IP Address rule",
-					"Microsoft.Network/publicIPAddresses/write",
-					"True",
-					"3.0.0",
-					"6.2.9",
-					"Monitoring for Create or Update Public IP Address events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Delete Public IP Address rule",
-					"Microsoft.Network/publicIPAddresses/delete",
-					"True",
-					"3.0.0",
-					"6.2.10",
-					"Monitoring for Delete Public IP Address events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-activity-log-missing-alerts.json": [
-			{
-				"args": [
-					"Create Policy Assignment",
-					"Microsoft.Authorization/policyAssignments/write",
-					"",
-					"3.0.0",
-					"6.2.1",
-					"Monitoring for create policy assignment events gives insight into changes done in 'azure policy - assignments' and may reduce the time it takes to detect unsolicited changes.",
-					"monkey365 rule"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Delete Policy Assignment",
-					"Microsoft.Authorization/policyAssignments/delete",
-					"",
-					"3.0.0",
-					"6.2.2",
-					"Monitoring for delete policy assignment events gives insight into changes done in 'azure policy - assignments' and may reduce the time it takes to detect unsolicited changes.",
-					"monkey365 rule"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Create or Update Network Security Group",
-					"Microsoft.Network/networkSecurityGroups/write",
-					"",
-					"3.0.0",
-					"6.2.3",
-					"Monitoring for 'Create' or 'Update Network Security Group' events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
-					"monkey365 rule"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Delete Network Security Group",
-					"Microsoft.Network/networkSecurityGroups/delete",
-					"",
-					"3.0.0",
-					"6.2.4",
-					"Monitoring for 'Delete Network Security Group' events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
-					"monkey365 rule"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Create or Update Security Solution",
-					"Microsoft.Security/securitySolutions/write",
-					"",
-					"3.0.0",
-					"6.2.5",
-					"Monitoring for Create or Update Security Solution events gives insight into changes to the active security solutions and may reduce the time it takes to detect suspicious activity.",
-					"monkey365 rule"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Delete Security Solution",
-					"Microsoft.Security/securitySolutions/delete",
-					"",
-					"3.0.0",
-					"6.2.6",
-					"Monitoring for Delete Security Solution events gives insight into changes to the active security solutions and may reduce the time it takes to detect suspicious activity.",
-					"monkey365 rule"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Create or Update SQL Server Firewall Rule",
-					"Microsoft.Sql/servers/firewallRules/write",
 					"",
 					"3.0.0",
 					"6.2.7",
-					"Monitoring for Create or Update or Delete SQL Server Firewall Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
-					"monkey365 rule"
+					"Monitoring for Create or Update or Delete SQL Server Firewall Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
 				"enabled": true,
 				"level": "medium"
@@ -1275,8 +1611,7 @@
 					"",
 					"3.0.0",
 					"6.2.8",
-					"Monitoring for Delete SQL Server Firewall Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
-					"monkey365 rule"
+					"Monitoring for Delete SQL Server Firewall Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
 				"enabled": true,
 				"level": "medium"
@@ -1288,8 +1623,7 @@
 					"",
 					"3.0.0",
 					"6.2.9",
-					"Monitoring for Create or Update Public IP Address events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
-					"monkey365 rule"
+					"Monitoring for Create or Update Public IP Address events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
 				"enabled": true,
 				"level": "medium"
@@ -1301,11 +1635,49 @@
 					"",
 					"3.0.0",
 					"6.2.10",
-					"Monitoring for Create or Update Public IP Address events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
-					"monkey365 rule"
+					"Monitoring for Create or Update Public IP Address events gives insight into network access changes and may reduce the time it takes to detect suspicious activity."
 				],
 				"enabled": true,
 				"level": "medium"
+			}
+		],
+		"azure-application-insights-not-configured.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "6.3.1"
+					}
+				]
+			}
+		],
+		"azure-monitor-resource-logging-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "6.4"
+					}
+				]
+			}
+		],
+		"azure-sku-basic-detected.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "6.5"
+					}
+				]
 			}
 		],
 		"azure-nsg-tcp-ports-open.json": [
@@ -1442,34 +1814,6 @@
 				"level": "medium"
 			}
 		],
-		"azure-nsg-port-open.json": [
-			{
-				"args": [
-					"ALL",
-					"*",
-					"`all ports` open to all. Network security groups should be periodically evaluated for port misconfigurations. Where certain ports and protocols may be exposed to the Internet, they should be evaluated for necessity and restricted wherever they are not explicitly required and narrowly configured.",
-					"The potential security problem with using HTTP(S) over the Internet is that attackers can use various brute force techniques to gain access to Azure resources. Once the attackers gain access, they can use the resource as a launch point for compromising other resources within the Azure tenant.",
-					"3.0.0",
-					"7.4",
-					""
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"ALL",
-					"0-65535",
-					"`all ports` open to all. Network security groups should be periodically evaluated for port misconfigurations. Where certain ports and protocols may be exposed to the Internet, they should be evaluated for necessity and restricted wherever they are not explicitly required and narrowly configured.",
-					"The potential security problem with using HTTP(S) over the Internet is that attackers can use various brute force techniques to gain access to Azure resources. Once the attackers gain access, they can use the resource as a launch point for compromising other resources within the Azure tenant.",
-					"2.0.0",
-					"7.4",
-					""
-				],
-				"enabled": true,
-				"level": "high"
-			}
-		],
 		"azure-network-watcher-flow-log-retention.json": [
 			{
 				"enabled": true,
@@ -1509,6 +1853,19 @@
 				]
 			}
 		],
+		"azure-bastion-hosts-not-present.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "8.1"
+					}
+				]
+			}
+		],
 		"azure-os-managed-disk-disabled.json": [
 			{
 				"enabled": true,
@@ -1522,7 +1879,7 @@
 				]
 			}
 		],
-		"azure-vm-os-data-sse-encryption-disabled.json": [
+		"azure-vm-os-data-cmk-encryption-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -1535,7 +1892,7 @@
 				]
 			}
 		],
-		"azure-unattached-disk-sse-encryption-disabled.json": [
+		"azure-unattached-disk-cmk-encryption-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -1544,6 +1901,32 @@
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "3.0.0",
 						"reference": "8.4"
+					}
+				]
+			}
+		],
+		"azure-disk-network-access-allow-public-access.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "8.5"
+					}
+				]
+			}
+		],
+		"azure-data-access-authentication-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "8.6"
 					}
 				]
 			}
@@ -1561,7 +1944,7 @@
 				]
 			}
 		],
-		"azure-vm-antimalware-disabled.json": [
+		"azure-vm-endpoint-protection-disabled.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -1583,6 +1966,32 @@
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "3.0.0",
 						"reference": "8.9"
+					}
+				]
+			}
+		],
+		"azure-identities-with-access-to-privileged-vm-lacking-mfa.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "8.10"
+					}
+				]
+			}
+		],
+		"azure-vm-trusted-launch-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "8.11"
 					}
 				]
 			}
@@ -1639,7 +2048,7 @@
 				]
 			}
 		],
-		"azure-app-services-ad-managed-identity-missing.json": [
+		"azure-app-services-eid-managed-identity-missing.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -1648,6 +2057,19 @@
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "3.0.0",
 						"reference": "9.5"
+					}
+				]
+			}
+		],
+		"azure-app-service-basic-auth-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "3.0.0",
+						"reference": "9.6"
 					}
 				]
 			}
@@ -1704,7 +2126,7 @@
 				]
 			}
 		],
-		"azure-app-services-client-certificate-missing.json": [
+		"azure-app-service-lack-keyvault-secret.json": [
 			{
 				"enabled": true,
 				"level": "medium",
@@ -1712,7 +2134,33 @@
 					{
 						"name": "CIS Microsoft Azure Foundations",
 						"version": "2.0.0",
-						"reference": "9.4"
+						"reference": "9.11"
+					}
+				]
+			}
+		],
+		"azure-app-service-remote-debugging-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "2.0.0",
+						"reference": "9.12"
+					}
+				]
+			}
+		],
+		"azure-subscription-missing-resource-locks.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+						"version": "2.0.0",
+						"reference": "10.1"
 					}
 				]
 			}

@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ Function Get-PSExoModuleFile{
         [parameter(Mandatory=$false, HelpMessage="Purview")]
         [Switch]$Purview
     )
-    try{
-        if($PSBoundParameters['Purview'] -and $PSBoundParameters['Purview'].IsPresent){
+    Try{
+        If($PSBoundParameters['Purview'] -and $PSBoundParameters['Purview'].IsPresent){
             #Get Security and Compliance Auth token
 			$ExoAuth = $O365Object.auth_tokens.ComplianceCenter
             #Get TenantId from token
@@ -47,18 +47,18 @@ Function Get-PSExoModuleFile{
 			#Get Backend Uri
 			$Uri = $O365Object.SecCompBackendUri
             #Add AnchorMailbox header
-            if($O365Object.isConfidentialApp){
-                if($null -ne $O365Object.Tenant.MyDomain){
+            If($O365Object.isConfidentialApp){
+                If($null -ne $O365Object.Tenant.MyDomain){
                     $extraHeader = @{
                         'X-AnchorMailbox' = ("UPN:Monkey365@{0}" -f $O365Object.Tenant.MyDomain.id);
                     }
                 }
-                elseif((Test-IsValidTenantId -TenantId $O365Object.TenantId) -eq $false){
+                ElseIf((Test-IsValidTenantId -TenantId $O365Object.TenantId) -eq $false){
                     $extraHeader = @{
                         'X-AnchorMailbox' = ("UPN:Monkey365@{0}" -f $O365Object.TenantId);
                     }
                 }
-                else{
+                Else{
                     Write-Warning "Tenant Name was not recognized. Unable to get Compliance Center backend url"
                     return
                 }
@@ -78,7 +78,7 @@ Function Get-PSExoModuleFile{
                     Debug = $O365Object.debug;
                 }
             }
-            else{
+            Else{
                 #Get Module file
                 $param = @{
                     Authentication = $ExoAuth;
@@ -95,7 +95,7 @@ Function Get-PSExoModuleFile{
                 }
             }
         }
-        else{
+        Else{
             #Get environment
             $Environment = $O365Object.Environment
             #Get Auth token
@@ -117,7 +117,8 @@ Function Get-PSExoModuleFile{
         }
         Get-PSExoAdminApiObject @param
     }
-    catch{
+    Catch{
         Write-Verbose $_
     }
 }
+

@@ -1,0 +1,119 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "Identity Protection",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure the Entra ID 'Risky sign-ins' report is reviewed at least weekly",
+  "description": "
+		This report contains records of accounts that have had activity that could indicate they are compromised, such as accounts that have: 
+		* Successfully signed in after multiple failures, which is an indication that the accounts have cracked passwords. 
+		* Signed in to tenant from a client IP address that has been recognized by Microsoft as an anonymous proxy IP address (such as a TOR network). 
+		* Successful sign-ins from users where two sign-ins appeared to originate from different regions and the time between sign-ins makes it impossible for the user to have travelled between those regions. 
+  ",
+  "rationale": "Reviewing this report on a regular basis allows for identification and remediation of compromised accounts.",
+  "impact": null,
+  "remediation": {
+    "text": "
+			###### To review the 'Risky sign-ins' report: 
+			1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com. 
+			2. Click expand Protection select Risky activities. 
+			3. Under Report click on Risky sign-ins. 
+			4. Review by Risk level (aggregate). 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/overview-identity-protection",
+	"https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/howto-identity-protection-remediate-unblock"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "5.2.6.1",
+	  "profile": "E5 Level 1"
+    }
+  ],
+  "level": "info",
+  "tags": [
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+		"isManual":false,
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure the Entra ID'Risky sign-ins' report is reviewed at least weekly",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_sign_in_report_is_reviewed",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

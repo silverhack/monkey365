@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ function Get-MonkeySharePointOnlineTenantAdminInfo {
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
 		[string]$collectorId
 	)
-	begin {
+	Begin {
 		$sps_tenant_admin_details = $null
 		#Collector metadata
 		$monkey_metadata = @{
@@ -74,7 +74,7 @@ function Get-MonkeySharePointOnlineTenantAdminInfo {
 		}
 		$sps_tenant_admin_details = $null;
 	}
-	process {
+	Process {
 		$msg = @{
 			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online Tenant Admin Info",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -92,8 +92,8 @@ function Get-MonkeySharePointOnlineTenantAdminInfo {
 			$sps_tenant_admin_details = Get-MonkeyCSOMTenant @p
 		}
 	}
-	end {
-		if ($sps_tenant_admin_details) {
+	End {
+		If ($sps_tenant_admin_details) {
 			$sps_tenant_admin_details.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.TenantDetails')
 			[pscustomobject]$obj = @{
 				Data = $sps_tenant_admin_details;
@@ -101,7 +101,7 @@ function Get-MonkeySharePointOnlineTenantAdminInfo {
 			}
 			$returnData.o365_spo_tenant_admin_details = $obj
 		}
-		else {
+		Else {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Tenant Admin details",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -114,6 +114,7 @@ function Get-MonkeySharePointOnlineTenantAdminInfo {
 		}
 	}
 }
+
 
 
 

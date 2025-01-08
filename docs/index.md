@@ -19,6 +19,10 @@ To help with this effort, Monkey365 also provides several ways to identify secur
 
 # Architecture
 
+<div class="center">
+<img src='assets/images/monkey365_arch.png' />
+</div>
+
 Monkey365 works in three phases. In the first phase, collectors will issue queries against the multiple data sources to retrieve the desired metadata about targeted tenant or subscription, and then will collect information. Once all the necessary metadata is collected, the result is passed to an internal module in order to start the verifying phase, in which the tool uses the data collected in first phase to perform query search with a default set of rules, as a mechanism to evaluate the configuration and to search for potential misconfigurations and security issues. The third phase starts to generate reports, such as an HTML report containing structured data for quick checking and verification of the results.
 
 # Documentation

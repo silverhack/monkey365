@@ -1,0 +1,121 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "CosmosDB",
+  "serviceName": "Databases",
+  "displayName": "Ensure That 'Firewalls & Networks' Is Limited to Use Selected Networks Instead of All Networks",
+  "description": "Limiting your Cosmos DB to only communicate on whitelisted networks lowers its attack footprint.",
+  "rationale": "Selecting certain networks for your Cosmos DB to communicate restricts the number of networks including the internet that can interact with what is stored within the database.",
+  "impact": "
+		*WARNING* : Failure to whitelist the correct networks will result in a connection loss. 
+		*WARNING* : Changes to Cosmos DB firewalls may take up to 15 minutes to apply. Ensure that sufficient time is planned for remediation or changes to avoid disruption. 
+  ",
+  "remediation": {
+    "text": "
+			###### Remediate from Azure Portal 
+			1. Open the portal menu. 
+			2. Select the Azure Cosmos DB blade. 
+			3. Select a Cosmos DB account to audit. 
+			4. Select Networking. 
+			5. Under Public network access, select Selected networks. 
+			6. Under Virtual networks, select + Add existing virtual network or + Add a new virtual network. 
+			7. For existing networks, select subscription, virtual network, subnet and click Add. For new networks, provide a name, update the default values if required, and click Create. 
+			8. Click Save. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-private-endpoints",
+	"https://docs.microsoft.com/en-us/azure/cosmos-db/how-to-configure-vnet-service-endpoint",
+	"https://docs.microsoft.com/en-us/cli/azure/cosmosdb?view=azure-cli-latest#az-cosmosdb-show",
+	"https://docs.microsoft.com/en-us/cli/azure/cosmosdb/database?view=azure-cli-latest#az-cosmosdb-database-list",
+	"https://docs.microsoft.com/en-us/powershell/module/az.cosmosdb/?view=azps-8.1.0",
+	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-network-security#ns-2-secure-cloud-native-services-with-network-controls"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "5.4.1",
+	  "profile": "Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "cosmosdb_all_networks_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

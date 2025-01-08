@@ -1,0 +1,132 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "App Services",
+  "serviceName": "Hosted Services",
+  "displayName": "Ensure 'FTP State' is set to 'FTPS Only' or 'Disabled'",
+  "description": "By default, App Services can be deployed over FTP. If FTP is required for an essential deployment workflow, FTPS should be required for FTP login for all App Services. If FTPS is not expressly required for the App, the recommended setting is `Disabled`.",
+  "rationale": "FTP is an unencrypted network protocol that will transmit data - including passwords - in clear-text. The use of this protocol can lead to both data and credential compromise, and can present opportunities for exfiltration, persistence, and lateral movement.",
+  "impact": "Any deployment workflows that rely on FTP or FTPs rather than the WebDeploy or HTTPs endpoints may be affected.",
+  "remediation": {
+    "text": "###### Using From Azure Portal\r\n\t\t\t\t\t1. Go to the Azure Portal\r\n\t\t\t\t\t2. Select `App Services`\r\n\t\t\t\t\t3. Click on an `app`\r\n\t\t\t\t\t4. Select `Settings` and then `Configuration`\r\n\t\t\t\t\t5. Under `General Settings`, for the `Platform Settings`, the FTP state should be set to `Disabled` or `FTPS Only`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/app-service/deploy-ftp",
+	"https://docs.microsoft.com/en-us/azure/app-service/overview-security",
+	"https://docs.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-data-protection#dp-4-encrypt-sensitive-information-in-transit",
+	"https://docs.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-posture-vulnerability-management#pv-7-rapidly-and-automatically-remediate-software-vulnerabilities",
+	"https://learn.microsoft.com/en-us/rest/api/appservice/web-apps/create-or-update-configuration#ftpsstate"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "9.3",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_app_services",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "appConfig.properties.ftpsState",
+                "eq",
+                "AllAllowed"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Application Name",
+          "kind": "Kind",
+          "location": "Location",
+          "properties.defaultHostName": "HostName",
+          "appConfig.properties.ftpsState": "FTPS State"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "name",
+            "kind",
+            "location",
+            "properties.defaultHostName",
+            "appConfig.properties.ftpsState"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "app_service_ftp_allowed",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

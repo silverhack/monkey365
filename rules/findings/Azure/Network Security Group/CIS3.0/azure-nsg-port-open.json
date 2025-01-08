@@ -1,0 +1,137 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Network Security Groups",
+  "serviceName": "Network",
+  "displayName": "_ARG_0_ port open to all",
+  "description": "_ARG_2_",
+  "rationale": "_ARG_3_",
+  "impact": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/virtual-network/security-overview"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "_ARG_4_",
+      "reference": "_ARG_5_"
+    },
+    [
+      "_ARG_6_"
+    ]
+  ],
+  "level": "high",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_nsg_rules",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "operator": "and",
+        "filter": [
+          {
+            "include": "allow-tcp.json"
+          },
+          {
+            "include": "allow-udp.json"
+          },
+          {
+            "include": "exposed-to-the-internet.json"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "DestinationPortRange",
+                "eq",
+                "_ARG_1_"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_nsg_security_port_open_all",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

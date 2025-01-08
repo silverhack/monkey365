@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ function Get-MonkeySharePointOnlineSiteAccessRequest {
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
 		[string]$collectorId
 	)
-	begin {
+	Begin {
 		#Collector metadata
 		$monkey_metadata = @{
 			Id = "sps0004";
@@ -103,9 +103,11 @@ function Get-MonkeySharePointOnlineSiteAccessRequest {
 		#set generic list
 		$all_external_access = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
 		$allWebs = [System.Collections.Generic.List[System.Object]]::new()
+        $abort = $true
 	}
-	process {
-		if ($null -ne $O365Object.spoSites) {
+	Process {
+		If ($null -ne $O365Object.spoSites) {
+            $abort = $false
 			$msg = @{
 				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online site access requests",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -135,28 +137,31 @@ function Get-MonkeySharePointOnlineSiteAccessRequest {
 			}
 		}
 	}
-	end {
-		if ($all_external_access) {
-			$all_external_access.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Site.AccessRequests')
-			[pscustomobject]$obj = @{
-				Data = $all_external_access;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.o365_spo_site_access_requests = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Site access requests",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Tags = @('SPSAccessRequestEmptyResponse');
-			}
-			Write-Verbose @msg
-		}
+	End {
+        If($abort -eq $false){
+		    If ($all_external_access) {
+			    $all_external_access.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Site.AccessRequests')
+			    [pscustomobject]$obj = @{
+				    Data = $all_external_access;
+				    Metadata = $monkey_metadata;
+			    }
+			    $returnData.o365_spo_site_access_requests = $obj
+		    }
+		    Else {
+			    $msg = @{
+				    MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Site access requests",$O365Object.TenantID);
+				    callStack = (Get-PSCallStack | Select-Object -First 1);
+				    logLevel = "verbose";
+				    InformationAction = $O365Object.InformationAction;
+				    Verbose = $O365Object.Verbose;
+				    Tags = @('SPSAccessRequestEmptyResponse');
+			    }
+			    Write-Verbose @msg
+		    }
+        }
 	}
 }
+
 
 
 

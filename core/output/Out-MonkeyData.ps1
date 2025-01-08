@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -129,10 +129,17 @@ Function Out-MonkeyData{
                 if($null -ne $O365Object.ruleset -and $null -ne $O365Object.rulesPath){
                     #Evaluate rules
                     If($null -ne $MonkeyExportObject.Output){
+                        Try{
+                            $convertPassFindingToGood = [bool]::TryParse($O365Object.internal_config.htmlSettings.convertPassFindingToGood,[ref]$null)
+                        }
+                        Catch{
+                            $convertPassFindingToGood = $false
+                        }
                         $p = @{
                             InputObject = $MonkeyExportObject.Output;
                             Ruleset = $O365Object.ruleset;
                             RulesPath = $O365Object.rulesPath;
+                            ConvertPassFindingToGood = $convertPassFindingToGood;
                             Verbose = $O365Object.verbose;
                             InformationAction = $O365Object.InformationAction;
                             Debug = $O365Object.debug;
@@ -186,3 +193,4 @@ Function Out-MonkeyData{
         }
     }
 }
+

@@ -1,0 +1,106 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "Conditional Access",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure password protection is enabled for on-prem Active Directory",
+  "description": "Microsoft defines Multifactor authentication capable as being registered and enabled for a strong authentication method. The method must also be allowed by the authentication methods policy. Ensure all member users are `MFA capable`.",
+  "rationale": "Multifactor authentication requires an individual to present a minimum of two separate forms of authentication before access is granted. Users who are not MFA Capable have never registered a strong authentication method for multifactor authentication that is within policy and may not be using MFA. This could be a result of having never signed in, exclusion from a Conditional Access (CA) policy requiring MFA, or a CA policy does not exist. Reviewing this list of users will help identify possible lapses in policy or procedure.",
+  "impact": "When using the UI audit method guest users will appear in the report and unless the organization is applying MFA rules to guests then they will need to be manually filtered. Accounts that provide on-premises directory synchronization also appear in these reports.",
+  "remediation": {
+    "text": "Remediation steps will depend on the status of the personnel in question or configuration of Conditional Access policies.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+		"https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.reports/update-mgreportauthenticationmethoduserregistrationdetail?view=graph-powershell-1.0#-ismfacapable",
+		"https://learn.microsoft.com/en-us/entra/identity/monitoring-health/how-to-view-applied-conditional-access-policies",
+		"https://learn.microsoft.com/en-us/entra/identity/conditional-access/what-if-tool",
+		"https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-methods-activity"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "5.2.3.4",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": "true",
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+        ],
+      "message": "Ensure all member users are 'MFA capable'",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "@odata.context"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "aad_users_mfa_capable_not_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

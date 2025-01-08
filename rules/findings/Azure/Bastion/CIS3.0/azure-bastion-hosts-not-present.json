@@ -1,0 +1,123 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Bastion",
+  "serviceName": "Network",
+  "displayName": "Ensure an Azure Bastion Host Exists",
+  "description": "The Azure Bastion service allows secure remote access to Azure Virtual Machines over the Internet without exposing remote access protocol ports and services directly to the Internet. The Azure Bastion service provides this access using TLS over 443/TCP, and subscribes to hardened configurations within an organization's Azure Active Directory service.",
+  "rationale": "The Azure Bastion service allows organizations a more secure means of accessing Azure Virtual Machines over the Internet without assigning public IP addresses to those Virtual Machines. The Azure Bastion service provides Remote Desktop Protocol (RDP) and Secure Shell (SSH) access to Virtual Machines using TLS within a web browser, thus preventing organizations from opening up 3389/TCP and 22/TCP to the Internet on Azure Virtual Machines. Additional benefits of the Bastion service includes Multi-Factor Authentication, Conditional Access Policies, and any other hardening measures configured within Azure Active Directory using a central point of access.",
+  "impact": "The Azure Bastion service incurs additional costs and requires a specific virtual network configuration. The Standard tier offers additional configuration options compared to the Basic tier and may incur additional costs for those added features.",
+  "remediation": {
+    "text": "
+			###### Remediate from Azure Portal 
+			1. Click on Bastions 
+			2. Select the Subscription 
+			3. Select the Resource group 
+			4. Type a Name for the new Bastion host 
+			5. Select a Region 
+			6. Choose Standard next to Tier 
+			7. Use the slider to set the Instance count 
+			8. Select the Virtual network or Create new 
+			9. Select the Subnet named AzureBastionSubnet. Create a Subnet named AzureBastionSubnet using a /26 CIDR range if it doesn't already exist.
+			10. Selct the appropriate Public IP address option. 
+			11. If Create new is selected for the Public IP address option, provide a Public IP address name. 
+			12. If Use existing is selected for Public IP address option, select an IP address from Choose public IP address 
+			13. Click Next: Tags > 
+			14. Configure the appropriate Tags 
+			15. Click Next: Advanced > 
+			16. Select the appropriate Advanced options 
+			17. Click Next: Review + create > 
+			18. Click Create 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/bastion/bastion-overview#sku",
+	"https://learn.microsoft.com/en-us/powershell/module/az.network/get-azbastion?view=azps-9.2.0",
+	"https://learn.microsoft.com/en-us/cli/azure/network/bastion?view=azure-cli-latest"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "8.1",
+	  "profile": "Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_lack_of_bastion_hosts",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

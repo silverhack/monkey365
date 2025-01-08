@@ -1,0 +1,128 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Microsoft Defender for Cloud",
+  "serviceName": "Subscription",
+  "displayName": "Ensure That Microsoft Defender for Azure Cosmos DB Is Set To 'On'",
+  "description": "Microsoft Defender for Cosmos DB scans all incoming network requests for changes to your virtual machine.",
+  "rationale": "In scanning Cosmos DB requests within a subscription, requests are compared to a heuristic list of potential security threats. These threats could be a result of a security breach within your services, thus scanning for them could prevent a potential security threat from being introduced.",
+  "impact": "Enabling Microsoft Defender for Cosmos requires enabling Microsoft Defender for your subscription. Both will incur additional charges.",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. Review the chosen pricing tier. For the `Cosmos DB` resource type the radial button should be set to `On`\r\n\t\t\t\t\t6. Select `Save`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql?view=azuresql",
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-enable-database-protections",
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "3.1.7.1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_pricing_tier",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "name",
+                "eq",
+                "CosmosDbs"
+              ],
+              [
+                "properties.pricingTier",
+                "eq",
+                "Free"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Resource Name",
+          "properties.pricingTier": "Pricing Tier"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Pricing Tier"
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_defender_missing_cosmodb_protection",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

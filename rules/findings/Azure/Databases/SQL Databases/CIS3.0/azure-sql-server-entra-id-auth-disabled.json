@@ -1,0 +1,143 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "SQL Server",
+  "serviceName": "Databases",
+  "displayName": "Ensure that Microsoft Entra authentication is Configured for SQL Servers",
+  "description": "Use Microsoft Entra authentication for authentication with SQL Database to manage credentials in a single place.",
+  "rationale": "
+		Microsoft Entra authentication is a mechanism to connect to Microsoft Azure SQL Database and SQL Data Warehouse by using identities in the Microsoft Entra ID directory. With Entra ID authentication, identities of database users and other Microsoft services can be managed in one central location. Central ID management provides a single place to manage database users and simplifies permission management. 
+		* It provides an alternative to SQL Server authentication. 
+		* Helps stop the proliferation of user identities across database servers. 
+		* Allows password rotation in a single place. 
+		* Customers can manage database permissions using external (Entra ID) groups. 
+		* It can eliminate storing passwords by enabling integrated Windows authentication and other forms of authentication supported by Microsoft Entra. 
+		* Entra ID authentication uses contained database users to authenticate identities at the database level. 
+		* Entra ID supports token-based authentication for applications connecting to SQL Database. 
+		* Entra ID authentication supports ADFS (domain federation) or native user/password authentication for a local Active Directory without domain synchronization. 
+		* Entra ID supports connections from SQL Server Management Studio that use Active Directory Universal Authentication, which includes Multi-Factor Authentication (MFA). MFA includes strong authentication with a range of easy verification options — phone call, text message, smart cards with pin, or mobile app notification.
+  ",
+  "impact": "This will create administrative overhead with user account and permission management. For further security on these administrative accounts, you may want to consider licensing which supports features like Multi Factor Authentication.",
+  "remediation": {
+    "text": "
+			###### Remediate from Azure Portal 
+			1. Go to SQL servers 
+			2. For each SQL server, under Settings, click Microsoft Entra ID 
+			3. Click Set admin 
+			4. Select an admin 
+			5. Click Select 
+			6. Click Save 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-aad-authentication-configure"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "5.1.4",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_sql_servers",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "sqlAd.enabled",
+                "eq",
+                "False"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Server Name",
+          "location": "Location",
+          "resourceGroupName": "Resource group name",
+          "fqdn": "FQDN",
+          "sqlAd.enabled": "Active Directory Admin enabled"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Active Directory Admin enabled"
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "sql_server_entra_id_authentication_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

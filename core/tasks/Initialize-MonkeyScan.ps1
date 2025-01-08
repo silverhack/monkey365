@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -96,112 +96,42 @@ Function Initialize-MonkeyScan {
         catch{
             throw ("{0}: {1}" -f "Unable to create var object",$_.Exception.Message)
         }
+        #Check if collectors are available
+        If($null -eq $O365Object.Collectors){
+            $abort = $true
+        }
+        Else{
+            $abort = $false
+        }
     }
     Process{
-        switch ($Provider.ToLower()){
-            { @("azure", "entraid") -contains $_ }{
-                $libs = [System.Collections.Generic.List[System.String]]::new();
-                #All of them will have the EntraID lib
-                foreach($lib in $aadlibs){
-                    [void]$libs.Add($lib)
-                }
-                $msg = @{
-                    MessageData = ("Getting collectors for {0}" -f $Provider);
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'info';
-                    InformationAction = $O365Object.InformationAction;
-                    Tags = @('Monkey365InitializeScan');
-                }
-                Write-Information @msg
-                if($_ -eq 'entraid'){
-                    $collectors = @($O365Object.Collectors).Where({$_.Provider -eq 'EntraID'})
-                }
-                else{
-                    $collectors = @($O365Object.Collectors).Where({$_.Provider -eq $Provider})
-                    #Add Azure libs to array
-                    [void]$libs.Add($azureLib)
-                }
-                if($collectors.Count -gt 0){
-                    #Get dependsOn
-                    $dependsOn = $collectors | Select-Object -ExpandProperty dependsOn
-                    if($null -ne $dependsOn){
-                        foreach($depend in @($dependsOn)){
-                            $dependslibs = @($all_dirs).Where({$_ -like ("*{0}*" -f $dependsOn)})
-                            if($dependslibs){
-                                foreach($lib in $dependslibs){
-                                    [void]$libs.Add($lib)
-                                }
-                            }
-                        }
+        If($abort -eq $false){
+            switch ($Provider.ToLower()){
+                { @("azure", "entraid") -contains $_ }{
+                    $libs = [System.Collections.Generic.List[System.String]]::new();
+                    #All of them will have the EntraID lib
+                    foreach($lib in $aadlibs){
+                        [void]$libs.Add($lib)
                     }
-                    #Remove folders
-                    $libs = @($libs).Where({($_ -notmatch "helpers") -and ($_ -notmatch "utils") -and ($_ -notmatch "csom" -and $_ -notmatch "rest")})
-                    #Remove duplicate
-                    $libs = $libs | Select-Object -Unique
-                    #Add utils
-                    $libs+=$utilsLib
-                    #Get files
-                    $libs = $libs | Get-MonkeyFile -Recurse
-                    #remove duplicate
-                    $libs = $libs | Select-Object -Unique
-                    #only ps1 files
-                    $libs = @($libs).Where({$_.EndsWith('ps1')})
-                    #Set hashtable
-                    $scanOptions = [ordered]@{
-                        scanName = $Provider;
-                        modules = $O365Object.runspaces_modules;
-                        libCommands = $libs;
-                        vars = $vars;
-                        threads = $Throttle;
-                        collectors = $collectors;
-                        apartmentState = $ApartmentState;
-                        startUpScripts = $O365Object.runspace_init;
-                    }
-                    [void]$all_scans.Add($scanOptions);
-                }
-                else{
                     $msg = @{
-                        MessageData = ("Collectors were not found for {0}" -f $Provider);
+                        MessageData = ("Getting collectors for {0}" -f $Provider);
                         callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'warning';
+                        logLevel = 'info';
                         InformationAction = $O365Object.InformationAction;
                         Tags = @('Monkey365InitializeScan');
                     }
-                    Write-Warning @msg
-                }
-            }
-            'microsoft365'{
-                #Group collectors into a single resource
-                $collectors = @($O365Object.Collectors).Where({$_.Provider -ne 'EntraID' -and $_.Provider -ne 'Azure'}) | Group-Object -Property Resource
-                if($null -ne $collectors){
-                    foreach($service in $collectors){
-                        $libs = [System.Collections.Generic.List[System.String]]::new();
-                        #All of them will have the EntraID lib
-                        foreach($lib in $aadlibs){
-                            [void]$libs.Add($lib)
-                        }
-                        $msg = @{
-                            MessageData = ("Getting collectors for {0}" -f $service.Name);
-                            callStack = (Get-PSCallStack | Select-Object -First 1);
-                            logLevel = 'info';
-                            InformationAction = $O365Object.InformationAction;
-                            Tags = @('Monkey365InitializeScan');
-                        }
-                        Write-Information @msg
-                        $msg = @{
-                            MessageData = ("{0} collector(s) will be loaded within runspace" -f $service.Count);
-                            callStack = (Get-PSCallStack | Select-Object -First 1);
-                            logLevel = 'info';
-                            InformationAction = $O365Object.InformationAction;
-                            Tags = @('Monkey365InitializeScan');
-                        }
-                        Write-Information @msg
-                        $extralibs = @($all_dirs).Where({$_ -like ("*{0}*" -f $service.Name)})
-                        foreach($lib in $extralibs){
-                            [void]$libs.Add($lib)
-                        }
+                    Write-Information @msg
+                    if($_ -eq 'entraid'){
+                        $collectors = @($O365Object.Collectors).Where({$_.Provider -eq 'EntraID'})
+                    }
+                    else{
+                        $collectors = @($O365Object.Collectors).Where({$_.Provider -eq $Provider})
+                        #Add Azure libs to array
+                        [void]$libs.Add($azureLib)
+                    }
+                    if($collectors.Count -gt 0){
                         #Get dependsOn
-                        $dependsOn = $service.Group | Select-Object -ExpandProperty dependsOn
+                        $dependsOn = $collectors | Select-Object -ExpandProperty dependsOn
                         if($null -ne $dependsOn){
                             foreach($depend in @($dependsOn)){
                                 $dependslibs = @($all_dirs).Where({$_ -like ("*{0}*" -f $dependsOn)})
@@ -212,6 +142,7 @@ Function Initialize-MonkeyScan {
                                 }
                             }
                         }
+                        #Remove folders
                         $libs = @($libs).Where({($_ -notmatch "helpers") -and ($_ -notmatch "utils") -and ($_ -notmatch "csom" -and $_ -notmatch "rest")})
                         #Remove duplicate
                         $libs = $libs | Select-Object -Unique
@@ -225,29 +156,117 @@ Function Initialize-MonkeyScan {
                         $libs = @($libs).Where({$_.EndsWith('ps1')})
                         #Set hashtable
                         $scanOptions = [ordered]@{
-                            scanName = $service.Name;
+                            scanName = $Provider;
                             modules = $O365Object.runspaces_modules;
                             libCommands = $libs;
                             vars = $vars;
                             threads = $Throttle;
+                            collectors = $collectors;
                             apartmentState = $ApartmentState;
-                            collectors = $service.Group;
                             startUpScripts = $O365Object.runspace_init;
                         }
                         [void]$all_scans.Add($scanOptions);
                     }
-                }
-                else{
-                    $msg = @{
-                        MessageData = ("Collectors were not found for {0}" -f $Provider);
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'warning';
-                        InformationAction = $O365Object.InformationAction;
-                        Tags = @('Monkey365InitializeScan');
+                    else{
+                        $msg = @{
+                            MessageData = ("Collectors were not found for {0}" -f $Provider);
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365InitializeScan');
+                        }
+                        Write-Warning @msg
                     }
-                    Write-Warning @msg
+                }
+                'microsoft365'{
+                    #Group collectors into a single resource
+                    $collectors = @($O365Object.Collectors).Where({$_.Provider -ne 'EntraID' -and $_.Provider -ne 'Azure'}) | Group-Object -Property Resource
+                    if($null -ne $collectors){
+                        foreach($service in $collectors){
+                            $libs = [System.Collections.Generic.List[System.String]]::new();
+                            #All of them will have the EntraID lib
+                            foreach($lib in $aadlibs){
+                                [void]$libs.Add($lib)
+                            }
+                            $msg = @{
+                                MessageData = ("Getting collectors for {0}" -f $service.Name);
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'info';
+                                InformationAction = $O365Object.InformationAction;
+                                Tags = @('Monkey365InitializeScan');
+                            }
+                            Write-Information @msg
+                            $msg = @{
+                                MessageData = ("{0} collector(s) will be loaded within runspace" -f $service.Count);
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'info';
+                                InformationAction = $O365Object.InformationAction;
+                                Tags = @('Monkey365InitializeScan');
+                            }
+                            Write-Information @msg
+                            $extralibs = @($all_dirs).Where({$_ -like ("*{0}*" -f $service.Name)})
+                            foreach($lib in $extralibs){
+                                [void]$libs.Add($lib)
+                            }
+                            #Get dependsOn
+                            $dependsOn = $service.Group | Select-Object -ExpandProperty dependsOn
+                            if($null -ne $dependsOn){
+                                foreach($depend in @($dependsOn)){
+                                    $dependslibs = @($all_dirs).Where({$_ -like ("*{0}*" -f $dependsOn)})
+                                    if($dependslibs){
+                                        foreach($lib in $dependslibs){
+                                            [void]$libs.Add($lib)
+                                        }
+                                    }
+                                }
+                            }
+                            $libs = @($libs).Where({($_ -notmatch "helpers") -and ($_ -notmatch "utils") -and ($_ -notmatch "csom" -and $_ -notmatch "rest")})
+                            #Remove duplicate
+                            $libs = $libs | Select-Object -Unique
+                            #Add utils
+                            $libs+=$utilsLib
+                            #Get files
+                            $libs = $libs | Get-MonkeyFile -Recurse
+                            #remove duplicate
+                            $libs = $libs | Select-Object -Unique
+                            #only ps1 files
+                            $libs = @($libs).Where({$_.EndsWith('ps1')})
+                            #Set hashtable
+                            $scanOptions = [ordered]@{
+                                scanName = $service.Name;
+                                modules = $O365Object.runspaces_modules;
+                                libCommands = $libs;
+                                vars = $vars;
+                                threads = $Throttle;
+                                apartmentState = $ApartmentState;
+                                collectors = $service.Group;
+                                startUpScripts = $O365Object.runspace_init;
+                            }
+                            [void]$all_scans.Add($scanOptions);
+                        }
+                    }
+                    Else{
+                        $msg = @{
+                            MessageData = ("Collectors were not found for {0}" -f $Provider);
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365InitializeScan');
+                        }
+                        Write-Warning @msg
+                    }
                 }
             }
+        }
+        Else{
+            $msg = @{
+                MessageData = "Collectors were not found for any provider"
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'warning';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365InitializeScan');
+            }
+            Write-Warning @msg
         }
     }
     End{

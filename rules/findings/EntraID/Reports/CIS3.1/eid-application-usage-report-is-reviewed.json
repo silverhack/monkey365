@@ -1,0 +1,110 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "Groups",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure the Application Usage report is reviewed at least weekly",
+  "description": "The Application Usage report includes a usage summary for all Software as a Service (SaaS) applications that are integrated with the organization's directory.",
+  "rationale": "Review the list of app registrations on a regular basis to look for risky apps that users have enabled that could cause data spillage or accidental elevation of privilege. Attackers can often get access to data illicitly through third-party SaaS applications.",
+  "impact": null,
+  "remediation": {
+    "text": "
+			###### To review the Application Usage report: 
+			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/. 
+			2. Click to expand Identity > Applications select Enterprise applications. 
+			3. Under Activity select Usage & insights. 
+			4. Review the information.
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+	"https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-create-rule",
+	"https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-dynamic-membership",
+	"https://learn.microsoft.com/en-us/azure/active-directory/external-identities/use-dynamic-groups"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "5.1.5.1",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "info",
+  "tags": [
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": "true",
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure the Application Usage report is reviewed at least weekly",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_application_usage_report_is_reviewed",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

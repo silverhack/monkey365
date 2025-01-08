@@ -1,0 +1,115 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Diagnostic Settings",
+  "serviceName": "Subscription",
+  "displayName": "Ensure that logging for Azure Key Vault is 'Enabled'",
+  "description": "Enable AuditEvent logging for key vault instances to ensure interactions with key vaults are logged and available. Monitoring how and when key vaults are accessed, and by whom enables an audit trail of interactions with confidential information, keys and certificates managed by Azure Keyvault. Enabling logging for Key Vault saves information in an Azure storage account that the user provides. This creates a new container named insights-logs-auditevent automatically for the specified storage account, and this same storage account can be used for collecting logs for multiple key vaults.",
+  "rationale": "Monitoring how and when key vaults are accessed, and by whom, enables an audit trail of interactions with confidential information, keys, and certificates managed by Azure Key Vault. Enabling logging for Key Vault saves information in a user provided destination of either an Azure storage account or Log Analytics workspace. The same destination can be used for collecting logs for multiple Key Vaults.",
+  "impact": null,
+  "remediation": {
+    "text": "
+			###### Remediate from Azure Portal 
+			1. Go to Key vaults. 
+			2. Select a Key vault. 
+			3. Under Monitoring, select Diagnostic settings. 
+			4. Click Edit setting to update an existing diagnostic setting, or Add diagnostic setting to create a new one. 
+			5. If creating a new diagnostic setting, provide a name. 
+			6. Configure an appropriate destination. 
+			7. Under Category groups, check audit and allLogs. 
+			8. Click Save. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/key-vault/general/howto-logging",
+	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-8-ensure-security-of-key-and-certificate-repository",
+	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "6.1.4",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_key_vault_logging_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

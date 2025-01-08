@@ -1,4 +1,4 @@
-﻿ConvertFrom-StringData @'
+ConvertFrom-StringData @'
     RunspaceCreationError          = Unable to create RunspacePool
     ISSCreationError               = Unable to create Initial Session State
     OpenRunspaceMessage            = Opening runspacePool

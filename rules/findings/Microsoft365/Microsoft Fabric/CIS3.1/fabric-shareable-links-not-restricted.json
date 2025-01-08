@@ -1,0 +1,120 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Microsoft Fabric",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure shareable links are restricted",
+  "description": "
+		Creating a shareable link allows a user to create a link to a report or dashboard, then add that link to an email or another messaging application. There are 3 options that can be selected when creating a shareable link: 
+		* People in your organization 
+		* People with existing access 
+		* Specific people 
+		This setting solely deals with restrictions to People in the organization. External users by default are not included in any of these categories, and therefore cannot use any of these links regardless of the state of this setting. The recommended state is `Enabled for a subset of the organization` or `Disabled`.
+  ",
+  "rationale": "While external users are unable to utilize shareable links, disabling or restricting this feature ensures that a user cannot generate a link accessible by individuals within the same organization who lack the necessary clearance to the shared data. For example, a member of Human Resources intends to share sensitive information with a particular employee or another colleague within their department. The owner would be prompted to specify either People with existing access or Specific people when generating the link requiring the person clicking the link to pass a first layer access control list. This measure along with proper file and folder permissions can help prevent unintended access and potential information leakage.",
+  "impact": "If the setting is Enabled then only specific people in the organization would be allowed to create general links viewable by the entire organization.",
+  "remediation": {
+    "text": "
+			###### Restrict shareable links: 
+			1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal 
+			2. Select Tenant settings. 
+			3. Scroll to Export and Sharing settings. 
+			4. Set Allow shareable links to grant access to everyone in your organization to one of these states: 
+			  * State 1: Disabled 
+			  * State 2: Enabled with Specific security groups selected and defined. 
+			**Important** : If the organization doesn't actively use this feature it is recommended to keep it `Disabled`. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-share-dashboards?wt.mc_id=powerbi_inproduct_sharedialog#link-settings",
+	"https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-export-sharing"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "9.1.7",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure shareable links are restricted",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "fabric_shareable_links_not_restricted",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

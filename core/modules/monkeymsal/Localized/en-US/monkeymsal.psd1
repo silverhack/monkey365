@@ -1,4 +1,4 @@
-﻿ConvertFrom-StringData @'
+ConvertFrom-StringData @'
     OSVersionMessage                 = {0} OS detected. Loading MSAL {1}
     AccessTokenErrorMessage          = Unable to get access token for {0}
     AcquireTokenFailed               = Acquire token failed. {0}

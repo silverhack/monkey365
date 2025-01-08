@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,26 +45,29 @@ Function Get-ObjectCompliance {
     )
     Process{
         Try{
-            $msg = @()
+            $msg = [System.Collections.Generic.List[System.String]]::new()
             foreach($obj in @($InputObject)){
                 if($null -ne $obj){
                     $isPsCustomObject = ([System.Management.Automation.PSCustomObject]).IsAssignableFrom($obj.GetType())
                     #check if PsObject
                     $isPsObject = ([System.Management.Automation.PSObject]).IsAssignableFrom($obj.GetType())
                     If($obj -is [string]){
-                        $msg+=$obj
+                        [void]$msg.Add($obj);
                     }
                     Elseif($isPsCustomObject -or $isPsObject){
-                        $legend = ("{0} {1} {2}"-f $obj.name,$obj.version,$obj.reference)
-                        $msg+=$legend
+                        Foreach($element in $obj.PsObject.Properties){
+                            [void]$msg.Add($element.Value);
+                        }
                     }
                     ElseIf ($obj -is [System.Collections.IEnumerable] -and $obj -isnot [string]){
-                        $msg+=$obj
+                        Foreach($element in $obj){
+                            [void]$msg.Add($element);
+                        }
                     }
                 }
             }
             #return Object
-            (@($msg) -join '| ');
+            (@($msg) -join ' | ');
         }
         Catch{
             Write-Error $_

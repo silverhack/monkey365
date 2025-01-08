@@ -20,6 +20,36 @@ $param = @{
 Invoke-Monkey365 @param
 ```
 
+## Overview
+
+The HTML report is entirely independent of the JSON or CSV report. As a result, all components are designed to be compatible with both Microsoft 365 and Azure providers. The HTML report will adjust the rendering of various components based on the content.
+
+## Compliance
+
+A [ruleset](../../security_checks/overview) allows you to organize multiple rules that work towards a common goal. These rulesets represent your governance rules that you want Monkey365 to analyze for you. Monkey365 will alert you when a rule is violated.
+
+Monkey365 includes a variety of default rules and rulesets that can be modified. Additionally, you can configure your own compliance rules.
+
+The HTML report can be comprised of various components.
+
+**Findings Summary**: As indicated in the below picture, the "Findings Summary" shows a breakdown of rule violations in the charts "Issues by service", "Issues by severity".
+
+![](../assets/images/htmlcharts.png)
+
+**Dashboard Table**: As shown in the image below, the "Dashboard Table" provides an overview of the scan operation, including the number of rules, the service name, and the current trend of violations.
+
+![](../assets/images/dashboardTable.png)
+
+**Finding Cards**: As shown in the image below, a `Finding card` provides an overview of the rule, including the severity, rule name, description, a brief summary of the general description, and the rationale of the rule.
+
+![](../assets/images/findingCard.png)
+
+If the query does not meet the configured value, then the card will have a button that can be used to check the corresponding violations, as indicated in the above picture (position 1).
+
+If the rule's query meets the configured value, the level will be changed to `good`, as shown below:
+
+![](../assets/images/goodCard.png)
+
 ## Customize HTML
 
 A Monkey365 report uses JSON-like configuration objects to visualize data in a variety of ways. This approach makes it easy to modify and combine tables, style them, and make them interactive with buttons. You can use your favorite text editor in order to modify these configuration files.

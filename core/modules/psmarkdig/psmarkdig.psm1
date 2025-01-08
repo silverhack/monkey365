@@ -1,4 +1,4 @@
-﻿Set-StrictMode -Version Latest
+Set-StrictMode -Version Latest
 
 Function Import-MarkDigLibrary{
     [OutputType([System.Boolean])]
