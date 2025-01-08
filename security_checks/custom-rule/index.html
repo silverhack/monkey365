@@ -1391,18 +1391,27 @@
 <span class="w">            </span><span class="s2">&quot;Monkey365 rule&quot;</span>
 <span class="w">        </span><span class="p">]</span>
 <span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;o365_exo_users&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;conditions&quot;</span><span class="p">:</span><span class="w">  </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="err">s</span><span class="kc">tate</span><span class="err">me</span><span class="kc">nts</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="err">co</span><span class="kc">n</span><span class="err">di</span><span class="kc">t</span><span class="err">io</span><span class="kc">ns</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">                        </span><span class="p">[</span><span class="s2">&quot;RemotePowerShellEnabled&quot;</span><span class="p">,</span><span class="s2">&quot;ne&quot;</span><span class="p">,</span><span class="s2">&quot;False&quot;</span><span class="p">]</span>
-<span class="w">                    </span><span class="p">]</span>
-<span class="w">                </span><span class="p">}</span>
+<span class="w">    </span><span class="nt">&quot;rule&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;o365_exo_users&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;subPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;selectCondition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">              </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;conditions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="p">[</span>
+<span class="w">                    </span><span class="s2">&quot;RemotePowerShellEnabled&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s2">&quot;ne&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="s2">&quot;False&quot;</span>
+<span class="w">                  </span><span class="p">]</span>
+<span class="w">                </span><span class="p">]</span>
+<span class="w">              </span><span class="p">}</span>
 <span class="w">            </span><span class="p">]</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">],</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="nt">&quot;idsuffix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;o365_exo_users_remote_ps_enabled&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -1411,7 +1420,7 @@
 <p>3.- <code>displayName</code>: The rule name.</p>
 <p>4.- <code>description</code>: The rule description. Rule description supports <a href='https://en.wikipedia.org/wiki/Markdown' target='_blank'>Markdown</a>. That way you can add links and apply minor text styles.</p>
 <p>5.- <code>references</code>: This parameter is optional. You can add external links in order to help consultants find more information about findings. Result output will sometimes be more than enough to explain what the issue is, but it can also be beneficial to explain why an issue exists, and this is a great place to do that. Additional elements such as remediation or rationale can be added to existing JSON rule. Both of them supports <a href='https://en.wikipedia.org/wiki/Markdown' target='_blank'>Markdown</a>.</p>
-<p>6.- The <code>condition</code> property determines the checks Monkey365 will use to test each user returned in Exchange Online. Specifically, the <code>RemotePowerShellEnabled</code> property of each user object will be evaluated. The value of <code>RemotePowerShellEnabled</code> should not be <em>False</em>. Multiple PowerShell comparison operators are supported. The following <a href='https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators?view=powershell-7.2' target='_blank'>link</a> is a list of comparison operators supported by PowerShell. </p>
+<p>6.- The <code>rule</code> property determines the checks Monkey365 will use to test each user returned in Exchange Online. Specifically, the <code>RemotePowerShellEnabled</code> property of each user object will be evaluated. The value of <code>RemotePowerShellEnabled</code> should not be <em>False</em>. Multiple PowerShell comparison operators are supported. The following <a href='https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators?view=powershell-7.2' target='_blank'>link</a> is a list of comparison operators supported by PowerShell. </p>
 <p>7.-  <code>idSuffix</code>: UniqueID for the rule.</p>
 <p>8.- Name your rule with a unique name .Json.</p>
 <h2 id="testing-rules">Testing rules</h2>

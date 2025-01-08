@@ -1288,15 +1288,95 @@
 
 <h1 id="overview">Overview</h1>
 <p>Monkey365 helps streamline the process of performing not only Microsoft 365, but also Azure subscriptions and Microsoft Entra ID Security Reviews.</p>
-<p>160+ checks covering industry defined security best practices for Microsoft 365, Azure and Microsoft Entra ID.</p>
+<p>200+ checks covering industry defined security best practices for Microsoft 365, Azure and Microsoft Entra ID.</p>
 <p>All rulesets are located at <code>$monkey365_DIR/rules/ruleset</code> directory.</p>
 <p>Monkey365 will help consultants to assess cloud environment and to analyze the risk factors according to controls and best practices. The report will contain structured data for quick checking and verification of the results.</p>
+<h1 id="rules">Rules</h1>
+<p>A Monkey365 rule consists of instructions designed to query cloud data to identify misconfigurations.
+The Monkey365 core analyzer processes user-defined rules, assesses them against cloud data, and generates violations for any matched rules. A set of one or more rules forms a <em>Ruleset</em>, which helps organize multiple rules that work towards a common objective.</p>
+<h1 id="rule">Rule</h1>
+<p>A Rule, written in JSON, includes metadata, conditions, and actions. It directs the core analyzer to execute specific actions when the defined conditions are met.</p>
+<h1 id="rule-metadata">Rule Metadata</h1>
+<p>Rule metadata contains general information about a rule:</p>
+<p>1.- <code>serviceType</code>: This is the friendly name of the application/service that is checked, displayed on the HTML dashboard.</p>
+<p>2.- <code>serviceName</code>: This is the friendly name of the provider, which is displayed on the HTML sidebar.</p>
+<p>3.- <code>displayName</code>: The rule name.</p>
+<p>4.- <code>description</code>: The rule description. Rule description supports <a href='https://en.wikipedia.org/wiki/Markdown' target='_blank'>Markdown</a>. That way you can add links and apply minor text styles.</p>
+<p>5.- <code>references</code>: This parameter is optional. You can add external links in order to help consultants find more information about findings. Result output will sometimes be more than enough to explain what the issue is, but it can also be beneficial to explain why an issue exists, and this is a great place to do that. Additional elements such as remediation or rationale can be added to existing JSON rule. Both of them supports <a href='https://en.wikipedia.org/wiki/Markdown' target='_blank'>Markdown</a>.</p>
+<p>6.- The <code>query</code> property determines the checks Monkey365 will use to search for misconfigurations.</p>
+<p>7.-  <code>idSuffix</code>: UniqueID for the rule.</p>
+<h1 id="rule-levels">Rule Levels</h1>
+<p>The rule's severity is specified in the metadata using the <em>level</em> field. The severity can be one of the following values:</p>
+<ul>
+<li>informational</li>
+<li>low</li>
+<li>medium</li>
+<li>high</li>
+<li>critical</li>
+</ul>
+<h1 id="rule-status">Rule Status</h1>
+<p>If the rule is executed correctly (error-free), the core analyzer will assign a status property based on the following criteria:</p>
+<ul>
+<li>Pass: If the rule's query meets the configured value.</li>
+<li>Fail: If the rule's query does not meet the configured value.</li>
+<li>Manual: If the query is empty, the analyzer will flag the rule as manual, indicating that manual intervention is needed.</li>
+</ul>
+<h1 id="rule-condition">Rule Condition</h1>
+<p>Every rule should have a query block that contains exactly one or more conditions. A condition defines a search query to be evaluated against the input data.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;operator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;and&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;conditions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;isEnabled&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;eq&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;True&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;policyName&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;match&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;Built-In&quot;</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;operator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;and&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;conditions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;Policy.ScanUrls&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;eq&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;False&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;Policy.AllowClickThrough&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;eq&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;True&quot;</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">          </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;Policy.EnableSafeLinksForEmail&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;eq&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;False&quot;</span>
+<span class="w">          </span><span class="p">]</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;operator&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;or&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span><span class="w">       </span>
+</code></pre></div>
+<p>Multiple PowerShell comparison operators are supported. The following <a href='https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comparison_operators?view=powershell-7.2' target='_blank'>link</a> is a list of comparison operators supported by PowerShell.</p>
+<h1 id="ruleset">Ruleset</h1>
+<p>A set of one or more rules forms Ruleset, which helps organize multiple rules that work towards a common objective.</p>
+<p>A ruleset is formed by placing one or more JSON rule files in a directory and creating a ruleset.json within it.</p>
+<p>The ruleset file stores metadata of the Ruleset, as described <a href="../custom-ruleset">here</a> </p>
 <h1 id="supported-standards">Supported standards</h1>
 <p>By default, the HTML report shows you the CIS (Center for Internet Security) Benchmark. The CIS Benchmarks for Azure and Microsoft 365 are guidelines for security and compliance best practices.</p>
 <p>The following standards are supported by Monkey365:</p>
 <ul>
-<li>CIS Microsoft Azure Foundations Benchmark v2.0.0, v3.0.0</li>
-<li>CIS Microsoft 365 Foundations Benchmark v2.0.0, v3.0.0</li>
+<li>CIS Microsoft Azure Foundations Benchmark v3.0.0</li>
+<li>CIS Microsoft 365 Foundations Benchmark v3.0.0</li>
 </ul>
 <p>More standards will be added in next releases (NIST, HIPAA, GDPR, PCI-DSS, etc..) as they are available.</p>
 <h1 id="notes-about-security-controls">Notes about security controls</h1>

@@ -1352,19 +1352,19 @@
 <p>The TypeScript subset method included under <code>src</code> is similar to what's used in <a href="https://www.npmjs.com/package/@uifabric/icons"><code>@uifabric/icons</code></a> and will make the most sense in applications that use <a href="https://github.com/OfficeDev/office-ui-fabric-react/">office-ui-fabric-react</a> controls.</p>
 <p>As a prerequisite to using these subsets, ensure that your project is configured to build TypeScript. You may wish to use a tool like <a href="https://github.com/wmonk/create-react-app-typescript">create-react-app-typescript</a> or Microsoft's own <a href="https://github.com/Microsoft/TypeScript-React-Starter">TypeScript-React-Starter</a>. This is a temporary limitation—future updates to the subsetter tool will include pre-compiled subsets that you'll be able to use with simpler configurations.</p>
 <p>Once your project is configured, in your source code, import the <code>initializeIcons</code> function and call it on the page(s) you wish to use the icons:</p>
-<div class="highlight"><pre><span></span><code>import { initializeIcons } from &#39;path-to-subset/src&#39;;
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">initializeIcons</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;path-to-subset/src&#39;</span><span class="p">;</span>
 
-initializeIcons();
+<span class="nx">initializeIcons</span><span class="p">();</span>
 </code></pre></div>
 <p>This defines an <code>@font-face</code> rule and registers a map of icon names for the subset. Once initialized, icons can be used through the <code>getIcon</code> API in <code>office-ui-fabric-react</code>, like below:</p>
-<div class="highlight"><pre><span></span><code>import { Icon } from &#39;office-ui-fabric-react/lib/Icon&#39;;
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Icon</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;office-ui-fabric-react/lib/Icon&#39;</span><span class="p">;</span>
 
-&lt;Icon iconName=&#39;Snow&#39; /&gt;
+<span class="p">&lt;</span><span class="nt">Icon</span><span class="w"> </span><span class="na">iconName</span><span class="o">=</span><span class="s">&#39;Snow&#39;</span><span class="w"> </span><span class="p">/&gt;</span>
 </code></pre></div>
 <p>CSS classnames can also be used directly on elements using the <code>getIconClassNames</code> API from <code>@uifabric/styling</code>:</p>
-<div class="highlight"><pre><span></span><code>import { getIconClassName } from &#39;@uifabric/styling&#39;;
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">getIconClassName</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;@uifabric/styling&#39;</span><span class="p">;</span>
 
-return `&lt;i class=&quot;${getIconClassName(&#39;Snow&#39;)}&quot; /&gt;`;
+<span class="k">return</span><span class="w"> </span><span class="sb">`&lt;i class=&quot;</span><span class="si">${</span><span class="nx">getIconClassName</span><span class="p">(</span><span class="s1">&#39;Snow&#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">&quot; /&gt;`</span><span class="p">;</span>
 </code></pre></div>
 <p>More details on JavaScript-based icon usage can be found on <a href="https://github.com/OfficeDev/office-ui-fabric-react/wiki/Using-icons">Office UI Fabric React's wiki</a>, <a href="https://www.npmjs.com/package/@uifabric/icons"><code>@uifabric/icons</code></a>, and <a href="https://www.npmjs.com/package/@uifabric/styling#using-fabric-core-classes"><code>@uifabric/styling</code></a>.</p>
 <h1 id="maintaining-a-subset">Maintaining a subset</h1>

@@ -91,7 +91,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#customize-html" class="md-skip">
+        <a href="#overview" class="md-skip">
           Skip to content
         </a>
       
@@ -989,6 +989,20 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance" class="md-nav__link">
+    Compliance
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#customize-html" class="md-nav__link">
     Customize HTML
   </a>
@@ -1350,6 +1364,20 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance" class="md-nav__link">
+    Compliance
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#customize-html" class="md-nav__link">
     Customize HTML
   </a>
@@ -1437,6 +1465,21 @@
 <span class="p">}</span>
 <span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
 </code></pre></div>
+<h2 id="overview">Overview</h2>
+<p>The HTML report is entirely independent of the JSON or CSV report. As a result, all components are designed to be compatible with both Microsoft 365 and Azure providers. The HTML report will adjust the rendering of various components based on the content.</p>
+<h2 id="compliance">Compliance</h2>
+<p>A <a href="../../security_checks/overview">ruleset</a> allows you to organize multiple rules that work towards a common goal. These rulesets represent your governance rules that you want Monkey365 to analyze for you. Monkey365 will alert you when a rule is violated.</p>
+<p>Monkey365 includes a variety of default rules and rulesets that can be modified. Additionally, you can configure your own compliance rules.</p>
+<p>The HTML report can be comprised of various components.</p>
+<p><strong>Findings Summary</strong>: As indicated in the below picture, the "Findings Summary" shows a breakdown of rule violations in the charts "Issues by service", "Issues by severity".</p>
+<p><img alt="" src="../../assets/images/htmlcharts.png" /></p>
+<p><strong>Dashboard Table</strong>: As shown in the image below, the "Dashboard Table" provides an overview of the scan operation, including the number of rules, the service name, and the current trend of violations.</p>
+<p><img alt="" src="../../assets/images/dashboardTable.png" /></p>
+<p><strong>Finding Cards</strong>: As shown in the image below, a <code>Finding card</code> provides an overview of the rule, including the severity, rule name, description, a brief summary of the general description, and the rationale of the rule.</p>
+<p><img alt="" src="../../assets/images/findingCard.png" /></p>
+<p>If the query does not meet the configured value, then the card will have a button that can be used to check the corresponding violations, as indicated in the above picture (position 1).</p>
+<p>If the rule's query meets the configured value, the level will be changed to <code>good</code>, as shown below:</p>
+<p><img alt="" src="../../assets/images/goodCard.png" /></p>
 <h2 id="customize-html">Customize HTML</h2>
 <p>A Monkey365 report uses JSON-like configuration objects to visualize data in a variety of ways. This approach makes it easy to modify and combine tables, style them, and make them interactive with buttons. You can use your favorite text editor in order to modify these configuration files.</p>
 <h2 id="html-configuration-files-location">HTML Configuration Files Location</h2>
