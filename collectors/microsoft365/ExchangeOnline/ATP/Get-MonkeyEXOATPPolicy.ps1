@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ function Get-MonkeyEXOATPPolicy {
 			Tags = @('ExoATPPolicyInfo');
 		}
 		Write-Information @msg
-		if ($O365Object.ATPEnabled -eq $true) {
+		If ($O365Object.Tenant.licensing.ATPEnabled) {
 			#Get APT Policy
 			$p = @{
 				Authentication = $ExoAuth;
@@ -137,6 +137,7 @@ function Get-MonkeyEXOATPPolicy {
 		}
 	}
 }
+
 
 
 

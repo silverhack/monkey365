@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyEXOSensitivityLabel {
+function Get-MonkeyEXOAdminAuditLogConfig {
 <#
         .SYNOPSIS
-		Collector to get information about sensitivity labels from Exchange Online
+		Collector to get information about audit log config from Exchange Online
 
         .DESCRIPTION
-		Collector to get information about sensitivity labels from Exchange Online
+		Collector to get information about audit log config from Exchange Online
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyEXOSensitivityLabel {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyEXOSensitivityLabel
+            File Name	: Get-MonkeyEXOAdminAuditLogConfig
             Version     : 1.0
 
         .LINK
@@ -43,17 +43,17 @@ function Get-MonkeyEXOSensitivityLabel {
 		[string]$collectorId
 	)
 	begin {
-		$sensitivity_labels = $null
+		$O365_logConfig = $null
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "purv008";
+			Id = "purv003";
 			Provider = "Microsoft365";
 			Resource = "Purview";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyEXOSensitivityLabel";
+			collectorName = "Get-MonkeyEXOAdminAuditLogConfig";
 			ApiType = $null;
-			description = "Collector to get information about sensitivity labels from Exchange Online";
+			description = "Collector to get information about audit log config from Exchange Online";
 			Group = @(
 				"Purview"
 			);
@@ -64,7 +64,7 @@ function Get-MonkeyEXOSensitivityLabel {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"o365_secomp_sensitivity_labels"
+				"o365_secomp_log_config"
 			);
 			dependsOn = @(
 				"ExchangeOnline"
@@ -76,54 +76,55 @@ function Get-MonkeyEXOSensitivityLabel {
 	process {
 		if ($O365Object.onlineServices.Purview -eq $true) {
 			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance sensitivity labels",$O365Object.TenantID);
+				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance Admin audit log config",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $O365Object.InformationAction;
-				Tags = @('SecCompLabelsInfo');
+				InformationAction = $InformationAction;
+				Tags = @('SecCompLogConfigInfo');
 			}
 			Write-Information @msg
 			#Get Security and Compliance Auth token
 			$ExoAuth = $O365Object.auth_tokens.ComplianceCenter
-			#Get Backend Uri
-			$Uri = $O365Object.SecCompBackendUri
+			#Get instance
+			$Environment = $O365Object.Environment
 			#InitParams
 			$p = @{
 				Authentication = $ExoAuth;
-				EndPoint = $Uri;
+				Environment = $Environment;
 				ResponseFormat = 'clixml';
-				Command = 'Get-Label';
+				Command = 'Get-AdminAuditLogConfig';
 				Method = "POST";
 				InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
 			}
-			#Get label
-			$sensitivity_labels = Get-PSExoAdminApiObject @p
+			#Get O365 log config
+			$O365_logConfig = Get-PSExoAdminApiObject @p
 		}
 	}
 	end {
-		if ($null -ne $sensitivity_labels) {
-			$sensitivity_labels.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.sensitivity_labels')
+		if ($O365_logConfig) {
+			$O365_logConfig.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.logConfig')
 			[pscustomobject]$obj = @{
-				Data = $sensitivity_labels;
+				Data = $O365_logConfig;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.o365_secomp_sensitivity_labels = $obj
+			$returnData.o365_secomp_log_config = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance sensitivity labels",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance Admin audit log config",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('SecCompSensitivityLabelsEmptyResponse');
+				Tags = @('SecCompLogConfigEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
 		}
 	}
 }
+
 
 
 

@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyEXOComplianceTag {
+function Get-MonkeyEXODLPCompliancePolicy {
 <#
         .SYNOPSIS
-		Collector to get information about compliance tags from Exchange Online
+		Collector to get information about DLP compliance policies in Microsoft Exchange Online
 
         .DESCRIPTION
-		Collector to get information about compliance tags from Exchange Online
+		Collector to get information about DLP compliance policies in Microsoft Exchange Online
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyEXOComplianceTag {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyEXOComplianceTag
+            File Name	: Get-MonkeyEXODLPCompliancePolicy
             Version     : 1.0
 
         .LINK
@@ -43,17 +43,17 @@ function Get-MonkeyEXOComplianceTag {
 		[string]$collectorId
 	)
 	begin {
-		$compliance_tags = $null;
+		$exo_compliance_dlp_policies = $null
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "purv005";
+			Id = "purv009";
 			Provider = "Microsoft365";
 			Resource = "Purview";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyEXOComplianceTag";
+			collectorName = "Get-MonkeyEXODLPCompliancePolicy";
 			ApiType = $null;
-			description = "Collector to get information about compliance tags from Exchange Online";
+			description = "Collector to get information about DLP compliance policies in Microsoft Exchange Online";
 			Group = @(
 				"Purview"
 			);
@@ -64,7 +64,7 @@ function Get-MonkeyEXOComplianceTag {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"o365_secomp_compliance_tag"
+				"o365_secomp_dlp_compliance_policy"
 			);
 			dependsOn = @(
 				"ExchangeOnline"
@@ -76,11 +76,11 @@ function Get-MonkeyEXOComplianceTag {
 	process {
 		if ($O365Object.onlineServices.Purview -eq $true) {
 			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance tags",$O365Object.TenantID);
+				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance DLP compliance policies",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $InformationAction;
-				Tags = @('SecCompTagsInfo');
+				InformationAction = $O365Object.InformationAction;
+				Tags = @('SecCompDLPInfo');
 			}
 			Write-Information @msg
 			#Get Security and Compliance Auth token
@@ -92,38 +92,44 @@ function Get-MonkeyEXOComplianceTag {
 				Authentication = $ExoAuth;
 				EndPoint = $Uri;
 				ResponseFormat = 'clixml';
-				Command = 'Get-ComplianceTag';
+				Command = 'Get-DlpCompliancePolicy';
 				Method = "POST";
 				InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
 			}
-			#Get Compliance tags
-			$compliance_tags = Get-PSExoAdminApiObject @p
+			#Get DLP compliance policies
+			$exo_compliance_dlp_policies = Get-PSExoAdminApiObject @p
+			if ($null -eq $exo_compliance_dlp_policies) {
+				$exo_compliance_dlp_policies = @{
+					isEnabled = $false
+				}
+			}
 		}
 	}
 	end {
-		if ($compliance_tags) {
-			$compliance_tags.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.Tag')
+		if ($exo_compliance_dlp_policies) {
+			$exo_compliance_dlp_policies.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.DLP.Compliance.Policy')
 			[pscustomobject]$obj = @{
-				Data = $compliance_tags;
+				Data = $exo_compliance_dlp_policies;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.o365_secomp_compliance_tag = $obj
+			$returnData.o365_secomp_dlp_compliance_policy = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance tags",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance DLP compliance policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('SecCompTagsEmptyResponse');
+				Tags = @('SecCompDLPEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
 		}
 	}
 }
+
 
 
 

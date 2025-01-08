@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyEXODLPCompliancePolicy {
+function Get-MonkeyEXOActivityAlert {
 <#
         .SYNOPSIS
-		Collector to get information about DLP compliance policies in Microsoft Exchange Online
+		Collector to get information about activity alerts from PurView
 
         .DESCRIPTION
-		Collector to get information about DLP compliance policies in Microsoft Exchange Online
+		Collector to get information about activity alerts from PurView
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyEXODLPCompliancePolicy {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyEXODLPCompliancePolicy
+            File Name	: Get-MonkeyEXOActivityAlert
             Version     : 1.0
 
         .LINK
@@ -43,17 +43,17 @@ function Get-MonkeyEXODLPCompliancePolicy {
 		[string]$collectorId
 	)
 	begin {
-		$exo_compliance_dlp_policies = $null
+		$activity_alerts = $null;
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "purv009";
+			Id = "purv001";
 			Provider = "Microsoft365";
 			Resource = "Purview";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyEXODLPCompliancePolicy";
+			collectorName = "Get-MonkeyEXOActivityAlert";
 			ApiType = $null;
-			description = "Collector to get information about DLP compliance policies in Microsoft Exchange Online";
+			description = "Collector to get information about activity alerts from PurView";
 			Group = @(
 				"Purview"
 			);
@@ -64,7 +64,7 @@ function Get-MonkeyEXODLPCompliancePolicy {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"o365_secomp_dlp_compliance_policy"
+				"o365_secomp_activity_alerts"
 			);
 			dependsOn = @(
 				"ExchangeOnline"
@@ -76,11 +76,11 @@ function Get-MonkeyEXODLPCompliancePolicy {
 	process {
 		if ($O365Object.onlineServices.Purview -eq $true) {
 			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance DLP compliance policies",$O365Object.TenantID);
+				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance activity alerts",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('SecCompDLPInfo');
+				Tags = @('SecCompActivityAlertsInfo');
 			}
 			Write-Information @msg
 			#Get Security and Compliance Auth token
@@ -92,43 +92,39 @@ function Get-MonkeyEXODLPCompliancePolicy {
 				Authentication = $ExoAuth;
 				EndPoint = $Uri;
 				ResponseFormat = 'clixml';
-				Command = 'Get-DlpCompliancePolicy';
+				Command = 'Get-ActivityAlert';
 				Method = "POST";
 				InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
 			}
-			#Get DLP compliance policies
-			$exo_compliance_dlp_policies = Get-PSExoAdminApiObject @p
-			if ($null -eq $exo_compliance_dlp_policies) {
-				$exo_compliance_dlp_policies = @{
-					isEnabled = $false
-				}
-			}
+			#Get activity alerts
+			$activity_alerts = Get-PSExoAdminApiObject @p
 		}
 	}
 	end {
-		if ($exo_compliance_dlp_policies) {
-			$exo_compliance_dlp_policies.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.DLP.Compliance.Policy')
+		if ($activity_alerts) {
+			$activity_alerts.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.ActivityAlerts')
 			[pscustomobject]$obj = @{
-				Data = $exo_compliance_dlp_policies;
+				Data = $activity_alerts;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.o365_secomp_dlp_compliance_policy = $obj
+			$returnData.o365_secomp_activity_alerts = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance DLP compliance policy",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance activity alerts",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('SecCompDLPEmptyResponse');
+				Tags = @('SecCompActivityAlertsEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
 		}
 	}
 }
+
 
 
 

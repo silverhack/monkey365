@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ function Get-MonkeyEXOAttachmentPolicy {
 			Tags = @('ExoSafeAttachmentPolicyInfo');
 		}
 		Write-Information @msg
-		if ($O365Object.ATPEnabled) {
+		if ($O365Object.Tenant.licensing.ATPEnabled) {
 			#Enumerate Safe attachment Policy
 			$attachment_policy = Get-SafeAttachmentInfo
 			if ($null -eq $attachment_policy) {
@@ -127,6 +127,7 @@ function Get-MonkeyEXOAttachmentPolicy {
 		}
 	}
 }
+
 
 
 

@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyEXOAdminAuditLogConfig {
+function Get-MonkeyEXOProtectionAlert {
 <#
         .SYNOPSIS
-		Collector to get information about audit log config from Exchange Online
+		Collector to get information about protection alert in Exchange Online
 
         .DESCRIPTION
-		Collector to get information about audit log config from Exchange Online
+		Collector to get information about protection alert in Exchange Online
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyEXOAdminAuditLogConfig {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyEXOAdminAuditLogConfig
+            File Name	: Get-MonkeyEXOProtectionAlert
             Version     : 1.0
 
         .LINK
@@ -43,17 +43,17 @@ function Get-MonkeyEXOAdminAuditLogConfig {
 		[string]$collectorId
 	)
 	begin {
-		$O365_logConfig = $null
+		$exo_protection_alert = $null
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "purv003";
+			Id = "purv002";
 			Provider = "Microsoft365";
 			Resource = "Purview";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyEXOAdminAuditLogConfig";
+			collectorName = "Get-MonkeyEXOProtectionAlert";
 			ApiType = $null;
-			description = "Collector to get information about audit log config from Exchange Online";
+			description = "Collector to get information about protection alert in Exchange Online";
 			Group = @(
 				"Purview"
 			);
@@ -64,7 +64,7 @@ function Get-MonkeyEXOAdminAuditLogConfig {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"o365_secomp_log_config"
+				"o365_secomp_protection_alert"
 			);
 			dependsOn = @(
 				"ExchangeOnline"
@@ -76,54 +76,55 @@ function Get-MonkeyEXOAdminAuditLogConfig {
 	process {
 		if ($O365Object.onlineServices.Purview -eq $true) {
 			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance Admin audit log config",$O365Object.TenantID);
+				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance protection alert",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
 				InformationAction = $InformationAction;
-				Tags = @('SecCompLogConfigInfo');
+				Tags = @('SecCompProtectionAlertInfo');
 			}
 			Write-Information @msg
 			#Get Security and Compliance Auth token
 			$ExoAuth = $O365Object.auth_tokens.ComplianceCenter
-			#Get instance
-			$Environment = $O365Object.Environment
+			#Get Backend Uri
+			$Uri = $O365Object.SecCompBackendUri
 			#InitParams
 			$p = @{
 				Authentication = $ExoAuth;
-				Environment = $Environment;
+				EndPoint = $Uri;
 				ResponseFormat = 'clixml';
-				Command = 'Get-AdminAuditLogConfig';
+				Command = 'Get-ProtectionAlert';
 				Method = "POST";
 				InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
 			}
-			#Get O365 log config
-			$O365_logConfig = Get-PSExoAdminApiObject @p
+			#Get protection alerts
+			$exo_protection_alert = Get-PSExoAdminApiObject @p
 		}
 	}
 	end {
-		if ($O365_logConfig) {
-			$O365_logConfig.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.logConfig')
+		if ($null -ne $exo_protection_alert) {
+			$exo_protection_alert.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.ProtectionAlert')
 			[pscustomobject]$obj = @{
-				Data = $O365_logConfig;
+				Data = $exo_protection_alert;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.o365_secomp_log_config = $obj
+			$returnData.o365_secomp_protection_alert = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance Admin audit log config",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online protection alert",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('SecCompLogConfigEmptyResponse');
+				Tags = @('SecCompProtectionAlertResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
 		}
 	}
 }
+
 
 
 

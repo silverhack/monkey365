@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyEXOActivityAlert {
+function Get-MonkeyEXOSensitivityLabel {
 <#
         .SYNOPSIS
-		Collector to get information about activity alerts from PurView
+		Collector to get information about sensitivity labels from Exchange Online
 
         .DESCRIPTION
-		Collector to get information about activity alerts from PurView
+		Collector to get information about sensitivity labels from Exchange Online
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyEXOActivityAlert {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyEXOActivityAlert
+            File Name	: Get-MonkeyEXOSensitivityLabel
             Version     : 1.0
 
         .LINK
@@ -43,17 +43,17 @@ function Get-MonkeyEXOActivityAlert {
 		[string]$collectorId
 	)
 	begin {
-		$activity_alerts = $null;
+		$sensitivity_labels = $null
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "purv001";
+			Id = "purv008";
 			Provider = "Microsoft365";
 			Resource = "Purview";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyEXOActivityAlert";
+			collectorName = "Get-MonkeyEXOSensitivityLabel";
 			ApiType = $null;
-			description = "Collector to get information about activity alerts from PurView";
+			description = "Collector to get information about sensitivity labels from Exchange Online";
 			Group = @(
 				"Purview"
 			);
@@ -64,7 +64,7 @@ function Get-MonkeyEXOActivityAlert {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"o365_secomp_activity_alerts"
+				"o365_secomp_sensitivity_labels"
 			);
 			dependsOn = @(
 				"ExchangeOnline"
@@ -76,11 +76,11 @@ function Get-MonkeyEXOActivityAlert {
 	process {
 		if ($O365Object.onlineServices.Purview -eq $true) {
 			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance activity alerts",$O365Object.TenantID);
+				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance sensitivity labels",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('SecCompActivityAlertsInfo');
+				Tags = @('SecCompLabelsInfo');
 			}
 			Write-Information @msg
 			#Get Security and Compliance Auth token
@@ -92,38 +92,39 @@ function Get-MonkeyEXOActivityAlert {
 				Authentication = $ExoAuth;
 				EndPoint = $Uri;
 				ResponseFormat = 'clixml';
-				Command = 'Get-ActivityAlert';
+				Command = 'Get-Label';
 				Method = "POST";
 				InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
 			}
-			#Get activity alerts
-			$activity_alerts = Get-PSExoAdminApiObject @p
+			#Get label
+			$sensitivity_labels = Get-PSExoAdminApiObject @p
 		}
 	}
 	end {
-		if ($activity_alerts) {
-			$activity_alerts.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.ActivityAlerts')
+		if ($null -ne $sensitivity_labels) {
+			$sensitivity_labels.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.sensitivity_labels')
 			[pscustomobject]$obj = @{
-				Data = $activity_alerts;
+				Data = $sensitivity_labels;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.o365_secomp_activity_alerts = $obj
+			$returnData.o365_secomp_sensitivity_labels = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance activity alerts",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance sensitivity labels",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('SecCompActivityAlertsEmptyResponse');
+				Tags = @('SecCompSensitivityLabelsEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
 		}
 	}
 }
+
 
 
 

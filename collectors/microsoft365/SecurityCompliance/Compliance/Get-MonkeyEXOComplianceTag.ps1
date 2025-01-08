@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyEXOProtectionAlert {
+function Get-MonkeyEXOComplianceTag {
 <#
         .SYNOPSIS
-		Collector to get information about protection alert in Exchange Online
+		Collector to get information about compliance tags from Exchange Online
 
         .DESCRIPTION
-		Collector to get information about protection alert in Exchange Online
+		Collector to get information about compliance tags from Exchange Online
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyEXOProtectionAlert {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyEXOProtectionAlert
+            File Name	: Get-MonkeyEXOComplianceTag
             Version     : 1.0
 
         .LINK
@@ -43,17 +43,17 @@ function Get-MonkeyEXOProtectionAlert {
 		[string]$collectorId
 	)
 	begin {
-		$exo_protection_alert = $null
+		$compliance_tags = $null;
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "purv002";
+			Id = "purv005";
 			Provider = "Microsoft365";
 			Resource = "Purview";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyEXOProtectionAlert";
+			collectorName = "Get-MonkeyEXOComplianceTag";
 			ApiType = $null;
-			description = "Collector to get information about protection alert in Exchange Online";
+			description = "Collector to get information about compliance tags from Exchange Online";
 			Group = @(
 				"Purview"
 			);
@@ -64,7 +64,7 @@ function Get-MonkeyEXOProtectionAlert {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"o365_secomp_protection_alert"
+				"o365_secomp_compliance_tag"
 			);
 			dependsOn = @(
 				"ExchangeOnline"
@@ -76,11 +76,11 @@ function Get-MonkeyEXOProtectionAlert {
 	process {
 		if ($O365Object.onlineServices.Purview -eq $true) {
 			$msg = @{
-				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance protection alert",$O365Object.TenantID);
+				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance tags",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
 				InformationAction = $InformationAction;
-				Tags = @('SecCompProtectionAlertInfo');
+				Tags = @('SecCompTagsInfo');
 			}
 			Write-Information @msg
 			#Get Security and Compliance Auth token
@@ -92,38 +92,39 @@ function Get-MonkeyEXOProtectionAlert {
 				Authentication = $ExoAuth;
 				EndPoint = $Uri;
 				ResponseFormat = 'clixml';
-				Command = 'Get-ProtectionAlert';
+				Command = 'Get-ComplianceTag';
 				Method = "POST";
 				InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;
 			}
-			#Get protection alerts
-			$exo_protection_alert = Get-PSExoAdminApiObject @p
+			#Get Compliance tags
+			$compliance_tags = Get-PSExoAdminApiObject @p
 		}
 	}
 	end {
-		if ($null -ne $exo_protection_alert) {
-			$exo_protection_alert.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.ProtectionAlert')
+		if ($compliance_tags) {
+			$compliance_tags.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.Tag')
 			[pscustomobject]$obj = @{
-				Data = $exo_protection_alert;
+				Data = $compliance_tags;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.o365_secomp_protection_alert = $obj
+			$returnData.o365_secomp_compliance_tag = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online protection alert",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance tags",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('SecCompProtectionAlertResponse');
+				Tags = @('SecCompTagsEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
 		}
 	}
 }
+
 
 
 

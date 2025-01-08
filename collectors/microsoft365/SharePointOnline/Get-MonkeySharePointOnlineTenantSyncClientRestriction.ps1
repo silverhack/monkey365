@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ function Get-MonkeySharePointOnlineTenantSyncClientRestriction {
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
 		[string]$collectorId
 	)
-	begin {
+	Begin {
 		#Collector metadata
 		$monkey_metadata = @{
 			Id = "sps0011";
@@ -74,24 +74,26 @@ function Get-MonkeySharePointOnlineTenantSyncClientRestriction {
 		#Set null
 		$sps_tenant_sync_info = $null
 	}
-	process {
-		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online Tenant Sync Client restriction",$O365Object.TenantID);
-			callStack = (Get-PSCallStack | Select-Object -First 1);
-			logLevel = 'info';
-			InformationAction = $O365Object.InformationAction;
-			Tags = @('SPSTenantSyncInfo');
-		}
-		Write-Information @msg
-		$p = @{
-			InformationAction = $O365Object.InformationAction;
-			Verbose = $O365Object.Verbose;
-			Debug = $O365Object.Debug;
-		}
-		$sps_tenant_sync_info = Get-MonkeyCSOMTenantSyncClientRestriction @p
+	Process {
+        If($O365Object.isSharePointAdministrator){
+		    $msg = @{
+			    MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online Tenant Sync Client restriction",$O365Object.TenantID);
+			    callStack = (Get-PSCallStack | Select-Object -First 1);
+			    logLevel = 'info';
+			    InformationAction = $O365Object.InformationAction;
+			    Tags = @('SPSTenantSyncInfo');
+		    }
+		    Write-Information @msg
+		    $p = @{
+			    InformationAction = $O365Object.InformationAction;
+			    Verbose = $O365Object.Verbose;
+			    Debug = $O365Object.Debug;
+		    }
+		    $sps_tenant_sync_info = Get-MonkeyCSOMTenantSyncClientRestriction @p
+        }
 	}
-	end {
-		if ($sps_tenant_sync_info) {
+	End {
+		If ($sps_tenant_sync_info) {
 			$sps_tenant_sync_info.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Tenant.SyncClientRestriction')
 			[pscustomobject]$obj = @{
 				Data = $sps_tenant_sync_info;
@@ -99,7 +101,7 @@ function Get-MonkeySharePointOnlineTenantSyncClientRestriction {
 			}
 			$returnData.o365_spo_tenant_sync_restrictions = $obj
 		}
-		else {
+		Else {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online Tenant Sync Client Restriction",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -112,6 +114,7 @@ function Get-MonkeySharePointOnlineTenantSyncClientRestriction {
 		}
 	}
 }
+
 
 
 

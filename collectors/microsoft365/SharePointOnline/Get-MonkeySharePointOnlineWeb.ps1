@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ function Get-MonkeySharePointOnlineWeb {
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
 		[string]$collectorId
 	)
-	begin {
+	Begin {
 		#Collector metadata
 		$monkey_metadata = @{
 			Id = "sps0012";
@@ -100,41 +100,48 @@ function Get-MonkeySharePointOnlineWeb {
 				Debug = $O365Object.Debug;
 			}
 		}
+        $abort = $true
 	}
-	process {
-		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online webs",$O365Object.TenantID);
-			callStack = (Get-PSCallStack | Select-Object -First 1);
-			logLevel = 'info';
-			InformationAction = $O365Object.InformationAction;
-			Tags = @('SPSWebsInfo');
-		}
-		Write-Information @msg
-		#Get all webs for user
-		$all_webs = @($O365Object.spoSites).ForEach({ $_.url | Get-MonkeyCSOMWeb @pWeb })
+	Process {
+        If($null -ne $O365Object.spoSites){
+            $abort = $false;
+		    $msg = @{
+			    MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Sharepoint Online webs",$O365Object.TenantID);
+			    callStack = (Get-PSCallStack | Select-Object -First 1);
+			    logLevel = 'info';
+			    InformationAction = $O365Object.InformationAction;
+			    Tags = @('SPSWebsInfo');
+		    }
+		    Write-Information @msg
+		    #Get all webs for user
+		    $all_webs = @($O365Object.spoSites).ForEach({ $_.url | Get-MonkeyCSOMWeb @pWeb })
+        }
 	}
-	end {
-		if ($all_webs) {
-			$all_webs.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Webs')
-			[pscustomobject]$obj = @{
-				Data = $all_webs;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.o365_spo_webs = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online webs",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Tags = @('SPSWebsEmptyResponse');
-				Verbose = $O365Object.Verbose;
-			}
-			Write-Verbose @msg
-		}
+	End {
+        If($abort -eq $false){
+		    If ($all_webs) {
+			    $all_webs.PSObject.TypeNames.Insert(0,'Monkey365.SharePoint.Webs')
+			    [pscustomobject]$obj = @{
+				    Data = $all_webs;
+				    Metadata = $monkey_metadata;
+			    }
+			    $returnData.o365_spo_webs = $obj
+		    }
+		    Else {
+			    $msg = @{
+				    MessageData = ($message.MonkeyEmptyResponseMessage -f "Sharepoint Online webs",$O365Object.TenantID);
+				    callStack = (Get-PSCallStack | Select-Object -First 1);
+				    logLevel = "verbose";
+				    InformationAction = $O365Object.InformationAction;
+				    Tags = @('SPSWebsEmptyResponse');
+				    Verbose = $O365Object.Verbose;
+			    }
+			    Write-Verbose @msg
+		    }
+        }
 	}
 }
+
 
 
 
