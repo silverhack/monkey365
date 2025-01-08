@@ -1,0 +1,136 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "Identity Protection",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure that collaboration invitations are sent to allowed domains only",
+  "description": "
+		B2B collaboration is a feature within Microsoft Entra External ID that allows for guest invitations to an organization. 
+		Ensure users can only send invitations to specified domains. 
+		*NOTE* : This list works independently from OneDrive for Business and SharePoint Online allow/block lists. To restrict individual file sharing in SharePoint Online, set up an allow or blocklist for OneDrive for Business and SharePoint Online. For instance, in SharePoint or OneDrive users can still share with external users from prohibited domains by using Anyone links if they haven't been disabled.
+  ",
+  "rationale": "By specifying allowed domains for collaborations, external user's companies are explicitly identified. Also, this prevents internal users from inviting unknown external users such as personal accounts and granting them access to resources.",
+  "impact": "This could make harder collaboration if the setting is not quickly updated when a new domain is identified as `allowed`.",
+  "remediation": {
+    "text": "###### From Azure Portal\r\n\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t2. Go to `Users`\r\n\t\t\t\t\t3. Go to `User settings`\r\n\t\t\t\t\t4. Under `External users`, click on `Manage external collaboration settings` \r\n\t\t\t\t\t5. Under `Collaboration restrictions`, select `Allow invitations only to the specified domains (most restrictive)`, check the Target domains setting, and specify the domains allowed to collaborate.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions",
+    "http://www.rebeladmin.com/2019/04/step-step-guide-restrict-azure-ad-administration-portal/",
+    "https://docs.microsoft.com/en-us/azure/active-directory/active-directory-assign-admin-roles-azure-portal",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "5.1.6.1",
+	  "profile": "E3 Level 2"
+    }
+  ],
+  "level": "low",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "aad_b2b_directory_policies",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "targetedDomains.Count",
+                "eq",
+                "0"
+              ],
+              [
+                "isAllowlist",
+                "eq",
+                "true"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Collaboration invitations are open to all domains",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_restrict_collaboration_specific_domains_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

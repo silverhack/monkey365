@@ -1,0 +1,112 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Storage Accounts",
+  "serviceName": "Storage",
+  "displayName": "Ensure Storage Logging is Enabled for Table Service for 'Read', 'Write', and 'Delete' Requests",
+  "description": "Azure Table storage is a service that stores structured NoSQL data in the cloud, providing a key/attribute store with a schema-less design. Storage Logging happens server-side and allows details for both successful and failed requests to be recorded in the storage account. These logs allow users to see the details of read, write, and delete operations against the tables. Storage Logging log entries contain the following information about individual requests: timing information such as start time, end-to-end latency, and server latency; authentication details; concurrency information; and the sizes of the request and response messages.",
+  "rationale": "Storage Analytics logs contain detailed information about successful and failed requests to a storage service. This information can be used to monitor each individual request to a storage service for increased security or diagnostics. Requests are logged on a besteffort basis. Storage Analytics logging is not enabled by default for your storage account.",
+  "impact": "Being a level 2, enabling this setting can have a high impact on the cost of data storage used for logging more data per each request. Do not enable this without determining your need for this level of logging or forget to check in on data usage and projected cost.",
+  "remediation": {
+    "text": "
+			###### Remediate from Azure Portal 
+			1. Go to Storage Accounts. 
+			2. For each storage account, under Monitoring, click Diagnostics settings. 
+			3. Select the table tab indented below the storage account. 
+			4. To create a new diagnostic setting, click + Add diagnostic setting. To update an existing diagnostic setting, click Edit setting on the diagnostic setting. 
+			5. Check the boxes next to StorageRead, StorageWrite, and StorageDelete. 
+			6. Select an appropriate destination. 
+			7. Click Save.  
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+		"https://docs.microsoft.com/en-us/rest/api/storageservices/about-storage-analytics-logging",
+		"https://docs.microsoft.com/en-us/cli/azure/storage/logging?view=azure-cli-latest",
+		"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "4.14",
+	  "profile": "Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "storage_accounts_logging_disabled_for_table_service",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

@@ -1,0 +1,107 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "Users",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure Guest Users are reviewed at least biweekly",
+  "description": "
+		Guest users can be set up for those users not in the organization to still be granted access to resources. It is important to maintain visibility for what guest users are established in the tenant. 
+		Ensure Guest Users are reviewed no less frequently than biweekly. 
+		*Note* : With the E5 license an access review can be configured to review guest accounts automatically on a reoccurring basis. This is the preferred method if the licensing is available.
+  ",
+  "rationale": "Periodic review of guest users ensures proper access to resources.",
+  "impact": null,
+  "remediation": {
+    "text": "",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.1.0",
+      "reference": "1.1.4",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": "true"
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "False",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure Guest Users are reviewed at least biweekly",
+        "defaultMessage": "Ensure Guest Users are reviewed at least biweekly"
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid_lack_emergency_account",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

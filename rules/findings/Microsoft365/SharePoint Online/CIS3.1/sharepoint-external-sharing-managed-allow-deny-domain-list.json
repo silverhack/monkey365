@@ -1,0 +1,123 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "SharePoint Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure SharePoint external sharing is managed through domain allow/deny lists",
+  "description": "Control sharing of documents to external domains by either blocking domains or only allowing sharing with specific named domains.",
+  "rationale": "Attackers will often attempt to expose sensitive information to external entities through sharing, and restricting the domains that users can share documents with will reduce that surface area.",
+  "impact": "Enabling this feature will prevent users from sharing documents with domains outside of the organization unless allowed.",
+  "remediation": {
+    "text": "###### To configure document sharing restrictions, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Log in as an SharePoint Administrator\r\n\t\t\t\t\t2. Navigate to \u003ca href=\"https://admin.microsoft.com\" target=\"_blank\"\u003eMicrosoft 365 administration portal\u003c/a\u003e, Click on Admin Centers and then SharePoint.\r\n\t\t\t\t\t3. Expand `Policies` then click `Sharing`.\r\n\t\t\t\t\t4. Expand `More external sharing settings` and check `Limit external sharing by domain`..\r\n\t\t\t\t\t5. Select `Add domains` to add a list of approved domains.\r\n\t\t\t\t\t6. Click `Save` at the bottom of the page.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To configure document sharing restrictions, you can also use SharePoint Online PowerShell\r\n\t\t\t\t\t1. Connect to SharePoint Online using Connect-SPOService\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```\r\n\t\t\t\t\tSet-SPOTenant -SharingDomainRestrictionMode AllowList -SharingAllowedDomainList \"domain1.com domain2.com\"\r\n\t\t\t\t\t```",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/sharepoint/turn-external-sharing-on-or-off",
+    "https://docs.microsoft.com/en-us/microsoft-365/solutions/microsoft-365-limit-sharing?view=o365-worldwide"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "7.2.6",
+	  "profile": "E3 Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+  ],
+  "rule": {
+    "path": "o365_spo_tenant_details",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "SharingDomainRestrictionMode",
+                "eq",
+                "0"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "AllowEditing": "Allow Editing",
+          "AnyoneLinkTrackUsers": "Link Track Users",
+          "ConditionalAccessPolicy": "Conditional Access Policy",
+          "SharingDomainRestrictionMode": "Sharing Domain Restriction Mode"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure document sharing is being controlled by domains with allowlist or denylist",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "spo_document_sharing_all_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

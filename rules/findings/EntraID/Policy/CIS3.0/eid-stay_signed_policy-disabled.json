@@ -1,0 +1,129 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "Identity Protection",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure the option to remain signed in is hidden",
+  "description": "The option for the user to `Stay signed in` or the `Keep me signed in` option will prompt a user after a successful login, when the user selects this option a persistent refresh token is created. Typically this lasts for 90 days and does not prompt for sign-in or Multi-Factor.",
+  "rationale": "Allowing users to select this option presents risk, especially in the even that the user signs into their account on a publicly accessible computer/web browser. In this case anyone with access to the profile said users utilized would have access to their account when directing the web browser to office.com.",
+  "impact": "Once you have changed this setting users will no longer be prompted upon sign-in with the message `Stay signed in?`. This may mean users will be forced to sign in more frequently. Important: some features of SharePoint Online and Office 2010 have a dependency on users remaining signed in. If you hide this option, users may get additional and unexpected sign in prompts.",
+  "remediation": {
+    "text": "###### From Azure Portal\r\n\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t2. Scroll down and select `Company branding` under `Manage` followed by the appropriate policy.\r\n\t\t\t\t\t\t* If no policy exists you will need to create one.\r\n\t\t\t\t\t3. Scroll to the bottom of the newly opened pane and ensure Show option to `remain signed` in is set to `No`.\r\n\t\t\t\t\t4. Click `Save`.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/customize-branding"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "5.1.2.5",
+	  "profile": "E3 Level 2"
+    }
+  ],
+  "level": "low",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "aad_company_branding",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "isConfigured",
+                "eq",
+                "true"
+              ],
+              [
+                "hideKeepMeSignedIn",
+                "eq",
+                "true"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": "true",
+    "returnObject": {
+      "PolicyName": "Hide Keep Me Signed-In option",
+      "Status": "Disabled"
+    },
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "stay signed in is not disabled",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_keep_me_sign_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

@@ -1,0 +1,118 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Microsoft Teams",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure anonymous users and dial-in callers can't start a meeting",
+  "description": "
+		This policy setting controls if an anonymous participant can start a Microsoft Teams meeting without someone in attendance. Anonymous users and dial-in callers must wait in the lobby until the meeting is started by someone in the organization or an external user from a trusted organization. 
+		Anonymous participants are classified as: 
+		* Participants who are not logged in to Teams with a work or school account. 
+		* Participants from non-trusted organizations (as configured in external access). 
+		* Participants from organizations where there is not mutual trust. 
+		**Note** : This setting only applies when Who can bypass the lobby is set to Everyone. If the anonymous users can join a meeting organization-level setting or meeting policy is Off, this setting only applies to dial-in callers. 
+  ",
+  "rationale": "Not allowing anonymous participants to automatically join a meeting reduces the risk of meeting spamming.",
+  "impact": "Anonymous participants will not be able to start a Microsoft Teams meeting.",
+  "remediation": {
+    "text": "
+			###### To remediate using the UI: 
+			1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com. 
+			2. Click to expand Meetings select Meeting policies. 
+			3. Click Global (Org-wide default). 
+			4. Under meeting join & lobby set Anonymous users and dial-in callers can start a meeting to Off. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoftteams/anonymous-users-in-meetings",
+	"https://learn.microsoft.com/en-US/microsoftteams/who-can-bypass-meeting-lobby?WT.mc_id=TeamsAdminCenterCSH#overview-of-lobby-settings-and-policies"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "8.5.2",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure anonymous users and dial-in callers can't start a meeting",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "teams_anonymous_users_and_dialin_callers_not_restricted_start_meeting",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

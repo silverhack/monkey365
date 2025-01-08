@@ -1,0 +1,140 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure MailTips are enabled for end users",
+  "description": "MailTips are informative messages displayed to users while they're composing a message. While a new message is open and being composed, Exchange analyzes the message (including recipients). If a potential problem is detected, the user is notified with a MailTip prior to sending the message. Using the information in the MailTip, the user can adjust the message to avoid undesirable situations or non-delivery reports (also known as NDRs or bounce messages).",
+  "rationale": "Setting up MailTips gives a visual aid to users when they send emails to large groups of recipients or send emails to recipients not within the tenant.",
+  "impact": "",
+  "remediation": {
+    "text": "###### To enable MailTips, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tSet-OrganizationConfig -MailTipsAllTipsEnabled $true -MailTipsExternalRecipientsTipsEnabled $true -MailTipsGroupMetricsEnabled $true -MailTipsLargeAudienceThreshold \u002725\u0027\r\n\t\t\t\t\t```",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/mailtips/mailtips"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "6.5.2",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "o365_exo_org_config",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "MailTipsAllTipsEnabled",
+                "eq",
+                "false"
+              ],
+              [
+                "MailTipsExternalRecipientsTipsEnabled",
+                "eq",
+                "false"
+              ],
+              [
+                "MailTipsGroupMetricsEnabled",
+                "eq",
+                "false"
+              ],
+              [
+                "MailTipsLargeAudienceThreshold",
+                "lt",
+                "25"
+              ]
+            ],
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "Name": "Name",
+          "MailTipsAllTipsEnabled": "All Tips Enabled",
+          "MailTipsExternalRecipientsTipsEnabled": "External Recipients Tips Enabled",
+          "MailTipsGroupMetricsEnabled": "Group Metrics Tips Enabled",
+          "MailTipsLargeAudienceThreshold": "Large Audience Threshold Tips Enabled"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure MailTips are enabled for end users",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_exo_mailtips_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

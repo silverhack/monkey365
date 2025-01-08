@@ -1,0 +1,108 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "Users",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure 'Access reviews' for Guest Users are configured",
+  "description": "Access reviews enable administrators to establish an efficient automated process for reviewing group memberships, access to enterprise applications, and role assignments. These reviews can be scheduled to recur regularly, with flexible options for delegating the task of reviewing membership to different members of the organization. Ensure Access reviews for Guest Users are configured to be performed no less frequently than monthly.",
+  "rationale": "Access to groups and applications for guests can change over time. If a guest user's access to a particular folder goes unnoticed, they may unintentionally gain access to sensitive data if a member adds new files or data to the folder or application. Access reviews can help reduce the risks associated with outdated assignments by requiring a member of the organization to conduct the reviews. Furthermore, these reviews can enable a fail-closed mechanism to remove access to the subject if the reviewer does not respond to the review.",
+  "impact": "Access reviews that are ignored may cause guest users to lose access to resources temporarily.",
+  "remediation": {
+    "text": "",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/active-directory/governance/create-access-review",
+	"https://learn.microsoft.com/en-us/azure/active-directory/governance/access-reviews-overview"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "5.3.2",
+	  "profile": "E5 Level 2"
+    }
+  ],
+  "level": "low",
+  "tags": [
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+		"isManual":false,
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure 'Access reviews' for Guest Users are configured",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_guest_access_review_not_present",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

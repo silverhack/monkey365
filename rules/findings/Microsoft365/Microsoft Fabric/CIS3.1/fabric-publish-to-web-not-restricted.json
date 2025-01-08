@@ -1,0 +1,115 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Microsoft Fabric",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure 'Publish to web' is restricted",
+  "description": "Power BI enables users to share reports and materials directly on the internet from both the application's desktop version and its web user interface. This functionality generates a publicly reachable web link that doesn't necessitate authentication or the need to be an AAD user in order to access and view it. The recommended state is Enabled for a subset of the organization or Disabled.",
+  "rationale": "When using Publish to Web anyone on the Internet can view a published report or visual. Viewing requires no authentication. It includes viewing detail-level data that your reports aggregate. By disabling the feature, restricting access to certain users and allowing existing embed codes organizations can mitigate the exposure of confidential or proprietary information.",
+  "impact": "Depending on the organization's utilization administrators may experience more overhead managing embed codes, and requests.",
+  "remediation": {
+    "text": "
+			###### Restrict Publish to web: 
+			1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal 
+			2. Select Tenant settings. 
+			3. Scroll to Export and Sharing settings. 
+			4. Set Publish to web to one of these states: 
+			* State 1: Disabled 
+			* State 2: Enabled with Choose how embed codes work set to Only allow existing codes AND Specific security groups selected and defined 
+
+			**Important** : If the organization doesn't actively use this feature it is recommended to keep it Disabled. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-publish-to-web",
+	"https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-export-sharing#publish-to-web"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "9.1.4",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure 'Publish to web' is restricted",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "fabric_publish_to_web_not_restricted",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

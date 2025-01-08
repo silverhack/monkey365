@@ -1,0 +1,128 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "General",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure that 'Require Multifactor Authentication to register or join devices with Microsoft Entra' is set to 'Yes'",
+  "description": "
+			*NOTE:* This recommendation is only relevant if your subscription is using Per-User MFA. If your organization is licensed to use Conditional Access, the preferred method of requiring MFA to join devices to Entra ID is to use a Conditional Access policy (see additional information below for link).
+			Joining or registering devices to Microsoft Entra ID should require multi-factor authentication.
+  ",
+  "rationale": "Multi-factor authentication is recommended when adding devices to Microsoft Entra ID. When set to `Yes`, users who are adding devices from the internet must first use the second method of authentication before their device is successfully added to the directory. This ensures that rogue devices are not added to the directory for a compromised user account.",
+  "impact": "A slight impact of additional overhead, as Administrators will now have to approve every access to the domain.",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t2. Go to `Devices`\r\n\t\t\t\t\t3. Go to `Device settings`\r\n\t\t\t\t\t4. Ensure that `Require Multi-Factor Auth to join devices` is set to `Yes`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/active-directory/devices/concept-azure-ad-join",
+    "https://docs.microsoft.com/en-us/azure/active-directory/devices/device-management-azure-portal",
+    "https://blogs.technet.microsoft.com/janketil/2016/02/29/azure-mfa-for-enrollment-in-intune-and-azure-ad-device-registration-explained/",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-4-use-strong-authentication-controls-for-all-azure-active-directory-based-access"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "2.22",
+	  "profile":"Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "aad_device_settings",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "multiFactorAuthConfiguration",
+                "eq",
+                "notRequired"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "isEnabled": "Enabled",
+          "requireMfaSetting": "Require MFA setting",
+          "maxDeviceNumberPerUserSetting": "Max devices per user"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Require MFA setting"
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Joining devices is not requiring MFA",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_mfa_devices_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

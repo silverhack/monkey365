@@ -1,0 +1,139 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "General",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure That 'Restrict access to Microsoft Entra admin center' is Set to 'Yes'",
+  "description": "
+			Restrict access to the Microsoft Entra ID administration center to administrators only.
+			*NOTE:* This only affects access to the Entra ID administrator's web portal. This setting does not prohibit privileged users from using other methods such as Rest API or Powershell to obtain sensitive information from Microsoft Entra ID.
+  ",
+  "rationale": "The Microsoft Entra ID administrative center has sensitive data and permission settings. All non-administrators should be prohibited from accessing any Microsoft Entra ID data in the administration center to avoid exposure.",
+  "impact": "All administrative tasks will need to be done by Administrators, causing additional overhead in management of users and resources.",
+  "remediation": {
+    "text": "###### From Azure Console
+			1. From Azure Home select the Portal Menu 
+			2. Select Microsoft Entra ID 
+			3. Under Manage, select Users 
+			4. Under Manage, select User settings 
+			5. Under Administration centre, set Restrict access to Microsoft Entra admin center to Yes 
+			6. Click Save
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions",
+    "http://www.rebeladmin.com/2019/04/step-step-guide-restrict-azure-ad-administration-portal/",
+    "https://docs.microsoft.com/en-us/azure/active-directory/active-directory-assign-admin-roles-azure-portal",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "2.17",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "aad_directory_properties",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "restrictNonAdminUsers",
+                "eq",
+                "False"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "objectId": "Object Id",
+          "displayName": "Display Name",
+          "usersCanRegisterApps": "Users can register apps",
+          "restrictNonAdminUsers": "Restrict non-admin users"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Restrict non-admin users"
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Access to the Microsoft Entra ID administration portal is not restricted",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_restrict_users_ad_portal",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

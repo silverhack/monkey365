@@ -1,0 +1,136 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "App Services",
+  "serviceName": "Hosted Services",
+  "displayName": "Ensure 'HTTPS Only' is set to `On`",
+  "description": "Azure App Service allows apps to run under both HTTP and HTTPS by default. Apps can be accessed by anyone using non-secure HTTP links by default. Non-secure HTTP requests can be restricted and all HTTP requests redirected to the secure HTTPS port. It is recommended to enforce HTTPS-only traffic.",
+  "rationale": "Enabling HTTPS-only traffic will redirect all non-secure HTTP requests to HTTPS ports. HTTPS uses the TLS/SSL protocol to provide a secure connection which is both encrypted and authenticated. It is therefore important to support HTTPS for the security benefits.",
+  "impact": "When it is enabled, every incoming HTTP request is redirected to the HTTPS port. This means an extra level of security will be added to the HTTP requests made to the app.",
+  "remediation": {
+    "text": "
+			###### Remediate from Azure Portal 
+			1. Login to Azure Portal using https://portal.azure.com 
+			2. Go to App Services 
+			3. For each App Service 
+			4. Under Setting section, click on Configuration 
+			5. Under the General Settings tab, set HTTPS Only to On under Platform Settings 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/app-service/overview-security?source=recommendations#https-and-certificates",
+	"https://docs.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-data-protection#dp-3-encrypt-sensitive-data-in-transit",
+	"https://learn.microsoft.com/en-us/powershell/module/az.websites/set-azwebapp",
+	"https://techcommunity.microsoft.com/t5/azure-paas-blog/enable-https-setting-on-azure-app-service-using-azure-policy/ba-p/3286603"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "9.1",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_app_services",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "properties.httpsOnly",
+                "eq",
+                "False"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Application Name",
+          "kind": "Kind",
+          "location": "Location",
+          "properties.defaultHostName": "HostName",
+          "properties.httpsOnly": "Https Only",
+          "appConfig.properties.ftpsState": "SSL FTP",
+          "appConfig.properties.minTlsVersion": "TLS Version"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Https Only"
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "app_service_httpsonly_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

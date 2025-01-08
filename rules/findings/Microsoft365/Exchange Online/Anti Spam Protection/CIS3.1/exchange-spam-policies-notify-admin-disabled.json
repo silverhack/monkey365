@@ -1,0 +1,137 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure Exchange Online Spam Policies are set to notify administrators",
+  "description": "In Microsoft 365 organizations with mailboxes in Exchange Online or standalone Exchange Online Protection (EOP) organizations without Exchange Online mailboxes, email messages are automatically protected against spam (junk email) by EOP. Configure Exchange Online Spam Policies to copy emails and notify someone when a sender in the organization has been blocked for sending spam emails.",
+  "rationale": "A blocked account is a good indication that the account in question has been breached and an attacker is using it to send spam emails to other people.",
+  "impact": "Notification of users that have been blocked should not cause an impact to the user.",
+  "remediation": {
+    "text": "###### To set the Exchange Online Spam Policies correctly, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Click `Security` to open the Security portal.\r\n\t\t\t\t\t2. Navigate to `Threat management`, then `Policy`, and select `Anti-spam`.\r\n\t\t\t\t\t3. Click `Anti-spam outbound policy`.\r\n\t\t\t\t\t4. Select `Edit policy` then expand `Notification`.\r\n\t\t\t\t\t5. Check `Send a copy of outbound messages that exceed these limits to these users and groups`, then select `+Add people`, and enter the desired email addresses.\r\n\t\t\t\t\t6. Check `Notify specific people if senders are blocked`, then select `+Add people`, and enter the desired email addresses.\r\n\t\t\t\t\t7. Click `Save`.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To set the Exchange Online Spam Policies correctly, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\t$BccEmailAddress = @(\"\u003cINSERT-EMAIL\u003e\")\r\n\t\t\t\t\t$NotifyEmailAddress = @(\"\u003cINSERT-EMAIL\u003e\")\r\n\t\t\t\t\tSet-HostedOutboundSpamFilterPolicy -Identity Default -\r\n\t\t\t\t\tBccSuspiciousOutboundAdditionalRecipients $BccEmailAddress -\r\n\t\t\t\t\tBccSuspiciousOutboundMail $true -NotifyOutboundSpam $true -\r\n\t\t\t\t\tNotifyOutboundSpamRecipients $NotifyEmailAddress\r\n\t\t\t\t\t```",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/configure-the-outbound-spam-policy?view=o365-worldwide"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "2.1.6",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+  ],
+  "rule": {
+    "path": "o365_exo_hosted_spam_policy",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "BccSuspiciousOutboundMail",
+                "eq",
+                "False"
+              ],
+              [
+                "BccSuspiciousOutboundAdditionalRecipients.Count",
+                "eq",
+                "0"
+              ],
+              [
+                "NotifyOutboundSpam",
+                "eq",
+                "False"
+              ],
+              [
+                "NotifyOutboundSpamRecipients.Count",
+                "eq",
+                "0"
+              ]
+            ],
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "Name": "Name",
+          "BccSuspiciousOutboundMail": "BCC Nofity",
+          "NotifyOutboundSpam": "Notify Outbound Spam"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_exo_outbound_spam_notification_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

@@ -1,0 +1,129 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "Groups",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure that 'Users can create security groups in Azure portals, API or PowerShell' is set to 'No'",
+  "description": "Restrict security group creation to administrators only.",
+  "rationale": "When creating security groups is enabled, all users in the directory are allowed to create new security groups and add members to those groups. Unless a business requires this day-to-day delegation, security group creation should be restricted to administrators only.",
+  "impact": "Enabling this setting could create a number of request that would need to be managed by an administrator.",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t2. Go to `Groups`\r\n\t\t\t\t\t3. Go to `General`\r\n\t\t\t\t\t4. Ensure that `Users can create security groups in Azure portals, API or PowerShell` is set to `No`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/methods-for-assigning-users-and-groups",
+    "https://docs.microsoft.com/en-us/azure/active-directory/users-groups-roles/groups-self-service-management",
+    "https://docs.microsoft.com/en-us/azure/active-directory/active-directory-accessmanagement-self-service-group-management#making-a-group-available-for-end-user-self-service",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-5-automate-entitlement-management",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "2.19",
+	  "profile":"Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "aad_authorization_policy",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateSecurityGroups",
+                "eq",
+                "True"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "displayName": "Display Name",
+          "description": "Description",
+          "TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateSecurityGroups": "Allowed to create Security Groups"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Allowed to create Security Groups"
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Users can create security groups",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_restrict_security_group_creation_admins",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

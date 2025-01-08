@@ -1,0 +1,129 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "App Services",
+  "serviceName": "Hosted Services",
+  "displayName": "Ensure that Register with Entra ID is enabled on App Service",
+  "description": "Managed service identity in App Service provides more security by eliminating secrets from the app, such as credentials in the connection strings. When registering an App Service with Entra ID, the app will connect to other Azure services securely without the need for usernames and passwords.",
+  "rationale": "App Service provides a highly scalable, self-patching web hosting service in Azure. It also provides a managed identity for apps, which is a turn-key solution for securing access to Azure SQL Database and other Azure services.",
+  "impact": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-gb/azure/app-service/app-service-web-tutorial-connect-msi",
+	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identity-management#im-1-use-centralized-identity-and-authentication-system"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "9.5",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_app_services",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "identity.principalId",
+                "eq",
+                ""
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Application Name",
+          "kind": "Kind",
+          "location": "Location",
+          "properties.defaultHostName": "HostName",
+          "properties.httpsOnly": "Https Only",
+          "identity.principalId": "Principal ID",
+          "appConfig.properties.ftpsState": "SSL FTP",
+          "appConfig.properties.minTlsVersion": "TLS Version",
+          "appConfig.properties.siteAuthSettings.Enabled": "Site Auth Enabled"
+        },
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        "Principal ID"
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "app_service_missing_identity",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

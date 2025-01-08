@@ -1,0 +1,137 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Storage Accounts",
+  "serviceName": "Storage",
+  "displayName": "Ensure that storage account access keys are periodically regenerated",
+  "description": "Regenerate storage account access keys periodically.",
+  "rationale": "When a storage account is created, Azure generates two 512-bit storage access keys, which are used for authentication when the storage account is accessed. Rotating these keys periodically ensures that any inadvertent access or exposure does not result in these keys being compromised.",
+  "impact": "Regenerating access keys can affect services in Azure as well as the organization\u0027s applications that are dependent on the storage account. All clients that use the access key to access the storage account must be updated to use the new key.",
+  "remediation": {
+    "text": "Follow Microsoft Azure documentation for regenerating storage account access keys.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account#regenerate-storage-access-keys",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-2-manage-application-identities-securely-and-automatically",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "4.4",
+	  "profile": "Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_storage_accounts",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "keyRotation.key1.isRotated",
+                "eq",
+                "False"
+              ],
+              [
+                "keyRotation.key2.isRotated",
+                "eq",
+                "False"
+              ]
+            ],
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "location": "Location",
+          "ResourceGroupName": "ResourceGroupName",
+          "keyRotation.key1.isRotated": "Key1 Rotated",
+          "keyRotation.key2.isRotated": "Key2 Rotated"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "name",
+            "location",
+            "ResourceGroupName",
+            "keyRotation"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "storage_accounts_missing_key_rotation",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

@@ -1,0 +1,143 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Azure Disks",
+  "serviceName": "Compute",
+  "displayName": "Ensure that 'Unattached disks' are encrypted with 'Customer Managed Key' (CMK)",
+  "description": "Ensure that unattached disks in a subscription are encrypted with a Customer Managed Key (CMK).",
+  "rationale": "Managed disks are encrypted by default with Platform-managed keys. Using Customer-managed keys may provide an additional level of security or meet an organization\u0027s regulatory requirements. Encrypting managed disks ensures that its entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads. Even if the disk is not attached to any of the VMs, there is always a risk where a compromised user account with administrative access to VM service can mount/attach these data disks which may lead to sensitive information disclosure and tampering.",
+  "impact": "
+		*NOTE* : You must have your key vault set up to utilize this. Encryption is available only on Standard tier VMs. This might cost you more. 
+		Utilizing and maintaining Customer-managed keys will require additional work to create, protect, and rotate keys. 
+  ",
+  "remediation": {
+    "text": "If data stored in the disk is no longer useful, refer to Azure documentation to delete unattached data disks at:\r\n\t\t\t\t\t* https://docs.microsoft.com/en-us/rest/api/compute/disks/delete\r\n\t\t\t\t\t* https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-delete\r\n\t\t\t\t\tIf data stored in the disk is important, To encrypt the disk refer azure documentation at:\r\n\t\t\t\t\t* https://docs.microsoft.com/en-us/azure/virtual-machines/disks-enable-customer-managed-keys-portal\r\n\t\t\t\t\t* https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/security/fundamentals/azure-disk-encryption-vms-vmss",
+    "https://docs.microsoft.com/en-us/azure/security-center/security-center-disk-encryption?toc=%2fazure%2fsecurity%2ftoc.json",
+    "https://docs.microsoft.com/en-us/rest/api/compute/disks/delete",
+    "https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-delete",
+    "https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings",
+    "https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-update",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-5-encrypt-sensitive-data-at-rest"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "8.4",
+	  "profile": "Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_managed_disks",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "managedBy",
+                "eq",
+                ""
+              ],
+              [
+                "sse_encryption",
+                "ne",
+                "EncryptionAtRestWithCustomerKey"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Disk Name",
+          "location": "Location",
+          "skuname": "SKU Name",
+          "properties.osType": "OS Type",
+          "sse_encryption": "SSE Encryption"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "name",
+            "location",
+            "skuname",
+            "properties.osType",
+            "sse_encryption"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "unattached_disk_sse_encryption_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

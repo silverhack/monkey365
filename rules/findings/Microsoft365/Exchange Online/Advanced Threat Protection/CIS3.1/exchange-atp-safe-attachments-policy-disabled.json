@@ -1,0 +1,121 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure Safe Attachments policy is enabled",
+  "description": "The Safe Attachments policy helps protect users from malware in email attachments by scanning attachments for viruses, malware, and other malicious content. When an email attachment is received by a user, Safe Attachments will scan the attachment in a secure environment and provide a verdict on whether the attachment is safe or not.",
+  "rationale": "Enabling Safe Attachments policy helps protect against malware threats in email attachments by analyzing suspicious attachments in a secure, cloud-based environment before they are delivered to the user's inbox. This provides an additional layer of security and can prevent new or unseen types of malware from infiltrating the organization's network.",
+  "impact": "Delivery of email with attachments may be delayed while scanning is occurring.",
+  "remediation": {
+    "text": "###### To enable the ATP Safe Attachments policy, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Click `Security` to open the `Security portal`.\r\n\t\t\t\t\t2. Navigate to `Threat management`, then `Policy`, and select `Safe Attachments`.\r\n\t\t\t\t\t3. Click `+`.\r\n\t\t\t\t\t4. Enter Policy Name and Description followed by the Users, Groups, or Domains it will \r\n\t\t\t\t\tapply to.\r\n\t\t\t\t\t5. Select `Block`, `Monitor`, `Replace` or `Dynamic Delivery` based on your organizational policies.\r\n\t\t\t\t\t6. Select `Next`.\r\n\t\t\t\t\t7. Select `Submit` followed by `Done`.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-attachments?view=o365-worldwide"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "2.1.4",
+	  "profile": "E5 Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+  ],
+  "rule": {
+    "path": "o365_exo_safe_attachment_policy",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "Enable",
+                "eq",
+                "false"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "Name": "Name",
+          "Identity": "Identity",
+          "Enable": "Is enabled"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Check if Safe Attachments policy is enabled",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_exo_safe_attachment_policy_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

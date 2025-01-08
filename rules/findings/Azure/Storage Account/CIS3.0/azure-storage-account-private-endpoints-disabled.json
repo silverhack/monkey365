@@ -1,0 +1,107 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Storage Accounts",
+  "serviceName": "Storage",
+  "displayName": "Ensure Private Endpoints are used to access Storage Accounts",
+  "description": "Use private endpoints for your Azure Storage accounts to allow clients and services to securely access data located over a network via an encrypted Private Link. To do this, the private endpoint uses an IP address from the VNet for each service. Network traffic between disparate services securely traverses encrypted over the VNet. This VNet can also link addressing space, extending your network and accessing resources on it. Similarly, it can be a tunnel through public networks to connect remote infrastructures together. This creates further security through segmenting network traffic and preventing outside sources from accessing it.",
+  "rationale": "Securing traffic between services through encryption protects the data from easy interception and reading.",
+  "impact": "A Private Endpoint costs approximately US$7.30 per month. If an Azure Virtual Network is not implemented correctly, this may result in the loss of critical network traffic.",
+  "remediation": {
+    "text": "",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/storage/common/storage-private-endpoints",
+	"https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview",
+	"https://docs.microsoft.com/en-us/azure/private-link/create-private-endpoint-portal",
+	"https://docs.microsoft.com/en-us/azure/private-link/create-private-endpoint-cli?tabs=dynamic-ip",
+	"https://docs.microsoft.com/en-us/azure/private-link/create-private-endpoint-powershell?tabs=dynamic-ip",
+	"https://docs.microsoft.com/en-us/azure/private-link/tutorial-private-endpoint-storage-portal",
+	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-network-security#ns-2-secure-cloud-native-services-with-network-controls"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "4.9",
+	  "profile": "Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "storage_accounts_private_endpoints_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

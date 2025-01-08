@@ -1,0 +1,115 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Purview",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure user role group changes are reviewed at least weekly",
+  "description": "Role-Based Access Control allows for permissions to be assigned to users based on their roles within an organization. It is a more manageable form of access control that is less prone to errors. These user roles can be audited inside of Microsoft Purview to provide a security auditor insight into user privilege change.",
+  "rationale": "Weekly reviews provide an opportunity to identify rights changes in an organization and are a large part of maintaining Least Privilege and preventing Privilege creep. Insider Threats, either intentional or unintentional, can occur when a user has higher than needed privileges. Maintaining accountability of role membership will keep insiders and malicious actors limited in the scope of potential damaging activities.",
+  "impact": "By performing regular reviews, the Administrators assigning rights to users will need to inevitably provide justification for those changes to security auditors. Documentation that includes detailed policies, procedures, and change requests will need to be considered to keep a secure organization functioning within its planned operational level.",
+  "remediation": {
+    "text": "
+			###### To review user role group changes: 
+			1. Navigate to Microsoft Purview https://compliance.microsoft.com/. 
+			2. Under Solutions click on Audit then select New Search. 
+			3. In Activities find Added member to Role under the Role administration activities section and select it. 
+			4. Set a valid Start Date and End Date within the last week. 
+			5. Click Search. 
+			6. Review once the search is completed. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+		"https://learn.microsoft.com/en-us/powershell/module/exchange/search-unifiedauditlog?view=exchange-ps"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "3.1.2",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "info",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure user role group changes are reviewed at least weekly",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_purview_user_role_group_change_report_is_reviewed",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

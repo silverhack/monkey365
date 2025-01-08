@@ -1,0 +1,113 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "SharePoint Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure external sharing is restricted by security group",
+  "description": "
+		External sharing of content can be restricted to specific security groups. This setting is global, applies to sharing in both SharePoint and OneDrive and cannot be set at the site level in SharePoint. 
+		The recommended state is Enabled or Checked. 
+  ",
+  "rationale": "Organizations wishing to create tighter security controls for external sharing can set this to enforce role-based access control by using security groups already defined in Microsoft Entra.",
+  "impact": "OneDrive will also be governed by this and there is no granular control at the SharePoint site level.",
+  "remediation": {
+    "text": "
+		###### To remediate using the UI: 
+		1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint 
+		2. Click to expand Policies > Sharing. 
+		3. Scroll to and expand More external sharing settings. 
+		4. Set the following: 
+			* Check Allow only users in specific security groups to share externally 
+			* Define Manage security groups in accordance with company procedure. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "7.2.8",
+	  "profile": "E3 Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure external sharing is restricted by security group",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "spo_link_sharing_not_restricted_security_group",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

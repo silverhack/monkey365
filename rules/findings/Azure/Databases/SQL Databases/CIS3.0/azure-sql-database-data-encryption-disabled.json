@@ -1,0 +1,127 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "SQL Server",
+  "serviceName": "Databases",
+  "displayName": "Ensure that 'Data encryption' is set to 'On' on a SQL Database",
+  "description": "Enable Transparent Data Encryption on every SQL server.",
+  "rationale": "Azure SQL Database transparent data encryption helps protect against the threat of malicious activity by performing real-time encryption and decryption of the database, associated backups, and transaction log files at rest without requiring changes to the application.",
+  "impact": null,
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `SQL databases`.\r\n\t\t\t\t\t2. For each DB instance\r\n\t\t\t\t\t3. Click on `Transparent data encryption`\r\n\t\t\t\t\t4. Set encryption to `On`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/security/fundamentals/encryption-atrest",
+    "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-security-overview"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "5.1.5",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_sql_servers",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "databases.name",
+                "ne",
+                "master"
+              ],
+              [
+                "databases.tdeSettings.enabled",
+                "eq",
+                "Disabled"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "sql_server_db_encryption_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

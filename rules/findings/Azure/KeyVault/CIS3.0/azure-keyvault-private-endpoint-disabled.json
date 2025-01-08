@@ -1,0 +1,113 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Azure KeyVault",
+  "serviceName": "Storage",
+  "displayName": "Private endpoints will secure network traffic from Azure Key Vault to the resources requesting secrets and keys.",
+  "description":'
+		Private endpoints will secure network traffic from Azure Key Vault to the resources requesting secrets and keys.
+  ',
+  "rationale": "Private endpoints will keep network requests to Azure Key Vault limited to the endpoints attached to the resources that are whitelisted to communicate with each other. Assigning the Key Vault to a network without an endpoint will allow other resources on that network to view all traffic from the Key Vault to its destination. In spite of the complexity in configuration, this is recommended for high security secrets.",
+  "impact": "Incorrect or poorly-timed changing of network configuration could result in service interruption. There are also additional costs tiers for running a private endpoint per petabyte or more of networking traffic.",
+  "remediation": {
+    "text": '',
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+		"https://docs.microsoft.com/en-us/azure/private-link/private-endpoint-overview",
+		"https://docs.microsoft.com/en-us/azure/storage/common/storage-private-endpoints",
+		"https://azure.microsoft.com/en-us/pricing/details/private-link/",
+		"https://docs.microsoft.com/en-us/azure/key-vault/general/private-link-service?tabs=portal",
+		"https://docs.microsoft.com/en-us/azure/virtual-network/quick-create-portal",
+		"https://docs.microsoft.com/en-us/azure/private-link/tutorial-private-endpoint-storage-portal",
+		"https://docs.microsoft.com/en-us/azure/bastion/bastion-overview",
+		"https://docs.microsoft.com/azure/dns/private-dns-getstarted-cli#create-an-additional-dns-record",
+		"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-8-ensure-security-of-key-and-certificate-repository"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "3.3.7",
+	  "profile":"Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_key_vault_private_endpoint_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

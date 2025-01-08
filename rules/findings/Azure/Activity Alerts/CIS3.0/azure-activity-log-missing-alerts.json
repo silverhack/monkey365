@@ -1,0 +1,124 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Azure Alerts",
+  "serviceName": "Subscription",
+  "displayName": "_ARG_0_ missing alert",
+  "description": "_ARG_0_ alert was missing. Consider to add and enable this alert.",
+  "rationale": "_ARG_5_",
+  "impact": null,
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/azure-monitor/platform/activity-log-collect",
+    "_ARG_2_"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "_ARG_3_",
+      "reference": "_ARG_4_",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_monitor_alerts",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "operationName",
+                "eq",
+                "_ARG_1_"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": "true",
+    "returnObject": {
+      "operationName": "_ARG_1_",
+      "Status": "DoesNotExists"
+    },
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "The _ARG_1_ alert was not found",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "operationName",
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_monitor_alert_missing_rule",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

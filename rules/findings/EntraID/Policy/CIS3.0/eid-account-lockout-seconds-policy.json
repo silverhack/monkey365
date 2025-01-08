@@ -1,0 +1,132 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "General",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure that account 'Lockout duration in seconds' is greater than or equal to '60'",
+  "description": "The account lockout duration value determines how long an account retains the status of lockout, and therefore how long before a user can continue to attempt to login after passing the lockout threshold.",
+  "rationale": "Account lockout is a method of protecting against brute-force and password spray attacks. Once the lockout threshold has been exceeded, the account enters a lockedout state which prevents all login attempts for a variable duration. The lockout in combination with a reasonable duration reduces the total number of failed login attempts that a malicious actor can execute in a given period of time.",
+  "impact": "
+			If account lockout duration is set too low (less than 60 seconds), malicious actors can perform more password spray and brute-force attempts over a given period of time. 
+			If the account lockout duration is set too high (more than 300 seconds) users may experience inconvenient delays during lockout.
+  ",
+  "remediation": {
+    "text": "
+			###### Remediate from Azure Portal 
+			1. From Azure Home select the Portal Menu. 
+			2. Select Microsoft Entra ID. 
+			3. Under Manage, select Security. 
+			4. Under Manage, select Authentication methods. 
+			5. Under Manage, select Password protection. 
+			6. Set the Lockout duration in seconds to 60 or higher.
+			7. Click Save.
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-password-smart-lockout#manage-microsoft-entra-smart-lockout-values"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "2.7",
+	  "profile": "Level 1"
+    }
+  ],
+  "level": "low",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "aad_password_protection_policy",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "lockoutDurationInSeconds",
+                "ge",
+                "60"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": "Ensure that account 'Lockout duration in seconds' is greater than or equal to '60'"
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_incorrect_account_lockout_seconds",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

@@ -1,0 +1,129 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure 'AuditDisabled' organizationally is set to 'False'",
+  "description": "
+		The value False indicates that mailbox auditing on by default is turned on for the organization. Mailbox auditing on by default in the organization overrides the mailbox auditing settings on individual mailboxes. For example, if mailbox auditing is turned off for a mailbox (the AuditEnabled property on the mailbox is False), the default mailbox actions are still audited for the mailbox, because mailbox auditing on by default is turned on for the organization. Turning off mailbox auditing on by default ($true) has the following results: 
+
+		* Mailbox auditing is turned off for your organization. 
+		* From the time you turn off mailbox auditing on by default, no mailbox actions are audited, even if mailbox auditing is enabled on a mailbox (the AuditEnabled property on the mailbox is True). 
+		* Mailbox auditing isn't turned on for new mailboxes and setting the AuditEnabled property on a new or existing mailbox to True is ignored. 
+		* Any mailbox audit bypass association settings (configured by using the Set MailboxAuditBypassAssociation cmdlet) are ignored. 
+		* Existing mailbox audit records are retained until the audit log age limit for the record expires. 
+
+		The recommended state for this setting is False at the organization level. This will enable auditing and enforce the default. 
+  ",
+  "rationale": "
+		Enforcing the default ensures auditing was not turned off intentionally or accidentally. Auditing mailbox actions will allow forensics and IR teams to trace various malicious activities that can generate TTPs caused by inbox access and tampering. 
+		**NOTE** : Without advanced auditing (E5 function) the logs are limited to 90 days. 
+  ",
+  "impact": "None - this is the default behavior as of 2019.",
+  "remediation": {
+    "text": "
+		###### Enable mailbox auditing at the organizational level: 
+		1. Connect to Exchange Online using Connect-ExchangeOnline. 
+		2. Run the following PowerShell command: 
+
+		```PowerShell
+		Set-OrganizationConfig -AuditDisabled $false
+		```
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-mailboxes?view=o365-worldwide",
+	"https://learn.microsoft.com/en-us/powershell/module/exchange/set-organizationconfig?view=exchange-ps#-auditdisabled"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "6.1.1",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure 'AuditDisabled' organizationally is set to 'False'",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_exo_audit_enabled_globally",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

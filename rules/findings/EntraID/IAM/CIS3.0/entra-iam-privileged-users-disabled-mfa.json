@@ -1,0 +1,168 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "Microsoft Entra ID Identity",
+  "serviceName": "IAM",
+  "displayName": "Ensure that 'Multi-Factor Auth Status' is 'Enabled' for all Privileged Users",
+  "description": "
+			###### IMPORTANT - Please read the section overview
+			If your organization pays for Microsoft Entra ID licensing (included in Microsoft 365 E3, E5, or F5, and EM&S E3 or E5 licenses) and CAN use Conditional Access, ignore the recommendations in this section and proceed to the Conditional Access section.
+			Enable multi-factor authentication for all roles, groups, and users that have write access or permissions to Azure resources. These include custom created objects or built-in roles such as;
+			* Service Co-Administrators
+			* Subscription Owners
+			* Contributors
+  ",
+  "rationale": "Multi-factor authentication requires an individual to present a minimum of two separate forms of authentication before access is granted. Multi-factor authentication provides additional assurance that the individual attempting to gain access is who they claim to be. With multi-factor authentication, an attacker would need to compromise at least two different authentication mechanisms, increasing the difficulty of compromise and thus reducing the risk.",
+  "impact": "Users would require two forms of authentication before any access is granted. Additional administrative time will be required for managing dual forms of authentication when enabling multi-factor authentication.",
+  "remediation": {
+    "text": "
+		###### Remediate from Azure Portal <br>
+
+		1. From Azure Home select the Portal Menu 
+		2. Select `Microsoft Entra ID` blade 
+		3. Under `Manage`, click `Roles and administrators`
+		4. Take note of all users with the role `Service Co-Administrators`, `Owners` or `Contributors`
+		5. Return to the `Overview`
+		6. Under `Manage`, click `Users`
+		7. Click on the `Per-User MFA` button in the top row menu 
+		8. Check the box next to each noted user 
+		9. Click `Enable MFA` 
+		10. Click `Enable`
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/multi-factor-authentication/multi-factor-authentication",
+    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-identity-management#im-4-use-strong-authentication-controls-for-all-azure-active-directory-based-access",
+    "https://docs.microsoft.com/en-us/azure/security/fundamentals/identity-management-best-practices"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "2.1.2",
+	  "profile": "Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "aad_role_assignment",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "include": "_ARG_0_"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "ObjectType",
+                "eq",
+                "User"
+              ],
+              [
+                "mfaenabled",
+                "ne"
+              ],
+              [
+                "mfaenabled",
+                "eq",
+                "false"
+              ]
+            ],
+            "operator": "and",
+            "whereObject": "effectiveMembers"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": "true"
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "effectiveMembers.userPrincipalName": "UPN",
+          "effectiveMembers.objectType": "Object Type",
+          "effectiveMembers.userType": "User Type",
+          "displayName": "Role",
+          "isBuiltIn": "isBuiltIn",
+          "effectiveMembers.mfaenabled": "MFA enabled"
+        },
+        "expandObject": "effectiveMembers"
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": "effectiveMembers",
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "False",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          "effectiveUsers.userPrincipalName": "UPN",
+          "effectiveUsers.objectType": "ObjectType",
+          "effectiveUsers.id": "Id"
+        },
+        "expandObject": "effectiveUsers"
+      },
+      "status": {
+        "keyName": [
+          "UPN"
+        ],
+      "message": "MFA is not enabled for {UPN}",
+        "defaultMessage": "Ensure that multi-factor authentication is enabled for all privileged users"
+      },
+      "properties": {
+        "resourceName": "UPN",
+        "resourceId": "id",
+        "resourceType": "ObjectType"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "aad_privileged_users_with_mfa_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

@@ -1,0 +1,125 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Azure",
+  "serviceType": "Network Watcher",
+  "serviceName": "Network",
+  "displayName": "Ensure that Network Watcher is 'Enabled' for Azure Regions that are in use",
+  "description": "Enable Network Watcher for physical regions in Azure subscriptions.",
+  "rationale": "Network diagnostic and visualization tools available with Network Watcher help users understand, diagnose, and gain insights to the network in Azure.",
+  "impact": "There are additional costs per transaction to run and store network data. For high volume networks these charges will add up quickly.",
+  "remediation": {
+    "text": "Opting-out of Network Watcher automatic enablement is a permanent change. Once you opt-out you cannot opt-in without contacting support.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview",
+	"https://learn.microsoft.com/en-us/cli/azure/network/watcher?view=azure-cli-latest",
+	"https://learn.microsoft.com/en-us/cli/azure/network/watcher?view=azure-cli-latest#az-network-watcher-configure",
+	"https://learn.microsoft.com/en-us/azure/network-watcher/network-watcher-create",
+	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-4-enable-network-logging-for-security-investigation",
+	"https://azure.microsoft.com/en-ca/pricing/details/network-watcher/"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "3.0.0",
+      "reference": "6.5",
+	  "profile": "Level 2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "az_network_watcher",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "all_locations_enabled",
+                "eq",
+                "False"
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "network_watcher_disabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+
