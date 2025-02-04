@@ -52,7 +52,7 @@
               [
                 "auditing.enabled",
                 "eq",
-                "False"
+                "Disabled"
               ]
             ]
           }
@@ -125,4 +125,5 @@
     
   ]
 }
+
 

@@ -35,9 +35,10 @@ Function New-OcsfAccountObject{
     #>
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
-    [OutputType([System.Management.Automation.PSCustomObject])]
+    [OutputType([Ocsf.Objects.Entity.Account])]
 	param()
     Process{
         [Ocsf.Objects.Entity.Account]::new()
     }
 }
+

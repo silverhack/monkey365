@@ -49,8 +49,8 @@
           {
             "conditions": [
               [
-                "['1.2','1.3']",
-                "contains",
+                ['1.2','1.3'],
+                "notcontains",
                 "appConfig.properties.minTlsVersion"
               ]
             ]
@@ -126,4 +126,5 @@
     
   ]
 }
+
 

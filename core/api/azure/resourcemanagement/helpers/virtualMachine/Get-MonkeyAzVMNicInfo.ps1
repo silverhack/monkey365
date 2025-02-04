@@ -47,36 +47,46 @@ Function Get-MonkeyAzVMNicInfo {
     }
     Process{
         try{
-            if ($InputObject.properties.networkProfile.networkInterfaces.Count -gt 0) {
-                $p = @{
-	                Id = $InputObject.properties.networkProfile.networkInterfaces.id;
-                    ApiVersion = $AzureNICConfig.api_version;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                    InformationAction = $O365Object.InformationAction;
-                }
-                $nic = Get-MonkeyAzObjectById @p
-                if($nic){
-                    $InputObject.localNic.name = $nic.name;
-                    $InputObject.localNic.localIpAddress = $nic.properties.ipConfigurations.properties.privateIPAddress;
-                    $InputObject.localNic.macAddress = $nic.properties.macAddress;
-                    $InputObject.localNic.ipForwardingEnabled = $nic.properties.enableIPForwarding;
-                    $InputObject.localNic.rawObject = $nic;
-                    #Check public IP
-                    $public = $nic.properties.ipConfigurations.Where({$null -ne $_.properties.psObject.Properties.Item('publicIpAddress')})
-                    if($public.Count -gt 0){
-                        $p = @{
-	                        Id = $public.id;
-                            ApiVersion = $AzureNICConfig.api_version;
-                            Verbose = $O365Object.verbose;
-                            Debug = $O365Object.debug;
-                            InformationAction = $O365Object.InformationAction;
-                        }
-                        $publicIp = Get-MonkeyAzObjectById @p
-                        if($publicIp){
-                            $InputObject.publicNic.publicIpAddress = $publicIp.properties.ipAddress;
-                            $InputObject.publicNic.publicIPAllocationMethod = $publicIp.Properties.publicIPAllocationMethod;
-                            $InputObject.publicNic.rawObject = $publicIp;
+            If ($InputObject.properties.networkProfile.networkInterfaces.Count -gt 0) {
+                Foreach($interface in $InputObject.properties.networkProfile.networkInterfaces){
+                    $p = @{
+	                    Id = $interface.id;
+                        ApiVersion = $AzureNICConfig.api_version;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                        InformationAction = $O365Object.InformationAction;
+                    }
+                    $nic = Get-MonkeyAzObjectById @p
+                    If($nic){
+                        $localNic = $InputObject.newLocalNic()
+                        $localNic.name = $nic.name;
+                        $localNic.localIpAddress = $nic.properties.ipConfigurations.properties.privateIPAddress;
+                        $localNic.macAddress = $nic.properties.macAddress;
+                        $localNic.ipForwardingEnabled = $nic.properties.enableIPForwarding;
+                        $localNic.rawObject = $nic;
+                        #Append to localNic
+                        $InputObject.localNic.Add($localNic);
+                        #Check public IP
+                        $publicNic = $nic.properties.ipConfigurations.Where({$null -ne $_.properties.psObject.Properties.Item('publicIpAddress')})
+                        If($publicNic.Count -gt 0){
+                            Foreach($public in $publicNic){
+                                $p = @{
+	                                Id = $public.properties.publicIPAddress.id;
+                                    ApiVersion = $AzureNICConfig.api_version;
+                                    Verbose = $O365Object.verbose;
+                                    Debug = $O365Object.debug;
+                                    InformationAction = $O365Object.InformationAction;
+                                }
+                                $publicIp = Get-MonkeyAzObjectById @p
+                                if($publicIp){
+                                    $newNic = $InputObject.newPublicNic()
+                                    $newNic.publicIpAddress = $publicIp.properties.ipAddress;
+                                    $newNic.publicIPAllocationMethod = $publicIp.Properties.publicIPAllocationMethod;
+                                    $newNic.rawObject = $publicIp;
+                                    #Add to publicNic
+                                    $InputObject.publicNic.Add($newNic);
+                                }
+                            }
                         }
                     }
                 }
@@ -87,3 +97,4 @@ Function Get-MonkeyAzVMNicInfo {
         }
     }
 }
+

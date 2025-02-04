@@ -184,3 +184,4 @@ Function Get-MonkeyMSGraphEntraDirectoryRole{
         #Nothing to do here
     }
 }
+

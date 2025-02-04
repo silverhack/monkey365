@@ -42,3 +42,4 @@ Function New-OcsfFindingInfoObject{
         [Ocsf.Objects.Finding.FindingInfo]::new() | Select-Object $properties
     }
 }
+

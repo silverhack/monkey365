@@ -63,3 +63,4 @@ Function Test-CanRequestGroup {
         #Nothing to do here
     }
 }
+

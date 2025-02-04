@@ -39,25 +39,32 @@ Function New-MonkeyVaultObject {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
 	[CmdletBinding()]
 	Param (
-        [parameter(Mandatory= $True, HelpMessage="keyvault object")]
-        [Object]$KeyVault
+        [parameter(Mandatory= $True, ValueFromPipeline = $True, HelpMessage="keyvault object")]
+        [Object]$InputObject
     )
     Process{
         try{
             #Create ordered dictionary
             $KeyVaultObject = [ordered]@{
-                id = $KeyVault.Id;
-		        name = $KeyVault.Name;
-                type = $KeyVault.type;
-                location = $KeyVault.location;
-		        tags = $KeyVault.tags;
-                sku = $KeyVault.properties.sku;
-                tenantId = $KeyVault.properties.tenantId;
-                properties = $KeyVault.properties;
-                enableRbacAuthorization = $KeyVault.properties.enableRbacAuthorization;
+                id = $InputObject.Id;
+		        name = $InputObject.Name;
+                type = $InputObject.type;
+                location = $InputObject.location;
+		        tags = if($null -ne $InputObject.Psobject.Properties.Item('tags')){$InputObject.tags}else{$null};
+                sku = $InputObject.properties.sku;
+                tenantId = $InputObject.properties.tenantId;
+                provisioningState = $InputObject.properties.provisioningState;
+                properties = $InputObject.properties;
+                enableRbacAuthorization = if($null -ne $InputObject.Psobject.Properties.Item('enableRbacAuthorization')){$InputObject.properties.enableRbacAuthorization}else{$false};
                 locks = $null;
-                resourceGroupName = $KeyVault.Id.Split("/")[4];
-                networkAcls = if($null -ne $KeyVault.properties.PsObject.Properties.Item('networkAcls')){$KeyVault.properties.networkAcls}else{$null};
+                resourceGroupName = $InputObject.Id.Split("/")[4];
+                privateEndpointConnections = if($null -ne $InputObject.properties.PsObject.Properties.Item('privateEndpointConnections')){$InputObject.properties.privateEndpointConnections}else{$null};
+                allowAccessFromAllNetworks = $null;
+                networkAcls = if($null -ne $InputObject.properties.PsObject.Properties.Item('networkAcls')){$InputObject.properties.networkAcls}else{$null};
+                protection = [PSCustomObject]@{
+                    enablePurgeProtection = If($null -ne $InputObject.Properties.PsObject.Properties.Item('enablePurgeProtection')){$InputObject.Properties.enablePurgeProtection}Else{$false};
+                    softDeleteEnabled = if($null -ne $InputObject.properties.PsObject.Properties.Item('enableSoftDelete')){$InputObject.properties.enableSoftDelete}else{$false};
+                };
                 diagnosticSettings = [PSCustomObject]@{
                     enabled = $false;
                     name = $null;
@@ -70,7 +77,7 @@ Function New-MonkeyVaultObject {
                     secrets = $null;
                     certificates = $null;
                 };
-                rawObject = $KeyVault;
+                rawObject = $InputObject;
             }
             #Create PsObject
             $_obj = New-Object -TypeName PsObject -Property $KeyVaultObject
@@ -94,3 +101,4 @@ Function New-MonkeyVaultObject {
         }
     }
 }
+

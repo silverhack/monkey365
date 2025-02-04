@@ -1,0 +1,112 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure SMTP AUTH is disabled",
+  "description": "This setting enables or disables authenticated client SMTP submission (SMTP AUTH) at an organization level in Exchange Online. The recommended state is Turn off SMTP AUTH protocol for your organization.",
+  "rationale": "SMTP AUTH is a legacy protocol. Disabling it at the organization level supports the principle of least functionality and serves to further back additional controls that block legacy protocols, such as in Conditional Access. Virtually all modern email clients that connect to Exchange Online mailboxes in Microsoft 365 can do so without using SMTP AUTH.",
+  "impact": "This enforces the default behavior, so no impact is expected unless the organization is using it globally. A per-mailbox setting exists that overrides the tenant-wide setting, allowing an individual mailbox SMTP AUTH capability for special cases.",
+  "remediation": {
+    "text": "
+			###### To remediate using the UI: 
+			1. Navigate to Exchange admin center https://admin.exchange.microsoft.com. 
+			2. Select Settings > Mail flow. 
+			3. Uncheck Turn off SMTP AUTH protocol for your organization. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/authenticated-client-smtp-submission"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "4.0.0",
+      "reference": "6.5.4",
+	  "profile": "E5 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    ""
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure SMTP AUTH is disabled",
+        "defaultMessage": "Ensure SMTP AUTH is disabled"
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_exo_smtp_auth_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

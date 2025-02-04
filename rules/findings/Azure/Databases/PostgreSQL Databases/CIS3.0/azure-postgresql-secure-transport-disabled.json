@@ -39,12 +39,32 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_postgresql_servers",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "parameterName",
+                "eq",
+                "require_secure_transport"
+              ],
+              [
+                "parameterValue",
+                "ne",
+                "on"
+              ]
+            ],
+            "operator": "and",
+            "whereObject": "configuration"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -53,9 +73,14 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "serverName": "Server Name",
+          "parameterName": "Parameter",
+          "parameterValue": "Value"
+        },
         "expandObject": null
       },
-      "table": "asList",
+      "table": "Nornal",
       "decorate": [
         
       ],
@@ -64,13 +89,13 @@
       "actions": {
         "objectData": {
           "properties": [
-            
+			"configuration"
           ],
           "expandObject": null,
           "limit": null
         },
-        "showGoToButton": null,
-        "showModalButton": null,
+        "showGoToButton": "true",
+        "showModalButton": "true",
         "directLink": null
       }
     },
@@ -104,4 +129,5 @@
     
   ]
 }
+
 

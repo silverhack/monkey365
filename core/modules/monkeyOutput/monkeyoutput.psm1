@@ -10,3 +10,4 @@ Import-LocalizedData @LocalizedDataParams;
 $listofFiles = [System.IO.Directory]::EnumerateFiles(("{0}" -f $PSScriptRoot),"*.ps1","AllDirectories")
 $all_files = $listofFiles.Where({($_ -like "*public*") -or ($_ -like "*private*")})
 $all_files.ForEach({. $_})
+

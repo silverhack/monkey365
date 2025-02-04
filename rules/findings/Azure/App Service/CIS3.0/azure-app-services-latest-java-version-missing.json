@@ -45,7 +45,6 @@
     },
     "query": [
       {
-        "operator": "and",
         "filter": [
           {
             "conditions": [
@@ -61,7 +60,12 @@
               ]
             ],
             "operator": "and"
-          },
+          }
+        ]
+      },
+	  {
+        "connectOperator": "and",
+        "filter": [
           {
             "conditions": [
               [
@@ -72,7 +76,7 @@
             ]
           }
         ]
-      }
+	  }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -148,4 +152,5 @@
     
   ]
 }
+
 

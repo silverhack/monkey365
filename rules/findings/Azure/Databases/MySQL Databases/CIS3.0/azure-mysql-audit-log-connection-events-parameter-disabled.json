@@ -38,7 +38,7 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_mysql_servers",
     "subPath": null,
     "selectCondition": {
       
@@ -103,4 +103,5 @@
     
   ]
 }
+
 

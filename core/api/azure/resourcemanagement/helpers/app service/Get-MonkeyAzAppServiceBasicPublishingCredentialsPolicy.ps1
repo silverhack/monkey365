@@ -46,18 +46,16 @@ Function Get-MonkeyAzAppServiceBasicPublishingCredentialsPolicy {
     )
     Process{
         try{
-            if($App.kind -eq 'functionapp'){
-                $p = @{
-                    Id = $App.Id;
-                    Resource = 'basicPublishingCredentialsPolicies';
-                    Method = 'GET';
-                    ApiVersion = $APIVersion;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                    InformationAction = $O365Object.InformationAction;
-                }
-                Get-MonkeyAzObjectById @p
+            $p = @{
+                Id = $App.Id;
+                Resource = 'basicPublishingCredentialsPolicies/scm';
+                Method = 'GET';
+                ApiVersion = $APIVersion;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+                InformationAction = $O365Object.InformationAction;
             }
+            Get-MonkeyAzObjectById @p
         }
         catch{
             Write-Verbose $_
@@ -67,3 +65,4 @@ Function Get-MonkeyAzAppServiceBasicPublishingCredentialsPolicy {
         #Nothing to do here
     }
 }
+

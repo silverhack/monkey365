@@ -306,10 +306,7 @@ Function Invoke-Monkey365{
         [Switch]$ForceMSALDesktop,
 
         [Parameter(Mandatory=$false, HelpMessage="List available collectors")]
-        [Switch]$ListCollector,
-
-        [Parameter(Mandatory=$false, HelpMessage="List available rules")]
-        [Switch]$ListRule
+        [Switch]$ListCollector
     )
     dynamicparam{
         # Set available instance class
@@ -520,7 +517,7 @@ Function Invoke-Monkey365{
         #Connect
         Connect-MonkeyCloud
         #Start Watcher
-        if($null -ne (Get-Command -Name "Watch-AccessToken" -ErrorAction ignore)){
+        If($null -ne (Get-Command -Name "Watch-AccessToken" -ErrorAction ignore)){
             Watch-AccessToken
         }
     }
@@ -579,3 +576,4 @@ Function Invoke-Monkey365{
         }
     }
 }
+

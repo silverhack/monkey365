@@ -59,3 +59,4 @@ Function Get-MonkeyAzRedisFirewallRule {
         Write-Verbose $_
     }
 }
+

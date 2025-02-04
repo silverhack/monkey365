@@ -60,3 +60,4 @@ Function Get-MonkeyTeamsServiceDiscovery {
         #Nothing to do here
     }
 }
+

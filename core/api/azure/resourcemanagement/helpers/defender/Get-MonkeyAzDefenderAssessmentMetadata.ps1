@@ -55,3 +55,4 @@ Function Get-MonkeyAzDefenderAssessmentMetadata {
         Write-Verbose $_
     }
 }
+

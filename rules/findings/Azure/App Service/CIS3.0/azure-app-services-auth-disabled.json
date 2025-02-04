@@ -41,7 +41,7 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_app_services",
     "subPath": null,
     "selectCondition": {
       
@@ -106,4 +106,5 @@
     
   ]
 }
+
 

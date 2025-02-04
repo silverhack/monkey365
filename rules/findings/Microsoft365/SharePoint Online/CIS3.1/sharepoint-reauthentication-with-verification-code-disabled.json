@@ -45,12 +45,31 @@
   "tags": [
   ],
   "rule": {
-    "path": "",
+    "path": "o365_spo_tenant_admin_details",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "EmailAttestationRequired",
+                "eq",
+                "False"
+              ],
+			  [
+                "EmailAttestationReAuthDays",
+                "lt",
+                "15"
+              ]
+            ],
+			"operator":"or"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -59,6 +78,11 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+		  "RootSiteUrl": "Root Site",
+		  "EmailAttestationRequired": "Email attestation required",
+          "EmailAttestationReAuthDays": "Email attestation re-auth days"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -111,4 +135,5 @@
     
   ]
 }
+
 

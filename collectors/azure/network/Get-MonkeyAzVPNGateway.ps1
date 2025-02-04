@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyAZKeyVaultInfo {
+function Get-MonkeyAzVPNGateway {
 <#
         .SYNOPSIS
-		Azure Collector to get all keyvaults in subscription
+		Collector to get information about existing VPN gateways from Azure
 
         .DESCRIPTION
-		Azure Collector to get all keyvaults in subscription
+		Collector to get information about existing VPN gateways from Azure
 
         .INPUTS
 
@@ -30,13 +30,13 @@ function Get-MonkeyAZKeyVaultInfo {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAZKeyVaultInfo
+            File Name	: Get-MonkeyAzVPNGateway
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments","",Scope = "Function")]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns","",Scope = "Function")]
 	[CmdletBinding()]
 	param(
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
@@ -45,16 +45,16 @@ function Get-MonkeyAZKeyVaultInfo {
 	begin {
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "az00080";
+			Id = "az00024";
 			Provider = "Azure";
-			Resource = "KeyVault";
+			Resource = "VirtualNetwork";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyAZKeyVaultInfo";
+			collectorName = "Get-MonkeyAzVPNGateway";
 			ApiType = "resourceManagement";
-			description = "Collector to get Azure Keyvault information";
+			description = "Collector to get information about existing VPN gateways from Azure";
 			Group = @(
-				"KeyVault"
+				"Network"
 			);
 			Tags = @(
 
@@ -63,7 +63,7 @@ function Get-MonkeyAZKeyVaultInfo {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"az_keyvault"
+				"az_vpn_gateway"
 			);
 			dependsOn = @(
 
@@ -72,67 +72,59 @@ function Get-MonkeyAZKeyVaultInfo {
 			supportClientCredential = $true
 		}
 		#Get Config
-		$keyvault_Config = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureKeyVault" } | Select-Object -ExpandProperty resource
-		#Get Keyvaults
-		$KeyVaults = $O365Object.all_resources.Where({ $_.type -like 'Microsoft.KeyVault/*' })
-		#Set list
-		$all_keyvault = $null
+		$AzureVPNGatewayConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureVPNGateway" } | Select-Object -ExpandProperty resource
+		#Get VPN gateways instances
+		$VPNGatewaysInstances = $O365Object.all_resources.Where({ $_.Id -like '*Microsoft.Network/virtualNetworkGateways*' })
+		if (-not $VPNGatewaysInstances) { continue }
+		$AllVPNGateways = $null
 	}
 	process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure KeyVault",$O365Object.current_subscription.displayName);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure VPN Gateway",$O365Object.current_subscription.displayName);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
 			InformationAction = $O365Object.InformationAction;
-			Tags = @('AzureKeyVaultInfo');
+			Tags = @('AzureVPNGatewayInfo');
 		}
 		Write-Information @msg
-		if ($KeyVaults.Count -gt 0) {
+		If ($VPNGatewaysInstances.Count -gt 0) {
 			$new_arg = @{
-				APIVersion = $keyvault_Config.api_version;
+				APIVersion = $AzureVPNGatewayConfig.api_version;
 			}
 			$p = @{
-				ScriptBlock = { Get-MonkeyAzKeyVault -KeyVault $_ };
+				ScriptBlock = { Get-MonkeyAzVirtualNetworkGatewayInfo -InputObject $_ };
 				Arguments = $new_arg;
 				Runspacepool = $O365Object.monkey_runspacePool;
 				ReuseRunspacePool = $true;
 				Debug = $O365Object.VerboseOptions.Debug;
 				Verbose = $O365Object.VerboseOptions.Verbose;
+                InformationAction = $O365Object.InformationAction;
 				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
 				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
 				BatchSize = $O365Object.nestedRunspaces.BatchSize;
 			}
-			$all_keyvault = $KeyVaults | Invoke-MonkeyJob @p
+			$AllVPNGateways = $VPNGatewaysInstances | Invoke-MonkeyJob @p
 		}
 	}
 	end {
-		if ($all_keyvault) {
-			$all_keyvault.PSObject.TypeNames.Insert(0,'Monkey365.Azure.KeyVault')
+		if ($AllVPNGateways) {
+			$AllVPNGateways.PSObject.TypeNames.Insert(0,'Monkey365.Azure.VPNGateway')
 			[pscustomobject]$obj = @{
-				Data = $all_keyvault;
+				Data = $AllVPNGateways;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.az_keyvault = $obj
+			$returnData.az_vpn_gateway = $obj;
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure KeyVaults",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure VPN Gateway",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('AzureKeyVaultsEmptyResponse');
+				Tags = @('AzureVPNGatewayEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
 		}
 	}
 }
-
-
-
-
-
-
-
-
-

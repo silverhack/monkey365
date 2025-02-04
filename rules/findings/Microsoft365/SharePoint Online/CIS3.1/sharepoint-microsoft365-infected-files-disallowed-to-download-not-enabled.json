@@ -10,7 +10,7 @@
   "rationale": "Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams protects your organization from inadvertently sharing malicious files. When an infected file is detected, that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization\u0027s security team.",
   "impact": "The only potential impact associated with implementation of this setting is potential inconvenience associated with the small percentage of false positive detections that may occur.",
   "remediation": {
-    "text": "###### To set O365 SharePoint to disallow download of infected files, use Powershell:\r\n\t\t\t\t\t1. Connect using `Connect-SPOService`, you will need to enter the URL for your Sharepoint Online admin page https://*-admin.sharepoint.com as well as a Global Admin account.\r\n\t\t\t\t\t2. Run the following Powershell command to set the value to True\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tSet-SPOTenant â€“DisallowInfectedFileDownload $true\r\n\t\t\t\t\t```\r\n\t\t\t\t\t3. After several minutes run the following to verify the value for `DisallowInfectedFileDownload` has been set to True.\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tGet-SPOTenant | Select-Object DisallowInfectedFileDownload\r\n\t\t\t\t\t```",
+    "text": "###### To set O365 SharePoint to disallow download of infected files, use Powershell:\r\n\t\t\t\t\t1. Connect using `Connect-SPOService`, you will need to enter the URL for your Sharepoint Online admin page https://*-admin.sharepoint.com as well as a Global Admin account.\r\n\t\t\t\t\t2. Run the following Powershell command to set the value to True\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tSet-SPOTenant Ã¢â‚¬â€œDisallowInfectedFileDownload $true\r\n\t\t\t\t\t```\r\n\t\t\t\t\t3. After several minutes run the following to verify the value for `DisallowInfectedFileDownload` has been set to True.\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tGet-SPOTenant | Select-Object DisallowInfectedFileDownload\r\n\t\t\t\t\t```",
     "code": {
       "powerShell": null,
       "iac": null,
@@ -121,4 +121,5 @@
     
   ]
 }
+
 

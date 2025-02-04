@@ -42,7 +42,7 @@ Function Get-MonkeyAzStorageAccountInfo {
         [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2022-05-01"
+        [String]$APIVersion = "2024-01-01"
     )
     Process{
         try{
@@ -55,34 +55,52 @@ Function Get-MonkeyAzStorageAccountInfo {
 		    }
 		    $strAccount = Get-MonkeyAzObjectById @p
             if($strAccount){
-                $strObject = New-MonkeyStorageAccountObject -StrAccount $strAccount
+                $strObject = $strAccount | New-MonkeyStorageAccountObject
                 #Check if infrastructure encryption is enabled
-				if ($null -eq $strObject.Properties.encryption.PSObject.Properties.Item('requireInfrastructureEncryption')) {
+				if ($null -eq $strAccount.Properties.encryption.PSObject.Properties.Item('requireInfrastructureEncryption')) {
 					$strObject.requireInfrastructureEncryption = $false
 				}
 				else {
 					$strObject.requireInfrastructureEncryption = $strObject.Properties.encryption.requireInfrastructureEncryption
 				}
                 $k1 = $strObject.Properties.keyCreationTime.key1
-                if($null -ne $k1){
+                If($null -ne $k1){
+                    #set key1 last rotation
+				    $strObject.keyRotation.key1.lastRotationDate = $strObject.Properties.keyCreationTime.key1
 				    $today = Get-Date
 				    $date_key1 = Get-Date $k1
-				    if (($today - $date_key1).TotalDays -lt 90) {
+				    If (($today - $date_key1).TotalDays -lt 90) {
 					    $strObject.keyRotation.key1.isRotated = $true
 				    }
+                    Else{
+                        $strObject.keyRotation.key1.isRotated = $false
+                    }
                 }
-				#set key1 last rotation
-				$strObject.keyRotation.key1.lastRotationDate = $strObject.Properties.keyCreationTime.key1
+                Else{
+                    $strObject.keyRotation.key1.isRotated = $false
+                    #Set last rotation date to never
+                    $d = [System.DateTime]::new(1970,1,1)
+                    $strObject.keyRotation.key1.lastRotationDate = $d.ToString("yyyy-MM-ddThh:mm:ss.fffZ");
+                }
 				$k2 = $strObject.Properties.keyCreationTime.key2
-                if($null -ne $k2){
+                If($null -ne $k2){
+                    #set key2 last rotation
+				    $strObject.keyRotation.key2.lastRotationDate = $strObject.Properties.keyCreationTime.key2
                     $date_key2 = Get-Date $k2
-				    if (($today - $date_key2).TotalDays -lt 90) {
+				    If (($today - $date_key2).TotalDays -lt 90) {
 					    $strObject.keyRotation.key2.isRotated = $true
 				    }
+                    Else{
+                        $strObject.keyRotation.key2.isRotated = $false
+                    }
                 }
-				#set key2 last rotation
-				$strObject.keyRotation.key2.lastRotationDate = $strObject.Properties.keyCreationTime.key2
-				if ($null -ne $strObject.Properties.encryption.PSObject.Properties.Item('keyvaultproperties') -and $strObject.Properties.encryption.keyvaultproperties) {
+                Else{
+                    $strObject.keyRotation.key2.isRotated = $false
+                    #Set last rotation date to never
+                    $d = [System.DateTime]::new(1970,1,1)
+                    $strObject.keyRotation.key2.lastRotationDate = $d.ToString("yyyy-MM-ddThh:mm:ss.fffZ");
+                }
+				If ($null -ne $strObject.Properties.encryption.PSObject.Properties.Item('keyvaultproperties') -and $strObject.Properties.encryption.keyvaultproperties) {
 					$strObject.keyvaulturi = $strObject.Properties.encryption.keyvaultproperties.keyvaulturi
 					$strObject.keyname = $strObject.Properties.encryption.keyvaultproperties.keyname
 					$strObject.keyversion = $strObject.Properties.encryption.keyvaultproperties.keyversion
@@ -180,3 +198,4 @@ Function Get-MonkeyAzStorageAccountInfo {
         }
     }
 }
+

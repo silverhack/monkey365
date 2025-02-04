@@ -69,18 +69,18 @@ Function Get-MonkeyMSGraphcrossTenantAccessPolicy {
                 }
                 $partners = Get-MonkeyMSGraphObject @p
                 if($null -ne $partners){
-                    foreach($partner in @($partners)){
+                    foreach($_partner in @($partners)){
                         $p = @{
-                            TenantId = $partner.TenantId;
+                            TenantId = $_partner.TenantId;
                             InformationAction = $O365Object.InformationAction;
                             Verbose = $O365Object.verbose;
                             Debug = $O365Object.debug;
                         }
                         $tenantInfo = Find-MonkeyMSGraphTenantInformationByTenantId @p
                         if($null -ne $tenantInfo){
-                            $partner | Add-Member -type NoteProperty -name federationBrandName -value $tenantInfo.federationBrandName -Force
-                            $partner | Add-Member -type NoteProperty -name displayName -value $tenantInfo.displayName -Force
-                            $partner | Add-Member -type NoteProperty -name defaultDomainName -value $tenantInfo.defaultDomainName -Force
+                            $_partner | Add-Member -type NoteProperty -name federationBrandName -value $tenantInfo.federationBrandName -Force
+                            $_partner | Add-Member -type NoteProperty -name displayName -value $tenantInfo.displayName -Force
+                            $_partner | Add-Member -type NoteProperty -name defaultDomainName -value $tenantInfo.defaultDomainName -Force
                         }
                         Start-Sleep -Milliseconds 200
                     }
@@ -125,3 +125,4 @@ Function Get-MonkeyMSGraphcrossTenantAccessPolicy {
         #Nothing to do here
     }
 }
+

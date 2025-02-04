@@ -42,12 +42,31 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "o365_teams_skype_meeting_policies",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "Identity",
+                "eq",
+                "Global"
+              ],
+			  [
+                "AllowPSTNUsersToBypassLobby",
+                "eq",
+                "false"
+              ]
+            ],
+			"operator":"and"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -56,6 +75,10 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "Identity": "Identity",
+          "AllowPSTNUsersToBypassLobby": "Allow PSTN Users To Bypass Lobby"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -108,4 +131,5 @@
     
   ]
 }
+
 

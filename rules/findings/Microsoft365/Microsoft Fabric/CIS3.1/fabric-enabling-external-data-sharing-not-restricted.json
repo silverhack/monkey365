@@ -3,7 +3,7 @@
     
   ],
   "provider": "Microsoft365",
-  "serviceType": "Microsoft Fabric",
+  "serviceType": "Fabric",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure enabling of external data sharing is restricted",
   "description": "Power BI admins can specify which users or user groups can share datasets externally with guests from a different tenant through the in-place mechanism. Disabling this setting prevents any user from sharing datasets externally by restricting the ability of users to turn on external sharing for datasets they own or manage. The recommended state is Enabled for a subset of the organization or Disabled.",
@@ -110,4 +110,5 @@
     
   ]
 }
+
 

@@ -48,6 +48,9 @@ function Get-MonkeyAzObjectById{
         [parameter(Mandatory=$false, HelpMessage="Expand")]
         [String[]]$Expand,
 
+        [parameter(Mandatory=$false, HelpMessage="Extra parameters")]
+        [System.Collections.Hashtable]$ExtraParameters,
+
         [parameter(Mandatory=$false, HelpMessage="Method")]
         [ValidateSet("GET","POST")]
         [String]$Method = "GET",
@@ -59,17 +62,15 @@ function Get-MonkeyAzObjectById{
         [String]$ApiVersion
     )
     Begin{
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
         #Get Environment
         $Environment = $O365Object.Environment
-        #Get Azure Active Directory Auth
-        $rm_auth = $O365Object.auth_tokens.ResourceManager
+        #Get Auth object
+        $authObject = $O365Object.auth_tokens.ResourceManager
+        #set base uri
         $base_uri = [String]::Empty
         $Server = ("{0}" -f $Environment.ResourceManager.Replace('https://',''))
         #Set filter
-        $my_filter = [String]::Empty
+        $my_filter = [System.Text.StringBuilder]::new()
     }
     Process{
         #Add objectId
@@ -80,34 +81,35 @@ function Get-MonkeyAzObjectById{
         if($Resource){
             $base_uri = ("{0}/{1}" -f $base_uri, $Resource)
         }
-        if($Filter){
-            If($Filter.Contains(' ')){
-                $my_filter = ('&$filter={0}' -f [uri]::EscapeDataString($Filter))
-            }
-            else{
-                $my_filter = ('&$filter={0}' -f $Filter)
+        #Add api version
+        [void]$my_filter.Append(("?api-version={0}" -f $ApiVersion))
+        #Add extra params to query
+        If($ExtraParameters){
+            Foreach($extraParam in $ExtraParameters.GetEnumerator()){
+                [void]$my_filter.Append(('&{0}={1}' -f $extraParam.Name,$extraParam.Value ))
             }
         }
         #add Expand
-        if($Expand){
-            if($null -ne $my_filter){
-                $my_filter = ('{0}&$expand={1}' -f $my_filter, (@($Expand) -join ','))
+        If($Expand){
+            [void]$my_filter.Append(('&$expand={0}' -f (@($Expand) -join ',')))
+        }
+        If($Filter){
+            If($Filter.Contains(' ')){
+                [void]$my_filter.Append(('&$filter={0}' -f [uri]::EscapeDataString($Filter)))
             }
             else{
-                $my_filter = ('?$expand={0}' -f (@($Expand) -join ','))
+                [void]$my_filter.Append(('&$filter={0}' -f $Filter))
             }
         }
-        #Add api version
-        $my_filter = ("?api-version={0}{1}" -f $ApiVersion,$my_filter)
-        $base_uri = ("{0}{1}" -f $base_uri, $my_filter)
+        $base_uri = ("{0}{1}" -f $base_uri, $my_filter.ToString())
         #Remove double slashes
         $final_uri = ("{0}{1}" -f $Server,$base_uri)
         $final_uri = [regex]::Replace($final_uri,"/+","/")
         $final_uri = ("https://{0}" -f $final_uri.ToString())
     }
     End{
-        $params = @{
-            Authentication = $rm_auth;
+        $p = @{
+            Authentication = $authObject;
             OwnQuery = $final_uri;
             Environment = $Environment;
             ContentType = 'application/json';
@@ -117,7 +119,6 @@ function Get-MonkeyAzObjectById{
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
-        Get-MonkeyRMObject @params
+        Get-MonkeyRMObject @p
     }
 }
-

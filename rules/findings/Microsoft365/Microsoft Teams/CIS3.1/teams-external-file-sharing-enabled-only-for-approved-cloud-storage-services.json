@@ -43,12 +43,46 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "o365_teams_client_settings",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "AllowDropbox",
+                "eq",
+                "true"
+              ],
+			  [
+                "AllowBox",
+                "eq",
+                "true"
+              ],
+			  [
+                "AllowGoogleDrive",
+                "eq",
+                "true"
+              ],
+			  [
+                "AllowShareFile",
+                "eq",
+                "true"
+              ],
+			  [
+                "AllowEgnyte",
+                "eq",
+                "true"
+              ]
+            ],
+			"operator":"or"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -57,6 +91,13 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "AllowDropbox": "Allow Dropbox",
+          "AllowBox": "Allow Box",
+          "AllowGoogleDrive": "Allow Google Drive",
+		  "AllowShareFile": "Allow Share File",
+		  "AllowEgnyte": "Allow Egnyte"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -109,4 +150,5 @@
     
   ]
 }
+
 

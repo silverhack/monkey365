@@ -43,7 +43,7 @@ Function Get-MonkeyAzVirtualMachineInfo {
         [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2021-07-01"
+        [String]$APIVersion = "2024-07-01"
     )
     Process{
         try{
@@ -76,6 +76,8 @@ Function Get-MonkeyAzVirtualMachineInfo {
                 $vmObject | Get-MonkeyAzVMOSDataDiskInfo
                 #Get NIC info
                 $vmObject | Get-MonkeyAzVMNicInfo
+                #Get Security Profile info
+                $vmObject | Get-MonkeyAzVMSecurityProfileInfo
                 #Get Locks
                 $vmObject.locks = $vmObject | Get-MonkeyAzLockInfo
                 #Get diagnostic settings
@@ -127,3 +129,4 @@ Function Get-MonkeyAzVirtualMachineInfo {
         }
     }
 }
+

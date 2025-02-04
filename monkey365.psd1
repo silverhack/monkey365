@@ -12,7 +12,7 @@
 RootModule = 'monkey365.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.94'
+ModuleVersion = '0.94.5'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -154,5 +154,6 @@ HelpInfoURI = 'https://silverhack.github.io/monkey365/'
 # DefaultCommandPrefix = ''
 
 }
+
 
 

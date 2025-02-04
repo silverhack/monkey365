@@ -161,3 +161,4 @@ Function Get-MonkeyAzMySQlServer {
         }
     }
 }
+

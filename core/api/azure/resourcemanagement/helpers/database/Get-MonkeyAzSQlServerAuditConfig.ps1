@@ -72,3 +72,4 @@ Function Get-MonkeyAzSQlServerAuditConfig {
         #Nothing to do here
     }
 }
+

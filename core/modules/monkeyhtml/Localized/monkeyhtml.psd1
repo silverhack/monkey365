@@ -24,3 +24,4 @@ ConvertFrom-StringData @'
     unableTocreateElement          = Unable to create html element for {0}
     unableTocreateCardElement      = Unable to create html card element for {0}
 '@
+

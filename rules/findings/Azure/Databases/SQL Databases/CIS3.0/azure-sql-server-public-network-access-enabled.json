@@ -42,12 +42,25 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_sql_servers",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "properties.publicNetworkAccess",
+                "ne",
+                "Disabled"
+              ]
+            ]
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -56,9 +69,14 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "name": "Server Name",
+          "location": "Location",
+          "properties.publicNetworkAccess": "Public Network Access"
+        },
         "expandObject": null
       },
-      "table": "asList",
+      "table": "Normal",
       "decorate": [
         
       ],
@@ -107,4 +125,5 @@
     
   ]
 }
+
 

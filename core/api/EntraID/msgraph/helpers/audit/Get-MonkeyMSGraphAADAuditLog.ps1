@@ -85,3 +85,4 @@ Function Get-MonkeyMSGraphAADAuditLog {
         #Nothing to do here
     }
 }
+

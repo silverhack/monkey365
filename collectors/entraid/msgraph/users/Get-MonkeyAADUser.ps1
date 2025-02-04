@@ -99,7 +99,6 @@ function Get-MonkeyAADUser {
 		#Get all users
 		$p = @{
 			APIVersion = $aadConf.api_version;
-			Expand = 'owners';
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;
@@ -128,6 +127,7 @@ function Get-MonkeyAADUser {
 		}
 	}
 }
+
 
 
 

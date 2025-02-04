@@ -77,8 +77,8 @@ Function Convert-Value{
         elseif([string]::IsNullOrEmpty($Value)){
             return $null
         }
-        elseif($value -is [System.Array]){
-            return $Value
+        elseif($Value -is [System.Collections.IEnumerable] -and $Value -isnot [string]){
+            Write-Output $Value -NoEnumerate
         }
         else{
             return [System.Convert]::ToString($Value);
@@ -88,4 +88,5 @@ Function Convert-Value{
         #nothing to do here
     }
 }
+
 

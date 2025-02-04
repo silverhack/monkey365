@@ -45,3 +45,4 @@ ConvertFrom-StringData @'
     PathNotFoundErrorMessage         = "{0}" was not found in dataset
     UnableToFormatErrorMessage       = Unable to format {0} data
 '@
+

@@ -45,12 +45,25 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_storage_accounts",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "properties.networkAcls.defaultAction",
+                "eq",
+                "Allow"
+              ]
+            ]
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -59,6 +72,12 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "name": "Name",
+          "location": "Location",
+          "ResourceGroupName": "ResourceGroupName",
+          "properties.networkAcls.defaultAction": "Default ACL Action"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -70,11 +89,14 @@
       ],
       "actions": {
         "objectData": {
+          "properties": [
+			"*"
+          ],
           "expandObject": null,
           "limit": null
         },
-        "showGoToButton": "True",
-        "showModalButton": "True",
+        "showGoToButton": "true",
+        "showModalButton": "true",
         "directLink": null
       }
     },
@@ -108,4 +130,5 @@
     
   ]
 }
+
 

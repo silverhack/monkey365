@@ -127,12 +127,3 @@ function Get-MonkeyAzCacheForRedis {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-

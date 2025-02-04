@@ -64,3 +64,4 @@ Function Get-MonkeyAzServerThreatDetectionPolicy {
         #Nothing to do here
     }
 }
+

@@ -59,7 +59,7 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_cosmosdb",
     "subPath": null,
     "selectCondition": {
       
@@ -122,4 +122,5 @@
     
   ]
 }
+
 

@@ -41,8 +41,14 @@
     
   ],
   "rule": {
-    "isManual":"true",
-    "shouldExist": "true",
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
     "returnObject": null,
     "removeIfNotExists": null
   },
@@ -109,4 +115,5 @@
     
   ]
 }
+
 

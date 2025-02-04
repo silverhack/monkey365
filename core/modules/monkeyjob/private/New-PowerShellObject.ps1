@@ -49,7 +49,7 @@ Function New-PowerShellObject{
         [System.Management.Automation.Runspaces.RunspacePool]$RunspacePool,
 
         [Parameter(Mandatory=$false,position=4,HelpMessage="arguments")]
-        [Object] $Arguments
+        [Object]$Arguments
     )
     Process{
         try{
@@ -94,3 +94,4 @@ Function New-PowerShellObject{
         }
     }
 }
+

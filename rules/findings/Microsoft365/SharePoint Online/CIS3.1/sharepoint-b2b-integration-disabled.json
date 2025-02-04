@@ -36,7 +36,7 @@
   "tags": [
   ],
   "rule": {
-    "path": "o365_spo_tenant_details",
+    "path": "o365_spo_tenant_admin_details",
     "subPath": null,
     "selectCondition": {
       
@@ -48,7 +48,7 @@
             "conditions": [
               [
                 "EnableAzureADB2BIntegration",
-                "ne",
+                "eq",
                 "false"
               ]
             ]
@@ -64,7 +64,8 @@
     "html": {
       "data": {
         "properties": {
-          
+          "RootSiteUrl": "Root Site",
+          "EnableAzureADB2BIntegration": "Azure B2B Integration"
         },
         "expandObject": null
       },
@@ -78,7 +79,8 @@
       "actions": {
         "objectData": {
           "properties": [
-            "*"
+            "RootSiteUrl",
+			"EnableAzureADB2BIntegration"
           ],
           "expandObject": null,
           "limit": null
@@ -118,4 +120,5 @@
     
   ]
 }
+
 

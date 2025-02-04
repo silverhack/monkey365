@@ -60,12 +60,36 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "o365_teams_skype_federation_settings",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "AllowTeamsConsumer",
+                "eq",
+                "true"
+              ],
+			  [
+                "AllowPublicUsers",
+                "eq",
+                "true"
+              ],
+			  [
+                "AllowFederatedUsers",
+                "eq",
+                "true"
+              ]
+            ],
+			"operator":"or"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -74,6 +98,13 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "Identity": "Identity",
+          "AllowTeamsConsumer": "Allow Teams Consumer",
+          "AllowPublicUsers": "Allow Public Users",
+		  "AllowFederatedUsers": "Allow Federated Users",
+		  "AllowedDomains": "Allowed Domains"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -126,4 +157,5 @@
     
   ]
 }
+
 

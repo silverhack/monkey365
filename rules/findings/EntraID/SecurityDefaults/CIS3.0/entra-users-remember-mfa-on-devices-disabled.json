@@ -15,7 +15,7 @@
   "impact": "For every login attempt, the user will be required to perform multi-factor authentication.",
   "remediation": {
     "text": "
-		###### Remediate from Azure Portal <br>
+		###### Remediate from Azure Portal <br/>
 
 		1. From Azure Home select the Portal Menu 
 		2. Select `Microsoft Entra ID` blade 
@@ -51,10 +51,16 @@
     
   ],
   "rule": {
-	"isManual": "true",  
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
     "shouldExist": null,
     "returnObject": null,
-    "removeIfNotExists": "false"
+    "removeIfNotExists": null
   },
   "output": {
     "html": {
@@ -105,4 +111,5 @@
     
   ]
 }
+
 

@@ -64,3 +64,4 @@ Function Get-MonkeyAzDatabaseLedgerConfig {
         #Nothing to do here
     }
 }
+

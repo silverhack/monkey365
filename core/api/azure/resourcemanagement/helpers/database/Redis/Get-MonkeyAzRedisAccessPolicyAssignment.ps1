@@ -59,3 +59,4 @@ Function Get-MonkeyAzRedisAccessPolicyAssignment {
         Write-Verbose $_
     }
 }
+

@@ -134,3 +134,4 @@ Function Get-MonkeyMSGraphAADServicePrincipal {
         #Nothing to do here
     }
 }
+

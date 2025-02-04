@@ -62,7 +62,7 @@ function ConvertTo-Query{
                 }
                 If(@($filters).Count -eq 1 -and $null -eq $operator){
                     $q = (@($filters) -join ' ')
-                    if($null -ne $connectOperator -and $null -ne (Get-LogicalOperator $connectOperator)){
+                    If($null -ne $connectOperator -and $null -ne (Get-LogicalOperator $connectOperator)){
                         $q = ("-{0} ({1})" -f $connectOperator,$q)
                     }
                     If($q.Length -gt 0){
@@ -100,4 +100,5 @@ function ConvertTo-Query{
         }
     }
 }
+
 

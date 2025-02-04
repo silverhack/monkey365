@@ -35,12 +35,32 @@
 	"legacy"
   ],
   "rule": {
-    "path": "",
+    "path": "az_postgresql_servers",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "parameterName",
+                "eq",
+                "log_connections"
+              ],
+              [
+                "parameterValue",
+                "ne",
+                "on"
+              ]
+            ],
+            "operator": "and",
+            "whereObject": "configuration"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -49,9 +69,14 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "Name": "Server Name",
+          "Location": "Parameter",
+          "resourceGroupName": "Resource Group Name"
+        },
         "expandObject": null
       },
-      "table": "asList",
+      "table": "Normal",
       "decorate": [
         
       ],
@@ -60,13 +85,13 @@
       "actions": {
         "objectData": {
           "properties": [
-            
+            "configuration"
           ],
           "expandObject": null,
           "limit": null
         },
-        "showGoToButton": null,
-        "showModalButton": null,
+        "showGoToButton": "true",
+        "showModalButton": "true",
         "directLink": null
       }
     },
@@ -100,4 +125,5 @@
     
   ]
 }
+
 

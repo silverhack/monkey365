@@ -86,7 +86,7 @@
                 ]
             }
         ],
-		"aad-password-expiring-enabled.json": [
+		"eid-password-expiring-enabled.json": [
             {
                 "enabled": true,
                 "level": "medium",
@@ -216,7 +216,7 @@
                 ]
             }
         ],
-		"exchange-anti-malware-admin-notification-disabled.json": [
+		"exchange-notifications-for-internal-users-sending-malware-disabled.json": [
             {
                 "enabled": true,
                 "level": "medium",
@@ -528,7 +528,7 @@
                 ]
             }
         ],
-		"azure-activedirectory-restrict-users-ad-portal.json": [
+		"eid-restrict-users-entra-portal.json": [
             {
                 "enabled": true,
                 "level": "medium",
@@ -541,7 +541,7 @@
                 ]
             }
         ],
-		"aad-stay_signed_policy-disabled.json": [
+		"eid-stay-signed-policy-disabled.json": [
             {
                 "enabled": true,
                 "level": "low",
@@ -554,7 +554,7 @@
                 ]
             }
         ],
-		"aad-linkedin-sync-enabled.json": [
+		"eid-linkedin-sync-enabled.json": [
             {
                 "enabled": true,
                 "level": "low",
@@ -593,7 +593,7 @@
                 ]
             }
         ],
-		"azure-activedirectory-users-can-consent-apps-data-access-trusted-publishers-disabled.json": [
+		"eid-users-can-consent-apps-data-access.json": [
             {
                 "enabled": true,
                 "level": "medium",
@@ -619,7 +619,7 @@
                 ]
             }
         ],
-		"aad-restrict-collaboration-specific-domains-disabled.json": [
+		"eid-restrict-collaboration-specific-domains-disabled.json": [
             {
                 "enabled": true,
                 "level": "medium",
@@ -632,7 +632,7 @@
                 ]
             }
         ],
-		"aad-password-hash-sync-disabled.json": [
+		"eid-password-hash-sync-disabled.json": [
             {
                 "enabled": true,
                 "level": "medium",
@@ -645,7 +645,7 @@
                 ]
             }
         ],
-		"aad-iam-privileged-users-disabled-mfa.json": [
+		"entra-iam-privileged-users-disabled-mfa.json": [
             {
                 "args": [
                     "aad-m365-privileged-roles.json"
@@ -661,7 +661,7 @@
                 ]
             }
         ],
-        "aad-iam-users-disabled-mfa.json": [
+        "entra-iam-users-disabled-mfa.json": [
             {
                 "enabled": true,
                 "level": "high",
@@ -674,7 +674,7 @@
                 ]
             }
         ],
-		"aad-cap-block-basic-authentication-not-enabled.json": [
+		"eid-cap-block-legacy-authentication-not-enabled.json": [
             {
                 "enabled": true,
                 "level": "medium",
@@ -1080,7 +1080,7 @@
 		"sharepoint-guest-user-sharing-disabled.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "medium",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1093,7 +1093,7 @@
 		"sharepoint-external-sharing-managed-allow-deny-domain-list.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "low",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1106,7 +1106,7 @@
 		"sharepoint-link-sharing-not-restricted.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "medium",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1119,7 +1119,7 @@
 		"sharepoint-external-sharing-not-restricted-by-security-group.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "low",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1132,7 +1132,7 @@
 		"sharepoint-guest-access-to-site-or-onedrive-not-expire.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "low",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1145,7 +1145,7 @@
 		"sharepoint-reauthentication-with-verification-code-disabled.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "low",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1158,7 +1158,7 @@
 		"sharepoint-microsoft365-infected-files-disallowed-to-download-not-enabled.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "medium",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1184,7 +1184,7 @@
 		"sharepoint-custom-script-execution-personal-sites-disabled.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "medium",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1197,7 +1197,7 @@
 		"sharepoint-custom-script-execution-enabled-on-site-collections.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "medium",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1210,7 +1210,7 @@
 		"teams-external-file-sharing-enabled-only-for-approved-cloud-storage-services.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "low",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1236,7 +1236,7 @@
 		"teams-external-access-not-restricted.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "medium",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1249,7 +1249,7 @@
 		"teams-app-permission-policies-not-configured.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "medium",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1262,7 +1262,7 @@
 		"teams-anonymous-users-cant-join-meeting.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "low",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1275,7 +1275,7 @@
 		"teams-anonymous-users-and-dial-in-callers-not-restricted-start-meeting.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "medium",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1288,7 +1288,7 @@
 		"teams-only-org-people-can-bypass-lobby.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "low",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1301,7 +1301,7 @@
 		"teams-users-dialing-in-cant-bypass-lobby.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "low",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1314,7 +1314,7 @@
 		"teams-meeting-chat-not-allow-anonymous-users.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "medium",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -1340,7 +1340,7 @@
 		"teams-external-participants-cannot-give-or-request-control.json": [
             {
                 "enabled": true,
-                "level": "info",
+                "level": "low",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",

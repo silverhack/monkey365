@@ -56,12 +56,25 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "o365_spo_sites_properties",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "DenyAddAndCustomizePages",
+                "ne",
+                "2"
+              ]
+            ]
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -70,6 +83,11 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "Title": "Site",
+          "Url": "Url",
+          "DenyAddAndCustomizePages": "Allowed Custom Script Execution"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -122,4 +140,5 @@
     
   ]
 }
+
 

@@ -189,7 +189,16 @@ Function Format-DataFromExpression {
                     }
                     Else{
                         foreach($element in $_expressions.PsObject.Properties){
+                            <#
                             If($element.Name.Trim().ToString().Contains('@') -or $element.Name.Trim().ToString().Contains('.')){
+                                $newExpression = [ordered]@{
+                                    Name = $element.value;
+                                    Expression = [scriptblock]::Create(('$_."{0}"' -f $element.Name))
+                                }
+                                [void]$allExpressions.Add($newExpression);
+                            }
+                            #>
+                            If($element.Name.Trim().ToString().Contains('@')){
                                 $newExpression = [ordered]@{
                                     Name = $element.value;
                                     Expression = [scriptblock]::Create(('$_."{0}"' -f $element.Name))
@@ -264,4 +273,5 @@ Function Format-DataFromExpression {
         }
     }
 }
+
 

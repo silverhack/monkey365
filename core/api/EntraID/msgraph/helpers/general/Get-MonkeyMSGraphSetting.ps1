@@ -81,3 +81,4 @@ Function Get-MonkeyMSGraphSetting {
         #Nothing to do here
     }
 }
+

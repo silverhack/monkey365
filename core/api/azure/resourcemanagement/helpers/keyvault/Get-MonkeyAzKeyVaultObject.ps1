@@ -46,20 +46,23 @@ Function Get-MonkeyAzKeyVaultObject {
         [String]$ObjectType = "keys",
 
         [Parameter(Mandatory=$false)]
-        [Switch]$GetProperties
+        [Switch]$GetProperties,
+
+        [Parameter(Mandatory=$false)]
+        [Switch]$RotationPolicy
     )
     try{
         $objects = $null;
         $Auth = $O365Object.auth_tokens.AzureVault
         #set Uri
-        if($ObjectType -eq 'keys'){
-            [URI]$URI = ("{0}keys?api-version={1}" -f $KeyVault.Properties.vaultUri,'7.3')
+        If($ObjectType -eq 'keys'){
+            [URI]$URI = ("{0}keys?api-version={1}" -f $KeyVault.Properties.vaultUri,'7.4')
         }
-        elseif($ObjectType -eq 'secrets'){
-            [URI]$URI = ("{0}secrets?api-version={1}" -f $KeyVault.Properties.vaultUri,'7.0')
+        ElseIf($ObjectType -eq 'secrets'){
+            [URI]$URI = ("{0}secrets?api-version={1}" -f $KeyVault.Properties.vaultUri,'7.4')
         }
-        else{
-            [URI]$URI = ("{0}certificates?api-version={1}" -f $KeyVault.Properties.vaultUri,'7.0')
+        Else{
+            [URI]$URI = ("{0}certificates?api-version={1}" -f $KeyVault.Properties.vaultUri,'7.4')
         }
         #Get object
         if($null -ne $Auth -and $null -ne $URI){
@@ -75,13 +78,26 @@ Function Get-MonkeyAzKeyVaultObject {
 			}
 			$objects = Get-MonkeyRMObject @params
         }
-        if($null -ne $objects){
-            if($GetProperties.IsPresent){
+        If($null -ne $objects){
+            ForEach($obj in @($objects)){
+                #Set expiration Time
+                If($null -eq $obj.attributes.psobject.Properties.Item('exp')){
+                    $obj.attributes | Add-Member -Type NoteProperty -Name exp -Value $null
+                }
+                #Set days since last update
+                Try{
+                    $updated = $obj.attributes.updated
+                    $updatedTime = (([System.DateTimeOffset]::FromUnixTimeSeconds($updated)).DateTime).ToString("s")
+                    $today = Get-Date
+                    $timeSpan = New-TimeSpan -Start $updatedTime -End $today
+                    $obj.attributes | Add-Member -Type NoteProperty -Name daysSinceLastUpdate -Value $timeSpan.Days
+                }
+                Catch{
+                    $obj.attributes | Add-Member -Type NoteProperty -Name daysSinceLastUpdate -Value $null
+                }
+            }
+            If($GetProperties.IsPresent){
                 foreach($obj in @($objects)){
-                    #Set expiration Time
-                    if($null -eq $obj.attributes.psobject.Properties.Item('exp')){
-                        $obj.attributes | Add-Member -Type NoteProperty -Name exp -Value $null
-                    }
                     #Construct URI
                     $query = $URI.Query
                     if($null -ne $obj.Psobject.Properties.Item('kid')){
@@ -111,11 +127,37 @@ Function Get-MonkeyAzKeyVaultObject {
                     }
                 }
             }
-            else{
-                #Set expiry to null
-                foreach($object in @($objects)){
-                    if($null -eq $object.attributes.psobject.Properties.Item('exp')){
-                        $object.attributes | Add-Member -Type NoteProperty -Name exp -Value $null
+            If($RotationPolicy.IsPresent -and $ObjectType -eq "keys"){
+                foreach($obj in @($objects)){
+                    #Construct URI
+                    $query = $URI.Query
+                    if($null -ne $obj.Psobject.Properties.Item('kid')){
+                        $newUri = ("{0}/rotationpolicy{1}" -f $obj.kid,$query)
+                    }
+                    elseif($null -ne $obj.Psobject.Properties.Item('id')){
+                        $newUri = ("{0}/rotationpolicy{1}" -f $obj.id,$query)
+                    }
+                    else{
+                        $newUri = $null;
+                    }
+                    if($null -ne $newUri){
+                        $p = @{
+				            Authentication = $Auth;
+				            OwnQuery = $newUri;
+				            Environment = $O365Object.Environment;
+				            ContentType = 'application/json';
+				            Method = "GET";
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+			            }
+			            $_rotationPolicy = Get-MonkeyRMObject @p
+                        if($rotationPolicy){
+                            $obj | Add-Member -Type NoteProperty -Name rotationPolicy -Value $_rotationPolicy
+                        }
+                        Else{
+                            $obj | Add-Member -Type NoteProperty -Name rotationPolicy -Value $null
+                        }
                     }
                 }
             }
@@ -127,3 +169,4 @@ Function Get-MonkeyAzKeyVaultObject {
         Write-Verbose $_
     }
 }
+

@@ -37,23 +37,62 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_postgresql_servers",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "parameterName",
+                "eq",
+                "logfiles.retention_days"
+              ]
+            ],
+            "whereObject": "configuration"
+          }
+        ]
+      },
+	  {
+		"connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "parameterValue",
+                "lt",
+                "3"
+              ],
+			  [
+                "parameterValue",
+                "eq",
+                "7"
+              ]
+            ],
+            "operator": "or"
+          }
+        ]
+      }
     ],
-    "shouldExist": null,
+	"shouldExist": null,
     "returnObject": null,
     "removeIfNotExists": null
   },
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "Name": "Server Name",
+          "Location": "Parameter",
+          "resourceGroupName": "Resource Group Name"
+        },
         "expandObject": null
       },
-      "table": "asList",
+      "table": "Normal",
       "decorate": [
         
       ],
@@ -62,13 +101,13 @@
       "actions": {
         "objectData": {
           "properties": [
-            
+            "configuration"
           ],
           "expandObject": null,
           "limit": null
         },
-        "showGoToButton": null,
-        "showModalButton": null,
+        "showGoToButton": "true",
+        "showModalButton": "true",
         "directLink": null
       }
     },
@@ -102,4 +141,5 @@
     
   ]
 }
+
 

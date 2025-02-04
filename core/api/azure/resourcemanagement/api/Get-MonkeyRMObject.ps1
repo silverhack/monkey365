@@ -278,25 +278,25 @@ Function Get-MonkeyRMObject{
                     $return_objects = Invoke-MonkeyWebRequest @p
                 }
             }
-            if($null -ne $return_objects -and $null -ne $return_objects.PSObject.Properties.Item('value') -and $return_objects.value.Count -gt 0){
+            If($null -ne $return_objects -and $null -ne $return_objects.PSObject.Properties.Item('value') -and @($return_objects.value).Count -gt 0){
                 #return Value
                 $return_objects.value
             }
-            elseif($null -ne $return_objects -and $null -ne $return_objects.PSObject.Properties.Item('value') -and $return_objects.value.Count -eq 0){
+            ElseIf($null -ne $return_objects -and $null -ne $return_objects.PSObject.Properties.Item('value') -and @($return_objects.value).Count -eq 0){
                 #empty response
                 $return_objects.value
             }
-            else{
+            Else{
                 $return_objects
             }
             #Check for paging objects
-            if($null -ne $return_objects.PSObject.Properties.Item('odata.nextLink')){
+            If($null -ne $return_objects.PSObject.Properties.Item('odata.nextLink')){
                 $nextLink = $return_objects.'odata.nextLink'
             }
-            elseif($null -ne $return_objects.PSObject.Properties.Item('nextLink')){
+            ElseIf($null -ne $return_objects.PSObject.Properties.Item('nextLink')){
                 $nextLink = $return_objects.nextLink
             }
-            else{
+            Else{
                 $nextLink = $null;
             }
             if ($null -ne $nextLink -and -NOT $nextLink.EndsWith('__0')){
@@ -334,4 +334,5 @@ Function Get-MonkeyRMObject{
         #Nothing to do here
     }
 }
+
 

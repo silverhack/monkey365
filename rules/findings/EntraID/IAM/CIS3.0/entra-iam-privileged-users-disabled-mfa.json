@@ -18,7 +18,7 @@
   "impact": "Users would require two forms of authentication before any access is granted. Additional administrative time will be required for managing dual forms of authentication when enabling multi-factor authentication.",
   "remediation": {
     "text": "
-		###### Remediate from Azure Portal <br>
+		###### Remediate from Azure Portal <br/>
 
 		1. From Azure Home select the Portal Menu 
 		2. Select `Microsoft Entra ID` blade 
@@ -165,4 +165,5 @@
     
   ]
 }
+
 

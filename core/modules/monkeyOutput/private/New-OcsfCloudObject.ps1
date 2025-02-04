@@ -55,3 +55,4 @@ Function New-OcsfCloudObject{
         }
     }
 }
+

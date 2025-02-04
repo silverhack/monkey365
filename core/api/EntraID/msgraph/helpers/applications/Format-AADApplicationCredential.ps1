@@ -64,7 +64,7 @@ Function Format-AADApplicationCredential {
                     $startDate = Get-Date
                     $timeSpan = New-TimeSpan -Start $startDate -End $endDate
                     $credential | Add-Member -Type NoteProperty -Name expireInDays -Value $timeSpan.Days -Force
-                    if($timeSpan.Days -le 0){
+                    If($timeSpan.Days -le 0){
                         $credential | Add-Member -Type NoteProperty -Name keyExpired -Value $true -Force
                     }
                     else{
@@ -77,3 +77,4 @@ Function Format-AADApplicationCredential {
         $Application
     }
 }
+

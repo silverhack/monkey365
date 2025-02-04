@@ -70,6 +70,7 @@ $internal_functions = @(
     '/core/analysis',
     '/core/import',
     '/core/output',
+    '/core/watcher',
     '/core/api/EntraID/msgraph',
     '/core/tenant',
     '/core/subscription',
@@ -94,3 +95,4 @@ $all_files.ForEach({. $_})
 
 $monkey = ("{0}/Invoke-Monkey365.ps1" -f $PSScriptRoot)
 . $monkey
+

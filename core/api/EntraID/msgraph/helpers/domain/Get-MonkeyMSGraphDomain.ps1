@@ -89,3 +89,4 @@ Function Get-MonkeyMSGraphDomain {
         #Nothing to do here
     }
 }
+

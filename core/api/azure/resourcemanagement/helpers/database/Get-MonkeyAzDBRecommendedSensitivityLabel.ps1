@@ -64,3 +64,4 @@ Function Get-MonkeyAzDBRecommendedSensitivityLabel {
         #Nothing to do here
     }
 }
+

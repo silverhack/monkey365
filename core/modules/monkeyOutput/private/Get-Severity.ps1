@@ -56,3 +56,4 @@ Function Get-Severity{
         }
     }
 }
+

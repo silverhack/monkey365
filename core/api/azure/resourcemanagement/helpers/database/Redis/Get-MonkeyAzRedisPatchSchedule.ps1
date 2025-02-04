@@ -59,3 +59,4 @@ Function Get-MonkeyAzRedisPatchSchedule {
         Write-Verbose $_
     }
 }
+

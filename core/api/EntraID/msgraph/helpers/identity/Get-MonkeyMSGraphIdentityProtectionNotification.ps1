@@ -65,3 +65,4 @@ Function Get-MonkeyMSGraphIdentityProtectionNotification {
         #Nothing to do here
     }
 }
+

@@ -47,10 +47,16 @@
             "conditions": [
               [
                 "SharingDomainRestrictionMode",
-                "eq",
-                "0"
+                "ne",
+                "1"
+              ],
+			  [
+                "SharingAllowedDomainList.Length",
+                "gt",
+                "5"
               ]
-            ]
+            ],
+			"operator":"and"
           }
         ]
       }
@@ -120,4 +126,5 @@
     
   ]
 }
+
 

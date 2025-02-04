@@ -65,3 +65,4 @@ Function Get-MonkeyMSGraphSecureScoreControlProfile {
         #Nothing to do here
     }
 }
+

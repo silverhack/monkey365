@@ -58,6 +58,29 @@ Function New-MonkeyVMObject {
                 isAVAgentInstalled = $null;
                 isVMAgentInstalled = $null;
                 instanceView = $InputObject.properties.instanceView;
+                securityProfile = [PSCustomObject]@{
+                    encryptionAtHost = $null;
+                    encryptionIdentity = [PSCustomObject]@{
+                        userAssignedIdentityResourceId = $null;
+                    };
+                    proxyAgentSettings = [PSCustomObject]@{
+                        enabled = $null;
+                        keyIncarnationId = $null;
+                        mode = [PSCustomObject]@{
+                            Audit = $null;
+                            Enforce = $null;
+                        };
+                    };
+                    securityType = [PSCustomObject]@{
+                        ConfidentialVM = $null;
+                        TrustedLaunch = $null;
+                    };
+                    uefiSettings = [PSCustomObject]@{
+                        secureBootEnabled = $false;
+                        vTpmEnabled = $false;
+                    };
+                    rawObject = $null;
+                };
                 locks = $null;
                 osDisk = [PSCustomObject]@{
                     isManagedDisk = $null;
@@ -74,18 +97,8 @@ Function New-MonkeyVMObject {
                     enabled = $null;
                     rawObject = $null;
                 };
-                localNic = [PSCustomObject]@{
-                    name = $null;
-                    localIpAddress = $null;
-                    macAddress = $null;
-                    ipForwardingEnabled = $null;
-                    rawObject = $null;
-                };
-                publicNic = [PSCustomObject]@{
-                    publicIpAddress = $null;
-                    publicIPAllocationMethod = $null;
-                    rawObject = $null;
-                };
+                localNic = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+                publicNic = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
                 diagnosticSettings = [PSCustomObject]@{
                     enabled = $false;
                     name = $null;
@@ -99,6 +112,26 @@ Function New-MonkeyVMObject {
             }
             #Create PsObject
             $_obj = New-Object -TypeName PsObject -Property $VMObject
+            #Add method for local NIC
+            $_obj | Add-Member -Type ScriptMethod -Name newLocalNic -Value {
+                $newNic = [PSCustomObject]@{
+                    name = $null;
+                    localIpAddress = $null;
+                    macAddress = $null;
+                    ipForwardingEnabled = $null;
+                    rawObject = $null;
+                };
+                return $newNic
+            }
+            #Add method for public NIC
+            $_obj | Add-Member -Type ScriptMethod -Name newPublicNic -Value {
+                $newNic = [PSCustomObject]@{
+                    publicIpAddress = $null;
+                    publicIPAllocationMethod = $null;
+                    rawObject = $null;
+                };
+                return $newNic
+            }
             #return object
             return $_obj
         }
@@ -119,3 +152,4 @@ Function New-MonkeyVMObject {
         }
     }
 }
+

@@ -96,7 +96,7 @@ Function Get-MonkeyAzRecoveryServiceVaultInfo {
                     }
                 }
                 #Return object
-                return $vmObject
+                return $rsVaultObject
             }
         }
         catch{
@@ -104,3 +104,4 @@ Function Get-MonkeyAzRecoveryServiceVaultInfo {
         }
     }
 }
+

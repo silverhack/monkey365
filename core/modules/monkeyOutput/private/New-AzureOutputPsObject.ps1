@@ -85,3 +85,4 @@ Function New-AzureOutputPsObject {
         }
     }
 }
+

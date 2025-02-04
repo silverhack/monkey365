@@ -1,0 +1,118 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Fabric",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure Service Principals cannot create and use profiles",
+  "description": "
+		Service principal profiles provide a flexible solution for apps used in a multitenancy deployment. The profiles enable customer data isolation and tighter security boundaries between customers that are utilizing the app. 
+		The recommended state is `Enabled for a subset of the organization` or `Disabled`.
+  ",
+  "rationale": "Service Principals should be restricted to a security group to limit which Service Principals can interact with profiles. This supports the principle of least privilege.",
+  "impact": "Disabled is the default behavior.",
+  "remediation": {
+    "text": "
+			###### To remediate using the UI: 
+			1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal 
+			2. Select Tenant settings. 
+			3. Scroll to Developer settings. 
+			4. Set Allow service principals to create and use profiles to one of these states: 
+			  * State 1: Disabled 
+			  * State 2: Enabled with Specific security groups selected and defined. 
+			**Important** : If the organization doesn't actively use this feature it is recommended to keep it Disabled. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/fabric/admin/service-admin-portal-developer",
+	"https://learn.microsoft.com/en-us/power-bi/developer/embedded/embed-multi-tenancy"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "4.0.0",
+      "reference": "9.1.11",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure Service Principals cannot create and use profiles",
+        "defaultMessage": "Ensure Service Principals cannot create and use profiles"
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "fabric_service_principals_can_create_and_use_profiles",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+
+

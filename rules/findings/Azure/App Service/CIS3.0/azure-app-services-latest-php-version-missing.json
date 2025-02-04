@@ -45,8 +45,7 @@
     },
     "query": [
       {
-        "operator": "and",
-        "filter": [
+		"filter": [
           {
             "conditions": [
               [
@@ -66,7 +65,12 @@
               ]
             ],
             "operator": "and"
-          },
+          }
+        ]
+      },
+	  {
+        "connectOperator": "and",
+        "filter": [
           {
             "conditions": [
               [
@@ -161,4 +165,5 @@
     
   ]
 }
+
 

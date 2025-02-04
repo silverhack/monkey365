@@ -38,12 +38,25 @@
   "tags": [
   ],
   "rule": {
-    "path": "",
+    "path": "o365_spo_tenant_admin_details",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "LegacyAuthProtocolsEnabled",
+                "eq",
+                "true"
+              ]
+            ]
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -53,11 +66,12 @@
     "html": {
       "data": {
         "properties": {
-          
+          "RootSiteUrl": "Root Site",
+          "LegacyAuthProtocolsEnabled": "Legacy Auth Protocols Enabled"
         },
         "expandObject": null
       },
-      "table": null,
+      "table": "Normal",
       "decorate": [
         
       ],
@@ -67,7 +81,8 @@
       "actions": {
         "objectData": {
           "properties": [
-            "*"
+            "RootSiteUrl",
+			"LegacyAuthProtocolsEnabled"
           ],
           "expandObject": null,
           "limit": null
@@ -107,4 +122,5 @@
     
   ]
 }
+
 

@@ -3,7 +3,7 @@
     
   ],
   "provider": "Microsoft365",
-  "serviceType": "Microsoft Fabric",
+  "serviceType": "Fabric",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure 'Publish to web' is restricted",
   "description": "Power BI enables users to share reports and materials directly on the internet from both the application's desktop version and its web user interface. This functionality generates a publicly reachable web link that doesn't necessitate authentication or the need to be an AAD user in order to access and view it. The recommended state is Enabled for a subset of the organization or Disabled.",
@@ -112,4 +112,5 @@
     
   ]
 }
+
 

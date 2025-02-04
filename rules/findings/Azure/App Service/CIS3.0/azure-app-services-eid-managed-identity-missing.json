@@ -47,9 +47,9 @@
           {
             "conditions": [
               [
-                "identity.principalId",
+                "identity.enabled",
                 "eq",
-                ""
+                "false"
               ]
             ]
           }
@@ -126,4 +126,5 @@
     
   ]
 }
+
 

@@ -47,7 +47,7 @@
             "conditions": [
               [
                 "enabled",
-                "eq",
+                "ne",
                 "true"
               ],
               [
@@ -56,7 +56,7 @@
                 "90"
               ]
             ],
-            "operator": "and"
+            "operator": "or"
           }
         ]
       }
@@ -123,4 +123,5 @@
     
   ]
 }
+
 

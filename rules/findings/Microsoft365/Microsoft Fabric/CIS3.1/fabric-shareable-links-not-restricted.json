@@ -3,7 +3,7 @@
     
   ],
   "provider": "Microsoft365",
-  "serviceType": "Microsoft Fabric",
+  "serviceType": "Fabric",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure shareable links are restricted",
   "description": "
@@ -117,4 +117,5 @@
     
   ]
 }
+
 

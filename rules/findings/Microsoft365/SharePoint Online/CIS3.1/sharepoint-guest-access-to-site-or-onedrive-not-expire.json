@@ -48,12 +48,31 @@
   "tags": [
   ],
   "rule": {
-    "path": "",
+    "path": "o365_spo_tenant_admin_details",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "ExternalUserExpirationRequired",
+                "eq",
+                "False"
+              ],
+			  [
+                "ExternalUserExpireInDays",
+                "lt",
+                "30"
+              ]
+            ],
+			"operator":"or"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -62,6 +81,11 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+		  "RootSiteUrl": "Root Site",
+		  "ExternalUserExpirationRequired": "External users expiration required",
+          "ExternalUserExpireInDays": "External users expire in days"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -114,4 +138,5 @@
     
   ]
 }
+
 

@@ -7,7 +7,7 @@
   "serviceName": "Storage",
   "displayName": "Ensure that 'Allow Blob Anonymous Access' is set to 'Disabled'",
   "description": '
-				The Azure Storage setting â€˜Allow Blob Anonymous Accessâ€™ (aka "allowBlobPublicAccess") controls whether anonymous access is allowed for blob data in a storage account. When this property is set to True, it enables public read access to blob data, which can be convenient for sharing data but may carry security risks. When set to False, it disallows public access to blob data, providing a more secure storage environment.
+				The Azure Storage setting Ã¢â‚¬ËœAllow Blob Anonymous AccessÃ¢â‚¬â„¢ (aka "allowBlobPublicAccess") controls whether anonymous access is allowed for blob data in a storage account. When this property is set to True, it enables public read access to blob data, which can be convenient for sharing data but may carry security risks. When set to False, it disallows public access to blob data, providing a more secure storage environment.
   ',
   "rationale": 'If "Allow Blob Anonymous Access" is enabled, blobs can be accessed by adding the blob name to the URL to see the contents. An attacker can enumerate a blob using methods, such as brute force, and access them. Exfiltration of data by brute force enumeration of items from a storage account may occur if this setting is set to `Enabled`. ',
   "impact": "Additional consideration may be required for exceptional circumstances where elements of a storage account require public accessibility. In these circumstances, it is highly recommended that all data stored in the public facing storage account be reviewed for sensitive or potentially compromising data, and that sensitive or compromising data is never stored in these storage accounts.",
@@ -45,12 +45,25 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_storage_accounts",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "properties.allowBlobPublicAccess",
+                "ne",
+                "false"
+              ]
+            ]
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -59,6 +72,12 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "name": "Name",
+          "location": "Location",
+          "ResourceGroupName": "ResourceGroupName",
+          "properties.allowBlobPublicAccess": "Allow blob Public Access"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -111,4 +130,5 @@
     
   ]
 }
+
 

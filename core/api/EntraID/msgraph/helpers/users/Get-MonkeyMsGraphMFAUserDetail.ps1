@@ -178,3 +178,4 @@ Function Get-MonkeyMsGraphMFAUserDetail {
         #Nothing to do here
     }
 }
+

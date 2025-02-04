@@ -1,0 +1,127 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Microsoft Teams",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure external Teams users cannot initiate conversations",
+  "description": "
+		This setting prevents external users who are not managed by an organization from initiating contact with users in the protected organization. 
+		The recommended state is to uncheck `External users with Teams accounts not managed by an organization can contact users in my organization`. 
+		**Note** : Disabling this setting is used as an additional stop gap for the previous setting which disables communication with unmanaged Teams users entirely. If an organization chooses to have an exception to (L1) Ensure communication with unmanaged Teams users is disabled they can do so while also disabling the ability for the same group of users to initiate contact. Disabling communication entirely will also disable the ability for unmanaged users to initiate contact. 
+  ",
+  "rationale": "
+		Allowing users to communicate with unmanaged Teams users presents a potential security threat as little effort is required by threat actors to gain access to a trial or free Microsoft Teams account. Some real-world attacks and exploits delivered via Teams over external access channels include: 
+		* DarkGate malware 
+		* Social engineering / Phishing attacks by `Midnight Blizzard` 
+		* GIFShell 
+		* Username enumeration
+  ",
+  "impact": "The impact of disabling this is very low.",
+  "remediation": {
+    "text": "
+			###### To remediate using the UI: 
+			1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com/. 
+			2. Click to expand Users select External access. 
+			3. Scroll to Teams accounts not managed by an organization 
+			4. Uncheck External users with Teams accounts not managed by an organization can contact users in my organization. 
+			5. Click Save. 
+
+			**Note** : If People in my organization can communicate with Teams users whose accounts aren't managed by an organization is already set to Off then this setting will not be visible and can be considered to be in a passing state. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoftteams/trusted-organizations-external-meetings-chat?tabs=organization-settings",
+	"https://cybersecurity.att.com/blogs/security-essentials/darkgate-malware-delivered-via-microsoft-teams-detection-and-response",
+	"https://www.microsoft.com/en-us/security/blog/2023/08/02/midnight-blizzard-conducts-targeted-social-engineering-over-microsoft-teams/",
+	"https://www.bitdefender.com/blog/hotforsecurity/gifshell-attack-lets-hackers-create-reverse-shell-through-microsoft-teams-gifs/"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "4.0.0",
+      "reference": "8.2.3",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure external Teams users cannot initiate conversations",
+        "defaultMessage": "Ensure external Teams users cannot initiate conversations"
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "teams_external_users_cannot_initiate_conversations",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+
+

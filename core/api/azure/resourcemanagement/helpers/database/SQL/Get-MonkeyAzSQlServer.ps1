@@ -155,6 +155,39 @@ Function Get-MonkeyAzSQlServer {
                     if($fwRules){
                         $new_dbServer.fwRules = $fwRules;
                     }
+                    #######Get Connection policy########
+                    $p = @{
+						Server = $new_dbServer;
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+					}
+					$connectionPolicy = Get-MonkeyAzSQLServerConnectionPolicy @p
+                    if($connectionPolicy){
+                        $new_dbServer.networking.connectionPolicy = $connectionPolicy;
+                    }
+                    #######Get Private Endpoint connections########
+                    $p = @{
+						Server = $new_dbServer;
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+					}
+					$PEConnection = Get-MonkeyAzSQLServerPrivateEndpointConnection @p
+                    if($PEConnection){
+                        $new_dbServer.networking.privateEndpointConnections = $PEConnection;
+                    }
+                    #######Get virtual network rules########
+                    $p = @{
+						Server = $new_dbServer;
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+					}
+					$virtualNetwork = Get-MonkeyAzServerVirtualNetworkRule @p
+                    if($virtualNetwork){
+                        $new_dbServer.networking.virtualNetworkRules = $virtualNetwork;
+                    }
                     #Get locks
                     $new_dbServer.locks = $new_dbServer | Get-MonkeyAzLockInfo
                     #Get diagnostic settings
@@ -186,3 +219,4 @@ Function Get-MonkeyAzSQlServer {
         }
     }
 }
+

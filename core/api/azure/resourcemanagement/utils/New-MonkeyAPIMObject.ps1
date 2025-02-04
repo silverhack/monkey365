@@ -49,7 +49,7 @@ Function New-MonkeyAPIMObject {
                 id = $InputObject.Id;
 		        name = $InputObject.Name;
                 location = $InputObject.location;
-		        tags = $InputObject.tags;
+		        tags = if($null -ne $InputObject.Psobject.Properties.Item('tags')){$InputObject.tags}else{$null};
                 sku = $InputObject.properties.sku;
                 type = $InputObject.type;
                 identity = $InputObject.identity;
@@ -94,3 +94,4 @@ Function New-MonkeyAPIMObject {
         }
     }
 }
+

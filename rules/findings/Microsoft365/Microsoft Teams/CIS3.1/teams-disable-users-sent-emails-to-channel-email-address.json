@@ -7,7 +7,7 @@
   "serviceName": "Microsoft 365",
   "displayName": "Ensure users can't send emails to a channel email address",
   "description": "Teams channel email addresses are an optional feature that allows users to email the Teams channel directly.",
-  "rationale": "Channel email addresses are not under the tenantâ€™s domain and organizations do not have control over the security settings for this email address. An attacker could email channels directly if they discover the channel email address.",
+  "rationale": "Channel email addresses are not under the tenantÃ¢â‚¬â„¢s domain and organizations do not have control over the security settings for this email address. An attacker could email channels directly if they discover the channel email address.",
   "impact": "Users will not be able to email the channel directly.",
   "remediation": {
     "text": "
@@ -41,12 +41,25 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "o365_teams_client_settings",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "AllowEmailIntoChannel",
+                "eq",
+                "false"
+              ]
+            ]
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -55,6 +68,11 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "ConfigId": "Identity",
+          "AllowEmailIntoChannel": "Allow Email Into Channel",
+          "AllowGuestUser": "Allow guest user"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -107,4 +125,5 @@
     
   ]
 }
+
 

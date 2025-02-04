@@ -42,12 +42,25 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_storage_accounts",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "allowCrossTenantReplication",
+                "ne",
+                "false"
+              ]
+            ]
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -56,6 +69,12 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "name": "Name",
+          "location": "Location",
+          "ResourceGroupName": "ResourceGroupName",
+          "allowCrossTenantReplication": "Cross Tenant Replication"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -108,4 +127,5 @@
     
   ]
 }
+
 
