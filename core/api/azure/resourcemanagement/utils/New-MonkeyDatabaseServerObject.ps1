@@ -58,6 +58,12 @@ Function New-MonkeyDatabaseServerObject {
 		        fqdn = $Server.properties.fullyQualifiedDomainName;
                 administratorLogin = $Server.properties.administratorLogin;
                 minimalTlsVersion = if($null -ne $Server.properties.PsObject.Properties.Item('minimalTlsVersion')){$Server.properties.minimalTlsVersion}else{$null};
+                requireInfrastructureEncryption = $false;
+                networking = [PSCustomObject]@{
+                    virtualNetworkRules = $null;
+                    privateEndpointConnections = $null;
+                    connectionPolicy = $null;
+                };
                 sqlAd = [PSCustomObject]@{
                     enabled = $false;
                     type = $null;
@@ -107,6 +113,7 @@ Function New-MonkeyDatabaseServerObject {
                 fwRules = $null;
                 configuration = $null;
                 failoverGroups = $null;
+                virtualNetworkRules = $null;
                 databases = $null;
                 locks = $null;
                 rawObject = $Server;

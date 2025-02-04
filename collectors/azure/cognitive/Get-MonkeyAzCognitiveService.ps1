@@ -48,7 +48,7 @@ function Get-MonkeyAzCognitiveService {
 	begin {
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "az00006";
+			Id = "az00162";
 			Provider = "Azure";
 			Resource = "CognitiveServices";
 			ResourceType = $null;
@@ -77,9 +77,9 @@ function Get-MonkeyAzCognitiveService {
 		#Get Config
 		$CognitiveAPI = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureCognitive" } | Select-Object -ExpandProperty resource
 		#Get Cognitive Services accounts
-		$cognitive_services = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.CognitiveServices/accounts' }
+		$cognitive_services = $O365Object.all_resources.Where({ $_.type -like '*Microsoft.CognitiveServices/accounts*'})
 		if (-not $cognitive_services) { continue }
-		$all_cognitive_services = @();
+		$all_cognitive_services = $null;
 	}
 	process {
 		$msg = @{
@@ -91,29 +91,22 @@ function Get-MonkeyAzCognitiveService {
 		}
 		Write-Information @msg
 		#Get All Cognitive accounts
-		if ($cognitive_services) {
-			foreach ($cognitive_service in $cognitive_services) {
-				#Set query
-				$p = @{
-					Id = $cognitive_service.Id;
-					APIVersion = $CognitiveAPI.api_version;
-					Verbose = $O365Object.Verbose;
-					Debug = $O365Object.Debug;
-					InformationAction = $O365Object.InformationAction;
-				}
-				$my_cognitive_account = Get-MonkeyAzObjectById @p
-				if ($my_cognitive_account) {
-					#Get Network properties
-					if (-not $my_cognitive_account.Properties.NetworkRuleSet) {
-						$my_cognitive_account | Add-Member -Type NoteProperty -Name allowAccessFromAllNetworks -Value $true
-					}
-					else {
-						$my_cognitive_account | Add-Member -Type NoteProperty -Name allowAccessFromAllNetworks -Value $false
-					}
-					#Add cognitive account to array
-					$all_cognitive_services += $my_cognitive_account
-				}
+		if ($cognitive_services.Count -gt 0) {
+			$new_arg = @{
+				APIVersion = $CognitiveAPI.api_version;
 			}
+			$p = @{
+				ScriptBlock = { Get-MonkeyAIHubCognitiveAccountInfo -InputObject $_ };
+				Arguments = $new_arg;
+				Runspacepool = $O365Object.monkey_runspacePool;
+				ReuseRunspacePool = $true;
+				Debug = $O365Object.VerboseOptions.Debug;
+				Verbose = $O365Object.VerboseOptions.Verbose;
+				MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			}
+			$all_cognitive_services = $cognitive_services | Invoke-MonkeyJob @p
 		}
 	}
 	end {

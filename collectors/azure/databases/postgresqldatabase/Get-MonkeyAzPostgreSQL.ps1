@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-function Get-MonkeyAzPostgreSQLInfo {
+function Get-MonkeyAzPostgreSQL {
 <#
         .SYNOPSIS
 		Collector to get info about PostgreSQL Databases from Azure
@@ -30,7 +30,7 @@ function Get-MonkeyAzPostgreSQLInfo {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAzPostgreSQLInfo
+            File Name	: Get-MonkeyAzPostgreSQL
             Version     : 1.0
 
         .LINK
@@ -50,7 +50,7 @@ function Get-MonkeyAzPostgreSQLInfo {
 			Resource = "Databases";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyAzPostgreSQLInfo";
+			collectorName = "Get-MonkeyAzPostgreSQL";
 			ApiType = "resourceManagement";
 			description = "Collector to get info about PostgreSQL Databases from Azure";
 			Group = @(
@@ -78,7 +78,7 @@ function Get-MonkeyAzPostgreSQLInfo {
 		$DatabaseServers = $O365Object.all_resources.Where({ $_.type -like 'Microsoft.DBforPostgreSQL/servers' })
 		#Get PostgreSQL flexible Servers
 		$FlexibleServers = $O365Object.all_resources.Where({ $_.type -like 'Microsoft.DBforPostgreSQL/flexibleServers' })
-		if (-not $DatabaseServers -or -not $FlexibleServers) { continue }
+        if (-not $DatabaseServers -and -not $FlexibleServers) {continue }
 		#Set array
 		$all_servers = [System.Collections.Generic.List[System.Object]]::new()
 	}
@@ -97,7 +97,7 @@ function Get-MonkeyAzPostgreSQLInfo {
 				APIVersion = $configForPostgreSQL.api_version;
 			}
 			$p = @{
-				ScriptBlock = { Get-MonkeyAzPostgreSQlServer -InputObject $_ };
+				ScriptBlock = { Get-MonkeyAzPostgreSQlInfo -InputObject $_ };
 				Arguments = $new_arg;
 				Runspacepool = $O365Object.monkey_runspacePool;
 				ReuseRunspacePool = $true;
@@ -120,7 +120,7 @@ function Get-MonkeyAzPostgreSQLInfo {
 				APIVersion = $flexibleConfigForPostgreSQL.api_version;
 			}
 			$p = @{
-				ScriptBlock = { Get-MonkeyAzPostgreSQlServer -InputObject $_ };
+				ScriptBlock = { Get-MonkeyAzPostgreSQlInfo -InputObject $_ };
 				Arguments = $new_arg;
 				Runspacepool = $O365Object.monkey_runspacePool;
 				ReuseRunspacePool = $true;

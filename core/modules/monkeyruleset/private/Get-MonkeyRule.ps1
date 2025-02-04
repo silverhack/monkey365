@@ -60,6 +60,7 @@ Function Get-MonkeyRule{
                     $compliance = $element | Select-Object -ExpandProperty compliance -ErrorAction Ignore
                     if($null -ne $is_rule_enabled -and $is_rule_enabled){
                         if($null -ne $found_args){
+                            <#
                             $count = 0;
                             foreach($_args in $element.args[0..($shadow_rule.arg_names.Count - 1)]){
                                 foreach($arg in $_args){
@@ -73,6 +74,17 @@ Function Get-MonkeyRule{
                                         $count+=1
                                         $raw_rule = $raw_rule -replace $string_replace,""
                                     }
+                                }
+                            }
+                            #>
+                            For($i= 0;$i -lt @($element.args).Count;$i++){
+                                $string_replace= ('(?<Item>_ARG_{0}_)' -f $i)
+                                $_arg = $element.args[$i];
+                                If($_arg){
+                                    $raw_rule = $raw_rule -replace $string_replace,$_arg
+                                }
+                                Else{
+                                    $raw_rule = $raw_rule -replace $string_replace,""
                                 }
                             }
                         }

@@ -99,6 +99,12 @@ Function Get-MonkeyAzVMOSDataDiskInfo {
                     else{
                         $data_disk | Add-Member -Type NoteProperty -Name isManaged -Value $false
                     }
+                    #Get data access auth mode
+                    If($null -ne $data_disk.disk){
+                        If ($null -eq $data_disk.disk.properties.PSObject.Properties.Item('dataAccessAuthMode')) {
+					        $data_disk.disk.properties | Add-Member -Type NoteProperty -Name dataAccessAuthMode -Value "None"
+				        }
+                    }
                     #Add to array
                     $InputObject.dataDisks.Add($data_disk)
                 }

@@ -1,4 +1,4 @@
-# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,9 +38,11 @@ Function Get-NewFilter{
         [parameter(Mandatory=$True,HelpMessage="Element to check")]
         [AllowNull()]
         [AllowEmptyString()]
-        [String]$LeftItem,
+        [Object]$LeftItem,
 
         [parameter(Mandatory=$True,HelpMessage="Operator")]
+        [AllowNull()]
+        [AllowEmptyString()]
         [String]$Operator,
 
         [parameter(Mandatory=$True,HelpMessage="Right item")]
@@ -50,84 +52,100 @@ Function Get-NewFilter{
     )
     Process{
         $tmp_filter = $nullLeft = $pipeline = $null;
-        if([string]::IsNullOrEmpty($LeftItem)){
+        If([string]::IsNullOrEmpty($LeftItem)){
             $nullLeft = $True
         }
-        if($LeftItem -eq '{$_}'){
+        If($LeftItem -eq '{$_}'){
             $pipeline = $True
         }
-        #Pass value and try to cast to a real reference
-        $converted_value = Convert-Value -Value $RightItem;
-        if([string]::IsNullOrEmpty($Operator)){
-            if($nullLeft){
+        $LeftCastValue = Convert-Value -Value $LeftItem;
+        $RightCastValue = Convert-Value -Value $RightItem;
+        If([string]::IsNullOrEmpty($Operator)){
+            If($nullLeft){
                 $tmp_filter = ('$null')
             }
             Elseif($pipeline){
                 $tmp_filter = '$_'
             }
-            else{
+            Elseif($LeftCastValue -is [System.Collections.IEnumerable] -and $LeftCastValue -isnot [System.String]){
+                $tmp_filter = ('@({0})' -f ('"' + ($LeftCastValue -join '","')+ '"'))
+            }
+            Else{
                 $tmp_filter = ('$_.{0}' -f $LeftItem)
             }
         }
-        elseif([string]::IsNullOrEmpty($converted_value)){
-            if($nullLeft){
+        Elseif($LeftCastValue -is [System.Collections.IEnumerable] -and $LeftCastValue -isnot [System.String]){
+            If($RightCastValue -is [System.String]){
+                $leftCondition = Get-CastValue -InputObject $LeftCastValue
+                $tmp_filter = ('{0} -{1} $_.{2}' -f $leftCondition, $Operator, $RightCastValue)
+            }
+            Else{
+                $leftCondition = Get-CastValue -InputObject $LeftItem
+                $rightCondition = Get-CastValue -InputObject $RightItem
+                $tmp_filter = ('{0} -{1} {2}' -f $leftCondition, $Operator, $rightCondition)
+            }
+        }
+        ElseIf([string]::IsNullOrEmpty($RightCastValue)){
+            If($nullLeft){
                 $tmp_filter = ('$null -{0} $null' -f $Operator)
             }
-            Elseif($pipeline){
+            ElseIf($pipeline){
                 $tmp_filter = ('$_ -{0} $null' -f $Operator)
             }
-            else{
+            Else{
                 $tmp_filter = ('$null -{0} $_.{1}' -f $Operator, $LeftItem)
             }
         }
-        elseif($converted_value -is [string]){
-            if($nullLeft){
-                $tmp_filter = ('$null -{0} ''{1}''' -f $Operator, [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value))
+        ElseIf($RightCastValue -is [string]){
+            $rightCondition = Get-CastValue -InputObject $RightCastValue
+            If($nullLeft){
+                $tmp_filter = ('$null -{0} {1}' -f $Operator, $rightCondition)
             }
-            Elseif($pipeline){
-                $tmp_filter = ('$_ -{0} ''{1}''' -f $Operator, [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value))
+            ElseIf($pipeline){
+                $tmp_filter = ('$_ -{0} {1}' -f $Operator, $rightCondition)
             }
-            else{
-                $tmp_filter = ('$_.{0} -{1} ''{2}''' -f $LeftItem, $Operator, [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value))
-            }
-        }
-        elseif($converted_value -is [Boolean]){
-            if($nullLeft){
-                $tmp_filter = ('$null -{0} ${1}' -f $Operator, $converted_value)
-            }
-            Elseif($pipeline){
-                $tmp_filter = ('$_ -{0} ${1}' -f $Operator, $converted_value)
-            }
-            else{
-                $tmp_filter = ('$_.{0} -{1} ${2}' -f $LeftItem, $Operator, $converted_value)
+            Else{
+                $tmp_filter = ('$_.{0} -{1} {2}' -f $LeftItem, $Operator, $rightCondition)
             }
         }
-        elseif($converted_value -is [System.Array]){
-            if($nullLeft){
-                $tmp_filter = ('$null -{0} ({1})' -f $Operator,('"' + ([System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value) -join -join '","')+ '"'))
+        ElseIf($RightCastValue -is [Boolean]){
+            If($nullLeft){
+                $tmp_filter = ('$null -{0} ${1}' -f $Operator, $RightCastValue)
             }
-            Elseif($pipeline){
-                $tmp_filter = ('$_ -{0} ({1})' -f $Operator,('"' + ([System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value) -join -join '","')+ '"'))
+            ElseIf($pipeline){
+                $tmp_filter = ('$_ -{0} ${1}' -f $Operator, $RightCastValue)
             }
-            else{
-                $tmp_filter = ('$_.{0} -{1} ({2})' -f $LeftItem, $Operator,('"' + ([System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($converted_value) -join -join '","')+ '"'))
-            }
-        }
-        else{
-            if($nullLeft){
-                $tmp_filter = ('$null -{0} {1}' -f $Operator, $converted_value)
-            }
-            Elseif($pipeline){
-                $tmp_filter = ('$_ -{0} {1}' -f $Operator, $converted_value)
-            }
-            else{
-                $tmp_filter = ('$_.{0} -{1} {2}' -f $LeftItem, $Operator, $converted_value)
+            Else{
+                $tmp_filter = ('$_.{0} -{1} ${2}' -f $LeftItem, $Operator, $RightCastValue)
             }
         }
-        if($tmp_filter){
+        ElseIf($RightCastValue -is [System.Collections.IEnumerable] -and $RightCastValue -isnot [System.String]){
+            $rightCondition = Get-CastValue -InputObject $RightItem
+            If($nullLeft){
+                $tmp_filter = ('$null -{0} {1}' -f $Operator,$rightCondition)
+            }
+            ElseIf($pipeline){
+                $tmp_filter = ('$_ -{0} {1}' -f $Operator,$rightCondition)
+            }
+            Else{
+                $tmp_filter = ('$_.{0} -{1} {2}' -f $LeftItem, $Operator,$rightCondition)
+            }
+        }
+        Else{
+            If($nullLeft){
+                $tmp_filter = ('$null -{0} {1}' -f $Operator, $RightCastValue)
+            }
+            ElseIf($pipeline){
+                $tmp_filter = ('$_ -{0} {1}' -f $Operator, $RightCastValue)
+            }
+            Else{
+                $tmp_filter = ('$_.{0} -{1} {2}' -f $LeftItem, $Operator, $RightCastValue)
+            }
+        }
+        If($tmp_filter){
             return $tmp_filter
         }
-        else{
+        Else{
             Write-Warning -Message ("The filter is not valid")
             return $null;
         }

@@ -41,7 +41,7 @@ Function Get-MonkeyMSGraphUser {
         [Parameter(Mandatory=$false, ParameterSetName = 'UserId', ValueFromPipeline = $True)]
         [String]$UserId,
 
-        [Parameter(Mandatory=$false, ParameterSetName = 'UserPrincipalName', ValueFromPipeline = $True)]
+        [Parameter(Mandatory=$false, ParameterSetName = 'UserPrincipalName')]
         [String]$UserPrincipalName,
 
         [Parameter(Mandatory=$false)]

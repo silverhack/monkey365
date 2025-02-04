@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 Function New-IssueCard{
     <#
         .SYNOPSIS
@@ -203,12 +204,13 @@ Function New-IssueCard{
             [void]$div_issue_left.AppendChild($card_impact)
         }
         #Check for remediation
-        if($null -ne $issue.psobject.properties.Item('remediation') -and $null -ne $issue.remediation -and $issue.remediation.Length -gt 0){
+        if($null -ne $issue.psobject.properties.Item('remediation') -and $null -ne $issue.remediation.text -and $issue.remediation.text.Length -gt 0){
             #Convert description to html
+            $card_remediation = $null;
             try{
-                $text = Remove-BlankAndTab -text $issue.remediation
+                $text = Remove-BlankAndTab -text $issue.remediation.text
                 $outHtml = Convert-MarkDownToHtml $text -UseAdvancedExtensions
-                if($null -ne $outHtml){
+                if($null -ne $outHtml -and $outHtml.Length -gt 0){
                     $xml = New-Object -TypeName System.Xml.XmlDocument
                     $outHtml = ("<div>{0}</div>" -f $outHtml)
                     [void]$xml.LoadXml($outHtml)
@@ -220,8 +222,10 @@ Function New-IssueCard{
                 $card_remediation = New-HtmlTag @p_element
                 [void]$card_remediation.AppendChild($issue_skeleton.CreateTextNode($issue.remediation.ToString()))
             }
-            [void]$div_issue_left.AppendChild($h6_remediation)
-            [void]$div_issue_left.AppendChild($card_remediation)
+            If($null -ne $card_remediation){
+                [void]$div_issue_left.AppendChild($h6_remediation)
+                [void]$div_issue_left.AppendChild($card_remediation)
+            }
         }
         #Get references
         $card_references_links = New-HtmlTag @p_element

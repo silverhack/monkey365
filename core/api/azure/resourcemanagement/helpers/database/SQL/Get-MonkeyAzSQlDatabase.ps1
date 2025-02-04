@@ -56,11 +56,37 @@ Function Get-MonkeyAzSQlDatabase {
                 InformationAction = $O365Object.InformationAction;
 		    }
 		    $databases = Get-MonkeyAzObjectById @p
-            if($databases){
+            If($databases){
                 foreach($database in $databases){
                     $new_db = New-MonkeyDatabaseObject -Database $database
-                    if($new_db){
-                        if ($new_db.Name -ne "master") {
+                    If($new_db){
+                        If ($new_db.Name -ne "master") {
+                            #######Get database backup short term policy Status########
+                            $p = @{
+							    Database = $new_db;
+                                ShortTermRetentionPolicy = $True;
+                                InformationAction = $O365Object.InformationAction;
+                                Verbose = $O365Object.verbose;
+                                Debug = $O365Object.debug;
+						    }
+						    $backupshortRetentionPolicy = Get-MonkeyAzDatabaseBackupConfiguration @p
+                            If($backupshortRetentionPolicy){
+                                $new_db.backup.shortTermRetentionPolicy = $backupshortRetentionPolicy
+                            }
+                            #######Get database backup long term backup Status########
+                            $p = @{
+							    Database = $new_db;
+                                LongTermRetentionBackup = $True;
+                                onlyLatestPerDatabase = $True;
+                                DatabaseState = "Live";
+                                InformationAction = $O365Object.InformationAction;
+                                Verbose = $O365Object.verbose;
+                                Debug = $O365Object.debug;
+						    }
+						    $backupLongTermObj = Get-MonkeyAzDatabaseBackupConfiguration @p
+                            If($backupLongTermObj){
+                                $new_db.backup.longTermRetentionBackups = $backupLongTermObj
+                            }
                             #######Get database Transparent Data Encryption Status########
                             $msg = @{
 							    MessageData = ($message.DatabaseServerTDEMessage -f $new_db.Name);
@@ -78,7 +104,7 @@ Function Get-MonkeyAzSQlDatabase {
 						    }
 						    $tde = Get-MonkeyAzDatabaseTdeConfig @p
                             if($tde){
-                                $new_db.tdeSettings.enabled = $tde.properties.state
+                                $new_db.tdeSettings.status = $tde.properties.state
                                 $new_db.tdeSettings.rawData = $tde;
                             }
                             #######Get Database Auditing Policy########
@@ -90,7 +116,7 @@ Function Get-MonkeyAzSQlDatabase {
 						    }
 						    $audit = Get-MonkeyAzDatabaseAuditConfig @p
                             if($audit){
-                                $new_db.auditing.enabled = $audit.properties.state;
+                                $new_db.auditing.status = $audit.properties.state;
                                 $new_db.auditing.retentionDays = $audit.properties.retentionDays;
                                 $new_db.auditing.isAzureMonitorTargetEnabled = $audit.properties.isAzureMonitorTargetEnabled;
                                 if($audit.properties.Psobject.Properties.Item('auditActionsAndGroups')){
@@ -107,7 +133,7 @@ Function Get-MonkeyAzSQlDatabase {
 						    }
 						    $tdp = Get-MonkeyAzDatabaseThreatDetectionPolicy @p
                             if($tdp){
-                                $new_db.tdpSettings.enabled = $tdp.properties.state;
+                                $new_db.tdpSettings.status = $tdp.properties.state;
                                 $new_db.tdpSettings.disabledAlerts = $tdp.properties.disabledAlerts;
                                 $new_db.tdpSettings.emailAddresses = $tdp.properties.emailAddresses;
                                 $new_db.tdpSettings.sentToAdmins = $tdp.properties.emailAccountAdmins;
@@ -123,7 +149,7 @@ Function Get-MonkeyAzSQlDatabase {
 						    }
 						    $ledger = Get-MonkeyAzDatabaseLedgerConfig @p
                             if($ledger){
-                                $new_db.ledger.enabled = $ledger.properties.state;
+                                $new_db.ledger.status = $ledger.properties.state;
                                 $new_db.ledger.rawData = $ledger;
                             }
                             #######Get Database masking########
@@ -135,7 +161,7 @@ Function Get-MonkeyAzSQlDatabase {
 						    }
 						    $maskingPolicy = Get-MonkeyAzDBDataMaskingPolicy @p
                             if($maskingPolicy){
-                                $new_db.dataMaskingPolicies.enabled = $maskingPolicy.properties.dataMaskingState;
+                                $new_db.dataMaskingPolicies.status = $maskingPolicy.properties.dataMaskingState;
                                 $new_db.dataMaskingPolicies.rawData = $maskingPolicy;
                             }
                             #######Get Database masking rules########
@@ -172,8 +198,8 @@ Function Get-MonkeyAzSQlDatabase {
                                 $new_db.sensitivityLabel.rawData = $CurrentSL;
                             }
                         }
-                        else{
-                            $new_db.tdeSettings.enabled = $false;
+                        Else{
+                            $new_db.tdeSettings.status = $false;
                         }
                         #add to array
                         [void]$all_databases.Add($new_db)

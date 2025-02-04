@@ -59,14 +59,17 @@ Function New-MonkeyDatabaseObject {
                 creationDate = if($null -ne $Database.properties.PsObject.properties.Item('creationDate')){$Database.properties.creationDate}else{$null};
                 defaultSecondaryLocation = if($null -ne $Database.properties.PsObject.properties.Item('defaultSecondaryLocation')){$Database.properties.defaultSecondaryLocation}else{$null};
                 readScale = if($null -ne $Database.properties.PsObject.properties.Item('readScale')){$Database.properties.readScale}else{$null};
-                encryptionStatus = $null;
                 locks = $null;
+                backup = [PSCustomObject]@{
+                    shortTermRetentionPolicy = $null;
+                    longTermRetentionBackups = $null;
+                };
                 tdeSettings = [PSCustomObject]@{
-                    enabled = $null;
+                    status = $null;
                     rawData = $null;
                 };
                 tdpSettings = [PSCustomObject]@{
-                    enabled = $null;
+                    status = $null;
                     disabledAlerts = $null;
                     emailAddresses = $null;
                     sentToAdmins = $null;
@@ -74,18 +77,18 @@ Function New-MonkeyDatabaseObject {
                     rawData = $null;
                 };
                 auditing = [PSCustomObject]@{
-                    enabled = $null;
+                    status = $null;
                     auditActionsAndGroups = $null;
                     isAzureMonitorTargetEnabled = $null;
                     retentionDays = $null;
                     rawData = $null;
                 };
                 ledger = [PSCustomObject]@{
-                    enabled = $null;
+                    status = $null;
                     rawData = $null;
                 };
                 dataMaskingPolicies = [PSCustomObject]@{
-                    enabled = $null;
+                    status = $null;
                     rawData = $null;
                 };
                 dataMaskingRules = [PSCustomObject]@{

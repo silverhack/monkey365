@@ -50,7 +50,7 @@ Function New-MonkeyAppServiceObject {
 		        name = $App.Name;
                 location = $App.location;
                 kind = if($null -ne $App.PsObject.Properties.Item('kind')){$App.kind}else{$null};
-		        tags = $App.tags;
+		        tags = if($null -ne $App.Psobject.Properties.Item('tags')){$App.tags}else{$null};
                 type = $App.type;
                 properties = $App.properties;
                 resourceGroupName = $App.Id.Split("/")[4];

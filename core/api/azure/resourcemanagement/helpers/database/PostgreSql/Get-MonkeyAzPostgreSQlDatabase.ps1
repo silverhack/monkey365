@@ -43,7 +43,7 @@ Function Get-MonkeyAzPostgreSQlDatabase {
         [Object]$Server,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2017-12-01-preview"
+        [String]$APIVersion = "2024-11-01-preview"
     )
     Process{
         try{
@@ -66,7 +66,6 @@ Function Get-MonkeyAzPostgreSQlDatabase {
             }
             #return object
             Write-Output $all_databases -NoEnumerate
-num
         }
         catch{
             Write-Verbose $_

@@ -89,16 +89,16 @@ Function Get-MonkeyAzStorageAccountDiagnosticSetting {
             $key = Get-MonkeyAzStorageAccountKey @p
             #Get Endpoint
             if($Type -eq 'queue'){
-                $endpoint = $StorageAccount.properties.primaryEndpoints.queue
+                $endpoint = $StorageAccount.properties.primaryEndpoints | Select-Object -ExpandProperty queue -ErrorAction Ignore
             }
             elseif($Type -eq 'file'){
-                $endpoint = $StorageAccount.properties.primaryEndpoints.File
+                $endpoint = $StorageAccount.properties.primaryEndpoints | Select-Object -ExpandProperty File -ErrorAction Ignore
             }
             if($Type -eq 'blob'){
-                $endpoint = $StorageAccount.properties.primaryEndpoints.blob
+                $endpoint = $StorageAccount.properties.primaryEndpoints | Select-Object -ExpandProperty blob -ErrorAction Ignore
             }
             else{
-                $endpoint = $StorageAccount.properties.primaryEndpoints.Table
+                $endpoint = $StorageAccount.properties.primaryEndpoints | Select-Object -ExpandProperty table -ErrorAction Ignore
             }
             if($null -ne $endpoint){
                 #Get SAS Uri

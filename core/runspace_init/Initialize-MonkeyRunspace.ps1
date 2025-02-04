@@ -15,13 +15,18 @@
 [CmdletBinding()]
 param ()
 $isO365Object = Get-Variable -Name O365Object -ErrorAction Ignore
-if($null -ne $isO365Object){
+If($null -ne $isO365Object){
     #Set Monkey365 current location
     Set-Location -Path $O365Object.InitialPath;
     #Import Localized data
     $LocalizedDataParams = $O365Object.LocalizedDataParams
-    if($null -ne $LocalizedDataParams){
+    If($null -ne $LocalizedDataParams){
         Import-LocalizedData @LocalizedDataParams;
+    }
+    #Import logger
+    $_logger = @($O365Object.runspaces_modules).Where({$_ -like "*monkeylogger*"},[System.Management.Automation.WhereOperatorSelectionMode]::First)
+    If($_logger.Count -gt 0){
+        Import-Module $_logger[0].ToString() -Force
     }
     #set the default connection limit
     [System.Net.ServicePointManager]::DefaultConnectionLimit = 1024;

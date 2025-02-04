@@ -39,34 +39,35 @@ Function New-MonkeyStorageAccountObject {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
 	[CmdletBinding()]
 	Param (
-        [parameter(Mandatory= $True, HelpMessage="Storate account object")]
-        [Object]$StrAccount
+        [parameter(Mandatory= $True, ValueFromPipeline = $True, HelpMessage="Storate account object")]
+        [Object]$InputObject
     )
     Process{
         try{
             #Create ordered dictionary
             $strObject = [ordered]@{
-                id = $StrAccount.Id;
-		        name = $StrAccount.Name;
-                type = $StrAccount.type;
-                location = $StrAccount.location;
-		        tags = $StrAccount.tags;
-                properties = $StrAccount.Properties;
-                resourceGroupName = $StrAccount.Id.Split("/")[4];
-                kind = $StrAccount.kind;
-                skuName = $StrAccount.SKU.Name;
-                skuTier = $StrAccount.SKU.tier;
-		        CreationTime = $StrAccount.Properties.CreationTime;
-                primaryLocation = $StrAccount.Properties.primaryLocation;
-                statusofPrimary = $StrAccount.Properties.statusOfPrimary;
-                supportsHttpsTrafficOnly = $StrAccount.Properties.supportsHttpsTrafficOnly;
+                id = $InputObject.Id;
+		        name = $InputObject.Name;
+                type = $InputObject.type;
+                location = $InputObject.location;
+		        tags = if($null -ne $InputObject.Psobject.Properties.Item('tags')){$InputObject.tags}else{$null};
+                properties = $InputObject.Properties;
+                allowCrossTenantReplication = if($null -ne $InputObject.properties.Psobject.Properties.Item('allowCrossTenantReplication')){$InputObject.properties.allowCrossTenantReplication}else{$true};
+                resourceGroupName = $InputObject.Id.Split("/")[4];
+                kind = $InputObject.kind;
+                skuName = $InputObject.SKU.Name;
+                skuTier = $InputObject.SKU.tier;
+		        CreationTime = $InputObject.Properties.CreationTime;
+                primaryLocation = $InputObject.Properties.primaryLocation;
+                statusofPrimary = $InputObject.Properties.statusOfPrimary;
+                supportsHttpsTrafficOnly = $InputObject.Properties.supportsHttpsTrafficOnly;
                 requireInfrastructureEncryption = $false;
-                blobEndpoint = $StrAccount.Properties.primaryEndpoints.blob;
-                queueEndpoint = $StrAccount.Properties.primaryEndpoints.queue;
-                tableEndpoint = $StrAccount.Properties.primaryEndpoints.Table;
-                fileEndpoint = $StrAccount.Properties.primaryEndpoints.File;
-                webEndpoint = $StrAccount.Properties.primaryEndpoints.Web;
-                dfsEndpoint = $StrAccount.Properties.primaryEndpoints.dfs;
+                blobEndpoint = If($InputObject.Properties.primaryEndpoints.Psobject.Properties.Item('blob')){$InputObject.Properties.primaryEndpoints.blob}Else{$null};
+                queueEndpoint = If($InputObject.Properties.primaryEndpoints.Psobject.Properties.Item('queue')){$InputObject.Properties.primaryEndpoints.queue}Else{$null};
+                tableEndpoint = If($InputObject.Properties.primaryEndpoints.Psobject.Properties.Item('Table')){$InputObject.Properties.primaryEndpoints.Table}Else{$null};
+                fileEndpoint = If($InputObject.Properties.primaryEndpoints.Psobject.Properties.Item('File')){$InputObject.Properties.primaryEndpoints.File}Else{$null};
+                webEndpoint = If($InputObject.Properties.primaryEndpoints.Psobject.Properties.Item('Web')){$InputObject.Properties.primaryEndpoints.Web}Else{$null};
+                dfsEndpoint = If($InputObject.Properties.primaryEndpoints.Psobject.Properties.Item('Web')){$InputObject.Properties.primaryEndpoints.dfs}Else{$null};
                 keyRotation = [PSCustomObject]@{
                     key1 = [PSCustomObject]@{
                         isRotated = $null;
@@ -81,14 +82,14 @@ Function New-MonkeyStorageAccountObject {
                 keyname = $null;
                 keyversion = $null;
                 usingOwnKey = $false;
-                isBlobEncrypted = $StrAccount.Properties.encryption.services.blob.Enabled;
-                lastBlobEncryptionEnabledTime = $StrAccount.Properties.encryption.services.blob.lastEnabledTime;
-                isFileEncrypted = $StrAccount.Properties.encryption.services.File.Enabled;
-                lastFileEnabledTime = $StrAccount.Properties.encryption.services.File.lastEnabledTime;
+                isBlobEncrypted = $InputObject.Properties.encryption.services.blob.Enabled;
+                lastBlobEncryptionEnabledTime = $InputObject.Properties.encryption.services.blob.lastEnabledTime;
+                isFileEncrypted = $InputObject.Properties.encryption.services.File.Enabled;
+                lastFileEnabledTime = $InputObject.Properties.encryption.services.File.lastEnabledTime;
                 isEncrypted = $null;
                 lastEnabledTime = $null;
-                allowAzureServices = $StrAccount.Properties.networkAcls.bypass -match 'AzureServices';
-                allowAccessFromAllNetworks = if (-not $StrAccount.Properties.networkAcls.virtualNetworkRules -and -not $StrAccount.Properties.networkAcls.ipRules -and $StrAccount.Properties.networkAcls.defaultAction -eq 'Allow'){$true}else{$false};
+                allowAzureServices = $InputObject.Properties.networkAcls.bypass -match 'AzureServices';
+                allowAccessFromAllNetworks = if (-not $InputObject.Properties.networkAcls.virtualNetworkRules -and -not $InputObject.Properties.networkAcls.ipRules -and $InputObject.Properties.networkAcls.defaultAction -eq 'Allow'){$true}else{$false};
                 dataProtection = $null;
                 advancedProtectionEnabled = $null;
                 atpRawObject = $null;
@@ -100,7 +101,7 @@ Function New-MonkeyStorageAccountObject {
                     table = $null;
                 };
                 locks = $null;
-                rawObject = $StrAccount;
+                rawObject = $InputObject;
             }
             #Create PsObject
             $str_obj = New-Object -TypeName PsObject -Property $strObject

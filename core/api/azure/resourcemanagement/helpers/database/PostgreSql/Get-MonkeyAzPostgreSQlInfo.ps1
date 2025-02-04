@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Get-MonkeyAzPostgreSQlServer {
+Function Get-MonkeyAzPostgreSQlInfo {
     <#
         .SYNOPSIS
 		Get PostgreSql server from Azure
@@ -29,7 +29,7 @@ Function Get-MonkeyAzPostgreSQlServer {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAzPostgreSQlServer
+            File Name	: Get-MonkeyAzPostgreSQlInfo
             Version     : 1.0
 
         .LINK
@@ -42,7 +42,7 @@ Function Get-MonkeyAzPostgreSQlServer {
         [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2017-12-01"
+        [String]$APIVersion = "2024-11-01-preview"
     )
     Process{
         try{
@@ -57,6 +57,13 @@ Function Get-MonkeyAzPostgreSQlServer {
             if($dbServer){
                 $new_dbServer = New-MonkeyDatabaseServerObject -Server $dbServer
                 if($new_dbServer){
+                    #Check if infrastructure encryption is enabled
+				    if ($null -eq $new_dbServer.Properties.encryption.PSObject.Properties.Item('infrastructureEncryption')) {
+					    $new_dbServer.requireInfrastructureEncryption = $false
+				    }
+				    else {
+					    $new_dbServer.requireInfrastructureEncryption = $new_dbServer.Properties.encryption.infrastructureEncryption
+				    }
                     #Get Databases
                     $databases = $new_dbServer | Get-MonkeyAzPostgreSQLDatabase -APIVersion $APIVersion
                     if($databases){

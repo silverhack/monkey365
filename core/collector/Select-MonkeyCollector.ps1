@@ -118,6 +118,11 @@ Function Select-MonkeyCollector{
             $graphCollectors = Get-MetadataFromCollector -Provider EntraID -ApiType graphlegacy
             $msGraphCollectors = Get-MetadataFromCollector -Provider EntraID -ApiType MSGraph
             $apiPortalCollectors = Get-MetadataFromCollector -Provider EntraID -ApiType EntraIDPortal
+            #Add Azure collector to get Diagnostic settings for Entra ID
+            $eidCollector = Get-MetadataFromCollector -Provider Azure -Service General | Where-Object {$_.Id -eq "az00150"}
+            If($null -ne $eidCollector){
+                [void]$entraIdCollectors.Add($eidCollector);
+            }
             If($O365Object.isConfidentialApp -eq $true){
                 #Only MSGraph is supported for confidential apps
                 If ($msGraphCollectors -is [System.Collections.IEnumerable] -and $msGraphCollectors -isnot [string]){

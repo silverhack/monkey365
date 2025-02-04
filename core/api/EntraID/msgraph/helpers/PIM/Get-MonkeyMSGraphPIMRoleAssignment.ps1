@@ -41,11 +41,15 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
     [OutputType([System.Collections.Generic.List[System.Management.Automation.PsObject]])]
     Param ()
     try{
+        $new_arg = @{
+            APIVersion = 'beta';
+        }
         #Set Job params
         If($O365Object.isConfidentialApp){
             $jobParam = @{
-	            ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_ -APIVersion 'beta'};
-	            Runspacepool = $O365Object.monkey_runspacePool;
+	            ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_};
+                Arguments = $new_arg;
+                Runspacepool = $O365Object.monkey_runspacePool;
 	            ReuseRunspacePool = $true;
 	            Debug = $O365Object.VerboseOptions.Debug;
 	            Verbose = $O365Object.VerboseOptions.Verbose;
@@ -71,7 +75,8 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                 Else{
                     #Set job params
                     $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck -APIVersion 'beta' };
+	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck};
+                        Arguments = $new_arg;
 	                    Runspacepool = $O365Object.monkey_runspacePool;
 	                    ReuseRunspacePool = $true;
 	                    Debug = $O365Object.VerboseOptions.Debug;
@@ -86,7 +91,8 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                 If($O365Object.auth_tokens.MSGraph.clientId -eq (Get-WellKnownAzureService -AzureService MicrosoftGraph)){
                     #Set job params
                     $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_ -APIVersion 'beta'};
+	                    ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_};
+                        Arguments = $new_arg;
 	                    Runspacepool = $O365Object.monkey_runspacePool;
 	                    ReuseRunspacePool = $true;
 	                    Debug = $O365Object.VerboseOptions.Debug;
@@ -99,7 +105,8 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                 Else{
                     #Set job params
                     $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck -APIVersion 'beta' };
+	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck};
+                        Arguments = $new_arg;
 	                    Runspacepool = $O365Object.monkey_runspacePool;
 	                    ReuseRunspacePool = $true;
 	                    Debug = $O365Object.VerboseOptions.Debug;
