@@ -70,6 +70,7 @@ $internal_functions = @(
     '/core/analysis',
     '/core/import',
     '/core/output',
+    '/core/watcher',
     '/core/api/EntraID/msgraph',
     '/core/tenant',
     '/core/subscription',
