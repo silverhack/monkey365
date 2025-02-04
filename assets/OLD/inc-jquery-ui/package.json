@@ -11,12 +11,12 @@
 	"main": "ui/widget.js",
 	"maintainers": [
 		{
-			"name": "Scott González",
+			"name": "Scott GonzÃ¡lez",
 			"email": "scott.gonzalez@gmail.com",
 			"url": "http://scottgonzalez.com"
 		},
 		{
-			"name": "Jörn Zaefferer",
+			"name": "JÃ¶rn Zaefferer",
 			"email": "joern.zaefferer@gmail.com",
 			"url": "http://bassistance.de"
 		},
@@ -72,3 +72,4 @@
 	},
 	"keywords": []
 }
+
