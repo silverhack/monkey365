@@ -49,3 +49,4 @@ Function New-OcsfDetectionFindingObject{
         [Ocsf.Finding.Detection]::new() | Select-Object $properties
     }
 }
+

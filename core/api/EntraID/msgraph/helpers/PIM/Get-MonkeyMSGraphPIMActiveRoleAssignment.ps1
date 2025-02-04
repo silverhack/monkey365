@@ -65,3 +65,4 @@ Function Get-MonkeyMSGraphPIMActiveRoleAssignment {
         #Nothing to do here
     }
 }
+

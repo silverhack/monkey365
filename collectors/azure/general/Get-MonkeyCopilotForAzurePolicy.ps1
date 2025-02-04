@@ -114,3 +114,4 @@ function Get-MonkeyCopilotForAzurePolicy {
 		}
 	}
 }
+

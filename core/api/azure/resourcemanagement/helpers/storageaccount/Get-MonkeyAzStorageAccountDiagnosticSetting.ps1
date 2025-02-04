@@ -199,3 +199,4 @@ Function Get-MonkeyAzStorageAccountDiagnosticSetting {
         #Nothing to do here
     }
 }
+

@@ -64,3 +64,4 @@ Function Get-MonkeyAzDBDataMaskingPolicy {
         #Nothing to do here
     }
 }
+

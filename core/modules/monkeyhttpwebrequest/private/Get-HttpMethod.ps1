@@ -71,3 +71,4 @@ Function Get-HttpMethod{
         Write-Error $_
     }
 }
+

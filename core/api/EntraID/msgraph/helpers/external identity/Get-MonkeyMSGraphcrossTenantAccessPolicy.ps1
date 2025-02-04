@@ -125,3 +125,4 @@ Function Get-MonkeyMSGraphcrossTenantAccessPolicy {
         #Nothing to do here
     }
 }
+

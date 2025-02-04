@@ -102,3 +102,4 @@ Function Test-TeamsConnection {
         #Nothing to do here
     }
 }
+

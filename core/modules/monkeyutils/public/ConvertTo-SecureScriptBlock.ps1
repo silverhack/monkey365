@@ -80,3 +80,4 @@ Function ConvertTo-SecureScriptBlock{
         }
     }
 }
+

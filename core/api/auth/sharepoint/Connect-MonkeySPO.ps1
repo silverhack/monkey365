@@ -185,3 +185,4 @@ Function Connect-MonkeySPO {
     #Try to get token
     Get-MonkeyMSALToken @new_params
 }
+

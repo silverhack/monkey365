@@ -64,3 +64,4 @@ Function Get-MonkeyAzDatabaseAuditConfig {
         #Nothing to do here
     }
 }
+

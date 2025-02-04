@@ -139,3 +139,4 @@ Function Get-MetadataFromCollector{
         #Nothing to do here
     }
 }
+

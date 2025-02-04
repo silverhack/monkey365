@@ -162,3 +162,4 @@ Function Invoke-RuleScan{
         #Nothing to do here
     }
 }
+

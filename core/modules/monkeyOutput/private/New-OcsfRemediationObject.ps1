@@ -42,3 +42,4 @@ Function New-OcsfRemediationObject{
         [Ocsf.Objects.Vulnerability.Remediation]::new() | Select-Object $properties
     }
 }
+

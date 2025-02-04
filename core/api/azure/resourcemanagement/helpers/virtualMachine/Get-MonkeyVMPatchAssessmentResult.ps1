@@ -70,3 +70,4 @@ function Get-MonkeyVMPatchAssessmentResult{
         Write-Output $patchAssessmentResults -NoEnumerate
     }
 }
+

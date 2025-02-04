@@ -42,3 +42,4 @@ Function New-OcsfProductObject{
         [Ocsf.Objects.Product]::new() | Select-Object $properties
     }
 }
+

@@ -64,3 +64,4 @@ Function Get-MonkeyAzDBDataMaskingRule {
         #Nothing to do here
     }
 }
+

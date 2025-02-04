@@ -12,3 +12,4 @@ ConvertFrom-StringData @'
     RefreshingToken                  = Refreshing token
     RemoveSilentParameter            = Removing Silent parameter
 '@
+

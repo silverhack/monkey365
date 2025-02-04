@@ -72,3 +72,4 @@ function Get-Condition{
         }
     }
 }
+

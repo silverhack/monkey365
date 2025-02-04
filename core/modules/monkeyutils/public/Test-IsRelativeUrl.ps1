@@ -44,3 +44,4 @@ Function Test-IsRelativeUrl{
         [System.Uri]::TryCreate($InputObject,[System.UriKind]::Relative,[ref]$result)
     }
 }
+
