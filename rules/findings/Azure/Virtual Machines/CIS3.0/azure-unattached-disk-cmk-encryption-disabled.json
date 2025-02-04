@@ -55,12 +55,12 @@
           {
             "conditions": [
               [
-                "managedBy",
-                "eq",
-                ""
+                "diskState",
+                "ne",
+                "Attached"
               ],
               [
-                "sse_encryption",
+                "encryption.sseEncryption",
                 "ne",
                 "EncryptionAtRestWithCustomerKey"
               ]
@@ -82,7 +82,7 @@
           "location": "Location",
           "skuname": "SKU Name",
           "properties.osType": "OS Type",
-          "sse_encryption": "SSE Encryption"
+          "encryption.sseEncryption": "SSE Encryption"
         },
         "expandObject": null
       },

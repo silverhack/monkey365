@@ -6,19 +6,14 @@
   "serviceType": "Conditional Access",
   "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure that an exclusionary Device code flow policy is considered",
-  "description": "
-			Conditional Access Policies can be used to prevent the Device code authentication flow. Device code flow should be permitted only for users that regularly perform duties that explicitly require the use of Device Code to authenticate, such as utilizing Azure with PowerShell.
-  ",
-  "rationale": '
-			Attackers use Device code flow in phishing attacks and, if successful, results in the attacker gaining access tokens and refresh tokens which are scoped to "user_impersonation", which can perform any action the user has permission to perform.
-  ',
+  "description": "Conditional Access Policies can be used to prevent the Device code authentication flow. Device code flow should be permitted only for users that regularly perform duties that explicitly require the use of Device Code to authenticate, such as utilizing Azure with PowerShell.",
+  "rationale": "Attackers use Device code flow in phishing attacks and, if successful, results in the attacker gaining access tokens and refresh tokens which are scoped to `user_impersonation`, which can perform any action the user has permission to perform.",
   "impact": "
 			Microsoft Entra ID P1 or P2 is required. 
 			This policy should be tested using the `Report-only mode` before implementation. Without a full and careful understanding of the accounts and personnel who require Device code authentication flow, implementing this policy can block authentication for users and devices who rely on Device code flow. For users and devices that rely on device code flow authentication, more secure alternatives should be implemented wherever possible. 
   ",
   "remediation": {
-    "text": '
-	',
+    "text": "",
     "code": {
       "powerShell": null,
       "iac": null,

@@ -13,7 +13,7 @@
   "rationale": "If Double Encryption is enabled, another layer of encryption is implemented at the hardware level before the storage or network level. Information will be encrypted before it is even accessed, preventing both interception of data in motion if the network layer encryption is broken and data at rest in system resources such as memory or processor cache. Encryption will also be in place for any backups taken of the database, so the key will secure access the data in all forms. For the most secure implementation of key based encryption, it is recommended to use a Customer Managed asymmetric RSA 2048 Key in Azure Key Vault.",
   "impact": "The read and write speeds to the database will be impacted if both default encryption and Infrastructure Encryption are checked, as a secondary form of encryption requires more resource overhead for the cryptography of information. This cost is justified for information security. Customer managed keys are recommended for the most secure implementation, leading to overhead of key management. The key will also need to be backed up in a secure location, as loss of the key will mean loss of the information in the database.",
   "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Azure Database for PostgreSQL servers`.\r\n\t\t\t\t\t2. For each PostgreSQL database, go to `Additional Settings`\r\n\t\t\t\t\t3. Ensure that \u0027Infrastructure encryption enabled\u0027 is \u0027checked\u0027",
+    "text": "",
     "code": {
       "powerShell": null,
       "iac": null,
@@ -49,9 +49,9 @@
           {
             "conditions": [
               [
-                "properties.infrastructureEncryption",
+                "requireInfrastructureEncryption",
                 "eq",
-                "Disabled"
+                "false"
               ]
             ]
           }
@@ -66,11 +66,13 @@
     "html": {
       "data": {
         "properties": {
-          
+          "name": "Server Name",
+          "location": "Location",
+          "requireInfrastructureEncryption": "Infrastructure Encryption"
         },
         "expandObject": null
       },
-      "table": null,
+      "table": "Normal",
       "decorate": [
         
       ],
@@ -85,8 +87,8 @@
           "expandObject": null,
           "limit": null
         },
-        "showGoToButton": false,
-        "showModalButton": false,
+        "showGoToButton": "true",
+        "showModalButton": "true",
         "directLink": null
       }
     },

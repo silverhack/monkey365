@@ -83,7 +83,7 @@
         "properties": {
           "name": "VM Name",
           "location": "Location",
-          "os_sse_encryption": "OS SSE Type"
+          "osDisk.SSE.type": "SSE Type"
         },
         "expandObject": null
       },

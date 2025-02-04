@@ -40,12 +40,31 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_managed_disks",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "allowAccessFromAllNetworks",
+                "eq",
+                "true"
+              ],
+			  [
+                "networkAccessPolicy",
+                "eq",
+                "AllowAll"
+              ]
+            ],
+			"operator": "and"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -54,6 +73,13 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "name": "Disk Name",
+          "location": "Location",
+          "skuname": "SKU Name",
+          "networkAccessPolicy": "Network Access Policy",
+          "allowAccessFromAllNetworks": "Access From All Networks"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -65,11 +91,14 @@
       ],
       "actions": {
         "objectData": {
+          "properties": [
+			"*"
+          ],
           "expandObject": null,
           "limit": null
         },
-        "showGoToButton": "True",
-        "showModalButton": "True",
+        "showGoToButton": "true",
+        "showModalButton": "true",
         "directLink": null
       }
     },

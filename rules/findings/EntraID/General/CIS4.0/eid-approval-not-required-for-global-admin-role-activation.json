@@ -1,0 +1,116 @@
+{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "General",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure approval is required for Global Administrator role activation",
+  "description": "Microsoft Entra Privileged Identity Management can be used to audit roles, allow just in time activation of roles and allow for periodic role attestation. Requiring approval before activation allows one of the selected approvers to first review and then approve the activation prior to PIM granted the role. The approver doesn't have to be a group member or owner. The recommended state is Require approval to activate for the Global Administrator role.",
+  "rationale": "Approvers do not need to be assigned the same role or be members of the same group. It's important to have at least two approvers and an emergency access (break-glass) account to prevent a scenario where no Global Administrators are available. For example, if the last active Global Administrator leaves the organization, and only eligible but inactive Global Administrators remain, a trusted approver without the Global Administrator role or an emergency access account would be essential to avoid delays in critical administrative tasks.",
+  "impact": "",
+  "remediation": {
+    "text": "
+			###### To remediate using the UI: 
+			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/. 
+			2. Click to expand Identity Governance select Privileged Identity Management. 
+			3. Under Manage select Microsoft Entra Roles. 
+			4. Under Manage select Roles. 
+			5. Select Global Administrator in the list. 
+			6. Select Role settings and click Edit. 
+			7. Check the Require approval to activate box. 
+			8. Add at least two approvers. 
+			9. Click Update. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+	"https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/groups-role-settings#require-approval-to-activate"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "4.0.0",
+      "reference": "5.3.4",
+	  "profile": "E5 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": "",
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": "true",
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": "",
+        "message": "Ensure approval is required for Global Administrator role activation",
+        "defaultMessage": "Ensure approval is required for Global Administrator role activation"
+      },
+      "properties": {
+        "resourceName": "Id",
+        "resourceId": "Id",
+        "resourceType": "@odata.type"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_approval_for_global_admin_not_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}

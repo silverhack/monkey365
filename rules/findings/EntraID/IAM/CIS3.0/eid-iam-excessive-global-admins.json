@@ -72,9 +72,8 @@
       "data": {
         "properties": {
           "effectiveMembers.userPrincipalName": "User Principal Name",
-          "effectiveMembers.objectType": "Object Type",
-          "effectiveMembers.userType": "User Type",
-          "effectiveMembers.mfaenabled": "MFA enabled"
+          "effectiveMembers.id": "Object Id",
+          "displayName": "Role Assigned"
         },
         "expandObject": "effectiveMembers"
       },

@@ -3,7 +3,7 @@
     
   ],
   "provider": "Microsoft365",
-  "serviceType": "Microsoft Fabric",
+  "serviceType": "Fabric",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure 'Interact with and share R and Python' visuals is 'Disabled'",
   "description": "Power BI allows the integration of R and Python scripts directly into visuals. This feature allows data visualizations by incorporating custom calculations, statistical analyses, machine learning models, and more using R or Python scripts. Custom visuals can be created by embedding them directly into Power BI reports. Users can then interact with these visuals and see the results of the custom code within the Power BI interface.",

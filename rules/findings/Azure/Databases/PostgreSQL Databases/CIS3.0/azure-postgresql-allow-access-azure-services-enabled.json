@@ -10,7 +10,7 @@
   "rationale": "If access from Azure services is enabled, the server\u0027s firewall will accept connections from all Azure resources, including resources not in your subscription. This is usually not a desired configuration. Instead, setup firewall rules to allow access from specific network ranges or VNET rules to allow access from specific virtual networks.",
   "impact": null,
   "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com\r\n\t\t\t\t\t2. Go to `Azure Database for PostgreSQL server`\r\n\t\t\t\t\t3. For each database, click on `Connection security`\r\n\t\t\t\t\t4. In `Firewall rules`\r\n\t\t\t\t\t5. Ensure `Allow access to Azure services is set to OFF`.\r\n\t\t\t\t\t6. Click Save to apply the changed rule",
+    "text": "",
     "code": {
       "powerShell": null,
       "iac": null,
@@ -50,22 +50,18 @@
           {
             "conditions": [
               [
-                "fwRules.RuleName",
-                "eq",
-                "AllowAllWindowsAzureIps"
-              ],
-              [
-                "fwRules.StartIpAddress",
+                "StartIpAddress",
                 "eq",
                 "0.0.0.0"
               ],
               [
-                "fwRules.EndIpAddress",
+                "EndIpAddress",
                 "eq",
                 "0.0.0.0"
               ]
             ],
-            "operator": "and"
+            "operator": "and",
+			"whereObject": "fwrules"
           }
         ]
       }
@@ -78,11 +74,14 @@
     "html": {
       "data": {
         "properties": {
-          
+          "serverName": "Server Name",
+          "RuleName": "Rule Name",
+          "StartIpAddress": "Start IP Address",
+		  "EndIpAddress": "End IP Address"
         },
         "expandObject": null
       },
-      "table": null,
+      "table": "Normal",
       "decorate": [
         
       ],
@@ -92,13 +91,13 @@
       "actions": {
         "objectData": {
           "properties": [
-            "*"
+            "fwrules"
           ],
           "expandObject": null,
           "limit": null
         },
-        "showGoToButton": false,
-        "showModalButton": false,
+        "showGoToButton": "true",
+        "showModalButton": "true",
         "directLink": null
       }
     },

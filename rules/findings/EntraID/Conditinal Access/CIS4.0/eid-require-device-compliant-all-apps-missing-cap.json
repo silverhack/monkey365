@@ -1,0 +1,165 @@
+﻿{
+  "args": [
+    
+  ],
+  "provider": "EntraID",
+  "serviceType": "Conditional Access",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure that a Conditional Access Policy exists to require device marked as compliant",
+  "description": "Use Conditional Access to require a user\u0027s device to be either Microsoft Entra hybrid joined or compliant during authentication.",
+  "rationale": "The security risk of an adversary authenticating to the tenant from their own device is reduced by requiring a managed device to authenticate. Managed devices are under the provisioning and control of the agency.",
+  "impact": "",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa",
+    "https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access",
+    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/troubleshoot-conditional-access-what-if",
+    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/plan-conditional-access",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-7-restrict-resource-access-based-on--conditions"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "4.0.0",
+      "reference": "5.2.2.10",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "aad_conditional_access_policy",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+      {
+        "operator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "state",
+                "eq",
+                "true"
+              ],
+              [
+                "conditions.users.includeUsers",
+                "eq",
+                "All"
+              ],
+              [
+                "conditions.applications.includeApplications",
+                "eq",
+                "All"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "grantControls.operator",
+                "eq",
+                "OR"
+              ],
+              [
+                "grantControls.builtInControls",
+                "match",
+                "compliantDevice"
+              ],
+              [
+                "grantControls.builtInControls",
+                "match",
+                "domainJoinedDevice"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": "true",
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "displayName": "Name",
+          "state": "Status",
+          "conditions.applications.includeApplications": "Applications",
+          "conditions.users.includeUsers": "Users",
+          "grantControls.operator": "Operator",
+          "grantControls.builtInControls": "BuiltIn Controls"
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "displayName"
+        ],
+      "message": "The {displayName} policy is not configured to require a compliant device",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "@odata.context"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid_cap_require_device_compliance_not_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}

@@ -98,10 +98,16 @@
     
   ],
   "rule": {
-	"isManual": "true",  
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
     "shouldExist": null,
     "returnObject": null,
-    "removeIfNotExists": "false"
+    "removeIfNotExists": null
   },
   "output": {
     "html": {

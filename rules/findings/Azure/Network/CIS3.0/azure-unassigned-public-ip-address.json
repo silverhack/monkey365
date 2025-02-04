@@ -10,7 +10,19 @@
   "rationale": "Public IP Addresses allocated to the tenant should be periodically reviewed for necessity. Public IP Addresses that are not intentionally assigned and controlled present a publicly facing vector for threat actors and significant risk to the tenant.",
   "impact": "Public IP Addresses that are not intentionally assigned and controlled present a publicly facing vector for threat actors and significant risk to the tenant.",
   "remediation": {
-    "text": "Remediation will vary significantly depending on your organization\u0027s security requirements for the resources attached to each individual Public IP address. \r\n\t\t\t\t\t###### From Azure Portal\r\n\t\t\t\t\t1. Open the `All Resources blade`\r\n\t\t\t\t\t2. Click on `Add Filter`\r\n\t\t\t\t\t3. In the Add Filter window, select the following:\r\n\t\t\t\t\tFilter: `Type`\r\nOperator: `Equals`\r\nValue: `Public IP address`\r\n\t\t\t\t\t4. Click the `Apply` button\r\n\r\n\t\t\t\t\t5. For each Public IP address in the list, use Overview (or Properties) to review the `Associated to:` field and determine if the associated resource is still relevant to your tenant environment. If the associated resource is relevant, ensure that additional controls exist to mitigate risk (e.g. Firewalls, VPNs, Traffic Filtering, Virtual Gateway Appliances, Web Application Firewalls, etc.) on all subsequently attached resources.",
+    "text": "
+		Remediation will vary significantly depending on your organization's security requirements for the resources attached to each individual Public IP address. 
+
+		###### From Azure Portal
+			1. Open the `All Resources blade`
+			2. Click on `Add Filter`
+			3. In the Add Filter window, select the following:
+				Filter: `Type`
+				Operator: `Equals`
+				Value: `Public IP address`
+			4. Click the `Apply` button
+			5. For each Public IP address in the list, use Overview (or Properties) to review the `Associated to:` field and determine if the associated resource is still relevant to your tenant environment. If the associated resource is relevant, ensure that additional controls exist to mitigate risk (e.g. Firewalls, VPNs, Traffic Filtering, Virtual Gateway Appliances, Web Application Firewalls, etc.) on all subsequently attached resources.
+	",
     "code": {
       "powerShell": null,
       "iac": null,

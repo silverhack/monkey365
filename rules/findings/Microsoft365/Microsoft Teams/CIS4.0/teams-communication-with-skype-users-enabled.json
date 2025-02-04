@@ -1,0 +1,115 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Microsoft Teams",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure communication with Skype users is disabled",
+  "description": "
+		This policy setting controls chat with external unmanaged Skype users. 
+		**Note** : Skype for business is deprecated as of July 31, 2021, although these settings may still be valid for a period of time. See the link in the reference section for more information. 
+  ",
+  "rationale": "Skype was deprecated July 31, 2021. Disabling communication with skype users reduces the attack surface of the organization. If a partner organization or satellite office wishes to collaborate and has not yet moved off of Skype, then a valid exception will need to be considered for this recommendation.",
+  "impact": "Teams users will be unable to communicate with Skype users that are not in the same organization.",
+  "remediation": {
+    "text": "
+			###### To remediate using the UI: 
+			1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com/. 
+			2. Click to expand Users select External access. 
+			3. Locate Skype users 
+			4. Set Allow users in my organization to communicate with Skype users to Off. 
+			5. Click Save.
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoftteams/trusted-organizations-external-meetings-chat",
+	"https://learn.microsoft.com/en-US/microsoftteams/manage-external-access?WT.mc_id=TeamsAdminCenterCSH"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "4.0.0",
+      "reference": "8.2.4",
+	  "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+      
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure communication with Skype users is disabled",
+        "defaultMessage": "Ensure communication with Skype users is disabled"
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "teams_communication_skype_users_enabled",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

@@ -6,23 +6,16 @@
   "serviceType": "Azure SQL Firewall",
   "serviceName": "Network",
   "displayName": "Ensure no Azure SQL Databases allow ingress from _ARG_0_",
-  "description": "_ARG_2_",
+  "description": "_ARG_3_",
   "rationale": "
 		Azure SQL Server includes a firewall to block access to unauthorized connections. More granular IP addresses can be defined by referencing the range of addresses available from specific datacenters. 
 		By default, for a SQL server, a Firewall exists with StartIp of 0.0.0.0 and EndIP of 0.0.0.0 allowing access to all the Azure services. 
 		Additionally, a custom rule can be set up with StartIp of 0.0.0.0 and EndIP of 255.255.255.255 allowing access from ANY IP over the Internet. In order to reduce the potential attack surface for a SQL server, firewall rules should be defined with more granular IP addresses by referencing the range of addresses available from specific datacenters.
-		If Allow Azure services and resources to access this server is 'Checked', this will allow resources outside of the subscription/tenant/organization boundary, within any region of Azure, to effectively bypass the defined SQL Server Network ACL on public endpoint. A malicious attacker can successfully launch a SQL server password bruteforce attack by creating a virtual machine in any Azure subscription/region, from outside of the subscription boundary where the SQL Server is residing. 
+		If Allow Azure services and resources to access this server is `Checked`, this will allow resources outside of the subscription/tenant/organization boundary, within any region of Azure, to effectively bypass the defined SQL Server Network ACL on public endpoint. A malicious attacker can successfully launch a SQL server password bruteforce attack by creating a virtual machine in any Azure subscription/region, from outside of the subscription boundary where the SQL Server is residing. 
   ",
   "impact": "Disabling Allow Azure services and resources to access this server will break all connections to SQL server and Hosted Databases unless custom IP specific rules are added in Firewall Policy.",
   "remediation": {
     "text": "
-			###### Remediate from Azure Portal 
-			1. Go to SQL servers 
-			2. For each SQL server 
-			3. Under Security, click Networking 
-			4. Uncheck Allow Azure services and resources to access this server 
-			5. Set firewall rules to limit access to only authorized connections 
-			6. Click Save
 	",
     "code": {
       "powerShell": null,
@@ -68,12 +61,12 @@
               [
                 "fwRules.StartIpAddress",
                 "eq",
-                "_ARG_0_"
+                "_ARG_1_"
               ],
               [
                 "fwRules.EndIpAddress",
                 "eq",
-                "_ARG_1_"
+                "_ARG_2_"
               ]
             ],
             "operator": "and"
@@ -89,11 +82,16 @@
     "html": {
       "data": {
         "properties": {
-          
+          "Name": "Server Name",
+          "Location": "Location",
+          "ResourceGroupName": "Resource Group",
+          "fwRules.RuleName": "Rule Name",
+          "fwRules.StartIpAddress": "StartIpAddress",
+          "fwRules.EndIpAddress": "EndIpAddress"
         },
-        "expandObject": null
+        "expandObject": "fwRules"
       },
-      "table": null,
+      "table": "Normal",
       "decorate": [
         
       ],
@@ -103,13 +101,17 @@
       "actions": {
         "objectData": {
           "properties": [
-            "*"
+            "Name",
+			"Location",
+			"RuleName",
+			"StartIpAddress",
+			"EndIpAddress"
           ],
-          "expandObject": null,
+          "expandObject": "fwRules",
           "limit": null
         },
         "showGoToButton": false,
-        "showModalButton": false,
+        "showModalButton": true,
         "directLink": null
       }
     },

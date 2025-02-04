@@ -50,14 +50,14 @@
           {
             "conditions": [
               [
-                "osType",
+                "osDisk.disk.properties.osType",
                 "ne",
                 ""
               ],
               [
-                "os_disk_encryption",
-                "eq",
-                "Disabled"
+                "osDisk.isEncrypted",
+                "ne",
+                "true"
               ]
             ],
             "operator": "and"

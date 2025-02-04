@@ -45,12 +45,31 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_storage_accounts",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "dataProtection.properties.deleteRetentionPolicy.enabled",
+                "eq",
+                "False"
+              ],
+			  [
+                "dataProtection.properties.containerDeleteRetentionPolicy.enabled",
+                "eq",
+                "False"
+              ]
+            ],
+			"operator":"or"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -59,6 +78,12 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "name": "Name",
+          "CreationTime": "Creation Time",
+          "location": "Location",
+          "dataProtection.properties.deleteRetentionPolicy.enabled": "SoftDelete"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -70,11 +95,14 @@
       ],
       "actions": {
         "objectData": {
+          "properties": [
+			"*"
+          ],
           "expandObject": null,
           "limit": null
         },
-        "showGoToButton": "True",
-        "showModalButton": "True",
+        "showGoToButton": "true",
+        "showModalButton": "true",
         "directLink": null
       }
     },

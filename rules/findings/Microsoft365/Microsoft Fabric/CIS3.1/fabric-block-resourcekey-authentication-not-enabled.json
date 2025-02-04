@@ -3,7 +3,7 @@
     
   ],
   "provider": "Microsoft365",
-  "serviceType": "Microsoft Fabric",
+  "serviceType": "Fabric",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure 'Block ResourceKey Authentication' is 'Enabled'",
   "description": "This setting blocks the use of resource key based authentication. The Block ResourceKey Authentication setting applies to streaming and PUSH datasets. If blocked users will not be allowed send data to streaming and PUSH datasets using the API with a resource key. The recommended state is Enabled.",

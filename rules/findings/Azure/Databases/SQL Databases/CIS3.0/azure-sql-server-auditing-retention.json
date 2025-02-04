@@ -58,6 +58,11 @@
                 "auditing.retentionDays",
                 "eq",
                 "-1"
+              ],
+			  [
+                "auditing.enabled",
+                "eq",
+                "Disabled"
               ]
             ],
             "operator": "or"

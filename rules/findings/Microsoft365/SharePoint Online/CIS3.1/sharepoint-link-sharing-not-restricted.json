@@ -42,20 +42,39 @@
   "tags": [
   ],
   "rule": {
-    "path": "",
+    "path": "o365_spo_tenant_admin_details",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "DefaultSharingLinkType",
+                "ne",
+                "1"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "shouldExist": null,
+	"shouldExist": null,
     "returnObject": null,
     "removeIfNotExists": null
   },
   "output": {
     "html": {
       "data": {
+		"properties": {
+		  "RootSiteUrl": "Root Site",
+		  "AllowEditing": "Allow Editing",
+          "AnyoneLinkTrackUsers": "Link Track Users",
+          "DefaultSharingLinkType": "Default Sharing Link Type"
+        },
         "expandObject": null
       },
       "table": "Normal",

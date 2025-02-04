@@ -35,12 +35,31 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_app_services",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "basicPublishingCredentialsPolicies.properties.allow",
+                "eq",
+                "false"
+              ],
+			  [
+                "appConfig.properties.ftpsState",
+                "eq",
+                "AllAllowed"
+              ]
+            ],
+			"operator": "or"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -49,9 +68,20 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "name": "Application Name",
+          "kind": "Kind",
+          "location": "Location",
+          "properties.defaultHostName": "HostName",
+          "properties.httpsOnly": "Https Only",
+          "identity.principalId": "Principal ID",
+          "appConfig.properties.ftpsState": "SSL FTP",
+          "appConfig.properties.minTlsVersion": "TLS Version",
+          "basicPublishingCredentialsPolicies.properties.allow": "SCM Basic Auth Enabled"
+        },
         "expandObject": null
       },
-      "table": "asList",
+      "table": "Normal",
       "decorate": [
         
       ],
@@ -65,8 +95,8 @@
           "expandObject": null,
           "limit": null
         },
-        "showGoToButton": null,
-        "showModalButton": null,
+        "showGoToButton": "True",
+        "showModalButton": "True",
         "directLink": null
       }
     },

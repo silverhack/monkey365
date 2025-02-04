@@ -45,7 +45,6 @@
     },
     "query": [
       {
-        "operator": "and",
         "filter": [
           {
             "conditions": [
@@ -55,18 +54,23 @@
                 "functionapp"
               ],
               [
-                "appConfig.properties.pythonVersion",
+                "appConfig.properties.pythonVersion.Length",
                 "ne",
-                ""
+                "0"
               ],
               [
-                "appConfig.properties.linuxFxVersion",
+                "appConfig.properties.linuxFxVersion.Length",
                 "ne",
-                ""
+                "0"
               ]
             ],
             "operator": "and"
-          },
+          }
+        ]
+      },
+	  {
+        "connectOperator": "and",
+        "filter": [
           {
             "conditions": [
               [
@@ -80,10 +84,10 @@
                 "PYTHON*3.8"
               ]
             ],
-            "operator": "or"
+			"operator": "or"
           }
         ]
-      }
+	  }
     ],
     "shouldExist": null,
     "returnObject": null,

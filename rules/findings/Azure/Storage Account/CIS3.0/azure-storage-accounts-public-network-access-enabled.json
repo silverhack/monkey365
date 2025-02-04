@@ -46,12 +46,25 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_storage_accounts",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "allowAccessFromAllNetworks",
+                "eq",
+                "True"
+              ]
+            ]
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -60,6 +73,12 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "name": "Name",
+          "location": "Location",
+          "ResourceGroupName": "ResourceGroupName",
+          "allowAccessFromAllNetworks": "Access From All Networks"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -71,6 +90,12 @@
       ],
       "actions": {
         "objectData": {
+		  "properties": [
+			"name",
+            "location",
+            "ResourceGroupName",
+            "allowAccessFromAllNetworks"
+          ],
           "expandObject": null,
           "limit": null
         },

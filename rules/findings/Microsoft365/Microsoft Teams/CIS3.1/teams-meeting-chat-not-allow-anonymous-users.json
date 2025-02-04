@@ -41,12 +41,31 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "o365_teams_skype_meeting_policies",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "Identity",
+                "eq",
+                "Global"
+              ],
+			  [
+                "MeetingChatEnabledType",
+                "ne",
+                "EnabledExceptAnonymous"
+              ]
+            ],
+			"operator":"and"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -55,6 +74,10 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "Identity": "Identity",
+          "MeetingChatEnabledType": "Meeting Chat Enabled Type"
+        },
         "expandObject": null
       },
       "table": "Normal",

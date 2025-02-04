@@ -54,8 +54,14 @@
                 "properties.minimumTlsVersion",
                 "ne",
                 "TLS1_2"
+              ],
+			  [
+                "properties.minimumTlsVersion",
+                "ne",
+                "TLS1_3"
               ]
-            ]
+            ],
+			"operator":"or"
           }
         ]
       }

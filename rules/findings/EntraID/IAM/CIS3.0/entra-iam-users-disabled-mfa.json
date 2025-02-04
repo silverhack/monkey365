@@ -8,7 +8,7 @@
   "displayName": "Ensure that 'Multi-Factor Auth Status' is 'Enabled' for all Non-Privileged Users",
   "description": "
 			###### IMPORTANT - Please read the section overview:
-			If your organization pays for Microsoft Entra ID licensing (included in Microsoft 365 E3, E5, or F5, and EM&S E3 or E5 licenses) and CAN use Conditional Access, ignore the recommendations in this section and proceed to the Conditional Access section. <br> Enable multi-factor authentication for all non-privileged users.",
+			If your organization pays for Microsoft Entra ID licensing (included in Microsoft 365 E3, E5, or F5, and EM&S E3 or E5 licenses) and CAN use Conditional Access, ignore the recommendations in this section and proceed to the Conditional Access section. <br/> Enable multi-factor authentication for all non-privileged users.",
   "rationale": "Multi-factor authentication requires an individual to present a minimum of two separate forms of authentication before access is granted. Multi-factor authentication provides additional assurance that the individual attempting to gain access is who they claim to be. With multi-factor authentication, an attacker would need to compromise at least two different authentication mechanisms, increasing the difficulty of compromise and thus reducing the risk.",
   "impact": "Users would require two forms of authentication before any access is granted. Also, this requires an overhead for managing dual forms of authentication.",
   "remediation": {

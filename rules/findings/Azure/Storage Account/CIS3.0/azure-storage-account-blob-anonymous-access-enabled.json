@@ -45,12 +45,25 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_storage_accounts",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "properties.allowBlobPublicAccess",
+                "ne",
+                "false"
+              ]
+            ]
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -59,6 +72,12 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "name": "Name",
+          "location": "Location",
+          "ResourceGroupName": "ResourceGroupName",
+          "properties.allowBlobPublicAccess": "Allow blob Public Access"
+        },
         "expandObject": null
       },
       "table": "Normal",

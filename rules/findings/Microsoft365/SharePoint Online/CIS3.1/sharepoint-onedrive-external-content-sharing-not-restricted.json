@@ -38,14 +38,27 @@
   "tags": [
   ],
   "rule": {
-    "path": "",
+    "path": "o365_spo_tenant_admin_details",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "SharingCapability",
+                "eq",
+                "2"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "shouldExist": null,
+	"shouldExist": null,
     "returnObject": null,
     "removeIfNotExists": null
   },
@@ -53,7 +66,8 @@
     "html": {
       "data": {
         "properties": {
-          
+          "RootSiteUrl": "Root Site",
+          "SharingCapability": "Sharing Capability"
         },
         "expandObject": null
       },

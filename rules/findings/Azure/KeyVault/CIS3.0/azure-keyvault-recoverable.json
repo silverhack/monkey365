@@ -50,12 +50,12 @@
           {
             "conditions": [
               [
-                "properties.enableSoftDelete",
+                "protection.softDeleteEnabled",
                 "eq",
                 "false"
               ],
               [
-                "properties.enablePurgeProtection",
+                "protection.enablePurgeProtection",
                 "eq",
                 "false"
               ]

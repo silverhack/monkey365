@@ -40,12 +40,24 @@
 	"Legacy"
   ],
   "rule": {
-    "path": "",
+    "path": "az_virtual_machines",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "securityProfile.securityType.TrustedLaunch",
+                "ne"
+              ]
+            ]
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -54,6 +66,11 @@
   "output": {
     "html": {
       "data": {
+        "properties": {
+          "name": "VM Name",
+          "location": "Location",
+          "securityProfile.securityType.TrustedLaunch": "TrustedLaunch"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -65,6 +82,11 @@
       ],
       "actions": {
         "objectData": {
+          "properties": [
+            "name",
+            "location",
+            "securityprofile"
+          ],
           "expandObject": null,
           "limit": null
         },

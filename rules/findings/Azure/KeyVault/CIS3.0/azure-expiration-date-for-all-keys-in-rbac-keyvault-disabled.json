@@ -35,12 +35,30 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "az_keyvault",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "enableRbacAuthorization",
+                "eq",
+                "true"
+              ],
+              [
+                "objects.keys.attributes.exp",
+                "ne"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -49,9 +67,14 @@
   "output": {
     "html": {
       "data": {
+		"properties": {
+          "name": "Key Vault Name",
+          "location": "Location",
+          "enableRbacAuthorization": "RBAC Enabled"
+        },
         "expandObject": null
       },
-      "table": "asList",
+      "table": "Normal",
       "decorate": [
         
       ],
@@ -65,8 +88,8 @@
           "expandObject": null,
           "limit": null
         },
-        "showGoToButton": null,
-        "showModalButton": null,
+        "showGoToButton": "true",
+        "showModalButton": "true",
         "directLink": null
       }
     },
