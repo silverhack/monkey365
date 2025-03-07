@@ -66,3 +66,4 @@ Function Get-MonkeyMSGraphPIMRoleManagementPolicyAssignment {
         #Nothing to do here
     }
 }
+

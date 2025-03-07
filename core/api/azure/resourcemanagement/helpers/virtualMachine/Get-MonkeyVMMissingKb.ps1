@@ -71,3 +71,4 @@ function Get-MonkeyVMMissingKb{
         Write-Output $missingPatches -NoEnumerate
     }
 }
+

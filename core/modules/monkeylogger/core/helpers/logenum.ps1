@@ -20,3 +20,4 @@ Enum LevelName{
     Error = 4
     Critical = 5
 }
+

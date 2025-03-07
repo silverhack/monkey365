@@ -11,3 +11,4 @@ ConvertFrom-StringData @'
     AccountWasNotFound               = No account was found on public application
     RemoveSilentParameter            = Removing Silent parameter
 '@
+

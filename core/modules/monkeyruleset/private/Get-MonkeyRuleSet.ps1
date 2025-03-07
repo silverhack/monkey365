@@ -41,15 +41,24 @@ Function Get-MonkeyRuleSet{
         [String]$Ruleset
     )
     Process{
-        if (Test-Path -Path $Ruleset){
-            $myRuleset = Get-Content $Ruleset -Raw | ConvertFrom-Json
-            if(Test-isValidRuleSet -Object $myRuleset){
-                return $myRuleset
+        Try{
+            If (Test-Path -Path $Ruleset){
+                $myRuleset = Get-Content $Ruleset -Raw | ConvertFrom-Json
+                If(Test-isValidRuleSet -Object $myRuleset){
+                    return $myRuleset
+                }
+                Else{
+                    Write-Warning -Message ($Script:messages.InvalidRuleset -f $Ruleset)
+                }
             }
-            else{
-                Write-Warning -Message ($Script:messages.InvalidRulesetMessage -f $Ruleset)
+            Else{
+                Write-Warning -Message ($Script:messages.UnableToImportRuleset -f $Ruleset)
             }
+        }
+        Catch{
+            Write-Warning -Message ($Script:messages.InvalidRuleset -f $Ruleset)
         }
     }
 }
+
 

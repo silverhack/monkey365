@@ -43,24 +43,25 @@ Function Import-MonkeyRuleset{
         [parameter(Mandatory=$True, ParameterSetName = 'RuleSet',HelpMessage="Ruleset File")]
         [String]$Ruleset
     )
-    try{
-        if($PSCmdlet.ParameterSetName -eq 'RuleSet'){
+    Try{
+        If($PSCmdlet.ParameterSetName -eq 'RuleSet'){
             $p = @{
                 Ruleset = $Ruleset;
             }
             $myRuleSet = Get-MonkeyRuleSet @p
-            if($myRuleSet){
+            If($myRuleSet){
                 New-Variable -Name SecBaseline -Value $myRuleSet -Scope Script -Force
             }
         }
-        else{
-            if(Test-isValidRuleSet -Object $RulesetObject){
+        Else{
+            If(Test-isValidRuleSet -Object $RulesetObject){
                 New-Variable -Name SecBaseline -Value $RulesetObject -Scope Script -Force
             }
         }
     }
-    catch{
+    Catch{
         Write-Warning $Script:messages.UnableToSetRuleset
         Write-Verbose $_.Exception.Message
     }
 }
+

@@ -64,3 +64,4 @@ Function Get-MonkeyAzSQLFailoverGroup {
         #Nothing to do here
     }
 }
+

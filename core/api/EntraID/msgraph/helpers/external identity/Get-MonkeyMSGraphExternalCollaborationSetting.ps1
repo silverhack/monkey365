@@ -65,3 +65,4 @@ Function Get-MonkeyMSGraphExternalCollaborationSetting {
         #Nothing to do here
     }
 }
+

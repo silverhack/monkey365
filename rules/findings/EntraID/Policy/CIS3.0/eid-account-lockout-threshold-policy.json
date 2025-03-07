@@ -59,7 +59,7 @@
             "conditions": [
               [
                 "lockoutThreshold",
-                "le",
+                "gt",
                 "10"
               ]
             ]
@@ -130,4 +130,5 @@
     
   ]
 }
+
 

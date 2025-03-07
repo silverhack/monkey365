@@ -72,3 +72,4 @@ Function Resolve-AzureSubscription{
         return $Subscription
     }
 }
+

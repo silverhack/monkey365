@@ -53,3 +53,4 @@ Function New-OcsfResourceDetailsObject{
         return $resourceDetails
     }
 }
+

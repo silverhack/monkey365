@@ -17,7 +17,7 @@
 		* Entra ID authentication uses contained database users to authenticate identities at the database level. 
 		* Entra ID supports token-based authentication for applications connecting to SQL Database. 
 		* Entra ID authentication supports ADFS (domain federation) or native user/password authentication for a local Active Directory without domain synchronization. 
-		* Entra ID supports connections from SQL Server Management Studio that use Active Directory Universal Authentication, which includes Multi-Factor Authentication (MFA). MFA includes strong authentication with a range of easy verification options — phone call, text message, smart cards with pin, or mobile app notification.
+		* Entra ID supports connections from SQL Server Management Studio that use Active Directory Universal Authentication, which includes Multi-Factor Authentication (MFA). MFA includes strong authentication with a range of easy verification options â€” phone call, text message, smart cards with pin, or mobile app notification.
   ",
   "impact": "This will create administrative overhead with user account and permission management. For further security on these administrative accounts, you may want to consider licensing which supports features like Multi Factor Authentication.",
   "remediation": {
@@ -140,4 +140,5 @@
     
   ]
 }
+
 

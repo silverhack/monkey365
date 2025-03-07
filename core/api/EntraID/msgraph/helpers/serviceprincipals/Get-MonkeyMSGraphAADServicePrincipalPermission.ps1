@@ -122,3 +122,4 @@ Function Get-MonkeyMSGraphAADServicePrincipalPermission {
         }
     }
 }
+

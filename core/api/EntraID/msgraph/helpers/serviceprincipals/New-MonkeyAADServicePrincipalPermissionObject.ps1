@@ -82,3 +82,4 @@ Function New-MonkeyAADServicePrincipalPermissionObject {
         }
     }
 }
+

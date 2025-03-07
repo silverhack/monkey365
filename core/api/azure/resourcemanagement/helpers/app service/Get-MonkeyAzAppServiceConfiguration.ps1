@@ -64,3 +64,4 @@ Function Get-MonkeyAzAppServiceConfiguration {
         #Nothing to do here
     }
 }
+

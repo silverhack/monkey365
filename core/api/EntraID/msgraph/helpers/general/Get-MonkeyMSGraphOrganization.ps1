@@ -95,3 +95,4 @@ Function Get-MonkeyMSGraphOrganization {
         #Nothing to do here
     }
 }
+

@@ -110,3 +110,4 @@ function Get-MonkeyAADPortalManagedAppByPrincipalID {
     }
 }
 
+

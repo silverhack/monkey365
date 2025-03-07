@@ -93,3 +93,4 @@ Function Get-MonkeyAzInsightEventType {
         #nothing to do here
     }
 }
+
