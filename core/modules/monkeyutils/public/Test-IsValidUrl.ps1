@@ -12,13 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Get-MonkeyRuleSet{
+Function Test-IsValidUrl{
     <#
         .SYNOPSIS
-		Get content from ruleset file.
 
         .DESCRIPTION
-		Get content from ruleset file.
 
         .INPUTS
 
@@ -29,36 +27,21 @@ Function Get-MonkeyRuleSet{
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyRuleSet
+            File Name	: Test-IsValidUrl
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-    [CmdletBinding()]
+    [cmdletbinding()]
+    [OutputType([System.Boolean])]
     Param (
-        [parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="Ruleset File")]
-        [String]$Ruleset
+        [parameter(Mandatory=$false, ValueFromPipeline = $true, HelpMessage="InputObjec")]
+        [String]$InputObject
     )
     Process{
-        Try{
-            If (Test-Path -Path $Ruleset){
-                $myRuleset = Get-Content $Ruleset -Raw | ConvertFrom-Json
-                If(Test-isValidRuleSet -Object $myRuleset){
-                    return $myRuleset
-                }
-                Else{
-                    Write-Warning -Message ($Script:messages.InvalidRuleset -f $Ruleset)
-                }
-            }
-            Else{
-                Write-Warning -Message ($Script:messages.UnableToImportRuleset -f $Ruleset)
-            }
-        }
-        Catch{
-            Write-Warning -Message ($Script:messages.InvalidRuleset -f $Ruleset)
-        }
+        [System.Uri]$out = $null;
+        [System.Uri]::TryCreate($InputObject,[System.UriKind]::Absolute,[ref]$out) -and ($out.Scheme -eq [System.Uri]::UriSchemeHttp -or $out.Scheme -eq [System.Uri]::UriSchemeHttps)
     }
 }
-
 

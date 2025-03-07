@@ -59,7 +59,7 @@
             "conditions": [
               [
                 "lockoutDurationInSeconds",
-                "ge",
+                "lt",
                 "60"
               ]
             ]

@@ -3,10 +3,12 @@ ConvertFrom-StringData @'
     InitDataset                      = Dataset was created
     DatasetNotCreated                = Dataset was not created
     InvalidObject                    = Unable to query dataset. Invalid Object.
+    InvalidRuleset                   = Unable to import ruleset. {0} is not valid
     UnableToCloneObject              = Unable to clone object
     DirectoryFoundMessage            = {0} directory was found in {1}
     AdditionalRulesMessage           = Importing additional rules from {0}
     UnableToSetRuleset               = Unable to set ruleset
+    UnableToImportRuleset            = Unable to import ruleset. {0} was not found
     RulesetNotLoaded                 = The ruleset was not loaded
     UnableToGetRulesetInfo           = Unable to get information from ruleset
     UnableToGetMetadataInfo          = Unable to get metadata info from '{0}'
