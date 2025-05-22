@@ -12,7 +12,7 @@
 RootModule = 'monkey365.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.94.6'
+ModuleVersion = '0.95'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -74,11 +74,6 @@ NestedModules = @(
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
     'Invoke-Monkey365',
-    'Write-Information',
-    'Write-Warning',
-    'Write-Debug',
-    'Write-Verbose',
-    'Write-Error',
     'Get-MonkeyJobError'
     'Convert-MarkDownToHtml',
     'Convert-MarkDownToPlainText',
@@ -115,15 +110,16 @@ PrivateData = @{
         # Tags applied to this module. These help with module discovery in online galleries.
         Tags = @(
             "Microsoft365",
-            "Microsoft 365 security",
+            "Microsoft365-Security",
             "Azure",
             "AzureAD",
-            "Entra ID security assessment",
-            "Microsoft Entra",
+            "EntraID-Security-Assessment",
+            "Microsoft-Entra",
+            "Cloud-Security-Configuration-Review",
             "CSPM",
-            "Office 365",
-            "Office 365 Security",
-            "CIS Benchmark"
+            "Office365",
+            "Office-365-Security",
+            "CIS-Benchmark"
         )
 
         # A URL to the license for this module.
@@ -135,7 +131,7 @@ PrivateData = @{
         # A URL to an icon representing this module.
         IconUri = 'https://user-images.githubusercontent.com/5271640/181045413-1d17333c-0533-404a-91be-2070ccc6ee29.png'
 
-        Prerelease = 'beta'
+        #Prerelease = 'beta'
 
         # ReleaseNotes of this module
         ReleaseNotes = '*'
@@ -154,6 +150,5 @@ HelpInfoURI = 'https://silverhack.github.io/monkey365/'
 # DefaultCommandPrefix = ''
 
 }
-
 
 

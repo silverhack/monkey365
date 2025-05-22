@@ -521,18 +521,14 @@ Function Invoke-Monkey365{
             Write-Error $_
         }
         Finally{
-            #Remove Report variable
-            if($null -ne (Get-Variable -Name Report -Scope Script -ErrorAction Ignore)){
-                Remove-Variable -Name Report -Scope Script -Force
-            }
-            #Remove Report variable
-            if($null -ne (Get-Variable -Name returnData -Scope Script -ErrorAction Ignore)){
-                Remove-Variable -Name returnData -Scope Script -Force
-            }
+            #Remove OutFolder variable
+            Remove-Variable -Name OutFolder -Scope Script -Force -ErrorAction Ignore
+            #Remove returnData variable
+            Remove-Variable -Name returnData -Scope Script -Force -ErrorAction Ignore
+            #Remove LogQueue
+            Remove-Variable -Name MonkeyLogQueue -Scope Global -ErrorAction Ignore -Force
             #collect garbage
             [System.GC]::GetTotalMemory($true) | out-null
         }
     }
 }
-
-

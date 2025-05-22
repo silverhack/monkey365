@@ -78,4 +78,3 @@ $param = @{
 Write-information @param
 #Start process
 Start-Process docker -ArgumentList $buildArgs -NoNewWindow -Wait
-

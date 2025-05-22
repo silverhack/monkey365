@@ -7,6 +7,9 @@
   <a href="https://github.com/silverhack/monkey365"><img alt="ScriptAnalyzer" src="https://github.com/silverhack/monkey365/actions/workflows/psa.yml/badge.svg"></a>
   <a href="https://github.com/silverhack/monkey365"><img alt="Lines" src="https://img.shields.io/tokei/lines/github/silverhack/monkey365"></a>
   <a href="https://twitter.com/tr1ana"><img alt="Twitter" src="https://img.shields.io/twitter/follow/tr1ana?style=social"></a>
+  [![latest PsGallery version](https://img.shields.io/powershellgallery/v/monkey365.svg?label=latest+version)](https://www.powershellgallery.com/packages/monkey365)
+  [![Downloads](https://img.shields.io/powershellgallery/dt/monkey365.svg?label=downloads)](https://www.powershellgallery.com/packages/monkey365)
+  ![GitHub Downloads](https://img.shields.io/github/downloads/silverhack/monkey365/total)
 </p>
 
 <p
@@ -19,7 +22,29 @@ Monkey365 is a collector-based PowerShell module that can be used to review the 
 
 # Installation
 
-You can either download the latest zip by clicking [this link](https://github.com/silverhack/monkey365/archive/refs/heads/main.zip) or download Monkey365 by cloning the [repository](https://github.com/silverhack/monkey365.git):
+## PowerShell Gallery
+
+You can install Monkey365 using the built-in `Install-Module` command. The examples below will install Monkey365 in your  <a href="https://learn.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershellget-3.x#-scope" target="_blank">installation scope</a> depending on your PowerShell version. You can control this using the `-Scope <AllUsers/CurrentUser>` parameter.
+
+``` powershell
+Install-Module -Name monkey365 -Scope CurrentUser
+```
+
+To install a beta version, you can use the following command:
+
+``` powershell
+Install-Module -Name monkey365 -Scope CurrentUser -AllowPrerelease
+```
+
+To update monkey365:
+
+``` powershell
+Update-Module -Name monkey365 -Scope CurrentUser
+```
+
+## GitHub
+
+You can download the latest release by clicking [here](https://github.com/silverhack/monkey365/releases). Once downloaded, you must extract the file and extract the files to a suitable directory.
 
 Once downloaded, you must extract the files to a suitable directory. Once you have unzipped the zip file, you can use the PowerShell V3 Unblock-File cmdlet to unblock files:
 

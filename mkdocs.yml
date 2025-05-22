@@ -43,9 +43,9 @@ nav:
   - Home: index.md
   - Getting started:
     - Overview:
-      - Installation: install-instructions.md
-      - Permissions: permissions.md
-      - Basic Usage: basic-usage.md
+      - Installation: install/install-instructions.md
+      - Permissions: getting_started/permissions.md
+      - Basic Usage: getting_started/basic-usage.md
     - Configuration:
       - General Options: configuration/general-options.md
       - Azure Options: configuration/azure-options.md
@@ -80,10 +80,10 @@ nav:
       - Overview: security_checks/overview.md
       - Create a custom rule: security_checks/custom-rule.md
       - Custom ruleset: security_checks/custom-ruleset.md
-  - License and Contributing: license-contributing.md
-  - Support: support.md
-  - Disclaimer: disclaimer.md
-  - Sample Report: sample/Monkey365.html
+  - License and Contributing: license/license-contributing.md
+  - Support: support/support.md
+  - Disclaimer: support/disclaimer.md
+  - Sample Report: sample/monkey365.html
 
 extra:
   consent:
