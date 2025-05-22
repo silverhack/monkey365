@@ -1,0 +1,21 @@
+name: Scan Monkey365 with PSScriptAnalyzer
+
+on:
+  # Triggers the workflow on push or pull request events but only for the develop branch
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  psscriptanalyzer_job:
+    name: PsScriptAnalyzer Monkey365 Scan Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run ScriptAnalyzer
+        uses: ./
+        with:
+          path: .\
+          recurse: true
