@@ -65,9 +65,9 @@ runs:
         }
         $Config = $ScriptAnalyzer.Config
         $ScriptAnalyzer.Results = $files | Invoke-ScriptAnalyzer @Config
-        $errors   = ScriptAnalyzer.Results.Where({($_.Severity -eq 'Error') -or ($_.Severity -eq 'ParseError')})
-        $warnings = ScriptAnalyzer.Results.Where({$_.Severity -eq 'Warning'})
-        $info = ScriptAnalyzer.Results.Where({$_.Severity -eq 'Information'})
+        $errors   = $ScriptAnalyzer.Results.Where({($_.Severity -eq 'Error') -or ($_.Severity -eq 'ParseError')})
+        $warnings = $ScriptAnalyzer.Results.Where({$_.Severity -eq 'Warning'})
+        $info = $ScriptAnalyzer.Results.Where({$_.Severity -eq 'Information'})
         if($errors){
           foreach ($e in $errors){
             $message = ("file={0},line={1},message{2}" -f $e.ScriptName,$e.Line,$e.Message)
