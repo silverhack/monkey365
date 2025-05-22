@@ -141,4 +141,3 @@ Function Get-OcsfDetectionFindingObject{
     }
 }
 
-

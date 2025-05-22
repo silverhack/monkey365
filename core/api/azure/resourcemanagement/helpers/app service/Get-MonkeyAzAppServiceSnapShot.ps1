@@ -64,4 +64,3 @@ Function Get-MonkeyAzAppServiceSnapShot {
         #Nothing to do here
     }
 }
-

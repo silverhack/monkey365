@@ -64,4 +64,3 @@ Function Get-MonkeyAzSQlServerEncryptorProtector {
         #Nothing to do here
     }
 }
-

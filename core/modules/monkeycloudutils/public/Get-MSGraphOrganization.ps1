@@ -86,4 +86,3 @@ Function Get-MSGraphOrganization{
     }
 }
 
-

@@ -66,6 +66,7 @@ Function Invoke-ClientRequest{
             $Verbose = $True
         }
         if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $DebugPreference = 'Continue'
             $Debug = $True
         }
         if($PSBoundParameters.ContainsKey('InformationAction')){
@@ -155,8 +156,6 @@ Function Invoke-ClientRequest{
                 $param = @{
                     Message = ('TimeOut for {0}' -f $Request.RequestUri);
                     Verbose = $Verbose;
-                    Debug = $Debug;
-                    InformationAction = $InformationAction;
                 }
                 Write-Verbose @param
                 $p = @{
@@ -171,8 +170,6 @@ Function Invoke-ClientRequest{
                 $param = @{
                     Message = ('Task faulted');
                     Verbose = $Verbose;
-                    Debug = $Debug;
-                    InformationAction = $InformationAction;
                 }
                 Write-Verbose @param
                 $p = @{
@@ -187,8 +184,6 @@ Function Invoke-ClientRequest{
                 $param = @{
                     Message = ('Task cancelled');
                     Verbose = $Verbose;
-                    Debug = $Debug;
-                    InformationAction = $InformationAction;
                 }
                 Write-Verbose @param
             }
@@ -203,7 +198,6 @@ Function Invoke-ClientRequest{
                     $p = @{
                         Message = ("[{0}] {1}" -f $webTaskResult.Result.StatusCode, $webTaskResult.Result.RequestMessage.RequestUri.AbsoluteUri);
                         Verbose = $Verbose;
-                        InformationAction = $InformationAction
                     }
                     Write-Verbose @p
                     $p = @{
@@ -218,4 +212,3 @@ Function Invoke-ClientRequest{
         }
     }
 }
-

@@ -292,4 +292,3 @@ Function Get-MonkeyAzRoleAssignmentForObject{
         Get-MonkeyRMObject @p
     }
 }
-

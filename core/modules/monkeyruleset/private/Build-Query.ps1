@@ -45,12 +45,12 @@ Function Build-Query{
         Try{
             If($PSBoundParameters.ContainsKey('InputObject') -and $PSBoundParameters['InputObject']){
                 $ruleObj = $null;
-                $shadowObj = $InputObject | Copy-PsObject
+                #$InputObject = $InputObject | Copy-PsObject
                 #Get query object
-                If(($shadowObj.psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){
-                    $ruleObj = $shadowObj.GetPropertyByPath('rule.query')
+                If(($InputObject.psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){
+                    $ruleObj = $InputObject.GetPropertyByPath('rule.query')
                     if($null -eq $ruleObj){
-                        Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $shadowObj.displayName)
+                        Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $InputObject.displayName)
                         return
                     }
                 }
@@ -67,11 +67,11 @@ Function Build-Query{
                 If($finalquery.Length -gt 0){
                     $safeQuery = $finalquery | ConvertTo-SecureScriptBlock
                     if($safeQuery){
-                        $shadowObj | Add-Member -type NoteProperty -name query -value $safeQuery
-                        return $shadowObj
+                        $InputObject | Add-Member -type NoteProperty -name query -value $safeQuery
+                        return $InputObject
                     }
                     else{
-                        Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $shadowObj.displayName)
+                        Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $InputObject.displayName)
                     }
                 }
             }
@@ -117,4 +117,3 @@ Function Build-Query{
         }
     }
 }
-

@@ -40,11 +40,14 @@ Function New-Logger{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseOutputTypeCorrectly", "", Scope="Function")]
     [CmdletBinding()]
     Param (
-        [parameter(ValueFromPipelineByPropertyName=$true, Mandatory= $false, HelpMessage= "Loggers")]
+        [parameter(Mandatory= $false, HelpMessage= "Loggers")]
         [Array]$Loggers=@(),
 
         [parameter(Mandatory= $false, HelpMessage= "Initial path")]
-        [String]$InitialPath
+        [String]$InitialPath,
+
+        [parameter(Mandatory= $false, HelpMessage= "Queue logger")]
+        [System.Collections.Concurrent.BlockingCollection`1[System.Management.Automation.InformationRecord]]$LogQueue
     )
     Begin{
         #Check informationAction
@@ -52,18 +55,27 @@ Function New-Logger{
             $PSBoundParameters.Add('informationAction',$InformationPreference);
         }
         #Check Debug
-        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+        If($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
             $verbosity=@{Debug=$true}
             $DebugPreference = 'Continue'
         }
-        else{
+        Else{
             $verbosity=@{Debug=$false}
         }
-        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+        If($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
             $verbosity.Add("Verbose",$true)
+            $VerbosePreference = 'Continue'
         }
-        else{
+        Else{
             $verbosity.Add("Verbose",$false)
+        }
+        #Check Log Queue
+        If(-NOT $PSBoundParameters.ContainsKey('LogQueue')){
+            New-Variable -Name LogQueue -Scope Script `
+                                -Value ([System.Collections.Concurrent.BlockingCollection[System.Management.Automation.InformationRecord]]::new()) -Force
+        }
+        Else{
+            New-Variable -Name LogQueue -Scope Script -Value $PSBoundParameters['LogQueue'] -Force
         }
         #Create object
         $logger = New-Object -Type PSObject -Property @{
@@ -79,6 +91,7 @@ Function New-Logger{
           Verbose = $verbosity.Verbose
           Debug = $verbosity.Debug
           DebugPreference = $DebugPreference
+          VerbosePreference = $VerbosePreference
           loggers = $Loggers
           enabled_loggers = $null
           rootPath = $null;
@@ -207,10 +220,12 @@ Function New-Logger{
                 return
             }
             #Initialize vars
-            if($null -eq (Get-Variable -Name LogQueue -ErrorAction Ignore)){
-                New-Variable -Name LogQueue -Scope Global `
-                                -Value ([System.Collections.Concurrent.BlockingCollection[System.Management.Automation.InformationRecord]]::new(100)) -Force
+            <#
+            If($null -eq (Get-Variable -Name LogQueue -Scope Script -ErrorAction Ignore)){
+                New-Variable -Name LogQueue -Scope Script `
+                                -Value ([System.Collections.Concurrent.BlockingCollection[System.Management.Automation.InformationRecord]]::new()) -Force
             }
+            #>
             New-Variable -Name MonkeyLogRunspace -Scope Script -Option ReadOnly `
                          -Value ([hashtable]::Synchronized(@{ })) -Force
             New-Variable -Name _handle -Scope Script -Option ReadOnly `
@@ -221,6 +236,13 @@ Function New-Logger{
                 "LogQueue"=$LogQueue;
                 "_handle"=$_handle;
                 "enabled_loggers" = $this.enabled_loggers;
+            }
+            #Add DebugPreference and VerbosePreference to session state
+            If($this.Debug){
+                [void]$session_vars.Add('DebugPreference','Continue')
+            }
+            If($this.Verbose){
+                [void]$session_vars.Add('VerbosePreference','Continue')
             }
             #
             $Script:InitialSessionState = New-LoggerSessionState -ImportVariables $session_vars -ApartmentState MTA
@@ -266,13 +288,13 @@ Function New-Logger{
             }
             Catch{
                 $msg = [hashtable] @{
-                        MessageData = $_.Exception.Message
-                        InformationAction = $this.informationAction
-                        CallStack = $this.CallStack
-                        ForeGroundColor = "Red"
-                        tags = @('MonkeyLog')
-                    }
-                    Write-Error @msg
+                    MessageData = $_.Exception.Message
+                    InformationAction = $this.informationAction
+                    CallStack = $this.CallStack
+                    ForeGroundColor = "Red"
+                    tags = @('MonkeyLog')
+                }
+                Write-Error @msg
             }
             $_handle.Set(); #
             # Spawn Logging Consumer
@@ -344,8 +366,8 @@ Function New-Logger{
                 Write-Warning @msg
                 $this.stop()
             }
-            else{
-                if($_handle.isSet){
+            Else{
+                If($_handle.isSet){
                     $msg = [hashtable] @{
                         MessageData = "Log enabled"
                         InformationAction = $this.informationAction
@@ -391,7 +413,7 @@ Function New-Logger{
             [void] $Script:MonkeyLogRunspace.Runspace.Dispose()
             #Remove environment variables
             #Remove-Variable -Scope Script -Force -Name LogQueue -ErrorAction SilentlyContinue
-            Remove-Variable -Scope Global -Force -Name LogQueue -ErrorAction SilentlyContinue
+            Remove-Variable -Scope Script -Force -Name LogQueue -ErrorAction SilentlyContinue
             Remove-Variable -Scope Script -Force -Name MonkeyLogRunspace -ErrorAction SilentlyContinue
             Remove-Variable -Scope Script -Force -Name _handle -ErrorAction SilentlyContinue
             Remove-Variable -Scope Script -Force -Name enabled_loggers -ErrorAction SilentlyContinue
@@ -442,5 +464,4 @@ Function New-Logger{
         }
     }
 }
-
 

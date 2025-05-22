@@ -101,7 +101,7 @@ Function Import-MonkeyJob{
                 }
                 #Set new variables
                 Set-Variable returnData -Value $raw_data.Output -Scope Script -Force
-                Set-Variable Report -Value $selected_job.jobFolder -Scope Script -Force
+                Set-Variable OutFolder -Value $selected_job.jobFolder -Scope Script -Force
                 Out-MonkeyData -OutData $Script:returnData
             }
             catch{
@@ -133,5 +133,4 @@ Function Import-MonkeyJob{
         }
     }
 }
-
 

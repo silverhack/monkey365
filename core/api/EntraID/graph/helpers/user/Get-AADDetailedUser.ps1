@@ -132,4 +132,3 @@ Function Get-AADDetailedUser {
     }
 }
 
-

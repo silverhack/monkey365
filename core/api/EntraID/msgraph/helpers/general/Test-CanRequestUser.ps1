@@ -64,4 +64,3 @@ Function Test-CanRequestUser {
         #Nothing to do here
     }
 }
-

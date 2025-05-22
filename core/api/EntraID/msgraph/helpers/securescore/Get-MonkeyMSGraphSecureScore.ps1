@@ -92,4 +92,3 @@ Function Get-MonkeyMSGraphSecureScore{
     }
 }
 
-

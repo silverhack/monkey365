@@ -74,4 +74,3 @@ Function Get-ObjectPropertyByPath {
         }
     }
 }
-

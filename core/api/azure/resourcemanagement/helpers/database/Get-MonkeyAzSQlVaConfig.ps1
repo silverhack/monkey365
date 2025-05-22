@@ -64,4 +64,3 @@ Function Get-MonkeyAzSQlVaConfig {
         #Nothing to do here
     }
 }
-

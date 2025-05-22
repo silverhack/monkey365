@@ -69,4 +69,3 @@ Function New-MonkeyEntraCrossTenantAccessPolicyObject {
         }
     }
 }
-

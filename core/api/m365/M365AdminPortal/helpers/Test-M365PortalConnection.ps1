@@ -94,4 +94,3 @@ Function Test-M365PortalConnection {
         #Nothing to do here
     }
 }
-

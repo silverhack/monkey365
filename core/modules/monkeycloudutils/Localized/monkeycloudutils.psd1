@@ -9,4 +9,3 @@ ConvertFrom-StringData @'
     MSALApplicationError        = Unable to create MSAL application for {0}
     RedirectUriError            = Unable to get redirectUri for {0}
 '@
-

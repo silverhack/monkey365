@@ -47,4 +47,3 @@ Function Get-ObjectResourceId {
         }
     }
 }
-

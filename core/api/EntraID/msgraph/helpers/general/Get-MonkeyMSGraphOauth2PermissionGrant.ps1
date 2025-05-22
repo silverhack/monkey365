@@ -71,4 +71,3 @@ Function Get-MonkeyMSGraphOauth2PermissionGrant {
         return $oauthPermission
     }
 }
-

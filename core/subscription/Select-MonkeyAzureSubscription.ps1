@@ -122,4 +122,3 @@ Function Select-MonkeyAzureSubscription{
     }
 }
 
-

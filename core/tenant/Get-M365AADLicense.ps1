@@ -69,4 +69,3 @@ Function Get-M365AADLicense{
     }
 }
 
-

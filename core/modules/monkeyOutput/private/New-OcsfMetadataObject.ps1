@@ -49,4 +49,3 @@ Function New-OcsfMetadataObject{
         }
     }
 }
-

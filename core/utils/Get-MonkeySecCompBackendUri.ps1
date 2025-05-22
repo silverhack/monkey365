@@ -128,4 +128,3 @@ function Get-MonkeySecCompBackendUri {
         return $backendUri
     }
 }
-

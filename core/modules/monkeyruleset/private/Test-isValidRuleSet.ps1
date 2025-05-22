@@ -77,4 +77,3 @@ Function Test-isValidRuleSet{
     }
 }
 
-

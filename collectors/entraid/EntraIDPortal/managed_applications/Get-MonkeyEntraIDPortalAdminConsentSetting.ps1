@@ -139,4 +139,3 @@ function Get-MonkeyEntraIDPortalAdminConsentSetting {
 
 
 
-

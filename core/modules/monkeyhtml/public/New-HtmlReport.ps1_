@@ -1,0 +1,265 @@
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+Function New-HtmlReport{
+    <#
+        .SYNOPSIS
+
+        .DESCRIPTION
+
+        .INPUTS
+
+        .OUTPUTS
+
+        .EXAMPLE
+
+        .NOTES
+	        Author		: Juan Garrido
+            Twitter		: @tr1ana
+            File Name	: New-HtmlReport
+            Version     : 1.0
+
+        .LINK
+            https://github.com/silverhack/monkey365
+    #>
+
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory=$true, HelpMessage="Report")]
+        [Object]$Report,
+
+        [Parameter(Mandatory=$true, HelpMessage="Execution info object")]
+        [Object]$ExecutionInfo,
+
+        [Parameter(Mandatory=$true, HelpMessage="Rules")]
+        [Object]$Rules,
+
+        [Parameter(Mandatory=$true, HelpMessage="Ruleset info")]
+        [Object]$RulesetInfo,
+
+        [parameter(Mandatory= $true, HelpMessage= "Directory output")]
+        [ValidateScript({
+            If( -Not (Test-Path -Path $_) ){
+                throw ("The directory does not exist in {0}" -f (Split-Path -Path $_))
+            }
+            If(-Not (Test-Path -Path $_ -PathType Container) ){
+                throw "The OutDir argument must be a directory. Files are not allowed."
+            }
+            return $true
+        })]
+        [System.IO.DirectoryInfo]$OutDir,
+
+        [parameter(Mandatory= $true, HelpMessage= "json config")]
+        [ValidateScript({
+            If( -Not (Test-Path -Path $_) ){
+                throw ("The HTML config does not exist in {0}" -f (Split-Path -Path $_))
+            }
+            If(-Not (Test-Path -Path $_ -PathType Leaf) ){
+                throw "The HTML config argument must be a json file. Folder paths are not allowed."
+            }
+            If($_ -notmatch "(\.json)"){
+                throw "The file specified in the config argument must be of type json"
+            }
+            return $true
+        })]
+        [System.IO.FileInfo]$ConfigFile,
+
+        [Parameter(Mandatory=$false, HelpMessage="Load resources from external source")]
+        [Switch]$SinglePage,
+
+        [Parameter(Mandatory=$false, HelpMessage="Instance")]
+        [String]$Instance,
+
+        [Parameter(Mandatory=$true, HelpMessage="Repository info object")]
+        [Object]$RepositoryInfo
+    )
+    Begin{
+        #$BodyObjects = [System.Collections.Generic.List[System.Object]]::new()
+        #main template
+        [xml]$html = '<html lang="en"></html>'
+        #Set variable template for using in whole script
+        Set-Variable -Name Template -Value $html -Scope Script -Force
+        Set-Variable -Name Report -Value $PSBoundParameters['Report'] -Scope Script -Force
+        Set-Variable -Name Rules -Value $PSBoundParameters['Rules'] -Scope Script -Force
+        Set-Variable -Name ExecutionInfo -Value $PSBoundParameters['ExecutionInfo'] -Scope Script -Force
+        Set-Variable -Name RulesetInfo -Value $PSBoundParameters['RulesetInfo'] -Scope Script -Force
+        Set-Variable -Name RepositoryInfo -Value $PSBoundParameters['RepositoryInfo'] -Scope Script -Force
+    }
+    Process{
+        Try{
+            #New client handler
+            $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-HtmlHeader")
+            $newPsboundParams = [ordered]@{}
+            $param = $MetaData.Parameters.Keys
+            foreach($p in $param.GetEnumerator()){
+                If($PSBoundParameters.ContainsKey($p)){
+                    $newPsboundParams.Add($p,$PSBoundParameters[$p])
+                }
+            }
+            #Get header object
+            #$header = New-HtmlHeader @newPsboundParams
+            $header = Get-HtmlHeader @newPsboundParams -External
+            #$myHeader = $html.ImportNode($header.get_DocumentElement(), $True)
+            #$myHeader.RemoveAttribute("xmlns");
+            #Add to template
+            [void]$html.DocumentElement.AppendChild($header)
+            #Add body
+            $bodyDiv = New-HtmlTag -Name body -ClassName "monkey-scrollbar"
+            $bodyDiv.RemoveAttribute("xmlns");
+            #Add wrapper
+            $wrapperDiv = New-HtmlTag -Name div -ClassName "wrapper"
+            #Add sidebar Div
+            $sideBarDiv = New-SideBar -InputObject $Script:Report
+            #Add main Div
+            $mainDiv = New-HtmlTag -Name div -ClassName "main"
+            #Get navBar
+            $navBar = New-HTMLNavBar
+            #Get issue cards
+            $ContainerCards = Get-HtmlContainerCard -InputObject $Script:Report
+            #Get all modal objects
+            $modals = Get-AllModalHtmlObject -Report $Script:Report
+            $c = $html.CreateComment('Monkey365 modal objects')
+            #Add to body
+            [void]$bodyDiv.AppendChild($c);
+            #Add modals
+            Foreach($modalObj in $modals){
+                [void]$bodyDiv.AppendChild($modalObj);
+            }
+            $c = $html.CreateComment('End Monkey365 modal objects')
+            #Add to body
+            [void]$bodyDiv.AppendChild($c);
+            #Add to main div
+            [void]$mainDiv.AppendChild($navBar);
+            #Add sidebar and main to wrapper div
+            $c = $html.CreateComment('Sidebar')
+            [void]$wrapperDiv.AppendChild($c);
+            [void]$wrapperDiv.AppendChild($sideBarDiv);
+            $c = $html.CreateComment('End Sidebar');
+            [void]$wrapperDiv.AppendChild($c);
+            #Create Div class content
+            $DivContent = New-HtmlTag -Name div -ClassName "content"
+            #Create Div container fluid
+            $DivContainerFluid = New-HtmlTag -Name div -ClassName "container-fluid" -Id "Monkey365Data"
+            #Add provider info
+            $Provider = New-AccountInfo -Instance $Instance
+            #Add to container fluid
+            $c = $html.CreateComment('Provider info');
+            [void]$DivContainerFluid.AppendChild($c);
+            [void]$DivContainerFluid.AppendChild($Provider);
+            $c = $html.CreateComment('End Provider info');
+            [void]$DivContainerFluid.AppendChild($c);
+            #Add scan details info content
+            $scanInfoContent = New-HtmlScanDetailsCard
+            If($scanInfoContent){
+                $c = $html.CreateComment('Monkey365 scan info');
+                [void]$DivContainerFluid.AppendChild($c);
+                [void]$DivContainerFluid.AppendChild($scanInfoContent);
+                $c = $html.CreateComment('End Monkey365 scan info');
+                [void]$DivContainerFluid.AppendChild($c);
+            }
+            #Add dashboard to main content
+            $mainDashboard = New-HtmlMainDashboard -InputObject $Script:Report -HorizontalStackedBar -Donut
+            If($mainDashboard){
+                $c = $html.CreateComment('Monkey365 main dashboard');
+                [void]$DivContainerFluid.AppendChild($c);
+                [void]$DivContainerFluid.AppendChild($mainDashboard);
+                $c = $html.CreateComment('End Monkey365 main dashboard');
+                [void]$DivContainerFluid.AppendChild($c);
+            }
+            #Add finding cards
+            $c = $html.CreateComment('Monkey365 finding cards');
+            [void]$DivContainerFluid.AppendChild($c);
+            Foreach($containerCard in @($ContainerCards)){
+                [void]$DivContainerFluid.AppendChild($containerCard);
+            }
+            $c = $html.CreateComment('End Monkey365 finding cards');
+            [void]$DivContainerFluid.AppendChild($c);
+            #Get empty card
+            $monkeyEmptyCard = New-HtmlContainerCard -CardTitle "Monkey365 findings" -Img (Get-SvgIcon -InputObject monkey365)
+            #Get Body
+            $cardBody = $monkeyEmptyCard.SelectSingleNode('//div[contains(@class,"card-body")]')
+            #Add Id
+            [void]$cardBody.SetAttribute('id','Monkey365Findings')
+            $newRow = $html.CreateElement("div");
+            [void]$newRow.SetAttribute('class','row d-none')
+            [void]$newRow.SetAttribute('id','Monkey365GlobalFindings')
+            #Append card
+            [void]$newRow.AppendChild($monkeyEmptyCard);
+            $c = $html.CreateComment('Monkey365 empty card')
+            #Add to body
+            [void]$DivContainerFluid.AppendChild($c);
+            #Add row
+            [void]$DivContainerFluid.AppendChild($newRow);
+            $c = $html.CreateComment('End Monkey365 empty card')
+            [void]$DivContainerFluid.AppendChild($c);
+            #Add to div content
+            [void]$DivContent.AppendChild($DivContainerFluid);
+
+            #Add div content to main div
+            [void]$mainDiv.AppendChild($DivContent);
+            #Add main content to wrapper div
+            [void]$wrapperDiv.AppendChild($mainDiv);
+            #Add to body
+            [void]$bodyDiv.AppendChild($wrapperDiv);
+            #Insert body into html
+            #$myHeader = $html.ImportNode($header.get_DocumentElement(), $True)
+            #$myHeader.RemoveAttribute("xmlns");
+            #Add more javascript
+            $new_src = $html.CreateElement("script")
+            [void]$new_src.SetAttribute('src','assets/inc-monkey/js/monkey_helper.js')
+            [void]$new_src.AppendChild($html.CreateWhitespace(""))
+            #$new_src.InnerText = [string]::Empty
+            [void]$bodyDiv.AppendChild($new_src)
+            #Add to template
+            [void]$html.DocumentElement.AppendChild($bodyDiv)
+            #Create comment for body
+            $c = $html.CreateComment('End body element')
+            [void]$html.DocumentElement.AppendChild($c);
+            #Add to html
+            [void]$html.html.SetAttribute('xmlns','http://www.w3.org/1999/html')
+            #Set html document type
+            #check PsVersion
+            If($PSVersionTable.PSVersion.Major -lt 7){
+                $documentType = $html.CreateDocumentType('html',$null,$null,$null)
+            }
+            Else{
+                $documentType = $html.CreateDocumentType('html','-//W3C//DTD HTML 4.01//EN','http://www.w3.org/TR/html4/strict.dtd',$null)
+            }
+            #$documentType = $html.CreateDocumentType('html',$null,$null,$null)
+            [void]$html.PrependChild($documentType);
+            #$htmlObject = $html.OuterXml.Insert(0,"<!DOCTYPE html>`n")
+            $indented = Update-XMLIndent -Content $html -Indent 1
+            $_decodedHtml = [System.Web.HttpUtility]::HtmlDecode($indented)
+            #Set out file
+            $outFile = ("{0}{1}Monkey365.html" -f $outDir, [System.IO.Path]::DirectorySeparatorChar)
+            $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
+            [System.IO.File]::WriteAllLines($outFile, $_decodedHtml, $Utf8NoBomEncoding)
+            #Out-File -InputObject $_decodedHtml -FilePath $outFile -Encoding utf8
+        }
+        Catch{
+            Write-Error $_
+            return
+        }
+    }
+    End{
+        #Cleaning vars
+        Remove-Variable -Name Template -Force -ErrorAction Ignore
+        Remove-Variable -Name Report -Force -ErrorAction Ignore
+        Remove-Variable -Name ExecutionInfo -Force -ErrorAction Ignore
+        Remove-Variable -Name Rules -Force -ErrorAction Ignore
+        Remove-Variable -Name RulesetInfo -Force -ErrorAction Ignore
+        Remove-Variable -Name RepositoryInfo -Force -ErrorAction Ignore
+    }
+}

@@ -59,4 +59,3 @@ Function Get-MonkeyAzKubernetesUpgradeProfile {
         Write-Verbose $_
     }
 }
-

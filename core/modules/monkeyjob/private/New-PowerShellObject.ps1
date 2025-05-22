@@ -94,4 +94,3 @@ Function New-PowerShellObject{
         }
     }
 }
-

@@ -14,4 +14,3 @@ ConvertFrom-StringData @'
     InvalidPsObject                  = Unable to query object. Invalid PsObject
     MethodNotFound                   = Unable to query object. Method GetPropertyByPath not found
 '@
-

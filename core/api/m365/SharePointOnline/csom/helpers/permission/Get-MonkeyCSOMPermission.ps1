@@ -148,4 +148,3 @@ Function Get-MonkeyCSOMPermission{
         Start-Sleep -Milliseconds 500
     }
 }
-

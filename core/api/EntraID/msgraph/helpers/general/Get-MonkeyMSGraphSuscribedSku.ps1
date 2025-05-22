@@ -69,4 +69,3 @@ Function Get-MonkeyMSGraphSuscribedSku {
         #nothing to do here
     }
 }
-

@@ -205,4 +205,3 @@ Function Get-MonkeyGraphAADUserMFA {
         $User
     }
 }
-

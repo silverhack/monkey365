@@ -88,4 +88,3 @@ Function Test-isValidRule{
         }
     }
 }
-

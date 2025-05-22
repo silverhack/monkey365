@@ -95,6 +95,19 @@ Function Get-ObjectFromDataset{
                                         }
                                     }
                                 }
+                                #Check if data must be formatted before execute query
+                                $dataFormatting = $InputObject.rule | Select-Object -ExpandProperty data -ErrorAction Ignore
+                                If($null -ne $dataFormatting){
+                                    $expressions = $dataFormatting | Select-Object -ExpandProperty properties -ErrorAction Ignore
+                                    $expandObject = $dataFormatting | Select-Object -ExpandProperty expandObject -ErrorAction Ignore
+                                    If($null -ne $expressions){
+                                        $p = @{
+                                            Expressions = $expressions;
+                                            ExpandObject = $expandObject;
+                                        }
+                                        $dataObjects = $dataObjects | Format-DataFromExpression @p -RuleName $InputObject.displayName
+                                    }
+                                }
                                 #return dataObjects
                                 return $dataObjects
                             }
@@ -114,4 +127,3 @@ Function Get-ObjectFromDataset{
         }
     }
 }
-

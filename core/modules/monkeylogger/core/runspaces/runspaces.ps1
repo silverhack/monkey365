@@ -52,6 +52,9 @@ Function New-LoggerSessionState{
     if($ImportVariables){
         #Add vars into session state
         foreach ($var in $ImportVariables.GetEnumerator()){
+            #Removing variable if already exists
+            $sessionstate.Variables.Remove($var.Name, $null)
+            #Add var
             $sessionstate.Variables.Add((New-Object -TypeName System.Management.Automation.Runspaces.SessionStateVariableEntry -ArgumentList $var.Name, `
                                                                                                                                              $var.Value, `
                                                                                                                                              $null, `
@@ -62,5 +65,4 @@ Function New-LoggerSessionState{
     $sessionstate.ApartmentState = [System.Threading.ApartmentState]::$ApartmentState
     return $sessionstate
 }
-
 

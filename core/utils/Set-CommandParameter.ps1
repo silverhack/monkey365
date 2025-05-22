@@ -82,4 +82,3 @@ Function Set-CommandParameter{
         #Nothing to do here
     }
 }
-

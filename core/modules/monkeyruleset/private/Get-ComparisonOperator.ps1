@@ -97,4 +97,3 @@ function Get-ComparisonOperator{
         }
     }
 }
-

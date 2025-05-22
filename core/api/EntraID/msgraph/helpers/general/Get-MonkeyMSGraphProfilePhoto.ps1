@@ -144,4 +144,3 @@ Function Get-MonkeyMSGraphProfilePhoto {
         }
     }
 }
-

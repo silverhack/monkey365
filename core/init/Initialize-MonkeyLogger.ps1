@@ -60,30 +60,34 @@ Function Initialize-MonkeyLogger{
     }
     #TODO: Add console format log
     #Get additional loggers if any
-    if($O365Object.internal_config.logging.loggers){
+    If($O365Object.internal_config.logging.loggers){
         $loggers+=$O365Object.internal_config.logging.loggers
     }
+    #Set LogQueue var
+    New-Variable -Name MonkeyLogQueue -Scope Script -Value $O365Object.MonkeyLogQueue -Force
     #Start logging
-    if($loggers){
+    If($loggers){
         $l_param = @{
             Loggers = $loggers;
             InitialPath = $InitialPath;
+            LogQueue = $O365Object.MonkeyLogQueue;
             informationAction = $O365Object.InformationAction;
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
         $status = Start-Logger @l_param
     }
-    else{
+    Else{
         $l_param = @{
             InitialPath = $InitialPath;
+            LogQueue = $O365Object.MonkeyLogQueue;
             InformationAction = $O365Object.InformationAction;
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
         $status = Start-Logger @l_param
     }
-    if($status -eq $false){
+    If($status -eq $false){
         $msg = @{
             MessageData = ($message.LoggerError);
             callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -94,5 +98,4 @@ Function Initialize-MonkeyLogger{
         Write-Warning @msg
     }
 }
-
 

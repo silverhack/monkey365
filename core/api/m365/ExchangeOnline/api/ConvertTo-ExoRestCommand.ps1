@@ -70,4 +70,3 @@ Function ConvertTo-ExoRestCommand{
         #Nothing to do here
     }
 }
-

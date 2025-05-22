@@ -41,4 +41,3 @@ Function New-OcsfAccountObject{
         [Ocsf.Objects.Entity.Account]::new()
     }
 }
-

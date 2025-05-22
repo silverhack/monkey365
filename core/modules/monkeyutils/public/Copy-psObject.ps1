@@ -48,4 +48,3 @@ Function Copy-PsObject {
         return [System.Management.Automation.PSSerializer]::Deserialize($obj_serializer)
     }
 }
-

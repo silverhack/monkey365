@@ -77,7 +77,7 @@ Function New-MonkeyFindingObject {
                         Expressions = $InputObject.output.html.data.properties;
                         ExpandObject = $InputObject.output.html.data.expandObject ;
                     }
-                    $dataOut = $PSBoundParameters['AffectedObjects'] | Format-DataFromExpression @p
+                    $dataOut = $PSBoundParameters['AffectedObjects'] | Format-DataFromExpression @p -RuleName $InputObject.displayName
                     #Add to object
                     $InputObject.output.html | Add-Member -Type NoteProperty -name out -value $dataOut -Force
                 }
@@ -180,4 +180,3 @@ Function New-MonkeyFindingObject {
         }
     }
 }
-

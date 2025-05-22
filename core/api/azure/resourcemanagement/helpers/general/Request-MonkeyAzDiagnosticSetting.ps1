@@ -57,4 +57,3 @@ Function Request-MonkeyAzDiagnosticSetting {
         }
     }
 }
-

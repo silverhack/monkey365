@@ -139,4 +139,3 @@ Function Get-MonkeyAzRoleDefinitionObject {
         #Nothing to do here
     }
 }
-

@@ -47,7 +47,10 @@ function Convert-MarkDownToHtml {
         [Switch]$UseAdvancedExtensions,
 
         [Parameter(Mandatory=$false, HelpMessage="Remove blank and tabs from text")]
-        [Switch]$RemoveBlankAndTabs
+        [Switch]$RemoveBlankAndTabs,
+
+        [Parameter(Mandatory=$false, HelpMessage="Remove implicit paragraph from MarkDig")]
+        [Switch]$RemoveImplicitParagraph
     )
     Begin{
         $raw_markdown = $outHtml = $null
@@ -82,11 +85,23 @@ function Convert-MarkDownToHtml {
                 If($RemoveBlankAndTabs.IsPresent){
                     $pattern = "[ \t]*\n[ \t]*"
                     $options = [text.regularexpressions.regexoptions]::Multiline
-                    $text = [regex]::Replace($raw_markdown,$pattern,[system.environment]::NewLine,$options)
-                    $raw_markdown = $text.Trim();
+                    $raw_markdown = [regex]::Replace($raw_markdown,$pattern,[system.environment]::NewLine,$options)
                 }
-                # Convert to html
-                $outHtml = [Markdig.Markdown]::ToHtml($raw_markdown,$pipeline)
+                If($RemoveImplicitParagraph.IsPresent){
+                    $parsedText = [Markdig.Markdown]::Parse($raw_markdown);
+                    $StringWriter = [System.IO.StringWriter]::new();
+                    $renderer = [Markdig.Renderers.HtmlRenderer]::new($StringWriter);
+                    $renderer.ImplicitParagraph = $true;
+                    $pipeline.Setup($renderer);
+                    [void]$renderer.Render($parsedText);
+                    $StringWriter.Flush();
+                    $outHtml= $StringWriter.ToString();
+                }
+                Else{
+                    # Convert to html
+                    $outHtml = [Markdig.Markdown]::ToHtml($raw_markdown,$pipeline)
+                }
+                #Output
                 If($null -ne $outHtml){
                     return $outHtml.Trim()
                 }
@@ -100,5 +115,4 @@ function Convert-MarkDownToHtml {
         #Nothing to do here
     }
 }
-
 

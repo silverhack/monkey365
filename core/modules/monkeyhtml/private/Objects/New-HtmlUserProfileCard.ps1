@@ -1,0 +1,191 @@
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+Function New-HtmlUserProfileCard{
+    <#
+        .SYNOPSIS
+
+        .DESCRIPTION
+
+        .INPUTS
+
+        .OUTPUTS
+
+        .EXAMPLE
+
+        .NOTES
+	        Author		: Juan Garrido
+            Twitter		: @tr1ana
+            File Name	: New-HtmlUserProfileCard
+            Version     : 1.0
+
+        .LINK
+            https://github.com/silverhack/monkey365
+    #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+    [CmdletBinding()]
+    [OutputType([System.Xml.XmlDocument])]
+    Param (
+        [parameter(Mandatory= $false, HelpMessage= "Template")]
+        [System.Xml.XmlDocument]$Template
+    )
+    Begin{
+        #Set template
+        If($PSBoundParameters.ContainsKey('Template') -and $PSBoundParameters['Template']){
+            $TemplateObject = $PSBoundParameters['Template']
+        }
+        ElseIf($null -ne (Get-Variable -Name Template -Scope Script -ErrorAction Ignore)){
+            $TemplateObject = $script:Template
+        }
+        Else{
+            [xml]$TemplateObject = "<html></html>"
+        }
+        #Create a main div
+        $DivElement = @{
+            Name = 'div';
+            ClassName = 'text-center';
+            Template = $TemplateObject;
+        }
+        #Create element
+        $mainDiv = New-HtmlTag @DivElement
+    }
+    Process{
+        #Add img to profile
+        $ImgElement = @{
+            Name = 'img';
+            Attributes = @{
+                src = $ExecutionInfo.userpic;
+                alt = $ExecutionInfo.displayName;
+                class = "rounded-circle avatar-xl";
+            }
+            Template = $TemplateObject;
+        }
+        #Create element
+        $imgObj = New-HtmlTag @ImgElement
+        #Add to main div
+        [void]$mainDiv.AppendChild($imgObj);
+        #Add displayname
+        $HElement = @{
+            Name = 'h4';
+            ClassName = 'mt-3 mb-0';
+            Text = $ExecutionInfo.displayName;
+            CreateTextNode = $true;
+            Template = $TemplateObject;
+        }
+        #Create element
+        $displayNameObj = New-HtmlTag @HElement
+        #Add to main div
+        [void]$mainDiv.AppendChild($displayNameObj);
+        #Add username
+        $SpanElement = @{
+            Name = 'span';
+            ClassName = 'username';
+            Text = $ExecutionInfo.userPrincipalName;
+            CreateTextNode = $true;
+            Template = $TemplateObject;
+        }
+        #Create element
+        $spanObj = New-HtmlTag @SpanElement
+        #Add to main div
+        [void]$mainDiv.AppendChild($spanObj);
+        #create scan-details-container
+        $DivElement = @{
+            Name = 'div';
+            ClassName = 'row scan-details-container';
+            Template = $TemplateObject;
+        }
+        #Create element
+        $divContainer = New-HtmlTag @DivElement
+        #Add TenantId, domain, etc..
+        Foreach($elem in $Script:ExecutionInfo.profile.GetEnumerator()){
+            #Create label
+            $DivElement = @{
+                Name = 'div';
+                ClassName = 'col-md-3 scan-label';
+                Text = $elem.name;
+                CreateTextNode = $true;
+                Template = $TemplateObject;
+            }
+            #Create element
+            $divLabel = New-HtmlTag @DivElement
+            #Add to details container
+            [void]$divContainer.AppendChild($divLabel);
+            #Create info
+            $DivElement = @{
+                Name = 'div';
+                ClassName = 'col-md-9 scan-info';
+                Text = $elem.value;
+                CreateTextNode = $true;
+                Template = $TemplateObject;
+            }
+            #Create element
+            $divValue = New-HtmlTag @DivElement
+            #Add to details container
+            [void]$divContainer.AppendChild($divValue);
+        }
+        #Add roles
+        $allRoles = $Script:ExecutionInfo | Select-Object -ExpandProperty roles -ErrorAction Ignore
+        If($allRoles){
+            #Create label
+            $DivElement = @{
+                Name = 'div';
+                ClassName = 'col-md-3 scan-label';
+                Text = "Role(s)";
+                CreateTextNode = $true;
+                Template = $TemplateObject;
+            }
+            #Create element
+            $divLabel = New-HtmlTag @DivElement
+            #Create div
+            $DivElement = @{
+                Name = 'div';
+                ClassName = 'col-md-9 scan-info';
+                Template = $TemplateObject;
+            }
+            #Create element
+            $divValue = New-HtmlTag @DivElement
+            Foreach($role in @($allRoles)){
+                $SpanElement = @{
+                    Name = 'span';
+                    ClassName = 'badge bg-primary';
+                    Text = $role;
+                    CreateTextNode = $true;
+                    Template = $TemplateObject;
+                }
+                #Create element
+                $spanObj = New-HtmlTag @SpanElement
+                #Append to div
+                [void]$divValue.AppendChild($spanObj);
+            }
+            #Add to div container
+            [void]$divContainer.AppendChild($divLabel);
+            [void]$divContainer.AppendChild($divValue);
+        }
+        #Add to main div
+        [void]$mainDiv.AppendChild($divContainer);
+        #Set card
+        $p = @{
+            CardTitle = "Information";
+            CardCategory = "Execution";
+            ClassName = "h-100";
+            Icon = "bi bi-list-check me-2";
+            AppendObject = $mainDiv;
+            Template = $TemplateObject;
+        }
+        New-HtmlContainerCard @p
+    }
+    End{
+        #Nothing to do here
+    }
+}

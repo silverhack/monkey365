@@ -73,4 +73,3 @@ Function Get-MonkeyAzMySQlDatabase {
         }
     }
 }
-

@@ -64,4 +64,3 @@ Function Get-MonkeyAzSQlServerAzureADOnlyAuth {
         #Nothing to do here
     }
 }
-

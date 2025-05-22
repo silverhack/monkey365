@@ -144,4 +144,3 @@ Function Get-MonkeyAzSbsPolicySetDefinition {
         #nothing to do here
     }
 }
-

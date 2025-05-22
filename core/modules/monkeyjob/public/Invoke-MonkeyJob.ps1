@@ -103,6 +103,19 @@ Function Invoke-MonkeyJob{
         [Switch]$ThrowOnRunspaceOpenError
     )
     Begin{
+        $Verbose = $False;
+        $Debug = $False;
+        $InformationAction = 'SilentlyContinue'
+        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+            $Verbose = $True
+        }
+        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $DebugPreference = 'Continue'
+            $Debug = $True
+        }
+        if($PSBoundParameters.ContainsKey('InformationAction')){
+            $InformationAction = $PSBoundParameters['InformationAction']
+        }
         if($PSBoundParameters.ContainsKey('ReuseRunspacePool') -and $PSBoundParameters['ReuseRunspacePool'].IsPresent){
             $reuseRSP = $True
         }
@@ -137,6 +150,9 @@ Function Invoke-MonkeyJob{
                 Throttle = $Throttle;
                 StartUpScripts = $StartUpScripts;
                 ThrowOnRunspaceOpenError = $ThrowOnRunspaceOpenError;
+                Verbose = $Verbose;
+                Debug = $Debug;
+                InformationAction = $InformationAction;
             }
             #Get runspace pool
             $Runspacepool = New-RunspacePool @localparams
@@ -344,4 +360,3 @@ Function Invoke-MonkeyJob{
         }
     }
 }
-

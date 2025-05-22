@@ -16,4 +16,3 @@ Function Remove-TabAndNewLine {
         }
     }
 }
-

@@ -83,4 +83,3 @@ Function Get-OsInfo {
         #Nothing to do here
     }
 }
-

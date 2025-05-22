@@ -135,4 +135,3 @@ Function Get-NewFilter2{
     }
 }
 
-

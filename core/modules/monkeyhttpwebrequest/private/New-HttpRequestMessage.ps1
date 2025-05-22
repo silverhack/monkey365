@@ -53,6 +53,9 @@ Function New-HttpRequestMessage{
         [String]$Referer
     )
     Begin{
+        If($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $DebugPreference = 'Continue'
+        }
         $_method = Get-HttpMethod -Method $Method
         #New request message
         $request = [System.Net.Http.HttpRequestMessage]::new($_method,$Url);
@@ -105,4 +108,3 @@ Function New-HttpRequestMessage{
         return $request
     }
 }
-

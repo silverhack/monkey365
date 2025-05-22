@@ -102,6 +102,7 @@ function New-MonkeyMsalApplication{
             $Verbose = $True
         }
         if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $DebugPreference = 'Continue'
             $Debug = $True
         }
         if($PSBoundParameters.ContainsKey('InformationAction') -and $PSBoundParameters['InformationAction']){
@@ -214,5 +215,4 @@ function New-MonkeyMsalApplication{
         return $newApplication
     }
 }
-
 

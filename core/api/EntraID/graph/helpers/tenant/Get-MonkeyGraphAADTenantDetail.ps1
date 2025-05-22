@@ -118,4 +118,3 @@ Function Get-MonkeyGraphAADTenantDetail{
     }
 }
 
-

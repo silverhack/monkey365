@@ -62,4 +62,3 @@ Function Get-MonkeyVMScaleSetInstanceView {
         Write-Verbose $_
     }
 }
-

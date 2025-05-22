@@ -99,6 +99,7 @@ Function Invoke-MonkeyWebRequest{
             $Verbose = $True
         }
         if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $DebugPreference = 'Continue'
             $Debug = $True
         }
         if($PSBoundParameters.ContainsKey('InformationAction')){
@@ -170,7 +171,7 @@ Function Invoke-MonkeyWebRequest{
         #Get string content
         $request = New-HttpRequestMessage @newPsboundParams
         #Execute request
-        if($null -ne $httpClient -and $null -ne $request -and $null -ne $body){
+        If($null -ne $httpClient -and $null -ne $request -and $null -ne $body){
             $p = @{
                 Client = $httpClient;
                 Method = $Method;
@@ -224,4 +225,3 @@ Function Invoke-MonkeyWebRequest{
         }
     }
 }
-

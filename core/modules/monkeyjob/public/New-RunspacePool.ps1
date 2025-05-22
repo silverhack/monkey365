@@ -50,6 +50,7 @@ Function New-RunspacePool{
             $RunSpacePool = New-RunSpacePool -Throttle 4 -ImportVariables @($SyncHashTable)
     #>
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+    [CmdletBinding()]
     [OutputType([System.Management.Automation.Runspaces.RunspacePool])]
     Param
     (
@@ -91,6 +92,19 @@ Function New-RunspacePool{
         [Switch]$ThrowOnRunspaceOpenError
     )
     Begin{
+        $Verbose = $False;
+        $Debug = $False;
+        $InformationAction = 'SilentlyContinue'
+        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+            $Verbose = $True
+        }
+        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $DebugPreference = 'Continue'
+            $Debug = $True
+        }
+        if($PSBoundParameters.ContainsKey('InformationAction')){
+            $InformationAction = $PSBoundParameters['InformationAction']
+        }
         if (-not $PSBoundParameters.ContainsKey('ThrowOnRunspaceOpenError')) {
             $ThrowOnRunspaceOpenError = $False
         }
@@ -104,6 +118,9 @@ Function New-RunspacePool{
             ApartmentState = $ApartmentState;
             StartUpScripts = $StartUpScripts;
             ThrowOnRunspaceOpenError = $ThrowOnRunspaceOpenError;
+            Verbose = $Verbose;
+            Debug = $Debug;
+            InformationAction = $InformationAction;
         }
         #Get Initial Session State
         $sessionstate = New-InitialSessionState @localparams
@@ -140,4 +157,3 @@ Function New-RunspacePool{
         return $runspacepool
     }
 }
-

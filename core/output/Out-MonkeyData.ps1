@@ -54,7 +54,7 @@ Function Out-MonkeyData{
                 #Set a new path for report folder
                 $_path = ("{0}/{1}" -f $O365Object.OutDir,(New-MonkeyGuid))
                 $ReportPath = New-MonkeyFolder -destination $_path
-                Set-Variable -Name Report -Value $ReportPath.FullName -Scope Script -Force
+                Set-Variable -Name OutFolder -Value $ReportPath.FullName -Scope Script -Force
                 #Write verbose message
                 $msg = @{
                     MessageData = ($message.ProjectDirectoryInfoMessage -f $ReportPath.FullName);
@@ -80,11 +80,10 @@ Function Out-MonkeyData{
                 }
                 Write-Verbose @msg
                 #Set job folder
-                $out_folder = ('{0}/MonkeyJob' -f $ReportPath)
-                $job_folder = New-MonkeyFolder -destination $out_folder
+                $job_folder = New-MonkeyFolder -destination ('{0}/MonkeyJob' -f $ReportPath)
                 #Write info message
                 $msg = @{
-                    MessageData = ($message.ProjectDirectoryInfoMessage -f $out_folder);
+                    MessageData = ($message.ProjectDirectoryInfoMessage -f $job_folder);
                     callStack = (Get-PSCallStack | Select-Object -First 1);
                     logLevel = 'verbose';
                     InformationAction = $O365Object.InformationAction;
@@ -107,7 +106,7 @@ Function Out-MonkeyData{
                 Out-Gzip -InputObject $MonkeyExportObject -outFile $out_file
                 #Add out_file and report to metadata
                 $metadata.raw_data = $out_file;
-                $metadata.jobFolder = $Script:Report;
+                $metadata.jobFolder = $Script:OutFolder;
                 $jobFileName = ("{0}/monkey365.json" -f $job_folder.FullName);
                 #Write verbose message
                 $msg = @{
@@ -130,7 +129,9 @@ Function Out-MonkeyData{
                     #Evaluate rules
                     If($null -ne $MonkeyExportObject.Output){
                         Try{
-                            $convertPassFindingToGood = [bool]::TryParse($O365Object.internal_config.htmlSettings.convertPassFindingToGood,[ref]$null)
+                            $out = $null;
+                            [void][bool]::TryParse($O365Object.internal_config.htmlSettings.convertPassFindingToGood, [ref]$out);
+                            $convertPassFindingToGood = $out;
                         }
                         Catch{
                             $convertPassFindingToGood = $false
@@ -153,17 +154,16 @@ Function Out-MonkeyData{
                     }
                 }
             }
-            if($MyParams.Compress -and $null -ne (Get-Variable -Name Report -Scope Script -ErrorAction Ignore)){
+            if($MyParams.Compress -and $null -ne (Get-Variable -Name OutFolder -Scope Script -ErrorAction Ignore)){
                 if (-not ([System.Management.Automation.PSTypeName]'System.IO.Compression').Type){
                     Add-Type -Assembly 'System.IO.Compression'
                 }
-                $all_files = Get-MonkeyFile -Path $Script:Report -Pattern * -Recurse
+                $all_files = Get-MonkeyFile -Path $Script:OutFolder -Pattern * -Recurse
                 if($all_files){
                     #Set file name
                     $zipFileName = ("Monkey365-{0:yyyy-MM-dd_hh-mm-ss-tt}.zip" -f [Datetime]::Now)
                     #Create zip folder
-                    $out_zip = ('{0}/zip' -f $Script:Report)
-                    $zip_folder = New-MonkeyFolder -destination $out_zip
+                    $zip_folder = New-MonkeyFolder -destination ('{0}/zip' -f $Script:OutFolder)
                     $msg = @{
                         MessageData = ($message.CompressingJob -f $zip_folder);
                         callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -183,8 +183,8 @@ Function Out-MonkeyData{
         }
         Finally{
             #Remove Report variable
-            if($null -ne (Get-Variable -Name Report -Scope Script -ErrorAction Ignore)){
-                Remove-Variable -Name Report -Scope Script -Force
+            if($null -ne (Get-Variable -Name OutFolder -Scope Script -ErrorAction Ignore)){
+                Remove-Variable -Name OutFolder -Scope Script -Force
             }
             #Remove dataset
             Remove-Variable -Name dataset -Force -ErrorAction Ignore
@@ -193,5 +193,4 @@ Function Out-MonkeyData{
         }
     }
 }
-
 

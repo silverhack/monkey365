@@ -83,4 +83,3 @@ Function New-MonkeyCSOMPermissionObject {
         }
     }
 }
-

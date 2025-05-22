@@ -35,6 +35,7 @@ Function New-InitialSessionState{
     #>
 
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+    [CmdletBinding()]
     [OutputType([System.Management.Automation.Runspaces.InitialSessionState])]
     Param
     (
@@ -67,53 +68,62 @@ Function New-InitialSessionState{
         catch{
             $sessionstate = $null
         }
+        If($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $DebugPreference = 'Continue'
+        }
     }
     Process{
-        if($null -ne $sessionstate -and $sessionstate -is [System.Management.Automation.Runspaces.InitialSessionState]){
-            if($ImportVariables){
+        If($null -ne $sessionstate -and $sessionstate -is [System.Management.Automation.Runspaces.InitialSessionState]){
+            If($ImportVariables){
                 $all_vars = New-Object System.Collections.ArrayList
-                if(([System.Collections.IDictionary]).IsAssignableFrom($ImportVariables.GetType())){
+                If(([System.Collections.IDictionary]).IsAssignableFrom($ImportVariables.GetType())){
                     $all_scopes = [System.Management.Automation.ScopedItemOptions]::AllScope
-                    foreach ($var in $ImportVariables.GetEnumerator()){
-                        if($null -eq $var.Value){
+                    Foreach ($var in $ImportVariables.GetEnumerator()){
+                        If($null -eq $var.Value){
                             Write-Verbose ("Null variable value found on {0}" -f $var.Name)
                             continue
                         }
-                        else{
+                        Else{
+                            #Removing variable if already exists
+                            $sessionstate.Variables.Remove($var.Name, $null)
+                            #Add Variable
                             $sessionstate.Variables.Add((New-Object -TypeName System.Management.Automation.Runspaces.SessionStateVariableEntry -ArgumentList $var.Name, $var.Value, $null))
                         }
                     }
                 }
-                else{
-                    foreach ($varname in $ImportVariables){
+                Else{
+                    ForEach ($varname in $ImportVariables){
                         If ($MyInvocation.CommandOrigin -eq 'Runspace') {
                             $localVar = Get-Variable $varname -ErrorAction Ignore | Where-Object { $_.Options -notmatch 'Constant' }
-                            if($null -ne $localVar){
+                            If($null -ne $localVar){
                                 [void]$all_vars.Add($localVar)
                             }
                         }
-                        elseif($null -ne $PSCmdlet.SessionState.PSVariable.Get($varname)){
+                        ElseIf($null -ne $PSCmdlet.SessionState.PSVariable.Get($varname)){
                             $localVar = $PSCmdlet.SessionState.PSVariable.Get($varname)
-                            if($null -ne $localVar){
+                            If($null -ne $localVar){
                                 [void]$all_vars.Add($localVar)
                             }
                         }
-                        else{
+                        Else{
                             $localVar = Get-Variable -Name $varname -ErrorAction Ignore
-                            if($null -ne $localVar){
+                            If($null -ne $localVar){
                                 [void]$all_vars.Add($localVar)
                             }
                         }
                     }
-                    if ($all_vars.Count -gt 0){
+                    If ($all_vars.Count -gt 0){
                         $all_scopes = [System.Management.Automation.ScopedItemOptions]::AllScope
                         #Add vars into session state
-                        foreach ($var in $all_vars){
+                        ForEach ($var in $all_vars){
                             $varToImport = [System.Management.Automation.Runspaces.SessionStateVariableEntry]::new($var.Name, `
                                                                                                                    $var.Value, `
                                                                                                                    $var.Description, `
                                                                                                                    $all_scopes)
-                            if($varToImport){
+                            If($varToImport){
+                                #Removing variable if already exists
+                                $sessionstate.Variables.Remove($var.Name, $null)
+                                #Create variable
                                 $sessionstate.Variables.Add($varToImport)
                             }
                         }
@@ -121,42 +131,42 @@ Function New-InitialSessionState{
                 }
             }
             #Check if should import modules
-            if($ImportModules){
-                if(([System.Collections.IDictionary]).IsAssignableFrom($ImportModules.GetType())){
+            If($ImportModules){
+                If(([System.Collections.IDictionary]).IsAssignableFrom($ImportModules.GetType())){
                     $ImportModules = $ImportModules.Values
                 }
-                foreach($module in $ImportModules){
+                ForEach($module in $ImportModules){
                     $moduleToImport = Resolve-Path -Path $module -ErrorAction Ignore
-                    if($null -ne $moduleToImport){
-                        Write-Debug ("Importing module: {0}" -f $module)
+                    If($null -ne $moduleToImport){
+                        Write-Verbose ("Importing module: {0}" -f $module)
                         $moduleToImport = $moduleToImport.Path.TrimEnd('\')
                         If (Test-Path -Path $moduleToImport -PathType Container){
                             #folder containing one or more scripts/modules
                             [void]$sessionstate.ImportPSModulesFromPath($moduleToImport);
                         }
-                        else{
+                        Else{
                             #script, binary file, etc..
                             [void]$sessionstate.ImportPSModule($moduleToImport);
                         }
                     }
-                    else{
+                    Else{
                         #Check if file or module exists
-                        if (Test-Path -Path $module){
-                            Write-Debug ("Importing module: {0}" -f $module)
+                        If (Test-Path -Path $module){
+                            Write-Verbose ("Importing module: {0}" -f $module)
                             [void]$sessionstate.ImportPSModule($module);
                         }
-                        else{
+                        Else{
                             Write-Warning ("{0} file or module does not exists" -f $module)
                         }
                     }
                 }
             }
-            if($ImportCommands){
+            If($ImportCommands){
                 $CommandsToImport = $ImportCommands | Get-FunctionDefinitionAst
-                if($null -ne $CommandsToImport){
-                    foreach($fnc in $CommandsToImport){
-                        if($fnc -is [System.Management.Automation.Language.FunctionDefinitionAst]){
-                            Write-Debug ("Importing command: {0}" -f $fnc.Name)
+                If($null -ne $CommandsToImport){
+                    ForEach($fnc in $CommandsToImport){
+                        If($fnc -is [System.Management.Automation.Language.FunctionDefinitionAst]){
+                            Write-Verbose ("Importing command: {0}" -f $fnc.Name)
                             $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $fnc.Name, $fnc.Body.GetScriptBlock()
                             #Create a SessionStateFunction
                             $sessionstate.Commands.Add($SessionStateFunction)
@@ -164,30 +174,30 @@ Function New-InitialSessionState{
                     }
                 }
             }
-            if($ImportCommandsAst){
-                foreach($fnc in $ImportCommandsAst){
-                    if($fnc -is [System.Management.Automation.Language.StatementAst]){
+            If($ImportCommandsAst){
+                ForEach($fnc in $ImportCommandsAst){
+                    If($fnc -is [System.Management.Automation.Language.StatementAst]){
                         $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $fnc.Name, $fnc.Body.GetScriptBlock()
-                        Write-Debug ("Importing AST command: {0}" -f $fnc.Name)
+                        Write-Verbose ("Importing AST command: {0}" -f $fnc.Name)
                         #Create a SessionStateFunction
                         $sessionstate.Commands.Add($SessionStateFunction)
                     }
                 }
             }
             #Check if startup scripts
-            if($StartUpScripts){
-                foreach($scp in $StartUpScripts){
-                    if (!(Test-Path -Path $scp)){
+            If($StartUpScripts){
+                ForEach($scp in $StartUpScripts){
+                    If (!(Test-Path -Path $scp)){
                         Write-Warning ("{0} file does not exists" -f $scp)
                         continue
                     }
-                    else{
+                    Else{
                         [void]$sessionstate.StartupScripts.Add($scp)
                     }
                 }
             }
             #Check for ThrowOnRunspaceOpenError flag
-            if($ThrowOnRunspaceOpenError){
+            If($ThrowOnRunspaceOpenError){
                 $sessionstate.ThrowOnRunspaceOpenError = $ThrowOnRunspaceOpenError
             }
             #Define ApartmentState
@@ -198,4 +208,3 @@ Function New-InitialSessionState{
         return $sessionstate
     }
 }
-

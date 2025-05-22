@@ -68,7 +68,7 @@ Function Watch-MonkeyJob{
     Do{
         #return if all jobs are completed
         if((@($Jobs| Where-Object {$_.Job.State -eq [System.Management.Automation.JobState]::Running})).Count -eq 0){
-            Write-Information $script:messages.CompletedJobs
+            Write-Verbose $script:messages.CompletedJobs
             Return
         }
         #If there are no completed jobs, wait for at least one using Eventing WaitAll, simply looping to check if jobs are completed will consume resources
@@ -101,5 +101,4 @@ Function Watch-MonkeyJob{
 
     }until($current_tasks -ge $BatchSize)
 }
-
 

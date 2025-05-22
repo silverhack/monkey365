@@ -63,4 +63,3 @@ Function Get-MonkeyAzDiagnosticSettingsById {
         Write-Verbose $_
     }
 }
-

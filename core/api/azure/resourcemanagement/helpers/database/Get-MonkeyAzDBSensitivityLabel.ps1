@@ -64,4 +64,3 @@ Function Get-MonkeyAzDBSensitivityLabel {
         #Nothing to do here
     }
 }
-

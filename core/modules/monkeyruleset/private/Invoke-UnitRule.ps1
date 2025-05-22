@@ -51,8 +51,8 @@ Function Invoke-UnitRule{
             #Get Matched elements
             $matched_elements = Get-QueryResult -InputObject $ObjectsToCheck -Query $InputObject.query
             #Get extra validation
-            $moreThan = $InputObject.rule | Select-Object -ExpandProperty moreThan -ErrorAction Ignore
-            $lessThan = $InputObject.rule | Select-Object -ExpandProperty lessThan -ErrorAction Ignore
+            $moreThan = $InputObject.rule | Select-Object -ExpandProperty moreThan -ErrorAction Ignore | Convert-Value
+            $lessThan = $InputObject.rule | Select-Object -ExpandProperty lessThan -ErrorAction Ignore | Convert-Value
             $shouldExist = $InputObject.rule | Select-Object -ExpandProperty shouldExist -ErrorAction Ignore
             $returnObject = $InputObject.rule | Select-Object -ExpandProperty returnObject -ErrorAction Ignore
             $showAll = $InputObject.rule | Select-Object -ExpandProperty showAll -ErrorAction Ignore
@@ -104,4 +104,3 @@ Function Invoke-UnitRule{
         #Nothing to do here
     }
 }
-

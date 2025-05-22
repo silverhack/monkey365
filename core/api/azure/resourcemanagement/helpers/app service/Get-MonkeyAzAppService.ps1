@@ -173,4 +173,3 @@ Function Get-MonkeyAzAppService {
         }
     }
 }
-

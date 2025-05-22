@@ -79,4 +79,3 @@ Function Invoke-EntraIDScanner{
     }
 }
 
-
