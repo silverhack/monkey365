@@ -4,12 +4,12 @@
 <p align="center">
   <a href="https://github.com/silverhack/monkey365"><img alt="License" src="https://img.shields.io/github/license/silverhack/monkey365"></a>
   <a href="https://github.com/silverhack/monkey365"><img alt="Pester" src="https://github.com/silverhack/monkey365/actions/workflows/pester.yml/badge.svg"></a>
-  <a href="https://github.com/silverhack/monkey365"><img alt="ScriptAnalyzer" src="https://github.com/silverhack/monkey365/actions/workflows/psa.yml/badge.svg"></a>
+  <a href="https://github.com/silverhack/monkey365"><img alt="ScriptAnalyzer" src="https://github.com/silverhack/monkey365/actions/workflows/scriptanalyzer.yml/badge.svg"></a>
   <a href="https://github.com/silverhack/monkey365"><img alt="Lines" src="https://img.shields.io/tokei/lines/github/silverhack/monkey365"></a>
   <a href="https://twitter.com/tr1ana"><img alt="Twitter" src="https://img.shields.io/twitter/follow/tr1ana?style=social"></a>
-  [![latest PsGallery version](https://img.shields.io/powershellgallery/v/monkey365.svg?label=latest+version)](https://www.powershellgallery.com/packages/monkey365)
-  [![Downloads](https://img.shields.io/powershellgallery/dt/monkey365.svg?label=downloads)](https://www.powershellgallery.com/packages/monkey365)
-  ![GitHub Downloads](https://img.shields.io/github/downloads/silverhack/monkey365/total)
+  <a href="https://github.com/silverhack/monkey365/releases"><img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/silverhack/monkey365/total"></a>
+  <a href="https://www.powershellgallery.com/packages/monkey365"><img alt="PowerShell Gallery" src="https://img.shields.io/powershellgallery/v/monkey365.svg?label=latest+version"></a>
+  <a href="https://www.powershellgallery.com/packages/monkey365"><img alt="PowerShell Gallery Downloads" src="https://img.shields.io/powershellgallery/dt/monkey365.svg?label=downloads"></a>
 </p>
 
 <p
@@ -125,3 +125,6 @@ More standards will be added in next releases (NIST, HIPAA, GDPR, PCI-DSS, etc..
 
 Additional information such as Installation or advanced usage can be found in the following [link](https://silverhack.github.io/monkey365/)
 
+# Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=silverhack/monkey365&type=Date)](https://www.star-history.com/#silverhack/monkey365&Date)
