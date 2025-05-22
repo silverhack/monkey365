@@ -24,9 +24,37 @@ Invoke-Monkey365 @param
 
 The HTML report is entirely independent of the JSON or CSV report. As a result, all components are designed to be compatible with both Microsoft 365 and Azure providers. The HTML report will adjust the rendering of various components based on the content.
 
+## Exporting options
+
+Monkey365 HTML reports uses CDN (jsDelivr) to load assets by default. The base [configuration](../configuration/configuration-file.md) is as follows:
+
+```json 
+"htmlSettings": {
+	"convertPassFindingToGood": true,
+	"assetsRepository":"https://github.com/silverhack/monkey365assets",
+	"localHtmlReport": {
+		"assetsPath": "localassets",
+		"enabled": "false"
+	},
+	"htmlReportFromCDN": "true"
+},
+```
+As an alternative, you can enable the legacy mode, which will download a local copy of all the assets and set local links within the report.
+
+???+ note
+	Downloading assets significantly increases the size of a report. The size can exceed 20MB.
+
+### In-House CDN
+
+There is an option to use an in-house CDN by configuring CDN URL via `assetsRepository` property (defaults to https://github.com/silverhack/monkey365assets).
+
+* Download assets via GitHub
+* Unpack it and upload files into your CDN (e.g. private GitHub repository)
+* Set the `assetsRepository`property to new CDN link
+
 ## Compliance
 
-A [ruleset](../../security_checks/overview) allows you to organize multiple rules that work towards a common goal. These rulesets represent your governance rules that you want Monkey365 to analyze for you. Monkey365 will alert you when a rule is violated.
+A [ruleset](../security_checks/overview.md) allows you to organize multiple rules that work towards a common goal. These rulesets represent your governance rules that you want Monkey365 to analyze for you. Monkey365 will alert you when a rule is violated.
 
 Monkey365 includes a variety of default rules and rulesets that can be modified. Additionally, you can configure your own compliance rules.
 
@@ -148,6 +176,8 @@ The above example will result in the data being rendered in a single table forma
 
 **Note** This feature is only supported in tables formatted as a ```Normal``` table.
 
+<!--
+
 ### Add direct link button
 
 Table elements can be configured to add a direct link to the Azure console section associated with the finding in the report. In order to route for showing raw data with modals, the ```showGoToButton``` should be set to ```True``` along with the ```actions```, as shown below:
@@ -175,3 +205,5 @@ The above example will result in the data being rendered in a single table forma
 ![](../assets/images/directLinkButton.png)
 
 **Note** This feature is only supported in tables formatted as a ```Normal``` table. Please, also note that since this feature is experimental, we welcome your feedback.
+
+-->

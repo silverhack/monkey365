@@ -3,7 +3,7 @@
     
   ],
   "provider": "Azure",
-  "serviceType": "Microsoft Defender for Cloud",
+  "serviceType": "Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure That Microsoft Defender for Open-Source Relational Databases Is Set To 'On'",
   "description": "Turning on Microsoft Defender for Open-source relational databases enables threat detection for Open-source relational databases, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
@@ -126,5 +126,4 @@
     
   ]
 }
-
 

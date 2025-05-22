@@ -8,11 +8,11 @@ Review the following sections to learn about current limitations of Monkey365 on
 
 ## SharePoint Online in PowerShell Core
 
-Monkey365 is using the **SharePoint Online Management Shell** ClientId when Interactive authentication flow is used. In order to give support to .NET Core, developers must set the reply URI to **http://localhost**, because .NET Core does not have an integrated UI. Due to **SharePoint Online Management Shell** is not configured to use **http://localhost** in the reply URI, authentication methods such as [Interactive browser authentication](../authFlows/interactive) or [Authentication with a username and password](../authFlows/ropc) are not supported in SharePoint Online when Monkey365 is executed using PowerShell Core (PowerShell 6 or later and PowerShell in NIX environments). The following options are available to avoid authentication issues:
+Monkey365 is using the **SharePoint Online Management Shell** ClientId when Interactive authentication flow is used. In order to give support to .NET Core, developers must set the reply URI to **http://localhost**, because .NET Core does not have an integrated UI. Due to **SharePoint Online Management Shell** is not configured to use **http://localhost** in the reply URI, authentication methods such as [Interactive browser authentication](authFlows/interactive.md) or [Authentication with a username and password](authFlows/ropc.md) are not supported in SharePoint Online when Monkey365 is executed using PowerShell Core (PowerShell 6 or later and PowerShell in NIX environments). The following options are available to avoid authentication issues:
 
 ### Change the authentication flow
 
-* Change the authentication flow to [Device Code Authentication](../authFlows/devicecode) or [Certificate-based Authentication](../authFlows/sp).
+* Change the authentication flow to [Device Code Authentication](authFlows/devicecode.md) or [Certificate-based Authentication](authFlows/sp.md).
 
 * Execute Monkey365 using the PowerShell V5 Default version. <span style="color:red">*Only valid on Windows environments*</span>
 

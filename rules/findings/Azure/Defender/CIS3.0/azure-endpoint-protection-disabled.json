@@ -3,7 +3,7 @@
     
   ],
   "provider": "Azure",
-  "serviceType": "Microsoft Defender for Cloud",
+  "serviceType": "Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure that 'Endpoint protection' component status is set to 'On'",
   "description": "
@@ -132,5 +132,4 @@
     
   ]
 }
-
 

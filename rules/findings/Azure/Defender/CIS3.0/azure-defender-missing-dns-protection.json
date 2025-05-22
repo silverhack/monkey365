@@ -3,7 +3,7 @@
     
   ],
   "provider": "Azure",
-  "serviceType": "Microsoft Defender for Cloud",
+  "serviceType": "Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure That Microsoft Defender for DNS Is Set To 'On'",
   "description": "
@@ -129,5 +129,4 @@
     
   ]
 }
-
 

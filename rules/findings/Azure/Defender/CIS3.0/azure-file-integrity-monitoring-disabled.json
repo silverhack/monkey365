@@ -3,7 +3,7 @@
     
   ],
   "provider": "Azure",
-  "serviceType": "Microsoft Defender for Cloud",
+  "serviceType": "Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure that 'File Integrity Monitoring' component status is set to 'On'",
   "description": "File Integrity Monitoring (FIM) is a feature that monitors critical system files in Windows or Linux for potential signs of attack or compromise.",
@@ -117,5 +117,4 @@
     
   ]
 }
-
 

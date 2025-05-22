@@ -3,7 +3,7 @@
     
   ],
   "provider": "Azure",
-  "serviceType": "Microsoft Defender for Cloud",
+  "serviceType": "Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure That Microsoft Defender for IoT Hub Is Set To 'On'",
   "description": "Microsoft Defender for IoT acts as a central security hub for IoT devices within your organization.",
@@ -126,5 +126,4 @@
     
   ]
 }
-
 

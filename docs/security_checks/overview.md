@@ -114,7 +114,7 @@ A set of one or more rules forms Ruleset, which helps organize multiple rules th
 
 A ruleset is formed by placing one or more JSON rule files in a directory and creating a ruleset.json within it.
 
-The ruleset file stores metadata of the Ruleset, as described [here](../custom-ruleset) 
+The ruleset file stores metadata of the Ruleset, as described [here](custom-ruleset.md) 
 
 # Supported standards
 

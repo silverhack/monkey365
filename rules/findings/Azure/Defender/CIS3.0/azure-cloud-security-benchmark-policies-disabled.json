@@ -3,7 +3,7 @@
     
   ],
   "provider": "Azure",
-  "serviceType": "Microsoft Defender for Cloud",
+  "serviceType": "Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure that Microsoft Cloud Security Benchmark policies are not set to 'Disabled'",
   "description": "The Microsoft Cloud Security Benchmark (or `MCSB`) is an Azure Policy Initiative containing many security policies to evaluate resource configuration against best practice recommendations. If a policy in the MCSB is set with effect type Disabled, it is not evaluated and may prevent administrators from being informed of valuable security recommendations.",
@@ -106,5 +106,4 @@
     
   ]
 }
-
 

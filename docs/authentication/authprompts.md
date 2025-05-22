@@ -4,7 +4,7 @@ author: Juan Garrido
 
 ## Well Known Microsoft's applications
 
-Monkey365 requires the use of first-party Microsoft registered applications to connect to Microsoft 365 services when [Interactive browser authentication](../authFlows/interactive) or [Device Code Authentication](../authFlows/devicecode) method is used.
+Monkey365 requires the use of first-party Microsoft registered applications to connect to Microsoft 365 services when [Interactive browser authentication](authFlows/interactive.md) or [Device Code Authentication](authFlows/devicecode.md) method is used.
 
 ## Multiple authentication prompts
 
@@ -49,4 +49,4 @@ The authentication prompt experience that you can expect is described in the fol
 </table>
 </center>
 
-That means that if a user is selecting for example Exchange Online, Purview and SharePoint Online in the -Collect flag, the user will see multiple authentication prompts. New authentication prompt is needed when the application has its own OAuth Refresh Token and is not shared with other client apps. 
+That means that if a user is selecting for example Exchange Online, Purview and SharePoint Online in the `-Collect` flag, the user will see multiple authentication prompts. New authentication prompt is needed when the application has its own OAuth Refresh Token and is not shared with other client apps. 

@@ -95,4 +95,4 @@ If users with remote PowerShell session are discovered, results will be displaye
 
 ![](../assets/images/formatted_rule.PNG)
 
-You can customize HTML tables in order to visualize data in a variety of ways. More information about how to customize data can be found [here](../../exporting/export-html/).
+You can customize HTML tables in order to visualize data in a variety of ways. More information about how to customize data can be found [here](../exporting/export-html.md).

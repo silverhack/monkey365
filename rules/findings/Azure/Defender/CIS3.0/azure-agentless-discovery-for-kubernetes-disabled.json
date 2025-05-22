@@ -3,7 +3,7 @@
     
   ],
   "provider": "Azure",
-  "serviceType": "Microsoft Defender for Cloud",
+  "serviceType": "Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure that 'Agentless discovery for Kubernetes' component status 'On'",
   "description": "Enable automatic discovery and configuration scanning of the Microsoft Kubernetes clusters.",
@@ -120,5 +120,4 @@
     
   ]
 }
-
 

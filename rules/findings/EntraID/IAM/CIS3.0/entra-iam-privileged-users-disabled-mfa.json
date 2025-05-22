@@ -3,8 +3,8 @@
     
   ],
   "provider": "EntraID",
-  "serviceType": "Microsoft Entra ID Identity",
-  "serviceName": "IAM",
+  "serviceType": "Entra Identity Governance",
+  "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure that 'Multi-Factor Auth Status' is 'Enabled' for all Privileged Users",
   "description": "
 			###### IMPORTANT - Please read the section overview
@@ -165,5 +165,4 @@
     
   ]
 }
-
 
