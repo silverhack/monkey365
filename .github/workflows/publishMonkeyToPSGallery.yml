@@ -43,6 +43,8 @@ jobs:
           $createModulePath = New-Item -Path $modulePath -ItemType Directory -Force
           If ($createModulePath) {
               Write-Output "SUCCESS: Creating staging path '$modulePath'."
+          } ElseIf($null -eq $prerelease){
+              $version = $manifest.version
           } Else {
               Write-Error "FAILED: Creating staging path '$modulePath'."
           }
