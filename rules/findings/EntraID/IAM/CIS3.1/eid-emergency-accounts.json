@@ -3,8 +3,8 @@
     
   ],
   "provider": "EntraID",
-  "serviceType": "Microsoft Entra ID Identity",
-  "serviceName": "IAM",
+  "serviceType": "Entra Identity Governance",
+  "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure two emergency access accounts have been defined",
   "description": "
 		Emergency access or `break glass` accounts are limited for emergency scenarios where normal administrative accounts are unavailable. They are not assigned to a specific user and will have a combination of physical and technical controls to prevent them from being accessed outside a true emergency. These emergencies could be due to several things, including: 
@@ -109,5 +109,4 @@
     
   ]
 }
-
 

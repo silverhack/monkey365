@@ -85,4 +85,3 @@ Function Get-MonkeyAzSqlFirewall {
         #Nothing to do here
     }
 }
-

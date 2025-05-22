@@ -91,4 +91,3 @@ Function Invoke-M365Scanner{
     }
 }
 
-

@@ -65,4 +65,3 @@ Function Get-MonkeyMSGraphCompanyBranding {
         #Nothing to do here
     }
 }
-

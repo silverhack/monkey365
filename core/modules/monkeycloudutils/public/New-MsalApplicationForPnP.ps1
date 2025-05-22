@@ -109,4 +109,3 @@ Function New-MsalApplicationForPnP{
         }
     }
 }
-

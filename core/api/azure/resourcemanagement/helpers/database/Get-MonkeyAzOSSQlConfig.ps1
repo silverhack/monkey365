@@ -85,4 +85,3 @@ Function Get-MonkeyAzOSSQlConfig {
         #Nothing to do here
     }
 }
-

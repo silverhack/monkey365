@@ -152,4 +152,3 @@ Function Get-MonkeyMSGraphServicePrincipalUserConsentPermission{
     }
 }
 
-

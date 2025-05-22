@@ -75,4 +75,3 @@ Function Get-PSExoMailBoxPermission{
         Start-Sleep -Milliseconds 100
     }
 }
-

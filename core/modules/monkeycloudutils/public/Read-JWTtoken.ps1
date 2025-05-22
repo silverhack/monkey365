@@ -62,4 +62,3 @@ function Read-JWTtoken {
     }
 }
 
-

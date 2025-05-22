@@ -107,4 +107,3 @@ function Get-MonkeyPowerBIBackendUri {
         return $backendUri
     }
 }
-

@@ -41,4 +41,3 @@ Function Connect-MonkeyIntune {
     }
 }
 
-

@@ -114,16 +114,16 @@ Function Write-Verbose {
             #Add verbose false
             [void]$newPsboundParams.Add('Verbose',$false);
             #Check if Verbose is present in psboundparameters
-            if($PSBoundParameters.ContainsKey('Verbose')){
+            If($PSBoundParameters.ContainsKey('Verbose')){
                 $newPsboundParams['Verbose'] = $PSBoundParameters['Verbose']
             }
             #Check if verbosity variable is present
-            elseif($null -ne (Get-Variable -Name Verbosity -ErrorAction Ignore)){
+            Elseif($null -ne (Get-Variable -Name Verbosity -ErrorAction Ignore)){
                 if($Verbosity -is [hashtable] -and $Verbosity.ContainsKey("Verbose")){
                     $newPsboundParams['Verbose'] = $verbosity.Verbose
                 }
             }
-            else{
+            Else{
                 #Check if verbose variable is present
                 if($null -ne (Get-Variable -Name Verbose -ErrorAction Ignore)){
                     #override default option
@@ -201,6 +201,5 @@ Function Write-Verbose {
 .ForwardHelpCategory Cmdlet
 
 #>
-
 
 

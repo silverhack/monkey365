@@ -62,4 +62,3 @@ Function Get-CommandToExecute{
         return $null
     }
 }
-

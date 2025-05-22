@@ -61,4 +61,3 @@ Function Get-FindingLegend {
     }
     return $statusMsg
 }
-

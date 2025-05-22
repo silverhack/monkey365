@@ -122,4 +122,3 @@ Function New-MsalApplicationForExo{
         }
     }
 }
-

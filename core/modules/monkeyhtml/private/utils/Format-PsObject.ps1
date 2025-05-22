@@ -1,4 +1,4 @@
-# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,8 +42,29 @@ Function Format-PsObject {
         If ($null -eq $InputObject) {
             return "NotSet"
         }
-        elseIf ($InputObject -is [String] -and $InputObject -eq [String]::Empty){
+        ElseIf ($InputObject -is [String] -and $InputObject -eq [String]::Empty){
             return "NotSet"
+        }
+        ElseIf (([System.Management.Automation.PSCustomObject]).IsAssignableFrom($InputObject.GetType()) -or ([System.Management.Automation.PSObject]).IsAssignableFrom($InputObject.GetType())) {
+            ## Iterate over all properties and convert it to a new PsObject
+            $objHashTable = [ordered]@{}
+            ForEach ($property in $InputObject.PSObject.Properties){
+                Try{
+                    $objHashTable[$property.Name] = Format-PsObject $property.Value
+                }
+                Catch{
+                    If($null -ne $property){
+                        Write-Verbose ("Unable to format {0}" -f $property.Name)
+                    }
+                    Else{
+                        Write-Verbose "Null property found"
+                    }
+                    Write-Verbose $_
+                }
+            }
+            #Convert to PsCustomObject
+            $newObj = New-Object -TypeName PSCustomObject -Property $objHashTable
+            return $newObj
         }
         #Check if dictionary
         If(([System.Collections.IDictionary]).IsAssignableFrom($InputObject.GetType())){
@@ -55,13 +76,17 @@ Function Format-PsObject {
                     $objHashTable[$key] = Format-PsObject $InputObject[$key]
                 }
                 Catch{
-                    Write-Verbose ("The error was: {0}" -f $_)
+                    Write-Verbose $_
                 }
             }
-            #Convert to PsObject and return object
-            $new_object = [pscustomobject]$objHashTable
-            #return object
-            return $new_object
+            If($objHashTable.Count -gt 0){
+                #Convert to PsCustomObject
+                $newObj = New-Object -TypeName PSCustomObject -Property $objHashTable
+                return $newObj
+            }
+            Else{
+                return "NotSet"
+            }
         }
         ## Iterate over all child objects in cases in which InputObject is an array
         ElseIf ($InputObject -is [System.Collections.IEnumerable] -and $InputObject -isnot [string]){
@@ -70,52 +95,35 @@ Function Format-PsObject {
                     Format-PsObject $object
                 }
             )
-            Write-Output $collection -NoEnumerate
-        }
-        ElseIf ($InputObject.GetType() -eq [System.Management.Automation.PSCustomObject] -or $InputObject.GetType() -eq [System.Management.Automation.PSObject]) {
-            ## Iterate over all properties and convert it to a new PsObject
-            $objHashTable = [ordered]@{}
-            ForEach ($property in $InputObject.PSObject.Properties){
-                try{
-                    $objHashTable[$property.Name] = Format-PsObject $property.Value
-                }
-                catch{
-                    if($null -ne $property){
-                        Write-Verbose ("Unable to format {0}" -f $property.Name)
-                    }
-                    else{
-                        Write-Verbose "Null property found"
-                    }
-                    Write-Verbose ("The error was: {0}" -f $_)
-                }
+            If($collection.Count -gt 0){
+                Write-Output $collection -NoEnumerate
             }
-            #Convert to PsObject and return object
-            $new_object = [pscustomobject]$objHashTable
-            #return object
-            return $new_object
+            Else{
+                return "NotSet"
+            }
         }
         Else {##Object isn't an array, hashtable, collection, etc... Cast object
-            try{
+            Try{
                 If([bool]::TryParse($InputObject, [ref]$out)){
-                    if($InputObject.ToString().ToLower() -eq "true"){
+                    If($InputObject.ToString().ToLower() -eq "true"){
                         return "Enabled"
                     }
-                    elseif($InputObject.ToString().ToLower() -eq "false"){
+                    ElseIf($InputObject.ToString().ToLower() -eq "false"){
                         return "Disabled"
                     }
                 }
-                Elseif($null -ne ($InputObject.ToString() -as [System.URI]) -and $null -ne ($InputObject.ToString() -as [System.URI]).AbsoluteURI){
+                ElseIf($null -ne ($InputObject.ToString() -as [System.URI]) -and $null -ne ($InputObject.ToString() -as [System.URI]).AbsoluteURI){
                     $uri = $InputObject.ToString() -as [System.URI]
                     return ("{0}://{1}{2}{3}" -f $uri.Scheme,$uri.DnsSafeHost,$uri.AbsolutePath,[uri]::EscapeDataString($uri.Query))
                 }
-                Elseif($InputObject -is [string]){
+                ElseIf($InputObject -is [string]){
                     return [System.Security.SecurityElement]::Escape($InputObject)
                 }
-                else{
+                Else{
                     return $InputObject
                 }
             }
-            catch{
+            Catch{
                 Write-Verbose $_
             }
         }
@@ -124,4 +132,3 @@ Function Format-PsObject {
         #Nothing to do here
     }
 }
-

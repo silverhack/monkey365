@@ -30,7 +30,10 @@ Function Start-Logger{
         [Array]$loggers,
 
         [parameter(Mandatory= $false, HelpMessage= "Initial path")]
-        [String]$InitialPath
+        [String]$InitialPath,
+
+        [parameter(Mandatory= $false, HelpMessage= "Queue logger")]
+        [System.Collections.Concurrent.BlockingCollection`1[System.Management.Automation.InformationRecord]]$LogQueue
     )
     New-Logger @PSBoundParameters
 }
@@ -62,4 +65,3 @@ Function Stop-Logger{
         }
     }
 }
-

@@ -140,4 +140,3 @@ Function Get-FormattedMessage {
     }
 }
 
-

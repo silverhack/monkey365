@@ -184,4 +184,3 @@ SPNotAllowedAuthFlowErrorMessage = Service principal authentication flow is not 
 CompressingJob                   = Compressing Monkey data into {0}
 TokenAcquiredGenericMessage      = A new token was successfully acquired
 '@;
-

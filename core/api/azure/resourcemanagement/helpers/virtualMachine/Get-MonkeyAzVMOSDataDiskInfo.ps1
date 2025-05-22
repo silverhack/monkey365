@@ -115,4 +115,3 @@ Function Get-MonkeyAzVMOSDataDiskInfo {
         }
     }
 }
-

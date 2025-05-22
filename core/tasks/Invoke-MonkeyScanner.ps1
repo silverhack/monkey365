@@ -232,7 +232,7 @@ Function Invoke-MonkeyScanner{
         }
         Else{
             $msg = @{
-                MessageData = ("Unable to start Monkey365. Collectors are empty");
+                MessageData = ("Unable to initialize the Monkey365 scan for {0}. Collectors for {1} are empty" -f $Provider, $Provider);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'warning';
                 InformationAction = $O365Object.InformationAction;
@@ -242,4 +242,3 @@ Function Invoke-MonkeyScanner{
         }
     }
 }
-

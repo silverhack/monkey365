@@ -50,16 +50,11 @@ Function New-StringContent{
     )
     Begin{
         $Verbose = $False;
-        $Debug = $False;
-        $InformationAction = 'SilentlyContinue'
         if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
             $Verbose = $True
         }
         if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
-            $Debug = $True
-        }
-        if($PSBoundParameters.ContainsKey('InformationAction')){
-            $InformationAction = $PSBoundParameters['InformationAction']
+            $DebugPreference = 'Continue'
         }
     }
     Process{
@@ -87,8 +82,6 @@ Function New-StringContent{
                 $param = @{
                     Message = $_.Exception;
                     Verbose = $Verbose;
-                    Debug = $Debug;
-                    InformationAction = $InformationAction;
                 }
                 Write-Verbose @param
             }
@@ -169,8 +162,6 @@ Function New-StringContent{
                     $param = @{
                         Message = $_.Exception;
                         Verbose = $Verbose;
-                        Debug = $Debug;
-                        InformationAction = $InformationAction;
                     }
                     Write-Verbose @param
                 }
@@ -182,4 +173,3 @@ Function New-StringContent{
         return $body
     }
 }
-

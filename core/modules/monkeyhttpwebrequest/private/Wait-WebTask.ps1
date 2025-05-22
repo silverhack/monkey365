@@ -60,8 +60,6 @@ function Wait-WebTask{
                     $param = @{
                         Message = ('Task cancelled by requestor');
                         Verbose = $Verbose;
-                        Debug = $Debug;
-                        InformationAction = $InformationAction;
                     }
                     Write-Verbose @param
                 }
@@ -69,8 +67,6 @@ function Wait-WebTask{
                     $param = @{
                         Message = ('Timeout');
                         Verbose = $Verbose;
-                        Debug = $Debug;
-                        InformationAction = $InformationAction;
                     }
                     Write-Verbose @param
                 }
@@ -78,5 +74,4 @@ function Wait-WebTask{
         }
     }
 }
-
 

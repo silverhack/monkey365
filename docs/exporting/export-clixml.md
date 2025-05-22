@@ -21,4 +21,4 @@ Invoke-Monkey365 @p
 
 ## CLIXML Properties
 
-Properties will be the same as [JSON](../export-json) output.
+Properties will be the same as [JSON](export-json.md) output.

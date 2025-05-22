@@ -225,4 +225,3 @@ Function Get-Rule{
     }
 }
 
-

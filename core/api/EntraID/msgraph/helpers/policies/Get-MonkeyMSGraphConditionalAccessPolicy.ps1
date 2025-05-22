@@ -145,4 +145,3 @@ Function Get-MonkeyMSGraphConditionalAccessPolicy{
     }
 }
 
-

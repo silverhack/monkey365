@@ -97,4 +97,3 @@ Function Get-MonkeyApplicationGatewayInfo {
         }
     }
 }
-

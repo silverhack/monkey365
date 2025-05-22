@@ -58,4 +58,3 @@ Function Get-ObjectTag {
         }
     }
 }
-

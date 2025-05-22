@@ -61,4 +61,3 @@ Function Test-IsUserSharepointAdministrator{
     }
 }
 
-

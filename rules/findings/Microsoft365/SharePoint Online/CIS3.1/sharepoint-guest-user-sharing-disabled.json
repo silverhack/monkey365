@@ -10,7 +10,7 @@
   "rationale": "Sharing and collaboration are key; however, file, folder, or site collection owners should have the authority over what external users get shared with to prevent unauthorized disclosures of information.",
   "impact": "The impact associated with this change is highly dependent upon current practices. If users do not regularly share with external parties, then minimal impact is likely. However, if users do regularly share with guests/externally, minimum impacts could occur as those external users will be unable to 're-share' content.",
   "remediation": {
-    "text": "###### To set SharePoint sharing settings, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Under `Admin centers` select `SharePoint`.\r\n\t\t\t\t\t2. Expand `Policies` then select `Sharing`.\r\n\t\t\t\t\t3. Expand `More external sharing settings`, uncheck `Allow guests to share items they don\u0027t own`.\r\n\t\t\t\t\t4. Click `Save`\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To Set Prevent external users from sharing files, folders, and sites that they donÃ¢â‚¬â„¢t own, use the SharePoint Online PowerShell Module:\r\n\t\t\t\t\t1. Connect to SharePoint Online service using `Connect-SPOService`.\r\n\t\t\t\t\t2. Run the following SharePoint Online PowerShell command:\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tSet-SPOTenant -PreventExternalUsersFromResharing $True\r\n\t\t\t\t\t```",
+    "text": "###### To set SharePoint sharing settings, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Under `Admin centers` select `SharePoint`.\r\n\t\t\t\t\t2. Expand `Policies` then select `Sharing`.\r\n\t\t\t\t\t3. Expand `More external sharing settings`, uncheck `Allow guests to share items they don\u0027t own`.\r\n\t\t\t\t\t4. Click `Save`\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To Set Prevent external users from sharing files, folders, and sites that they donâ€™t own, use the SharePoint Online PowerShell Module:\r\n\t\t\t\t\t1. Connect to SharePoint Online service using `Connect-SPOService`.\r\n\t\t\t\t\t2. Run the following SharePoint Online PowerShell command:\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tSet-SPOTenant -PreventExternalUsersFromResharing $True\r\n\t\t\t\t\t```",
     "code": {
       "powerShell": null,
       "iac": null,
@@ -121,5 +121,4 @@
     
   ]
 }
-
 

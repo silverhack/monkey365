@@ -13,4 +13,3 @@ if($null -ne $monkeyFiles){
     }
     Add-Type @p
 }
-

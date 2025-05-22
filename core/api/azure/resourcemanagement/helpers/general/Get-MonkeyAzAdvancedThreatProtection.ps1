@@ -62,4 +62,3 @@ Function Get-MonkeyAzAdvancedThreatProtection {
         #Nothing to do here
     }
 }
-

@@ -57,21 +57,17 @@ runs:
     - name: Run PSScriptAnalyzer
       shell: pwsh
       run: |
-        $PSA_args = [ordered]@{ Path = '${{ inputs.path }}'; }
-        if(![string]::IsNullOrEmpty('${{ inputs.customRulePath }}')) { $PSA_args.add('CustomRulePath', @(${{ inputs.customRulePath }})) }
-        if(![string]::IsNullOrEmpty('${{ inputs.recurseCustomRulePath }}')) { $PSA_args.add('RecurseCustomRulePath', $true) }
-        if(![string]::IsNullOrEmpty('${{ inputs.excludeRule }}')) { $PSA_args.add('ExcludeRule', @(${{ inputs.excludeRule }})) }
-        if(![string]::IsNullOrEmpty('${{ inputs.includeDefaultRules }}') -and '${{ inputs.includeDefaultRules }}' -ne 'false') { $PSA_args.add('IncludeDefaultRules', $true) }
-        if(![string]::IsNullOrEmpty('${{ inputs.includeRule }}')) { $PSA_args.add('IncludeRule', @(${{ inputs.includeRule }})) }
-        if(![string]::IsNullOrEmpty('${{ inputs.severity }}')) { $PSA_args.add('Severity', @(${{ inputs.severity }})) }
-        if(![string]::IsNullOrEmpty('${{ inputs.recurse }}') -and '${{ inputs.includeDefaultRules }}' -ne 'false') { $PSA_args.add('Recurse', $true) }
-        if(![string]::IsNullOrEmpty('${{ inputs.fix }}')) { $PSA_args.add('Fix', $true) }
-        if(![string]::IsNullOrEmpty('${{ inputs.enableExit }}')) { $PSA_args.add('EnableExit', $true) }
-        if(![string]::IsNullOrEmpty('${{ inputs.settings }}')) { $PSA_args.add('Settings', '${{ inputs.settings }}') }
-        [System.Void](Invoke-ScriptAnalyzer @PSA_args -Outvariable issues)
-        $errors   = $issues.Where({($_.Severity -eq 'Error') -or ($_.Severity -eq 'ParseError')})
-        $warnings = $issues.Where({$_.Severity -eq 'Warning'})
-        $info = $issues.Where({$_.Severity -eq 'Information'})
+        $ExcludeDirs = @('pipelines','docs','rules','tests')
+        $files = Get-ChildItem -Path ${{ inputs.path }}  -Recurse | Where-Object {$_.FullName -notmatch ($ExcludeDirs -join '|')}
+        $ScriptAnalyzer = @{
+            Config = @{IncludeDefaultRules = $true;}
+            Rules = Get-ScriptAnalyzerRule
+        }
+        $Config = $ScriptAnalyzer.Config
+        $ScriptAnalyzer.Results = $files | Invoke-ScriptAnalyzer @Config
+        $errors   = $ScriptAnalyzer.Results.Where({($_.Severity -eq 'Error') -or ($_.Severity -eq 'ParseError')})
+        $warnings = $ScriptAnalyzer.Results.Where({$_.Severity -eq 'Warning'})
+        $info = $ScriptAnalyzer.Results.Where({$_.Severity -eq 'Information'})
         if($errors){
           foreach ($e in $errors){
             $message = ("file={0},line={1},message{2}" -f $e.ScriptName,$e.Line,$e.Message)

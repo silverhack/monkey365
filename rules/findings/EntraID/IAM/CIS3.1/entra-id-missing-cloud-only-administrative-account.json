@@ -3,8 +3,8 @@
     
   ],
   "provider": "EntraID",
-  "serviceType": "Microsoft Entra ID Identity",
-  "serviceName": "IAM",
+  "serviceType": "Entra Identity Governance",
+  "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure Administrative accounts are separate and cloud-only",
   "description": "Administrative accounts are special privileged accounts that could have varying levels of access to data, users, and settings. Regular user accounts should never be utilized for administrative tasks and care should be taken, in the case of a hybrid environment, to keep Administrative accounts separated from on-prem accounts. Administrative accounts should not have applications assigned so that they have no access to potentially vulnerable services (EX. email, Teams, SharePoint, etc.) and only access to perform tasks as needed for administrative purposes.\r\n\t\t\t\t  Ensure administrative accounts are `cloud-only`.",
   "rationale": "Ensuring administrative accounts are cloud-only, will reduce the attack surface of high privileged identities in your environment. In order to participate in Microsoft 365 security services such as Identity protection, PIM and Conditional Access an administrative account will need a license attached to it. In a hybrid environment, having separate accounts will help ensure that in the event of a breach in the cloud, that the breach does not affect the on-prem environment and vice versa.",
@@ -134,5 +134,4 @@
     
   ]
 }
-
 

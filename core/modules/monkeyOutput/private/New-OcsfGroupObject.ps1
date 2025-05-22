@@ -42,4 +42,3 @@ Function New-OcsfGroupObject{
         [Ocsf.Objects.Entity.Group]::new() | Select-Object $properties
     }
 }
-

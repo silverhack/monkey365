@@ -129,4 +129,3 @@ Function Get-MonkeyMSGraphGroup {
         #Nothing to do here
     }
 }
-

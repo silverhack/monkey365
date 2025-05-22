@@ -94,4 +94,3 @@ Function Get-MonkeyCSOMListPermission{
         }
     }
 }
-

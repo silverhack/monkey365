@@ -304,4 +304,3 @@ Function Connect-MonkeyCloud{
     }
     $O365Object.Collectors = Select-MonkeyCollector @p
 }
-

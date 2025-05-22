@@ -68,4 +68,3 @@ Function Get-MonkeyAzStorageAccountKey {
         #Nothing to do here
     }
 }
-

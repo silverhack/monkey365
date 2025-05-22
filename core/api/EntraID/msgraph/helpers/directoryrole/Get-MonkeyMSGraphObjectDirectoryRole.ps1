@@ -103,4 +103,3 @@ Function Get-MonkeyMSGraphObjectDirectoryRole{
     }
 }
 
-

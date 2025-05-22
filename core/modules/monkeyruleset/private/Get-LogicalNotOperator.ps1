@@ -57,4 +57,3 @@ function Get-LogicalNotOperator{
         }
     }
 }
-

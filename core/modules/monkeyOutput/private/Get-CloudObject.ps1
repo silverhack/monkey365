@@ -85,4 +85,3 @@ Function Get-CloudObject{
         }
     }
 }
-

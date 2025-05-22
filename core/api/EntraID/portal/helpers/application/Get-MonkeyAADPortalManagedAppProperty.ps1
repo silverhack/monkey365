@@ -138,4 +138,3 @@ Function Get-MonkeyAADPortalManagedAppProperty {
     }
 }
 
-

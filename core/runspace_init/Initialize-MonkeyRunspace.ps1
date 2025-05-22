@@ -27,12 +27,16 @@ If($null -ne $isO365Object){
     $_logger = @($O365Object.runspaces_modules).Where({$_ -like "*monkeylogger*"},[System.Management.Automation.WhereOperatorSelectionMode]::First)
     If($_logger.Count -gt 0){
         Import-Module $_logger[0].ToString() -Force
+        #Initialize MonkeyLogger
+        $l_param = @{
+            LogQueue = $O365Object.MonkeyLogQueue;
+            InformationAction = $O365Object.InformationAction;
+            Verbose = $O365Object.verbose;
+            Debug = $O365Object.debug;
+        }
+        $null = Start-Logger @l_param
     }
-    #set the default connection limit
-    [System.Net.ServicePointManager]::DefaultConnectionLimit = 1024;
-    [System.Net.ServicePointManager]::MaxServicePoints = 1000;
 }
-
 
 
 

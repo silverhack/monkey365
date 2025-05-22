@@ -84,12 +84,14 @@ Function Initialize-MonkeyScan {
                 WriteLog = $O365Object.WriteLog;
                 Verbosity = $O365Object.VerboseOptions;
                 InformationAction = $O365Object.InformationAction;
+                VerbosePreference = $O365Object.VerboseOptions.VerbosePreference;
+                DebugPreference = $O365Object.VerboseOptions.DebugPreference;
                 returnData = $null;
                 LogQueue = $null;
             }
             #Get LogQueue
-            $Queue = (Get-Variable -Name LogQueue -ErrorAction Ignore);
-            if($null -ne $Queue){
+            $Queue = (Get-Variable -Name MonkeyLogQueue -Scope Global -ErrorAction Ignore);
+            If($null -ne $Queue){
                 $vars.LogQueue = $Queue.Value;
             }
         }
@@ -273,4 +275,3 @@ Function Initialize-MonkeyScan {
         Write-Output $all_scans -NoEnumerate
     }
 }
-

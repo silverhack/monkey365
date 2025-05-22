@@ -191,4 +191,3 @@ Function Get-MonkeyMSGraphAADAPPPermission {
         #Nothing to do here
     }
 }
-

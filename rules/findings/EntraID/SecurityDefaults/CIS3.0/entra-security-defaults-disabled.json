@@ -9,10 +9,10 @@
   "description": "
 					#### IMPORTANT - Please read the section overview
 					If your organization pays for Microsoft Entra ID licensing (included in Microsoft 365 E3, E5, or F5, and EM&S E3 or E5 licenses) and CAN use Conditional Access, ignore the recommendations in this section and proceed to the Conditional Access section. <br/>  Security defaults in Microsoft Entra ID make it easier to be secure and help protect your organization. Security defaults contain preconfigured security settings for common attacks. <br/> Security defaults is available to everyone. The goal is to ensure that all organizations have a basic level of security enabled at no extra cost. You may turn on security defaults in the Azure portal.",
-  "rationale": "Security defaults provide secure default settings that we manage on behalf of organizations to keep customers safe until they are ready to manage their own identity security settings. <br/> For example, doing the following: <br/> * Requiring all users and admins to register for MFA. <br/> * Challenging users with MFA - when necessary, based on factors such as location, device, role, and task. <br/> * Disabling authentication from legacy authentication clients, which canâ€™t do MFA.",
+  "rationale": "Security defaults provide secure default settings that we manage on behalf of organizations to keep customers safe until they are ready to manage their own identity security settings. <br/> For example, doing the following: <br/> * Requiring all users and admins to register for MFA. <br/> * Challenging users with MFA - when necessary, based on factors such as location, device, role, and task. <br/> * Disabling authentication from legacy authentication clients, which can’t do MFA.",
   "impact": "This recommendation should be implemented initially and then may be overridden by other service/product specific CIS Benchmarks. Administrators should also be aware that certain configurations in Microsoft Entra ID may impact other Microsoft services such as Microsoft 365.",
   "remediation": {
-    "text": "###### From Azure Portal <br/> To enable security defaults in your directory: <br/> 1. From Azure Home select the Portal Menu. <br/> 2. Browse toâ€¯`Microsoft Entra ID`â€¯>â€¯Properties <br/> 3. Select `Manage security defaults` <br/> 4. Under `Security defaults`, select `Enabled (recommended)`. <br/> 5. Select `Save`",
+    "text": "###### From Azure Portal <br/> To enable security defaults in your directory: <br/> 1. From Azure Home select the Portal Menu. <br/> 2. Browse to `Microsoft Entra ID` > Properties <br/> 3. Select `Manage security defaults` <br/> 4. Under `Security defaults`, select `Enabled (recommended)`. <br/> 5. Select `Save`",
     "code": {
       "powerShell": null,
       "iac": null,
@@ -121,5 +121,4 @@
     
   ]
 }
-
 

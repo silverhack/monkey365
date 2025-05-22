@@ -5,10 +5,10 @@ author: Juan Garrido
 
 Monkey365 has built-in support for exporting data to a large variety of formats, including CSV, CLIXML and JSON. For example, the CSV output format is a comma-separated output that can be imported into i.e., Excel spreadsheets. The JSON format is pretty similar to JavaScript object, so it can be used as a data format by any programming language. Finally, CLIXML will create an XML-based representation of all findings and will store it in a file. This section page documents how Monkey365's data may be exported to these formats.
 
-* [Export Data to CSV](../export-csv) 
-* [Export Data to HTML](../export-html)
-* [Export Data to CLIXML](../export-clixml)
-* [Export Data to JSON](../export-json)
+* [Export Data to CSV](export-csv.md) 
+* [Export Data to HTML](export-html.md)
+* [Export Data to CLIXML](export-clixml.md)
+* [Export Data to JSON](export-json.md)
 
 ## Data Location
 

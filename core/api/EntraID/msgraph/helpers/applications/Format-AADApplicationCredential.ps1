@@ -77,4 +77,3 @@ Function Format-AADApplicationCredential {
         $Application
     }
 }
-

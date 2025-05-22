@@ -82,4 +82,3 @@ Function Get-MonkeyMSGraphDirectoryRoleTemplate {
         #Nothing to do here
     }
 }
-

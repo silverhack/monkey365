@@ -1,0 +1,84 @@
+name: Publish to PowerShell Gallery
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  PublishMonkeyToGallery:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish
+        shell: powershell
+        env:
+          NUGET_KEY: ${{ secrets.PSGALLERY }}
+        run: |
+          $remove = @('.git', '.github', '.gitignore', 'docs', 'mkdocs.yml')
+          Write-Output "INFO: Preparing Windows-based GitHub runner for publishing module to the PowerShell Gallery."
+          Write-Output "INFO: Setting the PowerShell Gallery as a trusted repository."
+          Set-PSRepository psgallery -InstallationPolicy trusted
+          Write-Output "INFO: Locating module manifest in '$env:GITHUB_WORKSPACE'."
+          $moduleManifest = Get-ChildItem -Path $env:GITHUB_WORKSPACE -Filter *.psd1
+          If ($moduleManifest) {
+              Write-Output ("SUCCESS: Manifest {0} found in {1}." -f $moduleManifest.FullName, $env:GITHUB_WORKSPACE)
+          } Else {
+              Write-Output ("FAILURE: Manifest not found in {0}." -f $env:GITHUB_WORKSPACE)
+          }
+          If ($moduleManifest.Name -match '^(.*)\.psd1$') {
+            $moduleName = $Matches[1]
+            Write-Output "SUCCESS: Determining module name from manifest file name '$moduleName'."
+          } Else {
+                Write-Error "FAILED: Determining module name from manifest file name '$moduleName'."
+          }
+          $manifest = Test-ModuleManifest -Path $moduleManifest.FullName
+          $prerelease = $manifest.PrivateData.PSData['Prerelease']
+          If ($prerelease -and $prerelease.StartsWith('-')){
+              $version = ("{0}{1}" -f $manifest.version,$prerelease)
+          }
+          Else{
+              $version = ("{0}-{1}" -f $manifest.version,$prerelease)
+          }
+          $modulePath = Join-Path -Path $env:RUNNER_TEMP -ChildPath $moduleName
+          $createModulePath = New-Item -Path $modulePath -ItemType Directory -Force
+          If ($createModulePath) {
+              Write-Output "SUCCESS: Creating staging path '$modulePath'."
+          } Else {
+              Write-Error "FAILED: Creating staging path '$modulePath'."
+          }
+          Write-Output "INFO: Setting location to the GitHub workspace at '$env:GITHUB_WORKSPACE'."
+          Set-Location $env:GITHUB_WORKSPACE
+          Write-Output "INFO: Publishing module to the PowerShell Gallery."
+          Get-ChildItem -Force | Where-Object { $_.Name -notin $remove } | Copy-Item -Destination $modulePath -Recurse
+          #Get-ChildItem -Depth 5 -Path $modulePath | Format-Table -AutoSize
+          $moduleManifest_ = Join-Path -Path $modulePath -ChildPath ("{0}.psd1" -f $moduleName)
+          If (Test-Path -Path $moduleManifest_) {
+              #Check if module is already loaded
+              If($prerelease){
+                  $module = Find-Module -Name $moduleName -RequiredVersion ("{0}" -f $version) -AllowPrerelease -ErrorAction Ignore
+              }
+              Else{
+                  $module = Find-Module -Name $moduleName -RequiredVersion ("{0}" -f $version) -ErrorAction Ignore
+              }
+              If($null -eq $module){
+                  Publish-Module -Path $modulePath -NuGetApiKey $env:NUGET_KEY -Force
+                  Start-Sleep -Seconds 30
+                  If($prerelease){
+                      $module = Find-Module -Name $moduleName -RequiredVersion ("{0}" -f $version) -AllowPrerelease
+                  }
+                  Else{
+                      $module = Find-Module -Name $moduleName -RequiredVersion ("{0}" -f $version)
+                  }
+                  If ($module) {
+                      Write-Output "SUCCESS: Publishing module '$moduleName' version '$version' to PowerShell Gallery."
+                  }
+                  Else {
+                      Write-Error "FAILED: Publishing module '$moduleName' version '$version' to PowerShell Gallery."
+                  }
+              }
+              Else{
+                  Write-Output "SUCCESS: Module '$moduleName' version '$version' is already available in PowerShell Gallery."
+              }
+          } Else {
+              Write-Error "FAILED: Module manifest file not found at path '$moduleManifest_'."
+          }

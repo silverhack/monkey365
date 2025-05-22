@@ -27,8 +27,8 @@ Monkey365 works in three phases. In the first phase, collectors will issue queri
 
 # Documentation
 
-* [Getting Started](install-instructions)
-* [License and Contributing](license-contributing)
-* [Support](support)
-* [Disclaimer](disclaimer)
-* [Sample report](sample/Monkey365.html)
+* [Getting Started](install/install-instructions.md)
+* [License and Contributing](license/license-contributing.md)
+* [Support](support/support.md)
+* [Disclaimer](support/disclaimer.md)
+* [Sample report](sample/monkey365.html)

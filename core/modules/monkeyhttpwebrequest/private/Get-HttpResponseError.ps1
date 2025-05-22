@@ -47,6 +47,7 @@ Function Get-HttpResponseError{
             $Verbose = $True
         }
         if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $DebugPreference = 'Continue'
             $Debug = $True
         }
         if($PSBoundParameters.ContainsKey('InformationAction')){
@@ -59,14 +60,12 @@ Function Get-HttpResponseError{
         if($null -ne $Url){
             $param = @{
                 Message = ($script:messages.UnableToProcessUrl -f $Url);
-                Verbose = $Verbose;
             }
             Write-Debug @param
         }
         #Write error message
         $param = @{
             Message = ("[{0}]: {1}" -f $StatusCode, $Reason);
-            Verbose = $Verbose;
         }
         Write-Debug @param
         #Get response message
@@ -86,14 +85,12 @@ Function Get-HttpResponseError{
                     if($null -ne $errorCode){
                         $param = @{
                             Message = $errorCode;
-                            Verbose = $Verbose;
                         }
                         Write-Debug @param
                     }
                     if($null -ne $errorMessage){
                         $param = @{
                             Message = $errorMessage;
-                            Verbose = $Verbose;
                         }
                         Write-Debug @param
                     }
@@ -101,7 +98,6 @@ Function Get-HttpResponseError{
                 elseif($null -ne ($responseBody.psobject.properties.Item('error_description'))){
                     $param = @{
                         Message = $responseBody.error_description;
-                        Verbose = $Verbose;
                     }
                     Write-Debug @param
                 }
@@ -111,14 +107,12 @@ Function Get-HttpResponseError{
                     if($null -ne $errorCode){
                         $param = @{
                             Message = $errorCode;
-                            Verbose = $Verbose;
                         }
                         Write-Debug @param
                     }
                     if($null -ne $errorMessage){
                         $param = @{
                             Message = $errorMessage;
-                            Verbose = $Verbose;
                         }
                         Write-Debug @param
                     }
@@ -129,14 +123,12 @@ Function Get-HttpResponseError{
                     if($null -ne $errorCode){
                         $param = @{
                             Message = $errorCode;
-                            Verbose = $Verbose;
                         }
                         Write-Debug @param
                     }
                     if($null -ne $errorMessage){
                         $param = @{
                             Message = $errorMessage;
-                            Verbose = $Verbose;
                         }
                         Write-Debug @param
                     }
@@ -146,7 +138,6 @@ Function Get-HttpResponseError{
                 #Write detailed error message
                 $param = @{
                     Message = ($script:messages.DetailedErrorMessage -f $responseBody);
-                    Verbose = $Verbose;
                 }
                 Write-Debug @param
             }
@@ -155,7 +146,6 @@ Function Get-HttpResponseError{
             #Unable to get detailed error message
             $param = @{
                 Message = $script:messages.UnableToGetDetailedError;
-                Verbose = $Verbose;
             }
             Write-Debug @param
         }
@@ -164,16 +154,13 @@ Function Get-HttpResponseError{
         #Writes detailed error message
         $param = @{
             Message = $script:messages.UnableToProcessErrorMessage;
-            Verbose = $Verbose;
         }
         Write-Debug @param
         #Write detailed error message
         $param = @{
             Message = $_;
-            Debug = $Debug;
         }
         Write-Debug @param
     }
 }
-
 

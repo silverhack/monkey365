@@ -1,11 +1,5 @@
 Set-StrictMode -Version 1.0
 
-<#
-$listofFiles = [System.IO.Directory]::EnumerateFiles(("{0}" -f $PSScriptRoot),"*.ps1","AllDirectories").Where({$_.EndsWith('.ps1')})
-$all_files = $listofFiles.Where({($_ -like "*public*") -or ($_ -like "*private*")})
-$all_files.ForEach({. $_})
-#>
-
 $listofFiles = [System.IO.Directory]::EnumerateFiles(("{0}" -f $PSScriptRoot),"*.ps1","AllDirectories").Where({$_.EndsWith('.ps1')})
 $all_files = $listofFiles.Where({($_ -like "*public*") -or ($_ -like "*private*")})
 $content = $all_files.ForEach({
@@ -21,4 +15,3 @@ $LocalizedDataParams = @{
 }
 #Import localized data
 Import-LocalizedData @LocalizedDataParams;
-

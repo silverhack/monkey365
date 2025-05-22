@@ -99,4 +99,3 @@ Function Get-MonkeyAzApplicationGatewayWAFPolicy {
         }
     }
 }
-

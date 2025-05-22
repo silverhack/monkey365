@@ -87,11 +87,24 @@ Function Start-MonkeyJob{
         [Switch]$ThrowOnRunspaceOpenError
     )
     Begin{
-        if (-not $PSBoundParameters.ContainsKey('ThrowOnRunspaceOpenError')) {
+        If (-not $PSBoundParameters.ContainsKey('ThrowOnRunspaceOpenError')) {
             $ThrowOnRunspaceOpenError = $False
         }
+        $Verbose = $False;
+        $Debug = $False;
+        $InformationAction = 'SilentlyContinue'
+        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+            $Verbose = $True
+        }
+        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $DebugPreference = 'Continue'
+            $Debug = $True
+        }
+        if($PSBoundParameters.ContainsKey('InformationAction')){
+            $InformationAction = $PSBoundParameters['InformationAction']
+        }
         #Create new runspace or reuse existing
-        if (-not $PSBoundParameters.ContainsKey('Runspacepool')) {
+        If (-not $PSBoundParameters.ContainsKey('Runspacepool')) {
             #Create a new runspacePool
             $localparams = @{
                 ImportVariables = $ImportVariables;
@@ -103,6 +116,9 @@ Function Start-MonkeyJob{
                 Throttle = $Throttle;
                 StartUpScripts = $StartUpScripts;
                 ThrowOnRunspaceOpenError = $ThrowOnRunspaceOpenError;
+                Verbose = $Verbose;
+                Debug = $Debug;
+                InformationAction = $InformationAction;
             }
             #Get runspace pool
             $Runspacepool = New-RunspacePool @localparams
@@ -213,4 +229,3 @@ Function Start-MonkeyJob{
         }
     }
 }
-

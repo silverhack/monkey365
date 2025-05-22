@@ -156,4 +156,3 @@ Function Get-RuleServiceType{
     }
 }
 
-

@@ -87,4 +87,3 @@ Function New-MonkeyEntraIDRoleObject {
         }
     }
 }
-

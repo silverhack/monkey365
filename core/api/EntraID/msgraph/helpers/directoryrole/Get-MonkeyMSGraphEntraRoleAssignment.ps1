@@ -233,4 +233,3 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
         }
     }
 }
-

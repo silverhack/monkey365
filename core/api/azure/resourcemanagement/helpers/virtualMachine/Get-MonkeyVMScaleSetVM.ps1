@@ -60,4 +60,3 @@ Function Get-MonkeyVMScaleSetVM {
         Write-Verbose $_
     }
 }
-

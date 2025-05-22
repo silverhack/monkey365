@@ -103,7 +103,6 @@ Function Get-TenantLicensingInfo{
                     $licensingInfo.ProductInfo.consumedUnits = $suspendedLicense.consumedUnits
                 }
             }
-            return $licensingInfo
         }
         Catch{
             $msg = @{
@@ -123,8 +122,7 @@ Function Get-TenantLicensingInfo{
         }
     }
     End{
-        #Nothing to do here
+        return $licensingInfo
     }
 }
-
 

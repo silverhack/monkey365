@@ -103,4 +103,3 @@ Function Get-MonkeyAzInsightActivityLogAlert {
         #nothing to do here
     }
 }
-

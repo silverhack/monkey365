@@ -65,4 +65,3 @@ Function Get-RuleFileContent{
     }
 }
 
-

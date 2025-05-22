@@ -9,7 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the specIfic language governing permissions and
 # limitations under the License.
 
 
@@ -43,7 +43,7 @@ Function New-O365Object{
     Begin{
         try{
             #Check for MyParams var
-            if($null -eq (Get-Variable -Name MyParams -ErrorAction Ignore)){
+            If($null -eq (Get-Variable -Name MyParams -ErrorAction Ignore)){
                 $MyParams = @{}
                 return
             }
@@ -64,100 +64,102 @@ Function New-O365Object{
                 'Compress'
             )
             #Get SystemInfo
-            if($null -ne (Get-Command -Name "Get-MonkeySystemInfo" -ErrorAction Ignore)){
+            If($null -ne (Get-Command -Name "Get-MonkeySystemInfo" -ErrorAction Ignore)){
                 $SystemInfo = Get-MonkeySystemInfo
                 #Get OS version
-                if($null -ne (Get-Command -Name "Get-OSVersion" -ErrorAction Ignore) -and $null -ne $SystemInfo){
+                If($null -ne (Get-Command -Name "Get-OSVersion" -ErrorAction Ignore) -and $null -ne $SystemInfo){
                     $SystemInfo.OSVersion = Get-OSVersion
                 }
-                if($null -ne $SystemInfo -and ($MyParams.ContainsKey('ForceMSALDesktop') -and $MyParams['ForceMSALDesktop'])){
+                If($null -ne $SystemInfo -and ($MyParams.ContainsKey('ForceMSALDesktop') -and $MyParams['ForceMSALDesktop'])){
                     $SystemInfo.MsalType = 'Desktop'
                 }
             }
             #Get a new User-Agent
             $UserAgent = Get-MonkeyUserAgent
             #Set OnlineServices
-            if($null -ne (Get-Variable -Name m365_plugins -ErrorAction Ignore)){
+            If($null -ne (Get-Variable -Name m365_plugins -ErrorAction Ignore)){
                 #Add Azure and EntraID
                 [ref]$null = $OnlineServices.Add('Azure',$false)
                 [ref]$null = $OnlineServices.Add('EntraID',$false)
                 #Iterate over all Microsoft 365 services
-                foreach($service in $m365_plugins.GetEnumerator()){
+                ForEach($service in $m365_plugins.GetEnumerator()){
                     [ref]$null = $OnlineServices.Add($service,$false)
                 }
             }
             ################### VERBOSE OPTIONS #######################
             #Check verbose options
-            if($MyParams.ContainsKey('Verbose') -and $MyParams.Verbose -eq $true){
-                [void]$VerboseOptions.Add('Verbose',$true)
+            If($MyParams.ContainsKey('Verbose') -and $MyParams.Verbose -eq $true){
+                [void]$VerboseOptions.Add('Verbose',$true);
+                [void]$VerboseOptions.Add('VerbosePreference','Continue');
             }
-            else{
+            Else{
                 [void]$VerboseOptions.Add('Verbose',$false)
             }
             #Check Debug options
-            if($MyParams.ContainsKey('Debug') -and $MyParams.Debug -eq $true){
+            If($MyParams.ContainsKey('Debug') -and $MyParams.Debug -eq $true){
+                [void]$VerboseOptions.Add('DebugPreference','Continue')
                 [void]$VerboseOptions.Add("Debug",$true)
             }
-            else{
+            Else{
                 [void]$VerboseOptions.Add("Debug",$false)
             }
             ################### LOG, CONSOLE OPTIONS #######################
-            if($MyParams.ContainsKey('InformationAction')){
+            If($MyParams.ContainsKey('InformationAction')){
                 Set-Variable InformationAction -Value $MyParams.InformationAction -Scope Script -Force
             }
-            else{
+            Else{
                 Set-Variable InformationAction -Value "SilentlyContinue" -Scope Script -Force
             }
             ################## Set Initial params #########################
-            foreach ($p in $init_params){
-                if ($false -eq $MyParams.ContainsKey($p)){
+            ForEach ($p in $init_params){
+                If ($false -eq $MyParams.ContainsKey($p)){
                     [void]$MyParams.Add($p,$null)
                 }
             }
             #Set Compress option
-            if($null -eq $MyParams.Compress){
+            If($null -eq $MyParams.Compress){
                 $MyParams.Compress = $false
             }
             #Set Output Dir
-            if($false -eq $MyParams.ContainsKey('OutDir')){
+            If($false -eq $MyParams.ContainsKey('OutDir')){
                 $MyParams.OutDir = ("{0}/monkey-reports" -f $ScriptPath)
             }
             #Set Environment
-            if($null -eq $MyParams.Environment){
+            If($null -eq $MyParams.Environment){
                 $MyParams.Environment = $Environment
             }
             <#
             #Set Prompt
-            if($null -eq $MyParams.PromptBehavior){
+            If($null -eq $MyParams.PromptBehavior){
                 $MyParams.PromptBehavior = 'Auto'
             }
             #>
-            #Add threads to params if not exists
-            if($null -eq $MyParams.Threads){
+            #Add threads to params If not exists
+            If($null -eq $MyParams.Threads){
                 $MyParams.Threads = 2;
             }
-            #Add auditorName if not exists
-            if($null -eq $MyParams.auditorName){
+            #Add auditorName If not exists
+            If($null -eq $MyParams.auditorName){
                 $MyParams.AuditorName = $env:USERNAME
             }
             #TODO Set instance
-            if($null -eq $MyParams.Instance -and $null -ne $MyParams.IncludeEntraID){
+            If($null -eq $MyParams.Instance -and $null -ne $MyParams.IncludeEntraID){
                 $MyParams.Instance = 'EntraID';
             }
             #Set Verbose and Debug options
-            if($false -eq $MyParams.ContainsKey('Verbose')){
+            If($false -eq $MyParams.ContainsKey('Verbose')){
                 $MyParams.Verbose = $false
             }
-            if($false -eq $MyParams.ContainsKey('Debug')){
+            If($false -eq $MyParams.ContainsKey('Debug')){
                 $MyParams.Debug = $false
             }
             #Set informationAction
-            if($false -eq $MyParams.ContainsKey('InformationAction')){
+            If($false -eq $MyParams.ContainsKey('InformationAction')){
                 $MyParams.InformationAction = 'SilentlyContinue'
             }
-            #Override params with environment vars if any
-            #Check if username and password
-            if ((Test-Path env:MONKEY_ENV_MONKEY_USER) -and (Test-Path env:MONKEY_ENV_MONKEY_PASSWORD)){
+            #Override params with environment vars If any
+            #Check If username and password
+            If ((Test-Path env:MONKEY_ENV_MONKEY_USER) -and (Test-Path env:MONKEY_ENV_MONKEY_PASSWORD)){
                 try{
                     [securestring]$cred = ConvertTo-SecureString $env:MONKEY_ENV_MONKEY_PASSWORD
                     [pscredential]$InputObject = New-Object System.Management.Automation.PSCredential ($env:MONKEY_ENV_MONKEY_USER, $cred)
@@ -167,46 +169,46 @@ Function New-O365Object{
                     Write-Error $_
                 }
             }
-            #Check if TenantID
-            if (Test-Path env:MONKEY_ENV_TENANT_ID){
+            #Check If TenantID
+            If (Test-Path env:MONKEY_ENV_TENANT_ID){
                 $MyParams.TenantID = $env:MONKEY_ENV_TENANT_ID
             }
-            #Check if AuthMode
-            if (Test-Path env:MONKEY_ENV_AUTH_MODE){
+            #Check If AuthMode
+            If (Test-Path env:MONKEY_ENV_AUTH_MODE){
                 $MyParams.AuthMode = $env:MONKEY_ENV_AUTH_MODE
             }
-            #Check if subscriptions
-            if (Test-Path env:MONKEY_ENV_SUBSCRIPTIONS){
+            #Check If subscriptions
+            If (Test-Path env:MONKEY_ENV_SUBSCRIPTIONS){
                 $MyParams.Subscriptions = $env:MONKEY_ENV_SUBSCRIPTIONS
             }
-            #Check if collect
-            if (Test-Path env:MONKEY_ENV_COLLECT){
+            #Check If collect
+            If (Test-Path env:MONKEY_ENV_COLLECT){
                 $collect = @()
-                foreach($element in $env:MONKEY_ENV_COLLECT.Split(',')){
+                ForEach($element in $env:MONKEY_ENV_COLLECT.Split(',')){
                     $collect+=$element
                 }
-                if('all' -in $collect){
+                If('all' -in $collect){
                     [void]$collect.Clear();
                     $collect+='all'
                 }
-                if($collect.Count -gt 0){
+                If($collect.Count -gt 0){
                     #Remove duplicate before adding data to analysis var
                     $MyParams.Collect = $collect | Sort-Object -Property @{Expression={$_.Trim()}} -Unique
                 }
             }
-            #Check if exportTo
-            if (Test-Path env:MONKEY_ENV_EXPORT_TO){
+            #Check If exportTo
+            If (Test-Path env:MONKEY_ENV_EXPORT_TO){
                 $exportTo = @()
-                foreach($element in $env:MONKEY_ENV_EXPORT_TO.Split(',')){
+                ForEach($element in $env:MONKEY_ENV_EXPORT_TO.Split(',')){
                     $exportTo+=$element
                 }
-                if($exportTo.Count -gt 0){
+                If($exportTo.Count -gt 0){
                     #Remove duplicate before adding data to exportTo var
                     $MyParams.ExportTo = $exportTo | Sort-Object -Property @{Expression={$_.Trim()}} -Unique
                 }
             }
-            #Check if writelog
-            if (Test-Path env:MONKEY_ENV_WRITELOG){
+            #Check If writelog
+            If (Test-Path env:MONKEY_ENV_WRITELOG){
                 try{
                     $MyParams.WriteLog = [System.Convert]::ToBoolean($env:MONKEY_ENV_WRITELOG)
                 }
@@ -214,8 +216,8 @@ Function New-O365Object{
                     $MyParams.WriteLog = $false
                 }
             }
-            #Check if Verbose
-            if (Test-Path env:MONKEY_ENV_VERBOSE){
+            #Check If Verbose
+            If (Test-Path env:MONKEY_ENV_VERBOSE){
                 try{
                     $MyParams.Verbose = [System.Convert]::ToBoolean($env:MONKEY_ENV_VERBOSE)
                 }
@@ -223,8 +225,8 @@ Function New-O365Object{
                     $MyParams.Verbose = $false
                 }
             }
-            #Check if Debug
-            if (Test-Path env:MONKEY_ENV_DEBUG){
+            #Check If Debug
+            If (Test-Path env:MONKEY_ENV_DEBUG){
                 try{
                     $MyParams.Debug = [System.Convert]::ToBoolean($env:MONKEY_ENV_DEBUG)
                 }
@@ -234,7 +236,7 @@ Function New-O365Object{
             }
             #Calculate threads for nested runspaces
             [int]$nestedMaxThreads = ($MyParams.Threads / 2)
-            if($nestedMaxThreads -eq 0){$nestedMaxThreads = 1}
+            If($nestedMaxThreads -eq 0){$nestedMaxThreads = 1}
         }
         Catch{
             throw ("[ParameterError] {0}: {1}" -f "Unable to create Monkey365 object",$_.Exception.Message)
@@ -245,108 +247,68 @@ Function New-O365Object{
         #JSON config
         try{
             $json_path = ("{0}/config/monkey365.config" -f $ScriptPath)
-            if (!(Test-Path -Path $json_path)){
+            If (!(Test-Path -Path $json_path)){
                 throw ("{0} config does not exists" -f $json_path)
             }
             $internal_config_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
             #DLP config
             $json_path = ("{0}/core/utils/dlp/monkeydlp.json" -f $ScriptPath)
-            if (!(Test-Path -Path $json_path)){
+            If (!(Test-Path -Path $json_path)){
                 throw ("{0} dlp file does not exists" -f $json_path)
             }
             $internal_dlp_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
             #Get User Properties
             $json_path = ("{0}/core/utils/properties/monkeyuserprop.json" -f $ScriptPath)
-            if (!(Test-Path -Path $json_path)){
+            If (!(Test-Path -Path $json_path)){
                 throw ("{0} user properties file does not exists" -f $json_path)
             }
             $user_prop_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
             #Get diag settings unsupported resources
             $json_path = ("{0}/core/utils/diagnosticSettings/unsupportedResources.json" -f $ScriptPath)
-            if (!(Test-Path -Path $json_path)){
+            If (!(Test-Path -Path $json_path)){
                 throw ("{0} diagnostic settings file does not exists" -f $json_path)
             }
             $diag_settings_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
             ############ Get Ruleset info ################
             $ruleSet = $rulesPath = $null;
             #Get ruleset
-            if($null -ne $MyParams.ruleset){
+            If($null -ne $MyParams.ruleset){
                 $ruleSet = $MyParams.ruleset
             }
-            else{
-                if($null -ne $MyParams.Instance -and $MyParams.Instance.ToLower() -eq "azure"){
+            Else{
+                If($null -ne $MyParams.Instance -and $MyParams.Instance.ToLower() -eq "azure"){
                     $ruleSet = $internal_config_json.ruleSettings.azureDefaultRuleset
                 }
-                elseif($null -ne $MyParams.Instance -and $MyParams.Instance.ToLower() -eq "microsoft365"){
+                ElseIf($null -ne $MyParams.Instance -and $MyParams.Instance.ToLower() -eq "microsoft365"){
                     $ruleSet = $internal_config_json.ruleSettings.m365DefaultRuleset
                 }
-                else{
+                Else{
                     #Probably Azure AD
                     $ruleSet = $internal_config_json.ruleSettings.m365DefaultRuleset
                 }
             }
             $isRoot = [System.IO.Path]::IsPathRooted($ruleSet)
-            if(-NOT $isRoot){
+            If(-NOT $isRoot){
                 $ruleSet = ("{0}/{1}" -f $ScriptPath, $ruleSet)
             }
-            if (!(Test-Path -Path $ruleSet)){
+            If (!(Test-Path -Path $ruleSet)){
                 Write-Warning ("{0} not found" -f $ruleSet)
                 $ruleSet = $null;
             }
             #Get rulespath
-            if($null -ne $MyParams.RulesPath){
+            If($null -ne $MyParams.RulesPath){
                 $rulesPath = $MyParams.RulesPath
             }
-            else{
+            Else{
                 $rulesPath = $internal_config_json.ruleSettings.rules
             }
             $isRoot = [System.IO.Path]::IsPathRooted($rulesPath)
-            if(-NOT $isRoot){
+            If(-NOT $isRoot){
                 $rulesPath = ("{0}/{1}" -f $ScriptPath, $rulesPath)
             }
-            if (!(Test-Path -Path $rulesPath)){
+            If (!(Test-Path -Path $rulesPath)){
                 Write-Warning ("{0} not found" -f $rulesPath)
                 $rulesPath = $null;
-            }
-            ############ Get data mappings ################
-            #Get JSON table options
-            $dataMappings = @()
-            $tablePath = $internal_config_json.dataMappings.mappings
-            if($null -ne $tablePath){
-                $isRoot = [System.IO.Path]::IsPathRooted($tablePath)
-                if(-NOT $isRoot){
-                    $tablePath = ("{0}/{1}" -f $ScriptPath, $tablePath)
-                }
-                if (!(Test-Path -Path $tablePath)){
-                    throw ("[ConfigFileError] {0} {1}" -f $tablePath, "data mapping not found")
-                }
-            }
-            #Get table
-            if($null -ne $MyParams.Instance){
-                switch ($MyParams.Instance.ToLower()){
-                    'azure'{
-                        #Get data mappings
-                        $_mappings = Get-JsonFromFile -path ("{0}/azure" -f $tablePath)
-                        if($_mappings){
-                            $dataMappings+=$_mappings
-                        }
-                    }
-                    'microsoft365'{
-                        #Get data mappings
-                        $_mappings = Get-JsonFromFile -path ("{0}/m365" -f $tablePath)
-                        if($_mappings){
-                            $dataMappings+=$_mappings
-                        }
-                    }
-                }
-            }
-            #Check if IncludeEntraID
-            if($MyParams.IncludeEntraID){
-                #Get data mappings
-                $_mappings = Get-JsonFromFile -path ("{0}/aad" -f $tablePath)
-                if($_mappings){
-                    $dataMappings+=$_mappings
-                }
             }
         }
         Catch{
@@ -360,8 +322,8 @@ Function New-O365Object{
             )
             #runspaces modules
             $runspaces_modules = @(
-                ('{0}/core/modules/monkeyhttpwebrequest' -f $ScriptPath),
                 ('{0}/core/modules/monkeylogger' -f $ScriptPath),
+                ('{0}/core/modules/monkeyhttpwebrequest' -f $ScriptPath),
                 ('{0}/core/modules/monkeyjob' -f $ScriptPath),
                 ('{0}/core/modules/monkeyutils' -f $ScriptPath),
                 ('{0}/core/api/m365/SharePointOnline/utils/enum.ps1' -f $ScriptPath)
@@ -417,13 +379,15 @@ Function New-O365Object{
                 Collectors = $null;
                 Licensing = $null;
                 LogPath = $null;
+                loggers = $null;
+                MonkeyLogQueue = [System.Collections.Concurrent.BlockingCollection[System.Management.Automation.InformationRecord]]::new();
                 msal_public_applications = $null;
                 msal_confidential_applications = $null;
                 msalapplication = $null;
                 application_args = $null;
                 msal_application_args = $null;
                 msalAuthArgs = $null;
-                forceMSALDesktop = if($null -ne $MyParams.ForceMSALDesktop){$MyParams.ForceMSALDesktop}else{$false};
+                forceMSALDesktop = If($null -ne $MyParams.ForceMSALDesktop){$MyParams.ForceMSALDesktop}Else{$false};
                 isConfidentialApp = $null;
                 isSharePointAdministrator = $null;
                 spoSites = $null;
@@ -478,10 +442,9 @@ Function New-O365Object{
                 excludedResources = $MyParams.ExcludedResources;
                 ruleset = $ruleSet;
                 rulesPath = $rulesPath;
-                dataMappings = $dataMappings;
                 Compress = $MyParams.Compress;
                 useMSGraphForAAD = [System.Convert]::ToBoolean($internal_config_json.entraId.useMsGraph);
-                useOldAADAPIForUsers = [System.Convert]::ToBoolean($internal_config_json.entraId.getUsersWithAADInternalAPI)
+                useOldAADAPIforUsers = [System.Convert]::ToBoolean($internal_config_json.entraId.getUsersWithAADInternalAPI)
             }
             #Create new object
             $MonkeyObj = New-Object -TypeName PSCustomObject -Property $tmp_object
@@ -494,5 +457,4 @@ Function New-O365Object{
         }
     }
 }
-
 

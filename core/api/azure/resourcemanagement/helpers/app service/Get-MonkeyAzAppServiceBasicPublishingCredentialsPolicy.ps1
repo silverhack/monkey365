@@ -65,4 +65,3 @@ Function Get-MonkeyAzAppServiceBasicPublishingCredentialsPolicy {
         #Nothing to do here
     }
 }
-

@@ -67,4 +67,3 @@ Function Get-MonkeyAzAppServiceAuthSetting {
         #Nothing to do here
     }
 }
-

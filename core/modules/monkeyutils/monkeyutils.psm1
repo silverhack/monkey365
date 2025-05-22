@@ -15,4 +15,3 @@ $LocalizedDataParams = @{
 }
 #Import localized data
 Import-LocalizedData @LocalizedDataParams;
-

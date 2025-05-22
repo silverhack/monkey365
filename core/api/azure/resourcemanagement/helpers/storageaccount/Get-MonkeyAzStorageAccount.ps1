@@ -74,4 +74,3 @@ Function Get-MonkeyAzStorageAccount {
         #Nothing to do here
     }
 }
-

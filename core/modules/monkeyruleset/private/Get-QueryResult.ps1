@@ -68,4 +68,3 @@ Function Get-QueryResult{
     }
 }
 
-

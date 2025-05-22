@@ -76,4 +76,3 @@ Function Get-MonkeyAzProviderOperation {
         Write-Verbose $_
     }
 }
-

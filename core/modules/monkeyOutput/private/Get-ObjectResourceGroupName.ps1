@@ -43,4 +43,3 @@ Function Get-ObjectResourceGroupName {
         $PSBoundParameters['InputObject'] | Select-Object -ExpandProperty resourceGroupName -ErrorAction Ignore
     }
 }
-

@@ -88,4 +88,3 @@ Function New-MonkeyVMPatchObject {
         }
     }
 }
-

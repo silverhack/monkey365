@@ -15,9 +15,9 @@ $msal_modules = @(
 $msal_modules.ForEach({Import-Module ("{0}{1}{2}" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar, $_.ToString()) -Scope Global -Force})
 
 $internal_modules = @(
+    'core/modules/monkeylogger',
     'core/modules/monkeyutils',
     'core/modules/monkeyhttpwebrequest'
-    'core/modules/monkeylogger',
     'core/modules/psmarkdig',
     'core/modules/monkeyhtml',
     'core/modules/monkeyjob',
@@ -95,4 +95,3 @@ $all_files.ForEach({. $_})
 
 $monkey = ("{0}/Invoke-Monkey365.ps1" -f $PSScriptRoot)
 . $monkey
-

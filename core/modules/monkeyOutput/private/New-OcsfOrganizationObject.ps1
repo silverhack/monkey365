@@ -42,4 +42,3 @@ Function New-OcsfOrganizationObject{
         [Ocsf.Objects.Entity.Organization]::new() | Select-Object $properties
     }
 }
-

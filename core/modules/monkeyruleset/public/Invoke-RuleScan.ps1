@@ -88,20 +88,16 @@ Function Invoke-RuleScan{
                 Verbose = $Verbose;
                 Debug = $Debug;
             }
-            $validRules = Get-ValidRule @p
+            $validRules = Get-AvailableRule @p
         }
     }
     Process{
         If($null -ne $validRules -and @($validRules).Count -gt 0){
             ForEach($RuleObj in @($validRules)){
-                #Get a deep copy of the rule
-                $ShadowRule = $RuleObj | Copy-PsObject
-                #Check if rule has a query
-                $definedQuery = Get-ObjectPropertyByPath -InputObject $ShadowRule -Property "rule.query"
-                If($null -eq $definedQuery){
+                If($RuleObj.manual){
                     #Query is empty. Set rule as a manual
                     $p =  @{
-                        InputObject = $ShadowRule;
+                        InputObject = $RuleObj.rule;
                         AffectedObjects = $null;
                         Resources = $null;
                         UnixTimestamp = $PSBoundParameters['UnixTimestamp'];
@@ -115,7 +111,7 @@ Function Invoke-RuleScan{
                 }
                 Else{
                     #Build query
-                    $ShadowRule = $ShadowRule | Build-Query
+                    $ShadowRule = $RuleObj.rule | Build-Query
                     If($null -ne $ShadowRule){
                         #Get element
                         $ObjectsToCheck = $ShadowRule | Get-ObjectFromDataset
@@ -162,4 +158,3 @@ Function Invoke-RuleScan{
         #Nothing to do here
     }
 }
-

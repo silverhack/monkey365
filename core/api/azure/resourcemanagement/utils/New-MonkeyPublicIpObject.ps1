@@ -91,4 +91,3 @@ Function New-MonkeyPublicIpObject {
         }
     }
 }
-

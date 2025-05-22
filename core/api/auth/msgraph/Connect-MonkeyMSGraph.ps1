@@ -145,4 +145,3 @@ Function Connect-MonkeyMSGraph {
     Get-MonkeyMSALToken @new_params
 }
 
-

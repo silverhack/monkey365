@@ -44,4 +44,3 @@ Function Test-IsAbsoluteUrl{
         [System.Uri]::TryCreate($InputObject,[System.UriKind]::Absolute,[ref]$result)
     }
 }
-

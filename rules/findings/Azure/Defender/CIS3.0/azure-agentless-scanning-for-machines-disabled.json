@@ -3,7 +3,7 @@
     
   ],
   "provider": "Azure",
-  "serviceType": "Microsoft Defender for Cloud",
+  "serviceType": "Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure that 'Agentless scanning for machines' component status is set to 'On'",
   "description": "Using disk snapshots, the agentless scanner scans for installed software, vulnerabilities, and plain text secrets.",
@@ -113,5 +113,4 @@
     
   ]
 }
-
 

@@ -50,4 +50,3 @@ Function Get-PropertyFromPsObject {
         }
     }
 }
-

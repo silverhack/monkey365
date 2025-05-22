@@ -3,14 +3,14 @@
     
   ],
   "provider": "Azure",
-  "serviceType": "Microsoft Defender for Cloud",
+  "serviceType": "Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure that Microsoft Defender Recommendation for 'Apply system updates' status is 'Completed'",
   "description": "Ensure that the latest OS patches for all virtual machines are applied.",
   "rationale": "
 			Windows and Linux virtual machines should be kept updated to: 
 			* Address a specific bug or flaw 
-			* Improve an OS or applicationÃ¢â‚¬â„¢s general stability 
+			* Improve an OS or applicationâ€™s general stability 
 			* Fix a security vulnerability 
 
 			Microsoft Defender for Cloud retrieves a list of available security and critical updates from Windows Update or Windows Server Update Services (WSUS), depending on which service is configured on a Windows VM. The security center also checks for the latest updates in Linux systems. If a VM is missing a system update, the security center will recommend system updates be applied.
@@ -109,5 +109,4 @@
     
   ]
 }
-
 

@@ -93,4 +93,3 @@ Function Get-MonkeyGraphAADProfilePhoto {
     }
 }
 
-

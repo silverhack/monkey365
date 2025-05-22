@@ -144,4 +144,3 @@ Function Get-MonkeyAzSubscriptionPolicyAssignment {
         #nothing to do here
     }
 }
-

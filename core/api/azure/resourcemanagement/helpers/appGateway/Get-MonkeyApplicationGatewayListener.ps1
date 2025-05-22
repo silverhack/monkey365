@@ -60,4 +60,3 @@ Function Get-MonkeyApplicationGatewayListener {
         }
     }
 }
-

@@ -83,4 +83,3 @@ Function Get-NewScriptBlock{
         Write-Error $_
     }
 }
-

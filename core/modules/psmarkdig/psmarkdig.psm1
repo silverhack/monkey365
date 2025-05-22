@@ -9,7 +9,7 @@ Function Import-MarkDigLibrary{
     $MarkDigPath = ("{0}/lib" -f $PSScriptRoot)
     ## Select the correct assemblies
     if ($PSEdition -eq 'Desktop'){
-        $files = [System.IO.Directory]::EnumerateFiles(("{0}/net40" -f $MarkDigPath), "*.dll","AllDirectories")
+        $files = [System.IO.Directory]::EnumerateFiles(("{0}/net461" -f $MarkDigPath), "*.dll","AllDirectories")
         if($null -ne $files){
             foreach ($file in $files) {
                 $Assemblies.Add($file)
@@ -17,7 +17,7 @@ Function Import-MarkDigLibrary{
         }
     }
     elseif ($PSEdition -eq 'Core'){
-        $files = [System.IO.Directory]::EnumerateFiles(("{0}/netcoreapp2.1" -f $MarkDigPath),"*.dll","AllDirectories")
+        $files = [System.IO.Directory]::EnumerateFiles(("{0}/net8.0" -f $MarkDigPath),"*.dll","AllDirectories")
         if($null -ne $files){
             foreach ($file in $files) {
                 $Assemblies.Add($file)
@@ -60,4 +60,3 @@ if($isInstalled){
 else{
     Write-Warning "Unable to load psmarkdig module"
 }
-

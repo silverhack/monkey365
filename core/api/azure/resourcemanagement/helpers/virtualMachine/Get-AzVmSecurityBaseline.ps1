@@ -137,4 +137,3 @@ Function Get-AzVmSecurityBaseline {
     }
 }
 
-

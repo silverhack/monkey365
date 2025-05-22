@@ -40,11 +40,10 @@ ConvertFrom-StringData @'
     ElementNotFound                  = Unable to find element {0} on object
     UpdatingComlianceMessage         = Updating compliance for {0} rule
     FailedQueryMessage               = The "{0}" query failed to complete its execution on "{1}" rule
-    UnitItemNotFound                 = Removing rules for "{0}" as it was not found on dataset
+    UnitItemNotFound                 = Skipping rule {0} as data was not found on dataset
     FalsePositiveDetected            = Potentially false positive detected on "{0}"
     MethodNotFound                   = GetPropertyByPath method was not loaded
     EmptyRuleGenericMessage          = Empty rule found in "{0}"
     PathNotFoundErrorMessage         = "{0}" was not found in dataset
     UnableToFormatErrorMessage       = Unable to format {0} data
 '@
-

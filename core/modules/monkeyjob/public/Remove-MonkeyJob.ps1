@@ -54,7 +54,7 @@ Function Remove-MonkeyJob{
         [Parameter(Mandatory=$true, ParameterSetName='RunspacePoolId', HelpMessage="Job RunspacePoolId")]
         [System.Guid[]]$RunspacePoolId,
 
-        [Parameter(Mandatory=$false, HelpMessage="Job RunspacePoolId")]
+        [Parameter(Mandatory=$false, HelpMessage="Force remove")]
         [Switch]$Force,
 
         [Parameter(Mandatory=$false, HelpMessage="Dispose Job")]
@@ -154,5 +154,4 @@ Function Remove-MonkeyJob{
         }
     }
 }
-
 

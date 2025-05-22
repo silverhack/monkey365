@@ -87,6 +87,7 @@ Function New-HttpClient{
             $Verbose = $True
         }
         if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+            $DebugPreference = 'Continue'
             $Debug = $True
         }
         if($PSBoundParameters.ContainsKey('InformationAction')){
@@ -145,4 +146,3 @@ Function New-HttpClient{
         return $client
     }
 }
-

@@ -114,4 +114,3 @@ Function New-MsalApplicationForSPO{
         }
     }
 }
-

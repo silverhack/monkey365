@@ -3,7 +3,7 @@
     
   ],
   "provider": "Azure",
-  "serviceType": "Microsoft Defender for Cloud",
+  "serviceType": "Defender for Cloud",
   "serviceName": "Subscription",
   "displayName": "Ensure That Microsoft Defender for Azure Cosmos DB Is Set To 'On'",
   "description": "Microsoft Defender for Cosmos DB scans all incoming network requests for changes to your virtual machine.",
@@ -125,5 +125,4 @@
     
   ]
 }
-
 

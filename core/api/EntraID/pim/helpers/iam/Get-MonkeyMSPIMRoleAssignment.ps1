@@ -88,4 +88,3 @@ Function Get-MonkeyMSPIMRoleAssignment {
         #Nothing to do here
     }
 }
-
