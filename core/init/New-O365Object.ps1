@@ -93,15 +93,17 @@ Function New-O365Object{
                 [void]$VerboseOptions.Add('VerbosePreference','Continue');
             }
             Else{
-                [void]$VerboseOptions.Add('Verbose',$false)
+                [void]$VerboseOptions.Add('Verbose',$false);
+                [void]$VerboseOptions.Add('VerbosePreference','SilentlyContinue');
             }
             #Check Debug options
             If($MyParams.ContainsKey('Debug') -and $MyParams.Debug -eq $true){
-                [void]$VerboseOptions.Add('DebugPreference','Continue')
+                [void]$VerboseOptions.Add('DebugPreference','Continue');
                 [void]$VerboseOptions.Add("Debug",$true)
             }
             Else{
-                [void]$VerboseOptions.Add("Debug",$false)
+                [void]$VerboseOptions.Add("Debug",$false);
+                [void]$VerboseOptions.Add('DebugPreference','SilentlyContinue')
             }
             ################### LOG, CONSOLE OPTIONS #######################
             If($MyParams.ContainsKey('InformationAction')){
@@ -370,6 +372,7 @@ Function New-O365Object{
                     PowerBI = $null;
                     M365Admin = $null;
                     MSPIM = $null;
+                    Fabric = $null;
                 });
                 userPrincipalName = $null;
                 userId = $null;
