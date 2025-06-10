@@ -9,6 +9,9 @@ edit_uri: blob/main/docs/
 extra_css:
 - assets/css/extra.css
 
+hooks:
+- docs_overrides/hooks/year.py
+
 theme:
   language: en
   name: material
