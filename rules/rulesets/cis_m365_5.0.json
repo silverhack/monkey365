@@ -1,4 +1,9 @@
 {
+    "about": "This ruleset contains a collection of rules for Microsoft 365 based on CIS benchmark. These rules perform static analysis on Microsoft 365 artifacts within Exchange Online, SharePoint Online, Microsoft Teams or OneDrive, among others, and are used as a mechanism to evaluate the configuration of these Microsoft 365 workloads. Rules are also divided into categories and subcategories according to the rule's type. These rules are designed to determine whether controls within a standard are being adhered to. This will ensures that Microsoft 365 tenant will meet the industry standards.",
+    "framework": {
+		"name" : "CIS Microsoft 365 Foundations",
+		"version" : "5.0.0"
+	},
   "rules": {
     "eid-iam-cloud-only-admin-accounts.json": [
       {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.1.1"}]}
