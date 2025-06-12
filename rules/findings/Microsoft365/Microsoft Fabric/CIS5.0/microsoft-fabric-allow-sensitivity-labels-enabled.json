@@ -44,5 +44,6 @@
     "shouldExist": null,
     "returnObject": null,
     "removeIfNotExists": null
-  }
+  },
+  "idSuffix": "fabric_allow_sensitivity_labels_enabled"
 }

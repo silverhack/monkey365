@@ -44,5 +44,6 @@
     "shouldExist": null,
     "returnObject": null,
     "removeIfNotExists": null
-  }
+  },
+  "idSuffix": "fabric_service_principals_cannot_create_profiles"
 }
