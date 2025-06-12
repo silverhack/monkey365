@@ -6,5 +6,43 @@
   "cis_control": "9.1.10",
   "level": "L1",
   "source": "CIS_Microsoft_365_Foundations_Benchmark_v5.0.0.md",
-  "template": "fabric-access-to-api-by-service-principal-not-restricted.json"
+  "template": "fabric-access-to-api-by-service-principal-not-restricted.json",
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Fabric",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure access to APIs by Service Principals is restricted",
+  "rationale": "Restricting API access for Service Principals reduces the risk of unauthorized automation or data exfiltration by limiting programmatic access.",
+  "impact": "Some automated integrations may require review and adjustment to comply with this restriction.",
+  "remediation": {
+    "text": "1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal\n2. Select Tenant settings.\n3. Scroll to Export and Sharing settings.\n4. Restrict API access for Service Principals as per organizational policy.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/fabric/admin/service-admin-portal-export-sharing"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "5.0.0",
+      "reference": "9.1.10",
+      "profile": "E3 Level 1, E5 Level 1"
+    }
+  ],
+  "tags": [],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  }
 }

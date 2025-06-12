@@ -6,5 +6,43 @@
   "cis_control": "9.1.5",
   "level": "L2",
   "source": "CIS_Microsoft_365_Foundations_Benchmark_v5.0.0.md",
-  "template": "fabric-interact-with-r-and-python-not-disabled.json"
+  "template": "fabric-interact-with-r-and-python-not-disabled.json",
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Fabric",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure 'Interact with and share R and Python' visuals is disabled",
+  "rationale": "Disabling R and Python visuals reduces the risk of code execution vulnerabilities and potential data exfiltration.",
+  "impact": "Users will not be able to use R or Python visuals, which may affect advanced analytics scenarios.",
+  "remediation": {
+    "text": "1. Navigate a Microsoft Fabric https://app.powerbi.com/admin-portal\n2. Select Tenant settings.\n3. Scroll to Export and Sharing settings.\n4. Disable 'Interact with and share R and Python visuals'.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/fabric/admin/service-admin-portal-export-sharing"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "5.0.0",
+      "reference": "9.1.5",
+      "profile": "E3 Level 2, E5 Level 2"
+    }
+  ],
+  "tags": [],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  }
 }
