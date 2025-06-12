@@ -1,5 +1,6 @@
 {
   "id": "microsoft-fabric-guest-access-to-content-restricted",
+  "displayName": "Ensure guest access to content is restricted",
   "title": "Ensure guest access to content is restricted",
   "description": "This setting allows Microsoft Entra B2B guest users to have full access to the browsing experience using the left-hand navigation pane in the organization. Guest users who have been assigned workspace roles or specific item permissions will continue to have those roles and/or permissions, even if this setting is disabled. The recommended state is Enabled for a subset of the organization or Disabled.",
   "cis_version": "5.0.0",

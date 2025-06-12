@@ -1,0 +1,50 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Restrict access to Entra admin center",
+  "description": "Access to the Microsoft Entra admin center should be restricted to authorized administrators only.",
+  "rationale": "Limiting access to the admin center reduces the risk of unauthorized changes and exposure of sensitive configuration.",
+  "impact": "Only authorized administrators will be able to access the Entra admin center.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\n2. Go to Roles and administrators.\n3. Assign admin roles only to trusted users.\n4. Use Conditional Access policies to restrict access to the admin center.",
+    "code": {"powerShell": null, "iac": null, "terraform": null, "other": null}
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions"
+  ],
+  "compliance": [
+    {"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.1.2.4"}
+  ],
+  "level": "medium",
+  "tags": ["CIS Microsoft 365 Foundations 5.0.0 5.1.2.4", "EntraID", "Policy"],
+  "rule": {
+    "path": "Get-MonkeyEntraIDAdminAccess",
+    "subPath": null,
+    "selectCondition": "[?value.adminCenterAccessRestricted == 'False']",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {"properties": {"adminCenterAccessRestricted": "Admin Center Access Restricted"}, "expandObject": "value"},
+      "table": "Normal",
+      "decorate": [{"ItemName": "Admin Center Access Restricted", "ItemValue": "False", "className": "badge bg-danger larger-badge"}],
+      "emphasis": [],
+      "actions": {"objectData": {"properties": ["*"], "expandObject": null, "limit": null}, "showGoToButton": "False", "showModalButton": "True", "directLink": null}
+    },
+    "text": {
+      "data": {"properties": {}, "expandObject": null},
+      "status": {"keyName": [], "message": "Access to Entra admin center is not restricted.", "defaultMessage": null},
+      "properties": {"resourceName": "AdminCenterAccess", "resourceId": "AdminCenter", "resourceType": "Microsoft.Graph.AdminCenterAccess"},
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid-access-to-entra-admin-center-restricted",
+  "notes": ["This control is equivalent to 5.1.2.4 in CIS 5.0.0."],
+  "categories": []
+}
