@@ -1,0 +1,50 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure LinkedIn account connections are disabled",
+  "description": "LinkedIn account connections should be disabled to prevent sharing of organizational data with external social networks.",
+  "rationale": "Disabling LinkedIn account connections reduces the risk of data leakage and protects organizational privacy.",
+  "impact": "Users will not be able to connect their organizational accounts to LinkedIn, which may limit some features but increases security.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\n2. Go to User settings.\n3. Set LinkedIn account connections to Disabled.\n4. Save the changes.",
+    "code": {"powerShell": null, "iac": null, "terraform": null, "other": null}
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/users/linkedin-integration"
+  ],
+  "compliance": [
+    {"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.1.2.6"}
+  ],
+  "level": "medium",
+  "tags": ["CIS Microsoft 365 Foundations 5.0.0 5.1.2.6", "EntraID", "Policy"],
+  "rule": {
+    "path": "Get-MonkeyLinkedInConnectionPolicy",
+    "subPath": null,
+    "selectCondition": "[?linkedInConnectionEnabled == 'True']",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {"properties": {"linkedInConnectionEnabled": "LinkedIn Connection Enabled"}, "expandObject": "value"},
+      "table": "Normal",
+      "decorate": [{"ItemName": "LinkedIn Connection Enabled", "ItemValue": "True", "className": "badge bg-danger larger-badge"}],
+      "emphasis": [],
+      "actions": {"objectData": {"properties": ["*"], "expandObject": null, "limit": null}, "showGoToButton": "False", "showModalButton": "True", "directLink": null}
+    },
+    "text": {
+      "data": {"properties": {}, "expandObject": null},
+      "status": {"keyName": [], "message": "LinkedIn account connections are enabled.", "defaultMessage": null},
+      "properties": {"resourceName": "LinkedInConnectionPolicy", "resourceId": "LinkedInConnection", "resourceType": "Microsoft.Graph.Policy"},
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid-disable-linkedin-account-connections",
+  "notes": ["This control is equivalent to 5.1.2.6 in CIS 5.0.0."],
+  "categories": []
+}
