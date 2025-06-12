@@ -1,0 +1,31 @@
+{
+    "Id": "3.1.1",
+    "Title": "Ensure Microsoft 365 audit log search is Enabled",
+    "Description": "When audit log search is enabled in the Microsoft Purview compliance portal, user and admin activity within the organization is recorded in the audit log and retained for 180 days by default. However, some organizations may prefer to use a third-party security information and event management (SIEM) application to access their auditing data. In this scenario, a global admin can choose to turn off audit log search in Microsoft 365.",
+    "Rationale": "Enabling audit log search in the Microsoft Purview compliance portal can help organizations improve their security posture, meet regulatory compliance requirements, respond to security incidents, and gain valuable operational insights.",
+    "Audit": {
+        "UI": [
+            "Navigate to Microsoft Purview https://purview.microsoft.com/",
+            "Select Solutions and then Audit to open the audit search.",
+            "Choose a date and time frame in the past 30 days.",
+            "Verify search capabilities (e.g. try searching for Activities as Accessed file and results should be displayed)."
+        ],
+        "PowerShell": [
+            "Connect to Exchange Online using Connect-ExchangeOnline.",
+            "Run the following PowerShell command: Get-AdminAuditLogConfig | Select-Object UnifiedAuditLogIngestionEnabled",
+            "Ensure UnifiedAuditLogIngestionEnabled is set to True."
+        ]
+    },
+    "Remediation": {
+        "UI": [
+            "Navigate to Microsoft Purview https://purview.microsoft.com/",
+            "Select Solutions and then Audit to open the audit search.",
+            "Click blue bar Start recording user and admin activity.",
+            "Click Yes on the dialog box to confirm."
+        ],
+        "PowerShell": [
+            "Connect to Exchange Online using Connect-ExchangeOnline.",
+            "Run the following PowerShell command: Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true"
+        ]
+    }
+}

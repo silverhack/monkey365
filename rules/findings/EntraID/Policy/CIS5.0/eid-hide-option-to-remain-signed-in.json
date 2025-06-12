@@ -1,0 +1,51 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Hide the option to remain signed in",
+  "description": "The option for the user to Stay signed in, or the Keep me signed in option, should be hidden to reduce risk of unauthorized access.",
+  "rationale": "Allowing users to select this option presents risk, especially if the user signs into their account on a publicly accessible computer/web browser. Hiding this option helps prevent unauthorized access.",
+  "impact": "Users will no longer be prompted upon sign-in with the message Stay signed in?. This may mean users will be forced to sign in more frequently.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\n2. Click to expand Identity> Users > User settings.\n3. Set Show keep user signed in to No.\n4. Click Save.",
+    "code": {"powerShell": null, "iac": null, "terraform": null, "other": null}
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concepts-azuremulti-factor-authentication-prompts-session-lifetime",
+    "https://learn.microsoft.com/en-us/entra/fundamentals/how-to-manage-staysigned-in-prompt"
+  ],
+  "compliance": [
+    {"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.1.2.5"}
+  ],
+  "level": "medium",
+  "tags": ["CIS Microsoft 365 Foundations 5.0.0 5.1.2.5", "EntraID", "Policy"],
+  "rule": {
+    "path": "Get-MonkeyADPolicy",
+    "subPath": null,
+    "selectCondition": "[?value.allowStaySignedIn == 'False']",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {"properties": {"allowStaySignedIn": "Allow Stay Signed In"}, "expandObject": "value"},
+      "table": "Normal",
+      "decorate": [{"ItemName": "Allow Stay Signed In", "ItemValue": "False", "className": "badge bg-danger larger-badge"}],
+      "emphasis": [],
+      "actions": {"objectData": {"properties": ["*"], "expandObject": null, "limit": null}, "showGoToButton": "False", "showModalButton": "True", "directLink": null}
+    },
+    "text": {
+      "data": {"properties": {}, "expandObject": null},
+      "status": {"keyName": [], "message": "The 'Stay signed in' option is not hidden (allowStaySignedIn is False, meaning the prompt is shown).", "defaultMessage": null},
+      "properties": {"resourceName": "DirectorySettings", "resourceId": "TenantDefault", "resourceType": "Microsoft.Graph.Policy"},
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid-hide-option-to-remain-signed-in",
+  "notes": ["This control is equivalent to 5.1.2.5 in CIS 5.0.0."],
+  "categories": []
+}

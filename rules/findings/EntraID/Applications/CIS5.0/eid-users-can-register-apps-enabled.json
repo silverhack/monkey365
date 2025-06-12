@@ -1,0 +1,94 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure third party integrated applications are not allowed",
+  "description": "App registration allows users to register custom-developed applications for use within the directory.",
+  "rationale": "Third-party integrated applications connection to services should be disabled unless there is a very clear value and robust security controls are in place. While there are legitimate uses, attackers can grant access from breached accounts to third party applications to exfiltrate data from your tenancy without having to maintain the breached account.",
+  "impact": "The implementation of this change will impact both end users and administrators. End users will not be able to integrate third-party applications that they may wish to use. Administrators are likely to receive requests from end users to grant them permission to the necessary third-party applications.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\n2. Click to expand Identity > Users select Users settings.\n3. Set Users can register applications to No.\n4. Click Save.\n\nTo remediate using PowerShell:\n1. Connect to Microsoft Graph using Connect-MgGraph -Scopes \"Policy.ReadWrite.Authorization\"\n2. Run the following commands:\n   $param = @{ AllowedToCreateApps = \"$false\" }\n   Update-MgPolicyAuthorizationPolicy -DefaultUserRolePermissions $param",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity-platform/how-applications-areadded"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "6.1.1" 
+    }
+  ],
+  "level": "high", 
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 6.1.1",
+    "EntraID",
+    "Applications"
+  ],
+  "rule": {
+    "path": "Get-MonkeyMSGraphAuthorizationPolicy",
+    "subPath": null,
+    "selectCondition": "[?defaultUserRolePermissions.allowedToCreateApps == 'True']",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "allowedToCreateApps": "Users Can Register Applications"
+        },
+        "expandObject": "defaultUserRolePermissions"
+      },
+      "table": "Normal",
+      "decorate": [
+        {
+          "ItemName": "Users Can Register Applications",
+          "ItemValue": "True",
+          "className": "badge bg-danger larger-badge"
+        }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Users are allowed to register third-party applications.",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "AuthorizationPolicy",
+        "resourceId": "DefaultUserRolePermissions",
+        "resourceType": "Microsoft.Graph.AuthorizationPolicy"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid-users-can-register-apps-enabled",
+  "notes": ["This control is similar to 5.1.2.2."],
+  "categories": []
+}

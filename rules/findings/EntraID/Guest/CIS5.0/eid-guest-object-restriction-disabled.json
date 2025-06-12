@@ -1,0 +1,95 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure that guest user access is restricted",
+  "description": "Microsoft Entra ID, part of Microsoft Entra, allows you to restrict what external guest users can see in their organization in Microsoft Entra ID. Guest users are set to a limited permission level by default in Microsoft Entra ID, while the default for member users is the full set of user permissions.\n\nThese directory level permissions are enforced across Microsoft Entra services including Microsoft Graph, PowerShell v2, the Azure portal, and My Apps portal. Microsoft 365 services leveraging Microsoft 365 groups for collaboration scenarios are also affected, specifically Outlook, Microsoft Teams, and SharePoint. They do not override the SharePoint or Microsoft Teams guest settings.\n\nThe recommended state is at least Guest users have limited access to properties and memberships of directory objects or more restrictive.",
+  "rationale": "By limiting guest access to the most restrictive state this helps prevent malicious group and user object enumeration in the Microsoft 365 environment. This first step, known as reconnaissance in The Cyber Kill Chain, is often conducted by attackers prior to more advanced targeted attacks.",
+  "impact": "The default is Guest users have limited access to properties and memberships of directory objects.\n\nWhen using the 'most restrictive' setting, guests will only be able to access their own profiles and will not be allowed to see other users' profiles, groups, or group memberships.\n\nThere are some known issues with Yammer that will prevent guests that are signed in from leaving the group.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\n2. Click to expand Identity > External Identities select External collaboration settings.\n3. Under Guest user access set Guest user access restrictions to one of the following:\n    *   State: Guest users have limited access to properties and memberships of directory objects\n    *   State: Guest user access is restricted to properties and memberships of their own directory objects (most restrictive)\n\nTo remediate using PowerShell:\n1. Connect to Microsoft Graph using Connect-MgGraph -Scopes \"Policy.ReadWrite.Authorization\"\n2. Run the following command to set the guest user access restrictions to default:\n   # Guest users have limited access to properties and memberships of directory objects\n   Update-MgPolicyAuthorizationPolicy -GuestUserRoleId '10dae51f-b6af-4016-8d66-8c2a99b929b3'\n3. Or, run the following command to set it to the \"most restrictive\":\n   # Guest user access is restricted to properties and memberships of their own directory objects (most restrictive)\n   Update-MgPolicyAuthorizationPolicy -GuestUserRoleId '2af84b1e-32c8-42b7-82bcdaa82404023b'\n\nNote: Either setting allows for a passing state.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/users/users-restrict-guestpermissions",
+    "https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "4.1.3" 
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 4.1.3",
+    "EntraID",
+    "Guest"
+  ],
+  "rule": {
+    "path": "Get-MonkeyAADExternalCollaboration",
+    "subPath": null,
+    "selectCondition": "[?value.guestUserRoleId -eq $null]", 
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "guestUserRoleId": "Guest User Role ID"
+        },
+        "expandObject": "value"
+      },
+      "table": "Normal",
+      "decorate": [
+        {
+          "ItemName": "Guest User Role ID",
+          "ItemValue": "null",
+          "className": "badge bg-danger larger-badge"
+        }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Guest user access restrictions are not set to a limited or most restrictive level (guestUserRoleId is null, implying broadest access).",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "ExternalCollaborationSettings",
+        "resourceId": "AuthorizationPolicy",
+        "resourceType": "Microsoft.Graph.AuthorizationPolicy"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid-guest-object-restriction-disabled",
+  "notes": ["This control is similar to 5.1.6.2. The condition `guestUserRoleId -eq $null` implies the most permissive setting (same access as members), which is non-compliant."],
+  "categories": []
+}

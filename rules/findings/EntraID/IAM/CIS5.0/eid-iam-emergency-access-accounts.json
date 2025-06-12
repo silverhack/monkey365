@@ -1,0 +1,91 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure two emergency access accounts have been defined",
+  "description": "Emergency access or \"break glass\" accounts are limited for emergency scenarios where normal administrative accounts are unavailable. They are not assigned to a specific user and will have a combination of physical and technical controls to prevent them from being accessed outside a true emergency. These emergencies could be due to several things, including:\n\n*   Technical failures of a cellular provider or Microsoft related service such as MFA.\n*   The last remaining Global Administrator account is inaccessible.\n\nEnsure two Emergency Access accounts have been defined.\nNote: Microsoft provides several recommendations for these accounts and how to configure them. For more information on this, please refer to the references section. The CIS Benchmark outlines the more critical things to consider.",
+  "rationale": "In various situations, an organization may require the use of a break glass account to gain emergency access. In the event of losing access to administrative functions, an organization may experience a significant loss in its ability to provide support, lose insight into its security posture, and potentially suffer financial losses.",
+  "impact": "Failure to properly implement emergency access accounts can weaken the security posture. Microsoft recommends excluding at least one of the two emergency access accounts from all conditional access rules, necessitating passwords with sufficient entropy and length to protect against random guesses. For a secure passwordless solution, FIDO2 security keys may be used instead of passwords.",
+  "remediation": {
+    "text": "Step 1 - Create two emergency access accounts:\n1. Navigate to Microsoft 365 admin center https://admin.microsoft.com\n2. Expand Users > Active Users\n3. Click Add user and create a new user with this criteria:\n    *   Name the account in a way that does NOT identify it with a particular person.\n    *   Assign the account to the default .onmicrosoft.com domain and not the organization’s.\n    *   The password must be at least 16 characters and generated randomly.\n    *   Do not assign a license.\n    *   Assign the user the Global Administrator role.\n4. Repeat the above steps for the second account.\nStep 2 - Exclude at least one account from conditional access policies:\n1. Navigate Microsoft Entra admin center https://entra.microsoft.com/\n2. Expand Protection > Conditional Access.\n3. Inspect the conditional access policies.\n4. For each rule add an exclusion for at least one of the emergency access accounts.\n5. Users > Exclude > Users and groups and select one emergency access account.\nStep 3 - Ensure the necessary procedures and policies are in place:\n*   In order for accounts to be effectively used in a break glass situation the proper policies and procedures must be authorized and distributed by senior management.\n*   FIDO2 Security Keys should be locked in a secure separate fireproof location.\n*   Passwords should be at least 16 characters, randomly generated and MAY be separated in multiple pieces to be joined on emergency.\n\nWarning: As of 10/15/2024 MFA is required for all users including Break Glass Accounts. It is recommended to update these accounts to use passkey (FIDO2) or configure certificate-based authentication for MFA. Both methods satisfy the MFA requirement.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-accesscontrol/security-planning#stage-1-critical-items-to-do-right-now",
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-accesscontrol/security-emergency-access",
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/adminunits-restricted-management",
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/conceptmandatory-multifactor-authentication#accounts"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "1.1.2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 1.1.2",
+    "EntraID",
+    "IAM"
+  ],
+  "rule": {
+    "path": "Get-MonkeyAADUser",
+    "subPath": null,
+    "selectCondition": "Select-Object -ExpandProperty value | Where-Object { $_.userPrincipalName -like '*emergency*' } | Measure-Object | Where-Object { $_.Count -lt 2 }",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "Count": "Number of Emergency Accounts"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "False",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": ["Count"],
+        "message": "Fewer than two emergency access accounts (named with 'emergency' in UPN) defined. Found {0} account(s).",
+        "defaultMessage": "Fewer than two emergency access accounts defined."
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid-iam-emergency-access-accounts",
+  "notes": [],
+  "categories": []
+}

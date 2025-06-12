@@ -1,0 +1,101 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure 'Self service password reset enabled' is set to 'All'",
+  "description": "Enabling self-service password reset allows users to reset their own passwords in Entra ID. When users sign in to Microsoft 365, they will be prompted to enter additional contact information that will help them reset their password in the future. If combined registration is enabled additional information, outside of multi-factor, will not be needed.\n\nNote: Effective Oct. 1st, 2022, Microsoft will begin to enable combined registration for all users in Entra ID tenants created before August 15th, 2020. Tenants created after this date are enabled with combined registration by default.",
+  "rationale": "Users will no longer need to engage the helpdesk for password resets, and the password reset mechanism will automatically block common, easily guessable passwords.",
+  "impact": "Users will be required to provide additional contact information to enroll in self-service password reset. Additionally, minor user education may be required for users that are used to calling a help desk for assistance with password resets.\n\nNote: This is unavailable if using Entra Connect / Sync in a hybrid environment.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\n2. Click to expand Protection > Password reset select Properties.\n3. Set Self service password reset enabled to All",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoft-365/admin/add-users/let-users-resetpasswords?view=o365-worldwide",
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/tutorial-enable-sspr",
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-registrationmfa-sspr-combined"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "5.2.1" 
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 5.2.1",
+    "EntraID",
+    "SSPR"
+  ],
+  "rule": {
+    "path": "Get-MonkeyADPasswordResetPolicy",
+    "subPath": null,
+    "selectCondition": "[?enabled -ne 'all']",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "enabled": "SSPR Enabled For"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        {
+          "ItemName": "SSPR Enabled For",
+          "ItemValue": "selected",
+          "className": "badge bg-danger larger-badge"
+        },
+        {
+          "ItemName": "SSPR Enabled For",
+          "ItemValue": "none",
+          "className": "badge bg-danger larger-badge"
+        }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": ["enabled"],
+        "message": "Self-service password reset is not enabled for 'All' users. Currently set to: {0}.",
+        "defaultMessage": "Self-service password reset is not enabled for 'All' users."
+      },
+      "properties": {
+        "resourceName": "PasswordResetPolicy",
+        "resourceId": "TenantDefault",
+        "resourceType": "Microsoft.Graph.PasswordResetPolicy"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid-sspr-enabled-set-to-all",
+  "notes": ["This control is similar to 5.2.4.1."],
+  "categories": []
+}

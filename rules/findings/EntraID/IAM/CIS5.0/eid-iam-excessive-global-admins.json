@@ -1,0 +1,90 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure that between two and four global admins are designated",
+  "description": "Between two and four global administrators should be designated in the tenant. Ideally, these accounts will not have licenses assigned to them which supports additional controls found in this benchmark.",
+  "rationale": "If there is only one global administrator, they could perform malicious activities without being detected by another admin. Designating multiple global administrators eliminates this risk and ensures redundancy if the sole remaining global administrator leaves the organization. However, to minimize the attack surface, there should be no more than four global admins set for any tenant. A large number of global admins increases the likelihood of a successful account breach by an external attacker.",
+  "impact": "The potential impact associated with ensuring compliance with this requirement is dependent upon the current number of global administrators configured in the tenant. If there is only one global administrator in a tenant, an additional global administrator will need to be identified and configured. If there are more than four global administrators, a review of role requirements for current global administrators will be required to identify which of the users require global administrator access.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to the Microsoft 365 admin center https://admin.microsoft.com\n2. Select Users > Active Users.\n3. In the Search field enter the name of the user to be made a Global Administrator.\n4. To create a new Global Admin:\n    1. Select the user's name.\n    2. A window will appear to the right.\n    3. Select Manage roles.\n    4. Select Admin center access.\n    5. Check Global Administrator.\n    6. Click Save changes.\n5. To remove Global Admins:\n    1. Select User.\n    2. Under Roles select Manage roles\n    3. De-Select the appropriate role.\n    4. Click Save changes.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/enus/powershell/module/microsoft.graph.identity.directorymanagement/getmgdirectoryrole?view=graph-powershell-1.0",
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-accesscontrol/permissions-reference#all-roles",
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/bestpractices#5-limit-the-number-of-global-administrators-to-less-than-5"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "1.1.3"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 1.1.3",
+    "EntraID",
+    "IAM"
+  ],
+  "rule": {
+    "path": "Get-MonkeyAADDirectoryRole",
+    "subPath": null,
+    "selectCondition": "[?roleTemplateId == '62e90394-69f5-4237-9190-012177145e10'].members | Where-Object { $_.Count -gt 4 -or $_.Count -lt 2 }",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "Count": "Number of Global Admins"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "False",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": ["Count"],
+        "message": "The number of Global Administrators ({0}) is not between two and four.",
+        "defaultMessage": "Number of Global Administrators is not within the recommended range of 2-4."
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid-iam-excessive-global-admins",
+  "notes": [],
+  "categories": []
+}

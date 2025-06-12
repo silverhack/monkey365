@@ -1,0 +1,118 @@
+{
+  "args": [],
+  "provider": "EntraID",
+  "serviceType": "IAM",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure Administrative accounts are cloud-only",
+  "description": "Administrative accounts are special privileged accounts that could have varying levels of access to data, users, and settings. Regular user accounts should never be utilized for administrative tasks and care should be taken, in the case of a hybrid environment, to keep administrative accounts separate from on-prem accounts. Administrative accounts should not have applications assigned so that they have no access to potentially vulnerable services (EX. email, Teams, SharePoint, etc.) and only access to perform tasks as needed for administrative purposes. Ensure administrative accounts are not On-premises sync enabled.",
+  "rationale": "In a hybrid environment, having separate accounts will help ensure that in the event of a breach in the cloud, that the breach does not affect the on-prem environment and vice versa.",
+  "impact": "Administrative users will need to utilize login/logout functionality to switch accounts when performing administrative tasks, which means they will not benefit from SSO. This will require a migration process from the 'daily driver' account to a dedicated admin account. Once the new admin account is created, permission sets should be migrated from the 'daily driver' account to the new admin account. This includes both M365 and Azure RBAC roles. Failure to migrate Azure RBAC roles could prevent an admin from seeing their subscriptions/resources while using their admin account.",
+  "remediation": {
+    "text": "Remediation will require first identifying the privileged accounts that are synced from on-premises and then creating a new cloud-only account for that user. Once a replacement account is established, the hybrid account should have its role reduced to that of a non-privileged user or removed depending on the need.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoft-365/admin/add-users/addusers?view=o365-worldwide",
+    "https://learn.microsoft.com/en-us/microsoft-365/enterprise/protect-your-globaladministrator-accounts?view=o365-worldwide",
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/bestpractices#9-use-cloud-native-accounts-for-microsoft-entra-roles",
+    "https://learn.microsoft.com/en-us/entra/fundamentals/whatis",
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-accesscontrol/permissions-reference"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "5.0.0",
+      "reference": "1.1.1",
+      "profile": "E3 Level 1, E5 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "aad_role_assignment",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "include": "aad-m365-privileged-roles.json"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "dirSyncEnabled",
+                "ne"
+              ],
+              [
+                "OnPremisesSyncEnabled",
+                "ne"
+              ]
+            ],
+            "whereObject": "effectiveUsers",
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "userPrincipalName"
+        ],
+        "message": "The {userPrincipalName} user account is not a cloud-only account and hence the account is not separated from on-prem identity",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "user"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "aad_lack_cloud_only_accounts",
+  "notes": [],
+  "categories": []
+}

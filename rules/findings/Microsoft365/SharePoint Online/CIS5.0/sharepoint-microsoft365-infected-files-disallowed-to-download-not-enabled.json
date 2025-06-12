@@ -1,0 +1,95 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "SharePoint Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure Office 365 SharePoint infected files are disallowed for download",
+  "description": "By default, SharePoint online allows files that Defender for Office 365 has detected as infected to be downloaded.",
+  "rationale": "Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams protects your organization from inadvertently sharing malicious files. When an infected file is detected that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization's security team.",
+  "impact": "The only potential impact associated with implementation of this setting is potential inconvenience associated with the small percentage of false positive detections that may occur.",
+  "remediation": {
+    "text": "To remediate using PowerShell:\n1. Connect to SharePoint Online using Connect-SPOService -Url https://tenant-admin.sharepoint.com, replacing \"tenant\" with the appropriate value.\n2. Run the following PowerShell command to set the recommended value:\n   Set-SPOTenant –DisallowInfectedFileDownload $true\n\nNote: The Global Reader role cannot access SharePoint using PowerShell according to Microsoft. See the reference section for more information.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/defender-office-365/safe-attachments-for-spoodfb-teams-configure?view=o365-worldwide",
+    "https://learn.microsoft.com/en-us/defender-office-365/anti-malware-protectionfor-spo-odfb-teams-about?view=o365-worldwide",
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-accesscontrol/permissions-reference#global-reader"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "8.5.1" 
+    }
+  ],
+  "level": "high", 
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 8.5.1",
+    "SharePoint Online"
+  ],
+  "rule": {
+    "path": "Get-MonkeySharePointOnlineTenantInfo",
+    "subPath": null,
+    "selectCondition": "[?disallowInfectedFileDownload -ne 'True']",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "disallowInfectedFileDownload": "Disallow Infected File Download"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        {
+          "ItemName": "Disallow Infected File Download",
+          "ItemValue": "False",
+          "className": "badge bg-danger larger-badge"
+        }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Downloading of infected files from SharePoint Online is not disallowed.",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "SharePointTenantSettings",
+        "resourceId": "TenantSettings",
+        "resourceType": "Microsoft.Online.SharePoint.TenantAdministration.Tenant"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "sharepoint-microsoft365-infected-files-disallowed-to-download-not-enabled",
+  "notes": ["This control is similar to 7.3.1."],
+  "categories": []
+}

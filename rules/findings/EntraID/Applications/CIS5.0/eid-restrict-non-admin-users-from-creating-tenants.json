@@ -1,0 +1,50 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Restrict non-admin users from creating tenants",
+  "description": "Non-admin users should not be able to create new Azure AD tenants. This reduces the risk of shadow IT and unmonitored environments.",
+  "rationale": "Restricting tenant creation to admins only helps prevent unauthorized or accidental creation of new tenants, which can lead to data sprawl and security risks.",
+  "impact": "Non-admin users will not be able to create new tenants. Only administrators can perform this action.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\n2. Go to Tenant settings.\n3. Set 'Restrict non-admin users from creating tenants' to Yes.\n4. Save the changes.",
+    "code": {"powerShell": null, "iac": null, "terraform": null, "other": null}
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-users-create-tenant"
+  ],
+  "compliance": [
+    {"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.1.2.3"}
+  ],
+  "level": "medium",
+  "tags": ["CIS Microsoft 365 Foundations 5.0.0 5.1.2.3", "EntraID", "Tenant"],
+  "rule": {
+    "path": "Get-MonkeyEntraIDTenantSettings",
+    "subPath": null,
+    "selectCondition": "[?value.restrictNonAdminTenantCreation == 'False']",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {"properties": {"restrictNonAdminTenantCreation": "Restrict Non-Admin Tenant Creation"}, "expandObject": "value"},
+      "table": "Normal",
+      "decorate": [{"ItemName": "Restrict Non-Admin Tenant Creation", "ItemValue": "False", "className": "badge bg-danger larger-badge"}],
+      "emphasis": [],
+      "actions": {"objectData": {"properties": ["*"], "expandObject": null, "limit": null}, "showGoToButton": "False", "showModalButton": "True", "directLink": null}
+    },
+    "text": {
+      "data": {"properties": {}, "expandObject": null},
+      "status": {"keyName": [], "message": "Non-admin users are allowed to create tenants.", "defaultMessage": null},
+      "properties": {"resourceName": "TenantSettings", "resourceId": "TenantCreation", "resourceType": "Microsoft.Graph.TenantSettings"},
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid-restrict-non-admin-users-from-creating-tenants",
+  "notes": ["This control is equivalent to 5.1.2.3 in CIS 5.0.0."],
+  "categories": []
+}

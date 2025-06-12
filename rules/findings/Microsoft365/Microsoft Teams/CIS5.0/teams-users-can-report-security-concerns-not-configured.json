@@ -1,0 +1,94 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Microsoft Teams",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure users can report security concerns in Teams",
+  "description": "User reporting settings allow a user to report a message as malicious for further analysis. This recommendation is composed of 3 different settings and all be configured to pass:\n\n*   In the Teams admin center: On by default and controls whether users are able to report messages from Teams. When this setting is turned off, users can't report messages within Teams, so the corresponding setting in the Microsoft 365 Defender portal is irrelevant.\n*   In the Microsoft 365 Defender portal: On by default for new tenants. Existing tenants need to enable it. If user reporting of messages is turned on in the Teams admin center, it also needs to be turned on the Defender portal for user reported messages to show up correctly on the User reported tab on the Submissions page.\n*   Defender - Report message destinations: This applies to more than just Microsoft Teams and allows for an organization to keep their reports contained. Due to how the parameters are configured on the backend it is included in this assessment as a requirement.",
+  "rationale": "Users will be able to more quickly and systematically alert administrators of suspicious malicious messages within Teams. The content of these messages may be sensitive in nature and therefore should be kept within the organization and not shared with Microsoft without first consulting company policy.\n\nNote:\n\n*   The reported message remains visible to the user in the Teams client.\n*   Users can report the same message multiple times.\n*   The message sender isn't notified that messages were reported.",
+  "impact": "Enabling message reporting has an impact beyond just addressing security concerns. When users of the platform report a message, the content could include messages that are threatening or harassing in nature, possibly stemming from colleagues.\n\nDue to this the security staff responsible for reviewing and acting on these reports should be equipped with the skills to discern and appropriately direct such messages to the relevant departments, such as Human Resources (HR).",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.\n2. Click to expand Messaging select Messaging policies.\n3. Click Global (Org-wide default).\n4. Set Report a security concern to On.\n5. Next, navigate to Microsoft 365 Defender https://security.microsoft.com/\n6. Click on Settings > Email & collaboration > User reported settings.\n7. Scroll to Microsoft Teams.\n8. Check Monitor reported messages in Microsoft Teams and Save.\n9. Set Send reported messages to: to My reporting mailbox only with reports configured to be sent to authorized staff.\n\nTo remediate using PowerShell:\n1. Connect to Teams PowerShell using Connect-MicrosoftTeams.\n2. Connect to Exchange Online PowerShell using Connect-ExchangeOnline.\n3. Run the following cmdlet:\n   Set-CsTeamsMessagingPolicy -Identity Global -AllowSecurityEndUserReporting $true\n4. To configure the Defender reporting policies, edit and run this script:\n   $usersub = \"userreportedmessages@fabrikam.com\" # Change this.\n   $params = @{\n     Identity                                    = \"DefaultReportSubmissionPolicy\"\n     EnableReportToMicrosoft                     = $false\n     ReportChatMessageEnabled                    = $false\n     ReportChatMessageToCustomizedAddressEnabled = $true\n     ReportJunkToCustomizedAddress               = $true\n     ReportNotJunkToCustomizedAddress            = $true\n     ReportPhishToCustomizedAddress              = $true\n     ReportJunkAddresses                         = $usersub\n     ReportNotJunkAddresses                      = $usersub\n     ReportPhishAddresses                        = $usersub\n   }\n   Set-ReportSubmissionPolicy @params\n   New-ReportSubmissionRule -Name DefaultReportSubmissionRule -ReportSubmissionPolicy DefaultReportSubmissionPolicy -SentTo $usersub",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/defender-office-365/submissionsteams?view=o365-worldwide"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "8.6.1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 8.6.1",
+    "Microsoft Teams"
+  ],
+  "rule": {
+    "path": "Get-MonkeyTeamsUser", 
+    "subPath": null,
+    "selectCondition": "[?allowUserReporting -ne 'True']", 
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "identity": "Policy Identity",
+          "allowUserReporting": "Allow User Reporting (Security Concerns)"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        {
+          "ItemName": "Allow User Reporting (Security Concerns)",
+          "ItemValue": "False",
+          "className": "badge bg-danger larger-badge"
+        }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Users cannot report security concerns in Teams (AllowSecurityEndUserReporting is not True in Global Messaging Policy).",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "identity",
+        "resourceId": "identity",
+        "resourceType": "Microsoft.Teams.MessagingPolicy" 
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "teams-users-can-report-security-concerns-not-configured",
+  "notes": ["This control is similar to 8.6.1. The command Get-MonkeyTeamsUser is a placeholder; the actual check is against `Get-CsTeamsMessagingPolicy` and its `AllowSecurityEndUserReporting` property. The Defender portal settings part of 8.6.1 would need separate checks."],
+  "categories": []
+}
