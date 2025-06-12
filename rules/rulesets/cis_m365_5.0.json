@@ -12,7 +12,7 @@
       {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.1.2"}]}
     ],
     "eid-iam-excessive-global-admins.json": [
-      {"enabled": true, "level": "high", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.1.3"}]}
+      {"args": [ "4" ],"enabled": true, "level": "high", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.1.3"}]}
     ],
     "eid-iam-privileged-users-use-licenses-with-reduced-application-footprint.json": [
       {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.1.4"}]}
