@@ -1,0 +1,10 @@
+{
+  "id": "microsoft-fabric-allow-sensitivity-labels-enabled",
+  "title": "Ensure 'Allow users to apply sensitivity labels for content' is enabled",
+  "description": "Enable sensitivity labels in Microsoft Fabric to help classify and protect data according to its sensitivity.",
+  "cis_version": "5.0.0",
+  "cis_control": "9.1.6",
+  "level": "L1",
+  "source": "CIS_Microsoft_365_Foundations_Benchmark_v5.0.0.md",
+  "template": "fabric-allow-users-apply-sensitivity-labels-not-enabled.json"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "microsoft-fabric-external-data-sharing-restricted",
+  "title": "Ensure enabling of external data sharing is restricted",
+  "description": "Restrict enabling of external data sharing in Microsoft Fabric to prevent data leakage to unauthorized parties.",
+  "cis_version": "5.0.0",
+  "cis_control": "9.1.8",
+  "level": "L1",
+  "source": "CIS_Microsoft_365_Foundations_Benchmark_v5.0.0.md",
+  "template": "fabric-enabling-external-data-sharing-not-restricted.json"
+}

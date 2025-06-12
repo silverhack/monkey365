@@ -1,0 +1,97 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Microsoft Teams",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure external domains are restricted in the Teams admin center",
+  "description": "This policy controls whether external domains are allowed, blocked or permitted based on an allowlist or denylist. When external domains are allowed, users in your organization can chat, add users to meetings, and use audio video conferencing with users in external organizations.\n\nThe recommended state is Allow only specific external domains or Block all external domains.",
+  "rationale": "Allowlisting external domains that an organization is collaborating with allows for stringent controls over who an organization's users are allowed to make contact with.\n\nSome real-world attacks and exploits delivered via Teams over external access channels include:\n\n*   DarkGate malware\n*   Social engineering / Phishing attacks by \"Midnight Blizzard\"\n*   GIFShell\n*   Username enumeration",
+  "impact": "The impact in terms of the type of collaboration users are allowed to participate in and the I.T. resources expended to manage an allowlist will increase. If a user attempts to join the inviting organization's meeting they will be prevented from joining unless they were created as a guest in EntraID or their domain was added to the allowed external domains list.\n\nNote Organizations may choose create additional policies for specific groups needing external access.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com/.\n2. Click to expand Users select External access.\n3. Select the Policies tab\n4. Click on the Global (Org-wide default) policy.\n5. Set Teams and Skype for Business users in external organizations to Off.\n6. Click Save.\n\nTo remediate using PowerShell:\n1. Connect to Teams PowerShell using Connect-MicrosoftTeams\n2. Run the following command to configure the Global (Org-wide default)` policy.\n   Set-CsExternalAccessPolicy -Identity Global -EnableFederationAccess $false\n\nNote: Configuring the organization settings to block external access or to use a domain allowlist is also ni compliance with this control.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoftteams/trusted-organizations-externalmeetings-chat?tabs=organization-settings",
+    "https://cybersecurity.att.com/blogs/security-essentials/darkgate-malwaredelivered-via-microsoft-teams-detection-and-response",
+    "https://www.microsoft.com/en-us/security/blog/2023/08/02/midnight-blizzardconducts-targeted-social-engineering-over-microsoft-teams/",
+    "https://www.bitdefender.com/blog/hotforsecurity/gifshell-attack-lets-hackerscreate-reverse-shell-through-microsoft-teams-gifs/"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "4.2.1"
+    }
+  ],
+  "level": "high",
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 4.2.1",
+    "Microsoft Teams"
+  ],
+  "rule": {
+    "path": "Get-MonkeyTeamsClientConfiguration",
+    "subPath": null,
+    "selectCondition": "[?allowAnyUsers == 'True']",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "identity": "Policy Identity",
+          "allowAnyUsers": "Allow Any Users (External Access)"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        {
+          "ItemName": "Allow Any Users (External Access)",
+          "ItemValue": "True",
+          "className": "badge bg-danger larger-badge"
+        }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "External access in Microsoft Teams is not restricted to specific domains or blocked entirely.",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "identity",
+        "resourceId": "identity",
+        "resourceType": "Microsoft.Teams.ClientConfiguration"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "teams-external-access-not-restricted",
+  "notes": ["This control is similar to 8.2.1. The command Get-MonkeyTeamsClientConfiguration and property `allowAnyUsers` seems to be a more direct check for the 'Allow all external domains' scenario which is non-compliant."],
+  "categories": []
+}

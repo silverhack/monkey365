@@ -1,0 +1,94 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure user consent to apps accessing company data on their behalf is not allowed",
+  "description": "Control when end users and group owners are allowed to grant consent to applications, and when they will be required to request administrator review and approval. Allowing users to grant apps access to data helps them acquire useful applications and be productive but can represent a risk in some situations if it's not monitored and controlled carefully.",
+  "rationale": "Attackers commonly use custom applications to trick users into granting them access to company data. Restricting user consent mitigates this risk and helps to reduce the threat-surface.",
+  "impact": "If user consent is disabled, previous consent grants will still be honored but all future consent operations must be performed by an administrator. Tenant-wide admin consent can be requested by users through an integrated administrator consent request workflow or through organizational support processes.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\n2. Click to expand Identity > Applications select Enterprise applications.\n3. Under Security select Consent and permissions > User consent settings.\n4. Under User consent for applications select Do not allow user consent.\n5. Click the Save option at the top of the window.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-userconsent?pivots=portal"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "6.1.2" 
+    }
+  ],
+  "level": "high", 
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 6.1.2",
+    "EntraID",
+    "Applications"
+  ],
+  "rule": {
+    "path": "Get-MonkeyEntraIDPortalAdminConsentSetting",
+    "subPath": null,
+    "selectCondition": "[?value.usersCanConsentToApps == 'True']",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "usersCanConsentToApps": "Users Can Consent to Apps"
+        },
+        "expandObject": "value"
+      },
+      "table": "Normal",
+      "decorate": [
+        {
+          "ItemName": "Users Can Consent to Apps",
+          "ItemValue": "True",
+          "className": "badge bg-danger larger-badge"
+        }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Users are allowed to consent to applications accessing company data on their behalf.",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "AdminConsentSettings",
+        "resourceId": "UserConsentSettings",
+        "resourceType": "Microsoft.Graph.AdminConsentRequestPolicy" 
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid-users-can-consent-apps-data-access",
+  "notes": ["This control is similar to 5.1.5.1."],
+  "categories": []
+}

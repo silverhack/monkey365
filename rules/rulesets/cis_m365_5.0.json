@@ -1,0 +1,196 @@
+{
+  "rules": {
+    "eid-iam-cloud-only-admin-accounts.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.1.1"}]}
+    ],
+    "eid-iam-emergency-access-accounts.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.1.2"}]}
+    ],
+    "eid-iam-excessive-global-admins.json": [
+      {"enabled": true, "level": "high", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.1.3"}]}
+    ],
+    "eid-iam-privileged-users-use-licenses-with-reduced-application-footprint.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.1.4"}]}
+    ],
+    "eid-public-group-detected.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.2.1"}]}
+    ],
+    "exo-sign-in-shared-mailbox-enabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.2.2"}]}
+    ],
+    "eid-password-expiring-enabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.3.1"}]}
+    ],
+    "eid-idle-session-exists.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.3.2"}]}
+    ],
+    "exchange-calendar-sharing-external-user-enabled.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.3.3"}]}
+    ],
+    "m365-user-owned-apps-and-services-allowed.json": [
+      {"enabled": true, "level": "low", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.3.4"}]}
+    ],
+    "forms-internal-phishing-protection-disabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.3.5"}]}
+    ],
+    "exchange-customer-lockout-feature-enabled.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.3.6"}]}
+    ],
+    "third-party-storage-allowed-microsoft365.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.3.7"}]}
+    ],
+    "sway-external-sharing-enabled.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "1.3.8"}]}
+    ],
+    "eid-cap-block-legacy-authentication-not-enabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.1"}]}
+    ],
+    "exchange-smtp-auth-enabled.json": [
+      {"enabled": true, "level": "low", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.2"}]}
+    ],
+    "sharepoint-modern-authentication-required.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.3"}]}
+    ],
+    "eid-ensure-mfa-for-high-privileged-users-missing-cap.json": [
+      {"enabled": true, "level": "high", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "3.1.1"}]}
+    ],
+    "eid-ensure-mfa-for-users-missing-cap.json": [
+      {"enabled": true, "level": "high", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "3.1.2"}]}
+    ],
+    "eid-weak-authentication-methods-enabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "3.1.5"}]}
+    ],
+    "eid-guest-invite-restriction-disabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "4.1.1"}]}
+    ],
+    "eid-guest-object-restriction-disabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "4.1.3"}]}
+    ],
+    "teams-external-access-not-restricted.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "4.2.1"}]}
+    ],
+    "eid-stay-signed-policy-disabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.1.1"}]}
+    ],
+    "eid-sspr-enabled-set-to-all.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.2.1"}]}
+    ],
+    "eid-sspr-reset-number-of-methods.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.2.2"}]}
+    ],
+    "eid-users-can-register-apps-enabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "6.1.1"}]}
+    ],
+    "eid-users-can-consent-apps-data-access.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "6.1.2"}]}
+    ],
+    "purview-audit-log-search-disabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "7.1.1"}]}
+    ],
+    "purview-dlp-policies-disabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "7.2.1"}]}
+    ],
+    "exchange-atp-preset-security-policy-not-enabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "8.1.1"}]}
+    ],
+    "exchange-mail-forwarding-blocked-and-disabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "8.2.1"}]}
+    ],
+    "exchange-lack-of-comprehensive-attachment-filtering.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "8.3.1"}]}
+    ],
+    "exchange-atp-safe-links-office365-apps-disabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "8.4.1"}]}
+    ],
+    "sharepoint-microsoft365-infected-files-disallowed-to-download-not-enabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "8.5.1"}]}
+    ],
+    "teams-users-can-report-security-concerns-not-configured.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "8.6.1"}]}
+    ],
+    "exchange-atp-safe-links-office365-apps-disabled.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.1"}]}
+    ],
+    "exchange-common-attachment-type-filter-enabled.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.2"}]}
+    ],
+    "exchange-notifications-for-internal-users-sending-malware-disabled.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.3"}]}
+    ],
+    "exchange-atp-safe-attachments-policy-disabled.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.4"}]}
+    ],
+    "exchange-atp-safe-attachments-for-sharepoint-onedrive-and-teams-disabled.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.5"}]}
+    ],
+    "exchange-spam-policies-notify-admin-disabled.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.6"}]}
+    ],
+    "exchange-missing-dmarc-records.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.10"}]}
+    ],
+    "exchange-lack-of-comprehensive-attachment-filtering.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.11"}]}
+    ],
+    "exchange-connection-filter-ip-allow-list-enabled.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.12"}]}
+    ],
+    "exchange-connection-filter-safe-list-enabled.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.13"}]}
+    ],
+    "exhange-inbound-anti-spam-policies-allowed-domains.json": [
+      {"enabled": false, "level": "info", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "2.1.14"}]}
+    ],
+    "eid-per-user-mfa-disabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.1.2.1"}]}
+    ],
+    "eid-third-party-integrated-applications-disabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.1.2.2"}]}
+    ],
+    "eid-restrict-non-admin-users-from-creating-tenants.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.1.2.3"}]}
+    ],
+    "eid-access-to-entra-admin-center-restricted.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.1.2.4"}]}
+    ],
+    "eid-hide-option-to-remain-signed-in.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.1.2.5"}]}
+    ],
+    "eid-disable-linkedin-account-connections.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "5.1.2.6"}]}
+    ],
+    "microsoft-fabric-guest-user-access-restricted.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "9.1.1"}]}
+    ],
+    "microsoft-fabric-external-user-invitations-restricted.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "9.1.2"}]}
+    ],
+    "microsoft-fabric-guest-access-to-content-restricted.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "9.1.3"}]}
+    ],
+    "microsoft-fabric-publish-to-web-restricted.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "9.1.4"}]}
+    ],
+    "microsoft-fabric-interact-share-r-python-visuals-disabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "9.1.5"}]}
+    ],
+    "microsoft-fabric-allow-sensitivity-labels-enabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "9.1.6"}]}
+    ],
+    "microsoft-fabric-shareable-links-restricted.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "9.1.7"}]}
+    ],
+    "microsoft-fabric-external-data-sharing-restricted.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "9.1.8"}]}
+    ],
+    "microsoft-fabric-block-resourcekey-authentication-enabled.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "9.1.9"}]}
+    ],
+    "microsoft-fabric-service-principals-api-access-restricted.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "9.1.10"}]}
+    ],
+    "microsoft-fabric-service-principals-cannot-create-profiles.json": [
+      {"enabled": true, "level": "medium", "compliance": [{"name": "CIS Microsoft 365 Foundations", "version": "5.0.0", "reference": "9.1.11"}]}
+    ]
+  }
+}

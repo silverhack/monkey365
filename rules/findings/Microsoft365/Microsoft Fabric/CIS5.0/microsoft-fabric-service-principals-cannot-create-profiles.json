@@ -1,0 +1,10 @@
+{
+  "id": "microsoft-fabric-service-principals-cannot-create-profiles",
+  "title": "Ensure Service Principals cannot create and use profiles",
+  "description": "Prevent Service Principals from creating and using profiles in Microsoft Fabric to limit privilege escalation and unauthorized access.",
+  "cis_version": "5.0.0",
+  "cis_control": "9.1.11",
+  "level": "L1",
+  "source": "CIS_Microsoft_365_Foundations_Benchmark_v5.0.0.md",
+  "template": "fabric-service-principals-can-create-and-use-profiles.json"
+}

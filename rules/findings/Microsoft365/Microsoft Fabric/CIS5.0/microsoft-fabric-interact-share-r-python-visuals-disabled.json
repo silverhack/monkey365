@@ -1,0 +1,10 @@
+{
+  "id": "microsoft-fabric-interact-share-r-python-visuals-disabled",
+  "title": "Ensure 'Interact with and share R and Python' visuals is disabled",
+  "description": "Disable the ability to interact with and share R and Python visuals in Microsoft Fabric to reduce risk of code execution vulnerabilities.",
+  "cis_version": "5.0.0",
+  "cis_control": "9.1.5",
+  "level": "L2",
+  "source": "CIS_Microsoft_365_Foundations_Benchmark_v5.0.0.md",
+  "template": "fabric-interact-with-r-and-python-not-disabled.json"
+}

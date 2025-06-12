@@ -1,0 +1,102 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure multifactor authentication is enabled for all users in administrative roles",
+  "description": "Multifactor authentication is a process that requires an additional form of identification during the sign-in process, such as a code from a mobile device or a fingerprint scan, to enhance security.\n\nEnsure users in administrator roles have MFA capabilities enabled.",
+  "rationale": "Multifactor authentication requires an individual to present a minimum of two separate forms of authentication before access is granted. Multifactor authentication provides additional assurance that the individual attempting to gain access is who they claim to be. With multifactor authentication, an attacker would need to compromise at least two different authentication mechanisms, increasing the difficulty of compromise and thus reducing the risk.",
+  "impact": "Implementation of multifactor authentication for all users in administrative roles will necessitate a change to user routine. All users in administrative roles will be required to enroll in multifactor authentication using phone, SMS, or an authentication application. After enrollment, use of multifactor authentication will be required for future access to the environment.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.\n2. Click expand Protection > Conditional Access select Policies.\n3. Click New policy.\n    *   Under Users include Select users and groups and check Directory roles.\n    *   At a minimum, include the directory roles listed below in this section of the document.\n    *   Under Target resources include All resources (formerly 'All cloud apps') and do not create any exclusions.\n    *   Under Grant select Grant Access and check either Require multifactor authentication or Require authentication strength.\n    *   Click Select at the bottom of the pane.\n4. Under Enable policy set it to Report-only until the organization is ready to enable it.\n5. Click Create.\n\nAt minimum these directory roles should be included for MFA:\n\n*   Application administrator\n*   Authentication administrator\n*   Billing administrator\n*   Cloud application administrator\n*   Conditional Access administrator\n*   Exchange administrator\n*   Global administrator\n*   Global reader\n*   Helpdesk administrator\n*   Password administrator\n*   Privileged authentication administrator\n*   Privileged role administrator\n*   Security administrator\n*   SharePoint administrator\n*   User administrator\n\nNote: Report-only is an acceptable first stage when introducing any CA policy. The control, however, is not complete until the policy is on.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howtoconditional-access-policy-admin-mfa"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "3.1.1"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 3.1.1",
+    "EntraID",
+    "Conditional Access"
+  ],
+  "rule": {
+    "path": "Get-MonkeyAADConditionalAccess",
+    "subPath": null,
+    "selectCondition": "rules/conditions/EntraID/IAM/aad-m365-privileged-roles.json",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "displayName": "Policy Name",
+          "state": "State",
+          "grantControlsBuiltInControls": "Grant Controls",
+          "usersIncludeRoles": "Included Roles"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+         {
+          "ItemName": "State",
+          "ItemValue": "enabledForReportingButNotEnforced",
+          "className": "badge bg-warning larger-badge"
+        },
+        {
+          "ItemName": "State",
+          "ItemValue": "disabled",
+          "className": "badge bg-danger larger-badge"
+        }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "A Conditional Access Policy requiring MFA for administrative roles is missing or not correctly configured.",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "Microsoft.Graph.ConditionalAccessPolicy"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid-ensure-mfa-for-high-privileged-users-missing-cap",
+  "notes": ["This control is similar to 5.2.2.1. The selectCondition points to an external JSON file which defines the logic for identifying non-compliant policies."],
+  "categories": []
+}

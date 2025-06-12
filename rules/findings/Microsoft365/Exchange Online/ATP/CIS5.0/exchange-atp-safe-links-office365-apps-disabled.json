@@ -1,0 +1,103 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure Safe Links for Office Applications is Enabled",
+  "description": "Enabling Safe Links policy for Office applications allows URL's that exist inside of Office documents and email applications opened by Office, Office Online and Office mobile to be processed against Defender for Office time-of-click verification and rewritten if required.\n\nNote: E5 Licensing includes a number of Built-in Protection policies. When auditing policies note which policy you are viewing, and keep in mind CIS recommendations often extend the Default or Build-in Policies provided by MS. In order to Pass the highest priority policy must match all settings recommended.",
+  "rationale": "Safe Links for Office applications extends phishing protection to documents and emails that contain hyperlinks, even after they have been delivered to a user.",
+  "impact": "User impact associated with this change is minor - users may experience a very short delay when clicking on URLs in Office documents before being directed to the requested site. Users should be informed of the change as, in the event a link is unsafe and blocked, they will receive a message that it has been blocked.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft 365 Defender https://security.microsoft.com\n2. Under Email & collaboration select Policies & rules\n3. Select Threat policies then Safe Links\n4. Click on +Create\n5. Name the policy then click Next\n6. In Domains select all valid domains for the organization and Next\n7. Ensure the following URL & click protection settings are defined:\n   Email\n    *   Checked On: Safe Links checks a list of known, malicious links when users click links in email. URLs are rewritten by default\n    *   Checked Apply Safe Links to email messages sent within the organization\n    *   Checked Apply real-time URL scanning for suspicious links and links that point to files\n    *   Checked Wait for URL scanning to complete before delivering the message\n    *   Unchecked Do not rewrite URLs, do checks via Safe Links API only.\n   Teams\n    *   Checked On: Safe Links checks a list of known, malicious links when users click links in Microsoft Teams. URLs are not rewritten\n   Office 365 Apps\n    *   Checked On: Safe Links checks a list of known, malicious links when users click links in Microsoft Office apps. URLs are not rewritten\n   Click protection settings\n    *   Checked Track user clicks\n    *   Unchecked Let users click through the original URL\n   There is no recommendation for organization branding.\n8. Click Next twice and finally Submit\n\nTo remediate using PowerShell:\n1. Connect using Connect-ExchangeOnline.\n2. Run the following PowerShell script to create a policy at highest priority that will apply to all valid domains on the tenant:\n   # Create the Policy\n   $params = @{\n     Name                       = \"CIS SafeLinks Policy\"\n     EnableSafeLinksForEmail    = $true\n     EnableSafeLinksForTeams    = $true\n     EnableSafeLinksForOffice   = $true\n     TrackClicks                = $true\n     AllowClickThrough          = $false\n     ScanUrls                   = $true\n     EnableForInternalSenders   = $true\n     DeliverMessageAfterScan    = $true\n     DisableUrlRewrite          = $false\n   }\n   New-SafeLinksPolicy @params\n   # Create the rule for all users in all valid domains and associate with Policy\n   New-SafeLinksRule -Name \"CIS SafeLinks\" -SafeLinksPolicy \"CIS SafeLinks Policy\" -RecipientDomainIs (Get-AcceptedDomain).Name -Priority 0",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/defender-office-365/safe-links-policiesconfigure?view=o365-worldwide",
+    "https://learn.microsoft.com/en-us/powershell/module/exchange/setsafelinkspolicy?view=exchange-ps",
+    "https://learn.microsoft.com/en-us/defender-office-365/preset-securitypolicies?view=o365-worldwide"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "8.4.1" 
+    }
+  ],
+  "level": "high", 
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 8.4.1",
+    "Exchange Online",
+    "ATP"
+  ],
+  "rule": {
+    "path": "Get-MonkeyEXOSafeLinkPolicy",
+    "subPath": null,
+    "selectCondition": "[?isEnabled -ne 'True' -or enableForOfficeClients -ne 'True']",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Policy Name",
+          "isEnabled": "Policy Enabled",
+          "enableForOfficeClients": "Enabled for Office Clients"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        {
+          "ItemName": "Policy Enabled",
+          "ItemValue": "False",
+          "className": "badge bg-danger larger-badge"
+        },
+        {
+          "ItemName": "Enabled for Office Clients",
+          "ItemValue": "False",
+          "className": "badge bg-danger larger-badge"
+        }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "ATP Safe Links policy for Office 365 Apps is not enabled or not configured correctly.",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "identity",
+        "resourceType": "Microsoft.Exchange.Management.SystemConfigurationTasks.SafeLinksPolicy"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "exchange-atp-safe-links-office365-apps-disabled",
+  "notes": ["This control is similar to 2.1.1."],
+  "categories": []
+}

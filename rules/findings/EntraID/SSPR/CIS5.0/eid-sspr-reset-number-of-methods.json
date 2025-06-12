@@ -1,0 +1,94 @@
+{
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "EntraID",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure SSPR 'Number of methods required to reset' is 2",
+  "description": "This setting determines the number of different authentication methods a user must pass to reset their password. This can be set to one or two.",
+  "rationale": "Requiring two methods makes it more difficult for an attacker to reset a user's password without authorization. If only one method is required, and an attacker gains access to that one factor (for example, a user's secondary email account), they can reset the password and take control of the primary account.",
+  "impact": "Users will be required to provide two forms of authentication methods to reset their password. This might be slightly more inconvenient but significantly increases security.",
+  "remediation": {
+    "text": "To remediate using the UI:\n1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\n2. Click to expand Protection > Password reset.\n3. Select Authentication methods.\n4. Set Number of methods required to reset to 2.\n5. Click Save.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-sspr-howitworks#authentication-methods"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations",
+      "version": "5.0.0",
+      "reference": "5.2.2"
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    "CIS Microsoft 365 Foundations 5.0.0 5.2.2",
+    "EntraID",
+    "SSPR"
+  ],
+  "rule": {
+    "path": "Get-MonkeyADPasswordResetPolicy",
+    "subPath": null,
+    "selectCondition": "[?numberOfMethodsToReset -lt 2]",
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "numberOfMethodsToReset": "Number of Methods to Reset"
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        {
+          "ItemName": "Number of Methods to Reset",
+          "ItemValue": "1",
+          "className": "badge bg-danger larger-badge"
+        }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": ["*"],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "False",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": ["numberOfMethodsToReset"],
+        "message": "SSPR 'Number of methods required to reset' is set to {0}, which is less than the recommended 2.",
+        "defaultMessage": "SSPR 'Number of methods required to reset' is less than 2."
+      },
+      "properties": {
+        "resourceName": "PasswordResetPolicy",
+        "resourceId": "TenantDefault",
+        "resourceType": "Microsoft.Graph.PasswordResetPolicy"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid-sspr-reset-number-of-methods",
+  "notes": [],
+  "categories": []
+}

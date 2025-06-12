@@ -1,0 +1,10 @@
+{
+  "id": "microsoft-fabric-service-principals-api-access-restricted",
+  "title": "Ensure access to APIs by Service Principals is restricted",
+  "description": "Restrict access to APIs by Service Principals in Microsoft Fabric to reduce risk of unauthorized automation or data access.",
+  "cis_version": "5.0.0",
+  "cis_control": "9.1.10",
+  "level": "L1",
+  "source": "CIS_Microsoft_365_Foundations_Benchmark_v5.0.0.md",
+  "template": "fabric-access-to-api-by-service-principal-not-restricted.json"
+}
