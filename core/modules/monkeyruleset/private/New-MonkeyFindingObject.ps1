@@ -61,11 +61,21 @@ Function New-MonkeyFindingObject {
             if ($null -eq $InputObject.PSObject.Properties.Item('output') -or $null -eq $InputObject.output) {
                 $InputObject | Add-Member -Type NoteProperty -Name output -Value ([pscustomobject]@{}) -Force
             }
+            # Ensure output is a [pscustomobject]
+            if ($null -eq $InputObject.output -or $InputObject.output -isnot [pscustomobject]) {
+                $InputObject.output = [pscustomobject]@{}
+            }
             if ($null -eq $InputObject.output.PSObject.Properties.Item('html') -or $null -eq $InputObject.output.html) {
                 $InputObject.output | Add-Member -Type NoteProperty -Name html -Value ([pscustomobject]@{}) -Force
             }
+            if ($null -eq $InputObject.output.html -or $InputObject.output.html -isnot [pscustomobject]) {
+                $InputObject.output.html = [pscustomobject]@{}
+            }
             if ($null -eq $InputObject.output.PSObject.Properties.Item('text') -or $null -eq $InputObject.output.text) {
                 $InputObject.output | Add-Member -Type NoteProperty -Name text -Value ([pscustomobject]@{}) -Force
+            }
+            if ($null -eq $InputObject.output.text -or $InputObject.output.text -isnot [pscustomobject]) {
+                $InputObject.output.text = [pscustomobject]@{}
             }
             #Check level
             if($null -eq $InputObject.PsObject.Properties.Item('level')){
