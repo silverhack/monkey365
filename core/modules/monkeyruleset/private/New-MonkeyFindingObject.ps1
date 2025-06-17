@@ -57,6 +57,16 @@ Function New-MonkeyFindingObject {
     )
     Process{
         try{
+            # Ensure output, html, and text properties are initialized
+            if ($null -eq $InputObject.PSObject.Properties.Item('output') -or $null -eq $InputObject.output) {
+                $InputObject | Add-Member -Type NoteProperty -Name output -Value ([pscustomobject]@{}) -Force
+            }
+            if ($null -eq $InputObject.output.PSObject.Properties.Item('html') -or $null -eq $InputObject.output.html) {
+                $InputObject.output | Add-Member -Type NoteProperty -Name html -Value ([pscustomobject]@{}) -Force
+            }
+            if ($null -eq $InputObject.output.PSObject.Properties.Item('text') -or $null -eq $InputObject.output.text) {
+                $InputObject.output | Add-Member -Type NoteProperty -Name text -Value ([pscustomobject]@{}) -Force
+            }
             #Check level
             if($null -eq $InputObject.PsObject.Properties.Item('level')){
                 $InputObject | Add-Member -Type NoteProperty -name level -value $null -Force
