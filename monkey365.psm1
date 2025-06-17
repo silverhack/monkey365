@@ -23,7 +23,7 @@ $internal_modules = @(
     'core/modules/monkeyjob',
     'core/modules/monkeyruleset',
     'core/modules/psocsf',
-    'core/modules/monkeyOutput'
+    'core/modules/monkeyoutput'
 )
 $internal_modules.ForEach({Import-Module ("{0}{1}{2}" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar, $_.ToString()) -Force})
 
@@ -95,3 +95,5 @@ $all_files.ForEach({. $_})
 
 $monkey = ("{0}/Invoke-Monkey365.ps1" -f $PSScriptRoot)
 . $monkey
+$test = ("{0}/Invoke-Test.ps1" -f $PSScriptRoot)
+. $test

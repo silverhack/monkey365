@@ -121,12 +121,3 @@ function Get-MonkeyTeamsTenant {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-

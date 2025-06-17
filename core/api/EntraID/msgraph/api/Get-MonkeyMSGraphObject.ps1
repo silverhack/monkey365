@@ -35,56 +35,56 @@ Function Get-MonkeyMSGraphObject{
     #>
     [CmdletBinding()]
     Param (
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage='Authentication Object')]
         [Object]$Authentication,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$true, HelpMessage='Environment')]
         [Object]$Environment,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Object Type')]
         [String]$ObjectType,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage = 'Object ID')]
         [String]$ObjectId,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$False, HelpMessage='Filter')]
         [String]$Filter,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$False, HelpMessage='Expand')]
         [String]$Expand,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$False, HelpMessage='Top objects')]
         [String]$Top,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$False, HelpMessage='Order by')]
         [String]$orderBy,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$False, HelpMessage='Select objects')]
         [String[]]$Select,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [switch]$Count,
+        [parameter(Mandatory=$False, HelpMessage='Count objects')]
+        [Switch]$Count,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [switch]$me,
+        [parameter(Mandatory=$False, HelpMessage='Me')]
+        [Switch]$me,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [switch]$AddConsistencyLevelHeader,
+        [parameter(Mandatory=$False, HelpMessage='Add consistency level header')]
+        [Switch]$AddConsistencyLevelHeader,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$False, HelpMessage='RAW Query')]
         [String]$RawQuery,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$False, HelpMessage='Method')]
         [ValidateSet("CONNECT","GET","POST","HEAD","PUT")]
         [String]$Method = "GET",
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$False, HelpMessage='Content type')]
         [String]$ContentType = "application/json",
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [object]$Data,
+        [parameter(Mandatory=$False, HelpMessage='POST Data object')]
+        [Object]$Data,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$False, HelpMessage='API Version')]
         [String]$APIVersion = "v1.0"
     )
     Begin{

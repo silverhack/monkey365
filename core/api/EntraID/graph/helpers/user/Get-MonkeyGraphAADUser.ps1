@@ -9,7 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the specIfic language governing permissions and
 # limitations under the License.
 
 Function Get-MonkeyGraphAADUser {
@@ -68,11 +68,11 @@ Function Get-MonkeyGraphAADUser {
         }
     }
     Process{
-        if($PSCmdlet.ParameterSetName -eq 'UserId'){
+        If($PSBoundParameters.ContainsKey('UserId') -and $PSBoundParameters['UserId']){
             $uri = ("{0}/myorganization/users('{1}')?api-version={2}" `
                     -f $Environment.Graph, $UserId,$aadConf.internal_api_version)
 
-            $params = @{
+            $p = @{
                 Authentication = $AADAuth;
                 OwnQuery = $uri;
                 Environment = $Environment;
@@ -82,11 +82,10 @@ Function Get-MonkeyGraphAADUser {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $allUsers = Get-MonkeyGraphObject @params
         }
-        else{
+        Else{
             #Get users
-		    $params = @{
+		    $p = @{
 			    Authentication = $AADAuth;
 			    ObjectType = "users";
 			    Environment = $Environment;
@@ -98,9 +97,9 @@ Function Get-MonkeyGraphAADUser {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 		    }
-		    $allUsers = Get-MonkeyGraphObject @params
         }
-        if($allUsers -and $BypassMFACheck.IsPresent -eq $false){
+        $allUsers = Get-MonkeyGraphObject @p
+        If($allUsers -and $BypassMFACheck.IsPresent -eq $false){
             #Create new id property
             foreach($User in @($allUsers)){
                 $mfaStatus = $mfaenabled = $null
@@ -113,20 +112,20 @@ Function Get-MonkeyGraphAADUser {
                 #Get PhoneApp Details
                 $phoneAppDetails = $User.strongAuthenticationDetail.phoneAppDetails
                 #Get Office phone authentication method
-                $office_phone_mfa = $strong_auth | Where-Object {$null -ne $_.verificationDetail -and $_.verificationDetail.voiceOnlyPhoneNumber}
+                $office_phone_mfa = $strong_auth | Where-Object {$null -ne $_.verIficationDetail -and $_.verIficationDetail.voiceOnlyPhoneNumber}
                 #Get Phone authentication method
-                $phone_mfa = $strong_auth | Where-Object {$null -ne $_.verificationDetail -and $_.verificationDetail.phoneNumber}
+                $phone_mfa = $strong_auth | Where-Object {$null -ne $_.verIficationDetail -and $_.verIficationDetail.phoneNumber}
                 #Get alternative Phone authentication method
-                $alt_phone_mfa = $strong_auth | Where-Object {$null -ne $_.verificationDetail -and $_.verificationDetail.alternativePhoneNumber}
+                $alt_phone_mfa = $strong_auth | Where-Object {$null -ne $_.verIficationDetail -and $_.verIficationDetail.alternativePhoneNumber}
                 #Get default authentication method
-                if($null -ne ($User.searchableDeviceKey | Where-Object {$_.usage -eq 'FIDO'})){
+                If($null -ne ($User.searchableDeviceKey | Where-Object {$_.usage -eq 'FIDO'})){
                     #Get FIDO data
                     $fido_raw_data = $User.searchableDeviceKey | Where-Object {$_.usage -eq 'FIDO'}
-                    if(@($fido_raw_data).Count -gt 0){
+                    If(@($fido_raw_data).Count -gt 0){
                         $output = @()
                         foreach($fido_key in $fido_raw_data){
                             $fido2Details = ([System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($fido_key.keyMaterial)) | ConvertFrom-Json)
-                            $fidoCert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2([Convert]::FromBase64String($fido2Details.x5c[0]), [String]::Empty, [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::UserKeySet)
+                            $fidoCert = New-Object System.Security.Cryptography.X509CertIficates.X509CertIficate2([Convert]::FromBase64String($fido2Details.x5c[0]), [String]::Empty, [System.Security.Cryptography.X509CertIficates.X509KeyStorageFlags]::UserKeySet)
                             $fido2DetailsObj = [PSCustomObject][ordered]@{
                                 Usage = $fido_key.usage
                                 Version = $fido2Details.version
@@ -134,11 +133,11 @@ Function Get-MonkeyGraphAADUser {
                                 fidoKeyCert = $fidoCert
                                 creationTime = $fido_key.creationTime
                                 deviceId = $fido_key.deviceId
-                                keyIdentifier = $fido_key.keyIdentifier
+                                keyIdentIfier = $fido_key.keyIdentIfier
                                 fidoKeyCertRaw = $fido_key.keyMaterial
                                 fidoAaGuid = $fido_key.fidoAaGuid
                                 fidoAuthenticatorVersion = $fido_key.fidoAuthenticatorVersion
-                                fidoAttestationCertificates = $fido_key.fidoAttestationCertificates
+                                fidoAttestationCertIficates = $fido_key.fidoAttestationCertIficates
                             }
                             #Add to array
                             $output+=$fido2DetailsObj
@@ -146,49 +145,49 @@ Function Get-MonkeyGraphAADUser {
                             $User | Add-Member -type NoteProperty -name fidoDetails -value $output -Force
 
                         }
-                        if($weak_methods.Count -gt 0){
+                        If($weak_methods.Count -gt 0){
                             $mfaStatus = 'Weak'
                             $mfaenabled = $true
                             [void]$methods.Add('FIDO2 Authentication');
                         }
-                        else{
+                        Else{
                             $mfaStatus = 'Strong'
                             $mfaenabled = $true
                             [void]$methods.Add('FIDO2 Authentication');
                         }
                     }
                 }
-                elseif($O365Object.canRequestMFAForUsers -eq $false -and $O365Object.isConfidentialApp -eq $false){
+                ElseIf($O365Object.canRequestMFAForUsers -eq $false -and $O365Object.isConfidentialApp -eq $false){
                     $mfaenabled = $null
                     $mfaStatus = 'Unknown'
                     [void]$methods.Add('Unknown');
                 }
-                elseif($mfa_methods.Count -gt 0){
+                ElseIf($mfa_methods.Count -gt 0){
                     #Office Phone
-                    if($office_phone_mfa){
+                    If($office_phone_mfa){
                         $mfaStatus = 'Weak'
                         $mfaenabled = $true
                         [void]$methods.Add('Office Phone');
                         [void]$weak_methods.Add('Office Phone');
                     }
                     #Phone MFA
-                    if($phone_mfa){
+                    If($phone_mfa){
                         $mfaStatus = 'Weak'
                         $mfaenabled = $true
                         [void]$methods.Add('Phone Call');
                         [void]$weak_methods.Add('Phone Call');
                     }
                     #Alternative phone
-                    if($alt_phone_mfa){
+                    If($alt_phone_mfa){
                         $mfaStatus = 'Weak'
                         $mfaenabled = $true
                         [void]$methods.Add('Alternate Phone');
                         [void]$weak_methods.Add('Alternate Phone');
                     }
                     #Get SMS auth method
-                    if($null -ne $mfa_methods){
+                    If($null -ne $mfa_methods){
                         $sms_method = $mfa_methods.Where({$_.methodType -eq 'OneWaySms'})
-                        if($sms_method.Count -gt 0 -and $phone_mfa){
+                        If($sms_method.Count -gt 0 -and $phone_mfa){
                             $mfaStatus = 'Weak'
                             $mfaenabled = $true
                             [void]$methods.Add('SMS');
@@ -196,15 +195,15 @@ Function Get-MonkeyGraphAADUser {
                         }
                     }
                     #Get PhoneApp method
-                    if($null -ne $mfa_methods){
-                        $phoneappMethod = $mfa_methods.Where({$_.methodType -eq 'PhoneAppNotification'})
-                        if($phoneappMethod.Count -gt 0 -and $phoneAppDetails){
-                            if($weak_methods.Count -gt 0){
+                    If($null -ne $mfa_methods){
+                        $phoneappMethod = $mfa_methods.Where({$_.methodType -eq 'PhoneAppNotIfication'})
+                        If($phoneappMethod.Count -gt 0 -and $phoneAppDetails){
+                            If($weak_methods.Count -gt 0){
                                 $mfaStatus = 'Weak'
                                 $mfaenabled = $true
                                 [void]$methods.Add('Microsoft Authenticator');
                             }
-                            else{
+                            Else{
                                 $mfaStatus = 'Strong'
                                 $mfaenabled = $true
                                 [void]$methods.Add('Microsoft Authenticator');
@@ -212,16 +211,16 @@ Function Get-MonkeyGraphAADUser {
                         }
                     }
                     #Get Authenticator method
-                    if($null -ne $mfa_methods){
+                    If($null -ne $mfa_methods){
                         $phoneappMethod = $mfa_methods.Where({$_.methodType -eq 'PhoneAppOTP'})
                         $pad = $phoneAppDetails.Where({$_.authenticationType -eq 'OTP'})
-                        if($phoneappMethod.Count -gt 0 -and $pad.Count -gt 0){
-                            if($weak_methods.Count -gt 0){
+                        If($phoneappMethod.Count -gt 0 -and $pad.Count -gt 0){
+                            If($weak_methods.Count -gt 0){
                                 $mfaStatus = 'Weak'
                                 $mfaenabled = $true
                                 [void]$methods.Add('Software OATH Token');
                             }
-                            else{
+                            Else{
                                 $mfaStatus = 'Strong'
                                 $mfaenabled = $true
                                 [void]$methods.Add('Software OATH Token');
@@ -229,7 +228,7 @@ Function Get-MonkeyGraphAADUser {
                         }
                     }
                 }
-                else{
+                Else{
                     $mfaenabled = $false
                     $mfaStatus = 'Weak'
                     [void]$methods.Add('NotConfigured');
@@ -243,10 +242,14 @@ Function Get-MonkeyGraphAADUser {
                 $User
             }
         }
-        else{
+        Else{
             @($allUsers).ForEach({
                 #Add id property
                 $_ | Add-Member -type NoteProperty -name id -value $_.objectId -Force
+                $_ | Add-Member -type NoteProperty -name strongAuthenticationDetail -value $null -Force
+                $_ | Add-Member -type NoteProperty -name mfaenabled -value $null -Force
+                $_ | Add-Member -type NoteProperty -name mfaStatus -value $null -Force
+                $_ | Add-Member -type NoteProperty -name mfaMethods -value @() -Force
                 $_
             })
         }

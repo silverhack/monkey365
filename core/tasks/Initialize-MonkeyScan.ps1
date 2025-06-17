@@ -9,7 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the specIfic language governing permissions and
 # limitations under the License.
 
 Function Initialize-MonkeyScan {
@@ -58,14 +58,14 @@ Function Initialize-MonkeyScan {
         #Get all dirs
         $all_dirs = Get-MonkeyDirectory -Path $_path -Recurse
         #Get aad lib
-        $aadlibs = @($all_dirs).Where({$_ -like "*EntraID*"})
+        $aadlibs = @($all_dirs).Where({$_.ToLower() -like "*entraid*"})
         #Get Azure lib
         $azureLib = ("{0}{1}core{2}api{3}azure" -f $O365Object.Localpath,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar)
-        if(-NOT [System.IO.Directory]::Exists($azureLib)){
+        If(-NOT [System.IO.Directory]::Exists($azureLib)){
             throw ("Unable to locate Azure lib")
         }
         $utilsLib = ("{0}{1}core{2}utils" -f $O365Object.Localpath,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar)
-        if(-NOT [System.IO.Directory]::Exists($utilsLib)){
+        If(-NOT [System.IO.Directory]::Exists($utilsLib)){
             throw ("Unable to locate utils directory")
         }
         #Set vars
@@ -86,19 +86,14 @@ Function Initialize-MonkeyScan {
                 InformationAction = $O365Object.InformationAction;
                 VerbosePreference = $O365Object.VerboseOptions.VerbosePreference;
                 DebugPreference = $O365Object.VerboseOptions.DebugPreference;
+                LogQueue = $O365Object.MonkeyLogQueue;
                 returnData = $null;
-                LogQueue = $null;
-            }
-            #Get LogQueue
-            $Queue = (Get-Variable -Name MonkeyLogQueue -Scope Global -ErrorAction Ignore);
-            If($null -ne $Queue){
-                $vars.LogQueue = $Queue.Value;
             }
         }
         catch{
             throw ("{0}: {1}" -f "Unable to create var object",$_.Exception.Message)
         }
-        #Check if collectors are available
+        #Check If collectors are available
         If($null -eq $O365Object.Collectors){
             $abort = $true
         }
@@ -112,7 +107,7 @@ Function Initialize-MonkeyScan {
                 { @("azure", "entraid") -contains $_ }{
                     $libs = [System.Collections.Generic.List[System.String]]::new();
                     #All of them will have the EntraID lib
-                    foreach($lib in $aadlibs){
+                    ForEach($lib in $aadlibs){
                         [void]$libs.Add($lib)
                     }
                     $msg = @{
@@ -123,29 +118,29 @@ Function Initialize-MonkeyScan {
                         Tags = @('Monkey365InitializeScan');
                     }
                     Write-Information @msg
-                    if($_ -eq 'entraid'){
-                        $collectors = @($O365Object.Collectors).Where({$_.Provider -eq 'EntraID'})
+                    If($_ -eq 'entraid'){
+                        $collectors = @($O365Object.Collectors).Where({$_.Provider.ToLower() -eq 'entraid'})
                     }
-                    else{
-                        $collectors = @($O365Object.Collectors).Where({$_.Provider -eq $Provider})
+                    Else{
+                        $collectors = @($O365Object.Collectors).Where({$_.Provider.ToLower() -eq $Provider.ToLower()})
                         #Add Azure libs to array
                         [void]$libs.Add($azureLib)
                     }
-                    if($collectors.Count -gt 0){
+                    If($collectors.Count -gt 0){
                         #Get dependsOn
                         $dependsOn = $collectors | Select-Object -ExpandProperty dependsOn
-                        if($null -ne $dependsOn){
-                            foreach($depend in @($dependsOn)){
-                                $dependslibs = @($all_dirs).Where({$_ -like ("*{0}*" -f $dependsOn)})
-                                if($dependslibs){
-                                    foreach($lib in $dependslibs){
+                        If($null -ne $dependsOn){
+                            ForEach($depend in @($dependsOn)){
+                                $dependslibs = @($all_dirs).Where({$_.ToLower() -like ("*{0}*" -f $dependsOn.ToLower())})
+                                If($dependslibs){
+                                    ForEach($lib in $dependslibs){
                                         [void]$libs.Add($lib)
                                     }
                                 }
                             }
                         }
                         #Remove folders
-                        $libs = @($libs).Where({($_ -notmatch "helpers") -and ($_ -notmatch "utils") -and ($_ -notmatch "csom" -and $_ -notmatch "rest")})
+                        $libs = @($libs).Where({($_ -notmatch "helpers|utils|csom|rest")})
                         #Remove duplicate
                         $libs = $libs | Select-Object -Unique
                         #Add utils
@@ -169,7 +164,7 @@ Function Initialize-MonkeyScan {
                         }
                         [void]$all_scans.Add($scanOptions);
                     }
-                    else{
+                    Else{
                         $msg = @{
                             MessageData = ("Collectors were not found for {0}" -f $Provider);
                             callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -182,12 +177,12 @@ Function Initialize-MonkeyScan {
                 }
                 'microsoft365'{
                     #Group collectors into a single resource
-                    $collectors = @($O365Object.Collectors).Where({$_.Provider -ne 'EntraID' -and $_.Provider -ne 'Azure'}) | Group-Object -Property Resource
-                    if($null -ne $collectors){
-                        foreach($service in $collectors){
+                    $collectors = @($O365Object.Collectors).Where({$_.Provider.ToLower() -ne 'entraid' -and $_.Provider.ToLower() -ne 'azure'}) | Group-Object -Property Resource
+                    If($null -ne $collectors){
+                        ForEach($service in $collectors){
                             $libs = [System.Collections.Generic.List[System.String]]::new();
                             #All of them will have the EntraID lib
-                            foreach($lib in $aadlibs){
+                            ForEach($lib in $aadlibs){
                                 [void]$libs.Add($lib)
                             }
                             $msg = @{
@@ -206,23 +201,23 @@ Function Initialize-MonkeyScan {
                                 Tags = @('Monkey365InitializeScan');
                             }
                             Write-Information @msg
-                            $extralibs = @($all_dirs).Where({$_ -like ("*{0}*" -f $service.Name)})
-                            foreach($lib in $extralibs){
+                            $extralibs = @($all_dirs).Where({$_.ToLower() -like ("*{0}*" -f $service.Name.ToLower())})
+                            ForEach($lib in $extralibs){
                                 [void]$libs.Add($lib)
                             }
                             #Get dependsOn
                             $dependsOn = $service.Group | Select-Object -ExpandProperty dependsOn
-                            if($null -ne $dependsOn){
-                                foreach($depend in @($dependsOn)){
-                                    $dependslibs = @($all_dirs).Where({$_ -like ("*{0}*" -f $dependsOn)})
-                                    if($dependslibs){
-                                        foreach($lib in $dependslibs){
+                            If($null -ne $dependsOn){
+                                ForEach($depend in @($dependsOn)){
+                                    $dependslibs = @($all_dirs).Where({$_.ToLower() -like ("*{0}*" -f $dependsOn.ToLower())})
+                                    If($dependslibs){
+                                        ForEach($lib in $dependslibs){
                                             [void]$libs.Add($lib)
                                         }
                                     }
                                 }
                             }
-                            $libs = @($libs).Where({($_ -notmatch "helpers") -and ($_ -notmatch "utils") -and ($_ -notmatch "csom" -and $_ -notmatch "rest")})
+                            $libs = @($libs).Where({($_ -notmatch "helpers|utils|csom|rest")})
                             #Remove duplicate
                             $libs = $libs | Select-Object -Unique
                             #Add utils

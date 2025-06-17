@@ -1,4 +1,4 @@
-# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -9,17 +9,17 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the specIfic language governing permissions and
 # limitations under the License.
 
 
-function Get-MonkeyADMFAConfiguration {
+function Get-MonkeyFabricWorkspace {
 <#
         .SYNOPSIS
-		Collector to get MFA properties from Microsoft Entra ID
+		Collector to get information about workspaces from Microsoft Fabric
 
         .DESCRIPTION
-		Collector to get MFA properties from Microsoft Entra ID
+		Collector to get information about workspaces from Microsoft Fabric
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyADMFAConfiguration {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyADMFAConfiguration
+            File Name	: Get-MonkeyFabricWorkspace
             Version     : 1.0
 
         .LINK
@@ -42,20 +42,19 @@ function Get-MonkeyADMFAConfiguration {
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
 		[string]$collectorId
 	)
-	begin {
-		$Environment = $O365Object.Environment
+	Begin {
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "aad0033";
-			Provider = "EntraID";
-			Resource = "EntraIDPortal";
+			Id = "fabric002";
+			Provider = "Microsoft365";
+			Resource = "MicrosoftFabric";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyADMFAConfiguration";
-			ApiType = "EntraIDPortal";
-			description = "Collector to get MFA properties from Microsoft Entra ID";
+			collectorName = "Get-MonkeyFabricWorkspace";
+			ApiType = $null;
+			description = "Collector to get information about workspaces from Microsoft Fabric";
 			Group = @(
-				"EntraIDPortal"
+				"MicrosoftFabric"
 			);
 			Tags = @(
 
@@ -64,7 +63,7 @@ function Get-MonkeyADMFAConfiguration {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"aad_mfa_settings"
+				"m365_fabric_workspaces"
 			);
 			dependsOn = @(
 
@@ -72,59 +71,45 @@ function Get-MonkeyADMFAConfiguration {
 			enabled = $true;
 			supportClientCredential = $true
 		}
-		#Get Azure Active Directory Auth
-		$AADAuth = $O365Object.auth_tokens.AzurePortal
+		#set null
+		$workspaces = $null
 	}
-	process {
-		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID MFA settings",$O365Object.TenantID);
+	Process {
+        $msg = @{
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Fabric: Workspaces",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
-			Tags = @('AzurePortalMFASettings');
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('FabricWorkspacesInfo');
 		}
 		Write-Information @msg
-		#Get MFA settings
-		$params = @{
-			Authentication = $AADAuth;
-			Query = "MultiFactorAuthentication/TenantModel";
-			Environment = $Environment;
-			ContentType = 'application/json';
-			Method = "GET";
+		$p = @{
+            Expand = 'users','datasets','reports';
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;
 		}
-		$ad_mfa_properties = Get-MonkeyAzurePortalObject @params
+		$workspaces = Get-MonkeyPowerBiWorkspace @p
 	}
-	end {
-		if ($ad_mfa_properties) {
-			$ad_mfa_properties.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.mfa.properties')
+	End {
+		If ($workspaces) {
+			$workspaces.PSObject.TypeNames.Insert(0,'Monkey365.Fabric.Workspaces')
 			[pscustomobject]$obj = @{
-				Data = $ad_mfa_properties;
+				Data = $workspaces;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.aad_mfa_settings = $obj
+			$returnData.m365_fabric_workspaces = $obj
 		}
-		else {
+		Else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID MFA settings",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Fabric: Workspaces",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('AzurePortalMFAEmptyResponse');
+				Tags = @('FabricWorkspacesInfoEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
 		}
 	}
 }
-
-
-
-
-
-
-
-
-

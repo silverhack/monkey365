@@ -52,7 +52,7 @@ Function Get-MonkeyMSGraphDomain {
     }
     Process{
         if($PSCmdlet.ParameterSetName -eq 'DomainId'){
-            $params = @{
+            $p = @{
                 Authentication = $graphAuth;
                 ObjectType = 'domains';
                 ObjectId = $DomainId;
@@ -64,10 +64,9 @@ Function Get-MonkeyMSGraphDomain {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $domain = Get-MonkeyMSGraphObject @params
         }
         else{
-            $params = @{
+            $p = @{
                 Authentication = $graphAuth;
                 ObjectType = 'domains';
                 Environment = $Environment;
@@ -78,12 +77,9 @@ Function Get-MonkeyMSGraphDomain {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $domain = Get-MonkeyMSGraphObject @params
         }
-        #return data
-        if($domain){
-            return $domain
-        }
+        #execute command
+        Get-MonkeyMSGraphObject @p
     }
     End{
         #Nothing to do here
