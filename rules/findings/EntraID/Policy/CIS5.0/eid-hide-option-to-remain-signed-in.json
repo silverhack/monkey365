@@ -22,9 +22,9 @@
   "level": "medium",
   "tags": ["CIS Microsoft 365 Foundations 5.0.0 5.1.2.5", "EntraID", "Policy"],
   "rule": {
-    "path": "Get-MonkeyADPolicy",
+    "path": "aad_authorization_policy",
     "subPath": null,
-    "selectCondition": "[?value.allowStaySignedIn == 'False']",
+    "selectCondition": "[?value.hideKeepMeSignedIn == 'False']",
     "query": [],
     "shouldExist": null,
     "returnObject": null,

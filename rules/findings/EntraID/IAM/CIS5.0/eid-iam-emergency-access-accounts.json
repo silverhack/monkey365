@@ -37,9 +37,9 @@
     "IAM"
   ],
   "rule": {
-    "path": "Get-MonkeyAADUser",
+    "path": "aad_domain_users",
     "subPath": null,
-    "selectCondition": "Select-Object -ExpandProperty value | Where-Object { $_.userPrincipalName -like '*emergency*' } | Measure-Object | Where-Object { $_.Count -lt 2 }",
+    "selectCondition": "length([?contains(userPrincipalName, 'emergency')]) < `2`",
     "query": [],
     "shouldExist": null,
     "returnObject": null,

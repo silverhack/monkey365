@@ -36,9 +36,9 @@
     "ATP"
   ],
   "rule": {
-    "path": "Get-MonkeyEXOATPBuiltInProtectionRule",
+    "path": "o365_exo_atp_builtin_protection_rule",
     "subPath": null,
-    "selectCondition": "[?state -ne 'enabled']",
+    "selectCondition": "[?value.enabled == 'False']",
     "query": [],
     "shouldExist": null,
     "returnObject": null,
@@ -93,6 +93,8 @@
     }
   },
   "idSuffix": "exchange-atp-preset-security-policy-not-enabled",
-  "notes": ["This control is similar to 2.4.2. The CIS benchmark 8.1.1 refers to ATP Preset Security Policies which are checked by Get-MonkeyEXOATPBuiltInProtectionRule."],
+  "notes": [
+    "This control is similar to 2.4.2. The CIS benchmark 8.1.1 refers to ATP Preset Security Policies which are checked by the 'o365_exo_atp_builtin_protection_rule' data path."
+  ],
   "categories": []
 }

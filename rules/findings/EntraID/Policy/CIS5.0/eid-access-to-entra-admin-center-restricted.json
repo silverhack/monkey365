@@ -21,9 +21,9 @@
   "level": "medium",
   "tags": ["CIS Microsoft 365 Foundations 5.0.0 5.1.2.4", "EntraID", "Policy"],
   "rule": {
-    "path": "Get-MonkeyEntraIDAdminAccess",
+    "path": "aad_authorization_policy",
     "subPath": null,
-    "selectCondition": "[?value.adminCenterAccessRestricted == 'False']",
+    "selectCondition": "[?value.defaultUserRolePermissions.allowedToAccessAdminCenter == 'True']",
     "query": [],
     "shouldExist": null,
     "returnObject": null,

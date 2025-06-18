@@ -21,7 +21,7 @@
   "level": "medium",
   "tags": ["CIS Microsoft 365 Foundations 5.0.0 5.1.2.3", "EntraID", "Tenant"],
   "rule": {
-    "path": "Get-MonkeyEntraIDTenantSettings",
+    "path": "aad_settings",
     "subPath": null,
     "selectCondition": "[?value.restrictNonAdminTenantCreation == 'False']",
     "query": [],

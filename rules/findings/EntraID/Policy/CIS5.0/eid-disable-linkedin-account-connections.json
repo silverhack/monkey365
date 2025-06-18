@@ -21,9 +21,9 @@
   "level": "medium",
   "tags": ["CIS Microsoft 365 Foundations 5.0.0 5.1.2.6", "EntraID", "Policy"],
   "rule": {
-    "path": "Get-MonkeyLinkedInConnectionPolicy",
+    "path": "aad_authorization_policy",
     "subPath": null,
-    "selectCondition": "[?linkedInConnectionEnabled == 'True']",
+    "selectCondition": "[?value.defaultUserRolePermissions.allowedToUseLinkedIn == 'True']",
     "query": [],
     "shouldExist": null,
     "returnObject": null,
