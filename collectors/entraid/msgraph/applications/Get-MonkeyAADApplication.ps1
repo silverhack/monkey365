@@ -107,19 +107,22 @@ function Get-MonkeyAADApplication {
 			Debug = $O365Object.Debug;
 		}
 		$all_applications = Get-MonkeyMSGraphAADApplication @p | Format-AADApplicationCredential
+        $new_arg = @{
+            APIVersion = $aadConf.api_version;
+        }
 		#Get Application permissions
-
-		$p = @{
-			ScriptBlock = { Get-MonkeyMSGraphAADAPPPermission -Application $_ };
-			Runspacepool = $O365Object.monkey_runspacePool;
-			ReuseRunspacePool = $true;
-			Debug = $O365Object.VerboseOptions.Debug;
-			Verbose = $O365Object.VerboseOptions.Verbose;
-			MaxQueue = $O365Object.MaxQueue;
-			BatchSleep = $O365Object.BatchSleep;
-			BatchSize = $O365Object.BatchSize;
-		}
-		$app_perms = $all_applications | Invoke-MonkeyJob @p
+        $jobParam = @{
+	        ScriptBlock = {Get-MonkeyMSGraphAADAPPPermission -Application $_};
+            Arguments = $new_arg;
+	        Runspacepool = $O365Object.monkey_runspacePool;
+	        ReuseRunspacePool = $true;
+	        Debug = $O365Object.VerboseOptions.Debug;
+	        Verbose = $O365Object.VerboseOptions.Verbose;
+	        MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+	        BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+	        BatchSize = $O365Object.nestedRunspaces.BatchSize;
+        }
+		$app_perms = $all_applications | Invoke-MonkeyJob @jobParam
 		<#
 		#Get libs for runspace
         $rsOptions = Initialize-MonkeyScan -Provider EntraID
