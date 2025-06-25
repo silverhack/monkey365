@@ -80,15 +80,6 @@ Function Get-MonkeyCollector{
             #Set empty array
             $allCollectors = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
         }
-        #Get Api Type
-        Try{
-            $useMsGraph = [System.Convert]::ToBoolean($O365Object.internal_config.entraId.useMsGraph)
-            $useAADOldAPIForUsers = [System.Convert]::ToBoolean($O365Object.internal_config.entraId.getUsersWithAADInternalAPI)
-        }
-        Catch{
-            $useMsGraph = $true;
-            $useAADOldAPIForUsers = $false;
-        }
     }
     Process{
         If($allCollectors.Count -gt 0){
@@ -124,60 +115,6 @@ Function Get-MonkeyCollector{
                     [void]$entraIdCollectors.Add($msGraphCollectors)
                 }
             }
-            ElseIf($useMsGraph -eq $false -and $O365Object.isConfidentialApp -eq $false){
-                #Load Old Graph collectors
-                If ($graphCollectors -is [System.Collections.IEnumerable] -and $graphCollectors -isnot [string]){
-                    [void]$entraIdCollectors.AddRange($graphCollectors)
-                }
-                ElseIf ($graphCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $graphCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
-                    [void]$entraIdCollectors.Add($graphCollectors)
-                }
-                #Load Entra ID internal API collectors
-                If ($apiPortalCollectors -is [System.Collections.IEnumerable] -and $apiPortalCollectors -isnot [string]){
-                    [void]$entraIdCollectors.AddRange($apiPortalCollectors)
-                }
-                ElseIf ($apiPortalCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $apiPortalCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
-                    [void]$entraIdCollectors.Add($apiPortalCollectors)
-                }
-            }
-            ElseIf($useMsGraph -and $O365Object.isConfidentialApp -eq $false){
-                Foreach($_collector in $entraIdCollectors.GetEnumerator()){
-                    [void]$collectors.Add($eidCollector);
-                }
-                #Load MSGraph collectors
-                If ($msGraphCollectors -is [System.Collections.IEnumerable] -and $msGraphCollectors -isnot [string]){
-                    [void]$entraIdCollectors.AddRange($msGraphCollectors)
-                }
-                ElseIf ($msGraphCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $msGraphCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
-                    [void]$entraIdCollectors.Add($msGraphCollectors)
-                }
-                #Load Entra ID internal API collectors
-                If ($apiPortalCollectors -is [System.Collections.IEnumerable] -and $apiPortalCollectors -isnot [string]){
-                    [void]$entraIdCollectors.AddRange($apiPortalCollectors)
-                }
-                ElseIf ($apiPortalCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $apiPortalCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
-                    [void]$entraIdCollectors.Add($apiPortalCollectors)
-                }
-                #Check if should load old AAD collector for users
-                If($useAADOldAPIForUsers){
-                    #Remove MSGraph user collector
-                    $entraIdCollectors = $entraIdCollectors.Where({$_.collectorName -ne "Get-MonkeyAADUser"});
-                    #Add graph users collector
-                    $OlduserCollector = @($graphCollectors).Where({$_.collectorName -eq "Get-MonkeyADUser"});
-                    If($OlduserCollector.Count -gt 0){
-                        Foreach($_collector in $OlduserCollector){
-                            [void]$entraIdCollectors.Add($_collector)
-                        }
-                    }
-                    #Add policies
-                    $policiesCollector = @($graphCollectors).Where({$_.collectorName -eq "Get-MonkeyADPolicy"});
-                    If($policiesCollector.Count -gt 0){
-                        Foreach($_collector in $policiesCollector){
-                            [void]$entraIdCollectors.Add($_collector)
-                        }
-                    }
-                }
-            }
             Else{
                 #Load MSGraph collectors
                 If ($msGraphCollectors -is [System.Collections.IEnumerable] -and $msGraphCollectors -isnot [string]){
@@ -185,6 +122,13 @@ Function Get-MonkeyCollector{
                 }
                 ElseIf ($msGraphCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $msGraphCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
                     [void]$entraIdCollectors.Add($msGraphCollectors)
+                }
+                #Load Entra ID internal API collectors
+                If ($apiPortalCollectors -is [System.Collections.IEnumerable] -and $apiPortalCollectors -isnot [string]){
+                    [void]$entraIdCollectors.AddRange($apiPortalCollectors)
+                }
+                ElseIf ($apiPortalCollectors.GetType() -eq [System.Management.Automation.PSCustomObject] -or $apiPortalCollectors.GetType() -eq [System.Management.Automation.PSObject]) {
+                    [void]$entraIdCollectors.Add($apiPortalCollectors)
                 }
             }
             #Add discovered collectors

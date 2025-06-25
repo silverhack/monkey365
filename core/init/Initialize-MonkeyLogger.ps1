@@ -51,7 +51,7 @@ Function Initialize-MonkeyLogger{
         if($null -ne $fileLogger -and $null -ne $fileLogger.configuration.filename){
             $isRoot = [System.IO.Path]::IsPathRooted($fileLogger.configuration.filename)
             if(-NOT $isRoot){
-                $log_path = ("{0}/log/{1}" -f $ScriptPath, $fileLogger.configuration.filename)
+                $log_path = ("{0}/log/{1}" -f $O365Object.Localpath, $fileLogger.configuration.filename)
                 $fileLogger.configuration.filename = $log_path
             }
             #Add file logger
@@ -63,8 +63,6 @@ Function Initialize-MonkeyLogger{
     If($O365Object.internal_config.logging.loggers){
         $loggers+=$O365Object.internal_config.logging.loggers
     }
-    #Set LogQueue var
-    New-Variable -Name MonkeyLogQueue -Scope Script -Value $O365Object.MonkeyLogQueue -Force
     #Start logging
     If($loggers){
         $l_param = @{
@@ -75,7 +73,6 @@ Function Initialize-MonkeyLogger{
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
-        $status = Start-Logger @l_param
     }
     Else{
         $l_param = @{
@@ -85,14 +82,16 @@ Function Initialize-MonkeyLogger{
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
-        $status = Start-Logger @l_param
     }
+    #Initialize Logger
+    $status = Start-Logger @l_param
+    #Check status
     If($status -eq $false){
         $msg = @{
             MessageData = ($message.LoggerError);
             callStack = (Get-PSCallStack | Select-Object -First 1);
             logLevel = 'warning';
-            InformationAction = $InformationAction;
+            InformationAction = $O365Object.InformationAction;
             Tags = @('LoggerError');
         }
         Write-Warning @msg

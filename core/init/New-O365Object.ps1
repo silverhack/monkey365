@@ -328,6 +328,7 @@ Function New-O365Object{
                 ('{0}/core/modules/monkeyhttpwebrequest' -f $ScriptPath),
                 ('{0}/core/modules/monkeyjob' -f $ScriptPath),
                 ('{0}/core/modules/monkeyutils' -f $ScriptPath),
+                ('{0}/core/modules/monkeycloudutils' -f $ScriptPath),
                 ('{0}/core/api/m365/sharepointonline/utils/enum.ps1' -f $ScriptPath)
                 ('{0}/core/tasks/Initialize-MonkeyScan.ps1' -f $ScriptPath)
             )
@@ -377,7 +378,15 @@ Function New-O365Object{
                 userPrincipalName = $null;
                 userId = $null;
                 orgRegions = $null;
-                Tenant = $null;
+                Tenant = [PsCustomObject]@{
+                    tenantName = $null;
+                    tenantId = $null;
+                    companyInfo = $null;
+                    sku = $null;
+                    domains = $null;
+                    myDomain = $null;
+                    licensing = $null;
+                };
                 tenantOrigin = $null;
                 Collectors = $null;
                 Licensing = $null;
@@ -446,8 +455,6 @@ Function New-O365Object{
                 ruleset = $ruleSet;
                 rulesPath = $rulesPath;
                 Compress = $MyParams.Compress;
-                useMSGraphForAAD = [System.Convert]::ToBoolean($internal_config_json.entraId.useMsGraph);
-                useOldAADAPIforUsers = [System.Convert]::ToBoolean($internal_config_json.entraId.getUsersWithAADInternalAPI)
             }
             #Create new object
             $MonkeyObj = New-Object -TypeName PSCustomObject -Property $tmp_object

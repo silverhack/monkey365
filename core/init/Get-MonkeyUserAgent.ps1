@@ -36,8 +36,10 @@ Function Get-MonkeyUserAgent{
 
     [CmdletBinding()]
     Param()
-    $userAgent = $version = $manifest = $null;
-    $monkeymod = Get-Module -Name monkey365 -ErrorAction Ignore
+    $userAgent = $manifest = $null;
+    #Set Empty version
+    $version = [System.String]::Empty;
+    $monkeymod = Get-Module -Name monkey365 -ErrorAction Ignore | Select-Object -First 1
     #Get version
     if($null -ne $monkeymod){
         $version = $monkeymod.Version.ToString()

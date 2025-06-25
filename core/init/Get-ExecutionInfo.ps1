@@ -132,7 +132,7 @@ Function Get-ExecutionInfo{
                 Debug = $O365Object.debug;
                 InformationAction = $O365Object.InformationAction;
             }
-            $pic = Get-MonkeyGraphAADProfilePhoto @p
+            $pic = Get-MonkeyMSGraphProfilePhoto @p
         }
         if($null -ne $pic){
             $user_pic = ('data:image/png;base64,{0}' -f $pic)
