@@ -23,7 +23,7 @@ $internal_modules = @(
     'core/modules/monkeyjob',
     'core/modules/monkeyruleset',
     'core/modules/psocsf',
-    'core/modules/monkeyOutput'
+    'core/modules/monkeyoutput'
 )
 $internal_modules.ForEach({Import-Module ("{0}{1}{2}" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar, $_.ToString()) -Force})
 
@@ -71,18 +71,18 @@ $internal_functions = @(
     '/core/import',
     '/core/output',
     '/core/watcher',
-    '/core/api/EntraID/msgraph',
+    '/core/api/entraid/msgraph',
     '/core/tenant',
     '/core/subscription',
     '/core/api/azure',
-    '/core/api/EntraID/graph/api',
-    '/core/api/EntraID/graph/helpers/user',
+    '/core/api/entraid/graph/api',
+    '/core/api/entraid/graph/helpers/user',
     '/core/api/azure/resourcemanagement/api',
     '/core/api/azure/resourcemanagement/helpers/tenant',
-    '/core/api/m365/MicrosoftTeams/',
-    '/core/api/m365/ExchangeOnline/'
-    '/core/api/m365/SharePointOnline/',
-    '/core/api/m365/M365AdminPortal/'
+    '/core/api/m365/microsoftteams/',
+    '/core/api/m365/exchangeonline/'
+    '/core/api/m365/sharepointonline/',
+    '/core/api/m365/m365adminportal/'
 )
 
 $all_files = $internal_functions.ForEach({

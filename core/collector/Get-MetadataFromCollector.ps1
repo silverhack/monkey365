@@ -62,7 +62,7 @@ Function Get-MetadataFromCollector{
         If($null -eq $localPath){
             break
         }
-        $_path = ("{0}{1}collectors{2}{3}" -f $localPath,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar,$Provider)
+        $_path = ("{0}{1}collectors{2}{3}" -f $localPath,[System.IO.Path]::DirectorySeparatorChar,[System.IO.Path]::DirectorySeparatorChar,$Provider.ToLower())
     }
     Process{
         If([System.IO.Directory]::Exists($_path)){

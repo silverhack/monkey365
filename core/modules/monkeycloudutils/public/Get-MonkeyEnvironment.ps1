@@ -80,6 +80,7 @@ Function Get-MonkeyEnvironment{
                 OfficePortal = 'https://portal.office.com';
                 OfficeAdminPortal = 'https://admin.microsoft.com';
                 MSPIM = 'https://api.azrbac.mspim.azure.com';
+                Fabric = 'https://api.fabric.microsoft.com';
             }
         }
         'AzureChina'
@@ -112,6 +113,7 @@ Function Get-MonkeyEnvironment{
                 OfficePortal = 'https://portal.office.com';
                 OfficeAdminPortal = 'https://admin.microsoft.com';
                 MSPIM = 'https://api.azrbac.mspim.azure.com';
+                Fabric = 'https://api.fabric.microsoft.com';
             }
         }
         'AzureUSGovernment'
@@ -144,38 +146,7 @@ Function Get-MonkeyEnvironment{
                 OfficePortal = 'https://portal.office365.us';
                 OfficeAdminPortal = 'https://admin.microsoft.com';
                 MSPIM = 'https://api.azrbac.mspim.azure.com';
-            }
-        }
-        'AzureGermany'
-        {
-            [pscustomobject]$MonkeyEndpoints = @{
-                Login = "https://login.microsoftonline.de";
-                Graph = "https://graph.cloudapi.de";
-                Graphv2 = "https://graph.microsoft.de/";
-                ResourceManager = "https://management.microsoftazure.de/";
-                Outlook = "https://outlook.office365.de/";
-                ComplianceCenterAPI = "https://ps.compliance.protection.outlook.de";
-                ExchangeOnline = "https://outlook.office365.de/powershell-liveid";
-                ComplianceCenter = "https://ps.compliance.protection.outlook.de/powershell-liveid";
-                Lync = "https://admin1e.online.lync.com/OcsPowershellOAuth";
-                AADPortal = "https://main.iam.ad.ext.azure.com/api/";
-                AADRM = "https://aadrm.com";
-                Forms = "https://forms.office.com";
-                Storage = "https://storage.azure.com/";
-                Vaults = "https://vault.azure.net";
-                Servicemanagement = 'https://management.core.windows.net/';
-                Security = 'https://s2.security.ext.azure.com/api/';
-                LogAnalytics = 'https://api.loganalytics.io/';
-                WebAppServicePortal = 'https://web1.appsvcux.ext.azure.com/';
-                LegacyO365API = 'https://provisioningapi.microsoftonline.com/provisioningwebservice.svc';
-                Teams = 'https://api.interfaces.records.teams.microsoft.com';
-                AzurePortal = 'https://portal.microsoftazure.de';
-                PIM = 'https://api.azrbac.mspim.azure.com';
-                PowerBI = 'https://analysis.cloudapi.de/powerbi/api';
-                PowerBIAPI = 'https://api.powerbi.de';
-                OfficePortal = 'https://portal.office.com';
-                OfficeAdminPortal = 'https://admin.microsoft.com';
-                MSPIM = 'https://api.azrbac.mspim.azure.com';
+                Fabric = 'https://api.fabric.microsoft.us';
             }
         }
         'Default'

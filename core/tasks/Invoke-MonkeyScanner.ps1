@@ -9,7 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the specIfic language governing permissions and
 # limitations under the License.
 
 Function Invoke-MonkeyScanner{
@@ -73,10 +73,10 @@ Function Invoke-MonkeyScanner{
     Begin{
         $rdata = $null
         #set MaxQueue
-        if( -not $PSBoundParameters.ContainsKey('MaxQueue') ) {
+        If( -not $PSBoundParameters.ContainsKey('MaxQueue') ) {
             $MaxQueue = $Throttle * 3
         }
-        else {
+        Else {
             $MaxQueue = $MaxQueue
         }
         #Set runspaces array
@@ -86,34 +86,34 @@ Function Invoke-MonkeyScanner{
         #Get Initialize-MonkeyRuleset params
         $newPsboundParams = [ordered]@{}
         $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Initialize-MonkeyScan")
-        if($null -ne $MetaData){
+        If($null -ne $MetaData){
             $param = $MetaData.Parameters.Keys
-            foreach($p in $param.GetEnumerator()){
-                if($PSBoundParameters.ContainsKey($p)){
+            ForEach($p in $param.GetEnumerator()){
+                If($PSBoundParameters.ContainsKey($p)){
                     $newPsboundParams.Add($p,$PSBoundParameters.Item($p))
                 }
             }
         }
         $all_scans = Initialize-MonkeyScan @newPsboundParams
         #Get ReturnData object
-        if($PSBoundParameters.ContainsKey('ReturnData') -and $PSBoundParameters['ReturnData']){
+        If($PSBoundParameters.ContainsKey('ReturnData') -and $PSBoundParameters['ReturnData']){
             $rdata = $PSBoundParameters['ReturnData'];
         }
-        elseif($null -ne (Get-Variable -Name returnData -ErrorAction Ignore)){
+        ElseIf($null -ne (Get-Variable -Name returnData -ErrorAction Ignore)){
             $rdata = (Get-Variable -Name returnData -ErrorAction Ignore).Value;
         }
-        else{
+        Else{
             Set-Variable returnData -Value ([hashtable]::Synchronized(@{})) -Scope Script -Force
             $rdata = (Get-Variable -Name returnData -ErrorAction Ignore).Value;
         }
         #Populate vars
-        foreach($scan in $all_scans){
+        ForEach($scan in $all_scans){
             #Set synchronized hashtable
             $scan.vars.returnData = $rdata;
         }
         #Populate runspace vars
         $rndScan = $all_scans.Where({$null -ne $_.vars}) | Select-Object -First 1
-        if($null -ne $rndScan){
+        If($null -ne $rndScan){
             $O365Object.runspace_vars = $rndScan.vars;
         }
     }
@@ -127,7 +127,7 @@ Function Invoke-MonkeyScanner{
                 $myscan = $all_scans | Select-Object -First 1
                 #Get all libs
                 $libs = $all_scans.libCommands | Select-Object -Unique
-                if($null -ne $myscan){
+                If($null -ne $myscan){
                     $nestedParam = @{
                         ImportVariables = $myscan.vars;
                         ImportModules = $myscan.modules;
@@ -142,14 +142,14 @@ Function Invoke-MonkeyScanner{
                     }
                     #Set a second runspace for nested executions
                     $nestedRunspace = New-RunspacePool @nestedParam
-                    if($null -ne $nestedRunspace -and $nestedRunspace -is [System.Management.Automation.Runspaces.RunspacePool]){
+                    If($null -ne $nestedRunspace -and $nestedRunspace -is [System.Management.Automation.Runspaces.RunspacePool]){
                         #Add to array
                         [void]$all_runspaces.Add($nestedRunspace)
                         #Add to object
                         $O365Object.monkey_runspacePool = $nestedRunspace;
                     }
                 }
-                foreach($scan in $all_scans.GetEnumerator()){
+                ForEach($scan in $all_scans.GetEnumerator()){
                     $msg = @{
                         MessageData = ("Starting new scan for {0}" -f $scan.scanName);
                         callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -161,11 +161,11 @@ Function Invoke-MonkeyScanner{
                     #Set Generic list
                     $commands = [System.Collections.Generic.List[System.Object]]::new();
                     #Add collectors to libcommands
-                    foreach($collector in @($scan.collectors)){
+                    ForEach($collector in @($scan.collectors)){
                         [void]$commands.Add($collector.File);
                     }
                     #Add commands
-                    foreach($command in @($scan.libCommands)){
+                    ForEach($command in @($scan.libCommands)){
                         [void]$commands.Add($command);
                     }
                     $rsParam = @{
@@ -182,13 +182,13 @@ Function Invoke-MonkeyScanner{
                     }
                     #Get runspace pool
                     $runspacepool = New-RunspacePool @rsParam
-                    if($null -ne $runspacepool -and $runspacepool -is [System.Management.Automation.Runspaces.RunspacePool]){
+                    If($null -ne $runspacepool -and $runspacepool -is [System.Management.Automation.Runspaces.RunspacePool]){
                         $runspacepool.Open()
                         #Add to array
                         [void]$all_runspaces.Add($runspacepool)
                     }
-                    if($null -ne $runspacepool -and $runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::Opened){
-                        foreach($collector in $scan.collectors){
+                    If($null -ne $runspacepool -and $runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::Opened){
+                        ForEach($collector in $scan.collectors){
                             $p = @{
 			                    Runspacepool = $runspacepool;
 			                    ReuseRunspacePool = $true;
@@ -205,12 +205,12 @@ Function Invoke-MonkeyScanner{
                             Invoke-MonkeyJob -Command $collector.collectorName -Arguments $argument @p
                         }
                     }
-                    else{
-                        if($null -ne $runspacepool -and $runspacepool.RunspacePoolStateInfo.State -ne [System.Management.Automation.Runspaces.RunspaceState]::Opened){
+                    Else{
+                        If($null -ne $runspacepool -and $runspacepool.RunspacePoolStateInfo.State -ne [System.Management.Automation.Runspaces.RunspaceState]::Opened){
                             Write-Error ($message.RunspaceError)
                             return
                         }
-                        else{
+                        Else{
                             Write-Error ($message.UnknownError)
                             return
                         }
@@ -222,12 +222,9 @@ Function Invoke-MonkeyScanner{
             }
             Finally{
                 #Dispose all runspacepool
-                foreach($rs in $all_runspaces){
+                ForEach($rs in $all_runspaces){
                     $rs.Dispose()
                 }
-                #collect garbage
-                #[gc]::Collect()
-                [System.GC]::GetTotalMemory($true) | out-null
             }
         }
         Else{

@@ -328,7 +328,7 @@ Function New-O365Object{
                 ('{0}/core/modules/monkeyhttpwebrequest' -f $ScriptPath),
                 ('{0}/core/modules/monkeyjob' -f $ScriptPath),
                 ('{0}/core/modules/monkeyutils' -f $ScriptPath),
-                ('{0}/core/api/m365/SharePointOnline/utils/enum.ps1' -f $ScriptPath)
+                ('{0}/core/api/m365/sharepointonline/utils/enum.ps1' -f $ScriptPath)
                 ('{0}/core/tasks/Initialize-MonkeyScan.ps1' -f $ScriptPath)
             )
         }

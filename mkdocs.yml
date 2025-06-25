@@ -9,6 +9,9 @@ edit_uri: blob/main/docs/
 extra_css:
 - assets/css/extra.css
 
+hooks:
+- docs_overrides/hooks/year.py
+
 theme:
   language: en
   name: material
@@ -83,7 +86,7 @@ nav:
   - License and Contributing: license/license-contributing.md
   - Support: support/support.md
   - Disclaimer: support/disclaimer.md
-  - Sample Report: sample/monkey365.html
+  - Sample Report: sample/Monkey365.html
 
 extra:
   consent:
@@ -106,7 +109,7 @@ extra:
     repo_issue: https://github.com/silverhack/monkey365/issues
     repo_discussion: https://github.com/silverhack/monkey365/discussions
     
-copyright: Copyright &copy; 2023 <a href="https://twitter.com/tr1ana" target="blank">Juan Garrido</a>
+copyright: Copyright &copy; {year} <a href="https://twitter.com/tr1ana" target="blank">Juan Garrido</a>
 
 markdown_extensions:
   - admonition
