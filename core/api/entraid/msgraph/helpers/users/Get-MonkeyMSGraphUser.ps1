@@ -69,6 +69,8 @@ Function Get-MonkeyMSGraphUser {
         $graphAuth = $O365Object.auth_tokens.MSGraph
     }
     Process{
+        Write-Host ($PSBoundParameters | Out-String) -ForegroundColor Yellow
+        Write-Host ($PSCmdlet.ParameterSetName) -ForegroundColor Magenta
         if($PSCmdlet.ParameterSetName -eq 'UserId'){
             $params = @{
                 Authentication = $graphAuth;
@@ -84,7 +86,6 @@ Function Get-MonkeyMSGraphUser {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $user = Get-MonkeyMSGraphObject @params
         }
         elseif($PSCmdlet.ParameterSetName -eq 'UserPrincipalName'){
             #Set filter
@@ -103,7 +104,6 @@ Function Get-MonkeyMSGraphUser {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $user = Get-MonkeyMSGraphObject @params
         }
         else{
             $params = @{
@@ -121,14 +121,15 @@ Function Get-MonkeyMSGraphUser {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $user = Get-MonkeyMSGraphObject @params
         }
+        $user = Get-MonkeyMSGraphObject @params
         #return data
-        if($user -and $BypassMFACheck.IsPresent -eq $false){
+        #Azure PowerShell client is not able to get details about user's MFA
+        If($user -and $BypassMFACheck.IsPresent -eq $false -and $graphAuth.clientId -ne (Get-WellKnownAzureService -AzureService AzurePowerShell)){
             #Get user's MFA details
             $user | Get-MonkeyMsGraphMFAUserDetail
         }
-        else{
+        Else{
             $user
         }
     }

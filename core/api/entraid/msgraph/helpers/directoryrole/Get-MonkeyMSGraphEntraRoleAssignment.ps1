@@ -69,62 +69,32 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
             }
         }
         Else{
-            If($O365Object.useOldAADAPIForUsers){
-                If($O365Object.canRequestMFAForUsers){
-                    $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyGraphAADUser -UserId $_ };
-	                    Runspacepool = $O365Object.monkey_runspacePool;
-	                    ReuseRunspacePool = $true;
-	                    Debug = $O365Object.VerboseOptions.Debug;
-	                    Verbose = $O365Object.VerboseOptions.Verbose;
-	                    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-                    }
-                }
-                Else{
-                    #Set job params
-                    $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck};
-                        Arguments = $new_arg;
-	                    Runspacepool = $O365Object.monkey_runspacePool;
-	                    ReuseRunspacePool = $true;
-	                    Debug = $O365Object.VerboseOptions.Debug;
-	                    Verbose = $O365Object.VerboseOptions.Verbose;
-	                    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-                    }
+            If($O365Object.auth_tokens.MSGraph.clientId -eq (Get-WellKnownAzureService -AzureService MicrosoftGraph)){
+                #Set job params
+                $jobParam = @{
+	                ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_};
+                    Arguments = $new_arg;
+	                Runspacepool = $O365Object.monkey_runspacePool;
+	                ReuseRunspacePool = $true;
+	                Debug = $O365Object.VerboseOptions.Debug;
+	                Verbose = $O365Object.VerboseOptions.Verbose;
+	                MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+	                BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+	                BatchSize = $O365Object.nestedRunspaces.BatchSize;
                 }
             }
             Else{
-                If($O365Object.auth_tokens.MSGraph.clientId -eq (Get-WellKnownAzureService -AzureService MicrosoftGraph)){
-                    #Set job params
-                    $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_};
-                        Arguments = $new_arg;
-	                    Runspacepool = $O365Object.monkey_runspacePool;
-	                    ReuseRunspacePool = $true;
-	                    Debug = $O365Object.VerboseOptions.Debug;
-	                    Verbose = $O365Object.VerboseOptions.Verbose;
-	                    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-                    }
-                }
-                Else{
-                    #Set job params
-                    $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck};
-                        Arguments = $new_arg;
-	                    Runspacepool = $O365Object.monkey_runspacePool;
-	                    ReuseRunspacePool = $true;
-	                    Debug = $O365Object.VerboseOptions.Debug;
-	                    Verbose = $O365Object.VerboseOptions.Verbose;
-	                    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-                    }
+                #Set job params
+                $jobParam = @{
+	                ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck};
+                    Arguments = $new_arg;
+	                Runspacepool = $O365Object.monkey_runspacePool;
+	                ReuseRunspacePool = $true;
+	                Debug = $O365Object.VerboseOptions.Debug;
+	                Verbose = $O365Object.VerboseOptions.Verbose;
+	                MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+	                BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+	                BatchSize = $O365Object.nestedRunspaces.BatchSize;
                 }
             }
         }
@@ -175,6 +145,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                     }
                     #Get effective users and remove duplicate members
                     $uniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+                    $extendedUniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
                     $alluniqueUsers = @($users).Where({$_.'@odata.type' -match '#microsoft.graph.user'}) | Sort-Object -Property Id -Unique -ErrorAction Ignore
                     if($null -ne $alluniqueUsers){
                         foreach($usr in @($alluniqueUsers)){
@@ -183,12 +154,13 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                     }
                     #Get user's id
                     $allIds = $uniqueUsers | Select-Object -ExpandProperty Id -ErrorAction Ignore
-                    #Invoke job
-                    $members = $allIds | Invoke-MonkeyJob @jobParam
-                    $extendedUniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                    if($null -ne $members -and @($members).Count -gt 0){
-                        foreach($member in @($members)){
-                            [void]$extendedUniqueUsers.Add($member);
+                    If (@($allIds).Count -gt 0){
+                        #Invoke job
+                        $members = $allIds | Invoke-MonkeyJob @jobParam
+                        If($null -ne $members -and @($members).Count -gt 0){
+                            foreach($member in @($members)){
+                                [void]$extendedUniqueUsers.Add($member);
+                            }
                         }
                     }
                     $roleObject.effectiveUsers = $extendedUniqueUsers;
@@ -202,12 +174,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                     #Add Serviceprincipals to object
                     $roleObject.servicePrincipals = $servicePrincipals;
                     #Count objects
-                    if($roleObject.effectiveUsers.Count -gt 0){
-                        $roleObject.totalActiveusers = $roleObject.effectiveUsers.Count
-                    }
-                    Else{
-                        $roleObject.totalActiveusers = $roleObject.effectiveUsers.Count;
-                    }
+                    $roleObject.totalActiveusers = $roleObject.effectiveUsers.Count;
                     #Get duplicate users
                     $allUsers = (@($users).Where({$_.'@odata.type' -match '#microsoft.graph.user'}))
                     if($allUsers.Count -gt 0){
@@ -228,6 +195,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
             Write-Output $allEntraIDRoleAssignment -NoEnumerate
         }
         Catch{
+            write-host $_
             Write-Error $_
             return , $allEntraIDRoleAssignment
         }

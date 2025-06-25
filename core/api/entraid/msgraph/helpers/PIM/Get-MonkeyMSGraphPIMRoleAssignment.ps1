@@ -45,6 +45,7 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
             APIVersion = 'beta';
         }
         #Set Job params
+        #Set Job params
         If($O365Object.isConfidentialApp){
             $jobParam = @{
 	            ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_};
@@ -59,62 +60,32 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
             }
         }
         Else{
-            If($O365Object.useOldAADAPIForUsers){
-                If($O365Object.canRequestMFAForUsers){
-                    $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyGraphAADUser -UserId $_ };
-	                    Runspacepool = $O365Object.monkey_runspacePool;
-	                    ReuseRunspacePool = $true;
-	                    Debug = $O365Object.VerboseOptions.Debug;
-	                    Verbose = $O365Object.VerboseOptions.Verbose;
-	                    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-                    }
-                }
-                Else{
-                    #Set job params
-                    $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck};
-                        Arguments = $new_arg;
-	                    Runspacepool = $O365Object.monkey_runspacePool;
-	                    ReuseRunspacePool = $true;
-	                    Debug = $O365Object.VerboseOptions.Debug;
-	                    Verbose = $O365Object.VerboseOptions.Verbose;
-	                    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-                    }
+            If($O365Object.auth_tokens.MSGraph.clientId -eq (Get-WellKnownAzureService -AzureService MicrosoftGraph)){
+                #Set job params
+                $jobParam = @{
+	                ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_};
+                    Arguments = $new_arg;
+	                Runspacepool = $O365Object.monkey_runspacePool;
+	                ReuseRunspacePool = $true;
+	                Debug = $O365Object.VerboseOptions.Debug;
+	                Verbose = $O365Object.VerboseOptions.Verbose;
+	                MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+	                BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+	                BatchSize = $O365Object.nestedRunspaces.BatchSize;
                 }
             }
             Else{
-                If($O365Object.auth_tokens.MSGraph.clientId -eq (Get-WellKnownAzureService -AzureService MicrosoftGraph)){
-                    #Set job params
-                    $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_};
-                        Arguments = $new_arg;
-	                    Runspacepool = $O365Object.monkey_runspacePool;
-	                    ReuseRunspacePool = $true;
-	                    Debug = $O365Object.VerboseOptions.Debug;
-	                    Verbose = $O365Object.VerboseOptions.Verbose;
-	                    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-                    }
-                }
-                Else{
-                    #Set job params
-                    $jobParam = @{
-	                    ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck};
-                        Arguments = $new_arg;
-	                    Runspacepool = $O365Object.monkey_runspacePool;
-	                    ReuseRunspacePool = $true;
-	                    Debug = $O365Object.VerboseOptions.Debug;
-	                    Verbose = $O365Object.VerboseOptions.Verbose;
-	                    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-	                    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-	                    BatchSize = $O365Object.nestedRunspaces.BatchSize;
-                    }
+                #Set job params
+                $jobParam = @{
+	                ScriptBlock = { Get-MonkeyMSGraphUser -UserId $_ -BypassMFACheck};
+                    Arguments = $new_arg;
+	                Runspacepool = $O365Object.monkey_runspacePool;
+	                ReuseRunspacePool = $true;
+	                Debug = $O365Object.VerboseOptions.Debug;
+	                Verbose = $O365Object.VerboseOptions.Verbose;
+	                MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+	                BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+	                BatchSize = $O365Object.nestedRunspaces.BatchSize;
                 }
             }
         }

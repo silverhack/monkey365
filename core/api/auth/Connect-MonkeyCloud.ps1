@@ -174,7 +174,7 @@ Function Connect-MonkeyCloud{
             #$O365Object.auth_tokens.AzurePortal = Connect-MonkeyAzurePortal
         }
         #Get Tenant Information
-        $O365Object.Tenant = Get-TenantInformation
+        Get-TenantInformation
     }
     #Check If Azure services is selected
     If($O365Object.initParams.Instance -eq "Azure"){
@@ -217,10 +217,15 @@ Function Connect-MonkeyCloud{
     $ga = Test-MonkeyAADIAM -RoleTemplateId 62e90394-69f5-4237-9190-012177145e10
     #Check Authentication administrator permissions
     $aa = Test-MonkeyAADIAM -RoleTemplateId c4e39bd9-1100-46d3-8c65-fb160da0071f
+    #Check Privileged Authentication administrator permissions
+    $paa = Test-MonkeyAADIAM -RoleTemplateId 7be44c8a-adaf-4e2a-84d6-ab2649e08a13
     If($ga){
         $O365Object.canRequestMFAForUsers = $true
     }
     ElseIf($aa){
+        $O365Object.canRequestMFAForUsers = $true
+    }
+    ElseIf($paa){
         $O365Object.canRequestMFAForUsers = $true
     }
     ElseIf($O365Object.isConfidentialApp){
@@ -274,7 +279,7 @@ Function Connect-MonkeyCloud{
         $O365Object.onlineServices.EntraID = $true
     }
     #Check If EntraID P2 is enabled
-    If($null -ne $O365Object.Tenant.licensing.EntraIDP2){
+    If($null -ne $O365Object.Tenant.licensing -and $null -ne $O365Object.Tenant.licensing.EntraIDP2){
         $msg = @{
             MessageData = ($message.TokenRequestInfoMessage -f "Entra ID Privileged Managament Identity API")
             callStack = (Get-PSCallStack | Select-Object -First 1);

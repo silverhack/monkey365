@@ -51,7 +51,7 @@ Function Get-MonkeyMSGraphOrganization {
         $graphAuth = $O365Object.auth_tokens.MSGraph
     }
     Process{
-        if($PSCmdlet.ParameterSetName -eq 'TenantId'){
+        If($PSCmdlet.ParameterSetName -eq 'TenantId'){
             $params = @{
                 Authentication = $graphAuth;
                 ObjectType = 'organization';
@@ -66,7 +66,7 @@ Function Get-MonkeyMSGraphOrganization {
             }
             $Tenants = Get-MonkeyMSGraphObject @params
         }
-        else{
+        Else{
             $params = @{
                 Authentication = $graphAuth;
                 ObjectType = 'organization';
@@ -81,7 +81,7 @@ Function Get-MonkeyMSGraphOrganization {
             $Tenants = Get-MonkeyMSGraphObject @params
         }
         #return data
-        if($Tenants){
+        If($Tenants){
             foreach($organization in @($Tenants)){
                 #Add objectId legacy property
                 $organization | Add-Member -type NoteProperty -name objectId -value $organization.id -Force
