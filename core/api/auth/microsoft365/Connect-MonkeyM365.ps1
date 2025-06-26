@@ -60,6 +60,9 @@ Function Connect-MonkeyM365{
                     $moduleFile = Get-PSExoModuleFile @p
                     If($moduleFile){
                         $O365Object.onlineServices.Item($service) = $true
+                        #Connect AIPService
+                        Connect-MonkeyAIPService
+                        Start-Sleep -Milliseconds 100
                     }
                     Else{
                         $msg = @{
@@ -102,6 +105,9 @@ Function Connect-MonkeyM365{
                         $moduleFile = Get-PSExoModuleFile @p
                         If($moduleFile){
                             $O365Object.onlineServices.Item($service) = $true
+                            #Connect AIPService
+                            Connect-MonkeyAIPService
+                            Start-Sleep -Milliseconds 100
                         }
                         Else{
                             $msg = @{
@@ -263,6 +269,9 @@ Function Connect-MonkeyM365{
                     #Check If connected to SharePoint
                     If($O365Object.isSharePointAdministrator -or $null -ne $O365Object.spoSites){
                         $O365Object.onlineServices.Item($service) = $true
+                        #Connect AIPService
+                        Connect-MonkeyAIPService
+                        Start-Sleep -Milliseconds 100
                     }
                 }
             }
@@ -500,29 +509,6 @@ Function Connect-MonkeyM365{
                         }
                         Write-Warning @msg
                     }
-                }
-            }
-            #Connect to Microsoft Intune
-            'intune'{
-                $msg = @{
-                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Intune")
-                    callStack = (Get-PSCallStack | Select-Object -First 1);
-                    logLevel = 'info';
-                    InformationAction = $O365Object.InformationAction;
-                    Tags = @('TokenRequestInfoMessage');
-                }
-                Write-Information @msg
-                $p = @{
-                    Resource = $O365Object.Environment.Graphv2;
-                    AzureService = "Intune";
-                    InformationAction = $O365Object.InformationAction;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                }
-                $O365Object.auth_tokens.Intune = Connect-MonkeyGenericApplication @p
-                #$O365Object.auth_tokens.Intune = Connect-MonkeyIntune
-                If($null -ne $O365Object.auth_tokens.Intune){
-                    $O365Object.onlineServices.Item($service) = $true
                 }
             }
         }

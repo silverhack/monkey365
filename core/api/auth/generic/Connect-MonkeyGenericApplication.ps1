@@ -75,6 +75,15 @@ Function Connect-MonkeyGenericApplication {
                 foreach ($param in $O365Object.application_args.GetEnumerator()){
                     $client_app.add($param.Key, $param.Value)
                 }
+                #Add RedirectURI
+                If($PSBoundParameters.ContainsKey('RedirectUri') -and $PSBoundParameters['RedirectUri']){
+                    If($client_app.ContainsKey('RedirectUri')){
+                        $client_app.RedirectUri = $PSBoundParameters['RedirectUri']
+                    }
+                    Else{
+                        $client_app.add('RedirectUri', $PSBoundParameters['RedirectUri'])
+                    }
+                }
                 #Get ClientId from Microsoft Graph
                 $clientId = Get-WellKnownAzureService -AzureService $AzureService
                 if($clientId){
