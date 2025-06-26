@@ -132,8 +132,6 @@ Function Get-MonkeyMSFabricObject{
             $requestHeader = @{
                 Authorization = $AuthHeader
             }
-            #set count
-            $countObjects = 0;
             #Perform query
             Try{
                 switch ($Method) {
@@ -167,7 +165,7 @@ Function Get-MonkeyMSFabricObject{
                             }
                         }
                         Else{
-                            $param = @{
+                            $p = @{
                                 Url = $final_uri;
                                 Headers = $requestHeader;
                                 Method = $Method;

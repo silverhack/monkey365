@@ -103,7 +103,6 @@ Function Get-MonkeyCollector{
         #Check if EntraID collectors should be added
         If($O365Object.IncludeEntraID -eq $true -and $O365Object.onlineServices.EntraID -eq $true){
             $entraIdCollectors = [System.Collections.Generic.List[System.Object]]::new()
-            $graphCollectors = Get-MetadataFromCollector -Provider EntraID -Service Graph
             $msGraphCollectors = Get-MetadataFromCollector -Provider EntraID -Service MSGraph
             $apiPortalCollectors = Get-MetadataFromCollector -Provider EntraID -Service EntraIDPortal
             If($O365Object.isConfidentialApp -eq $true){

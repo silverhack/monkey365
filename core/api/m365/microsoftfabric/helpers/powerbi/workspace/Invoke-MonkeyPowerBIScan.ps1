@@ -37,6 +37,7 @@ Function Invoke-MonkeyPowerBiScan{
     #>
 
     [CmdletBinding()]
+    [OutputType([System.Collections.Generic.List[System.Object]])]
     Param()
     Begin{
         #set vars

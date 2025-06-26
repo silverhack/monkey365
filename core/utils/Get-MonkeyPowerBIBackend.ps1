@@ -38,8 +38,6 @@ Function Get-MonkeyPowerBIBackend{
 
     Param ()
     Begin{
-        #Getting environment
-		$Environment = $O365Object.Environment
         #Set uri
         $rawQuery = ('{0}/v1.0/myorg/admin/groups?$top=1' -f $O365Object.Environment.PowerBIAPI);
         #Get Auth header

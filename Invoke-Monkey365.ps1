@@ -426,7 +426,7 @@ Function Invoke-Monkey365{
         #Check if list collectors
         If($PSBoundParameters.ContainsKey('ListCollector') -and $PSBoundParameters['ListCollector'].IsPresent){
             #Get command Metadata
-            $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-MonkeyCollector")
+            $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Format-MonkeyCollector")
             $newPsboundParams = [ordered]@{}
             if($null -ne $MetaData){
                 $param = $MetaData.Parameters.Keys
@@ -452,7 +452,7 @@ Function Invoke-Monkey365{
                     [void]$newPsboundParams.Add('Provider',$PSBoundParameters['Instance']);
                 }
                 #Execute command
-                Get-MonkeyCollector @newPsboundParams
+                Format-MonkeyCollector @newPsboundParams
             }
             return
         }
