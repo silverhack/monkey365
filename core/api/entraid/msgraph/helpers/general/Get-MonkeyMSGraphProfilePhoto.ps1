@@ -71,9 +71,10 @@ Function Get-MonkeyMSGraphProfilePhoto {
                 ObjectType = 'users';
                 ObjectId = $ObjectId;
                 Environment = $Environment;
-                ContentType = 'application/json';
+                ContentType = 'image/jpg';
                 Method = "GET";
                 APIVersion = $APIVersion;
+                RawResponse = $True;
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
@@ -101,6 +102,7 @@ Function Get-MonkeyMSGraphProfilePhoto {
                     Url = $logoUrl;
                     ContentType = 'image/jpg';
                     Method = "GET";
+                    RawResponse = $True;
                     InformationAction = $O365Object.InformationAction;
                     Verbose = $O365Object.verbose;
                     Debug = $O365Object.debug;
@@ -128,6 +130,7 @@ Function Get-MonkeyMSGraphProfilePhoto {
                         Url = $logoUrl;
                         ContentType = 'image/jpg';
                         Method = "GET";
+                        RawResponse = $True;
                         InformationAction = $O365Object.InformationAction;
                         Verbose = $O365Object.verbose;
                         Debug = $O365Object.debug;
@@ -139,8 +142,15 @@ Function Get-MonkeyMSGraphProfilePhoto {
         }
     }
     End{
-        if($null -ne $profilePhoto){
-            return [Convert]::ToBase64String($profilePhoto)
+        If($null -ne $profilePhoto -and $profilePhoto -is [System.Net.Http.HttpResponseMessage]){
+            Try{
+                $stream = $profilePhoto.Content.ReadAsStreamAsync()
+                $memoryStream = $stream.GetAwaiter().GetResult()
+                return [Convert]::ToBase64String($memoryStream.ToArray())
+            }
+            Catch{
+                Write-Error $_
+            }
         }
     }
 }

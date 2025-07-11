@@ -9,7 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the specIfic language governing permissions and
 # limitations under the License.
 
 Function Get-MonkeyMSGraphObject{
@@ -84,32 +84,35 @@ Function Get-MonkeyMSGraphObject{
         [parameter(Mandatory=$False, HelpMessage='POST Data object')]
         [Object]$Data,
 
+        [parameter(Mandatory=$False, HelpMessage='Return raw response')]
+        [Switch]$RawResponse,
+
         [parameter(Mandatory=$False, HelpMessage='API Version')]
         [String]$APIVersion = "v1.0"
     )
     Begin{
         $Verbose = $Debug = $False;
         $InformationAction = 'SilentlyContinue'
-        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+        If($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
             $Verbose = $True
         }
-        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+        If($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
             $Debug = $True
         }
-        if($PSBoundParameters.ContainsKey('InformationAction')){
+        If($PSBoundParameters.ContainsKey('InformationAction')){
             $InformationAction = $PSBoundParameters['InformationAction']
         }
-        if($null -eq $Authentication){
+        If($null -eq $Authentication){
              Write-Warning -Message ($message.NullAuthenticationDetected -f "Microsoft Graph API")
              break
         }
         #Get Authorization Header
         $methods = $Authentication | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
         #Get Authorization Header
-        if($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
+        If($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
             $AuthHeader = $Authentication.CreateAuthorizationHeader()
         }
-        else{
+        Else{
             $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
         }
         #$AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
@@ -117,65 +120,65 @@ Function Get-MonkeyMSGraphObject{
         $base_uri = ("/{0}" -f $APIVersion)
         $my_filter = $null
         #construct query
-        if($Expand){
-            if($null -ne $my_filter){
+        If($Expand){
+            If($null -ne $my_filter){
                 $my_filter = ('{0}&$expand={1}' -f $my_filter, $Expand)
             }
-            else{
+            Else{
                 $my_filter = ('?$expand={0}' -f $Expand)
             }
         }
-        if($Filter){
-            if($null -ne $my_filter){
+        If($Filter){
+            If($null -ne $my_filter){
                 $my_filter = ('{0}&$filter={1}' -f $my_filter, [uri]::EscapeDataString($Filter))
             }
-            else{
+            Else{
                 $my_filter = ('?$filter={0}' -f [uri]::EscapeDataString($Filter))
             }
         }
-        if($Select){
-            if($null -ne $my_filter){
+        If($Select){
+            If($null -ne $my_filter){
                 $my_filter = ('{0}&$select={1}' -f $my_filter, (@($Select) -join ','))
             }
-            else{
+            Else{
                 $my_filter = ('?$select={0}' -f (@($Select) -join ','))
             }
         }
-        if($orderBy){
-            if($null -ne $my_filter){
+        If($orderBy){
+            If($null -ne $my_filter){
                 $my_filter = ('{0}&$orderby={1}' -f $my_filter, $orderBy)
             }
-            else{
+            Else{
                 $my_filter = ('?$orderby={0}' -f $orderBy)
             }
         }
-        if($Top){
-            if($null -ne $my_filter){
+        If($Top){
+            If($null -ne $my_filter){
                 $my_filter = ('{0}&$top={1}' -f $my_filter, $Top)
             }
-            else{
+            Else{
                 $my_filter = ('?$top={0}' -f $Top)
             }
         }
-        if($Count){
-            if($null -ne $my_filter){
+        If($Count){
+            If($null -ne $my_filter){
                 $my_filter = ('{0}&$count=true' -f $my_filter)
             }
-            else{
+            Else{
                 $my_filter = ('?$count=true' -f $Top)
             }
         }
-        if($me){
+        If($me){
             $base_uri = ("{0}/me" -f $base_uri)
         }
-        if($ObjectType){
+        If($ObjectType){
             $base_uri = ("{0}/{1}" -f $base_uri, $ObjectType)
         }
-        if($ObjectId){
+        If($ObjectId){
             $base_uri = ("{0}/{1}" -f $base_uri, $ObjectId)
         }
         #Append filter to query
-        if($my_filter){
+        If($my_filter){
             $base_uri = ("{0}{1}" -f $base_uri,$my_filter)
         }
         #Construct final URI
@@ -183,22 +186,22 @@ Function Get-MonkeyMSGraphObject{
         $final_uri = ("{0}{1}" -f $Server,$base_uri)
         $final_uri = [regex]::Replace($final_uri,"/+","/")
         $final_uri = ("https://{0}" -f $final_uri.ToString())
-        if($RawQuery){
-            if($my_filter){
+        If($RawQuery){
+            If($my_filter){
                 $final_uri = ("{0}{1}" -f $RawQuery,$my_filter)
             }
-            else{
+            Else{
                 $final_uri = ("{0}" -f $RawQuery)
             }
         }
     }
     Process{
-        if($final_uri){
+        If($final_uri){
             #Create Request Header
             $requestHeader = @{
                 Authorization = $AuthHeader
             }
-            if($PSBoundParameters.ContainsKey('AddConsistencyLevelHeader') -and $PSBoundParameters['AddConsistencyLevelHeader'].IsPresent){
+            If($PSBoundParameters.ContainsKey('AddConsistencyLevelHeader') -and $PSBoundParameters['AddConsistencyLevelHeader'].IsPresent){
                 [void]$requestHeader.Add('ConsistencyLevel','eventual')
             }
             #set count
@@ -218,11 +221,15 @@ Function Get-MonkeyMSGraphObject{
                             Debug = $Debug;
                             InformationAction = $InformationAction;
                         }
+                        If($PSBoundParameters.ContainsKey('RawResponse') -and $PSBoundParameters['RawResponse'].IsPresent){
+                            [void]$param.Add('RawResponse',$true)
+                        }
+                        #Execute query
                         $Objects = Invoke-MonkeyWebRequest @param
                     }
                     'POST'
                     {
-                        if($Data){
+                        If($Data){
                             $param = @{
                                 Url = $final_uri;
                                 Headers = $requestHeader;
@@ -235,7 +242,7 @@ Function Get-MonkeyMSGraphObject{
                                 InformationAction = $InformationAction;
                             }
                         }
-                        else{
+                        Else{
                             $param = @{
                                 Url = $final_uri;
                                 Headers = $requestHeader;
@@ -251,32 +258,33 @@ Function Get-MonkeyMSGraphObject{
                         $Objects = Invoke-MonkeyWebRequest @param
                     }
                 }
-                if($ObjectType){
-                    Write-Verbose ("Getting {0} from microsoft graph" -f $ObjectType)
+                #Writes URL to verbose stream
+                Write-Verbose $final_uri
+                #Check objects
+                If($null -ne $Objects -and $Objects -is [System.Net.Http.HttpResponseMessage]){
+                    $Objects
+                    return
                 }
-                else{
-                    Write-Verbose $final_uri
-                }
-                if($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and @($Objects.value).Count -gt 0){
+                ElseIf($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and @($Objects.value).Count -gt 0){
                     #Count objects
                     $countObjects += @($Objects.value).Count
                     #return Value
                     $Objects.value
                 }
-                elseif($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -eq 0){
+                ElseIf($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('value') -and $Objects.value.Count -eq 0){
                     #empty response
                     $Objects.value
                 }
-                else{
+                Else{
                     #Count objects
                     $countObjects += @($Objects).Count
                     $Objects
                 }
-                if($Top -and $Top -ge $countObjects){
+                If($Top -and $Top -ge $countObjects){
                     return
                 }
                 #Search for paging objects
-                if ($Objects.PsObject.Properties.Item('@odata.nextLink')){
+                If ($Objects.PsObject.Properties.Item('@odata.nextLink')){
                     $nextLink = $Objects.'@odata.nextLink'
                     while ($null -ne $nextLink){
                         #Make RestAPI call
