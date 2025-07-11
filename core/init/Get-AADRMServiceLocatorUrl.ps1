@@ -36,7 +36,7 @@ Function Get-AADRMServiceLocatorUrl{
     [CmdletBinding()]
     Param()
     try{
-        if($O365Object.auth_tokens.AADRM){
+        If($O365Object.auth_tokens.AADRM){
             $access_token = $O365Object.auth_tokens.AADRM
             #Set Authorization Header
             $AuthHeader = ("MSOID {0}" -f $access_token.AccessToken)
@@ -53,16 +53,16 @@ Function Get-AADRMServiceLocatorUrl{
             }
             [xml]$xml_response = Invoke-MonkeyWebRequest @p
             #Get service locator url
-            if($null -ne $xml_response){
+            If($null -ne $xml_response){
                 $ns = @{ns="http://microsoft.com/DRM/ServiceLocatorService"}
                 $response = Select-Xml -Xml $xml_response -XPath '//ns:ServiceLocationResponse' -Namespace $ns -ErrorAction Ignore
-                if($null -ne $response -and $null -ne ($response.PsObject.Properties.Item('Node'))){
+                If($null -ne $response -and $null -ne ($response.PsObject.Properties.Item('Node'))){
                     $service_locator = $response.Node.Url
                     return $service_locator
                 }
             }
         }
-        else{
+        Else{
             $msg = @{
                 MessageData = $message.AADRMServiceLocatorError;
                 callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -79,7 +79,7 @@ Function Get-AADRMServiceLocatorUrl{
             logLevel = 'error';
             Tags = @('AADRMServiceLocatorError');
         }
-        Write-Verbose @msg
+        Write-Error @msg
     }
 }
 
