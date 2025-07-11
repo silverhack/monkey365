@@ -56,12 +56,9 @@ Function Get-TenantInformation{
                 #Get tenant details
                 $Tenant = Get-MonkeyMSGraphOrganization -TenantId $tid
                 If($Tenant){
-                    #Set Tenant info var
-                    Set-Variable Tenant -Value $Tenant -Scope Script -Force
                     If($O365Object.isConfidentialApp){
                         #Set Userprincipalname var
                         If($O365Object.auth_tokens.MSGraph.psobject.Properties.Item('clientId')){
-                            Set-Variable userPrincipalName -Value $O365Object.auth_tokens.MSGraph.clientId.ToString() -Scope Script -Force
                             $O365Object.userPrincipalName = $O365Object.auth_tokens.MSGraph.clientId.ToString()
                         }
                         Else{
@@ -72,7 +69,6 @@ Function Get-TenantInformation{
                                 Tags = @('EIDUserPrincipalNameError');
                             }
                             Write-Warning @msg
-                            Set-Variable userPrincipalName -Value $null -Scope Script -Force
                             $O365Object.userPrincipalName = $O365Object.initParams.ClientId
                         }
                     }
@@ -80,15 +76,12 @@ Function Get-TenantInformation{
                         #Set Userprincipalname var
                         If($O365Object.auth_tokens.MSGraph.psobject.Properties.Item('UserInfo')){
                             $O365Object.userPrincipalName = $O365Object.auth_tokens.MSGraph.UserInfo.DisplayableId.ToString()
-                            Set-Variable userPrincipalName -Value $O365Object.auth_tokens.MSGraph.UserInfo.DisplayableId.ToString() -Scope Script -Force
                         }
                         ElseIf($O365Object.auth_tokens.MSGraph.psobject.Properties.Item('userPrincipalName')){
                             $O365Object.userPrincipalName = $O365Object.auth_tokens.MSGraph.userPrincipalName
-                            Set-Variable userPrincipalName -Value $O365Object.auth_tokens.MSGraph.userPrincipalName -Scope Script -Force
                         }
                         ElseIf($O365Object.auth_tokens.MSGraph.psobject.Properties.Item('Account')){
                             $O365Object.userPrincipalName = $O365Object.auth_tokens.MSGraph.Account.Username
-                            Set-Variable userPrincipalName -Value $O365Object.auth_tokens.MSGraph.Account.Username -Scope Script -Force
                         }
                         Else{
                             $msg = @{
@@ -98,14 +91,13 @@ Function Get-TenantInformation{
                                 Tags = @('EIDUserPrincipalNameError');
                             }
                             Write-Warning @msg
-                            Set-Variable userPrincipalName -Value $null -Scope Script -Force
                             $O365Object.userPrincipalName = $null
                         }
                     }
                     #Set properties
-                    $O365Object.Tenant.tenantName = $Tenant.displayName
+                    $O365Object.Tenant.tenantName = ($Tenant | Select-Object -ExpandProperty displayName -ErrorAction Ignore)
                     $O365Object.Tenant.companyInfo = $Tenant
-                    $O365Object.Tenant.tenantId = $Tenant.Id
+                    $O365Object.Tenant.tenantId = ($Tenant | Select-Object -ExpandProperty Id -ErrorAction Ignore)
                     #Get subscribed SKUs
                     $O365Object.Tenant.sku = Get-MonkeyMSGraphSuscribedSku
                     If($null -ne $O365Object.Tenant.sku){
@@ -121,7 +113,7 @@ Function Get-TenantInformation{
                 }
                 Else{
                     #Throw error
-                    throw ("[TenantError] {0}: {1}" -f "Unable to get tenant information",$_.Exception.Message)
+                    throw ("[TenantError] {0}" -f "Unable to get tenant information")
                 }
             }
             Else{
@@ -146,6 +138,7 @@ Function Get-TenantInformation{
                 MessageData = $_;
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'verbose';
+                Verbose = $O365Object.verbose;
                 Tags = @('EIDTenantError');
             }
             Write-Verbose @msg
