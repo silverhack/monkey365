@@ -163,30 +163,59 @@ Function New-O365Object{
             #Check If username and password
             If ((Test-Path env:MONKEY_ENV_MONKEY_USER) -and (Test-Path env:MONKEY_ENV_MONKEY_PASSWORD)){
                 try{
-                    [securestring]$cred = ConvertTo-SecureString $env:MONKEY_ENV_MONKEY_PASSWORD
-                    [pscredential]$InputObject = New-Object System.Management.Automation.PSCredential ($env:MONKEY_ENV_MONKEY_USER, $cred)
+                    [securestring]$cred = ConvertTo-SecureString $env:MONKEY_ENV_MONKEY_PASSWORD.Trim('"')
+                    [pscredential]$InputObject = New-Object System.Management.Automation.PSCredential ($env:MONKEY_ENV_MONKEY_USER.Trim('"'), $cred)
                     $MyParams.UserCredentials = $InputObject
                 }
                 catch{
                     Write-Error $_
+                    throw ("[ParameterError] {0}: {1}" -f "Unable to create Monkey365 object. Unable to retrieve user credentials from environment variables",$_.Exception.Message)
+                }
+            }
+            #Check If clientId and client Secret
+            ElseIf ((Test-Path env:MONKEY_ENV_CLIENT_ID) -and (Test-Path env:MONKEY_ENV_CLIENT_SECRET)){
+                try{
+                    [securestring]$cred = ConvertTo-SecureString $env:MONKEY_ENV_CLIENT_SECRET.Trim('"')
+                    [pscredential]$InputObject = New-Object System.Management.Automation.PSCredential ($env:MONKEY_ENV_CLIENT_ID.Trim('"'), $cred)
+                    $MyParams.ClientCredentials = $InputObject
+                }
+                catch{
+                    Write-Error $_
+                    throw ("[ParameterError] {0}: {1}" -f "Unable to create Monkey365 object. Unable to retrieve client credentials from environment variables",$_.Exception.Message)
+                }
+            }
+            #Check If clientId, certificate and certificate password
+            ElseIf ((Test-Path env:MONKEY_ENV_CLIENT_ID) -and (Test-Path env:MONKEY_ENV_CERTIFICATE)){
+                try{
+                    $MyParams.ClientId = $env:MONKEY_ENV_CLIENT_ID.Trim('"')
+                    $MyParams.Certificate = $env:MONKEY_ENV_CERTIFICATE.Trim('"')
+                    #Check If certificate password
+                    If (Test-Path env:MONKEY_ENV_CERTIFICATE_PASSWORD){
+                        [securestring]$cred = ConvertTo-SecureString $env:MONKEY_ENV_CERTIFICATE_PASSWORD.Trim('"')
+                        $MyParams.CertFilePassword = $cred
+                    }
+                }
+                catch{
+                    Write-Error $_
+                    throw ("[ParameterError] {0}: {1}" -f "Unable to create Monkey365 object. Unable to retrieve certificate credentials from environment variables",$_.Exception.Message)
                 }
             }
             #Check If TenantID
             If (Test-Path env:MONKEY_ENV_TENANT_ID){
-                $MyParams.TenantID = $env:MONKEY_ENV_TENANT_ID
+                $MyParams.TenantID = $env:MONKEY_ENV_TENANT_ID.Trim('"')
             }
             #Check If AuthMode
             If (Test-Path env:MONKEY_ENV_AUTH_MODE){
-                $MyParams.AuthMode = $env:MONKEY_ENV_AUTH_MODE
+                $MyParams.AuthMode = $env:MONKEY_ENV_AUTH_MODE.Trim('"')
             }
             #Check If subscriptions
             If (Test-Path env:MONKEY_ENV_SUBSCRIPTIONS){
-                $MyParams.Subscriptions = $env:MONKEY_ENV_SUBSCRIPTIONS
+                $MyParams.Subscriptions = $env:MONKEY_ENV_SUBSCRIPTIONS.Trim('"')
             }
             #Check If collect
             If (Test-Path env:MONKEY_ENV_COLLECT){
                 $collect = @()
-                ForEach($element in $env:MONKEY_ENV_COLLECT.Split(',')){
+                ForEach($element in $env:MONKEY_ENV_COLLECT.Trim('"').Split(',')){
                     $collect+=$element
                 }
                 If('all' -in $collect){
@@ -201,7 +230,7 @@ Function New-O365Object{
             #Check If exportTo
             If (Test-Path env:MONKEY_ENV_EXPORT_TO){
                 $exportTo = @()
-                ForEach($element in $env:MONKEY_ENV_EXPORT_TO.Split(',')){
+                ForEach($element in $env:MONKEY_ENV_EXPORT_TO.Trim('"').Split(',')){
                     $exportTo+=$element
                 }
                 If($exportTo.Count -gt 0){
@@ -212,7 +241,9 @@ Function New-O365Object{
             #Check If writelog
             If (Test-Path env:MONKEY_ENV_WRITELOG){
                 try{
-                    $MyParams.WriteLog = [System.Convert]::ToBoolean($env:MONKEY_ENV_WRITELOG)
+                    $out = $null;
+                    [void][bool]::TryParse($env:MONKEY_ENV_WRITELOG.Trim('"'), [ref]$out);
+                    $MyParams.WriteLog = $out
                 }
                 catch{
                     $MyParams.WriteLog = $false
@@ -221,7 +252,9 @@ Function New-O365Object{
             #Check If Verbose
             If (Test-Path env:MONKEY_ENV_VERBOSE){
                 try{
-                    $MyParams.Verbose = [System.Convert]::ToBoolean($env:MONKEY_ENV_VERBOSE)
+                    $out = $null;
+                    [void][bool]::TryParse($env:MONKEY_ENV_VERBOSE.Trim('"'), [ref]$out);
+                    $MyParams.Verbose = $out
                 }
                 catch{
                     $MyParams.Verbose = $false
@@ -230,7 +263,9 @@ Function New-O365Object{
             #Check If Debug
             If (Test-Path env:MONKEY_ENV_DEBUG){
                 try{
-                    $MyParams.Debug = [System.Convert]::ToBoolean($env:MONKEY_ENV_DEBUG)
+                    $out = $null;
+                    [void][bool]::TryParse($env:MONKEY_ENV_DEBUG.Trim('"'), [ref]$out);
+                    $MyParams.Debug = $out
                 }
                 catch{
                     $MyParams.Debug = $false
