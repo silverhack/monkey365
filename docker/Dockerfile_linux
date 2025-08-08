@@ -1,4 +1,3 @@
-#bueno para mirar https://github.com/Stijnc/polaris-pshtml-docker
 FROM mcr.microsoft.com/dotnet/sdk
 #Labels
 LABEL version="1.0" \
