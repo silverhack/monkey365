@@ -6,7 +6,7 @@
   "serviceType": "Fabric",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure guest access to content is restricted",
-  "description": "This setting allows Microsoft Entra B2B guest users to have full access to the browsing experience using the left-hand navigation pane in the organization. Guest users who have been assigned workspace roles or specific item permissions will continue to have those roles and/or permissions, even if this setting is disabled. The recommended state is Enabled for a subset of the organization or Disabled.",
+  "description": "This setting allows Microsoft Entra B2B guest users to have full access to the browsing experience using the left-hand navigation pane in the organization. Guest users who have been assigned workspace roles or specific item permissions will continue to have those roles and/or permissions, even if this setting is disabled. The recommended state is `Enabled for a subset of the organization` or `Disabled`.",
   "rationale": "Establishing and enforcing a dedicated security group prevents unauthorized access to Microsoft Fabric for guests collaborating in Entra that are new or assigned guest status from other applications. This upholds the principle of least privilege and uses role-based access control (RBAC). These security groups can also be used for tasks like conditional access, enhancing risk management and user accountability across the organization.",
   "impact": "Security groups will need to be more closely tended to and monitored.",
   "remediation": {
@@ -33,10 +33,13 @@
   ],
   "compliance": [
     {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "9.1.3",
-	  "profile": "E3 Level 1"
+		"name": "CIS Microsoft 365 Foundations Benchmark",
+		"version": "5.0.0",
+		"reference": "9.1.3",
+		"profile": [
+			"E3 Level 1",
+			"E5 Level 1"
+		]
     }
   ],
   "level": "medium",
@@ -44,12 +47,45 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "m365_fabric_tenant",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "settingName",
+                "eq",
+                "ElevatedGuestsTenant"
+              ]
+            ]
+          }
+        ]
+      },
+	  {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "enabled",
+                "eq",
+                "True"
+              ],
+			  [
+                "enabledSecurityGroups.Count",
+                "eq",
+                "0"
+              ]
+            ],
+			"operator": "and"
+          }
+        ]
+	  }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -58,6 +94,12 @@
   "output": {
     "html": {
       "data": {
+        "properties": {
+          "title": "Title",
+          "enabled": "Enabled",
+          "tenantSettingGroup": "Group",
+          "enabledSecurityGroups": "Security Groups"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -70,7 +112,11 @@
       "actions": {
         "objectData": {
           "properties": [
-            "*"
+            "title",
+            "enabled",
+            "location",
+            "tenantSettingGroup",
+            "enabledSecurityGroups"
           ],
           "expandObject": null,
           "limit": null
@@ -92,7 +138,7 @@
           
         ],
         "message": "Ensure guest access to content is restricted",
-        "defaultMessage": null
+        "defaultMessage": "Ensure guest access to content is restricted"
       },
       "properties": {
         "resourceName": null,

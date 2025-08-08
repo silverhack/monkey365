@@ -1,0 +1,120 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Defender",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure emergency access account activity is monitored",
+  "description": "Organizations should monitor sign-in and audit log activity from the emergency accounts and trigger notifications to other administrators. When you monitor the activity for emergency access accounts, you can verify these accounts are only used for testing or actual emergencies. You can use Azure Monitor, Microsoft Sentinel, Defender for Cloud Apps or other tools to monitor the sign-in logs and trigger email and SMS alerts to your administrators whenever emergency access accounts sign in.\n\nThis recommendation uses Defender for Cloud Apps Policies to alert on emergency access account activity.\n\nThe recommended state is to monitor `Activity type Log on` on break-glass or emergency access accounts.",
+  "rationale": "Emergency access accounts should be used in very few scenarios, for example, the last Global Administrator has left the organization and the account is inaccessible. All activity on an emergency access account should be reviewed at the time of the event to ensure the sign on is legitimate and authorized.",
+  "impact": "There is no real world impact to monitoring these accounts beyond allocating staff. The frequency of emergency account sign on should be so low that any activity raises a red flag that is treated with the highest priority.",
+  "remediation": {
+    "text": "
+			###### To remediate using the UI: 
+			1. Navigate to `Microsoft 365 Defender` https://security.microsoft.com 
+			2. Under the **Cloud Apps** section select `Policies -> Policy management`. 
+			3. Click on `All policies` and then `Create policy -> Activity policy`. 
+			4. Give the policy a name and set the following: 
+				* Policy severity to `High severity`. 
+				* Category to `Privileged accounts`. 
+				* Act on `Single activity`. 
+				* Click `Select a filter -> Activity type equals Log on`. 
+				* Click `Add a filter -> User Name equals <Emergency access account>` as `Any role`. 
+				* Ensure all emergency access accounts are added to this policy or another. 
+				* Select an alert method such as `Send alert as email`.
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/security-emergency-access#monitor-sign-in-and-audit-logs",
+	"https://learn.microsoft.com/en-us/defender-cloud-apps/control-cloud-apps-with-policies"
+  ],
+  "compliance": [
+    {
+		"name": "CIS Microsoft 365 Foundations Benchmark",
+		"version": "5.0.0",
+		"reference": "2.2.1",
+		"profile": [
+			"E5 Level 1"
+		]
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure emergency access account activity is monitored",
+        "defaultMessage": "Ensure emergency access account activity is monitored"
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "defender_emergency_access_account_not_monitored",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+

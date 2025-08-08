@@ -35,10 +35,13 @@
   ],
   "compliance": [
     {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "9.1.4",
-	  "profile": "E3 Level 1"
+		"name": "CIS Microsoft 365 Foundations Benchmark",
+		"version": "5.0.0",
+		"reference": "9.1.4",
+		"profile": [
+			"E3 Level 1",
+			"E5 Level 1"
+		]
     }
   ],
   "level": "medium",
@@ -46,12 +49,66 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "m365_fabric_tenant",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "settingName",
+                "eq",
+                "ElevatedGuestsTenant"
+              ]
+            ]
+          }
+        ]
+      },
+	  {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "enabled",
+                "eq",
+                "True"
+              ],
+			  [
+                "enabledSecurityGroups.Count",
+                "eq",
+                "0"
+              ]
+            ],
+			"operator": "and"
+          }
+        ]
+	  },
+	  {
+        "connectOperator": "or",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "name",
+                "eq",
+                "CreateP2w"
+              ],
+              [
+                "value",
+                "eq",
+                "true"
+              ]
+            ],
+            "operator": "and",
+            "whereObject": "properties"
+          }
+        ]
+	  }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -60,6 +117,12 @@
   "output": {
     "html": {
       "data": {
+        "properties": {
+          "title": "Title",
+          "enabled": "Enabled",
+          "tenantSettingGroup": "Group",
+          "enabledSecurityGroups": "Security Groups"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -72,7 +135,11 @@
       "actions": {
         "objectData": {
           "properties": [
-            "*"
+            "title",
+            "enabled",
+            "location",
+            "tenantSettingGroup",
+            "enabledSecurityGroups"
           ],
           "expandObject": null,
           "limit": null
@@ -94,7 +161,7 @@
           
         ],
         "message": "Ensure 'Publish to web' is restricted",
-        "defaultMessage": null
+        "defaultMessage": "Ensure 'Publish to web' is restricted"
       },
       "properties": {
         "resourceName": null,

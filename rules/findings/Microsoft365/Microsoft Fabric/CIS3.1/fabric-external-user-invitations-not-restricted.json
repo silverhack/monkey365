@@ -38,10 +38,13 @@
   ],
   "compliance": [
     {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "9.1.2",
-	  "profile": "E3 Level 1"
+		"name": "CIS Microsoft 365 Foundations Benchmark",
+		"version": "5.0.0",
+		"reference": "9.1.2",
+		"profile": [
+			"E3 Level 1",
+			"E5 Level 1"
+		]
     }
   ],
   "level": "medium",
@@ -49,12 +52,45 @@
     
   ],
   "rule": {
-    "path": "",
+    "path": "m365_fabric_tenant",
     "subPath": null,
     "selectCondition": {
       
     },
     "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "settingName",
+                "eq",
+                "ExternalSharingV2"
+              ]
+            ]
+          }
+        ]
+      },
+	  {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "enabled",
+                "eq",
+                "True"
+              ],
+			  [
+                "enabledSecurityGroups.Count",
+                "eq",
+                "0"
+              ]
+            ],
+			"operator": "and"
+          }
+        ]
+	  }
     ],
     "shouldExist": null,
     "returnObject": null,
@@ -63,6 +99,12 @@
   "output": {
     "html": {
       "data": {
+        "properties": {
+          "title": "Title",
+          "enabled": "Enabled",
+          "tenantSettingGroup": "Group",
+          "enabledSecurityGroups": "Security Groups"
+        },
         "expandObject": null
       },
       "table": "Normal",
@@ -75,7 +117,11 @@
       "actions": {
         "objectData": {
           "properties": [
-            "*"
+            "title",
+            "enabled",
+            "location",
+            "tenantSettingGroup",
+            "enabledSecurityGroups"
           ],
           "expandObject": null,
           "limit": null
@@ -97,7 +143,7 @@
           
         ],
         "message": "Ensure external user invitations are restricted",
-        "defaultMessage": null
+        "defaultMessage": "Ensure external user invitations are restricted"
       },
       "properties": {
         "resourceName": null,

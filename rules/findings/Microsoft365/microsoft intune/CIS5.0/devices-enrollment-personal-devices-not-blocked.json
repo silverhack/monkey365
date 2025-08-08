@@ -1,0 +1,117 @@
+{
+  "args": [
+    
+  ],
+  "provider": "Microsoft365",
+  "serviceType": "Intune",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure device enrollment for personally owned devices is blocked by default",
+  "description": "Device enrollment restrictions let you restrict devices from enrolling in Intune based on certain device attributes such as device limit, device platform, OS Version, manufacturer or device ownership (Personally owned devices).\n\nThe recommended state is to `Block` personally owned devices from enrollment.",
+  "rationale": "Restricting the enrollment of personally owned devices prevents attackers who have bypassed other controls from registering a new device to gain an additional foothold, further hiding or obscuring their activities.",
+  "impact": null,
+  "remediation": {
+    "text": "
+			###### To remediate using the UI: 
+			1. Navigate to Microsoft Intune admin center https://intune.microsoft.com/ 
+			2. Select Devices and then under Device onboarding click Enrollment 
+			3. Under Enrollment options select Device platform restriction. 
+			4. Inspect the policies listed under Device type restrictions 
+				* For the Default priority policy, click All Users. 
+				* Select Properties. 
+			5. Click Edit to change Platform settings. 
+			6. In the Personally owned column set each platform to Block. 
+	",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/intune/intune-service/protect/device-compliance-get-started"
+  ],
+  "compliance": [
+    {
+		"name": "CIS Microsoft 365 Foundations Benchmark",
+		"version": "5.0.0",
+		"reference": "4.2",
+		"profile": [
+			"E3 Level 2",
+			"E5 Level 2"
+		]
+    }
+  ],
+  "level": "medium",
+  "tags": [
+    
+  ],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {
+    },
+    "query": [
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+        },
+        "expandObject": null
+      },
+      "table": "Normal",
+      "decorate": [
+        
+      ],
+      "emphasis": [
+        
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          
+        ],
+        "message": "Ensure device enrollment for personally owned devices is blocked by default",
+        "defaultMessage": "Ensure device enrollment for personally owned devices is blocked by default"
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "intune_personally_owned_devices_not_blocked",
+  "notes": [
+    
+  ],
+  "categories": [
+    
+  ]
+}
+
