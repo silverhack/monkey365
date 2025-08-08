@@ -87,18 +87,8 @@ Function Select-MonkeyTenant{
         elseif($selected_Tenant -and $bypassSelection -eq $false){
             #Authenticate with selected TenantId
             $O365Object.TenantId = $selected_Tenant.tenantId
-            $O365Object.Tenant = $selected_Tenant
             #Check if already connected
             if($selected_Tenant.tenantId -ne $O365Object.tenantOrigin.objectId){
-                <#
-                if($null -eq $O365Object.application_args.Item('TenantId')){
-                    #Add TenantId
-                    [ref]$null = $O365Object.application_args.Add('TenantId',$selected_Tenant.tenantId)
-                }
-                else{
-                    $O365Object.application_args.TenantId = $selected_Tenant.tenantId
-                }
-                #>
                 #Because a new tenant was selected, a new application should be created
                 Initialize-AuthenticationParam
                 return $True
