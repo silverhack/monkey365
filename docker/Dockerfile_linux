@@ -1,11 +1,10 @@
-#bueno para mirar https://github.com/Stijnc/polaris-pshtml-docker
-FROM mcr.microsoft.com/powershell
+FROM mcr.microsoft.com/dotnet/sdk
 #Labels
-LABEL version="1.0"
-LABEL description="Monkey365 container"
-LABEL author "Juan Garrido"
-LABEL email "diariode@gmail.com"
-LABEL twitter "https://twitter.com/tr1ana"
+LABEL version="1.0" \
+      description="Monkey365 container" \
+      author="Juan Garrido" \
+      email="diariode@gmail.com" \
+      twitter="https://twitter.com/tr1ana"
 # Metadata parameters
 ARG VERSION
 ARG VCS_URL
