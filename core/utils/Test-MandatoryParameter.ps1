@@ -41,7 +41,7 @@ Function Test-MandatoryParameter{
     try{
         #Find empty analysis parameter
         if(($null -eq $O365Object.initParams.Collect -or $O365Object.initParams.Collect.Count -eq 0) -and $null -eq $O365Object.IncludeEntraID){
-            throw ("[EmptyParameterError] Please select a valid option with the -Analysis flag or use the -IncludeEntraId. For more information, please see https://silverhack.github.io/monkey365/ or use Get-Help Invoke-Monkey365 -Detailed")
+            throw ("[EmptyParameterError] Please select a valid option with the -Collect flag or use the -IncludeEntraId. For more information, please see https://silverhack.github.io/monkey365/ or use Get-Help Invoke-Monkey365 -Detailed")
         }
         #Find duplicates in analysis parameter
         $duplicateValue = $O365Object.initParams.Collect | Group-Object | Where-Object -Property Count -gt 1
