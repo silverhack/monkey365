@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/powershell
+FROM mcr.microsoft.com/dotnet/sdk
 #Labels
 LABEL version="1.0"
 LABEL description="Monkey365 container"
