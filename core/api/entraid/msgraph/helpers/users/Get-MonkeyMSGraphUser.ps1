@@ -69,8 +69,6 @@ Function Get-MonkeyMSGraphUser {
         $graphAuth = $O365Object.auth_tokens.MSGraph
     }
     Process{
-        Write-Host ($PSBoundParameters | Out-String) -ForegroundColor Yellow
-        Write-Host ($PSCmdlet.ParameterSetName) -ForegroundColor Magenta
         if($PSCmdlet.ParameterSetName -eq 'UserId'){
             $params = @{
                 Authentication = $graphAuth;

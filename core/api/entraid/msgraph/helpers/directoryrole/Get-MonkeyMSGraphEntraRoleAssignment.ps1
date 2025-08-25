@@ -195,7 +195,6 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
             Write-Output $allEntraIDRoleAssignment -NoEnumerate
         }
         Catch{
-            write-host $_
             Write-Error $_
             return , $allEntraIDRoleAssignment
         }
