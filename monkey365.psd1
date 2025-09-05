@@ -12,7 +12,7 @@
 RootModule = 'monkey365.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.95.7'
+ModuleVersion = '0.95.8'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -73,7 +73,6 @@ NestedModules = @(
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
-    'Invoke-Test',
     'Invoke-Monkey365',
     'Get-MonkeyJobError'
     'Convert-MarkDownToHtml',
@@ -82,7 +81,8 @@ FunctionsToExport = @(
     'ConvertTo-SecureScriptBlock',
     'Update-PsObject',
     'Get-AstFunction',
-    'Get-ObjectPropertyByPath'
+    'Get-ObjectPropertyByPath',
+    'Register-Monkey365Application'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
