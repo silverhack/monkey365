@@ -88,7 +88,7 @@ Function Get-Framework{
                         $message = ("There are $e[${color}m$($MyFrameworks.Count)${e}[0m available frameworks")
                     }
                     else{
-                        $message = ('There are {0} available frameworks' -f $MyFrameworks.Count)
+                        $message = ('There are {0} available frameworks' -f @($MyFrameworks).Count)
                     }
                     Write-Output $message
                     $color = $colors.Item('medium')

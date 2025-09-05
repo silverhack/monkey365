@@ -22,5 +22,18 @@ ConvertFrom-StringData @'
     RemoveDummyFunctionMessage     = Removing dummy function {0}
     ScriptBlockError               = Unable to create ScriptBlock object
     CommandNotRecognized           = Command {0} cannot be imported
-    UnableToRemoveJob              = "Unable to remove job {0}"
+    UnableToRemoveJob              = Unable to remove job {0}. Job state is {1}. Task status is {2}
+    UnableToRemoveJobDetailed      = Unable to remove job {0}. {1}
+    FileNotExists                  = File {0} does not exists
+    ImportingStatementAstMessage   = Importing StatementAst function: {0}
+    ImportingFunctionMessage       = Importing function: {0}
+    ImportingModuleMessage         = Importing module: {0}
+    ModuleNotExists                = File or module {0} does not exists
+    NullVariableMessage            = Null variable value found on {0}
+    CustomFunctionMessage          = Detected custom function with no parameters
+    UnableToGetAdditionalParam     = Unable to get additional parameters
+    UnableToGetParamFromSB         = Unable to determine parameter value from ScriptBlock. Adding empty string
+    StoppingJobMessage             = Stopping Job {0} with state {1}
+    UnableToDisposeTask            = Unable to dispose task {0}. Task status is {1}
+    JobFailedMessage               = MonkeyJob {0} failed
 '@

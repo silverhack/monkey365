@@ -38,7 +38,7 @@ Function Get-HttpMethod{
     [CmdletBinding()]
     Param (
         [parameter(Mandatory=$False, HelpMessage='Request method')]
-        [ValidateSet("GET","POST","PUT","HEAD")]
+        [ValidateSet("GET","POST","PUT","HEAD","PATCH")]
         [String]$Method = "GET"
     )
     try{
@@ -59,6 +59,10 @@ Function Get-HttpMethod{
             'put'
             {
                 $_method = [System.Net.Http.HttpMethod]::Put
+            }
+            'patch'
+            {
+                $_method = [System.Net.Http.HttpMethod]::new('PATCH')
             }
             Default
             {

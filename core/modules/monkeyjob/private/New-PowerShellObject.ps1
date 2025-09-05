@@ -42,13 +42,13 @@ Function New-PowerShellObject{
         [Parameter(Mandatory=$True,position=1,ParameterSetName='Command')]
         [String]$Command,
 
-        [Parameter(Mandatory=$false,position=2, ValueFromPipeline=$true)]
+        [Parameter(Mandatory=$false, ValueFromPipeline=$true)]
         [Object]$InputObject,
 
-        [Parameter(Mandatory=$False, position=3,HelpMessage="RunspacePool")]
+        [Parameter(Mandatory=$False, HelpMessage="RunspacePool")]
         [System.Management.Automation.Runspaces.RunspacePool]$RunspacePool,
 
-        [Parameter(Mandatory=$false,position=4,HelpMessage="arguments")]
+        [Parameter(Mandatory=$false, HelpMessage="arguments")]
         [Object]$Arguments
     )
     Process{
@@ -59,7 +59,7 @@ Function New-PowerShellObject{
             }
             #Add scriptblock
             if($PSCmdlet.ParameterSetName -eq 'ScriptBlock'){
-                [void]$Pipeline.AddScript($ScriptBlock,$True)
+                [void]$Pipeline.AddScript($ScriptBlock.ToString(),$True)
             }
             elseif($PSCmdlet.ParameterSetName -eq 'Command'){
                 [void]$Pipeline.AddCommand($Command)

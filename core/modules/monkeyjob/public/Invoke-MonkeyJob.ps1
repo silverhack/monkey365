@@ -106,29 +106,29 @@ Function Invoke-MonkeyJob{
         $Verbose = $False;
         $Debug = $False;
         $InformationAction = 'SilentlyContinue'
-        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+        If($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
             $Verbose = $True
         }
-        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+        If($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
             $DebugPreference = 'Continue'
             $Debug = $True
         }
-        if($PSBoundParameters.ContainsKey('InformationAction')){
+        If($PSBoundParameters.ContainsKey('InformationAction')){
             $InformationAction = $PSBoundParameters['InformationAction']
         }
-        if($PSBoundParameters.ContainsKey('ReuseRunspacePool') -and $PSBoundParameters['ReuseRunspacePool'].IsPresent){
+        If($PSBoundParameters.ContainsKey('ReuseRunspacePool') -and $PSBoundParameters['ReuseRunspacePool'].IsPresent){
             $reuseRSP = $True
         }
-        else{
+        Else{
             $reuseRSP = $false
         }
-        if (-not $PSBoundParameters.ContainsKey('ThrowOnRunspaceOpenError')) {
+        If (-not $PSBoundParameters.ContainsKey('ThrowOnRunspaceOpenError')) {
             $ThrowOnRunspaceOpenError = $False
         }
-        if( -not $PSBoundParameters.ContainsKey('MaxQueue') ) {
+        IF( -not $PSBoundParameters.ContainsKey('MaxQueue') ) {
             $MaxQueue = 3 * $MaxQueue
         }
-        else {
+        Else {
             $MaxQueue = $MaxQueue
         }
         if($PSBoundParameters.ContainsKey('Runspacepool') -and $PSBoundParameters['Runspacepool']){
@@ -156,12 +156,12 @@ Function Invoke-MonkeyJob{
             }
             #Get runspace pool
             $Runspacepool = New-RunspacePool @localparams
-            if($null -ne $Runspacepool -and $Runspacepool -is [System.Management.Automation.Runspaces.RunspacePool]){
+            If($null -ne $Runspacepool -and $Runspacepool -is [System.Management.Automation.Runspaces.RunspacePool]){
                 #Open runspace
                 Write-Verbose $script:messages.OpenRunspaceMessage
                 $Runspacepool.Open()
                 #Add RunspacePool to array
-                if($null -ne (Get-Variable -Name MonkeyRSP -ErrorAction Ignore)){
+                If($null -ne (Get-Variable -Name MonkeyRSP -ErrorAction Ignore)){
                     [void]$MonkeyRSP.Add($Runspacepool);
                 }
             }
@@ -172,110 +172,72 @@ Function Invoke-MonkeyJob{
         $Timer = [system.diagnostics.stopwatch]::StartNew()
         $SubTimer = [system.diagnostics.stopwatch]::StartNew()
         [int]$script:jobsCollected = 0
-        if($PSBoundParameters.ContainsKey('Timeout') -and $PSBoundParameters['TimeOut']){
+        If($PSBoundParameters.ContainsKey('Timeout') -and $PSBoundParameters['TimeOut']){
             #TimeOut is in Milliseconds
             [int]$Timeout = $PSBoundParameters['TimeOut'] * 1000
         }
-        else{
+        Else{
             #TimeOut is in Milliseconds
             [int]$Timeout = 10 * 1000
         }
     }
     Process{
-        if($null -ne $Runspacepool -and $Runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::Opened){
-            #Get scriptblock if any
-            $param = @{
-                RunspacePool = $Runspacepool;
-                Arguments = $Arguments;
-            }
-            if($PSBoundParameters.ContainsKey('InputObject') -and $PSBoundParameters['InputObject']){
-                [void]$param.Add('InputObject',$PSBoundParameters['InputObject'])
-            }
-            if($PSCmdlet.ParameterSetName -eq 'ScriptBlock'){
-                if($InputObject){
-                    $sb = Set-ScriptBlock -ScriptBlock $ScriptBlock -AddInputObject
+        If($null -ne $Runspacepool -and $Runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::Opened){
+            #Check If MaxQueue
+            If($MyMonkeyJobs.Count -ge $MaxQueue){
+                Write-Verbose ($script:messages.TimeSpentInvokeBatchMessage -f ($MyMonkeyJobs.Count / $BatchSize), $SubTimer.Elapsed.ToString())
+                $SubTimer.Reset();$SubTimer.Start()
+                $p = @{
+                    Jobs = $MyMonkeyJobs;
+                    BatchSize = $BatchSize;
+                    Timeout = $Timeout;
+                    Jobscollected = ([ref]$Script:jobsCollected);
                 }
-                else{
-                    $sb = Set-ScriptBlock -ScriptBlock $ScriptBlock
+                Watch-MonkeyJob @p
+                $SubTimer.Stop()
+                Write-Verbose ($script:messages.TimeSpentCollectBatchMessage -f ($MyMonkeyJobs.Count / $BatchSize), $SubTimer.Elapsed.ToString())
+                $SubTimer.Reset()
+                If($BatchSleep){
+                    Write-Verbose ($script:messages.SleepMessage -f $BatchSleep)
+                    Start-Sleep -Milliseconds $BatchSleep
                 }
-                [void]$param.Add('ScriptBlock',$sb)
+                $SubTimer.Start()
+                $MaxQueue += $BatchSize
             }
-            elseif($PSCmdlet.ParameterSetName -eq 'Command'){
-                [void]$param.Add('Command',$Command)
-            }
-            #Get new PowerShell Object
-            $Pipeline = New-PowerShellObject @param
-            if($Pipeline){
-                #Set Job name
-                $jobName = ("MonkeyTask{0}" -f (Get-Random -Maximum 1000 -Minimum 1));
-                #Create a new Job
-                $Job = [MonkeyJob]::new($Pipeline,$jobName);
-                #Get new MonkeyJob object
-                $newJob = New-MonkeyJobObject
-                if($newJob -and $null -ne $Job){
-                    #Populate job
-                    $newJob.RunspacePoolId = $Pipeline.RunspacePool.InstanceId;
-                    $newJob.Name = $jobName;
-                    $newJob.Job = $Job;
-                    if($PSCmdlet.ParameterSetName -eq 'ScriptBlock'){
-                        $newJob.Command = $scriptblock.ToString();
+            #Get Start-MonkeyJob Param
+            $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Start-MonkeyJob")
+            $newPsboundParams = @{}
+            If($null -ne $MetaData){
+                $param = $MetaData.Parameters.Keys
+                ForEach($p in $param.GetEnumerator()){
+                    If($PSBoundParameters.ContainsKey($p)){
+                        $newPsboundParams.Add($p,$PSBoundParameters[$p])
                     }
-                    elseif($PSCmdlet.ParameterSetName -eq 'Command'){
-                        $p = @{
-                            Command = $Command;
-                            InputObject = $InputObject;
-                            Arguments = $Arguments;
-                        }
-                        $cmd = Format-Command @p
-                        if($cmd){
-                            $newJob.Command = $cmd.ToString();
-                        }
-                    }
-                    #Add to list
-                    [void]$MyMonkeyJobs.Add($newJob);
-                    [void]$MonkeyJobs.Add($newJob);
                 }
+            }
+            #Check if RunspacePool
+            If(-NOT $newPsboundParams.ContainsKey('RunspacePool')){
+                [void]$newPsboundParams.Add('RunspacePool',$Runspacepool);
+            }
+            $newJob = Start-MonkeyJob @newPsboundParams
+            IF($newJob){
+                #Add to list
+                [void]$MyMonkeyJobs.Add($newJob);
             }
         }
-        else{
-            if($Runspacepool.RunspacePoolStateInfo.State -ne [System.Management.Automation.Runspaces.RunspaceState]::Opened){
+        Else{
+            If($Runspacepool.RunspacePoolStateInfo.State -ne [System.Management.Automation.Runspaces.RunspaceState]::Opened){
                 Write-Error ($script:messages.RunspaceError)
                 return
             }
-            else{
+            Else{
                 Write-Error ($script:messages.UnknownError)
                 return
             }
         }
     }
     End{
-        try{
-            for($NumJob = 0 ; $NumJob -lt $MyMonkeyJobs.Count; $NumJob++){
-                $MonkeyJob = $MyMonkeyJobs.Item($NumJob)
-                #Start Job
-                $MonkeyJob.Task = $MonkeyJob.Job.StartTask();
-                #Check if maxQueue
-                if($NumJob -ge $MaxQueue){
-                    Write-Verbose ($script:messages.TimeSpentInvokeBatchMessage -f ($NumJob / $BatchSize), $SubTimer.Elapsed.ToString())
-                    $SubTimer.Reset();$SubTimer.Start()
-                    $p = @{
-                        Jobs = $MyMonkeyJobs;
-                        BatchSize = $BatchSize;
-                        Timeout = $Timeout;
-                        Jobscollected = ([ref]$Script:jobsCollected);
-                    }
-                    Watch-MonkeyJob @p
-                    $SubTimer.Stop()
-                    Write-Verbose ($script:messages.TimeSpentCollectBatchMessage -f ($NumJob / $BatchSize), $SubTimer.Elapsed.ToString())
-                    $SubTimer.Reset()
-                    if($BatchSleep){
-                        Write-Verbose ($script:messages.SleepMessage -f $BatchSleep)
-                        Start-Sleep -Milliseconds $BatchSleep
-                    }
-                    $SubTimer.Start()
-                    $MaxQueue += $BatchSize
-                }
-            }
+        Try{
             #All jobs are invoked at this time, just collect all of them
             Write-Verbose "Invoked all Jobs, Collecting the last jobs that are running"
             #Collect all jobs
@@ -291,10 +253,10 @@ Function Invoke-MonkeyJob{
                 Watch-MonkeyJob @p
             }
         }
-        catch{
+        Catch{
             Write-Error ("MonkeyJob Error: {0}" -f $_)
         }
-        finally{
+        Finally{
             #Get Data
             $completedJobs = $MyMonkeyJobs | Where-Object {$_.Job.State -eq [System.Management.Automation.JobState]::Completed}
             #Receive jobs
@@ -302,42 +264,11 @@ Function Invoke-MonkeyJob{
             #Clean objects
             if($MyMonkeyJobs.Count -gt 0){
                 Write-Verbose ($script:messages.TerminateJobMessage -f $MyMonkeyJobs.Count)
-                foreach($MonkeyJob in $MyMonkeyJobs){
-                    #Get potential exceptions
-                    $JobStatus = $MonkeyJob.Job.JobStatus();
-                    if($JobStatus.Error.Count -gt 0){
-                        foreach($exception in $JobStatus.Error.GetEnumerator()){
-                            $JobError = [ordered]@{
-                                Id = $MonkeyJob.Id;
-                                callStack = (Get-PSCallStack | Select-Object -First 1);
-                                ErrorStr = $exception.Exception.Message;
-                                Exception = $exception;
-                            }
-                            #Add exception to ref
-                            $errObj = New-Object PSObject -Property $JobError
-                            if($null -ne (Get-Variable -Name MonkeyJobErrors -ErrorAction Ignore)){
-                                [void]$MonkeyJobErrors.Add($errObj)
-                            }
-                        }
-                    }
-                    #Clean MonkeyJob object
-                    #$MonkeyJob.Job.InnerJob.Stop();
-                    $MonkeyJob.Job.InnerJob.Dispose();
-                    if(!$ReuseRunspacePool){
-                        #$MonkeyJob.Job.InnerJob.RunspacePool.Close();
-                        $MonkeyJob.Job.InnerJob.RunspacePool.Dispose();
-                    }
-                    if($MonkeyJob.Job.State -ne [System.Management.Automation.JobState]::Stopped){
-                        $MonkeyJob.Job.StopJob();
-                    }
-                    $MonkeyJob.Job.Dispose();
-                    if($null -ne $MonkeyJob.Task){
-                        $MonkeyJob.Task.Dispose();
-                        $MonkeyJob.Task = $null;
-                    }
-                    [void]$MonkeyJobs.Remove($MonkeyJob)
-                    #Perform garbage collection
-                    [gc]::Collect()
+                If($reuseRSP){
+                    #$MyMonkeyJobs | Remove-MonkeyJob -KeepRunspacePool
+                }
+                Else{
+                    #$MyMonkeyJobs | Remove-MonkeyJob
                 }
             }
             #Stop timer
@@ -347,16 +278,6 @@ Function Invoke-MonkeyJob{
                 Write-Verbose ("Time took to Invoke and Complete the Jobs : {0}" -f $Timer.Elapsed.ToString())
 			    $Timer.Stop()
             }
-            #Dispose RunspacePool
-            if(!$reuseRSP -and $null -ne $Runspacepool -and $Runspacepool -is [System.Management.Automation.Runspaces.RunspacePool]){
-                Write-Verbose $script:messages.CloseRunspaceMessage
-                #https://github.com/PowerShell/PowerShell/issues/5746
-                #$Runspacepool.Close()
-                $Runspacepool.Dispose()
-            }
-            #collect garbage
-            #[gc]::Collect()
-            [System.GC]::GetTotalMemory($true) | out-null
         }
     }
 }

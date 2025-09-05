@@ -65,48 +65,52 @@ Function Receive-MonkeyJob{
         [Parameter(Mandatory=$true, ParameterSetName='RunspacePoolId', HelpMessage="Job RunspacePoolId")]
         [System.Guid[]]$RunspacePoolId
     )
-    Begin{
-        $queries = [System.Collections.Generic.List[ScriptBlock]]::new()
-    }
     Process{
-        $psn = $PSCmdlet.ParameterSetName
-        $items = $PSBoundParameters[$psn]
-        foreach($item in $items){
-            if($PSCmdlet.ParameterSetName -eq 'Job'){
-                $rule = ('$_.{0} -eq "{1}"' -f "Id",$item.Id)
-            }
-            else{
-                $rule = ('$_.{0} -eq "{1}"' -f $psn,$item)
-                if($PSBoundParameters.ContainsKey('State')){
-                    $rule = ('{0} -and $_.Job.State -eq "{1}"' -f $rule, $PSBoundParameters['State'])
-                }
-            }
-            $sb = [ScriptBlock]::Create($rule)
-            [void]$queries.Add($sb)
-        }
-    }
-    End{
-        if($PSCmdlet.ParameterSetName -eq 'All'){
-            #Get Data
-            $completedJobs = $MonkeyJobs | Where-Object {$_.Job.State -eq [System.Management.Automation.JobState]::Completed}
-            foreach($MonkeyJob in $completedJobs){
-                if($null -ne $MonkeyJob){
-                    if($MonkeyJob.Task.IsCompleted -and $MonkeyJob.Task.IsFaulted -eq $false){
-                        #return data
-                        $MonkeyJob.Task.Result
+        Try{
+            If($PSCmdlet.ParameterSetName -eq 'All'){
+                #Get Data
+                $completedJobs = $MonkeyJobs.Where({$_.Job.State -eq [System.Management.Automation.JobState]::Completed})
+                ForEach($MonkeyJob in $completedJobs){
+                    If($null -ne $MonkeyJob){
+                        If($MonkeyJob.Task.IsCompleted -and $MonkeyJob.Task.IsFaulted -eq $false){
+                            #return data
+                            $MonkeyJob.Task.Result
+                        }
                     }
                 }
             }
-        }
-        else{
-            foreach($query in $queries){
-                $MonkeyJob = $MonkeyJobs | Where-Object $query -ErrorAction Ignore;
-                if($null -ne $MonkeyJob -and $MonkeyJob.Job.State -eq [System.Management.Automation.JobState]::Completed){
-                    #return data
-                    $MonkeyJob.Task.Result
+            Else{
+                $psn = $PSCmdlet.ParameterSetName
+                $items = $PSBoundParameters[$psn]
+                ForEach($item in @($items)){
+                    If($PSCmdlet.ParameterSetName -eq 'Job'){
+                        $rule = ('$_.{0} -eq "{1}"' -f "Id",$item.Id)
+                    }
+                    Else{
+                        $rule = ('$_.{0} -eq "{1}"' -f $psn,$item)
+                        If($PSBoundParameters.ContainsKey('State')){
+                            $rule = ('{0} -and $_.Job.State -eq "{1}"' -f $rule, $PSBoundParameters['State'])
+                        }
+                    }
+                    $sb = [ScriptBlock]::Create($rule)
+                    $_jobs = $MonkeyJobs.Where($sb);
+                    $_jobs.ForEach(
+                        {
+                            If($_.Job.State -eq [System.Management.Automation.JobState]::Completed){
+                                #return data
+                                $_.Task.Result
+                            }
+                        }
+                    );
                 }
             }
         }
+        Catch{
+            Write-Error $_
+        }
+    }
+    End{
+        #Nothing to do here
     }
 }
 

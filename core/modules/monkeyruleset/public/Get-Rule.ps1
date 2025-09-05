@@ -210,7 +210,7 @@ Function Get-Rule{
                         $message = ("There are $e[${color}m$(@($mrules).Count)${e}[0m available rules")
                     }
                     else{
-                        $message = ('There are {0} available rules' -f $MyFrameworks.Count)
+                        $message = ('There are {0} available rules' -f @($mrules).Count)
                     }
                     Write-Output $message
                 }

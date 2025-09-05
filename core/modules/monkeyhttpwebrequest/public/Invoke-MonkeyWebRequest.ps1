@@ -42,7 +42,7 @@ Function Invoke-MonkeyWebRequest{
         [System.Net.Http.HttpClient]$Client,
 
         [parameter(Mandatory=$False, HelpMessage='Request method')]
-        [ValidateSet("GET","POST","PUT","HEAD")]
+        [ValidateSet("GET","POST","PUT","HEAD","PATCH")]
         [String]$Method = "GET",
 
         [parameter(Mandatory=$False, HelpMessage='Accept')]
@@ -71,6 +71,9 @@ Function Invoke-MonkeyWebRequest{
 
         [parameter(Mandatory=$False, HelpMessage='POST PUT data')]
         [String]$Data,
+
+        [parameter(Mandatory=$False, HelpMessage='StreamContent object')]
+        [Switch]$AsStreamContent,
 
         [parameter(Mandatory=$False, HelpMessage='Allows autoredirect')]
         [int32]$MaxRedirections,

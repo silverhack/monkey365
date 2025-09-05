@@ -95,18 +95,9 @@ Function Connect-MonkeySPO {
         $new_params.add($param.Key, $param.Value)
     }
     if($O365Object.isConfidentialApp -eq $false){
-        try{
-            $usePnpManagementShell = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.UsePnPManagementShell)
-        }
-        catch{
-            $usePnpManagementShell = $false
-        }
         #Check if application is present
         If(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)})).Count -gt 0){
             $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointOnline)}) | Select-Object -First 1
-        }
-        ElseIf(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)})).Count -gt 0){
-            $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService SharePointPnP)}) | Select-Object -First 1
         }
         Else{
             #Potentially first time the user is authenticating, so we use original parameters
@@ -127,40 +118,32 @@ Function Connect-MonkeySPO {
                 Debug = $O365Object.debug;
                 InformationAction = $O365Object.InformationAction;
             }
-            If($usePnpManagementShell){
-                $spo_app = New-MsalApplicationForPnP @p
-                #Add scopes
-                [string[]]$scope = "AllSites.Read"
-                [void]$new_params.Add('Scopes',$scope);
+            #Check if force MSAL desktop
+            if($null -ne $O365Object.SystemInfo -and $O365Object.SystemInfo.MsalType -eq 'Desktop'){
+                $p.Item('ForceDesktop') = $true
             }
-            Else{
-                #Check if force MSAL desktop
-                if($null -ne $O365Object.SystemInfo -and $O365Object.SystemInfo.MsalType -eq 'Desktop'){
-                    $p.Item('ForceDesktop') = $true
-                }
-                #Get Application for SPO
-                try{
-                    $spo_app = New-MsalApplicationForSPO @p
-                    #Validate .net core conflicts
-                    if($spo_app.AppConfig.RedirectUri -match "localhost" -and $O365Object.SystemInfo.MsalType -eq "Core"){
-                        $dc = $new_params.Item('DeviceCode');
-                        if($null -eq $dc -or $dc -eq $false){
-                            $msg = @{
-                                MessageData = "Unable to connect SharePoint Online. SharePoint Online Management Shell is not supporting interactive authentication on .NET core. Use DeviceCode instead. For more info, please check the following url: https://silverhack.github.io/monkey365/authentication/limitations/";
-                                callStack = (Get-PSCallStack | Select-Object -First 1);
-                                logLevel = 'Warning';
-                                InformationAction = $O365Object.InformationAction;
-                                Tags = @('MonkeySPOAuthenticationError');
-                            }
-                            Write-Warning @msg
-                            return
+            #Get Application for SPO
+            try{
+                $spo_app = New-MsalApplicationForSPO @p
+                #Validate .net core conflicts
+                if($spo_app.AppConfig.RedirectUri -match "localhost" -and $O365Object.SystemInfo.MsalType -eq "Core"){
+                    $dc = $new_params.Item('DeviceCode');
+                    if($null -eq $dc -or $dc -eq $false){
+                        $msg = @{
+                            MessageData = "Unable to connect SharePoint Online. SharePoint Online Management Shell is not supporting interactive authentication on .NET core. Use DeviceCode instead. For more info, please check the following url: https://silverhack.github.io/monkey365/authentication/limitations/";
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'Warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('MonkeySPOAuthenticationError');
                         }
+                        Write-Warning @msg
+                        return
                     }
                 }
-                Catch{
-                    Write-Error $_
-                    return
-                }
+            }
+            Catch{
+                Write-Error $_
+                return
             }
             if($null -ne $spo_app){
                 $new_params.publicApp = $spo_app

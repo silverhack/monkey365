@@ -57,99 +57,96 @@ Function Remove-MonkeyJob{
         [Parameter(Mandatory=$false, HelpMessage="Force remove")]
         [Switch]$Force,
 
-        [Parameter(Mandatory=$false, HelpMessage="Dispose Job")]
-        [Switch]$Dispose,
-
         [Parameter(Mandatory=$false, HelpMessage="Keep RunspacePool")]
         [Switch]$KeepRunspacePool
 
     )
     Begin{
-        $queries = [System.Collections.Generic.List[System.String]]::new()
+        $queries = [System.Collections.Generic.List[System.Management.Automation.ScriptBlock]]::new()
     }
     Process{
         $psn = $PSCmdlet.ParameterSetName
         $items = $PSBoundParameters[$psn]
-        foreach($item in @($items)){
-            try{
-                if($PSCmdlet.ParameterSetName -eq 'Job'){
+        ForEach($item in @($items)){
+            Try{
+                If($PSCmdlet.ParameterSetName -eq 'Job'){
                     $rule = ('$_.{0} -eq "{1}"' -f "Id",$item.Id)
                 }
-                else{
+                Else{
                     $rule = ('$_.{0} -eq "{1}"' -f $psn,$item)
                 }
-                [void]$queries.Add($rule)
+                [void]$queries.Add([System.Management.Automation.ScriptBlock]::Create($rule))
             }
-            catch{
+            Catch{
                 Write-Error $_.Exception
             }
         }
     }
     End{
-        foreach($query in $queries){
-            $_jobs = $MonkeyJobs.Where({$query})
-            foreach($MonkeyJob in $_jobs){
-                #Get potential exceptions
-                $JobStatus = $MonkeyJob.Job.JobStatus();
-                if($JobStatus.Error.Count -gt 0){
-                    foreach($exception in $JobStatus.Error.GetEnumerator()){
-                        $JobError = [ordered]@{
-                            Id = $MonkeyJob.Id;
-                            callStack = (Get-PSCallStack | Select-Object -First 1);
-                            ErrorStr = $exception.Exception.Message;
-                            Exception = $exception;
-                        }
-                        #Add exception to ref
-                        $errObj = New-Object PSObject -Property $JobError
-                        if($null -ne (Get-Variable -Name MonkeyJobErrors -ErrorAction Ignore)){
-                            [void]$MonkeyJobErrors.Add($errObj)
+        # Remove jobs if terminated or as requested
+        ForEach($query in $queries){
+            $_jobs = $MonkeyJobs.Where($query)
+            ForEach($MonkeyJob in $_jobs.Where({$null -ne $_})){
+                Try {
+                    $JobStatus = $MonkeyJob.Job.JobStatus()
+                    # Collect job errors if any
+                    If($JobStatus.Error.Count -gt 0){
+                        ForEach($exception in $JobStatus.Error.GetEnumerator()){
+                            $JobError = [PsCustomObject]@{
+                                Id = $MonkeyJob.Id
+                                callStack = (Get-PSCallStack | Select-Object -First 1)
+                                ErrorStr = $exception.Exception.Message
+                                Exception = $exception
+                            }
+                            If($null -ne (Get-Variable -Name MonkeyJobErrors -ErrorAction Ignore)){
+                                [void]$MonkeyJobErrors.Add($JobError)
+                            }
                         }
                     }
-                }
-                If ($MonkeyJob.Job.State -notmatch 'Completed|Failed|Stopped') {
-                    if($PSBoundParameters.ContainsKey('Force')){
-                        [void]$MonkeyJob.Job.InnerJob.Stop();
-                        $MonkeyJob.Job.InnerJob.Dispose();
-                        if(!$PSBoundParameters.ContainsKey('KeepRunspacePool')){
-                            #$MonkeyJob.Job.InnerJob.RunspacePool.Close();
-                            $MonkeyJob.Job.InnerJob.RunspacePool.Dispose();
+                    # If job is running and force is specified, forcibly stop
+                    If($MonkeyJob.Job.State -notmatch 'Completed|Failed|Stopped') {
+                        If ($PSBoundParameters.ContainsKey('Force')) {
+                            $MonkeyJob.Job.ForceStop()
+                            If (-NOT $PSBoundParameters.ContainsKey('KeepRunspacePool')) {
+                                $MonkeyJob.Job.DisposeInnerRunspacePool()
+                            }
+                            #Dispose the job
+                            $MonkeyJob.Job.Dispose()
                         }
-                        if($MonkeyJob.Job.State -ne [System.Management.Automation.JobState]::Stopped){
-                            $MonkeyJob.Job.StopJob();
+                        Else{
+                            Write-Warning ($script:messages.UnableToRemoveJobDetailed -f $MonkeyJob.Id,"Job is not completed, failed or stopped")
+                            return
                         }
-                        $MonkeyJob.Job.Dispose();
-                        #Dispose task
-                        if($null -ne $MonkeyJob.Task -and $MonkeyJob.Task.Status -match 'Canceled|Faulted|RanToCompletion'){
-                            $MonkeyJob.Task.Dispose();
-                            $MonkeyJob.Task = $null;
+                    }
+                    Else{
+                        Write-Verbose ($script:messages.StoppingJobMessage -f $MonkeyJob.Id,$MonkeyJob.Job.State)
+                        $MonkeyJob.Job.StopJob()
+                        If (-NOT $PSBoundParameters.ContainsKey('KeepRunspacePool')) {
+                            $MonkeyJob.Job.DisposeInnerRunspacePool()
                         }
+                        #Dispose the job
+                        $MonkeyJob.Job.Dispose()
+                    }
+                    If($MonkeyJob.Job.State -match 'Completed|Failed|Stopped') {
+                        # Dispose task if present and in terminal state
+                        If ($null -ne $MonkeyJob.Task -and $MonkeyJob.Task.Status -match 'Canceled|Faulted|RanToCompletion') {
+                            $MonkeyJob.Task.Dispose()
+                            $MonkeyJob.Task = $null
+                        }
+                        Else{
+                            Write-Warning ($script:messages.UnableToDisposeTask -f $MonkeyJob.Task.Id,$MonkeyJob.Task.Status)
+                        }
+                        # Remove from collection
                         [void]$MonkeyJobs.Remove($MonkeyJob)
                     }
                     Else{
-                        Write-Warning ($script:messages.UnableToRemoveJob -f $MonkeyJob.Id)
+                        Write-Warning ($script:messages.UnableToRemoveJob -f $MonkeyJob.Id,$MonkeyJob.Job.State, $MonkeyJob.Task.Status)
+                        return
                     }
                 }
-                #Clean MonkeyJob object
-                #$MonkeyJob.Job.InnerJob.Stop();
-                $MonkeyJob.Job.InnerJob.Dispose();
-                if(!$PSBoundParameters.ContainsKey('KeepRunspacePool')){
-                    #$MonkeyJob.Job.InnerJob.RunspacePool.Close();
-                    $MonkeyJob.Job.InnerJob.RunspacePool.Dispose();
+                Catch{
+                    Write-Error ("Failed to remove MonkeyJob {0}: {1}" -f $MonkeyJob.Id, $_.Exception.Message)
                 }
-                if($MonkeyJob.Job.State -ne [System.Management.Automation.JobState]::Stopped){
-                    $MonkeyJob.Job.StopJob();
-                }
-                $MonkeyJob.Job.Dispose();
-                if($null -ne $MonkeyJob.Task -and $MonkeyJob.Task.Status -match 'Canceled|Faulted|RanToCompletion'){
-                    $MonkeyJob.Task.Dispose();
-                    $MonkeyJob.Task = $null;
-                    [void]$MonkeyJobs.Remove($MonkeyJob)
-                }
-                Else{
-                    Write-Warning ($script:messages.UnableToRemoveJob -f $MonkeyJob.Id)
-                }
-                #Perform garbage collection
-                [gc]::Collect()
             }
         }
     }

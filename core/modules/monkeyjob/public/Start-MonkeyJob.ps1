@@ -41,8 +41,24 @@ Function Start-MonkeyJob{
         [Parameter(Mandatory=$True,position=0,ParameterSetName='ScriptBlock')]
         [System.Management.Automation.ScriptBlock]$ScriptBlock,
 
-        [Parameter(Mandatory=$True, ParameterSetName = 'Command')]
+        [Parameter(Mandatory=$True,Position = 0, ParameterSetName = 'Command')]
         [String]$Command,
+
+        [Parameter(Mandatory = $True, Position = 0, ParameterSetName = 'FilePath', HelpMessage = 'PowerShell Script file')]
+        [ValidateScript(
+            {
+            if( -Not ($_ | Test-Path) ){
+                throw ("The PowerShell file does not exist in {0}" -f (Split-Path -Path $_))
+            }
+            if(-Not ($_ | Test-Path -PathType Leaf) ){
+                throw "The argument must be a ps1 file. Folder paths are not allowed."
+            }
+            if($_ -notmatch "(\.ps1)"){
+                throw "The script specified argument must be of type ps1"
+            }
+            return $true
+        })]
+        [System.IO.FileInfo]$File,
 
         [Parameter(Mandatory=$false, HelpMessage="arguments")]
         [Object]$Arguments,
@@ -87,20 +103,23 @@ Function Start-MonkeyJob{
         [Switch]$ThrowOnRunspaceOpenError
     )
     Begin{
+        #Set null
+        $Pipeline = $monkeyJob = $Job = $null;
+        #Add runspaceOpenError var
         If (-not $PSBoundParameters.ContainsKey('ThrowOnRunspaceOpenError')) {
             $ThrowOnRunspaceOpenError = $False
         }
         $Verbose = $False;
         $Debug = $False;
         $InformationAction = 'SilentlyContinue'
-        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+        If($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
             $Verbose = $True
         }
-        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
+        If($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
             $DebugPreference = 'Continue'
             $Debug = $True
         }
-        if($PSBoundParameters.ContainsKey('InformationAction')){
+        If($PSBoundParameters.ContainsKey('InformationAction')){
             $InformationAction = $PSBoundParameters['InformationAction']
         }
         #Create new runspace or reuse existing
@@ -122,110 +141,96 @@ Function Start-MonkeyJob{
             }
             #Get runspace pool
             $Runspacepool = New-RunspacePool @localparams
-            if($null -ne $Runspacepool -and $Runspacepool -is [System.Management.Automation.Runspaces.RunspacePool]){
+            If($null -ne $Runspacepool -and $Runspacepool -is [System.Management.Automation.Runspaces.RunspacePool]){
                 #Open runspace
                 Write-Verbose $script:messages.OpenRunspaceMessage
                 $Runspacepool.Open()
             }
         }
-        else{
+        Else{
             if($Runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::BeforeOpen){
                 #Open runspace
                 Write-Verbose $script:messages.OpenRunspaceMessage
                 $Runspacepool.Open()
             }
         }
-        #Set Monkeyjobs variable
-        $AllMonkeyJobs = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
     }
     Process{
-        if($null -ne $Runspacepool -and $Runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::Opened){
-            #Get scriptblock if any
-            $param = @{
-                RunspacePool = $Runspacepool;
-                InputObject = $InputObject;
-                Arguments = $Arguments;
+        If($null -ne $Runspacepool -and $Runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::Opened){
+            #Get PowerShell Param
+            $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-PowerShellParam")
+            $newPsboundParams = @{}
+            If($null -ne $MetaData){
+                $param = $MetaData.Parameters.Keys
+                ForEach($p in $param.GetEnumerator()){
+                    If($PSBoundParameters.ContainsKey($p)){
+                        $newPsboundParams.Add($p,$PSBoundParameters[$p])
+                    }
+                }
             }
-            if($PSCmdlet.ParameterSetName -eq 'ScriptBlock'){
-                if($InputObject){
-                    $sb = Set-ScriptBlock -ScriptBlock $ScriptBlock -AddInputObject
-                }
-                else{
-                    $sb = Set-ScriptBlock -ScriptBlock $ScriptBlock
-                }
-                [void]$param.Add('ScriptBlock',$sb)
+            #Check if RunspacePool
+            If(-NOT $newPsboundParams.ContainsKey('RunspacePool')){
+                [void]$newPsboundParams.Add('RunspacePool',$Runspacepool);
             }
-            elseif($PSCmdlet.ParameterSetName -eq 'Command'){
-                [void]$param.Add('Command',$Command)
+            $psParams = Get-PowerShellParam @newPsboundParams
+            If($null -ne $psParams){
+                $Pipeline = New-PowerShellObject @psParams
             }
-            #Get new PowerShell Object
-            $Pipeline = New-PowerShellObject @param
-            if($Pipeline){
-                #Set Job name
-                if($PSBoundParameters.ContainsKey('JobName') -and $PSBoundParameters['JobName']){
-                    $MonkeyJobName = $PSBoundParameters['JobName'];
+            If($null -ne $Pipeline){
+                #Get Command Name
+                $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Format-CommandName")
+                $newPsboundParams = [ordered]@{}
+                If($null -ne $MetaData){
+                    $param = $MetaData.Parameters.Keys
+                    ForEach($p in $param.GetEnumerator()){
+                        If($PSBoundParameters.ContainsKey($p)){
+                            $newPsboundParams.Add($p,$PSBoundParameters[$p])
+                        }
+                    }
                 }
-                else{
-                    $MonkeyJobName = ("MonkeyTask{0}" -f (Get-Random -Maximum 1000 -Minimum 1));
+                $commandName = Format-CommandName @newPsboundParams
+                #Set new Job object
+                $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "New-MonkeyJobObject")
+                $jobObjectParams = [ordered]@{}
+                If($null -ne $MetaData){
+                    $param = $MetaData.Parameters.Keys
+                    ForEach($p in $param.GetEnumerator()){
+                        If($PSBoundParameters.ContainsKey($p)){
+                            $jobObjectParams.Add($p,$PSBoundParameters[$p])
+                        }
+                    }
                 }
-                #Create a new Job
-                $Job = [MonkeyJob]::new($Pipeline,$jobName);
                 #Get new MonkeyJob object
-                $newJob = New-MonkeyJobObject
-                if($newJob -and $null -ne $Job){
-                    #Populate job
-                    $newJob.RunspacePoolId = $Pipeline.RunspacePool.InstanceId;
-                    $newJob.Name = $MonkeyJobName;
-                    $newJob.Job = $Job;
-                    if($PSCmdlet.ParameterSetName -eq 'ScriptBlock'){
-                        $newJob.Command = $scriptblock.ToString();
-                    }
-                    elseif($PSCmdlet.ParameterSetName -eq 'Command'){
-                        $p = @{
-                            Command = $Command;
-                            InputObject = $InputObject;
-                            Arguments = $Arguments;
-                        }
-                        $cmd = Format-Command @p
-                        if($cmd){
-                            $newJob.Command = $cmd.ToString();
-                        }
-                    }
-                    #Add to list
-                    [void]$AllMonkeyJobs.Add($newJob);
+                $monkeyJob = New-MonkeyJobObject @jobObjectParams -CommandName $commandName
+                IF($null -ne $monkeyJob){
+                    #Create a new Job
+                    $Job = [MonkeyJob]::new($Pipeline,$monkeyJob.Name);
                 }
+            }
+            If($null -ne $Job){
+                #Populate job
+                $monkeyJob.RunspacePoolId = $Pipeline.RunspacePool.InstanceId;
+                $monkeyJob.Job = $Job;
+                #Start task
+                $monkeyJob.Task = $monkeyJob.Job.StartTask();
+                #Add to monkeyJob var
+                [void]$Script:MonkeyJobs.Add($monkeyJob)
+                #return Job
+                $monkeyJob
             }
         }
-        else{
-            if($Runspacepool.RunspacePoolStateInfo.State -ne [System.Management.Automation.Runspaces.RunspaceState]::Opened){
+        Else{
+            If($Runspacepool.RunspacePoolStateInfo.State -ne [System.Management.Automation.Runspaces.RunspaceState]::Opened){
                 Write-Error ($script:messages.RunspaceError)
                 return
             }
-            else{
+            Else{
                 Write-Error ($script:messages.UnknownError)
                 return
             }
         }
     }
     End{
-        try{
-            for($NumJob = 0 ; $NumJob -lt $AllMonkeyJobs.Count; $NumJob++){
-                $MonkeyJob = $AllMonkeyJobs.Item($NumJob)
-                $MonkeyJob.Task = $MonkeyJob.Job.StartTask();
-                #Add to monkeyJob var
-                if($null -eq (Get-Variable -Name MonkeyJobs -ErrorAction Ignore)){
-                    $MonkeyJobs = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-                    [void]$MonkeyJobs.Add($MonkeyJob)
-                }
-                else{
-                    [void]$MonkeyJobs.Add($MonkeyJob)
-                }
-            }
-            #return jobs
-            return $AllMonkeyJobs.ToArray()
-        }
-        catch{
-            Write-Error ("MonkeyJob Error: {0}" -f $_)
-        }
+        #Nothing to do here
     }
 }

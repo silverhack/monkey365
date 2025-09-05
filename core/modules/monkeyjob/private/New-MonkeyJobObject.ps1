@@ -39,23 +39,34 @@ Function New-MonkeyJobObject {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
 	[cmdletbinding()]
     [OutputType([System.Management.Automation.PSCustomObject])]
-	Param ()
+	Param (
+        [Parameter(Mandatory=$False,HelpMessage = 'Job Name')]
+        [System.String]$JobName,
+
+        [Parameter(Mandatory=$true,HelpMessage = 'Command Name')]
+        [System.String]$CommandName
+    )
     Process{
+        #Set Job name
+        If($PSBoundParameters.ContainsKey('JobName') -and $PSBoundParameters['JobName']){
+            $MonkeyJobName = $PSBoundParameters['JobName'];
+        }
+        Else{
+            $MonkeyJobName = ("MonkeyTask{0}" -f (Get-Random -Maximum 90000 -Minimum 1000));
+        }
         try{
             #Create ordered dictionary
             $new_obj = [ordered]@{
                 Id = ([guid]::NewGuid()).Guid;
-                Name = $null;
+                Name = $MonkeyJobName;
 		        StartTime = (Get-Date).ToUniversalTime();
                 RunspacePoolId = $null;
                 Job = $null;
                 Task = $null;
-                Command  = $null;
+                Command  = $CommandName;
             }
             #Create PsObject
-            $MonkeyJobObject = [pscustomobject]$new_obj
-            #return object
-            return $MonkeyJobObject
+            New-Object -TypeName PSCustomObject -Property $new_obj
         }
         catch{
 		    Write-Verbose $script:messages.MonkeyJobObjectError

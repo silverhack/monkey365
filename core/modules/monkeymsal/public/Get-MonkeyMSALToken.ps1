@@ -169,6 +169,8 @@ Function Get-MonkeyMSALToken{
         [Switch]$ForceAuth
     )
     Begin{
+        #Set scope
+        $scope = [System.Collections.Generic.List[System.String]]::new()
         #Set authType
         $AuthType = 'Interactive'
         $application = $authContext = $null;
@@ -188,21 +190,21 @@ Function Get-MonkeyMSALToken{
         if ($PSBoundParameters.ContainsKey('Scopes')){
             if($Resource -match '/$'){
                 foreach($scp in $Scopes){
-                    [string[]]$scope += ("{0}{1}" -f $Resource,$scp)
+                    [void]$scope.Add(("{0}{1}" -f $Resource,$scp));
                 }
             }
             else{
                 foreach($scp in $Scopes){
-                    [string[]]$scope += ("{0}/{1}" -f $Resource,$scp)
+                    [void]$scope.Add(("{0}/{1}" -f $Resource,$scp))
                 }
             }
         }
         else{
             if($Resource -match '/$'){
-                [string[]]$scope = ("{0}.default" -f $Resource)
+                [void]$scope.Add(("{0}.default" -f $Resource))
             }
             else{
-                [string[]]$scope = ("{0}/.default" -f $Resource)
+                [void]$scope.Add(("{0}/.default" -f $Resource))
             }
         }
     }

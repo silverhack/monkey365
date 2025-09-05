@@ -9,7 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
+# See the License for the specIfic language governing permissions and
 # limitations under the License.
 
 Function Get-HttpResponseError{
@@ -40,127 +40,118 @@ Function Get-HttpResponseError{
         [System.Net.Http.HttpResponseMessage]$ErrorResponse
     )
     try{
-        $Verbose = $False;
-        $Debug = $False;
-        $InformationAction = 'SilentlyContinue'
-        if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
+        If($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
             $Verbose = $True
-        }
-        if($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
-            $DebugPreference = 'Continue'
-            $Debug = $True
-        }
-        if($PSBoundParameters.ContainsKey('InformationAction')){
-            $InformationAction = $PSBoundParameters['InformationAction']
+            $VerbosePreference = 'Continue'
         }
         #Get url and status code
         $url = $ErrorResponse.RequestMessage.RequestUri
         $StatusCode = ($ErrorResponse.StatusCode.value__).ToString().Trim();
         $Reason = $ErrorResponse.ReasonPhrase
-        if($null -ne $Url){
-            $param = @{
+        If($null -ne $Url){
+            $p = @{
                 Message = ($script:messages.UnableToProcessUrl -f $Url);
             }
-            Write-Debug @param
+            Write-Verbose @p
         }
         #Write error message
-        $param = @{
+        $p = @{
             Message = ("[{0}]: {1}" -f $StatusCode, $Reason);
         }
-        Write-Debug @param
+        Write-Verbose @p
         #Get response message
         $rawData = $ErrorResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult()
-        if($null -eq $ErrorResponse.Content.Headers.ContentType){
+        If($null -eq $ErrorResponse.Content.Headers.ContentType){
             $contentType = 'application/json'
         }
         Else{
             $contentType = $ErrorResponse.Content.Headers.ContentType.MediaType
         }
         $responseBody = Convert-RawData -RawObject $rawData -ContentType $contentType
-        if($null -ne $responseBody){
+        If($null -ne $responseBody){
             try{
-                if($null -ne ($responseBody.psobject.properties.Item('odata.error'))){
+                If($null -ne ($responseBody.psobject.properties.Item('odata.error'))){
                     $errorCode = $responseBody.'odata.error'.code
                     $errorMessage = $responseBody.'odata.error'.message.value
-                    if($null -ne $errorCode){
-                        $param = @{
+                    If($null -ne $errorCode){
+                        $p = @{
                             Message = $errorCode;
                         }
-                        Write-Debug @param
+                        Write-Verbose @p
                     }
-                    if($null -ne $errorMessage){
-                        $param = @{
+                    If($null -ne $errorMessage){
+                        $p = @{
                             Message = $errorMessage;
                         }
-                        Write-Debug @param
+                        Write-Verbose @p
                     }
                 }
-                elseif($null -ne ($responseBody.psobject.properties.Item('error_description'))){
-                    $param = @{
+                ElseIf($null -ne ($responseBody.psobject.properties.Item('error_description'))){
+                    $p = @{
                         Message = $responseBody.error_description;
                     }
-                    Write-Debug @param
+                    Write-Verbose @p
                 }
-                elseif($null -ne ($responseBody.psobject.properties.Item('error'))){
+                ElseIf($null -ne ($responseBody.psobject.properties.Item('error'))){
                     $errorCode = $responseBody.error | Select-Object -ExpandProperty code -ErrorAction Ignore
                     $errorMessage = $responseBody.error | Select-Object -ExpandProperty message -ErrorAction Ignore
-                    if($null -ne $errorCode){
-                        $param = @{
+                    If($null -ne $errorCode){
+                        $p = @{
                             Message = $errorCode;
                         }
-                        Write-Debug @param
+                        Write-Verbose @p
                     }
-                    if($null -ne $errorMessage){
-                        $param = @{
+                    If($null -ne $errorMessage){
+                        $p = @{
                             Message = $errorMessage;
                         }
-                        Write-Debug @param
+                        Write-Verbose @p
                     }
                 }
-                elseif($null -ne ($responseBody.psobject.properties.Item('message'))){
+                ElseIf($null -ne ($responseBody.psobject.properties.Item('message'))){
                     $errorCode = $responseBody | Select-Object -ExpandProperty code -ErrorAction Ignore
                     $errorMessage = $responseBody | Select-Object -ExpandProperty message -ErrorAction Ignore
-                    if($null -ne $errorCode){
-                        $param = @{
+                    If($null -ne $errorCode){
+                        $p = @{
                             Message = $errorCode;
                         }
-                        Write-Debug @param
+                        Write-Verbose @p
                     }
-                    if($null -ne $errorMessage){
-                        $param = @{
+                    If($null -ne $errorMessage){
+                        $p = @{
                             Message = $errorMessage;
                         }
-                        Write-Debug @param
+                        Write-Verbose @p
                     }
                 }
             }
             catch{
                 #Write detailed error message
-                $param = @{
+                $p = @{
                     Message = ($script:messages.DetailedErrorMessage -f $responseBody);
                 }
-                Write-Debug @param
+                Write-Verbose @p
             }
         }
-        else{
+        Else{
             #Unable to get detailed error message
-            $param = @{
+            $p = @{
                 Message = $script:messages.UnableToGetDetailedError;
             }
-            Write-Debug @param
+            Write-Verbose @p
         }
     }
     catch{
         #Writes detailed error message
-        $param = @{
+        $p = @{
             Message = $script:messages.UnableToProcessErrorMessage;
         }
-        Write-Debug @param
+        Write-Verbose @p
         #Write detailed error message
-        $param = @{
+        $p = @{
             Message = $_;
         }
-        Write-Debug @param
+        Write-Verbose @p
     }
 }
 

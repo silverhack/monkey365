@@ -23,10 +23,8 @@ If($null -ne $isO365Object){
     If($null -ne $LocalizedDataParams){
         Import-LocalizedData @LocalizedDataParams;
     }
-    #Import logger
-    $_logger = @($O365Object.runspaces_modules).Where({$_ -like "*monkeylogger*"},[System.Management.Automation.WhereOperatorSelectionMode]::First)
-    If($_logger.Count -gt 0){
-        Import-Module $_logger[0].ToString() -Force
+    #start logger
+    IF($null -ne (Get-Command -Name Start-Logger -ErrorAction Ignore)){
         #Initialize MonkeyLogger
         $l_param = @{
             LogQueue = $O365Object.MonkeyLogQueue;
@@ -36,6 +34,7 @@ If($null -ne $isO365Object){
         }
         $null = Start-Logger @l_param
     }
+
 }
 
 

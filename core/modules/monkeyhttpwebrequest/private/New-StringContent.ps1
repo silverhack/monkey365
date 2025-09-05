@@ -38,6 +38,7 @@ Function New-StringContent{
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [CmdletBinding()]
     [OutputType([System.Net.Http.StringContent])]
+    [OutputType([System.Net.Http.StreamContent])]
     Param (
         [parameter(Mandatory=$False, HelpMessage='POST PUT data')]
         [String]$Data,
@@ -46,9 +47,13 @@ Function New-StringContent{
         [String]$ContentType,
 
         [parameter(Mandatory=$False, HelpMessage='Headers as hashtable')]
-        [System.Collections.Hashtable]$Headers
+        [System.Collections.Hashtable]$Headers,
+
+        [parameter(Mandatory=$False, HelpMessage='Return StreamContent object')]
+        [Switch]$AsStreamContent
     )
     Begin{
+        $body = $null;
         $Verbose = $False;
         if($PSBoundParameters.ContainsKey('Verbose') -and $PSBoundParameters.Verbose){
             $Verbose = $True
@@ -60,7 +65,25 @@ Function New-StringContent{
     Process{
         #Set body
         if($PSBoundParameters.ContainsKey('Data')){
-            $body = [System.Net.Http.StringContent]::new($Data,[System.Text.Encoding]::UTF8)
+            If($PSBoundParameters.ContainsKey('AsStreamContent') -and $PSBoundParameters['AsStreamContent'].Ispresent){
+                Try{
+                    $fi = [System.IO.FileInfo]::new($Data);
+                    If($fi.Exists){
+                        [byte[]]$byteContent = [System.IO.File]::ReadAllBytes($fi.FullName);
+                        $body = [System.Net.Http.StreamContent]::new([System.IO.MemoryStream]::new($byteContent))
+                    }
+                    Else{
+                        Write-Warning ("file {0} not exists" -f $Data)
+                    }
+                }
+                Catch{
+                    Write-Warning ("Unable to create stream content for {0}" -f $Data)
+                    Write-Error $_.Exception.Message
+                }
+            }
+            Else{
+                $body = [System.Net.Http.StringContent]::new($Data,[System.Text.Encoding]::UTF8)
+            }
         }
         else{
             $body = [System.Net.Http.StringContent]::new('',[System.Text.Encoding]::UTF8)

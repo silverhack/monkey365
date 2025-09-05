@@ -42,20 +42,40 @@ Function Connect-MonkeyGenericApplication {
         [Parameter(Mandatory=$true, HelpMessage="Resource to connect")]
         [String]$Resource,
 
+        [Parameter(Mandatory=$false, HelpMessage="MSAL Client Application")]
+        [Object]$Application,
+
         [Parameter(Mandatory=$false, HelpMessage="Redirect URI")]
         [String]$RedirectUri
     )
     Begin{
         #Set new params
         $new_params = @{}
-        foreach ($param in $O365Object.msal_application_args.GetEnumerator()){
+        ForEach ($param in $O365Object.msal_application_args.GetEnumerator()){
             $new_params.add($param.Key, $param.Value)
         }
     }
     Process{
-        if($O365Object.isConfidentialApp -eq $false){
+        If($O365Object.isConfidentialApp -eq $false){
+            #Check if passed application
+            If($PSBoundParameters.ContainsKey('Application') -and $PSBoundParameters['Application']){
+                If($PSBoundParameters['Application'] -is [Microsoft.Identity.Client.PublicClientApplication]){
+                    $new_params.publicApp = $PSBoundParameters['Application']
+                }
+                Else{
+                    $msg = @{
+                        MessageData = "Unable to get access token. Application is not a public client application";
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'Warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('MonkeyGenericApplicationClientIdError');
+                    }
+                    Write-Warning @msg
+                    return
+                }
+            }
             #Check if application is present
-            if(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService ("{0}" -f $AzureService))})).Count -gt 0){
+            ElseIf(($O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService ("{0}" -f $AzureService))})).Count -gt 0){
                 $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.ClientId -eq (Get-WellKnownAzureService -AzureService ("{0}" -f $AzureService))}) | Select-Object -First 1
                 #Add silent
                 if(-NOT $new_params.ContainsKey('Silent')){
@@ -122,8 +142,26 @@ Function Connect-MonkeyGenericApplication {
                 }
             }
             #Add redirect URI if present
-            if($PSBoundParameters.ContainsKey('RedirectUri') -and $PSBoundParameters['RedirectUri']){
+            If($PSBoundParameters.ContainsKey('RedirectUri') -and $PSBoundParameters['RedirectUri']){
                 $new_params.publicApp.RedirectUri = $PSBoundParameters['RedirectUri'];
+            }
+        }
+        Else{
+            If($PSBoundParameters.ContainsKey('Application') -and $PSBoundParameters['Application']){
+                If($PSBoundParameters['Application'] -is [Microsoft.Identity.Client.ConfidentialClientApplication]){
+                    $new_params.confidentialApp = $PSBoundParameters['Application']
+                }
+                Else{
+                    $msg = @{
+                        MessageData = "Unable to get access token. Application is not a confidential client application";
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'Warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('MonkeyGenericApplicationClientIdError');
+                    }
+                    Write-Warning @msg
+                    return
+                }
             }
         }
         #Add resource to param

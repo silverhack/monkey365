@@ -39,6 +39,14 @@ Function Initialize-AuthenticationParam{
         #Set new clients
         $O365Object.msal_public_applications = [System.Collections.Generic.List[Microsoft.Identity.Client.IPublicClientApplication]]::new()
         $O365Object.msal_confidential_applications = [System.Collections.Generic.List[Microsoft.Identity.Client.IConfidentialClientApplication]]::new()
+        $powerBiParamMap = @{
+            PowerBIClientId = "ClientId";
+            PowerBIClientSecret = "ClientSecret";
+            PowerBIClientCredentials = "ClientCredentials";
+            PowerBICertificateFile = "Certificate";
+            PowerBICertificatePassword = "CertFilePassword";
+
+        }
     }
     Process{
         $msalAppMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "New-MonkeyMsalApplication")
@@ -59,17 +67,17 @@ Function Initialize-AuthenticationParam{
         $O365Object.application_args = $newPsboundParams;
     }
     End{
-        if($O365Object.application_args){
+        If($O365Object.application_args){
             $app_param = $O365Object.application_args;
             $newApplication = New-MonkeyMsalApplication @app_param
             $O365Object.isConfidentialApp = -NOT $newApplication.isPublicApp;
             #$O365Object.msalapplication = New-MonkeyMsalApplication @app_param
             #$O365Object.isConfidentialApp = -NOT $O365Object.msalapplication.isPublicApp;
             #Get Auth params
-            $msalAppMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-MonkeyMSALToken")
+            $msalTokenMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-MonkeyMSALToken")
             #Set new dict
             $newPsboundParams = @{}
-            $param = $msalAppMetadata.Parameters.Keys
+            $param = $msalTokenMetadata.Parameters.Keys
             foreach($p in $param.GetEnumerator()){
                 if($O365Object.initParams.ContainsKey($p) -and $O365Object.initParams.Item($p)){
                     if ($p -in $app_param.keys) {continue }
@@ -79,7 +87,7 @@ Function Initialize-AuthenticationParam{
             if($O365Object.isConfidentialApp){
                 #Add confidential application
                 $O365Object.msalapplication = $newApplication;
-                [void]$O365Object.msal_confidential_applications.Add($O365Object.msalapplication)
+                [void]$O365Object.msal_confidential_applications.Add($O365Object.msalapplication);
                 [ref]$null = $newPsboundParams.Add('confidentialApp',$O365Object.msalapplication);
             }
             else{
@@ -100,6 +108,23 @@ Function Initialize-AuthenticationParam{
                 $new_params.add($param.Key, $param.Value)
             }
             $O365Object.msalAuthArgs = $new_params
+            #Check if PowerBI/Fabric auth
+            If($O365Object.initParams.ContainsKey('PowerBIClientId')){
+                $msalAppFabricParam = @{}
+                ForEach($param in $O365Object.initParams.GetEnumerator()){
+                    If($powerBiParamMap.Item($param.Key)){
+                        [void]$msalAppFabricParam.Add(($powerBiParamMap.Item($param.Key)),$param.Value);
+                    }
+                }
+                #Check if TenantId
+                If($null -ne $O365Object.TenantId){
+                    $msalAppFabricParam.Item('TenantId') = $O365Object.TenantId;
+                }
+                #Create application for PowerBI/Fabric
+                $newFabricApplication = New-MonkeyMsalApplication @msalAppFabricParam
+                #Add application
+                [void]$O365Object.msal_confidential_applications.Add($newFabricApplication);
+            }
         }
     }
 }

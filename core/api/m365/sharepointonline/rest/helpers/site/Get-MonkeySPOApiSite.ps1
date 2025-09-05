@@ -40,8 +40,11 @@ Function Get-MonkeySPOApiSite{
         [Parameter(Mandatory= $true, HelpMessage="Auth Object")]
         [Object]$Authentication,
 
-        [Parameter(Mandatory=$false, HelpMessage="Scan sub sites")]
-        [Switch]$ScanSubSites
+        [Parameter(Mandatory=$false, HelpMessage="Get sub sites")]
+        [Switch]$GetSubSites,
+
+        [Parameter(Mandatory=$false, HelpMessage="Get personal sites")]
+        [Switch]$GetPersonalSites
     )
     Begin{
         #Set False

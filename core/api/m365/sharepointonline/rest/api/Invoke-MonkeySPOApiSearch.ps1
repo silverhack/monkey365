@@ -105,32 +105,33 @@ Function Invoke-MonkeySPOApiSearch{
             #Perform query
             try{
                 switch ($Method) {
-                        'GET'
-                        {
-                            $param = @{
-                                Url = $URL;
-                                Headers = $requestHeader;
-                                Method = $Method;
-                                ContentType = $ContentType;
-                                Accept = $ContentType;
-                                UserAgent = $O365Object.UserAgent;
-                                Verbose = $Verbose;
-                                Debug = $Debug;
-                                InformationAction = $InformationAction;
-                            }
-                            $Objects = Invoke-MonkeyWebRequest @param
+                    'GET'
+                    {
+                        $param = @{
+                            Url = $URL;
+                            Headers = $requestHeader;
+                            Method = $Method;
+                            ContentType = $ContentType;
+                            Accept = $ContentType;
+                            UserAgent = $O365Object.UserAgent;
+                            Verbose = $Verbose;
+                            Debug = $Debug;
+                            InformationAction = $InformationAction;
                         }
+                        $Objects = Invoke-MonkeyWebRequest @param
+                        If($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('PrimaryQueryResult')){
+                            return $Objects
+                        }
+                    }
                 }
             }
             catch {
-                Write-Verbose $_
+                Write-Error $_
             }
         }
     }
     End{
-        if($null -ne $Objects -and $null -ne $Objects.PSObject.Properties.Item('PrimaryQueryResult')){
-            return $Objects
-        }
+        #Nothing to do here
     }
 }
 

@@ -85,9 +85,5 @@ Function Invoke-M365Scanner{
     Catch{
         Write-Error $_
     }
-    Finally{
-        #Perform garbage collection
-        [gc]::Collect()
-    }
 }
 

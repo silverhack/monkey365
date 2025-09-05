@@ -143,8 +143,10 @@ Function Invoke-MonkeyScanner{
                     #Set a second runspace for nested executions
                     $nestedRunspace = New-RunspacePool @nestedParam
                     If($null -ne $nestedRunspace -and $nestedRunspace -is [System.Management.Automation.Runspaces.RunspacePool]){
+                        #Open runspace
+                        $nestedRunspace.Open();
                         #Add to array
-                        [void]$all_runspaces.Add($nestedRunspace)
+                        [void]$all_runspaces.Add($nestedRunspace);
                         #Add to object
                         $O365Object.monkey_runspacePool = $nestedRunspace;
                     }
@@ -229,7 +231,7 @@ Function Invoke-MonkeyScanner{
         }
         Else{
             $msg = @{
-                MessageData = ("Unable to initialize the Monkey365 scan for {0}. Collectors for {1} are empty" -f $Provider, $Provider);
+                MessageData = ("Unable to initialize the Monkey365 scan for {0}. Collectors were not found for {1}" -f $Provider, $Provider);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'warning';
                 InformationAction = $O365Object.InformationAction;

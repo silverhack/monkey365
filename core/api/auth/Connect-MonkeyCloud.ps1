@@ -194,14 +194,44 @@ Function Connect-MonkeyCloud{
     }
     #Get licensing information
     $O365Object.Licensing = Get-MonkeySKUInfo
+    #Check If current identity can request users and groups from Microsoft Graph
+    $p = @{
+        InformationAction = $O365Object.InformationAction;
+        Verbose = $O365Object.verbose;
+        Debug = $O365Object.Debug;
+    }
+    $O365Object.canRequestUsersFromMsGraph = Test-CanRequestUser @p
+    $O365Object.canRequestGroupsFromMsGraph = Test-CanRequestGroup @p
+    #Get information about current identity
+    $O365Object.me = Get-MonkeyMe @p
+    #Check If connected to Azure AD
+    If($O365Object.canRequestUsersFromMsGraph -eq $false -and $null -eq $O365Object.Tenant.CompanyInfo){
+        $msg = @{
+            MessageData = ($message.NotConnectedTo -f "Microsoft Entra ID");
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'warning';
+            InformationAction = $O365Object.InformationAction;
+            Tags = @('Monkey365GraphAPIError');
+        }
+        Write-Warning @msg
+        $O365Object.onlineServices.EntraID = $false
+    }
+    Else{
+        $O365Object.onlineServices.EntraID = $true
+    }
     #Get actual userId
-    $authObject = $O365Object.auth_tokens.GetEnumerator() | Where-Object {$null -ne $_.Value} | Select-Object -ExpandProperty Value -First 1
-    If($null -ne $authObject){
-        $O365Object.userId = $authObject | Get-UserIdFromToken
+    If($O365Object.isConfidentialApp){
+        $O365Object.userId = $O365Object.me.id;
+    }
+    Else{
+        $authObject = $O365Object.auth_tokens.GetEnumerator() | Where-Object {$null -ne $_.Value} | Select-Object -ExpandProperty Value -First 1
+        If($null -ne $authObject){
+            $O365Object.userId = $authObject | Get-UserIdFromToken
+        }
     }
     #Get Azure AD permissions
     If($O365Object.isConfidentialApp){
-        $app_Permissions = Get-MonkeyMSGraphObjectDirectoryRole -ObjectId $O365Object.clientApplicationId -ObjectType servicePrincipal
+        $app_Permissions = Get-MonkeyMSGraphObjectDirectoryRole -ObjectId $O365Object.me.id -ObjectType servicePrincipal
         If($app_Permissions){
             $O365Object.aadPermissions = $app_Permissions
         }
@@ -236,7 +266,9 @@ Function Connect-MonkeyCloud{
     }
     #Check If requestMFA for users must be enabled by config
     try{
-        $requestMFA = $O365Object.internal_config.entraId.forceRequestMFA
+        $out = $null;
+        [void][bool]::TryParse($O365Object.internal_config.entraId.forceRequestMFA, [ref]$out);
+        $requestMFA = $out;
     }
     catch{
         $msg = @{
@@ -252,31 +284,6 @@ Function Connect-MonkeyCloud{
     If($requestMFA -eq $true){
         #Force request MFA for users
         $O365Object.canRequestMFAForUsers = $true;
-    }
-    #Check If current identity can request users and groups from Microsoft Graph
-    $p = @{
-        InformationAction = $O365Object.InformationAction;
-        Verbose = $O365Object.verbose;
-        Debug = $O365Object.Debug;
-    }
-    $O365Object.canRequestUsersFromMsGraph = Test-CanRequestUser @p
-    $O365Object.canRequestGroupsFromMsGraph = Test-CanRequestGroup @p
-    #Get information about current identity
-    $O365Object.me = Get-MonkeyMe @p
-    #Check If connected to Azure AD
-    If($O365Object.canRequestUsersFromMsGraph -eq $false -and $null -eq $O365Object.Tenant.CompanyInfo){
-        $msg = @{
-            MessageData = ($message.NotConnectedTo -f "Microsoft Entra ID");
-            callStack = (Get-PSCallStack | Select-Object -First 1);
-            logLevel = 'warning';
-            InformationAction = $O365Object.InformationAction;
-            Tags = @('Monkey365GraphAPIError');
-        }
-        Write-Warning @msg
-        $O365Object.onlineServices.EntraID = $false
-    }
-    Else{
-        $O365Object.onlineServices.EntraID = $true
     }
     #Check If EntraID P2 is enabled
     If($null -ne $O365Object.Tenant.licensing -and $null -ne $O365Object.Tenant.licensing.EntraIDP2){

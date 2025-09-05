@@ -454,14 +454,55 @@ Function Connect-MonkeyM365{
                 }
                 Write-Information @msg
                 #Connect to Fabric
-                $p = @{
-                    Resource = $O365Object.Environment.Fabric;
-                    AzureService = "AzurePowershell";
-                    InformationAction = $O365Object.InformationAction;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
+                If($O365Object.isConfidentialApp){
+                    If($O365Object.initParams.GetEnumerator().Where({$_.Key -eq 'PowerBIClientId'}).Count -gt 0){
+                        $application = $O365Object.msal_confidential_applications.Where({$_.ClientId -eq $O365Object.initParams.Item('PowerBIClientId')}) | Select-Object -First 1 -ErrorAction Ignore
+                        If($application){
+                            $p = @{
+                                Resource = $O365Object.Environment.Fabric;
+                                Application = $application;
+                                InformationAction = $O365Object.InformationAction;
+                                Verbose = $O365Object.verbose;
+                                Debug = $O365Object.debug;
+                            }
+                            #Connect to Microsoft Fabric
+                            $O365Object.auth_tokens.Fabric = Connect-MonkeyGenericApplication @p
+                        }
+                        Else{
+                            $msg = @{
+                                MessageData = "Unable to connect to Microsoft Fabric. Confidential application was not found";
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'warning';
+                                InformationAction = $O365Object.InformationAction;
+                                Tags = @('Monkey365FabricError');
+                            }
+                            Write-Warning @msg
+                            return
+                        }
+                    }
+                    Else{
+                        $msg = @{
+                            MessageData = "Unable to connect to Microsoft Fabric. Confidential application was not found";
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365FabricError');
+                        }
+                        Write-Warning @msg
+                        return
+                    }
                 }
-                $O365Object.auth_tokens.Fabric = Connect-MonkeyGenericApplication @p
+                Else{
+                    $p = @{
+                        Resource = $O365Object.Environment.Fabric;
+                        AzureService = "AzurePowershell";
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                    }
+                    #Connect to Microsoft Fabric
+                    $O365Object.auth_tokens.Fabric = Connect-MonkeyGenericApplication @p
+                }
                 If($null -ne $O365Object.auth_tokens.Fabric){
                     $O365Object.onlineServices.Item('PowerBI') = $true
                 }
@@ -471,7 +512,7 @@ Function Connect-MonkeyM365{
                         callStack = (Get-PSCallStack | Select-Object -First 1);
                         logLevel = 'warning';
                         InformationAction = $O365Object.InformationAction;
-                        Tags = @('Monkey365TeamsError');
+                        Tags = @('Monkey365FabricError');
                     }
                     Write-Warning @msg
                 }
@@ -484,15 +525,55 @@ Function Connect-MonkeyM365{
                     Tags = @('TokenRequestInfoMessage');
                 }
                 Write-Information @msg
-                #Connect to PowerBI
-                $p = @{
-                    Resource = $O365Object.Environment.PowerBI;
-                    AzureService = "AzurePowershell";
-                    InformationAction = $O365Object.InformationAction;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
+                If($O365Object.isConfidentialApp){
+                    If($O365Object.initParams.GetEnumerator().Where({$_.Key -eq 'PowerBIClientId'}).Count -gt 0){
+                        $application = $O365Object.msal_confidential_applications.Where({$_.ClientId -eq $O365Object.initParams.Item('PowerBIClientId')}) | Select-Object -First 1 -ErrorAction Ignore
+                        If($application){
+                            $p = @{
+                                Resource = $O365Object.Environment.PowerBI;
+                                Application = $application;
+                                InformationAction = $O365Object.InformationAction;
+                                Verbose = $O365Object.verbose;
+                                Debug = $O365Object.debug;
+                            }
+                            #Connect to Microsoft Fabric
+                            $O365Object.auth_tokens.PowerBI = Connect-MonkeyGenericApplication @p
+                        }
+                        Else{
+                            $msg = @{
+                                MessageData = "Unable to connect to Microsoft PowerBI. Confidential application was not found";
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'warning';
+                                InformationAction = $O365Object.InformationAction;
+                                Tags = @('Monkey365FabricError');
+                            }
+                            Write-Warning @msg
+                            return
+                        }
+                    }
+                    Else{
+                        $msg = @{
+                            MessageData = "Unable to connect to Microsoft PowerBI. Confidential application was not found";
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365FabricError');
+                        }
+                        Write-Warning @msg
+                        return
+                    }
                 }
-                $O365Object.auth_tokens.PowerBI = Connect-MonkeyGenericApplication @p
+                Else{
+                    #Connect to PowerBI
+                    $p = @{
+                        Resource = $O365Object.Environment.PowerBI;
+                        AzureService = "AzurePowershell";
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                    }
+                    $O365Object.auth_tokens.PowerBI = Connect-MonkeyGenericApplication @p
+                }
                 If($null -ne $O365Object.auth_tokens.PowerBI){
                     #Get Backend URI
                     $O365Object.PowerBIBackendUri = Get-MonkeyPowerBIBackend

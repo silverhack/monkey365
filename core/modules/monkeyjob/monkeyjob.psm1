@@ -1,5 +1,4 @@
 Set-StrictMode -Version Latest
-
 $mj_path = ("{0}/helpers/MonkeyJob.cs" -f $PSScriptRoot)
 $exists = [System.IO.File]::Exists($mj_path)
 #$mj_helper = Get-ChildItem -Path $mj_path | Where-Object {$_.Extension -in ".cs"} | Select-Object FullName -ErrorAction Ignore
@@ -43,7 +42,6 @@ if($exists){
     $MonkeyJobCleanup.Flag=$True
     $MonkeyJobCleanup.Host = $Host
     $InitialSessionState = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
-
     $MonkeyJobCleanup.Runspace =[runspacefactory]::CreateRunspace($Host,$InitialSessionState)
     $MonkeyJobCleanup.Runspace.Open()
     $MonkeyJobCleanup.Runspace.SessionStateProxy.SetVariable("MonkeyJobCleanup",$MonkeyJobCleanup)
@@ -57,15 +55,12 @@ if($exists){
                     foreach($MonkeyJob in $MonkeyJobs.GetEnumerator()){
                         Write-Verbose ("Cleaning MonkeyJob {0}" -f $MonkeyJob.Name)
                         #Clean MonkeyJob object
-                        $MonkeyJob.Job.InnerJob.Stop();
-                        $MonkeyJob.Job.InnerJob.Dispose();
-                        $MonkeyJob.Job.StopJob();
+                        $MonkeyJob.Job.ForceStop();
+                        $MonkeyJob.Job.DisposeInnerRunspacePool();
                         Start-Sleep -Milliseconds 500
                         $MonkeyJob.Job.Dispose();
                         $MonkeyJob.Task.Dispose();
                         $MonkeyJob.Task = $null;
-                        #Perform garbage collection
-                        [gc]::Collect()
                     }
                 }
                 catch{
@@ -83,8 +78,6 @@ if($exists){
                         Write-Verbose ("Cleaning RunspacePool {0}" -f $RunspacePool.InstanceId)
                         $RunspacePool.Close();
                         $RunspacePool.Dispose();
-                        #Perform garbage collection
-                        [gc]::Collect()
                     }
                 }
                 catch{
@@ -101,7 +94,7 @@ if($exists){
         $MonkeyJobCleanup.Flag=$False
         $MonkeyJobCleanup.PowerShell.Runspace = $MonkeyJobCleanup.Runspace
         $MonkeyJobCleanup.Handle = $MonkeyJobCleanup.PowerShell.BeginInvoke()
-        [System.Threading.WaitHandle]::WaitAll($MonkeyJobCleanup.Handle.AsyncWaitHandle)
+        [void][System.Threading.WaitHandle]::WaitAll($MonkeyJobCleanup.Handle.AsyncWaitHandle)
         $MonkeyJobCleanup.PowerShell.EndInvoke($MonkeyJobCleanup.Handle)
         $MonkeyJobCleanup.PowerShell.Dispose()
         $MonkeyJobs.Clear()
@@ -113,5 +106,4 @@ if($exists){
 }
 else{
     Write-Warning "Unable to load [MonkeyJob]. PowerShell module was not loaded"
-    return
 }

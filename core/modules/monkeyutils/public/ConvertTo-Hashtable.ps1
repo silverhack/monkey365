@@ -37,12 +37,20 @@ Function ConvertTo-Hashtable{
     [CmdletBinding()]
     Param (
         [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
-        [object]$objects
+        [object]$objects,
+
+        [parameter(Mandatory = $false)]
+        [Switch]$Ordered
     )
     Process{
         foreach($object in $objects){
             if($object -is [psobject]){
-                $hashtable = @{}
+                IF($Ordered.IsPresent){
+                    $hashtable = [ordered]@{}
+                }
+                Else{
+                    $hashtable = @{}
+                }
                 foreach ( $key in $object.psobject.properties) {
                     if($null -eq $key.Value){
                         $hashtable[$key.Name.ToString()] = $null
@@ -51,7 +59,7 @@ Function ConvertTo-Hashtable{
                         $hashtable[$key.Name.ToString()] = $key.Value
                     }
                     elseif($key.Value -is [psobject]){
-                        $hashtable[$key.Name.ToString()] = $key.Value
+                        $hashtable[$key.Name.ToString()] = ConvertTo-Hashtable $key.Value
                     }
                     elseif($key.Value -is [array]){
                         $hashtable[$key.Name.ToString()] = ConvertTo-Hashtable $key.Value

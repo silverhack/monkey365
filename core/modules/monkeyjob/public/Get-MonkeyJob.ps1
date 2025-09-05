@@ -73,35 +73,35 @@ Function Get-MonkeyJob{
         )]
         [String]$State
     )
-    Begin{
-        $queries = [System.Collections.Generic.List[ScriptBlock]]::new()
-    }
     Process{
-        $psn = $PSCmdlet.ParameterSetName
-        $items = $PSBoundParameters[$psn]
-        foreach($item in $items){
-            if($PSCmdlet.ParameterSetName -eq 'Job'){
-                $rule = ('$_.{0} -eq "{1}"' -f "Id",$item.Id)
+        Try{
+            If($PSCmdlet.ParameterSetName -eq 'All'){
+                $MonkeyJobs
             }
-            else{
-                $rule = ('$_.{0} -eq "{1}"' -f $psn,$item)
-                if($PSBoundParameters.ContainsKey('State')){
-                    $rule = ('{0} -and $_.Job.State -eq "{1}"' -f $rule, $PSBoundParameters['State'])
+            Else{
+                $psn = $PSCmdlet.ParameterSetName
+                $items = $PSBoundParameters[$psn]
+                ForEach($item in @($items)){
+                    If($PSCmdlet.ParameterSetName -eq 'Job'){
+                        $rule = ('$_.{0} -eq "{1}"' -f "Id",$item.Id)
+                    }
+                    Else{
+                        $rule = ('$_.{0} -eq "{1}"' -f $psn,$item)
+                        if($PSBoundParameters.ContainsKey('State')){
+                            $rule = ('{0} -and $_.Job.State -eq "{1}"' -f $rule, $PSBoundParameters['State'])
+                        }
+                    }
+                    $sb = [ScriptBlock]::Create($rule)
+                    $MonkeyJobs.Where($sb);
                 }
             }
-            $sb = [ScriptBlock]::Create($rule)
-            [void]$queries.Add($sb)
+        }
+        Catch{
+            Write-Error $_
         }
     }
     End{
-        if($PSCmdlet.ParameterSetName -eq 'All'){
-            $MonkeyJobs
-        }
-        else{
-            foreach($query in $queries){
-                $MonkeyJobs | Where-Object $query -ErrorAction Ignore;
-            }
-        }
+        #Nothing to do here
     }
 }
 

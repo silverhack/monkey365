@@ -46,7 +46,10 @@ Function Get-Metadata{
         [String]$ProductVersion,
 
         [parameter(Mandatory=$false, HelpMessage="Product Vendor Name")]
-        [String]$ProductVendorName
+        [String]$ProductVendorName,
+
+        [parameter(Mandatory=$false, HelpMessage="Tenant Id")]
+        [String]$TenantId
     )
     Process{
         Try{
@@ -56,7 +59,8 @@ Function Get-Metadata{
                 $metadataObject.EventCode = $InputObject.idSuffix;
                 $metadataObject.Product.Name = $PSBoundParameters['ProductName'];
                 $metadataObject.Product.VendorName = $PSBoundParameters['ProductVendorName'];
-                $metadataObject.Product.Version = $PSBoundParameters['ProductVersion'];;
+                $metadataObject.Product.Version = $PSBoundParameters['ProductVersion'];
+                $metadataObject.TenantId = $PSBoundParameters['TenantId'];
                 $metadataObject.Version = '1.1.0';
                 #return Object
                 return $metadataObject;

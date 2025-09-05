@@ -45,10 +45,10 @@ Function New-InitialSessionState{
         [Parameter(HelpMessage="modules to import into sessionState")]
         [Object]$ImportModules,
 
-        [Parameter(HelpMessage="commands to import into sessionState")]
+        [Parameter(HelpMessage="Functions to import from PS1 files into sessionState")]
         [Object]$ImportCommands,
 
-        [Parameter(HelpMessage="commands as StatementAst to import into sessionState")]
+        [Parameter(HelpMessage="Functions as StatementAst to import into sessionState")]
         [Object]$ImportCommandsAst,
 
         [Parameter(HelpMessage="Startup scripts (*ps1 files) to execute")]
@@ -68,9 +68,6 @@ Function New-InitialSessionState{
         catch{
             $sessionstate = $null
         }
-        If($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug){
-            $DebugPreference = 'Continue'
-        }
     }
     Process{
         If($null -ne $sessionstate -and $sessionstate -is [System.Management.Automation.Runspaces.InitialSessionState]){
@@ -80,7 +77,7 @@ Function New-InitialSessionState{
                     $all_scopes = [System.Management.Automation.ScopedItemOptions]::AllScope
                     Foreach ($var in $ImportVariables.GetEnumerator()){
                         If($null -eq $var.Value){
-                            Write-Verbose ("Null variable value found on {0}" -f $var.Name)
+                            Write-Verbose ($Script:messages.NullVariableMessage -f $var.Name)
                             continue
                         }
                         Else{
@@ -138,7 +135,7 @@ Function New-InitialSessionState{
                 ForEach($module in $ImportModules){
                     $moduleToImport = Resolve-Path -Path $module -ErrorAction Ignore
                     If($null -ne $moduleToImport){
-                        Write-Verbose ("Importing module: {0}" -f $module)
+                        Write-Verbose ($Script:messages.ImportingModuleMessage -f $module)
                         $moduleToImport = $moduleToImport.Path.TrimEnd('\')
                         If (Test-Path -Path $moduleToImport -PathType Container){
                             #folder containing one or more scripts/modules
@@ -152,33 +149,31 @@ Function New-InitialSessionState{
                     Else{
                         #Check if file or module exists
                         If (Test-Path -Path $module){
-                            Write-Verbose ("Importing module: {0}" -f $module)
+                            Write-Verbose ($Script:messages.ImportingModuleMessage -f $module)
                             [void]$sessionstate.ImportPSModule($module);
                         }
                         Else{
-                            Write-Warning ("{0} file or module does not exists" -f $module)
+                            Write-Warning ($Script:messages.ModuleNotExists -f $module)
                         }
                     }
                 }
             }
             If($ImportCommands){
-                $CommandsToImport = $ImportCommands | Get-FunctionDefinitionAst
-                If($null -ne $CommandsToImport){
-                    ForEach($fnc in $CommandsToImport){
-                        If($fnc -is [System.Management.Automation.Language.FunctionDefinitionAst]){
-                            Write-Verbose ("Importing command: {0}" -f $fnc.Name)
-                            $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $fnc.Name, $fnc.Body.GetScriptBlock()
-                            #Create a SessionStateFunction
-                            $sessionstate.Commands.Add($SessionStateFunction)
-                        }
+                $CommandsToImport = $ImportCommands | Find-FunctionFromFile -FindAll
+                ForEach($fnc in @($CommandsToImport).Where({$null -ne $_})){
+                    If($fnc -is [System.Management.Automation.Language.FunctionDefinitionAst]){
+                        Write-Verbose ($Script:messages.ImportingFunctionMessage -f $fnc.Name)
+                        $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $fnc.Name, $fnc.Body.GetScriptBlock()
+                        #Create a SessionStateFunction
+                        $sessionstate.Commands.Add($SessionStateFunction)
                     }
                 }
             }
             If($ImportCommandsAst){
-                ForEach($fnc in $ImportCommandsAst){
+                ForEach($fnc in @($ImportCommandsAst).Where({$null -ne $_})){
                     If($fnc -is [System.Management.Automation.Language.StatementAst]){
                         $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $fnc.Name, $fnc.Body.GetScriptBlock()
-                        Write-Verbose ("Importing AST command: {0}" -f $fnc.Name)
+                        Write-Verbose ($Script:messages.ImportingStatementAstMessage -f $fnc.Name)
                         #Create a SessionStateFunction
                         $sessionstate.Commands.Add($SessionStateFunction)
                     }
@@ -187,12 +182,12 @@ Function New-InitialSessionState{
             #Check if startup scripts
             If($StartUpScripts){
                 ForEach($scp in $StartUpScripts){
-                    If (!(Test-Path -Path $scp)){
-                        Write-Warning ("{0} file does not exists" -f $scp)
-                        continue
+                    If([System.IO.File]::Exists($scp)){
+                        [void]$sessionstate.StartupScripts.Add($scp)
                     }
                     Else{
-                        [void]$sessionstate.StartupScripts.Add($scp)
+                        Write-Warning ($Script:messages.FileNotExists -f $scp)
+                        continue
                     }
                 }
             }

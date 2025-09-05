@@ -41,11 +41,11 @@ Function Invoke-ClientRequest{
         [System.Net.Http.HttpClient]$Client,
 
         [parameter(Mandatory=$False, HelpMessage='HTTP Method')]
-        [ValidateSet("GET","POST","PUT","HEAD")]
+        [ValidateSet("GET","POST","PUT","HEAD","PATCH")]
         [System.Net.Http.HttpMethod]$Method,
 
         [parameter(Mandatory=$False, HelpMessage='Body')]
-        [System.Net.Http.StringContent]$Body,
+        [Object]$Body,
 
         [parameter(Mandatory=$False, HelpMessage='Request')]
         [System.Net.Http.HttpRequestMessage]$Request,
@@ -120,6 +120,19 @@ Function Invoke-ClientRequest{
                 }
             }
             'put'
+            {
+                #Add content to body
+                $Request.Content = $Body
+                try{
+                    $webTask = $Client.SendAsync($Request, $cancelTokenSource.Token);
+                    #Wait for the task
+                    $webTaskResult = Wait-WebTask -Task $webTask
+                }
+                catch{
+                    Write-Warning $_
+                }
+            }
+            'patch'
             {
                 #Add content to body
                 $Request.Content = $Body

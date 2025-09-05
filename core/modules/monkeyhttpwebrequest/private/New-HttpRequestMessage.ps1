@@ -43,7 +43,7 @@ Function New-HttpRequestMessage{
         [System.Uri]$Url,
 
         [parameter(Mandatory=$False, HelpMessage='Request method')]
-        [ValidateSet("GET","POST","PUT","HEAD")]
+        [ValidateSet("GET","POST","PUT","HEAD","PATCH")]
         [String]$Method = "GET",
 
         [parameter(Mandatory=$False, HelpMessage='Headers as hashtable')]

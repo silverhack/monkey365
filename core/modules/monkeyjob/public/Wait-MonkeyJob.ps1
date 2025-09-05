@@ -78,53 +78,55 @@ Function Wait-MonkeyJob{
         [int32]$Timeout
     )
     Begin{
-        $queries = [System.Collections.Generic.List[ScriptBlock]]::new()
-        if (-not $PSBoundParameters.ContainsKey('Timeout')) {
+        $allJobs = [System.Collections.Generic.List[System.Threading.Tasks.Task]]::new()
+        If (-not $PSBoundParameters.ContainsKey('Timeout')) {
             #TimeOut is in Milliseconds
             [int]$Timeout = 10 * 1000
         }
-        else{
+        Else{
             #TimeOut is in Milliseconds
             [int]$Timeout = $PSBoundParameters.TimeOut * 1000
         }
     }
     Process{
-        $psn = $PSCmdlet.ParameterSetName
-        $items = $PSBoundParameters[$psn]
-        foreach($item in $items){
-            if($PSCmdlet.ParameterSetName -eq 'Job'){
-                $rule = ('$_.{0} -eq "{1}"' -f "Id",$item.Id)
+        #Add tasks to array
+        If($PSCmdlet.ParameterSetName -eq 'All'){
+            ForEach($_job in $MonkeyJobs){
+                [void]$allJobs.Add($_job.Task)
             }
-            else{
-                $rule = ('$_.{0} -eq "{1}"' -f $psn,$item)
-                if($PSBoundParameters.ContainsKey('State')){
-                    $rule = ('{0} -and $_.Job.State -eq "{1}"' -f $rule, $PSBoundParameters['State'])
+        }
+        Else{
+            $psn = $PSCmdlet.ParameterSetName
+            $items = $PSBoundParameters[$psn]
+            ForEach($item in @($items)){
+                IF($PSCmdlet.ParameterSetName -eq 'Job'){
+                    $rule = ('$_.{0} -eq "{1}"' -f "Id",$item.Id)
                 }
+                Else{
+                    $rule = ('$_.{0} -eq "{1}"' -f $psn,$item)
+                    If($PSBoundParameters.ContainsKey('State')){
+                        $rule = ('{0} -and $_.Job.State -eq "{1}"' -f $rule, $PSBoundParameters['State'])
+                    }
+                }
+                $sb = [ScriptBlock]::Create($rule)
+                $MonkeyJob = $MonkeyJobs.Where($sb);
+                $MonkeyJob.ForEach(
+                    {
+                        [void]$allJobs.Add($_.Task);
+                    }
+                );
             }
-            $sb = [ScriptBlock]::Create($rule)
-            [void]$queries.Add($sb)
         }
     }
     End{
-        $allJobs = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
-        if($PSCmdlet.ParameterSetName -eq 'All'){
-            $allJobs = $MonkeyJobs
-        }
-        else{
-            foreach($query in $queries){
-                $MonkeyJob = $MonkeyJobs | Where-Object $query -ErrorAction Ignore;
-                if($null -ne $MonkeyJob){
-                    [void]$allJobs.Add($MonkeyJob);
-                }
-            }
-        }
-        if($allJobs.Count -gt 0){
-            try{
-                While (-not [System.Threading.Tasks.Task]::WaitAll($allJobs.Task, $Timeout)) {
+        #Monitor tasks
+        If($allJobs.Count -gt 0){
+            Try{
+                While (-not [System.Threading.Tasks.Task]::WaitAll($allJobs.ToArray(), $Timeout)) {
                     Write-Verbose $script:messages.WaitJobCompletion
                 }
             }
-            catch{
+            Catch{
                 #Task Error
                 Write-Error $_
             }

@@ -135,9 +135,5 @@ Function Invoke-AzureScanner{
     Catch{
         Write-Error $_
     }
-    Finally{
-        #Perform garbage collection
-        [System.GC]::GetTotalMemory($true) | out-null
-    }
 }
 
