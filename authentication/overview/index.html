@@ -18,7 +18,7 @@
         <link rel="prev" href="../../configuration/rate-limit/">
       
       
-        <link rel="next" href="../supported_auth_methods_byapp/">
+        <link rel="next" href="../authFlows/interactive/">
       
       
       <link rel="icon" href="../../assets/images/favicon.ico">
@@ -88,6 +88,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#using-service-principals" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -341,7 +346,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../sample/Monkey365.html" class="md-tabs__link">
+      <a href="../../sample/monkey365.html" class="md-tabs__link">
         
   
   
@@ -805,6 +810,8 @@
       
         
       
+        
+      
     
     
     
@@ -853,6 +860,19 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -865,52 +885,32 @@
 
       </a>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../supported_auth_methods_byapp/" class="md-nav__link">
         
-  
-  
-  <span class="md-ellipsis">
-    Supported Authentication Methods By Application
-    
-  </span>
-  
 
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
   
-    <li class="md-nav__item">
-      <a href="../authprompts/" class="md-nav__link">
-        
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-service-principals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using service principals
+    </span>
+  </a>
   
+</li>
+      
+    </ul>
   
-  <span class="md-ellipsis">
-    Authentication Prompts
-    
-  </span>
-  
-
-      </a>
+</nav>
+      
     </li>
   
 
@@ -944,10 +944,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_2" >
         
           
-          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_3_2" id="__nav_2_3_2_label" tabindex="0">
             
   
   
@@ -960,8 +960,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_2">
             <span class="md-nav__icon md-icon"></span>
             Authentication Flows
           </label>
@@ -1062,6 +1062,153 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../supported_auth_methods_byapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Supported Authentication Methods Matrix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Service Principal Authentication
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Service Principal Authentication
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sp_authentication/getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Manual Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sp_authentication/automatic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automatic Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authprompts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentication Prompts
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -1732,7 +1879,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sample/Monkey365.html" class="md-nav__link">
+      <a href="../../sample/monkey365.html" class="md-nav__link">
         
   
   
@@ -1765,6 +1912,23 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-service-principals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using service principals
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1791,6 +1955,16 @@
 <li><a href="../authFlows/devicecode/">Device Code Authentication</a></li>
 <li><a href="../authFlows/sp/">Client Credential Authentication</a></li>
 </ul>
+<h2 id="using-service-principals">Using service principals<a class="headerlink" href="#using-service-principals" title="Permanent link">&para;</a></h2>
+<p>Service principals in Microsoft Entra serve as representations of applications within a specific tenant. They outline the application's capabilities, the resources it can interact with, and the users permitted to utilize it. When an application is registered in Microsoft Entra ID, a service principal is automatically generated, enabling secure authentication and resource access for the application.</p>
+<p>To set up a service principal for use with Monkey365, you'll need to follow these steps:</p>
+<ul>
+<li>Register an Application in Microsoft Entra ID</li>
+<li>Create a Client Secret or Certificate</li>
+<li>Assign API Permissions</li>
+<li>Assign the required roles</li>
+</ul>
+<p>Check the <a href="../sp_authentication/getting_started/">Service Principal authentication section</a> for manual steps. Additionally, Monkey365 includes a <a href="../sp_authentication/automatic_setup/">built-in utility</a> that streamlines the creation and configuration of Entra ID applications.</p>
 
 
 

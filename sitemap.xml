@@ -2,138 +2,146 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://silverhack.github.io/monkey365/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/authentication/authprompts/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/authentication/limitations/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/authentication/overview/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/authentication/supported_auth_methods_byapp/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/authentication/authFlows/devicecode/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/authentication/authFlows/interactive/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/authentication/authFlows/ropc/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/authentication/authFlows/sp/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
+    </url>
+    <url>
+         <loc>https://silverhack.github.io/monkey365/authentication/sp_authentication/automatic_setup/</loc>
+         <lastmod>2025-09-05</lastmod>
+    </url>
+    <url>
+         <loc>https://silverhack.github.io/monkey365/authentication/sp_authentication/getting_started/</loc>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/configuration/azure-options/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/configuration/configuration-file/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/configuration/general-options/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/configuration/microsoft365-options/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/configuration/rate-limit/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/docker/docker/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/exporting/export-clixml/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/exporting/export-csv/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/exporting/export-html/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/exporting/export-json/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/exporting/exporting-data/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/getting_started/basic-usage/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/getting_started/permissions/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/install/install-instructions/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/license/license-contributing/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/logging/File/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/logging/Slack/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/logging/Teams/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/logging/channels/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/logging/introduction/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/security_checks/custom-rule/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/security_checks/custom-ruleset/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/security_checks/overview/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/support/disclaimer/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
     <url>
          <loc>https://silverhack.github.io/monkey365/support/support/</loc>
-         <lastmod>2025-08-08</lastmod>
+         <lastmod>2025-09-05</lastmod>
     </url>
 </urlset>

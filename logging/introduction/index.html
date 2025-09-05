@@ -346,7 +346,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../sample/Monkey365.html" class="md-tabs__link">
+      <a href="../../sample/monkey365.html" class="md-tabs__link">
         
   
   
@@ -808,6 +808,8 @@
       
         
       
+        
+      
     
     
     
@@ -871,52 +873,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../authentication/supported_auth_methods_byapp/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Supported Authentication Methods By Application
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../authentication/authprompts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Authentication Prompts
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
     
     
       
@@ -939,10 +895,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_2" >
         
           
-          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_3_2" id="__nav_2_3_2_label" tabindex="0">
             
   
   
@@ -955,8 +911,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_2">
             <span class="md-nav__icon md-icon"></span>
             Authentication Flows
           </label>
@@ -1057,6 +1013,153 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../authentication/supported_auth_methods_byapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Supported Authentication Methods Matrix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Service Principal Authentication
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Service Principal Authentication
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../authentication/sp_authentication/getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Manual Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../authentication/sp_authentication/automatic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automatic Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../authentication/authprompts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentication Prompts
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -1739,7 +1842,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sample/Monkey365.html" class="md-nav__link">
+      <a href="../../sample/monkey365.html" class="md-nav__link">
         
   
   
@@ -1791,12 +1894,12 @@
   
 
 
-<h1 id="introduction">Introduction</h1>
+<h1 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h1>
 <p>The internal logging module provides a multi-channel logger which is used internally. The logger module is inspired by the excellent project <a href='https://github.com/EsOsO/Logging/' target='_blank'>Powershell Logging Module</a>. This section outlines how to configure it.</p>
 <p>The internal module intercepts the Write-Information, Write-Warning, Write-Verbose, Write-Debug and Write-Error cmdlets by using proxy functions to first send messages to custom channels before sending stream data to their original commands from the <a href='https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/?view=powershell-7.2' target='_blank'>Microsoft.PowerShell.Utility</a> module.</p>
 <p>The <code>MonkeyLogger</code> will send stream data to enabled channels, which needs to be configured prior using. Each of these listeners will receive each of the stream data and then will be sent to some form of output.</p>
 <p>The easiest way to configure <code>MonkeyLogger</code> is to have configured listeners in the <code>logging</code> section within the <code>monkey365/config/monkey_365.config</code> file. See below for a practical example.</p>
-<h1 id="example">Example</h1>
+<h1 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h1>
 <div class="highlight"><pre><span></span><code><span class="nt">&quot;logging&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:[</span>
 <span class="w">        </span><span class="p">{</span>

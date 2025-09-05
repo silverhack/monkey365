@@ -346,7 +346,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../sample/Monkey365.html" class="md-tabs__link">
+      <a href="../../sample/monkey365.html" class="md-tabs__link">
         
   
   
@@ -875,6 +875,8 @@
       
         
       
+        
+      
     
     
     
@@ -938,52 +940,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../authentication/supported_auth_methods_byapp/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Supported Authentication Methods By Application
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../authentication/authprompts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Authentication Prompts
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
     
     
       
@@ -1006,10 +962,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_2" >
         
           
-          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2_3_2" id="__nav_2_3_2_label" tabindex="0">
             
   
   
@@ -1022,8 +978,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_2">
             <span class="md-nav__icon md-icon"></span>
             Authentication Flows
           </label>
@@ -1124,6 +1080,153 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../authentication/supported_auth_methods_byapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Supported Authentication Methods Matrix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Service Principal Authentication
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Service Principal Authentication
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../authentication/sp_authentication/getting_started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Manual Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../authentication/sp_authentication/automatic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automatic Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../authentication/authprompts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentication Prompts
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -1794,7 +1897,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sample/Monkey365.html" class="md-nav__link">
+      <a href="../../sample/monkey365.html" class="md-nav__link">
         
   
   
@@ -1883,7 +1986,7 @@
 
 <p>The module will not change or modify any assets deployed in an Azure subscription. Monkey365's only perform read-only access operations. Monkey365 cannot manipulate or change data and cannot influence the resources within Azure or Microsoft 365.</p>
 <p>Depending on what workloads you are trying to connect, Monkey365 will require that the provided identity have the following roles according to the principle of least privilege:</p>
-<h2 id="interactive-authentication">Interactive authentication</h2>
+<h2 id="interactive-authentication">Interactive authentication<a class="headerlink" href="#interactive-authentication" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Microsoft Entra ID and Azure environments<ul>
 <li><strong>Global Reader</strong> and <strong>Security Reader</strong> roles in all the subscriptions to assess</li>
@@ -1895,21 +1998,37 @@
 </ul>
 </li>
 </ul>
-<h2 id="service-principal-authentication">Service Principal Authentication</h2>
+<h2 id="service-principal-authentication">Service Principal Authentication<a class="headerlink" href="#service-principal-authentication" title="Permanent link">&para;</a></h2>
 <p>Access to APIs and Microsoft services require configuration of access scopes and roles. If you want a client application to access Azure and Microsoft 365 services, configure permissions to access the API in the app registration. The following permissions must be granted to the client application created in Azure:</p>
 <ul>
-<li>Microsoft Entra ID environment<ul>
-<li>Directory.Read.All</li>
-<li>Policy.Read.All</li>
+<li>
+<p>Microsoft Entra ID environment</p>
+<ul>
+<li>User.Read.All,</li>
+<li>Application.Read.All,</li>
+<li>Policy.Read.All,</li>
+<li>Organization.Read.All,</li>
+<li>RoleManagement.Read.Directory,</li>
+<li>GroupMember.Read.All,</li>
+<li>Directory.Read.All,</li>
+<li>PrivilegedEligibilitySchedule.Read.AzureADGroup,</li>
+<li>PrivilegedAccess.Read.AzureADGroup,</li>
+<li>RoleManagementPolicy.Read.AzureADGroup,</li>
+<li>Group.Read.All,</li>
+<li>SecurityEvents.Read.All,</li>
+<li>IdentityRiskEvent.Read.All</li>
 <li>UserAuthenticationMethod.Read.All</li>
 </ul>
 </li>
-<li>Azure<ul>
+<li>
+<p>Azure</p>
+<ul>
 <li><strong>Reader</strong> role in all the subscriptions to assess</li>
 </ul>
 </li>
 <li>SharePoint Online<ul>
 <li>Sites.FullControl.All</li>
+<li>Grant the given identity the role of <strong>SharePoint Administrator</strong></li>
 </ul>
 </li>
 <li>Exchange Online and Security and Compliance<ul>
@@ -1918,7 +2037,8 @@
 </ul>
 </li>
 </ul>
-<h2 id="references">References</h2>
+<p>See the <a href="../../authentication/overview/">authentication section</a> for further details on available authentication methods and permission references.</p>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <p><a href='https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps' target='_blank'>https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps</a></p>
 <p><a href='https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread' target='_blank'>https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread</a></p>
 
