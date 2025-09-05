@@ -15,7 +15,6 @@ hooks:
 theme:
   language: en
   name: material
-  #custom_dir: overrides
   font:
     text: Roboto
   palette:
@@ -57,13 +56,16 @@ nav:
       - Handle Rate Limit: configuration/rate-limit.md
     - Authentication:
       - Overview: authentication/overview.md
-      - Supported Authentication Methods By Application: authentication/supported_auth_methods_byapp.md
-      - Authentication Prompts: authentication/authprompts.md
       - Authentication Flows:
         - Web Browser Interactive: authentication/authFlows/interactive.md
         - Device Code: authentication/authFlows/devicecode.md
         - Service Principal: authentication/authFlows/sp.md
         - Resource Owner Password Credential: authentication/authFlows/ropc.md
+      - Supported Authentication Methods Matrix: authentication/supported_auth_methods_byapp.md
+      - Service Principal Authentication:
+        - Manual Setup: authentication/sp_authentication/getting_started.md
+        - Automatic Setup: authentication/sp_authentication/automatic_setup.md
+      - Authentication Prompts: authentication/authprompts.md
       - Current limitations: authentication/limitations.md
     - Docker:
       - Overview: docker/docker.md
@@ -113,5 +115,11 @@ copyright: Copyright &copy; {year} <a href="https://twitter.com/tr1ana" target="
 
 markdown_extensions:
   - admonition
+  - footnotes
   - pymdownx.details
   - pymdownx.superfences
+  - attr_list
+  - md_in_html
+  - pymdownx.blocks.caption
+  - toc:
+      permalink: true

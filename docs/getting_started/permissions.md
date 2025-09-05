@@ -19,16 +19,31 @@ Depending on what workloads you are trying to connect, Monkey365 will require th
 Access to APIs and Microsoft services require configuration of access scopes and roles. If you want a client application to access Azure and Microsoft 365 services, configure permissions to access the API in the app registration. The following permissions must be granted to the client application created in Azure:
 
 * Microsoft Entra ID environment
-    * Directory.Read.All
-	* Policy.Read.All
+    * User.Read.All,
+	* Application.Read.All,
+	* Policy.Read.All,
+	* Organization.Read.All,
+	* RoleManagement.Read.Directory,
+	* GroupMember.Read.All,
+	* Directory.Read.All,
+	* PrivilegedEligibilitySchedule.Read.AzureADGroup,
+	* PrivilegedAccess.Read.AzureADGroup,
+	* RoleManagementPolicy.Read.AzureADGroup,
+	* Group.Read.All,
+	* SecurityEvents.Read.All,
+	* IdentityRiskEvent.Read.All
 	* UserAuthenticationMethod.Read.All
+	
 * Azure
     * **Reader** role in all the subscriptions to assess
 * SharePoint Online
 	* Sites.FullControl.All
+	* Grant the given identity the role of **SharePoint Administrator**
 * Exchange Online and Security and Compliance
     * Exchange.ManageAsApp
 	* Grant the given identity the role of **Global Reader**
+
+See the [authentication section](../authentication/overview.md) for further details on available authentication methods and permission references.
 
 ## References
 

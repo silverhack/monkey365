@@ -6,8 +6,8 @@ author: Juan Garrido
 
 The Microsoft identity platform supports the OAuth 2.0 Resource Owner Password Credentials (ROPC) grant, which allows an application to sign in the user by directly handling their password. In this flow, client identification (e.g. user's email address) and user's credentials is sent to the identity server, and then a token is received.
 
-## Security Note
-There are multiple scenarios in which ROPC is not supported, such as hybrid identity federation access (Azure AD and ADFS) or when conditional access policies are enabled. There are more secure and available recommended alternatives, such as [Interactive authentication](interactive.md) or [Service Principal](sp.md). 
+???+ Warning "Security Note"
+	There are multiple scenarios in which ROPC is not supported, such as hybrid identity federation access (Entra ID and ADFS) or when conditional access policies are enabled. There are more secure and available recommended alternatives, such as [Interactive authentication](interactive.md) or [Service Principal](sp.md). 
 
 ## Usage Examples
 

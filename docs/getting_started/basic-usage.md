@@ -17,7 +17,7 @@ To get a list of all options and examples with detailed info use:
 Get-Help Invoke-Monkey365 -Detailed
 ```
 
-This example retrieves information from Azure AD and SharePoint Online and then print results. If credentials are not supplied, Monkey365 will prompt for credentials.
+This example retrieves information from Entra ID and SharePoint Online and then print results. If credentials are not supplied, Monkey365 will prompt for credentials.
 ``` powershell
 $param = @{
     Instance = 'Microsoft365';

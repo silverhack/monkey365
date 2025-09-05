@@ -224,7 +224,7 @@ Function Invoke-Monkey365{
 
         # Secure secret of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-App')]
-        [securestring]$ClientSecret,
+        [System.Security.SecureString]$ClientSecret,
 
         # Secure secret of the client requesting the token.
         [Parameter(Mandatory = $true, ParameterSetName = 'ClientSecret-InputObject', HelpMessage = 'PsCredential')]
@@ -255,7 +255,7 @@ Function Invoke-Monkey365{
 
         # Secure password of the certificate
         [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Certificate password')]
-        [Security.SecureString]$CertFilePassword,
+        [System.Security.SecureString]$CertFilePassword,
 
         [parameter(Mandatory= $false, HelpMessage= "json file with all rules")]
         [ValidateScript({
@@ -306,7 +306,13 @@ Function Invoke-Monkey365{
         [Switch]$ForceMSALDesktop,
 
         [Parameter(Mandatory=$false, HelpMessage="List available collectors")]
-        [Switch]$ListCollector
+        [Switch]$ListCollector,
+
+        [Parameter(Mandatory=$false, HelpMessage="List available rules")]
+        [Switch]$ListRule,
+
+        [Parameter(Mandatory=$false, HelpMessage="List available frameworks")]
+        [Switch]$ListFramework
     )
     dynamicparam{
         # Set available instance class
@@ -389,7 +395,7 @@ Function Invoke-Monkey365{
             $paramDictionary.Add($rsrc_pname, $rsrc_type_dynParam)
         }
         #Add parameters for Microsoft365 instance
-        if($null -ne (Get-Variable -Name Instance -ErrorAction Ignore) -and $Instance -eq 'Microsoft365'){
+        If($null -ne (Get-Variable -Name Instance -ErrorAction Ignore) -and $Instance -eq 'Microsoft365'){
             #Create the -ScanSites string parameter
             $attributeCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
             # define a new parameter attribute
@@ -400,6 +406,43 @@ Function Invoke-Monkey365{
             $rg_type_dynParam = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter($rg_pname,
             [string[]], $attributeCollection)
             $paramDictionary.Add($rg_pname, $rg_type_dynParam)
+            #Add PowerBI/Fabric ClientId parameter attribute
+            $clientIdAttr = New-Object System.Management.Automation.ParameterAttribute
+            $clientIdAttr.Mandatory = $false
+            $clientIdAttrCollection = New-Object -Type System.Collections.ObjectModel.Collection[System.Attribute]
+            $clientIdAttrCollection.Add($clientIdAttr)
+            $clientIdParam = New-Object System.Management.Automation.RuntimeDefinedParameter('PowerBIClientId', [System.String], $clientIdAttrCollection)
+            $paramDictionary.Add('PowerBIClientId', $clientIdParam)
+            #Add PowerBI/Fabric Client Secret parameter attribute
+            $clientSecretAttr = New-Object System.Management.Automation.ParameterAttribute
+            $clientSecretAttr.Mandatory = $false
+            $clientSecretAttrCollection = New-Object -Type System.Collections.ObjectModel.Collection[System.Attribute]
+            $clientSecretAttrCollection.Add($clientSecretAttr)
+            $clientSecretParam = New-Object System.Management.Automation.RuntimeDefinedParameter('PowerBIClientSecret', [System.Security.SecureString], $clientSecretAttrCollection)
+            $paramDictionary.Add('PowerBIClientSecret', $clientSecretParam)
+            #Add PowerBI/Fabric PSCredential parameter attribute
+            $pscredAttr = New-Object System.Management.Automation.ParameterAttribute
+            $pscredAttr.Mandatory = $false
+            $pscredAttrCollection = New-Object -Type System.Collections.ObjectModel.Collection[System.Attribute]
+            $pscredAttrCollection.Add($pscredAttr)
+            $pscredParam = New-Object System.Management.Automation.RuntimeDefinedParameter('PowerBIClientCredentials', [System.Management.Automation.PSCredential], $pscredAttrCollection)
+            $paramDictionary.Add('PowerBIClientCredentials', $pscredParam)
+            #Add PowerBI/Fabric Certificate parameter attribute
+            $certFileAttr = New-Object System.Management.Automation.ParameterAttribute
+            $certFileAttr.Mandatory = $false
+            $certFileAttrCollection = New-Object -Type System.Collections.ObjectModel.Collection[System.Attribute]
+            $certFileAttrCollection.Add($certFileAttr)
+            $validateScriptAttr = New-Object System.Management.Automation.ValidateScriptAttribute({ Test-Path -Path $_ -PathType Leaf })
+            $certFileAttrCollection.Add($validateScriptAttr)
+            $certFileParam = New-Object System.Management.Automation.RuntimeDefinedParameter('PowerBICertificateFile', [System.IO.FileInfo], $certFileAttrCollection)
+            $paramDictionary.Add('PowerBICertificateFile', $certFileParam)
+            #Add PowerBI/Fabric Certificate password parameter attribute
+            $certPassAttr = New-Object System.Management.Automation.ParameterAttribute
+            $certPassAttr.Mandatory = $false
+            $certPassAttrCollection = New-Object -Type System.Collections.ObjectModel.Collection[System.Attribute]
+            $certPassAttrCollection.Add($certPassAttr)
+            $passParam = New-Object System.Management.Automation.RuntimeDefinedParameter('PowerBICertificatePassword', [System.Security.SecureString], $certPassAttrCollection)
+            $paramDictionary.Add('PowerBICertificatePassword', $passParam)
         }
         # return the collection of dynamic parameters
         $paramDictionary
@@ -428,10 +471,10 @@ Function Invoke-Monkey365{
             #Get command Metadata
             $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Format-MonkeyCollector")
             $newPsboundParams = [ordered]@{}
-            if($null -ne $MetaData){
+            If($null -ne $MetaData){
                 $param = $MetaData.Parameters.Keys
-                foreach($p in $param.GetEnumerator()){
-                    if($PSBoundParameters.ContainsKey($p)){
+                ForEach($p in $param.GetEnumerator()){
+                    If($PSBoundParameters.ContainsKey($p)){
                         $newPsboundParams.Add($p,$PSBoundParameters[$p])
                     }
                 }
@@ -452,7 +495,87 @@ Function Invoke-Monkey365{
                     [void]$newPsboundParams.Add('Provider',$PSBoundParameters['Instance']);
                 }
                 #Execute command
-                Format-MonkeyCollector @newPsboundParams
+                $a = Format-MonkeyCollector @newPsboundParams
+                Write-Output $a -NoEnumerate
+            }
+            return
+        }
+        #Check if list collectors
+        If($PSBoundParameters.ContainsKey('ListRule') -and $PSBoundParameters['ListRule'].IsPresent){
+            #Get command Metadata
+            $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-Rule")
+            $newPsboundParams = [ordered]@{}
+            if($null -ne $MetaData){
+                $param = $MetaData.Parameters.Keys
+                foreach($p in $param.GetEnumerator()){
+                    if($PSBoundParameters.ContainsKey($p)){
+                        $newPsboundParams.Add($p,$PSBoundParameters[$p])
+                    }
+                }
+                #Add verbose, debug
+                $newPsboundParams.Add('Verbose',$O365Object.verbose)
+                $newPsboundParams.Add('Debug',$O365Object.debug)
+                $newPsboundParams.Add('InformationAction',$O365Object.InformationAction)
+                #Add pretty print
+                [void]$newPsboundParams.Add('Pretty',$true);
+                #Add RulesPath
+                If($newPsboundParams.Contains('RulesPath')){
+                    $newPsboundParams.RulesPath = $O365Object.rulesPath;
+                }
+                Else{
+                    [void]$newPsboundParams.Add('RulesPath',$O365Object.rulesPath);
+                }
+                #Remove RuleSet if null
+                If($newPsboundParams.Contains('RuleSet') -and $null -eq $newPsboundParams['RuleSet']){
+                    [void]$newPsboundParams.Remove('RuleSet');
+                }
+                #Remove instance if EntraID is selected
+                If($newPsboundParams.Contains('Instance') -and $newPsboundParams['Instance'] -eq 'EntraID'){
+                    [void]$newPsboundParams.Remove('Instance');
+                }
+                #Remove Instance if null
+                If($newPsboundParams.Contains('Instance') -and $null -eq $newPsboundParams['Instance']){
+                    [void]$newPsboundParams.Remove('Instance');
+                }
+                #Execute command
+                Get-Rule @newPsboundParams
+            }
+            return
+        }
+        #Check if list collectors
+        If($PSBoundParameters.ContainsKey('ListFramework') -and $PSBoundParameters['ListFramework'].IsPresent){
+            #Get command Metadata
+            $MetaData = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-Framework")
+            $newPsboundParams = [ordered]@{}
+            If($null -ne $MetaData){
+                $param = $MetaData.Parameters.Keys
+                ForEach($p in $param.GetEnumerator()){
+                    If($PSBoundParameters.ContainsKey($p)){
+                        $newPsboundParams.Add($p,$PSBoundParameters[$p])
+                    }
+                }
+                #Add verbose, debug
+                $newPsboundParams.Add('Verbose',$O365Object.verbose)
+                $newPsboundParams.Add('Debug',$O365Object.debug)
+                $newPsboundParams.Add('InformationAction',$O365Object.InformationAction)
+                #Remove Ruleset if not present
+                If($null -eq $newPsboundParams.Item('RuleSet')){
+                    [void]$newPsboundParams.Remove('RuleSet');
+                }
+                #Remove RulesPath if not present
+                If($null -eq $newPsboundParams.Item('RulesPath')){
+                    [void]$newPsboundParams.Remove('RulesPath');
+                }
+                #Remove Ruleset when RulesPath is also selected
+                If($null -ne $newPsboundParams.Item('RuleSet') -and $null -ne $newPsboundParams.Item('RulesPath')){
+                    [void]$newPsboundParams.Remove('RuleSet');
+                }
+                #If none is present, add default path
+                If($newPsboundParams.Keys -notcontains "RuleSet" -and $newPsboundParams.Keys -notcontains "RulesPath"){
+                    [void]$newPsboundParams.Add('RulesPath',$O365Object.rulesPath);
+                }
+                #Execute command
+                Get-Framework @newPsboundParams
             }
             return
         }
@@ -525,10 +648,6 @@ Function Invoke-Monkey365{
             Remove-Variable -Name OutFolder -Scope Script -Force -ErrorAction Ignore
             #Remove returnData variable
             Remove-Variable -Name returnData -Scope Script -Force -ErrorAction Ignore
-            #Remove LogQueue
-            Remove-Variable -Name MonkeyLogQueue -Scope Global -ErrorAction Ignore -Force
-            #collect garbage
-            [System.GC]::GetTotalMemory($true) | out-null
         }
     }
 }
