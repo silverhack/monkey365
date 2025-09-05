@@ -45,7 +45,7 @@ Describe 'MonkeyJob' {
             }
             Start-MonkeyJob @p
             $Job = Get-MonkeyJob
-            $Job.Job.InnerJob | Should -BeOfType [System.Management.Automation.PowerShell]
+            $Job.Task | Should -BeOfType [System.Threading.Tasks.Task]
         }
     }
     It 'Get Result' {
