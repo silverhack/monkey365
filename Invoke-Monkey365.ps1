@@ -591,7 +591,7 @@ Function Invoke-Monkey365{
         }
         Write-Information @msg
         $MSAL = ("{0}{1}core/modules/monkeymsal" -f $O365Object.Localpath,[System.IO.Path]::DirectorySeparatorChar)
-        Import-Module $MSAL -Scope Global -Force -ArgumentList $O365Object.forceMSALDesktop
+        Import-Module $MSAL -Force -ArgumentList $O365Object.forceMSALDesktop -Scope Global
         ################### End Validate parameters #####################
         #Initialize authentication parameters
         Initialize-AuthenticationParam

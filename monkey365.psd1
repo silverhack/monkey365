@@ -12,7 +12,7 @@
 RootModule = 'monkey365.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.95.8'
+ModuleVersion = '0.96'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -30,7 +30,7 @@ CompanyName = 'monkey365'
 Copyright = '(c)2021 Juan Garrido. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Monkey365 provides a tool for security consultants to easily conduct not only Microsoft 365, but also Azure subscriptions and Azure Active Directory security configuration reviews.'
+Description = 'Monkey365 provides a tool that enables security consultants to efficiently perform security configuration reviews across Microsoft 365, Azure subscriptions, and Microsoft Entra ID.'
 
 # Minimum version of the Windows PowerShell engine required by this module
 PowerShellVersion = '3.0'
@@ -67,7 +67,7 @@ RequiredModules = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
 NestedModules = @(
-    #'core/modules/monkeyutils/monkeyutils.psm1',
+    #'core/modules/monkeyutils/monkeyutils.psm1'
     #'core/modules/monkeylogger/monkeylogger.psm1'
 )
 
@@ -82,7 +82,8 @@ FunctionsToExport = @(
     'Update-PsObject',
     'Get-AstFunction',
     'Get-ObjectPropertyByPath',
-    'Register-Monkey365Application'
+    'Register-Monkey365Application',
+    'Test-IsPsObject'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

@@ -9,15 +9,11 @@ $LocalizedDataParams = @{
 #Import localized data
 Import-LocalizedData @LocalizedDataParams;
 
-$msal_modules = @(
-    'core/modules/monkeycloudutils'
-)
-$msal_modules.ForEach({Import-Module ("{0}{1}{2}" -f $PSScriptRoot,[System.IO.Path]::DirectorySeparatorChar, $_.ToString()) -Scope Global -Force})
-
 $internal_modules = @(
     'core/modules/monkeylogger',
+    'core/modules/monkeycloudutils',
     'core/modules/monkeyutils',
-    'core/modules/monkeyhttpwebrequest'
+    'core/modules/monkeyhttpwebrequest',
     'core/modules/psmarkdig',
     'core/modules/monkeyhtml',
     'core/modules/monkeyjob',
@@ -61,37 +57,71 @@ New-Variable -Name m365_plugins -Value $m365_plugins -Scope Script -Force
 Get-MonkeyJob | Remove-MonkeyJob
 
 $internal_functions = @(
-    '/core/init',
-    '/core/utils',
-    '/core/collector',
-    '/core/api/auth',
-    '/core/html',
-    '/core/tasks',
-    '/core/analysis',
-    '/core/import',
-    '/core/output',
-    '/core/watcher',
-    '/core/api/entraid/msgraph',
-    '/core/tenant',
-    '/core/subscription',
-    '/core/api/azure',
-    '/core/api/entraid/graph/api',
-    '/core/api/entraid/graph/helpers/user',
-    '/core/api/azure/resourcemanagement/api',
-    '/core/api/azure/resourcemanagement/helpers/tenant',
-    '/core/api/m365/microsoftteams/',
-    '/core/api/m365/exchangeonline/'
-    '/core/api/m365/sharepointonline/',
-    '/core/api/m365/m365adminportal/'
+    'core/api/auth',
+    'core/tenant',
+    'core/collector',
+    'core/utils',
+    'core/subscription',
+    'core/init',
+    'core/import',
+    'core/output',
+    'core/tasks',
+    'core/watcher'
 )
-
 $all_files = $internal_functions.ForEach({
-    If([System.IO.Directory]::Exists(("{0}{1}" -f $PSScriptRoot,$_))){
-        [System.IO.Directory]::EnumerateFiles(("{0}{1}" -f $PSScriptRoot,$_),"*.ps1",[System.IO.SearchOption]::AllDirectories)
+    If([System.IO.Directory]::Exists(("{0}/{1}" -f $PSScriptRoot,$_))){
+        [System.IO.Directory]::EnumerateFiles(("{0}/{1}" -f $PSScriptRoot,$_),"*.ps1",[System.IO.SearchOption]::AllDirectories)
     }
 })
 $all_files = $all_files.Where({$_.EndsWith('ps1')})
 $all_files.ForEach({. $_})
+
+#Internal files
+$internal_files = @(
+    'core/api/azure/resourcemanagement/api/Get-MonkeyRMObject.ps1',
+    'core/api/azure/resourcemanagement/helpers/tenant/Get-MonkeyAzTenant.ps1',
+    'core/api/azure/resourcemanagement/helpers/subscription/Get-MonkeyAzSubscription.ps1',
+    'core/api/azure/resourcemanagement/helpers/subscription/Get-MonkeyAzClassicAdministrator.ps1',
+    'core/api/azure/resourcemanagement/helpers/rbac/Get-MonkeyAzIAMPermission.ps1',
+    'core/api/azure/resourcemanagement/helpers/rbac/Get-MonkeyAzRoleAssignmentForObject.ps1',
+    'core/api/azure/resourcemanagement/helpers/rbac/Get-MonkeyAzRoleDefinitionObject.ps1',
+    'core/api/azure/resourcemanagement/helpers/general/Get-MonkeyAzResourceGroup.ps1',
+    'core/api/azure/resourcemanagement/helpers/general/Get-MonkeyAzResource.ps1',
+    'core/api/azure/resourcemanagement/helpers/general/Get-MonkeyAzProviderOperation.ps1',
+    'core/api/entraid/msgraph/api/Get-MonkeyMSGraphObject.ps1',
+    'core/api/entraid/msgraph/helpers/general/Get-MonkeyMSGraphOrganization.ps1',
+    'core/api/entraid/msgraph/helpers/general/Get-MonkeyMSGraphSuscribedSku.ps1',
+    'core/api/entraid/msgraph/helpers/general/Get-MonkeyMSGraphSuscribedSku.ps1',
+    'core/api/entraid/msgraph/helpers/domain/Get-MonkeyMSGraphDomain.ps1',
+    'core/api/entraid/msgraph/helpers/general/Test-CanRequestGroup.ps1',
+    'core/api/entraid/msgraph/helpers/general/Test-CanRequestUser.ps1',
+    'core/api/entraid/msgraph/helpers/general/Get-MonkeyMSGraphDirectoryObjectById.ps1',
+    'core/api/entraid/msgraph/helpers/general/Get-MonkeyMSGraphProfilePhoto.ps1',
+    'core/api/entraid/msgraph/helpers/users/Get-MonkeyMSGraphUser.ps1',
+    'core/api/entraid/msgraph/helpers/groups/Get-MonkeyMSGraphGroup.ps1',
+    'core/api/entraid/msgraph/helpers/groups/Get-MonkeyMSGraphGroupTransitiveMember.ps1',
+    'core/api/entraid/msgraph/helpers/serviceprincipals/Get-MonkeyMSGraphAADServicePrincipal.ps1',
+    'core/api/entraid/msgraph/helpers/directoryrole/Get-MonkeyMSGraphEntraDirectoryRole.ps1',
+    'core/api/entraid/msgraph/helpers/directoryrole/Get-MonkeyMSGraphEntraRoleAssignment.ps1',
+    'core/api/entraid/msgraph/helpers/directoryrole/Get-MonkeyMSGraphObjectDirectoryRole.ps1',
+    'core/api/m365/exchangeonline/helpers/Get-PSExoModuleFile.ps1',
+    'core/api/m365/exchangeonline/api/ConvertTo-ExoRestCommand.ps1',
+    'core/api/m365/exchangeonline/api/Get-PSExoAdminApiObject.ps1',
+    'core/api/m365/microsoftteams/api/Get-MonkeyTeamsObject.ps1',
+    'core/api/m365/microsoftteams/helpers/service/Get-MonkeyTeamsServiceDiscovery.ps1',
+    'core/api/m365/microsoftteams/helpers/service/Test-TeamsConnection.ps1',
+    'core/api/m365/sharepointonline/csom/api/Invoke-MonkeyCSOMRequest.ps1',
+    'core/api/m365/sharepointonline/csom/api/Invoke-MonkeyCSOMDefaultRequest.ps1',
+    'core/api/m365/sharepointonline/csom/helpers/site/Get-MonkeyCSOMSite.ps1',
+    'core/api/m365/sharepointonline/csom/helpers/site/Get-MonkeyCSOMSiteProperty.ps1',
+    'core/api/m365/sharepointonline/utils/Test-IsUserSharepointAdministrator.ps1',
+    'core/api/m365/sharepointonline/utils/Test-SiteConnection.ps1',
+    'core/scan/Invoke-AzureScanner.ps1',
+    'core/scan/Invoke-EntraIDScanner.ps1',
+    'core/scan/Invoke-M365Scanner.ps1'
+)
+$internal_files = $internal_files.ForEach({[System.IO.FileInfo]::new(("{0}/{1}" -f $PSScriptRoot,$_))})
+$internal_files.ForEach({. $_.FullName})
 
 $monkey = ("{0}/Invoke-Monkey365.ps1" -f $PSScriptRoot)
 . $monkey
