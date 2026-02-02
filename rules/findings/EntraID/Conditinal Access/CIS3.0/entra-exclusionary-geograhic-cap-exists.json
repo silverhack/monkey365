@@ -1,161 +1,110 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Conditional Access",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure that an exclusionary Geographic Access Policy is considered",
-  "description": "
-				*CAUTION:* If these policies are created without first auditing and testing the result, misconfiguration can potentially lock out administrators or create undesired access issues. 
-				Conditional Access Policies can be used to block access from geographic locations that are deemed out-of-scope for your organization or application. The scope and variables for this policy should be carefully examined and defined.
-  ",
-  "rationale": "
-				Conditional Access, when used as a deny list for the tenant or subscription, is able to prevent ingress or egress of traffic to countries that are outside of the scope of interest (e.g.: customers, suppliers) or jurisdiction of an organization. This is an effective way to prevent unnecessary and long-lasting exposure to international threats such as APTs.
-  ",
-  "impact": "
-		Microsoft Entra ID P1 or P2 is required. Limiting access geographically will deny access to users that are traveling or working remotely in a different part of the world. A point-to site or site to site tunnel such as a VPN is recommended to address exceptions to geographic access policies.
-  ",
-  "remediation": {
-    "text": '
-		First, set up the conditions objects values before updating an existing conditional access policy or before creating a new one. You may need to use additional PowerShell cmdlets to retrieve specific IDs such as the `Get-MgIdentityConditionalAccessNamedLocation` which outputs the `Location IDs` for use with conditional access policies. 
-
-		```PowerShell
-		$conditions = New-Object -TypeName 
-		Microsoft.Open.MSGraph.Model.ConditionalAccessConditionSet 
-		 
-		$conditions.Applications = New-Object -TypeName 
-		Microsoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition 
-		$conditions.Applications.IncludeApplications = <"All" | "Office365" | "app 
-		ID" | @("app ID 1", "app ID 2", etc...> 
-		$conditions.Applications.ExcludeApplications = <"Office365" | "app ID" | 
-		@("app ID 1", "app ID 2", etc...)> 
-		 
-		$conditions.Users = New-Object -TypeName 
-		Microsoft.Open.MSGraph.Model.ConditionalAccessUserCondition 
-		$conditions.Users.IncludeUsers = <"All" | "None" | "GuestsOrExternalUsers" | 
-		"Specific User ID" | @("User ID 1", "User ID 2", etc.)> 
-		$conditions.Users.ExcludeUsers = <"GuestsOrExternalUsers" | "Specific User 
-		ID" | @("User ID 1", "User ID 2", etc.)> 
-		$conditions.Users.IncludeGroups = <"group ID" | "All" | @("Group ID 1", 
-		"Group ID 2", etc...)> 
-		$conditions.Users.ExcludeGroups = <"group ID" | @("Group ID 1", "Group ID 2", 
-		etc...)> 
-		$conditions.Users.IncludeRoles = <"Role ID" | "All" | @("Role ID 1", "Role ID 
-		2", etc...)> 
-		$conditions.Users.ExcludeRoles = <"Role ID" | @("Role ID 1", "Role ID 2", 
-		etc...)> 
-		 
-		$conditions.Locations = New-Object -TypeName 
-		Microsoft.Open.MSGraph.Model.ConditionalAccessLocationCondition 
-		$conditions.Locations.IncludeLocations = <"Location ID" | @("Location ID 1", 
-		"Location ID 2", etc...) > 
-		$conditions.Locations.ExcludeLocations = <"AllTrusted" | "Location ID" | 
-		@("Location ID 1", "Location ID 2", etc...)> 
-		 
-		 
-		$controls = New-Object -TypeName 
-		Microsoft.Open.MSGraph.Model.ConditionalAccessGrantControls 
-		$controls._Operator = "OR" 
-		$controls.BuiltInControls = "block" 
-		```
-
-		Next, update the existing conditional access policy with the condition set options configured with the previous commands.
-
-		```PowerShell
-		Update-MgIdentityConditionalAccessPolicy -PolicyId <policy ID> -Conditions $conditions -GrantControls $controls 
-		```
-
-		To create a new conditional access policy that complies with this best practice, run the following commands after creating the condition set above
-
-		```PowerShell
-		New-MgIdentityConditionalAccessPolicy -Name "Policy Name" -State <enabled|disabled> -Conditions $conditions -GrantControls $controls
-		```
-	',
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-location",
-    "https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-report-only",
-    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identity-management#im-7-restrict-resource-access-based-on--conditions"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "2.2.2",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": "",
-          "limit": null
-        },
-        "showGoToButton": "False",
-        "showModalButton": "False",
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Conditional Access",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure that an exclusionary Geographic Access Policy is considered",
+    "description": "\r\n\t\t\t\t*CAUTION:* If these policies are created without first auditing and testing the result, misconfiguration can potentially lock out administrators or create undesired access issues. \r\n\t\t\t\tConditional Access Policies can be used to block access from geographic locations that are deemed out-of-scope for your organization or application. The scope and variables for this policy should be carefully examined and defined.\r\n  ",
+    "rationale": "\r\n\t\t\t\tConditional Access, when used as a deny list for the tenant or subscription, is able to prevent ingress or egress of traffic to countries that are outside of the scope of interest (e.g.: customers, suppliers) or jurisdiction of an organization. This is an effective way to prevent unnecessary and long-lasting exposure to international threats such as APTs.\r\n  ",
+    "impact": "\r\n\t\tMicrosoft Entra ID P1 or P2 is required. Limiting access geographically will deny access to users that are traveling or working remotely in a different part of the world. A point-to site or site to site tunnel such as a VPN is recommended to address exceptions to geographic access policies.\r\n  ",
+    "remediation": {
+        "text": "\r\n\t\tFirst, set up the conditions objects values before updating an existing conditional access policy or before creating a new one. You may need to use additional PowerShell cmdlets to retrieve specific IDs such as the `Get-MgIdentityConditionalAccessNamedLocation` which outputs the `Location IDs` for use with conditional access policies. \r\n\r\n\t\t```PowerShell\r\n\t\t$conditions = New-Object -TypeName \r\n\t\tMicrosoft.Open.MSGraph.Model.ConditionalAccessConditionSet \r\n\t\t \r\n\t\t$conditions.Applications = New-Object -TypeName \r\n\t\tMicrosoft.Open.MSGraph.Model.ConditionalAccessApplicationCondition \r\n\t\t$conditions.Applications.IncludeApplications = \u003c\"All\" | \"Office365\" | \"app \r\n\t\tID\" | @(\"app ID 1\", \"app ID 2\", etc...\u003e \r\n\t\t$conditions.Applications.ExcludeApplications = \u003c\"Office365\" | \"app ID\" | \r\n\t\t@(\"app ID 1\", \"app ID 2\", etc...)\u003e \r\n\t\t \r\n\t\t$conditions.Users = New-Object -TypeName \r\n\t\tMicrosoft.Open.MSGraph.Model.ConditionalAccessUserCondition \r\n\t\t$conditions.Users.IncludeUsers = \u003c\"All\" | \"None\" | \"GuestsOrExternalUsers\" | \r\n\t\t\"Specific User ID\" | @(\"User ID 1\", \"User ID 2\", etc.)\u003e \r\n\t\t$conditions.Users.ExcludeUsers = \u003c\"GuestsOrExternalUsers\" | \"Specific User \r\n\t\tID\" | @(\"User ID 1\", \"User ID 2\", etc.)\u003e \r\n\t\t$conditions.Users.IncludeGroups = \u003c\"group ID\" | \"All\" | @(\"Group ID 1\", \r\n\t\t\"Group ID 2\", etc...)\u003e \r\n\t\t$conditions.Users.ExcludeGroups = \u003c\"group ID\" | @(\"Group ID 1\", \"Group ID 2\", \r\n\t\tetc...)\u003e \r\n\t\t$conditions.Users.IncludeRoles = \u003c\"Role ID\" | \"All\" | @(\"Role ID 1\", \"Role ID \r\n\t\t2\", etc...)\u003e \r\n\t\t$conditions.Users.ExcludeRoles = \u003c\"Role ID\" | @(\"Role ID 1\", \"Role ID 2\", \r\n\t\tetc...)\u003e \r\n\t\t \r\n\t\t$conditions.Locations = New-Object -TypeName \r\n\t\tMicrosoft.Open.MSGraph.Model.ConditionalAccessLocationCondition \r\n\t\t$conditions.Locations.IncludeLocations = \u003c\"Location ID\" | @(\"Location ID 1\", \r\n\t\t\"Location ID 2\", etc...) \u003e \r\n\t\t$conditions.Locations.ExcludeLocations = \u003c\"AllTrusted\" | \"Location ID\" | \r\n\t\t@(\"Location ID 1\", \"Location ID 2\", etc...)\u003e \r\n\t\t \r\n\t\t \r\n\t\t$controls = New-Object -TypeName \r\n\t\tMicrosoft.Open.MSGraph.Model.ConditionalAccessGrantControls \r\n\t\t$controls._Operator = \"OR\" \r\n\t\t$controls.BuiltInControls = \"block\" \r\n\t\t```\r\n\r\n\t\tNext, update the existing conditional access policy with the condition set options configured with the previous commands.\r\n\r\n\t\t```PowerShell\r\n\t\tUpdate-MgIdentityConditionalAccessPolicy -PolicyId \u003cpolicy ID\u003e -Conditions $conditions -GrantControls $controls \r\n\t\t```\r\n\r\n\t\tTo create a new conditional access policy that complies with this best practice, run the following commands after creating the condition set above\r\n\r\n\t\t```PowerShell\r\n\t\tNew-MgIdentityConditionalAccessPolicy -Name \"Policy Name\" -State \u003cenabled|disabled\u003e -Conditions $conditions -GrantControls $controls\r\n\t\t```\r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-location",
+        "https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-report-only",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identity-management#im-7-restrict-resource-access-based-on--conditions"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "2.2.2",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": ""
-      },
-      "status": {
-        "keyName": [
+        "query": [
+            
         ],
-      "message": "",
-      "defaultMessage": "Ensure that an exclusionary Geographic Access Policy is considered"
-      },
-      "properties": {
-      },
-      "onlyStatus": true
-    }
-  },
-  "idSuffix": "eid_exclusionary_geographic_cap_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": "",
+                    "limit": null
+                },
+                "showGoToButton": "False",
+                "showModalButton": "False",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": ""
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": "Ensure that an exclusionary Geographic Access Policy is considered"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraConditionalAccess"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "eid_exclusionary_geographic_cap_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1112"
 }
-

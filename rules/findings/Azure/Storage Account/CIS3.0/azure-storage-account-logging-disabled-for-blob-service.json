@@ -1,144 +1,138 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Storage Accounts",
-  "serviceName": "Storage",
-  "displayName": "Ensure Storage logging is Enabled for Blob Service for 'Read', 'Write', and 'Delete' requests",
-  "description": "The Storage Blob service provides scalable, cost-efficient object storage in the cloud. Storage Logging happens server-side and allows details for both successful and failed requests to be recorded in the storage account. These logs allow users to see the details of read, write, and delete operations against the blobs. Storage Logging log entries contain the following information about individual requests: timing information such as start time, end-to-end latency, and server latency; authentication details; concurrency information; and the sizes of the request and response messages.",
-  "rationale": "Storage Analytics logs contain detailed information about successful and failed requests to a storage service. This information can be used to monitor each individual request to a storage service for increased security or diagnostics. Requests are logged on a besteffort basis. Storage Analytics logging is not enabled by default for your storage account.",
-  "impact": "Being a level 2, enabling this setting can have a high impact on the cost of data storage used for logging more data per each request. Do not enable this without determining your need for this level of logging or forget to check in on data usage and projected cost.",
-  "remediation": {
-    "text": "
-			###### Remediate from Azure Portal 
-			1. Go to Storage Accounts. 
-			2. For each storage account, under Monitoring, click Diagnostics settings. 
-			3. Select the blob tab indented below the storage account. 
-			4. To create a new diagnostic setting, click + Add diagnostic setting. To update an existing diagnostic setting, click Edit setting on the diagnostic setting. 
-			5. Check the boxes next to StorageRead, StorageWrite, and StorageDelete. 
-			6. Select an appropriate destination. 
-			7. Click Save. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-		"https://docs.microsoft.com/en-us/rest/api/storageservices/about-storage-analytics-logging",
-		"https://docs.microsoft.com/en-us/cli/azure/storage/logging?view=azure-cli-latest",
-		"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "4.13",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_storage_accounts",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "diagnosticSettings.blob.logging.read",
-                "eq",
-                "False"
-              ],
-			  [
-                "diagnosticSettings.blob.logging.write",
-                "eq",
-                "False"
-              ],
-			  [
-                "diagnosticSettings.blob.logging.delete",
-                "eq",
-                "False"
-              ]
-            ],
-			"operator":"or"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-		"properties": {
-          "name": "Name",
-          "location": "Location",
-          "ResourceGroupName": "ResourceGroupName"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-			"*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "true",
-        "showModalButton": "true",
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Storage Accounts",
+    "serviceName": "Storage",
+    "displayName": "Ensure Storage logging is Enabled for Blob Service for \u0027Read\u0027, \u0027Write\u0027, and \u0027Delete\u0027 requests",
+    "description": "The Storage Blob service provides scalable, cost-efficient object storage in the cloud. Storage Logging happens server-side and allows details for both successful and failed requests to be recorded in the storage account. These logs allow users to see the details of read, write, and delete operations against the blobs. Storage Logging log entries contain the following information about individual requests: timing information such as start time, end-to-end latency, and server latency; authentication details; concurrency information; and the sizes of the request and response messages.",
+    "rationale": "Storage Analytics logs contain detailed information about successful and failed requests to a storage service. This information can be used to monitor each individual request to a storage service for increased security or diagnostics. Requests are logged on a besteffort basis. Storage Analytics logging is not enabled by default for your storage account.",
+    "impact": "Being a level 2, enabling this setting can have a high impact on the cost of data storage used for logging more data per each request. Do not enable this without determining your need for this level of logging or forget to check in on data usage and projected cost.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### Remediate from Azure Portal \r\n\t\t\t1. Go to Storage Accounts. \r\n\t\t\t2. For each storage account, under Monitoring, click Diagnostics settings. \r\n\t\t\t3. Select the blob tab indented below the storage account. \r\n\t\t\t4. To create a new diagnostic setting, click + Add diagnostic setting. To update an existing diagnostic setting, click Edit setting on the diagnostic setting. \r\n\t\t\t5. Check the boxes next to StorageRead, StorageWrite, and StorageDelete. \r\n\t\t\t6. Select an appropriate destination. \r\n\t\t\t7. Click Save. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/rest/api/storageservices/about-storage-analytics-logging",
+        "https://docs.microsoft.com/en-us/cli/azure/storage/logging?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "4.13",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_storage_accounts",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "diagnosticSettings.blob.logging.read",
+                                "eq",
+                                "False"
+                            ],
+                            [
+                                "diagnosticSettings.blob.logging.write",
+                                "eq",
+                                "False"
+                            ],
+                            [
+                                "diagnosticSettings.blob.logging.delete",
+                                "eq",
+                                "False"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "storage_accounts_logging_disabled_for_blob",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "Location",
+                    "ResourceGroupName": "ResourceGroupName"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "true",
+                "showModalButton": "true",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "storage_accounts_logging_disabled_for_blob",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_186"
 }
-

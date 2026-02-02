@@ -1,138 +1,138 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Azure Disks",
-  "serviceName": "Storage",
-  "displayName": "Ensure that VHDs are Encrypted",
-  "description": "
-		*NOTE* : This is a legacy recommendation. Managed Disks are encrypted by default and recommended for all new VM implementations. 
-		VHD (Virtual Hard Disks) are stored in blob storage and are the old-style disks that were attached to Virtual Machines. The blob VHD was then leased to the VM. By default, storage accounts are not encrypted, and Microsoft Defender will then recommend that the OS disks should be encrypted. Storage accounts can be encrypted as a whole using PMK or CMK. This should be turned on for storage accounts containing VHDs.
-  ",
-  "rationale": "While it is recommended to use managed disks that are encrypted by default, `legacy` disk that may for a number of reasons need to be left as VHD\u0027s should also be encrypted to protect the data content. These `legacy` VHD\u0027s are not encrypted by default",
-  "impact": "Depending on how the encryption is implemented will change the size of the impact, if provider managed keys (PMK) are utilised the impact is relatively low, but processes need to be put in place to regularly rotate the keys. If Customer managed keys (CMK) are utilised a key management process needs to be implemented to store and manage key rotation and thus the impact is medium to high depending on user maturity with key management.",
-  "remediation": {
-    "text": null,
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-overview",
-    "https://docs.microsoft.com/en-us/azure/governance/policy/overview"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "8.9",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-	"Legacy"
-  ],
-  "rule": {
-    "path": "az_managed_disks",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "osDisk.disk.properties.osType",
-                "ne",
-                ""
-              ],
-              [
-                "osDisk.isEncrypted",
-                "ne",
-                "true"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "name": "Disk Name",
-          "location": "Location",
-          "skuname": "SKU Name",
-          "properties.osType": "OS Type",
-          "os_disk_encryption": "Encryption"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "name",
-            "location",
-            "skuname",
-            "properties.osType",
-            "os_disk_encryption"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Azure Disks",
+    "serviceName": "Storage",
+    "displayName": "Ensure that VHDs are Encrypted",
+    "description": "\r\n\t\t*NOTE* : This is a legacy recommendation. Managed Disks are encrypted by default and recommended for all new VM implementations. \r\n\t\tVHD (Virtual Hard Disks) are stored in blob storage and are the old-style disks that were attached to Virtual Machines. The blob VHD was then leased to the VM. By default, storage accounts are not encrypted, and Microsoft Defender will then recommend that the OS disks should be encrypted. Storage accounts can be encrypted as a whole using PMK or CMK. This should be turned on for storage accounts containing VHDs.\r\n  ",
+    "rationale": "While it is recommended to use managed disks that are encrypted by default, `legacy` disk that may for a number of reasons need to be left as VHD\u0027s should also be encrypted to protect the data content. These `legacy` VHD\u0027s are not encrypted by default",
+    "impact": "Depending on how the encryption is implemented will change the size of the impact, if provider managed keys (PMK) are utilised the impact is relatively low, but processes need to be put in place to regularly rotate the keys. If Customer managed keys (CMK) are utilised a key management process needs to be implemented to store and manage key rotation and thus the impact is medium to high depending on user maturity with key management.",
+    "remediation": {
+        "text": null,
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-overview",
+        "https://docs.microsoft.com/en-us/azure/governance/policy/overview"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "8.9",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        "Legacy"
+    ],
+    "rule": {
+        "path": "az_managed_disks",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "osDisk.disk.properties.osType",
+                                "ne",
+                                ""
+                            ],
+                            [
+                                "osDisk.isEncrypted",
+                                "ne",
+                                "true"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_os_disk_encryption_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Disk Name",
+                    "location": "Location",
+                    "skuname": "SKU Name",
+                    "properties.osType": "OS Type",
+                    "os_disk_encryption": "Encryption"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "name",
+                        "location",
+                        "skuname",
+                        "properties.osType",
+                        "os_disk_encryption"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_os_disk_encryption_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_210"
 }
-

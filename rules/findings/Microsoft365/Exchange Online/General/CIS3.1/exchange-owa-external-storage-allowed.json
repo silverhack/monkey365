@@ -1,122 +1,127 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Exchange Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure additional storage providers are restricted in Outlook on the web",
-  "description": "This setting allows users to open certain external files while working in Outlook on the web. If allowed, keep in mind that Microsoft doesn't control the use terms or privacy policies of those third-party services.",
-  "rationale": "By default additional storage providers are allowed in Outlook on the Web (such as Box, Dropbox, Facebook, Google Drive, OneDrive Personal, etc.). This could lead to information leakage and additional risk of infection from organizational non-trusted storage providers. Restricting this will inherently reduce risk as it will narrow opportunities for infection and data leakage.",
-  "impact": "Impact associated with this change is highly dependent upon current practices in the tenant. If users do not use other storage providers, then minimal impact is likely. However, if users do regularly utilize providers outside of the tenant this will affect their ability to continue to do so.",
-  "remediation": {
-    "text": "###### To disable external storage providers, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-EXOPSSession`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tSet-OwaMailboxPolicy -Identity OwaMailboxPolicy-Default -AdditionalStorageProvidersAvailable $false\r\n\t\t\t\t\t```\r\n\t\t\t\t\t3. Run the following Powershell command to verify that the value is now False:\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tGet-OwaMailboxPolicy | Format-Table Name, AdditionalStorageProvidersAvailable\r\n\t\t\t\t\t```",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/powershell/module/exchange/client-access/set-owamailboxpolicy?view=exchange-ps"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "6.5.3",
-	  "profile": "E3 Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "o365_exo_owa_mbox_policy",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "AdditionalStorageProvidersAvailable",
-                "eq",
-                "true"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "Name": "Name",
-          "OrganizationalUnitRoot": "Organization",
-          "ConditionalAccessPolicy": "Conditional Access Policy",
-          "AdditionalStorageProvidersAvailable": "Additional Storage Providers"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure additional storage providers are restricted in Outlook on the web",
+    "description": "This setting allows users to open certain external files while working in Outlook on the web. If allowed, keep in mind that Microsoft doesn\u0027t control the use terms or privacy policies of those third-party services.",
+    "rationale": "By default additional storage providers are allowed in Outlook on the Web (such as Box, Dropbox, Facebook, Google Drive, OneDrive Personal, etc.). This could lead to information leakage and additional risk of infection from organizational non-trusted storage providers. Restricting this will inherently reduce risk as it will narrow opportunities for infection and data leakage.",
+    "impact": "Impact associated with this change is highly dependent upon current practices in the tenant. If users do not use other storage providers, then minimal impact is likely. However, if users do regularly utilize providers outside of the tenant this will affect their ability to continue to do so.",
+    "remediation": {
+        "text": "###### To disable external storage providers, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-EXOPSSession`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tSet-OwaMailboxPolicy -Identity OwaMailboxPolicy-Default -AdditionalStorageProvidersAvailable $false\r\n\t\t\t\t\t```\r\n\t\t\t\t\t3. Run the following Powershell command to verify that the value is now False:\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tGet-OwaMailboxPolicy | Format-Table Name, AdditionalStorageProvidersAvailable\r\n\t\t\t\t\t```",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/powershell/module/exchange/client-access/set-owamailboxpolicy?view=exchange-ps"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "6.5.3",
+            "profile": "E3 Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_exo_owa_mbox_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "AdditionalStorageProvidersAvailable",
+                                "eq",
+                                "true"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "Ensure external storage providers available in Outlook on the Web are restricted",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_owa_additional_storage_allowed",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "Name": "Name",
+                    "OrganizationalUnitRoot": "Organization",
+                    "ConditionalAccessPolicy": "Conditional Access Policy",
+                    "AdditionalStorageProvidersAvailable": "Additional Storage Providers"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure external storage providers available in Outlook on the Web are restricted",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "Identity",
+                "resourceId": "ExchangeObjectId",
+                "resourceType": "ExchangeMailBoxPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_owa_additional_storage_allowed",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"DistinguishedName",
+		"ExchangeObjectId.Guid"		
+    ],
+    "id": "microsoft365_2121"
 }
-

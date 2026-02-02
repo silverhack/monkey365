@@ -1,116 +1,108 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Conditional Access",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Enable Azure AD Identity Protection sign-in risk policies",
-  "description": "
-		When a Conditional Access policy targets the Microsoft Admin Portals cloud app, the policy is enforced for tokens issued to application IDs of the following Microsoft administrative portals: 
-		* Azure portal 
-		* Exchange admin center 
-		* Microsoft 365 admin center 
-		* Microsoft 365 Defender portal 
-		* Microsoft Entra admin center 
-		* Microsoft Intune admin center 
-		* Microsoft Purview compliance portal 
-		* Power Platform admin center 
-		* SharePoint admin center 
-		* Microsoft Teams admin center 
-		Microsoft Admin Portals should be restricted to specific pre-determined administrative roles.
-  ",
-  "rationale": "By default, users can sign into the various portals but are restricted by what they can view. Blocking sign-in to Microsoft Admin Portals enhances security of sensitive data by restricting access to privileged users. This mitigates potential exposure due to administrative errors or software vulnerabilities introduced by a CSP, as well as acting as a defense in depth measure against security breaches.",
-  "impact": "PIM functionality will be impacted unless non-privileged users are first assigned to a permanent group or role that is excluded from this policy. When attempting to checkout a role in the Entra ID PIM area they will receive the message `You don't have access to this Your sign-in was successful but you don't have permission to access this resource`.",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-		"https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "5.2.2.8",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": "true",
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Conditional Access",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Enable Azure AD Identity Protection sign-in risk policies",
+    "description": "\r\n\t\tWhen a Conditional Access policy targets the Microsoft Admin Portals cloud app, the policy is enforced for tokens issued to application IDs of the following Microsoft administrative portals: \r\n\t\t* Azure portal \r\n\t\t* Exchange admin center \r\n\t\t* Microsoft 365 admin center \r\n\t\t* Microsoft 365 Defender portal \r\n\t\t* Microsoft Entra admin center \r\n\t\t* Microsoft Intune admin center \r\n\t\t* Microsoft Purview compliance portal \r\n\t\t* Power Platform admin center \r\n\t\t* SharePoint admin center \r\n\t\t* Microsoft Teams admin center \r\n\t\tMicrosoft Admin Portals should be restricted to specific pre-determined administrative roles.\r\n  ",
+    "rationale": "By default, users can sign into the various portals but are restricted by what they can view. Blocking sign-in to Microsoft Admin Portals enhances security of sensitive data by restricting access to privileged users. This mitigates potential exposure due to administrative errors or software vulnerabilities introduced by a CSP, as well as acting as a defense in depth measure against security breaches.",
+    "impact": "PIM functionality will be impacted unless non-privileged users are first assigned to a permanent group or role that is excluded from this policy. When attempting to checkout a role in the Entra ID PIM area they will receive the message `You don\u0027t have access to this Your sign-in was successful but you don\u0027t have permission to access this resource`.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "5.2.2.8",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
+        "query": [
+            
         ],
-      "message": "Ensure admin center access is limited to administrative roles",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": "displayName",
-        "resourceId": "id",
-        "resourceType": "@odata.context"
-      },
-      "onlyStatus": true
-    }
-  },
-  "idSuffix": "aad_cap_admin_center_apps_not_enabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure admin center access is limited to administrative roles",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraConditionalAccess"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "aad_cap_admin_center_apps_not_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1115"
 }
-

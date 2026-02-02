@@ -1,127 +1,130 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Subscription Security",
-  "serviceName": "Subscription",
-  "displayName": "Ensure 'Additional email addresses' is Configured with a Security Contact Email",
-  "description": "Microsoft Defender for Cloud emails the subscription owners whenever a high-severity alert is triggered for their subscription. You should provide a security contact email address as an additional email address.",
-  "rationale": "Microsoft Defender for Cloud emails the Subscription Owner to notify them about security alerts. Adding your Security Contact's email address to the 'Additional email addresses' field ensures that your organization's Security Team is included in these alerts. This ensures that the proper people are aware of any potential compromise in order to mitigate the risk in a timely fashion.",
-  "impact": null,
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Navigate to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Click on Pricing \u0026 settings\r\n\t\t\t\t\t3. Click on the appropriate Management Group, Subscription, or Workspace\r\n\t\t\t\t\t4. Click on `Email notifications`\r\n\t\t\t\t\t5. Enter a valid security contact email address (or multiple addresses separated by\tcommas) in the `Additional email addresses` field\r\n\t\t\t\t\t6. Click Save",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details",
-    "https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/list",
-    "https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/update",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "3.1.13",
-	  "profile":"Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_security_contacts",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "email.Length",
-                "eq",
-                0
-              ]
-            ]
-          }
-        ]
-      }
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "name": "Name",
-          "email": "Email",
-          "phone": "Phone",
-          "alertNotifications.state": "Alert notification status",
-          "alertNotifications.minimalSeverity": "Minimal severity alert"
-        },
-        "expandObject": null
-      },
-      "table": "asList",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-        "Email"
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": null,
-        "showModalButton": null,
-        "directLink": null
-      }
+    ],
+    "provider": "Azure",
+    "serviceType": "Subscription Security",
+    "serviceName": "Subscription",
+    "displayName": "Ensure \u0027Additional email addresses\u0027 is Configured with a Security Contact Email",
+    "description": "Microsoft Defender for Cloud emails the subscription owners whenever a high-severity alert is triggered for their subscription. You should provide a security contact email address as an additional email address.",
+    "rationale": "Microsoft Defender for Cloud emails the Subscription Owner to notify them about security alerts. Adding your Security Contact\u0027s email address to the \u0027Additional email addresses\u0027 field ensures that your organization\u0027s Security Team is included in these alerts. This ensures that the proper people are aware of any potential compromise in order to mitigate the risk in a timely fashion.",
+    "impact": null,
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. Navigate to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Click on Pricing \u0026 settings\r\n\t\t\t\t\t3. Click on the appropriate Management Group, Subscription, or Workspace\r\n\t\t\t\t\t4. Click on `Email notifications`\r\n\t\t\t\t\t5. Enter a valid security contact email address (or multiple addresses separated by\tcommas) in the `Additional email addresses` field\r\n\t\t\t\t\t6. Click Save",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/security-center/security-center-provide-security-contact-details",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/list",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/securitycontacts/update",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "3.1.13",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_security_contacts",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "email.Length",
+                                "eq",
+                                0
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "security_contact_mail_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "email": "Email",
+                    "phone": "Phone",
+                    "alertNotifications.state": "Alert notification status",
+                    "alertNotifications.minimalSeverity": "Minimal severity alert"
+                },
+                "expandObject": null
+            },
+            "table": "asList",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                "Email"
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": null,
+                "showModalButton": null,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "security_contact_mail_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_200"
 }
-

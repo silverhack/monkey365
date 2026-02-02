@@ -1,160 +1,144 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Microsoft Teams",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure 'external access' is restricted in the Teams admin center",
-  "description": "
-		This policy setting controls chat with external unmanaged Skype and Teams users. Users in the organization will not be searchable by unmanaged Skype or Teams users and will have to initiate all communications with unmanaged users. 
-		**Note** : As of December 2021, the default for Teams external communication is set to `People in my organization can communicate with Teams users whose accounts aren't managed by an organization`. 
-		**Note #2** : Skype for business is deprecated as of July 31, 2021, although these settings may still be valid for a period of time. See the link in the reference section for more information. 
-  ",
-  "rationale": "
-		Allowing users to communicate with Skype or Teams users outside of an organization presents a potential security threat as external users can interact with organization users over Skype for Business or Teams. While legitimate, productivity-improving scenarios exist, they are outweighed by the risk of data loss, phishing, and social engineering attacks against organization users via Teams. Some real-world attacks and exploits delivered via Teams over external access channels include: 
-		* DarkGate malware 
-		* Social engineering / Phishing attacks by `Midnight Blizzard` 
-		* GIFShell 
-		* Username enumeration 
-  ",
-  "impact": "
-		The impact of disabling external access to Teams and Skype for an organization is highly dependent on current usage practices. If users infrequently communicate with external parties using these channels, the impact is likely to be minimal. However, if users regularly use Teams and Skype for client communication, the impact could be significant. Therefore, before disabling external access, users should be notified, and alternate communication mechanisms should be identified to ensure continuity of communication. 
-		**Note** : Chat with external unmanaged Teams users isn't available in GCC, GCC High, or DOD deployments, or in private cloud environments. 
-  ",
-  "remediation": {
-    "text": "
-			###### To remediate using the UI: 
-			1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com/. 
-			2. Click to expand Users select External access. 
-			3. Under Teams and Skype for Business users in external organizations Select Block all external domains o If the organization's policy allows select any allowed external domains. 
-			4. Under Teams accounts not managed by an organization move the slider to Off. 
-			5. Under Skype users move the slider is to Off. 
-			6. Click Save. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/skypeforbusiness/set-up-skype-for-business-online/set-up-skype-for-business-online",
-	"https://learn.microsoft.com/en-US/microsoftteams/manage-external-access?WT.mc_id=TeamsAdminCenterCSH",
-	"https://cybersecurity.att.com/blogs/security-essentials/darkgate-malware-delivered-via-microsoft-teams-detection-and-response",
-	"https://www.microsoft.com/en-us/security/blog/2023/08/02/midnight-blizzard-conducts-targeted-social-engineering-over-microsoft-teams/",
-	"https://www.bitdefender.com/blog/hotforsecurity/gifshell-attack-lets-hackers-create-reverse-shell-through-microsoft-teams-gifs/"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "8.2.1",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "o365_teams_skype_federation_settings",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "AllowTeamsConsumer",
-                "eq",
-                "true"
-              ],
-			  [
-                "AllowPublicUsers",
-                "eq",
-                "true"
-              ],
-			  [
-                "AllowFederatedUsers",
-                "eq",
-                "true"
-              ]
-            ],
-			"operator":"or"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-		"properties": {
-          "Identity": "Identity",
-          "AllowTeamsConsumer": "Allow Teams Consumer",
-          "AllowPublicUsers": "Allow Public Users",
-		  "AllowFederatedUsers": "Allow Federated Users",
-		  "AllowedDomains": "Allowed Domains"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Microsoft Teams",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure \u0027external access\u0027 is restricted in the Teams admin center",
+    "description": "\r\n\t\tThis policy setting controls chat with external unmanaged Skype and Teams users. Users in the organization will not be searchable by unmanaged Skype or Teams users and will have to initiate all communications with unmanaged users. \r\n\t\t**Note** : As of December 2021, the default for Teams external communication is set to `People in my organization can communicate with Teams users whose accounts aren\u0027t managed by an organization`. \r\n\t\t**Note #2** : Skype for business is deprecated as of July 31, 2021, although these settings may still be valid for a period of time. See the link in the reference section for more information. \r\n  ",
+    "rationale": "\r\n\t\tAllowing users to communicate with Skype or Teams users outside of an organization presents a potential security threat as external users can interact with organization users over Skype for Business or Teams. While legitimate, productivity-improving scenarios exist, they are outweighed by the risk of data loss, phishing, and social engineering attacks against organization users via Teams. Some real-world attacks and exploits delivered via Teams over external access channels include: \r\n\t\t* DarkGate malware \r\n\t\t* Social engineering / Phishing attacks by `Midnight Blizzard` \r\n\t\t* GIFShell \r\n\t\t* Username enumeration \r\n  ",
+    "impact": "\r\n\t\tThe impact of disabling external access to Teams and Skype for an organization is highly dependent on current usage practices. If users infrequently communicate with external parties using these channels, the impact is likely to be minimal. However, if users regularly use Teams and Skype for client communication, the impact could be significant. Therefore, before disabling external access, users should be notified, and alternate communication mechanisms should be identified to ensure continuity of communication. \r\n\t\t**Note** : Chat with external unmanaged Teams users isn\u0027t available in GCC, GCC High, or DOD deployments, or in private cloud environments. \r\n  ",
+    "remediation": {
+        "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com/. \r\n\t\t\t2. Click to expand Users select External access. \r\n\t\t\t3. Under Teams and Skype for Business users in external organizations Select Block all external domains o If the organization\u0027s policy allows select any allowed external domains. \r\n\t\t\t4. Under Teams accounts not managed by an organization move the slider to Off. \r\n\t\t\t5. Under Skype users move the slider is to Off. \r\n\t\t\t6. Click Save. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/skypeforbusiness/set-up-skype-for-business-online/set-up-skype-for-business-online",
+        "https://learn.microsoft.com/en-US/microsoftteams/manage-external-access?WT.mc_id=TeamsAdminCenterCSH",
+        "https://cybersecurity.att.com/blogs/security-essentials/darkgate-malware-delivered-via-microsoft-teams-detection-and-response",
+        "https://www.microsoft.com/en-us/security/blog/2023/08/02/midnight-blizzard-conducts-targeted-social-engineering-over-microsoft-teams/",
+        "https://www.bitdefender.com/blog/hotforsecurity/gifshell-attack-lets-hackers-create-reverse-shell-through-microsoft-teams-gifs/"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "8.2.1",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_teams_skype_federation_settings",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "AllowTeamsConsumer",
+                                "eq",
+                                "true"
+                            ],
+                            [
+                                "AllowPublicUsers",
+                                "eq",
+                                "true"
+                            ],
+                            [
+                                "AllowFederatedUsers",
+                                "eq",
+                                "true"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure 'external access' is restricted in the Teams admin center",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "teams_external_access_not_restricted",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "Identity": "Identity",
+                    "AllowTeamsConsumer": "Allow Teams Consumer",
+                    "AllowPublicUsers": "Allow Public Users",
+                    "AllowFederatedUsers": "Allow Federated Users",
+                    "AllowedDomains": "Allowed Domains"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure \u0027external access\u0027 is restricted in the Teams admin center",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": "TeamsTenantFederationSettings"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "teams_external_access_not_restricted",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"Identity",
+		"ConfigId",
+		"Key.SchemaId.XName.name"
+    ],
+    "id": "microsoft365_2169"
 }
-

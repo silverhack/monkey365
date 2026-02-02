@@ -1,0 +1,139 @@
+{
+    "args": [
+        
+    ],
+    "provider": "Microsoft365",
+    "serviceType": "Microsoft Teams",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure communication with unmanaged Teams users is disabled",
+    "description": "This policy setting controls chats and meetings with external unmanaged Teams users (those not managed by an organization, such as Microsoft Teams (free)).\r\nThe recommended state is: `People in my organization can communicate with unmanaged Teams accounts` set to `Off`.",
+    "rationale": "Allowing users to communicate with unmanaged Teams users presents a potential security threat as little effort is required by threat actors to gain access to a trial or free Microsoft Teams account.\r\nSome real-world attacks and exploits delivered via Teams over external access channels include:
+		* DarkGate malware 
+		* Social engineering / Phishing attacks by `Midnight Blizzard`
+		* GIFShell 
+		* Username enumeration 
+	",
+    "impact": "Users will be unable to communicate with Teams users who are not managed by an organization.\r\nOrganizations may choose create additional policies for specific groups needing to communicating with unmanaged external users.\r\n*Note:* The settings that govern chats and meetings with external unmanaged Teams users aren't available in GCC, GCC High, or DOD deployments, or in private cloud environments.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com. \r\n\t\t\t2. Click to expand Users select External Access. \r\n\t\t\t3. Click Global (Org-wide default). \r\n\t\t\t4. Ensure `People in my organization can communicate with unmanaged Teams accounts` is set to `Off`.\r\n\t\t\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/microsoftteams/trusted-organizations-external-meetings-chat?tabs=organization-settings",
+		"https://www.microsoft.com/en-us/security/blog/2023/08/02/midnight-blizzard-conducts-targeted-social-engineering-over-microsoft-teams/",
+		"https://www.bitdefender.com/en-us/blog/hotforsecurity/gifshell-attack-lets-hackers-create-reverse-shell-through-microsoft-teams-gifs"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "8.2.2",
+            "profile": "E3 Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_teams_external_access_policies",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "Identity",
+                                "eq",
+                                "Global"
+                            ],
+                            [
+                                "EnableTeamsConsumerAccess",
+                                "eq",
+                                "true"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "ConfigId": "Config Id",
+                    "Identity": "Identity",
+                    "EnableTeamsConsumerAccess": "Allow Communication With Unmanaged Teams users"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure communication with unmanaged Teams users is disabled",
+                "defaultMessage": "Ensure communication with unmanaged Teams users is disabled"
+            },
+            "properties": {
+                "resourceName": "Identity",
+                "resourceId": "ConfigId",
+                "resourceType": "TeamsExternalAccessPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "teams_communication_unmanaged_teams_users_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"ConfigId",
+		"Identity"
+    ],
+    "id": "microsoft365_2197"
+}

@@ -1,129 +1,132 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Defender for Cloud",
-  "serviceName": "Subscription",
-  "displayName": "Ensure That Microsoft Defender for Open-Source Relational Databases Is Set To 'On'",
-  "description": "Turning on Microsoft Defender for Open-source relational databases enables threat detection for Open-source relational databases, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
-  "rationale": "Enabling Microsoft Defender for Open-source relational databases allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
-  "impact": "Turning on Microsoft Defender for Open-source relational databases incurs an additional cost per resource.",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. Review the chosen pricing tier. For the `Open-source relational databases` resource type the radial button should be set to `On`\r\n\t\t\t\t\t6. Select `Save`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql?view=azuresql",
-    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-enable-database-protections",
-    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "3.1.7.2",
-	  "profile":"Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_pricing_tier",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "name",
-                "eq",
-                "OpenSourceRelationalDatabases"
-              ],
-              [
-                "properties.pricingTier",
-                "eq",
-                "Free"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      }
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "name": "Resource Name",
-          "properties.pricingTier": "Pricing Tier"
-        },
-        "expandObject": null
-      },
-      "table": "asList",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-        "Pricing Tier"
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": null,
-        "showModalButton": null,
-        "directLink": null
-      }
+    ],
+    "provider": "Azure",
+    "serviceType": "Defender for Cloud",
+    "serviceName": "Subscription",
+    "displayName": "Ensure That Microsoft Defender for Open-Source Relational Databases Is Set To \u0027On\u0027",
+    "description": "Turning on Microsoft Defender for Open-source relational databases enables threat detection for Open-source relational databases, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
+    "rationale": "Enabling Microsoft Defender for Open-source relational databases allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
+    "impact": "Turning on Microsoft Defender for Open-source relational databases incurs an additional cost per resource.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. Review the chosen pricing tier. For the `Open-source relational databases` resource type the radial button should be set to `On`\r\n\t\t\t\t\t6. Select `Save`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql?view=azuresql",
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-enable-database-protections",
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "3.1.7.2",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_pricing_tier",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "name",
+                                "eq",
+                                "OpenSourceRelationalDatabases"
+                            ],
+                            [
+                                "properties.pricingTier",
+                                "eq",
+                                "Free"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_defender_missing_osrd_protection",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Resource Name",
+                    "properties.pricingTier": "Pricing Tier"
+                },
+                "expandObject": null
+            },
+            "table": "asList",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                "Pricing Tier"
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": null,
+                "showModalButton": null,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_defender_missing_osrd_protection",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_153"
 }
-

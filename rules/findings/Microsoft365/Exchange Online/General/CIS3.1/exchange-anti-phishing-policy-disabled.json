@@ -1,127 +1,250 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Exchange Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure that an anti-phishing policy has been created",
-  "description": "By default, Microsoft 365 includes built-in features that help protect your users from phishing attacks. Set up anti-phishing polices to increase this protection, for example by refining settings to better detect and prevent impersonation and spoofing attacks. The default policy applies to all users within the organization, and is a single view where you can fine-tune anti-phishing protection. Custom policies can be created and configured for specific users, groups or domains within the organization and will take precedence over the default policy for the scoped users.",
-  "rationale": "Protects users from phishing attacks (like impersonation and spoofing), and uses safety tips to warn users about potentially harmful messages.",
-  "impact": "Turning on Anti-Phishing should not cause an impact, messages will be displayed when applicable.",
-  "remediation": {
-    "text": "###### To set the anti-phishing policy, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Select Security.\r\n\t\t\t\t\t2. Expand `Threat Management`then select `Policy`.\r\n\t\t\t\t\t3. Select `Anti-phishing`.\r\n\t\t\t\t\t4. Click `Create` to create an anti-phishing policy.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To create an anti-phishing policy, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tNew-AntiPhishPolicy -Name \"Microsoft 365 AntiPhish Policy\"\r\n\t\t\t\t\t```",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/set-up-anti-phishing-policies?view=o365-worldwide",
-    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/configure-mdo-anti-phishing-policies?view=o365-worldwide"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "2.1.7",
-	  "profile": "E5 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "o365_exo_anti_phishing_info",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "isEnabled",
-                "ne",
-                "true"
-              ],
-              [
-                "policyName",
-                "eq",
-                "Office365 AntiPhish Default"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure that an anti-phishing policy has been created",
+    "description": "By default, Microsoft 365 includes built-in features that help protect your users from phishing attacks. Set up anti-phishing polices to increase this protection, for example by refining settings to better detect and prevent impersonation and spoofing attacks. The default policy applies to all users within the organization, and is a single view where you can fine-tune anti-phishing protection. Custom policies can be created and configured for specific users, groups or domains within the organization and will take precedence over the default policy for the scoped users.",
+    "rationale": "Protects users from phishing attacks (like impersonation and spoofing), and uses safety tips to warn users about potentially harmful messages.",
+    "impact": "Turning on Anti-Phishing should not cause an impact, messages will be displayed when applicable.",
+    "remediation": {
+        "text": "###### To set the anti-phishing policy, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Select Security.\r\n\t\t\t\t\t2. Expand `Threat Management`then select `Policy`.\r\n\t\t\t\t\t3. Select `Anti-phishing`.\r\n\t\t\t\t\t4. Click `Create` to create an anti-phishing policy.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To create an anti-phishing policy, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tNew-AntiPhishPolicy -Name \"Microsoft 365 AntiPhish Policy\"\r\n\t\t\t\t\t```",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/set-up-anti-phishing-policies?view=o365-worldwide",
+        "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/configure-mdo-anti-phishing-policies?view=o365-worldwide"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "2.1.7",
+            "profile": "E5 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_exo_anti_phishing_info",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "isDefault",
+                                "ne",
+                                "true"
+                            ],
+                            [
+                                "isEnabled",
+                                "eq",
+                                "true"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "policy.PhishThresholdLevel",
+                                "ge",
+                                "3"
+                            ],
+                            [
+                                "policy.EnableTargetedUserProtection",
+                                "eq",
+                                "True"
+                            ],
+                            [
+                                "policy.EnableOrganizationDomainsProtection",
+                                "eq",
+                                "True"
+                            ],
+							[
+                                "policy.EnableMailboxIntelligence",
+                                "eq",
+                                "True"
+                            ],
+							[
+                                "policy.EnableMailboxIntelligenceProtection",
+                                "eq",
+                                "True"
+                            ],
+							[
+                                "policy.EnableSpoofIntelligence",
+                                "eq",
+                                "True"
+                            ],
+							[
+                                "policy.TargetedUserProtectionAction",
+                                "eq",
+                                "Quarantine"
+                            ],
+							[
+                                "policy.TargetedDomainProtectionAction",
+                                "eq",
+                                "Quarantine"
+                            ],
+							[
+                                "policy.MailboxIntelligenceProtectionAction",
+                                "eq",
+                                "Quarantine"
+                            ],
+							[
+                                "policy.EnableFirstContactSafetyTips",
+                                "eq",
+                                "True"
+                            ],
+							[
+                                "policy.EnableSimilarUsersSafetyTips",
+                                "eq",
+                                "True"
+                            ],
+							[
+                                "policy.EnableSimilarDomainsSafetyTips",
+                                "eq",
+                                "True"
+                            ],
+							[
+                                "policy.EnableUnusualCharactersSafetyTips",
+                                "eq",
+                                "True"
+                            ],
+							[
+                                "policy.TargetedUsersToProtect.Count",
+                                "gt",
+                                "0"
+                            ],
+							[
+                                "policy.HonorDmarcPolicy",
+                                "eq",
+                                "True"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure that an anti-phishing policy has been created",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_anti_phishing_policy_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "policy.Name": "Name",
+                    "isEnabled": "Enabled",
+					"isDefault": "Default",
+                    "policy.PhishThresholdLevel": "PhishThresholdLevel",
+                    "policy.EnableTargetedUserProtection": "EnableTargetedUserProtection",
+                    "policy.EnableOrganizationDomainsProtection": "EnableOrganizationDomainsProtection",
+					"policy.EnableMailboxIntelligence": "EnableMailboxIntelligence",
+					"policy.EnableMailboxIntelligenceProtection": "EnableMailboxIntelligenceProtection",
+					"policy.EnableSpoofIntelligence": "EnableSpoofIntelligence",
+					"policy.TargetedUserProtectionAction": "TargetedUserProtectionAction",
+					"policy.TargetedDomainProtectionAction": "TargetedDomainProtectionAction",
+					"policy.MailboxIntelligenceProtectionAction": "MailboxIntelligenceProtectionAction",
+					"policy.EnableFirstContactSafetyTips": "EnableFirstContactSafetyTips",
+					"policy.EnableSimilarUsersSafetyTips": "EnableSimilarUsersSafetyTips",
+					"policy.EnableSimilarDomainsSafetyTips": "EnableSimilarDomainsSafetyTips",
+					"policy.EnableUnusualCharactersSafetyTips": "EnableUnusualCharactersSafetyTips",
+					"policy.TargetedUsersToProtect": "TargetedUsersToProtect",
+					"policy.HonorDmarcPolicy": "HonorDmarcPolicy"
+                },
+                "expandObject": null
+            },
+            "table": "asList",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "policy.Name": "Name",
+                    "isEnabled": "Enabled",
+					"isDefault": "Default",
+                    "policy.PhishThresholdLevel": "PhishThresholdLevel",
+                    "policy.EnableTargetedUserProtection": "EnableTargetedUserProtection",
+                    "policy.EnableOrganizationDomainsProtection": "EnableOrganizationDomainsProtection",
+					"policy.EnableMailboxIntelligence": "EnableMailboxIntelligence",
+					"policy.EnableMailboxIntelligenceProtection": "EnableMailboxIntelligenceProtection",
+					"policy.EnableSpoofIntelligence": "EnableSpoofIntelligence",
+					"policy.TargetedUserProtectionAction": "TargetedUserProtectionAction",
+					"policy.TargetedDomainProtectionAction": "TargetedDomainProtectionAction",
+					"policy.MailboxIntelligenceProtectionAction": "MailboxIntelligenceProtectionAction",
+					"policy.EnableFirstContactSafetyTips": "EnableFirstContactSafetyTips",
+					"policy.EnableSimilarUsersSafetyTips": "EnableSimilarUsersSafetyTips",
+					"policy.EnableSimilarDomainsSafetyTips": "EnableSimilarDomainsSafetyTips",
+					"policy.EnableUnusualCharactersSafetyTips": "EnableUnusualCharactersSafetyTips",
+					"policy.TargetedUsersToProtect": "TargetedUsersToProtect",
+					"policy.HonorDmarcPolicy": "HonorDmarcPolicy"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure that an anti-phishing policy has been created",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "policyName",
+                "resourceId": "policyId",
+                "resourceType": "ExchangeAntiPhishingPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_anti_phishing_policy_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"policyId",
+		"ruleId"
+    ],
+    "id": "microsoft365_2115"
 }
-

@@ -1,113 +1,129 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "SharePoint Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure external sharing is restricted by security group",
-  "description": "
-		External sharing of content can be restricted to specific security groups. This setting is global, applies to sharing in both SharePoint and OneDrive and cannot be set at the site level in SharePoint. 
-		The recommended state is Enabled or Checked. 
-  ",
-  "rationale": "Organizations wishing to create tighter security controls for external sharing can set this to enforce role-based access control by using security groups already defined in Microsoft Entra.",
-  "impact": "OneDrive will also be governed by this and there is no granular control at the SharePoint site level.",
-  "remediation": {
-    "text": "
-		###### To remediate using the UI: 
-		1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint 
-		2. Click to expand Policies > Sharing. 
-		3. Scroll to and expand More external sharing settings. 
-		4. Set the following: 
-			* Check Allow only users in specific security groups to share externally 
-			* Define Manage security groups in accordance with company procedure. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "7.2.8",
-	  "profile": "E3 Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "SharePoint Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure external sharing is restricted by security group",
+    "description": "\r\n\t\tExternal sharing of content can be restricted to specific security groups. This setting is global, applies to sharing in both SharePoint and OneDrive and cannot be set at the site level in SharePoint. \r\n\t\tThe recommended state is Enabled or Checked. \r\n  ",
+    "rationale": "Organizations wishing to create tighter security controls for external sharing can set this to enforce role-based access control by using security groups already defined in Microsoft Entra.",
+    "impact": "OneDrive will also be governed by this and there is no granular control at the SharePoint site level.",
+    "remediation": {
+        "text": "\r\n\t\t###### To remediate using the UI: \r\n\t\t1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint \r\n\t\t2. Click to expand Policies \u003e Sharing. \r\n\t\t3. Scroll to and expand More external sharing settings. \r\n\t\t4. Set the following: \r\n\t\t\t* Check Allow only users in specific security groups to share externally \r\n\t\t\t* Define Manage security groups in accordance with company procedure. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "7.2.8",
+            "profile": "E3 Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_spo_tenant_admin_details",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "GuestSharingGroupAllowListInTenantByGroupId",
+                                "eq",
+                                ""
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "Ensure external sharing is restricted by security group",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "spo_link_sharing_not_restricted_security_group",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "RootSiteUrl": "Root Site",
+                    "GuestSharingGroupAllowListInTenantByGroupId": "Allow Sharing Security Group",
+					"SharingAllowedDomainList": "External Sharing By Domain"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "RootSiteUrl": "Root Site",
+                    "GuestSharingGroupAllowListInTenantByGroupId": "Allow Sharing Security Group",
+					"SharingAllowedDomainList": "External Sharing By Domain"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure external sharing is restricted by security group",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "RootSiteUrl",
+                "resourceId": null,
+                "resourceType": "SPOTenantInfo"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "spo_link_sharing_not_restricted_security_group",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"_ObjectType_",
+		"_ObjectIdentity_",
+		"RootSiteUrl"
+    ],
+    "id": "microsoft365_2187"
 }
-

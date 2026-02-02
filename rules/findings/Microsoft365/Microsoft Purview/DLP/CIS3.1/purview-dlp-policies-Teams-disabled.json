@@ -1,139 +1,141 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Purview",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure DLP policies are enabled for Microsoft Teams",
-  "description": "
-		The default Teams Data Loss Prevention (DLP) policy rule in Microsoft 365 is a preconfigured rule that is automatically applied to all Teams conversations and channels. The default rule helps prevent accidental sharing of sensitive information by detecting and blocking certain types of content that are deemed sensitive or inappropriate by the organization. 
-		By default, the rule includes a check for the sensitive info type Credit Card Number which is pre-defined by Microsoft. 
-  ",
-  "rationale": "
-		Enabling the default Teams DLP policy rule in Microsoft 365 helps protect an organization's sensitive information by preventing accidental sharing or leakage Credit Card information in Teams conversations and channels. 
-		DLP rules are not one size fits all, but at a minimum something should be defined. The organization should identify sensitive information important to them and seek to intercept it using DLP. 
-  ",
-  "impact": "End-users may be prevented from sharing certain types of content, which may require them to adjust their behavior or seek permission from administrators to share specific content. Administrators may receive requests from end-users for permission to share certain types of content or to modify the policy to better fit the needs of their teams.",
-  "remediation": {
-    "text": null,
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/powershell/exchange/connect-to-scc-powershell?view=exchange-ps",
-	"https://learn.microsoft.com/en-us/purview/dlp-teams-default-policy?view=o365-worldwide%2F1000",
-	"https://learn.microsoft.com/en-us/powershell/module/exchange/connect-ippssession?view=exchange-ps"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "3.2.2",
-	  "profile": "E5 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "o365_secomp_dlp_compliance_info",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "isEnabled",
-                "eq",
-                "True"
-              ],
-              [
-                "Policy.TeamsLocation.Count",
-                "eq",
-                "0"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": {
-      "Feature": "Enabled DLP Policies For Teams",
-      "Status": "DoesNotExists"
+    "provider": "Microsoft365",
+    "serviceType": "Purview",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure DLP policies are enabled for Microsoft Teams",
+    "description": "\r\n\t\tThe default Teams Data Loss Prevention (DLP) policy rule in Microsoft 365 is a preconfigured rule that is automatically applied to all Teams conversations and channels. The default rule helps prevent accidental sharing of sensitive information by detecting and blocking certain types of content that are deemed sensitive or inappropriate by the organization. \r\n\t\tBy default, the rule includes a check for the sensitive info type Credit Card Number which is pre-defined by Microsoft. \r\n  ",
+    "rationale": "\r\n\t\tEnabling the default Teams DLP policy rule in Microsoft 365 helps protect an organization\u0027s sensitive information by preventing accidental sharing or leakage Credit Card information in Teams conversations and channels. \r\n\t\tDLP rules are not one size fits all, but at a minimum something should be defined. The organization should identify sensitive information important to them and seek to intercept it using DLP. \r\n  ",
+    "impact": "End-users may be prevented from sharing certain types of content, which may require them to adjust their behavior or seek permission from administrators to share specific content. Administrators may receive requests from end-users for permission to share certain types of content or to modify the policy to better fit the needs of their teams.",
+    "remediation": {
+        "text": null,
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "Rule.Name": "Rule Name",
-          "policyName": "Policy Name",
-          "isEnabled": "Enabled",
-          "Policy.TeamsLocation": "Teams Location"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/powershell/exchange/connect-to-scc-powershell?view=exchange-ps",
+        "https://learn.microsoft.com/en-us/purview/dlp-teams-default-policy?view=o365-worldwide%2F1000",
+        "https://learn.microsoft.com/en-us/powershell/module/exchange/connect-ippssession?view=exchange-ps"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "3.2.2",
+            "profile": "E5 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
         
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "Policy"
-          ],
-          "expandObject": null,
-          "limit": null
+    ],
+    "rule": {
+        "path": "o365_secomp_dlp_compliance_info",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
-    },
-    "text": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "isEnabled",
+                                "eq",
+                                "True"
+                            ],
+							[
+                                "workload",
+                                "match",
+                                "Teams"
+                            ],
+                            [
+                                "Policy.TeamsLocation.Count",
+                                "gt",
+                                "0"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure DLP policies are enabled for Microsoft Teams",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_dlp_Teams_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "Rule.Name": "Rule Name",
+                    "policyName": "Policy Name",
+                    "isEnabled": "Enabled",
+					"policy.workload": "Workload",
+                    "Policy.TeamsLocation": "Teams Location"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "Policy"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure DLP policies are enabled for Microsoft Teams",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "policyName",
+                "resourceId": "policyId",
+                "resourceType": "PurviewDLPComplianceInfo"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_dlp_Teams_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"policyId",
+		"ruleId"
+    ],
+    "id": "microsoft365_2160"
 }
-

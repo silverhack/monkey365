@@ -1,109 +1,113 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "MySQL Server",
-  "serviceName": "Databases",
-  "displayName": "Ensure server parameter 'tls_version' is set to 'TLSv1.2' (or higher) for MySQL flexible server",
-  "description": "Ensure tls_version on MySQL flexible servers is set to use TLS version 1.2 or higher.",
-  "rationale": "TLS connectivity helps to provide a new layer of security, by connecting database server to client applications using Transport Layer Security (TLS). Enforcing TLS connections between database server and client applications helps protect against \"man in the middle.\" attacks by encrypting the data stream between the server and application.",
-  "impact": null,
-  "remediation": {
-    "text": null,
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-networking#tls-and-ssl",
-	"https://learn.microsoft.com/en-us/azure/mysql/flexible-server/how-to-connect-tls-ssl",
-	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-3-encrypt-sensitive-data-in-transit"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "5.3.2",
-	  "profile": "Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_mysql_servers",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "MySQL Server",
+    "serviceName": "Databases",
+    "displayName": "Ensure server parameter \u0027tls_version\u0027 is set to \u0027TLSv1.2\u0027 (or higher) for MySQL flexible server",
+    "description": "Ensure tls_version on MySQL flexible servers is set to use TLS version 1.2 or higher.",
+    "rationale": "TLS connectivity helps to provide a new layer of security, by connecting database server to client applications using Transport Layer Security (TLS). Enforcing TLS connections between database server and client applications helps protect against \"man in the middle.\" attacks by encrypting the data stream between the server and application.",
+    "impact": null,
+    "remediation": {
+        "text": null,
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-networking#tls-and-ssl",
+        "https://learn.microsoft.com/en-us/azure/mysql/flexible-server/how-to-connect-tls-ssl",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-3-encrypt-sensitive-data-in-transit"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "5.3.2",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_mysql_servers",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "mysql_old_tls_version_configured",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "mysql_old_tls_version_configured",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_122"
 }
-

@@ -1,129 +1,131 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Exchange Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure 'AuditDisabled' organizationally is set to 'False'",
-  "description": "
-		The value False indicates that mailbox auditing on by default is turned on for the organization. Mailbox auditing on by default in the organization overrides the mailbox auditing settings on individual mailboxes. For example, if mailbox auditing is turned off for a mailbox (the AuditEnabled property on the mailbox is False), the default mailbox actions are still audited for the mailbox, because mailbox auditing on by default is turned on for the organization. Turning off mailbox auditing on by default ($true) has the following results: 
-
-		* Mailbox auditing is turned off for your organization. 
-		* From the time you turn off mailbox auditing on by default, no mailbox actions are audited, even if mailbox auditing is enabled on a mailbox (the AuditEnabled property on the mailbox is True). 
-		* Mailbox auditing isn't turned on for new mailboxes and setting the AuditEnabled property on a new or existing mailbox to True is ignored. 
-		* Any mailbox audit bypass association settings (configured by using the Set MailboxAuditBypassAssociation cmdlet) are ignored. 
-		* Existing mailbox audit records are retained until the audit log age limit for the record expires. 
-
-		The recommended state for this setting is False at the organization level. This will enable auditing and enforce the default. 
-  ",
-  "rationale": "
-		Enforcing the default ensures auditing was not turned off intentionally or accidentally. Auditing mailbox actions will allow forensics and IR teams to trace various malicious activities that can generate TTPs caused by inbox access and tampering. 
-		**NOTE** : Without advanced auditing (E5 function) the logs are limited to 90 days. 
-  ",
-  "impact": "None - this is the default behavior as of 2019.",
-  "remediation": {
-    "text": "
-		###### Enable mailbox auditing at the organizational level: 
-		1. Connect to Exchange Online using Connect-ExchangeOnline. 
-		2. Run the following PowerShell command: 
-
-		```PowerShell
-		Set-OrganizationConfig -AuditDisabled $false
-		```
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-mailboxes?view=o365-worldwide",
-	"https://learn.microsoft.com/en-us/powershell/module/exchange/set-organizationconfig?view=exchange-ps#-auditdisabled"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "6.1.1",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure \u0027AuditDisabled\u0027 organizationally is set to \u0027False\u0027",
+    "description": "\r\n\t\tThe value False indicates that mailbox auditing on by default is turned on for the organization. Mailbox auditing on by default in the organization overrides the mailbox auditing settings on individual mailboxes. For example, if mailbox auditing is turned off for a mailbox (the AuditEnabled property on the mailbox is False), the default mailbox actions are still audited for the mailbox, because mailbox auditing on by default is turned on for the organization. Turning off mailbox auditing on by default ($true) has the following results: \r\n\r\n\t\t* Mailbox auditing is turned off for your organization. \r\n\t\t* From the time you turn off mailbox auditing on by default, no mailbox actions are audited, even if mailbox auditing is enabled on a mailbox (the AuditEnabled property on the mailbox is True). \r\n\t\t* Mailbox auditing isn\u0027t turned on for new mailboxes and setting the AuditEnabled property on a new or existing mailbox to True is ignored. \r\n\t\t* Any mailbox audit bypass association settings (configured by using the Set MailboxAuditBypassAssociation cmdlet) are ignored. \r\n\t\t* Existing mailbox audit records are retained until the audit log age limit for the record expires. \r\n\r\n\t\tThe recommended state for this setting is False at the organization level. This will enable auditing and enforce the default. \r\n  ",
+    "rationale": "\r\n\t\tEnforcing the default ensures auditing was not turned off intentionally or accidentally. Auditing mailbox actions will allow forensics and IR teams to trace various malicious activities that can generate TTPs caused by inbox access and tampering. \r\n\t\t**NOTE** : Without advanced auditing (E5 function) the logs are limited to 90 days. \r\n  ",
+    "impact": "None - this is the default behavior as of 2019.",
+    "remediation": {
+        "text": "\r\n\t\t###### Enable mailbox auditing at the organizational level: \r\n\t\t1. Connect to Exchange Online using Connect-ExchangeOnline. \r\n\t\t2. Run the following PowerShell command: \r\n\r\n\t\t```PowerShell\r\n\t\tSet-OrganizationConfig -AuditDisabled $false\r\n\t\t```\r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-mailboxes?view=o365-worldwide",
+        "https://learn.microsoft.com/en-us/powershell/module/exchange/set-organizationconfig?view=exchange-ps#-auditdisabled"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "6.1.1",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_exo_org_config",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "AuditDisabled",
+                                "ne",
+                                "false"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "Ensure 'AuditDisabled' organizationally is set to 'False'",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_audit_enabled_globally",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "Id",
+                    "DisplayName": "DisplayName",
+					"Identity": "Identity",
+                    "AuditDisabled": "AuditDisabled"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"id": "Id",
+                    "DisplayName": "DisplayName",
+					"Identity": "Identity",
+                    "AuditDisabled": "AuditDisabled"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure \u0027AuditDisabled\u0027 organizationally is set to \u0027False\u0027",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "Identity",
+                "resourceId": "Guid",
+                "resourceType": "EXOOrgConfig"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_audit_enabled_globally",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"Guid",
+		"Identity"
+    ],
+    "id": "microsoft365_2116"
 }
-

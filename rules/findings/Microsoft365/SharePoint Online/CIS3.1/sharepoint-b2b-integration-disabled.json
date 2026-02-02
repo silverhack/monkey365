@@ -1,123 +1,129 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "SharePoint Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure SharePoint and OneDrive integration with Azure AD B2B is enabled",
-  "description": "Azure AD B2B provides authentication and management of guests. Authentication happens via one-time passcode when they don\u0027t already have a work or school account or a Microsoft account. Integration with SharePoint and OneDrive allows for more granular control of how guest user accounts are managed in the organization\u0027s AAD, unifying a similar guest experience already deployed in other Microsoft 365 services such as Teams.",
-  "rationale": "External users assigned guest accounts will be subject to Azure AD access policies, such as multi-factor authentication. This provides a way to manage guest identities and control access to SharePoint and OneDrive resources. Without this integration, files can be shared without account registration, making it more challenging to audit and manage who has access to the organization\u0027s data.",
-  "impact": "Azure B2B collaboration is used with other Azure services so should not be new or unusual. Microsoft also has made the experience seamless when turning on integration on SharePoint sites that already have active files shared with guest users. The referenced Microsoft article on the subject has more details on this.",
-  "remediation": {
-    "text": "###### To enable Azure AD B2B integration using PowerShell:\r\n\t\t\t\t\t1. Connect to SharePoint Online using Connect-SPOService -Url https://monkey-admin.sharepoint.com, replacing \"monkey\" with the appropiate value..\r\n\t\t\t\t\t2. Run the following command:\r\n\t\t\t\t\t\r\n\t```powershell\r\n\t\t\t\t\tSet-SPOTenant -EnableAzureADB2BIntegration $true\r\n\t\t\t\t\t```",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/sharepoint/sharepoint-azureb2b-integration#enabling-the-integration",
-    "https://learn.microsoft.com/en-us/entra/external-id/what-is-b2b",
-    "https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "7.2.2",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "low",
-  "tags": [
-  ],
-  "rule": {
-    "path": "o365_spo_tenant_admin_details",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "EnableAzureADB2BIntegration",
-                "eq",
-                "false"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "RootSiteUrl": "Root Site",
-          "EnableAzureADB2BIntegration": "Azure B2B Integration"
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "RootSiteUrl",
-			"EnableAzureADB2BIntegration"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "SharePoint Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure SharePoint and OneDrive integration with Azure AD B2B is enabled",
+    "description": "Azure AD B2B provides authentication and management of guests. Authentication happens via one-time passcode when they don\u0027t already have a work or school account or a Microsoft account. Integration with SharePoint and OneDrive allows for more granular control of how guest user accounts are managed in the organization\u0027s AAD, unifying a similar guest experience already deployed in other Microsoft 365 services such as Teams.",
+    "rationale": "External users assigned guest accounts will be subject to Azure AD access policies, such as multi-factor authentication. This provides a way to manage guest identities and control access to SharePoint and OneDrive resources. Without this integration, files can be shared without account registration, making it more challenging to audit and manage who has access to the organization\u0027s data.",
+    "impact": "Azure B2B collaboration is used with other Azure services so should not be new or unusual. Microsoft also has made the experience seamless when turning on integration on SharePoint sites that already have active files shared with guest users. The referenced Microsoft article on the subject has more details on this.",
+    "remediation": {
+        "text": "###### To enable Azure AD B2B integration using PowerShell:\r\n\t\t\t\t\t1. Connect to SharePoint Online using Connect-SPOService -Url https://monkey-admin.sharepoint.com, replacing \"monkey\" with the appropiate value..\r\n\t\t\t\t\t2. Run the following command:\r\n\t\t\t\t\t\r\n\t```powershell\r\n\t\t\t\t\tSet-SPOTenant -EnableAzureADB2BIntegration $true\r\n\t\t\t\t\t```",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/sharepoint/sharepoint-azureb2b-integration#enabling-the-integration",
+        "https://learn.microsoft.com/en-us/entra/external-id/what-is-b2b",
+        "https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "7.2.2",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "low",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_spo_tenant_admin_details",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "EnableAzureADB2BIntegration",
+                                "eq",
+                                "false"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "Ensure SharePoint and OneDrive integration with Azure AD B2B is enabled",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "spo_azure_b2b_integration_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "RootSiteUrl": "Root Site",
+                    "EnableAzureADB2BIntegration": "Azure B2B Integration"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "RootSiteUrl",
+                        "EnableAzureADB2BIntegration"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure SharePoint and OneDrive integration with Azure AD B2B is enabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "RootSiteUrl",
+                "resourceId": null,
+                "resourceType": "SPOTenantAdmin"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "spo_azure_b2b_integration_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"_ObjectType_",
+		"_ObjectIdentity_",
+		"RootSiteUrl"
+    ],
+    "id": "microsoft365_2182"
 }
-

@@ -1,134 +1,133 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Purview",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure Microsoft 365 audit log search is Enabled",
-  "description": "When audit log search is enabled in the Microsoft Purview compliance portal, user and admin activity within the organization is recorded in the audit log and retained for 90 days. However, some organizations may prefer to use a third-party security information and event management (SIEM) application to access their auditing data. In this scenario, a global admin can choose to turn off audit log search in Microsoft 365.",
-  "rationale": "Enabling audit log search in the Microsoft Purview compliance portal can help organizations improve their security posture, meet regulatory compliance requirements, respond to security incidents, and gain valuable operational insights.",
-  "impact": null,
-  "remediation": {
-    "text": "
-		###### To enable Microsoft 365 audit log search: 
-		1. Navigate to Microsoft Purview https://compliance.microsoft.com. 
-		2. Select Audit to open the audit search. 
-		3. Click Start recording user and admin activity next to the information warning at the top. 
-		4. Click Yes on the dialog box to confirm. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-log-enable-disable?view=o365-worldwide",
-	"https://learn.microsoft.com/en-us/powershell/module/exchange/set-adminauditlogconfig?view=exchange-ps"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "3.1.1",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "o365_secomp_log_config",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "AdminAuditLogEnabled",
-                "ne",
-                "True"
-              ],
-              [
-                "UnifiedAuditLogIngestionEnabled",
-                "ne",
-                "True"
-              ]
-            ],
-            "operator": "or"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "AdminAuditLogEnabled": "Audit Log",
-          "UnifiedAuditLogIngestionEnabled": "Unified ingestion",
-          "AdminAuditLogMailbox": "Mailbox auditing"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "Policy"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Purview",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure Microsoft 365 audit log search is Enabled",
+    "description": "When audit log search is enabled in the Microsoft Purview compliance portal, user and admin activity within the organization is recorded in the audit log and retained for 90 days. However, some organizations may prefer to use a third-party security information and event management (SIEM) application to access their auditing data. In this scenario, a global admin can choose to turn off audit log search in Microsoft 365.",
+    "rationale": "Enabling audit log search in the Microsoft Purview compliance portal can help organizations improve their security posture, meet regulatory compliance requirements, respond to security incidents, and gain valuable operational insights.",
+    "impact": null,
+    "remediation": {
+        "text": "\r\n\t\t###### To enable Microsoft 365 audit log search: \r\n\t\t1. Navigate to Microsoft Purview https://compliance.microsoft.com. \r\n\t\t2. Select Audit to open the audit search. \r\n\t\t3. Click Start recording user and admin activity next to the information warning at the top. \r\n\t\t4. Click Yes on the dialog box to confirm. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-log-enable-disable?view=o365-worldwide",
+        "https://learn.microsoft.com/en-us/powershell/module/exchange/set-adminauditlogconfig?view=exchange-ps"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "3.1.1",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_secomp_log_config",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "AdminAuditLogEnabled",
+                                "ne",
+                                "True"
+                            ],
+                            [
+                                "UnifiedAuditLogIngestionEnabled",
+                                "ne",
+                                "True"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure Microsoft 365 audit log search is Enabled",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_auditing_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "AdminAuditLogEnabled": "Audit Log",
+                    "UnifiedAuditLogIngestionEnabled": "Unified ingestion",
+                    "AdminAuditLogMailbox": "Mailbox auditing"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "Policy"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure Microsoft 365 audit log search is Enabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "Identity",
+                "resourceId": "ExchangeObjectId",
+                "resourceType": "PurviewAuditLogSettings"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_auditing_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"OrganizationId",
+		"ExchangeObjectId.Guid"
+    ],
+    "id": "microsoft365_2161"
 }
-

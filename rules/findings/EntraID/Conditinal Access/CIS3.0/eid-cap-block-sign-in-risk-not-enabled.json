@@ -1,159 +1,203 @@
-﻿{
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Conditional Access",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure that a Conditional Access Policy exists to block sign-ins categorized as high risk",
-  "description": "Use Conditional Access to block sign-ins categorized as high risk.",
-  "rationale": "Blocking high-risk users may prevent compromised accounts from accessing the tenant.",
-  "impact": "",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa",
-    "https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access",
-    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/troubleshoot-conditional-access-what-if",
-    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/plan-conditional-access",
-    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-7-restrict-resource-access-based-on--conditions"
-  ],
-  "compliance": [
-    "Monkey365"
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "aad_conditional_access_policy",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "operator": "and",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "state",
-                "eq",
-                "true"
-              ],
-              [
-                "conditions.users.includeUsers",
-                "eq",
-                "All"
-              ],
-              [
-                "conditions.applications.includeApplications",
-                "eq",
-                "All"
-              ]
-            ],
-            "operator": "and"
-          },
-          {
-            "conditions": [
-              [
-                "conditions.signInRiskLevels",
-                "match",
-                "high"
-              ]
-            ]
-          }
-        ]
-      },
-      {
-        "connectOperator": "and",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "grantControls.builtInControls",
-                "eq",
-                "block"
-              ]
-            ]
-          }
-        ]
-      }
+{
+    "args": [
+        
     ],
-    "shouldExist": "true",
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "displayName": "Name",
-          "state": "Status",
-          "conditions.applications.includeApplications": "Applications",
-          "conditions.users.includeUsers": "Users",
-          "conditions.signInRiskLevels": "SignIn Risk Levels",
-          "grantControls.operator": "Operator",
-          "grantControls.builtInControls": "BuiltIn Controls"
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Conditional Access",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure sign-in risk is blocked for medium and high risk",
+    "description": "Microsoft Entra ID Protection sign-in risk detects risks in real-time and offline. A risky sign-in is an indicator for a sign-in attempt that might not have been performed by the legitimate owner of a user account.\r\n*Note*: While Identity Protection also provides two risk policies with limited conditions, Microsoft highly recommends setting up risk-based policies in Conditional Access as opposed to the `legacy method` for the following benefits:
+		* Enhanced diagnostic data 
+		* Report-only mode integration 
+		* Graph API support 
+		* Use more Conditional Access attributes like sign-in frequency in the policy
+	",
+    "rationale": "Sign-in risk is determined at the time of sign-in and includes criteria across both real-time and offline detections for risk. Blocking sign-in to accounts that have risk can prevent undesired access from potentially compromised devices or unauthorized users.",
+    "impact": "Sign-in risk is heavily dependent on detecting risk based on atypical behaviors. Due to this it is important to run this policy in a report-only mode to better understand how the organization's environment and user activity may influence sign-in risk before turning the policy on. Once it's understood what actions may trigger a medium or high sign-in risk event I.T. can then work to create an environment to reduce false positives. For example, employees might be required to notify security personnel when they intend to travel with intent to access work resources.\r\n *Note*: Break-glass accounts should always be excluded from risk detection.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks#risk-detections-mapped-to-riskeventtype",
+        "https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access",
+        "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/troubleshoot-conditional-access-what-if",
+        "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/plan-conditional-access",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-7-restrict-resource-access-based-on--conditions"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "5.2.2.8",
+            "profile": "E5 Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_conditional_access_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          "displayName"
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "state",
+                                "eq",
+                                "enabled"
+                            ],
+                            [
+                                "conditions.users.includeUsers",
+                                "eq",
+                                "All"
+                            ],
+                            [
+                                "conditions.applications.includeApplications",
+                                "eq",
+                                "All"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "conditions.signInRiskLevels",
+                                "match",
+                                "high|medium"
+                            ]
+                        ]
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"MicrosoftAdminPortals",
+                                "notin",
+                                "conditions.applications.excludeApplications"
+                            ],
+                            [
+								"Office365",
+                                "notin",
+                                "conditions.applications.excludeApplications"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "grantControls.builtInControls",
+                                "eq",
+                                "block"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-      "message": "The {displayName} policy is not configured to sign-Ins categorized as high risk",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": "displayName",
-        "resourceId": "id",
-        "resourceType": "@odata.context"
-      },
-      "onlyStatus": true
-    }
-  },
-  "idSuffix": "aad_cap_block_signIn_risk",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "conditions.signInRiskLevels": "SignIn Risk Levels",
+                    "grantControls.operator": "Operator",
+                    "grantControls.builtInControls": "BuiltIn Controls"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "conditions.signInRiskLevels": "SignIn Risk Levels",
+                    "grantControls.operator": "Operator",
+                    "grantControls.builtInControls": "BuiltIn Controls"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    "displayName"
+                ],
+                "message": "The {displayName} policy is not configured to sign-Ins categorized as high risk",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraConditionalAccess"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "aad_cap_block_signIn_risk",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1105"
 }

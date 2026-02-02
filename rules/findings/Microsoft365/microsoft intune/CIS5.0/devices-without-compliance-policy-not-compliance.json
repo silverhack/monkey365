@@ -1,113 +1,114 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Intune",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure devices without a compliance policy are marked 'not compliant'",
-  "description": "Compliance policies are sets of rules and conditions that are used to evaluate the configuration of managed devices. These policies can help secure organizational data and resources from devices that don't meet those configuration requirements. Managed devices must satisfy the conditions you set in your policies to be considered compliant by Intune. When combined with conditional access, this allows more control over how non-compliant devices are treated.\n\nThe recommended state is `Mark devices with no compliance policy assigned as as Not compliant`.",
-  "rationale": "Implementing this setting is a first step in adopting compliance policies for devices. When used in together with Conditional Access policies the attack surface can be reduced by forcing an action to be taken for non-compliant devices.\n\n**Note** This section does not focus on which compliance policies to use, only that an organization should adopt and enforce them to their needs.",
-  "impact": "Any devices without a compliance policy will be marked not compliant. Care should be taken to first deploy any new compliance policies with a Conditional Access (CA) policy that is in the Report-only state. After the environment's device compliance is better understood it is then appropriate to finally align with `Mark devices with no compliance policy assigned as` and enable any CA policies that enforce actions based on device compliance.\n\nIf a mature environment already has an existing device compliance CA policy and a large number of devices without an assigned compliance policy, this could cause disruption as those devices would then be suddenly considered not compliant.",
-  "remediation": {
-    "text": "
-			###### To remediate using the UI: 
-			1. Navigate to Microsoft Intune admin center https://intune.microsoft.com/ 
-			2. Select Devices and then under Manage devices click Compliance 
-			3. Click Compliance settings. 
-			4. Set Mark devices with no compliance policy assigned as to Not compliant. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/intune/intune-service/protect/device-compliance-get-started"
-  ],
-  "compliance": [
-    {
-		"name": "CIS Microsoft 365 Foundations Benchmark",
-		"version": "5.0.0",
-		"reference": "4.1",
-		"profile": [
-			"E3 Level 2",
-			"E5 Level 2"
-		]
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Intune",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure devices without a compliance policy are marked \u0027not compliant\u0027",
+    "description": "Compliance policies are sets of rules and conditions that are used to evaluate the configuration of managed devices. These policies can help secure organizational data and resources from devices that don\u0027t meet those configuration requirements. Managed devices must satisfy the conditions you set in your policies to be considered compliant by Intune. When combined with conditional access, this allows more control over how non-compliant devices are treated.\n\nThe recommended state is `Mark devices with no compliance policy assigned as as Not compliant`.",
+    "rationale": "Implementing this setting is a first step in adopting compliance policies for devices. When used in together with Conditional Access policies the attack surface can be reduced by forcing an action to be taken for non-compliant devices.\n\n**Note** This section does not focus on which compliance policies to use, only that an organization should adopt and enforce them to their needs.",
+    "impact": "Any devices without a compliance policy will be marked not compliant. Care should be taken to first deploy any new compliance policies with a Conditional Access (CA) policy that is in the Report-only state. After the environment\u0027s device compliance is better understood it is then appropriate to finally align with `Mark devices with no compliance policy assigned as` and enable any CA policies that enforce actions based on device compliance.\n\nIf a mature environment already has an existing device compliance CA policy and a large number of devices without an assigned compliance policy, this could cause disruption as those devices would then be suddenly considered not compliant.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Intune admin center https://intune.microsoft.com/ \r\n\t\t\t2. Select Devices and then under Manage devices click Compliance \r\n\t\t\t3. Click Compliance settings. \r\n\t\t\t4. Set Mark devices with no compliance policy assigned as to Not compliant. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/intune/intune-service/protect/device-compliance-get-started"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "4.1",
+            "profile": [
+                "E3 Level 2",
+                "E5 Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "Ensure devices without a compliance policy are marked 'not compliant'",
-        "defaultMessage": "Ensure devices without a compliance policy are marked 'not compliant'"
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "intune_devices_lacks_non_compliance_policy",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure devices without a compliance policy are marked \u0027not compliant\u0027",
+                "defaultMessage": "Ensure devices without a compliance policy are marked \u0027not compliant\u0027"
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "intune_devices_lacks_non_compliance_policy",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "microsoft365_2158"
 }
-

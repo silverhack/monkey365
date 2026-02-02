@@ -1,133 +1,137 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "App Services",
-  "serviceName": "Hosted Services",
-  "displayName": "Ensure that 'Basic Authentication' is 'Disabled'",
-  "description": "Basic Authentication provides the ability to create identities and authentication for an App Service without a centralized Identity Provider. For a more effective, capable, and secure solution for Identity, Authentication, Authorization, and Accountability, a centralized Identity Provider such as Entra ID is strongly advised.",
-  "rationale": "Basic Authentication introduces an identity silo which can produce privileged access to a resource. This can be exploited in numerous ways and represents a significant vulnerability and attack vector.",
-  "impact": "An Identity Provider that can be used by the App Service for authenticating users is required.",
-  "remediation": {
-    "text": null,
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-	"https://learn.microsoft.com/en-us/azure/app-service/configure-basic-auth-disable?tabs=portal"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "9.6",
-	  "profile": "Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_app_services",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "basicPublishingCredentialsPolicies.properties.allow",
-                "eq",
-                "false"
-              ],
-			  [
-                "appConfig.properties.ftpsState",
-                "eq",
-                "AllAllowed"
-              ]
-            ],
-			"operator": "or"
-          }
-        ]
-      }
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-		"properties": {
-          "name": "Application Name",
-          "kind": "Kind",
-          "location": "Location",
-          "properties.defaultHostName": "HostName",
-          "properties.httpsOnly": "Https Only",
-          "identity.principalId": "Principal ID",
-          "appConfig.properties.ftpsState": "SSL FTP",
-          "appConfig.properties.minTlsVersion": "TLS Version",
-          "basicPublishingCredentialsPolicies.properties.allow": "SCM Basic Auth Enabled"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    ],
+    "provider": "Azure",
+    "serviceType": "App Services",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure that \u0027Basic Authentication\u0027 is \u0027Disabled\u0027",
+    "description": "Basic Authentication provides the ability to create identities and authentication for an App Service without a centralized Identity Provider. For a more effective, capable, and secure solution for Identity, Authentication, Authorization, and Accountability, a centralized Identity Provider such as Entra ID is strongly advised.",
+    "rationale": "Basic Authentication introduces an identity silo which can produce privileged access to a resource. This can be exploited in numerous ways and represents a significant vulnerability and attack vector.",
+    "impact": "An Identity Provider that can be used by the App Service for authenticating users is required.",
+    "remediation": {
+        "text": null,
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/configure-basic-auth-disable?tabs=portal"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "9.6",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_app_services",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "basicPublishingCredentialsPolicies.properties.allow",
+                                "eq",
+                                "false"
+                            ],
+                            [
+                                "appConfig.properties.ftpsState",
+                                "eq",
+                                "AllAllowed"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "app_service_basic_auth_enabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Application Name",
+                    "kind": "Kind",
+                    "location": "Location",
+                    "properties.defaultHostName": "HostName",
+                    "properties.httpsOnly": "Https Only",
+                    "identity.principalId": "Principal ID",
+                    "appConfig.properties.ftpsState": "SSL FTP",
+                    "appConfig.properties.minTlsVersion": "TLS Version",
+                    "basicPublishingCredentialsPolicies.properties.allow": "SCM Basic Auth Enabled"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "app_service_basic_auth_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_102"
 }
-

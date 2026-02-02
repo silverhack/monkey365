@@ -1,128 +1,182 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Conditional Access",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure 'Idle session timeout' is set to '3 hours (or less)' for unmanaged devices",
-  "description": "
-		Idle session timeout allows the configuration of a setting which will timeout inactive users after a pre-determined amount of time. When a user reaches the set idle timeout session, they'll get a notification that they're about to be signed out. They have to select to stay signed in or they'll be automatically signed out of all Microsoft 365 web apps. Combined with a Conditional Access rule this will only impact unmanaged devices. A managed device is considered a device managed by Intune MDM. 
-		The following Microsoft 365 web apps are supported. 
-		* Outlook Web App 
-		* OneDrive for Business 
-		* SharePoint Online (SPO) 
-		* Office.com and other start pages 
-		* Office (Word, Excel, PowerPoint) on the web 
-		* Microsoft 365 Admin Center 
-		*NOTE* : Idle session timeout doesn't affect Microsoft 365 desktop and mobile apps. The recommended setting is 3 hours (or less) for unmanaged devices. 
-  ",
-  "rationale": "Ending idle sessions through an automatic process can help protect sensitive company data and will add another layer of security for end users who work on unmanaged devices that can potentially be accessed by the public. Unauthorized individuals onsite or remotely can take advantage of systems left unattended over time. Automatic timing out of sessions makes this more difficult.",
-  "impact": "If step 2 in the Audit/Remediation procedure is left out then there is no issue with this from a security standpoint. However, it will require users on trusted devices to sign in more frequently which could result in credential prompt fatigue.",
-  "remediation": {
-    "text": '
-		###### To configure Idle session timeout: 
-		1. Navigate to the Microsoft 365 admin center https://admin.microsoft.com/. 
-		2. Click to expand Settings Select Org settings. 
-		3. Click Security & Privacy tab. 
-		4. Select Idle session timeout. 
-		5. Check the box Turn on to set the period of inactivity for users to be signed off of Microsoft 365 web apps 
-		6. Set a maximum value of 3 hours. 
-		7. Click save. 
-
-		###### Step 2 - Ensure the Conditional Access policy is in place: 
-		1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/ 
-		2. Expand Protect > Conditional Access 
-		3. Click New policy and give the policy a name. 
-		4. Select Users > All users. 
-		5. Select Cloud apps or actions > Select apps and select Office 365 
-		6. Select Conditions > Client apps > Yes check only Browser unchecking all other boxes. 
-		7. Select Sessions and check Use app enforced restrictions. 
-		8. Set Enable policy to On and click Create. 
-		*NOTE* : To ensure that idle timeouts affect only unmanaged devices, both steps must be completed. 
-	',
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-	"https://learn.microsoft.com/en-us/microsoft-365/admin/manage/idle-session-timeout-web-apps?view=o365-worldwide"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.1.0",
-      "reference": "1.3.2",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": "false"
-  },
-  "output": {
-    "html": {
-      "data": {
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": "",
-          "limit": null
-        },
-        "showGoToButton": "False",
-        "showModalButton": "False",
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Conditional Access",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure \u0027Idle session timeout\u0027 is set to \u00273 hours (or less)\u0027 for unmanaged devices",
+    "description": "\r\n\t\tIdle session timeout allows the configuration of a setting which will timeout inactive users after a pre-determined amount of time. When a user reaches the set idle timeout session, they\u0027ll get a notification that they\u0027re about to be signed out. They have to select to stay signed in or they\u0027ll be automatically signed out of all Microsoft 365 web apps. Combined with a Conditional Access rule this will only impact unmanaged devices. A managed device is considered a device managed by Intune MDM. \r\n\t\tThe following Microsoft 365 web apps are supported. \r\n\t\t* Outlook Web App \r\n\t\t* OneDrive for Business \r\n\t\t* SharePoint Online (SPO) \r\n\t\t* Office.com and other start pages \r\n\t\t* Office (Word, Excel, PowerPoint) on the web \r\n\t\t* Microsoft 365 Admin Center \r\n\t\t*NOTE* : Idle session timeout doesn\u0027t affect Microsoft 365 desktop and mobile apps. The recommended setting is 3 hours (or less) for unmanaged devices. \r\n  ",
+    "rationale": "Ending idle sessions through an automatic process can help protect sensitive company data and will add another layer of security for end users who work on unmanaged devices that can potentially be accessed by the public. Unauthorized individuals onsite or remotely can take advantage of systems left unattended over time. Automatic timing out of sessions makes this more difficult.",
+    "impact": "If step 2 in the Audit/Remediation procedure is left out then there is no issue with this from a security standpoint. However, it will require users on trusted devices to sign in more frequently which could result in credential prompt fatigue.",
+    "remediation": {
+        "text": "\r\n\t\t###### To configure Idle session timeout: \r\n\t\t1. Navigate to the Microsoft 365 admin center https://admin.microsoft.com/. \r\n\t\t2. Click to expand Settings Select Org settings. \r\n\t\t3. Click Security \u0026 Privacy tab. \r\n\t\t4. Select Idle session timeout. \r\n\t\t5. Check the box Turn on to set the period of inactivity for users to be signed off of Microsoft 365 web apps \r\n\t\t6. Set a maximum value of 3 hours. \r\n\t\t7. Click save. \r\n\r\n\t\t###### Step 2 - Ensure the Conditional Access policy is in place: \r\n\t\t1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/ \r\n\t\t2. Expand Protect \u003e Conditional Access \r\n\t\t3. Click New policy and give the policy a name. \r\n\t\t4. Select Users \u003e All users. \r\n\t\t5. Select Cloud apps or actions \u003e Select apps and select Office 365 \r\n\t\t6. Select Conditions \u003e Client apps \u003e Yes check only Browser unchecking all other boxes. \r\n\t\t7. Select Sessions and check Use app enforced restrictions. \r\n\t\t8. Set Enable policy to On and click Create. \r\n\t\t*NOTE* : To ensure that idle timeouts affect only unmanaged devices, both steps must be completed. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/microsoft-365/admin/manage/idle-session-timeout-web-apps?view=o365-worldwide"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.1.0",
+            "reference": "1.3.2",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_conditional_access_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": ""
-      },
-      "status": {
-        "keyName": [
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "state",
+                                "eq",
+                                "enabled"
+                            ],
+							[
+                                "conditions.users.includeUsers",
+                                "eq",
+                                "All"
+                            ],
+                            [
+                                "conditions.applications.includeApplications",
+                                "match",
+                                "Office365"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"MicrosoftAdminPortals",
+                                "notin",
+                                "conditions.applications.excludeApplications"
+                            ],
+                            [
+								"Office365",
+                                "notin",
+                                "conditions.applications.excludeApplications"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "sessionControls.applicationEnforcedRestrictions.isEnabled",
+                                "eq",
+                                "true"
+                            ],
+							[
+                                "conditions.clientAppTypes",
+                                "contains",
+                                "browser"
+                            ]
+                        ],
+						"operator":"and"
+                    }
+                ]
+            }
         ],
-      "message": "",
-      "defaultMessage": "Ensure that an exclusionary Geographic Access Policy is considered"
-      },
-      "properties": {
-      },
-      "onlyStatus": true
-    }
-  },
-  "idSuffix": "eid_exclusionary_geographic_cap_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "sessionControls.applicationEnforcedRestrictions.isEnabled": "Enforced Restriction"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": "",
+                    "limit": null
+                },
+                "showGoToButton": "False",
+                "showModalButton": "False",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "sessionControls.applicationEnforcedRestrictions.isEnabled": "Enforced Restriction"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": "Ensure Idle session timeout is set "
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraConditionalAccess"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "eid_application_enforced_restriction_cap_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1113"
 }
-

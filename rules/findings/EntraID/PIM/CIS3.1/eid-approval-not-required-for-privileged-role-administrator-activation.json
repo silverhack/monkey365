@@ -1,0 +1,168 @@
+{
+    "args": [
+        
+    ],
+    "provider": "EntraID",
+    "serviceType": "Entra Identity Governance",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure approval is required for Privileged Role Administrator activation",
+    "description": "Microsoft Entra Privileged Identity Management can be used to audit roles, allow just in time activation of roles and allow for periodic role attestation. Requiring approval before activation allows one of the selected approvers to first review and then approve the activation prior to PIM granted the role. The approver doesn't have to be a group member or owner.\r\nThe recommended state is `Require approval to activate` for the `Privileged Role Administrator` role.",
+    "rationale": "This role grants the ability to manage assignments for all Microsoft Entra roles including the Global Administrator role. This role does not include any other privileged abilities in Microsoft Entra ID like creating or updating users. However, users assigned to this role can grant themselves or others additional privilege by assigning additional roles.\n\rRequiring approval for activation enhances visibility and accountability every time this highly privileged role is used. This process reduces the risk of an attacker elevating a compromised account to the highest privilege level, as any activation must first be reviewed and approved by a trusted party.\r\n*Note:* This only acts as protection for eligible users that are activating a role. Directly assigning a role does require an approval workflow so therefore it is important to implement and use PIM correctly.",
+    "impact": "Requiring approvers for automatic role assignment can slightly increase administrative overhead and add delays to tasks.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/. \r\n\t\t\t2. Click to expand Identity Governance select Privileged Identity Management. \r\n\t\t\t3. Under Manage select Microsoft Entra Roles. \r\n\t\t\t4. Under Manage select Roles. \r\n\t\t\t5. Select Privileged Role Administrator in the list. \r\n\t\t\t6. Select Role settings and click Edit. \r\n\t\t\t7. Check the Require approval to activate box. \r\n\t\t\t8. Add at least two approvers. \r\n\t\t\t9. Click Update. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/groups-role-settings#require-approval-to-activate"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "5.3.5",
+            "profile": "E5 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_pim_roleAssignment",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+		"data": {
+            "properties": {
+                "policy.settings.@odata.type": "@odata.type",
+				"policy.settings.id": "policyId",
+				"policy.settings.setting": "policySetting",
+                "displayName": "displayName",
+                "description": "description",
+                "templateId": "templateId"
+            },
+            "expandObject": "policy.settings"
+        },
+        "query": [
+			{
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "templateId",
+                                "eq",
+								"e8611ab8-c189-46e8-94e1-60213ab1f814"
+                            ],
+							[
+                                "@odata.type",
+                                "like",
+								"*unifiedRoleManagementPolicyApprovalRule*"
+                            ]
+                        ],
+						"operator":"and"
+                    }
+                ]
+            },
+			{
+				"connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "isApprovalRequired",
+                                "eq",
+								"False"
+                            ],
+							[
+                                "approvalStages.primaryApproversCount",
+                                "lt",
+								"2"
+                            ]
+                        ],
+						"operator":"or",
+						"whereObject":"policySetting"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"templateId": "templateId",
+                    "displayName": "displayName",
+                    "description": "description",
+                    "policySetting.isApprovalRequired": "Approval Required",
+					"policySetting.approvalStages.primaryApproversCount": "Primary Approvers Count"
+                }
+            },
+            "table": "default",
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "templateId": "templateId",
+					"displayName": "displayName",
+                    "description": "description",
+                    "policySetting.isApprovalRequired": "Approval Required",
+					"policySetting.approvalStages.primaryApproversCount": "Primary Approvers Count"
+                }
+            },
+            "status": {
+                "keyName": "",
+                "message": "Ensure approval is required for Privileged Role Administrator activation",
+                "defaultMessage": "Ensure approval is required for Privileged Role Administrator activation"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "templateId",
+                "resourceType": "PIMUnifiedRoleManagementPolicyApprovalRule"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_approval_for_privileged_role_administrator_not_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"templateId",
+		"displayName"
+    ],
+    "id": "entraid_1174"
+}

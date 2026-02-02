@@ -1,0 +1,173 @@
+{
+    "args": [
+        
+    ],
+    "provider": "EntraID",
+    "serviceType": "Conditional Access",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure the device code sign-in flow is blocked",
+    "description": "The Microsoft identity platform supports the device authorization grant, which allows users to sign in to input-constrained devices such as a smart TV, IoT device, or a printer. To enable this flow, the device has the user visit a webpage in a browser on another device to sign in. Once the user signs in, the device is able to get access tokens and refresh tokens as needed.\r\nThe recommended state is to Block access for Device code flow in Conditional Access.",
+    "rationale": "Since August 2024, Microsoft has observed threat actors, such as Storm-2372, employing `device code phishing` attacks. These attacks deceive users into logging into productivity applications, capturing authentication tokens to gain further access to compromised accounts.\r\nTo mitigate this specific attack, block authentication code flows and permit only those from devices within trusted environments, identified by specific IP addresses.",
+    "impact": "Some administrative overhead will be required for stricter management of these devices. Since exclusions do not violate compliance, this feature can still be utilized effectively within a controlled environment.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-device-code",
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-authentication-flows",
+        "https://securing365.com/secure-your-device-code-auth-flows-now/",
+		"https://www.microsoft.com/en-us/security/blog/2025/02/13/storm-2372-conducts-device-code-phishing-campaign/",
+		"https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-block-authentication-flows#device-code-flow-policies"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "5.2.2.12",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_conditional_access_policy",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "state",
+                                "eq",
+                                "enabled"
+                            ],
+                            [
+                                "conditions.users.includeUsers",
+                                "eq",
+                                "All"
+                            ],
+                            [
+                                "conditions.applications.includeApplications",
+                                "eq",
+                                "All"
+                            ],
+							[
+                                "conditions.authenticationFlows.transferMethods",
+                                "eq",
+                                "deviceCodeFlow"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "grantControls.operator",
+                                "eq",
+                                "OR"
+                            ],
+                            [
+                                "grantControls.builtInControls",
+                                "match",
+                                "block"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "grantControls.operator": "Operator",
+                    "grantControls.builtInControls": "BuiltIn Controls"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "grantControls.operator": "Operator",
+                    "grantControls.builtInControls": "BuiltIn Controls"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    "displayName"
+                ],
+                "message": "The {displayName} policy is not configured to require a compliant or hybrid Entra ID joined device",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraConditionalAccess"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "aad_cap_managed_device_code_sign_in_flow_not_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1173"
+}

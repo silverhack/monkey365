@@ -1,119 +1,109 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Application Insights",
-  "serviceName": "Subscription",
-  "displayName": "Ensure that SKU Basic/Consumption is not used on artifacts that need to be monitored (Particularly for Production Workloads)",
-  "description": "The use of Basic or Free SKUs in Azure whilst cost effective have significant limitations in terms of what can be monitored and what support can be realized from Microsoft. Typically, these SKU's do not have a service SLA and Microsoft may refuse to provide support for them. Consequently Basic/Free SKUs should never be used for production workloads.",
-  "rationale": "
-			Typically, production workloads need to be monitored and should have an SLA with Microsoft, using Basic SKUs for any deployed product will mean that that these capabilities do not exist. 
-
-			The following resource types should use standard SKUs as a minimum. 
-			* Public IP Addresses 
-			* Network Load Balancers 
-			* REDIS Cache 
-			* SQL PaaS Databases 
-			* VPN Gateways 
-  ",
-  "impact": "
-			The impact of enforcing Standard SKU's is twofold 
-			1. There will be a cost increase 
-			2. The monitoring and service level agreements will be available and will support the production service. 
-
-			All resources should be either tagged or in separate Management Groups/Subscriptions 
-  ",
-  "remediation": {
-    "text": "Each artifact has its own process for upgrading from basic to standard SKU's and this should be followed if required.",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://azure.microsoft.com/en-us/support/plans",
-	"https://azure.microsoft.com/en-us/support/plans/response/"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "6.5",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "asList",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": null,
-        "showModalButton": null,
-        "directLink": null
-      }
+    ],
+    "provider": "Azure",
+    "serviceType": "Application Insights",
+    "serviceName": "Subscription",
+    "displayName": "Ensure that SKU Basic/Consumption is not used on artifacts that need to be monitored (Particularly for Production Workloads)",
+    "description": "The use of Basic or Free SKUs in Azure whilst cost effective have significant limitations in terms of what can be monitored and what support can be realized from Microsoft. Typically, these SKU\u0027s do not have a service SLA and Microsoft may refuse to provide support for them. Consequently Basic/Free SKUs should never be used for production workloads.",
+    "rationale": "\r\n\t\t\tTypically, production workloads need to be monitored and should have an SLA with Microsoft, using Basic SKUs for any deployed product will mean that that these capabilities do not exist. \r\n\r\n\t\t\tThe following resource types should use standard SKUs as a minimum. \r\n\t\t\t* Public IP Addresses \r\n\t\t\t* Network Load Balancers \r\n\t\t\t* REDIS Cache \r\n\t\t\t* SQL PaaS Databases \r\n\t\t\t* VPN Gateways \r\n  ",
+    "impact": "\r\n\t\t\tThe impact of enforcing Standard SKU\u0027s is twofold \r\n\t\t\t1. There will be a cost increase \r\n\t\t\t2. The monitoring and service level agreements will be available and will support the production service. \r\n\r\n\t\t\tAll resources should be either tagged or in separate Management Groups/Subscriptions \r\n  ",
+    "remediation": {
+        "text": "Each artifact has its own process for upgrading from basic to standard SKU\u0027s and this should be followed if required.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://azure.microsoft.com/en-us/support/plans",
+        "https://azure.microsoft.com/en-us/support/plans/response/"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "6.5",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_basic_sku_detected",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "expandObject": null
+            },
+            "table": "asList",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": null,
+                "showModalButton": null,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_basic_sku_detected",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_115"
 }
-

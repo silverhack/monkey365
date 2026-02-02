@@ -1,112 +1,131 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Applications",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure the admin consent workflow is enabled",
-  "description": "The admin consent workflow gives admins a secure way to grant access to applications that require admin approval. When a user tries to access an application but is unable to provide consent, they can send a request for admin approval. The request is sent via email to admins who have been designated as reviewers. A reviewer takes action on the request, and the user is notified of the action.",
-  "rationale": "The admin consent workflow (Preview) gives admins a secure way to grant access to applications that require admin approval. When a user tries to access an application but is unable to provide consent, they can send a request for admin approval. The request is sent via email to admins who have been designated as reviewers. A reviewer acts on the request, and the user is notified of the action.",
-  "impact": "To approve requests, a reviewer must be a global administrator, cloud application administrator, or application administrator. The reviewer must already have one of these admin roles assigned; simply designating them as a reviewer doesn't elevate their privileges.",
-  "remediation": {
-    "text": "
-			###### To enable the admin consent workflow, use the Microsoft 365 Admin Center: 
-			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/. 
-			2. Click to expand Identity > Applications select Enterprise applications. 
-			3. Under Security select Consent and permissions. 
-			4. Under Manage select Admin consent settings. 
-			5. Set Users can request admin consent to apps they are unable to consent to to Yes under Admin consent requests. 
-			6. Under the Reviewers choose the Roles and Groups that will review user generated app consent requests. 
-			7. Set Selected users will receive email notifications for requests to Yes 
-			8. Select Save at the top of the window. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-	"https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-admin-consent-workflow"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "5.1.5.3",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Applications",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure the admin consent workflow is enabled",
+    "description": "The admin consent workflow gives admins a secure way to grant access to applications that require admin approval. When a user tries to access an application but is unable to provide consent, they can send a request for admin approval. The request is sent via email to admins who have been designated as reviewers. A reviewer takes action on the request, and the user is notified of the action.",
+    "rationale": "The admin consent workflow (Preview) gives admins a secure way to grant access to applications that require admin approval. When a user tries to access an application but is unable to provide consent, they can send a request for admin approval. The request is sent via email to admins who have been designated as reviewers. A reviewer acts on the request, and the user is notified of the action.",
+    "impact": "To approve requests, a reviewer must be a global administrator, cloud application administrator, or application administrator. The reviewer must already have one of these admin roles assigned; simply designating them as a reviewer doesn\u0027t elevate their privileges.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### To enable the admin consent workflow, use the Microsoft 365 Admin Center: \r\n\t\t\t1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/. \r\n\t\t\t2. Click to expand Identity \u003e Applications select Enterprise applications. \r\n\t\t\t3. Under Security select Consent and permissions. \r\n\t\t\t4. Under Manage select Admin consent settings. \r\n\t\t\t5. Set Users can request admin consent to apps they are unable to consent to to Yes under Admin consent requests. \r\n\t\t\t6. Under the Reviewers choose the Roles and Groups that will review user generated app consent requests. \r\n\t\t\t7. Set Selected users will receive email notifications for requests to Yes \r\n\t\t\t8. Select Save at the top of the window. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-admin-consent-workflow"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "5.1.5.3",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_admin_consent_request_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "isEnabled",
+                                "eq",
+                                "False"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "Ensure the admin consent workflow is enabled",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "eid_admin_consent_workflow_not_enabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "isEnabled": "Enabled",
+                    "notifyReviewers": "notifyReviewers",
+                    "remindersEnabled": "remindersEnabled",
+					"requestDurationInDays": "requestDurationInDays",
+                    "reviewers": "reviewers"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "isEnabled": "Enabled",
+                    "notifyReviewers": "notifyReviewers",
+                    "remindersEnabled": "remindersEnabled",
+					"requestDurationInDays": "requestDurationInDays",
+                    "reviewers": "reviewers"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure the admin consent workflow is enabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": "adminConsentRequestPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_admin_consent_workflow_not_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"@odata.context"
+    ],
+    "id": "entraid_1104"
 }
-

@@ -1,133 +1,134 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "PostgreSQL Configuration",
-  "serviceName": "Database Configuration",
-  "displayName": "Ensure server parameter 'log_disconnections' is set to 'ON' for PostgreSQL single server",
-  "description": "
-		Enable `log_disconnections` on `PostgreSQL Servers`. 
-		*NOTE* : This recommendation currently only applies to Single Server, not Flexible Server. See additional information below for details about the planned retirement of Azure PostgreSQL Single Server. 
-  ",
-  "rationale": "Enabling `log_disconnections` helps PostgreSQL Database to `Logs end of a session`, including duration, which in turn generates query and error logs. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
-  "impact": "Enabling this setting will enable a log of all disconnections. If this is enabled for a high traffic server, the log may grow exponentially.",
-  "remediation": {
-    "text": null,
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/postgresql/single-server/how-to-configure-server-parameters-using-portal",
-    "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver",
-    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "5.2.7",
-	  "profile": "Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_postgresql_servers",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "parameterName",
-                "eq",
-                "log_disconnections"
-              ],
-              [
-                "parameterValue",
-                "ne",
-                "on"
-              ]
-            ],
-            "operator": "and",
-            "whereObject": "configuration"
-          }
-        ]
-      }
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-		"properties": {
-          "Name": "Server Name",
-          "Location": "Parameter",
-          "resourceGroupName": "Resource Group Name"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "configuration"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "true",
-        "showModalButton": "true",
-        "directLink": null
-      }
+    ],
+    "provider": "Azure",
+    "serviceType": "PostgreSQL Configuration",
+    "serviceName": "Database Configuration",
+    "displayName": "Ensure server parameter \u0027log_disconnections\u0027 is set to \u0027ON\u0027 for PostgreSQL single server",
+    "description": "\r\n\t\tEnable `log_disconnections` on `PostgreSQL Servers`. \r\n\t\t*NOTE* : This recommendation currently only applies to Single Server, not Flexible Server. See additional information below for details about the planned retirement of Azure PostgreSQL Single Server. \r\n  ",
+    "rationale": "Enabling `log_disconnections` helps PostgreSQL Database to `Logs end of a session`, including duration, which in turn generates query and error logs. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
+    "impact": "Enabling this setting will enable a log of all disconnections. If this is enabled for a high traffic server, the log may grow exponentially.",
+    "remediation": {
+        "text": null,
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/postgresql/single-server/how-to-configure-server-parameters-using-portal",
+        "https://docs.microsoft.com/en-us/rest/api/postgresql/configurations/listbyserver",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v2-logging-threat-detection#lt-4-enable-logging-for-azure-resources"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "5.2.7",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_postgresql_servers",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "parameterName",
+                                "eq",
+                                "log_disconnections"
+                            ],
+                            [
+                                "parameterValue",
+                                "ne",
+                                "on"
+                            ]
+                        ],
+                        "operator": "and",
+                        "whereObject": "configuration"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "postgresql_log_disconnections_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "Name": "Server Name",
+                    "Location": "Parameter",
+                    "resourceGroupName": "Resource Group Name"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "configuration"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "true",
+                "showModalButton": "true",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "postgresql_log_disconnections_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_129"
 }
-

@@ -1,114 +1,108 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "General",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure that 'Allow users to remember multi-factor authentication on devices they trust' is Disabled",
-  "description": "
-			###### IMPORTANT - Please read the section overview
-			If your organization pays for Microsoft Entra ID licensing (included in Microsoft 365 E3, E5, or F5, and EM&S E3 or E5 licenses) and CAN use Conditional Access, ignore the recommendations in this section and proceed to the Conditional Access section.
-			Do not allow users to remember multi-factor authentication on devices. 
-  ",
-  "rationale": "Remembering Multi-Factor Authentication (MFA) for devices and browsers allows users to have the option to bypass MFA for a set number of days after performing a successful sign-in using MFA. This can enhance usability by minimizing the number of times a user may need to perform two-step verification on the same device. However, if an account or device is compromised, remembering MFA for trusted devices may affect security. Hence, it is recommended that users not be allowed to bypass MFA.",
-  "impact": "For every login attempt, the user will be required to perform multi-factor authentication.",
-  "remediation": {
-    "text": "
-		###### Remediate from Azure Portal <br/>
-
-		1. From Azure Home select the Portal Menu 
-		2. Select `Microsoft Entra ID` blade 
-		3. Under `Manage`, click `Users`
-		4. Click on the `Per-User MFA` button in the top row menu 
-		5. Click on `Service settings`
-		6. Uncheck the box next to `Allow users to remember multi-factor authentication on devices they trust`
-		7. Click `Save`
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-mfa-mfasettings#remember-multi-factor-authentication-for-devices-that-users-trust",
-    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-4-use-strong-authentication-controls-for-all-azure-active-directory-based-access",
-    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identity-management#im-6-use-strong-authentication-controls"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "2.1.4",
-	  "profile": "Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": "",
-          "limit": null
-        },
-        "showGoToButton": "False",
-        "showModalButton": "False",
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "General",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure that \u0027Allow users to remember multi-factor authentication on devices they trust\u0027 is Disabled",
+    "description": "\r\n\t\t\t###### IMPORTANT - Please read the section overview\r\n\t\t\tIf your organization pays for Microsoft Entra ID licensing (included in Microsoft 365 E3, E5, or F5, and EM\u0026S E3 or E5 licenses) and CAN use Conditional Access, ignore the recommendations in this section and proceed to the Conditional Access section.\r\n\t\t\tDo not allow users to remember multi-factor authentication on devices. \r\n  ",
+    "rationale": "Remembering Multi-Factor Authentication (MFA) for devices and browsers allows users to have the option to bypass MFA for a set number of days after performing a successful sign-in using MFA. This can enhance usability by minimizing the number of times a user may need to perform two-step verification on the same device. However, if an account or device is compromised, remembering MFA for trusted devices may affect security. Hence, it is recommended that users not be allowed to bypass MFA.",
+    "impact": "For every login attempt, the user will be required to perform multi-factor authentication.",
+    "remediation": {
+        "text": "\r\n\t\t###### Remediate from Azure Portal \u003cbr/\u003e\r\n\r\n\t\t1. From Azure Home select the Portal Menu \r\n\t\t2. Select `Microsoft Entra ID` blade \r\n\t\t3. Under `Manage`, click `Users`\r\n\t\t4. Click on the `Per-User MFA` button in the top row menu \r\n\t\t5. Click on `Service settings`\r\n\t\t6. Uncheck the box next to `Allow users to remember multi-factor authentication on devices they trust`\r\n\t\t7. Click `Save`\r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-mfa-mfasettings#remember-multi-factor-authentication-for-devices-that-users-trust",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-4-use-strong-authentication-controls-for-all-azure-active-directory-based-access",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identity-management#im-6-use-strong-authentication-controls"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "2.1.4",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": ""
-      },
-      "status": {
-        "keyName": [
+        "query": [
+            
         ],
-      "message": "",
-      "defaultMessage": "Ensure that 'Allow users to remember multi-factor authentication on devices they trust' is Disabled"
-      },
-      "properties": {
-      },
-      "onlyStatus": true
-    }
-  },
-  "idSuffix": "eid_users_remember_mfa_trusted_devices_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": "",
+                    "limit": null
+                },
+                "showGoToButton": "False",
+                "showModalButton": "False",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": ""
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": "Ensure that \u0027Allow users to remember multi-factor authentication on devices they trust\u0027 is Disabled"
+            },
+            "properties": {
+                
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "eid_users_remember_mfa_trusted_devices_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "entraid_1162"
 }
-

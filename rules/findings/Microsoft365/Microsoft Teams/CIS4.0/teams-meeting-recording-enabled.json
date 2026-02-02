@@ -1,113 +1,133 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Microsoft Teams",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure meeting recording is off by default",
-  "description": "
-		This setting controls the ability for a user to initiate a recording of a meeting in progress. 
-		The recommended state is `Off` for the `Global (Org-wide default)` meeting policy. 
-  ",
-  "rationale": "Disabling meeting recordings in the Global meeting policy ensures that only authorized users, such as organizers, co-organizers, and leads, can initiate a recording. This measure helps safeguard sensitive information by preventing unauthorized individuals from capturing and potentially sharing meeting content. Restricting recording capabilities to specific roles allows organizations to exercise greater control over what is recorded, aligning it with the meeting's confidentiality requirements.",
-  "impact": "If there are no additional policies allowing anyone to record, then recording will effectively be disabled.",
-  "remediation": {
-    "text": "
-			###### To remediate using the UI: 
-			1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com. 
-			2. Click to expand Meetings select Meeting policies. 
-			3. Click Global (Org-wide default). 
-			4. Under Recording & transcription set Meeting recording to Off.
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-	"https://learn.microsoft.com/en-us/microsoftteams/settings-policies-reference#recording--transcription"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "4.0.0",
-      "reference": "8.5.9",
-	  "profile": "E3 Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Microsoft Teams",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure meeting recording is off by default",
+    "description": "\r\n\t\tThis setting controls the ability for a user to initiate a recording of a meeting in progress. \r\n\t\tThe recommended state is `Off` for the `Global (Org-wide default)` meeting policy. \r\n  ",
+    "rationale": "Disabling meeting recordings in the Global meeting policy ensures that only authorized users, such as organizers, co-organizers, and leads, can initiate a recording. This measure helps safeguard sensitive information by preventing unauthorized individuals from capturing and potentially sharing meeting content. Restricting recording capabilities to specific roles allows organizations to exercise greater control over what is recorded, aligning it with the meeting\u0027s confidentiality requirements.",
+    "impact": "If there are no additional policies allowing anyone to record, then recording will effectively be disabled.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com. \r\n\t\t\t2. Click to expand Meetings select Meeting policies. \r\n\t\t\t3. Click Global (Org-wide default). \r\n\t\t\t4. Under Recording \u0026 transcription set Meeting recording to Off.\r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/microsoftteams/settings-policies-reference#recording--transcription"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "8.5.9",
+            "profile": "E3 Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_teams_skype_meeting_policies",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "Identity",
+                                "eq",
+                                "Global"
+                            ],
+                            [
+                                "AllowCloudRecording",
+                                "eq",
+                                "True"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure meeting recording is off by default",
-        "defaultMessage": "Ensure meeting recording is off by default"
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "teams_meeting_recorded_enabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "Identity": "Identity",
+                    "Description": "Description",
+					"AllowCloudRecording": "Meeting recording"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "Identity": "Identity",
+                    "Description": "Description",
+					"AllowCloudRecording": "Meeting recording"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure meeting recording is off by default",
+                "defaultMessage": "Ensure meeting recording is off by default"
+            },
+            "properties": {
+                "resourceName": "Identity",
+                "resourceId": null,
+                "resourceType": "TeamsMeetingPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "teams_meeting_recorded_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"Identity"
+    ],
+    "id": "microsoft365_2181"
 }
-

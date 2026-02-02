@@ -1,114 +1,128 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Groups",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure that only organizationally managed/approved public groups exist",
-  "description": "
-		Microsoft 365 Groups is the foundational membership service that drives all teamwork across Microsoft 365. With Microsoft 365 Groups, you can give a group of people access to a collection of shared resources. While there are several different group types this recommendation concerns *Microsoft 365 Groups*. 
-		In the Administration panel, when a group is created, the default privacy value is `Public`. 
-  ",
-  "rationale": "
-		Ensure that only organizationally managed and approved public groups exist. When a group has a `public` privacy, users may access data related to this group (e.g. SharePoint), through three methods: 
-		* By using the Azure portal, and adding themselves into the public group 
-		* By requesting access to the group from the Group application of the Access Panel 
-		* By accessing the SharePoint URL 
-		Administrators are notified when a user uses the Azure Portal. Requesting access to the group forces users to send a message to the group owner, but they still have immediate access to the group. The SharePoint URL is usually guessable and can be found from the Group application of the Access Panel. If group privacy is not controlled, any user may access sensitive information, according to the group they try to access. Note: Public in this case means public to the identities within the organization. 
-  ",
-  "impact": "If the recommendation is applied, group owners could receive more access requests than usual, especially regarding groups originally meant to be public.",
-  "remediation": {
-    "text": "",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-		"https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-self-service-management",
-		"https://learn.microsoft.com/en-us/microsoft-365/admin/create-groups/compare-groups?view=o365-worldwide"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.1.0",
-      "reference": "1.2.1",
-	  "profile": "E3 Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": "true"
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "False",
-        "showModalButton": "False",
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Groups",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure that only organizationally managed/approved public groups exist",
+    "description": "\r\n\t\tMicrosoft 365 Groups is the foundational membership service that drives all teamwork across Microsoft 365. With Microsoft 365 Groups, you can give a group of people access to a collection of shared resources. While there are several different group types this recommendation concerns *Microsoft 365 Groups*. \r\n\t\tIn the Administration panel, when a group is created, the default privacy value is `Public`. \r\n  ",
+    "rationale": "\r\n\t\tEnsure that only organizationally managed and approved public groups exist. When a group has a `public` privacy, users may access data related to this group (e.g. SharePoint), through three methods: \r\n\t\t* By using the Azure portal, and adding themselves into the public group \r\n\t\t* By requesting access to the group from the Group application of the Access Panel \r\n\t\t* By accessing the SharePoint URL \r\n\t\tAdministrators are notified when a user uses the Azure Portal. Requesting access to the group forces users to send a message to the group owner, but they still have immediate access to the group. The SharePoint URL is usually guessable and can be found from the Group application of the Access Panel. If group privacy is not controlled, any user may access sensitive information, according to the group they try to access. Note: Public in this case means public to the identities within the organization. \r\n  ",
+    "impact": "If the recommendation is applied, group owners could receive more access requests than usual, especially regarding groups originally meant to be public.",
+    "remediation": {
+        "text": "",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-self-service-management",
+        "https://learn.microsoft.com/en-us/microsoft-365/admin/create-groups/compare-groups?view=o365-worldwide"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.1.0",
+            "reference": "1.2.1",
+            "profile": "E3 Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_groups",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+			{
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "visibility",
+                                "eq",
+                                "Public"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "Ensure Guest Users are reviewed at least biweekly",
-        "defaultMessage": "Ensure Guest Users are reviewed at least biweekly"
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": true
-    }
-  },
-  "idSuffix": "eid_lack_emergency_account",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": "true"
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "Id",
+                    "displayName": "Name",
+                    "description": "Description",
+                    "visibility": "Visibility"
+                }
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "False",
+                "showModalButton": "False",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"id": "Id",
+                    "displayName": "Name",
+                    "description": "Description",
+                    "visibility": "Visibility"
+                }
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure that only organizationally managed/approved public groups exist",
+                "defaultMessage": "Ensure that only organizationally managed/approved public groups exist"
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "EntraGroup"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "eid_public_group",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "entraid_1134"
 }
-

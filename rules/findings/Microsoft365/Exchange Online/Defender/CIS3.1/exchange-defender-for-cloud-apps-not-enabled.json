@@ -1,128 +1,115 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Exchange Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure Microsoft Defender for Cloud Apps is enabled and configured",
-  "description": "
-		Microsoft Defender for Cloud Apps is a Cloud Access Security Broker (CASB). It provides visibility into suspicious activity in Microsoft 365, enabling investigation into potential security issues and facilitating the implementation of remediation measures if necessary. Some risk detection methods provided by Entra Identity Protection also require Microsoft Defender for Cloud Apps: 
-
-		* Suspicious manipulation of inbox rules 
-		* Suspicious inbox forwarding 
-		* New country detection 
-		* Impossible travel detection 
-		* Activity from anonymous IP addresses 
-		* Mass access to sensitive files 
-  ",
-  "rationale": "Security teams can receive notifications of triggered alerts for atypical or suspicious activities, see how the organization's data in Microsoft 365 is accessed and used, suspend user accounts exhibiting suspicious activity, and require users to log back in to Microsoft 365 apps after an alert has been triggered.",
-  "impact": null,
-  "remediation": {
-    "text": "
-			###### Configure Information Protection and Cloud Discovery: 
-			1. Navigate to Microsoft 365 Defender https://security.microsoft.com/ 
-			2. Select Settings > Cloud apps. 
-			3. Scroll to Information Protection and select Files. 
-			4. Check Enable file monitoring. 
-			5. Scroll up to Cloud Discovery and select Microsoft Defender for Endpoint. 
-			6. Check Enforce app access, configure a Notification URL and Save. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-		"https://learn.microsoft.com/en-us/defender-cloud-apps/connect-office-365",
-		"https://learn.microsoft.com/en-us/defender-cloud-apps/connect-azure",
-		"https://learn.microsoft.com/en-us/defender-cloud-apps/best-practices",
-		"https://learn.microsoft.com/en-us/defender-cloud-apps/get-started",
-		"https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "2.4.3",
-	  "profile": "E5 Level 2"
-    }
-  ],
-  "level": "info",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure Microsoft Defender for Cloud Apps is enabled and configured",
+    "description": "\r\n\t\tMicrosoft Defender for Cloud Apps is a Cloud Access Security Broker (CASB). It provides visibility into suspicious activity in Microsoft 365, enabling investigation into potential security issues and facilitating the implementation of remediation measures if necessary. Some risk detection methods provided by Entra Identity Protection also require Microsoft Defender for Cloud Apps: \r\n\r\n\t\t* Suspicious manipulation of inbox rules \r\n\t\t* Suspicious inbox forwarding \r\n\t\t* New country detection \r\n\t\t* Impossible travel detection \r\n\t\t* Activity from anonymous IP addresses \r\n\t\t* Mass access to sensitive files \r\n  ",
+    "rationale": "Security teams can receive notifications of triggered alerts for atypical or suspicious activities, see how the organization\u0027s data in Microsoft 365 is accessed and used, suspend user accounts exhibiting suspicious activity, and require users to log back in to Microsoft 365 apps after an alert has been triggered.",
+    "impact": null,
+    "remediation": {
+        "text": "\r\n\t\t\t###### Configure Information Protection and Cloud Discovery: \r\n\t\t\t1. Navigate to Microsoft 365 Defender https://security.microsoft.com/ \r\n\t\t\t2. Select Settings \u003e Cloud apps. \r\n\t\t\t3. Scroll to Information Protection and select Files. \r\n\t\t\t4. Check Enable file monitoring. \r\n\t\t\t5. Scroll up to Cloud Discovery and select Microsoft Defender for Endpoint. \r\n\t\t\t6. Check Enforce app access, configure a Notification URL and Save. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/connect-office-365",
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/connect-azure",
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/best-practices",
+        "https://learn.microsoft.com/en-us/defender-cloud-apps/get-started",
+        "https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "2.4.3",
+            "profile": "E5 Level 2"
+        }
+    ],
+    "level": "info",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "Ensure Microsoft Defender for Cloud Apps is enabled and configured",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_defender_cloud_apps_not_enabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure Microsoft Defender for Cloud Apps is enabled and configured",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_defender_cloud_apps_not_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "microsoft365_2110"
 }
-

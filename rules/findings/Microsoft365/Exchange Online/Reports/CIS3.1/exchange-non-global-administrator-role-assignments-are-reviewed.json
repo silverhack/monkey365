@@ -1,114 +1,111 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Exchange Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure the Account Provisioning Activity report is reviewed at least weekly",
-  "description": "Non-global administrator role group assignments should be reviewed at least every week.",
-  "rationale": "While these roles are less powerful than a global admin, they do grant special privileges that can be used illicitly. If unusual activity is detected, contact the user to confirm it is a legitimate need.",
-  "impact": null,
-  "remediation": {
-    "text": "
-			###### To review non-global administrator role group assignments: 
-			1. Navigate to Microsoft 365 Defender https://security.microsoft.com. 
-			2. Click on Audit. 
-			3. Set Added member to Role and Removed a user from a directory role for Activities. 
-			4. Set Start Date and End Date. 
-			5. Click Search. 
-			6. Review.  
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "2.3.2",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "info",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure the Account Provisioning Activity report is reviewed at least weekly",
+    "description": "Non-global administrator role group assignments should be reviewed at least every week.",
+    "rationale": "While these roles are less powerful than a global admin, they do grant special privileges that can be used illicitly. If unusual activity is detected, contact the user to confirm it is a legitimate need.",
+    "impact": null,
+    "remediation": {
+        "text": "\r\n\t\t\t###### To review non-global administrator role group assignments: \r\n\t\t\t1. Navigate to Microsoft 365 Defender https://security.microsoft.com. \r\n\t\t\t2. Click on Audit. \r\n\t\t\t3. Set Added member to Role and Removed a user from a directory role for Activities. \r\n\t\t\t4. Set Start Date and End Date. \r\n\t\t\t5. Click Search. \r\n\t\t\t6. Review.  \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "2.3.2",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "info",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "Ensure non-global administrator role group assignments are reviewed at least weekly",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_nonglobal_admin_role_assignment_report_is_reviewed",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure non-global administrator role group assignments are reviewed at least weekly",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_nonglobal_admin_role_assignment_report_is_reviewed",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "microsoft365_2137"
 }
-

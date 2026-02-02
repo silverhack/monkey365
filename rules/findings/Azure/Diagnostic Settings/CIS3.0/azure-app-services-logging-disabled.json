@@ -1,147 +1,150 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Diagnostic Settings",
-  "serviceName": "Subscription",
-  "displayName": "Ensure that logging for Azure AppService 'HTTP logs' is enabled",
-  "description": "Enable AppServiceHTTPLogs diagnostic log category for Azure App Service instances to ensure all http requests are captured and centrally logged.",
-  "rationale": "Capturing web requests can be important supporting information for security analysts performing monitoring and incident response activities. Once logging, these logs can be ingested into SIEM or other central aggregation point for the organization",
-  "impact": "Log consumption and processing will incur additional cost.",
-  "remediation": {
-    "text": "###### Using From Azure Portal\r\n\t\t\t\t\t1. Go to the Azure Portal\r\n\t\t\t\t\t2. Select `App Services`\r\n\t\t\t\t\t3. For each `App Service`\r\n\t\t\t\t\t3. Go to `Diagnostic Settings`\r\n\t\t\t\t\t4. Click `Add Diagnostic Setting`\r\n\t\t\t\t\t5. Check the checkbox next to \u0027AppServiceHTTPLogs\u0027\r\n\t\t\t\t\t6. Configure destination based on your specific logging consumption capability (for example Stream to an event hub and then consuming with SIEM integration for Event Hub logging)",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/app-service/troubleshoot-diagnostic-logs",
-    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "6.1.6",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "low",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_app_services",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "operator": "and",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "diagnosticSettings.enabled",
-                "eq",
-                "false"
-              ],
-              [
-                "diagnosticSettings.properties.logs.categoryGroup",
-                "notcontains",
-                "allLogs"
-              ]
-            ],
-            "operator": "or"
-          },
-          {
-            "conditions": [
-              [
-                "diagnosticSettings.properties.logs.category",
-                "notContains",
-                "AppServiceHTTPLogs"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "name": "Application Name",
-          "kind": "Kind",
-          "location": "Location",
-          "properties.defaultHostName": "HostName",
-          "diagnosticSettings.enabled": "Diagnostic Settings Enabled",
-          "diagnosticSettings.properties.logs.category": "Log Category"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "name",
-            "kind",
-            "location",
-            "properties.defaultHostName",
-            "diagnosticSettings.enabled",
-            "diagnosticSettings.properties.logs.category"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Diagnostic Settings",
+    "serviceName": "Subscription",
+    "displayName": "Ensure that logging for Azure AppService \u0027HTTP logs\u0027 is enabled",
+    "description": "Enable AppServiceHTTPLogs diagnostic log category for Azure App Service instances to ensure all http requests are captured and centrally logged.",
+    "rationale": "Capturing web requests can be important supporting information for security analysts performing monitoring and incident response activities. Once logging, these logs can be ingested into SIEM or other central aggregation point for the organization",
+    "impact": "Log consumption and processing will incur additional cost.",
+    "remediation": {
+        "text": "###### Using From Azure Portal\r\n\t\t\t\t\t1. Go to the Azure Portal\r\n\t\t\t\t\t2. Select `App Services`\r\n\t\t\t\t\t3. For each `App Service`\r\n\t\t\t\t\t3. Go to `Diagnostic Settings`\r\n\t\t\t\t\t4. Click `Add Diagnostic Setting`\r\n\t\t\t\t\t5. Check the checkbox next to \u0027AppServiceHTTPLogs\u0027\r\n\t\t\t\t\t6. Configure destination based on your specific logging consumption capability (for example Stream to an event hub and then consuming with SIEM integration for Event Hub logging)",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/troubleshoot-diagnostic-logs",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "6.1.6",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "low",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_app_services",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "operator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "diagnosticSettings.enabled",
+                                "eq",
+                                "false"
+                            ],
+                            [
+                                "diagnosticSettings.properties.logs.categoryGroup",
+                                "notcontains",
+                                "allLogs"
+                            ]
+                        ],
+                        "operator": "or"
+                    },
+                    {
+                        "conditions": [
+                            [
+                                "diagnosticSettings.properties.logs.category",
+                                "notContains",
+                                "AppServiceHTTPLogs"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "app_service_login_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Application Name",
+                    "kind": "Kind",
+                    "location": "Location",
+                    "properties.defaultHostName": "HostName",
+                    "diagnosticSettings.enabled": "Diagnostic Settings Enabled",
+                    "diagnosticSettings.properties.logs.category": "Log Category"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "name",
+                        "kind",
+                        "location",
+                        "properties.defaultHostName",
+                        "diagnosticSettings.enabled",
+                        "diagnosticSettings.properties.logs.category"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "app_service_login_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_163"
 }
-

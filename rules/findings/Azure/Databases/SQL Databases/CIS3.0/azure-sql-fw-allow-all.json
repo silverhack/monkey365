@@ -1,148 +1,145 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Azure SQL Firewall",
-  "serviceName": "Network",
-  "displayName": "Ensure no Azure SQL Databases allow ingress from _ARG_0_",
-  "description": "_ARG_3_",
-  "rationale": "
-		Azure SQL Server includes a firewall to block access to unauthorized connections. More granular IP addresses can be defined by referencing the range of addresses available from specific datacenters. 
-		By default, for a SQL server, a Firewall exists with StartIp of 0.0.0.0 and EndIP of 0.0.0.0 allowing access to all the Azure services. 
-		Additionally, a custom rule can be set up with StartIp of 0.0.0.0 and EndIP of 255.255.255.255 allowing access from ANY IP over the Internet. In order to reduce the potential attack surface for a SQL server, firewall rules should be defined with more granular IP addresses by referencing the range of addresses available from specific datacenters.
-		If Allow Azure services and resources to access this server is `Checked`, this will allow resources outside of the subscription/tenant/organization boundary, within any region of Azure, to effectively bypass the defined SQL Server Network ACL on public endpoint. A malicious attacker can successfully launch a SQL server password bruteforce attack by creating a virtual machine in any Azure subscription/region, from outside of the subscription boundary where the SQL Server is residing. 
-  ",
-  "impact": "Disabling Allow Azure services and resources to access this server will break all connections to SQL server and Hosted Databases unless custom IP specific rules are added in Firewall Policy.",
-  "remediation": {
-    "text": "
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/configure-a-windows-firewall-for-database-engine-access?view=sql-server-2017",
-	"https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserverfirewallrule?view=azurermps-5.2.0",
-	"https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/set-azurermsqlserverfirewallrule?view=azurermps-5.2.0",
-	"https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/remove-azurermsqlserverfirewallrule?view=azurermps-5.2.0",
-	"https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure",
-	"https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-set-database-firewall-rule-azure-sql-database?view=azuresqldb-current",
-	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-network-security#ns-2-secure-cloud-native-services-with-network-controls",
-	"https://learn.microsoft.com/en-us/azure/azure-sql/database/network-access-controls-overview?view=azuresql#allow-azure-services"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "_ARG_4_",
-      "reference": "_ARG_5_",
-	  "profile": "_ARG_6_"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_sql_servers",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "fwRules.StartIpAddress",
-                "eq",
-                "_ARG_1_"
-              ],
-              [
-                "fwRules.EndIpAddress",
-                "eq",
-                "_ARG_2_"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "Name": "Server Name",
-          "Location": "Location",
-          "ResourceGroupName": "Resource Group",
-          "fwRules.RuleName": "Rule Name",
-          "fwRules.StartIpAddress": "StartIpAddress",
-          "fwRules.EndIpAddress": "EndIpAddress"
-        },
-        "expandObject": "fwRules"
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "Name",
-			"Location",
-			"RuleName",
-			"StartIpAddress",
-			"EndIpAddress"
-          ],
-          "expandObject": "fwRules",
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": true,
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Azure SQL Firewall",
+    "serviceName": "Network",
+    "displayName": "Ensure no Azure SQL Databases allow ingress from _ARG_0_",
+    "description": "_ARG_3_",
+    "rationale": "\r\n\t\tAzure SQL Server includes a firewall to block access to unauthorized connections. More granular IP addresses can be defined by referencing the range of addresses available from specific datacenters. \r\n\t\tBy default, for a SQL server, a Firewall exists with StartIp of 0.0.0.0 and EndIP of 0.0.0.0 allowing access to all the Azure services. \r\n\t\tAdditionally, a custom rule can be set up with StartIp of 0.0.0.0 and EndIP of 255.255.255.255 allowing access from ANY IP over the Internet. In order to reduce the potential attack surface for a SQL server, firewall rules should be defined with more granular IP addresses by referencing the range of addresses available from specific datacenters.\r\n\t\tIf Allow Azure services and resources to access this server is `Checked`, this will allow resources outside of the subscription/tenant/organization boundary, within any region of Azure, to effectively bypass the defined SQL Server Network ACL on public endpoint. A malicious attacker can successfully launch a SQL server password bruteforce attack by creating a virtual machine in any Azure subscription/region, from outside of the subscription boundary where the SQL Server is residing. \r\n  ",
+    "impact": "Disabling Allow Azure services and resources to access this server will break all connections to SQL server and Hosted Databases unless custom IP specific rules are added in Firewall Policy.",
+    "remediation": {
+        "text": "\r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/configure-a-windows-firewall-for-database-engine-access?view=sql-server-2017",
+        "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/get-azurermsqlserverfirewallrule?view=azurermps-5.2.0",
+        "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/set-azurermsqlserverfirewallrule?view=azurermps-5.2.0",
+        "https://docs.microsoft.com/en-us/powershell/module/azurerm.sql/remove-azurermsqlserverfirewallrule?view=azurermps-5.2.0",
+        "https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure",
+        "https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-set-database-firewall-rule-azure-sql-database?view=azuresqldb-current",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-network-security#ns-2-secure-cloud-native-services-with-network-controls",
+        "https://learn.microsoft.com/en-us/azure/azure-sql/database/network-access-controls-overview?view=azuresql#allow-azure-services"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "_ARG_4_",
+            "reference": "_ARG_5_",
+            "profile": "_ARG_6_"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_sql_servers",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "fwRules.StartIpAddress",
+                                "eq",
+                                "_ARG_1_"
+                            ],
+                            [
+                                "fwRules.EndIpAddress",
+                                "eq",
+                                "_ARG_2_"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_permissive_sql_fw_rule_enabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "Name": "Server Name",
+                    "Location": "Location",
+                    "ResourceGroupName": "Resource Group",
+                    "fwRules.RuleName": "Rule Name",
+                    "fwRules.StartIpAddress": "StartIpAddress",
+                    "fwRules.EndIpAddress": "EndIpAddress"
+                },
+                "expandObject": "fwRules"
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "Name",
+                        "Location",
+                        "RuleName",
+                        "StartIpAddress",
+                        "EndIpAddress"
+                    ],
+                    "expandObject": "fwRules",
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": true,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_permissive_sql_fw_rule_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_133"
 }
-

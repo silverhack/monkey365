@@ -1,135 +1,139 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "General",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure 'User consent for applications' Is Set To 'Allow for Verified Publishers'",
-  "description": "Allow users to provide consent for selected permissions when a request is coming from a verified publisher.",
-  "rationale": "If Microsoft Entra ID is running as an identity provider for third-party applications, permissions and consent should be limited to administrators or pre-approved. Malicious applications may attempt to exfiltrate data or abuse privileged user accounts.",
-  "impact": "Enforcing this setting may create additional requests that administrators need to fulfill quite often.",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t\t2. Go to `Users`\r\n\t\t\t\t\t\t3. Go to `User settings`\r\n\t\t\t\t\t\t4. Click on `Manage how end users launch and view their applications`\r\n\t\t\t\t\t\t5. Click on `Consent and Permissions`\r\n\t\t\t\t\t\t6. Set ` Allow user consent for apps from verified publishers, for selected permissions`\r\n\t\t\t\t\t\t7. Click on `Save`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/methods-for-assigning-users-and-groups",
-    "https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added",
-    "https://ezcloudinfo.com/2019/01/22/configure-access-panel-in-azure-active-directory/",
-    "https://blogs.msdn.microsoft.com/exchangedev/2014/06/05/managing-user-consent-for-applications-using-office-365-apis/",
-    "https://nicksnettravels.builttoroam.com/post/2017/01/24/Admin-Consent-for-Permissions-in-Azure-Active-Directory.aspx",
-    "https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/configure-user-consent#configure-user-consent-to-applications",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "2.13",
-	  "profile": "Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "aad_authorization_policy",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "TenantAuthPolicy.defaultUserRolePermissions.permissionGrantPoliciesAssigned.Count",
-                "ne",
-                "0"
-              ],
-              [
-                "TenantAuthPolicy.defaultUserRolePermissions.permissionGrantPoliciesAssigned",
-                "eq",
-                "ManagePermissionGrantsForSelf.microsoft-user-default-legacy"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "General",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure \u0027User consent for applications\u0027 Is Set To \u0027Allow for Verified Publishers\u0027",
+    "description": "Allow users to provide consent for selected permissions when a request is coming from a verified publisher.",
+    "rationale": "If Microsoft Entra ID is running as an identity provider for third-party applications, permissions and consent should be limited to administrators or pre-approved. Malicious applications may attempt to exfiltrate data or abuse privileged user accounts.",
+    "impact": "Enforcing this setting may create additional requests that administrators need to fulfill quite often.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t\t2. Go to `Users`\r\n\t\t\t\t\t\t3. Go to `User settings`\r\n\t\t\t\t\t\t4. Click on `Manage how end users launch and view their applications`\r\n\t\t\t\t\t\t5. Click on `Consent and Permissions`\r\n\t\t\t\t\t\t6. Set ` Allow user consent for apps from verified publishers, for selected permissions`\r\n\t\t\t\t\t\t7. Click on `Save`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/methods-for-assigning-users-and-groups",
+        "https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added",
+        "https://ezcloudinfo.com/2019/01/22/configure-access-panel-in-azure-active-directory/",
+        "https://blogs.msdn.microsoft.com/exchangedev/2014/06/05/managing-user-consent-for-applications-using-office-365-apis/",
+        "https://nicksnettravels.builttoroam.com/post/2017/01/24/Admin-Consent-for-Permissions-in-Azure-Active-Directory.aspx",
+        "https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/configure-user-consent#configure-user-consent-to-applications",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "2.13",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_authorization_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "tenantAuthPolicy.defaultUserRolePermissions.permissionGrantPoliciesAssigned.Count",
+                                "ne",
+                                "0"
+                            ],
+                            [
+                                "tenantAuthPolicy.defaultUserRolePermissions.permissionGrantPoliciesAssigned",
+                                "eq",
+                                "ManagePermissionGrantsForSelf.microsoft-user-default-legacy"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "The Allow for Verified Publishers is not set",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "eid_allow_consent_apps_from_trusted_publishers",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"tenantAuthPolicy.displayName": "Display Name",
+                    "tenantAuthPolicy.description": "Description"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"tenantAuthPolicy":"tenantAuthPolicy"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "The Allow for Verified Publishers is not set",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "tenantAuthPolicy.displayName",
+                "resourceId": "tenantAuthPolicyId",
+                "resourceType": "EntraAuthorizationPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_allow_consent_apps_from_trusted_publishers",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"tenantAuthPolicyId"
+    ],
+    "id": "entraid_1101"
 }
-

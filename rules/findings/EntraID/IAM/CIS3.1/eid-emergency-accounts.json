@@ -1,112 +1,109 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Entra Identity Governance",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure two emergency access accounts have been defined",
-  "description": "
-		Emergency access or `break glass` accounts are limited for emergency scenarios where normal administrative accounts are unavailable. They are not assigned to a specific user and will have a combination of physical and technical controls to prevent them from being accessed outside a true emergency. These emergencies could be due to several things, including: 
-		* Technical failures of a cellular provider or Microsoft related service such as MFA. 
-		* The last remaining Global Administrator account is inaccessible. 
-
-		Ensure two Emergency Access accounts have been defined. 
-		*Note*: Microsoft provides several recommendations for these accounts and how to configure them. For more information on this, please refer to the references section. The CIS Benchmark outlines the more critical things to consider. 
-  ",
-  "rationale": "In various situations, an organization may require the use of a break glass account to gain emergency access. In the event of losing access to administrative functions, an organization may experience a significant loss in its ability to provide support, lose insight into its security posture, and potentially suffer financial losses.",
-  "impact": "If care is not taken in properly implementing an emergency access account this could weaken security posture. Microsoft recommends to exclude at least one of these accounts from all conditional access rules therefore passwords must have sufficient entropy and length to protect against random guesses. FIDO2 security keys may be used instead of a password for secure passwordless solution.",
-  "remediation": {
-    "text": "",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-	"https://learn.microsoft.com/en-us/azure/active-directory/roles/security-planning#stage-1-critical-items-to-do-right-now",
-	"https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.1.0",
-      "reference": "1.1.2",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": "true"
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "False",
-        "showModalButton": "False",
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Entra Identity Governance",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure two emergency access accounts have been defined",
+    "description": "\r\n\t\tEmergency access or `break glass` accounts are limited for emergency scenarios where normal administrative accounts are unavailable. They are not assigned to a specific user and will have a combination of physical and technical controls to prevent them from being accessed outside a true emergency. These emergencies could be due to several things, including: \r\n\t\t* Technical failures of a cellular provider or Microsoft related service such as MFA. \r\n\t\t* The last remaining Global Administrator account is inaccessible. \r\n\r\n\t\tEnsure two Emergency Access accounts have been defined. \r\n\t\t*Note*: Microsoft provides several recommendations for these accounts and how to configure them. For more information on this, please refer to the references section. The CIS Benchmark outlines the more critical things to consider. \r\n  ",
+    "rationale": "In various situations, an organization may require the use of a break glass account to gain emergency access. In the event of losing access to administrative functions, an organization may experience a significant loss in its ability to provide support, lose insight into its security posture, and potentially suffer financial losses.",
+    "impact": "If care is not taken in properly implementing an emergency access account this could weaken security posture. Microsoft recommends to exclude at least one of these accounts from all conditional access rules therefore passwords must have sufficient entropy and length to protect against random guesses. FIDO2 security keys may be used instead of a password for secure passwordless solution.",
+    "remediation": {
+        "text": "",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/active-directory/roles/security-planning#stage-1-critical-items-to-do-right-now",
+        "https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.1.0",
+            "reference": "1.1.2",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "Emergency account was not found",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": true
-    }
-  },
-  "idSuffix": "eid_lack_emergency_account",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": "true"
+    },
+    "output": {
+        "html": {
+            "data": {
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "False",
+                "showModalButton": "False",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Emergency account was not found",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "eid_lack_emergency_account",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "entraid_1143"
 }
-

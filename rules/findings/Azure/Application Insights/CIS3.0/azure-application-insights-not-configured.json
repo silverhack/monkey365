@@ -1,117 +1,108 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Application Insights",
-  "serviceName": "Subscription",
-  "displayName": "Ensure Application Insights are Configured",
-  "description": "Application Insights within Azure act as an Application Performance Monitoring solution providing valuable data into how well an application performs and additional information when performing incident response. The types of log data collected include application metrics, telemetry data, and application trace logging data providing organizations with detailed information about application activity and application transactions. Both data sets help organizations adopt a proactive and retroactive means to handle security and performance related metrics within their modern applications.",
-  "rationale": "Configuring Application Insights provides additional data not found elsewhere within Azure as part of a much larger logging and monitoring program within an organization's Information Security practice. The types and contents of these logs will act as both a potential cost saving measure (application performance) and a means to potentially confirm the source of a potential incident (trace logging). Metrics and Telemetry data provide organizations with a proactive approach to cost savings by monitoring an application's performance, while the trace logging data provides necessary details in a reactive incident response scenario by helping organizations identify the potential source of an incident within their application.",
-  "impact": "Because Application Insights relies on a Log Analytics Workspace, an organization will incur additional expenses when using this service.",
-  "remediation": {
-    "text": "
-			###### Remediate from Azure Portal 
-			1. Navigate to Application Insights. 
-			2. Under the Basics tab within the PROJECT DETAILS section, select the Subscription. 
-			3. Select the Resource group. 
-			4. Within the INSTANCE DETAILS, enter a Name. 
-			5. Select a Region. 
-			6. Next to Resource Mode, select Workspace-based. 
-			7. Within the WORKSPACE DETAILS, select the Subscription for the log analytics workspace. 
-			8. Select the appropriate Log Analytics Workspace. 
-			9. Click Next:Tags >. 
-			10. Enter the appropriate Tags as Name, Value pairs. 
-			11. Click Next:Review+Create. 
-			12. Click Create. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "6.3.1",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "asList",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": null,
-        "showModalButton": null,
-        "directLink": null
-      }
+    ],
+    "provider": "Azure",
+    "serviceType": "Application Insights",
+    "serviceName": "Subscription",
+    "displayName": "Ensure Application Insights are Configured",
+    "description": "Application Insights within Azure act as an Application Performance Monitoring solution providing valuable data into how well an application performs and additional information when performing incident response. The types of log data collected include application metrics, telemetry data, and application trace logging data providing organizations with detailed information about application activity and application transactions. Both data sets help organizations adopt a proactive and retroactive means to handle security and performance related metrics within their modern applications.",
+    "rationale": "Configuring Application Insights provides additional data not found elsewhere within Azure as part of a much larger logging and monitoring program within an organization\u0027s Information Security practice. The types and contents of these logs will act as both a potential cost saving measure (application performance) and a means to potentially confirm the source of a potential incident (trace logging). Metrics and Telemetry data provide organizations with a proactive approach to cost savings by monitoring an application\u0027s performance, while the trace logging data provides necessary details in a reactive incident response scenario by helping organizations identify the potential source of an incident within their application.",
+    "impact": "Because Application Insights relies on a Log Analytics Workspace, an organization will incur additional expenses when using this service.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### Remediate from Azure Portal \r\n\t\t\t1. Navigate to Application Insights. \r\n\t\t\t2. Under the Basics tab within the PROJECT DETAILS section, select the Subscription. \r\n\t\t\t3. Select the Resource group. \r\n\t\t\t4. Within the INSTANCE DETAILS, enter a Name. \r\n\t\t\t5. Select a Region. \r\n\t\t\t6. Next to Resource Mode, select Workspace-based. \r\n\t\t\t7. Within the WORKSPACE DETAILS, select the Subscription for the log analytics workspace. \r\n\t\t\t8. Select the appropriate Log Analytics Workspace. \r\n\t\t\t9. Click Next:Tags \u003e. \r\n\t\t\t10. Enter the appropriate Tags as Name, Value pairs. \r\n\t\t\t11. Click Next:Review+Create. \r\n\t\t\t12. Click Create. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "6.3.1",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_application_insights_not_configured",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "expandObject": null
+            },
+            "table": "asList",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": null,
+                "showModalButton": null,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_application_insights_not_configured",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_114"
 }
-

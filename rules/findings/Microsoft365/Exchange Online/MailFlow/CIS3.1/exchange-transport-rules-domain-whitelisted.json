@@ -1,146 +1,150 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Exchange Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure mail transport rules do not whitelist specific domains",
-  "description": "Mail flow rules (transport rules) in Exchange Online are used to identify and take action on messages that flow through the organization.",
-  "rationale": "Whitelisting domains in transport rules bypasses regular malware and phishing scanning, which can enable an attacker to launch attacks against your users from a safe haven domain.",
-  "impact": "Care should be taken before implementation to ensure there is no business need for case-by-case whitelisting. Removing all whitelisted domains could affect incoming mail flow to an organization although modern systems sending legitimate mail should have no issue with this.",
-  "remediation": {
-  "text": "###### To alter the mail transport rules so they do not whitelist any specific domains, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Select `Exchange`.\r\n\t\t\t\t\t2. Select `Mail Flow` and `Rules`.\r\n\t\t\t\t\t3. For each rule that whitelists specific domains, select the rule and click the *Delete* icon.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To remove mail transport rules you may also use the Exchange Online PowerShell\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tRemove-TransportRule {RuleName}\r\n\t\t\t\t\t```\r\n\t\t\t\t\t3. To verify this worked you may re-run the audit command as follows:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tGet-TransportRule | Where-Object {($_.setscl -eq -1 -and $null -ne $_.SenderDomainIs)} | ft Name,SenderDomainIs\r\n\t\t\t\t\t```",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/conditions-and-exceptions",
-    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/create-safe-sender-lists-in-office-365?view=o365-worldwide"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "6.2.2",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "o365_exo_transport_rules",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "operator": "and",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "setscl",
-                "eq",
-                "-1"
-              ]
-            ]
-          },
-          {
-            "conditions": [
-              [
-                "SenderDomainIs",
-                "ne",
-                ""
-              ],
-              [
-                "FromAddressContainsWords",
-                "ne",
-                ""
-              ],
-              [
-                "FromAddressMatchesPatterns",
-                "ne",
-                ""
-              ]
-            ],
-            "operator": "or"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "Name": "Name",
-          "Description": "Description",
-          "setscl": "SetSCL",
-          "SenderDomainIs": "Sender Domains",
-          "FromAddressContainsWords": "From Address Contains",
-          "FromAddressMatchesPatterns": "From Address Match Pattern"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure mail transport rules do not whitelist specific domains",
+    "description": "Mail flow rules (transport rules) in Exchange Online are used to identify and take action on messages that flow through the organization.",
+    "rationale": "Whitelisting domains in transport rules bypasses regular malware and phishing scanning, which can enable an attacker to launch attacks against your users from a safe haven domain.",
+    "impact": "Care should be taken before implementation to ensure there is no business need for case-by-case whitelisting. Removing all whitelisted domains could affect incoming mail flow to an organization although modern systems sending legitimate mail should have no issue with this.",
+    "remediation": {
+        "text": "###### To alter the mail transport rules so they do not whitelist any specific domains, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Select `Exchange`.\r\n\t\t\t\t\t2. Select `Mail Flow` and `Rules`.\r\n\t\t\t\t\t3. For each rule that whitelists specific domains, select the rule and click the *Delete* icon.\r\n\t\t\t\t\t\r\n\t\t\t\t\t###### To remove mail transport rules you may also use the Exchange Online PowerShell\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-ExchangeOnline`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tRemove-TransportRule {RuleName}\r\n\t\t\t\t\t```\r\n\t\t\t\t\t3. To verify this worked you may re-run the audit command as follows:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tGet-TransportRule | Where-Object {($_.setscl -eq -1 -and $null -ne $_.SenderDomainIs)} | ft Name,SenderDomainIs\r\n\t\t\t\t\t```",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/conditions-and-exceptions",
+        "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/create-safe-sender-lists-in-office-365?view=o365-worldwide"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "6.2.2",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_exo_transport_rules",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "operator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "setscl",
+                                "eq",
+                                "-1"
+                            ]
+                        ]
+                    },
+                    {
+                        "conditions": [
+                            [
+                                "SenderDomainIs",
+                                "ne",
+                                ""
+                            ],
+                            [
+                                "FromAddressContainsWords",
+                                "ne",
+                                ""
+                            ],
+                            [
+                                "FromAddressMatchesPatterns",
+                                "ne",
+                                ""
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure mail transport rules do not whitelist specific domains",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_transport_rules_domain_whitelisted",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "Name": "Name",
+                    "Description": "Description",
+                    "setscl": "SetSCL",
+                    "SenderDomainIs": "Sender Domains",
+                    "FromAddressContainsWords": "From Address Contains",
+                    "FromAddressMatchesPatterns": "From Address Match Pattern"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure mail transport rules do not whitelist specific domains",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_transport_rules_domain_whitelisted",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "microsoft365_2128"
 }
-

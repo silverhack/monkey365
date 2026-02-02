@@ -1,135 +1,135 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Azure Disks",
-  "serviceName": "Compute",
-  "displayName": "Ensure that 'Disk Network Access' is NOT set to 'Enable public access from all networks'",
-  "description": "Virtual Machine Disks and snapshots can be configured to allow access from different network resources.",
-  "rationale": "The setting 'Enable public access from all networks' is, in many cases, an overly permissive setting on Virtual Machine Disks that presents atypical attack, data infiltration, and data exfiltration vectors. If a disk to network connection is required, the preferred setting is to `Disable public access and enable private access`.",
-  "impact": "
-		The setting `Disable public access and enable private access` will require configuring a private link (URL in references below). 
-		The setting `Disable public and private access` is most secure and preferred where disk network access is not needed. 
-  ",
-  "remediation": {
-    "text": "",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/virtual-machines/disks-enable-private-links-for-import-export-portal",
-	"https://learn.microsoft.com/en-us/azure/virtual-machines/linux/disks-export-import-private-links-cli",
-	"https://learn.microsoft.com/en-us/azure/virtual-machines/disks-restrict-import-export-overview"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "8.5",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_managed_disks",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "allowAccessFromAllNetworks",
-                "eq",
-                "true"
-              ],
-			  [
-                "networkAccessPolicy",
-                "eq",
-                "AllowAll"
-              ]
-            ],
-			"operator": "and"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-		"properties": {
-          "name": "Disk Name",
-          "location": "Location",
-          "skuname": "SKU Name",
-          "networkAccessPolicy": "Network Access Policy",
-          "allowAccessFromAllNetworks": "Access From All Networks"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-			"*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "true",
-        "showModalButton": "true",
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Azure Disks",
+    "serviceName": "Compute",
+    "displayName": "Ensure that \u0027Disk Network Access\u0027 is NOT set to \u0027Enable public access from all networks\u0027",
+    "description": "Virtual Machine Disks and snapshots can be configured to allow access from different network resources.",
+    "rationale": "The setting \u0027Enable public access from all networks\u0027 is, in many cases, an overly permissive setting on Virtual Machine Disks that presents atypical attack, data infiltration, and data exfiltration vectors. If a disk to network connection is required, the preferred setting is to `Disable public access and enable private access`.",
+    "impact": "\r\n\t\tThe setting `Disable public access and enable private access` will require configuring a private link (URL in references below). \r\n\t\tThe setting `Disable public and private access` is most secure and preferred where disk network access is not needed. \r\n  ",
+    "remediation": {
+        "text": "",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/disks-enable-private-links-for-import-export-portal",
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/linux/disks-export-import-private-links-cli",
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/disks-restrict-import-export-overview"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "8.5",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_managed_disks",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "allowAccessFromAllNetworks",
+                                "eq",
+                                "true"
+                            ],
+                            [
+                                "networkAccessPolicy",
+                                "eq",
+                                "AllowAll"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "disk_network_access_allow_all_networks",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Disk Name",
+                    "location": "Location",
+                    "skuname": "SKU Name",
+                    "networkAccessPolicy": "Network Access Policy",
+                    "allowAccessFromAllNetworks": "Access From All Networks"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "true",
+                "showModalButton": "true",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "disk_network_access_allow_all_networks",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_208"
 }
-

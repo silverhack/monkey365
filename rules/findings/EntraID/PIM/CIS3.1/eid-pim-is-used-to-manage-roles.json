@@ -1,107 +1,144 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Identity Protection",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure 'Privileged Identity Management' is used to manage roles",
-  "description": "Microsoft Entra Privileged Identity Management can be used to audit roles, allow just in time activation of roles and allow for periodic role attestation. Organizations should remove permanent members from privileged Office 365 roles and instead make them eligible, through a JIT activation workflow.",
-  "rationale": "Organizations want to minimize the number of people who have access to secure information or resources, because that reduces the chance of a malicious actor getting that access, or an authorized user inadvertently impacting a sensitive resource. However, users still need to carry out privileged operations in Entra ID. Organizations can give users just-in-time (JIT) privileged access to roles. There is a need for oversight for what those users are doing with their administrator privileges. PIM helps to mitigate the risk of excessive, unnecessary, or misused access rights.",
-  "impact": "Implementation of Just in Time privileged access is likely to necessitate changes to administrator routine. Administrators will only be granted access to administrative roles when required. When administrators request role activation, they will need to document the reason for requiring role access, anticipated time required to have the access, and to reauthenticate to enable role access.",
-  "remediation": {
-    "text": "",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "5.3.1",
-	  "profile": "E5 Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-		"isManual":false,
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Identity Protection",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure \u0027Privileged Identity Management\u0027 is used to manage roles",
+    "description": "Microsoft Entra Privileged Identity Management can be used to audit roles, allow just in time activation of roles and allow for periodic role attestation. Organizations should remove permanent members from privileged Office 365 roles and instead make them eligible, through a JIT activation workflow.",
+    "rationale": "Organizations want to minimize the number of people who have access to secure information or resources, because that reduces the chance of a malicious actor getting that access, or an authorized user inadvertently impacting a sensitive resource. However, users still need to carry out privileged operations in Entra ID. Organizations can give users just-in-time (JIT) privileged access to roles. There is a need for oversight for what those users are doing with their administrator privileges. PIM helps to mitigate the risk of excessive, unnecessary, or misused access rights.",
+    "impact": "Implementation of Just in Time privileged access is likely to necessitate changes to administrator routine. Administrators will only be granted access to administrative roles when required. When administrators request role activation, they will need to document the reason for requiring role access, anticipated time required to have the access, and to reauthenticate to enable role access.",
+    "remediation": {
+        "text": "",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "5.3.1",
+            "profile": "E5 Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_pim_roleAssignment",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+		"data": {
+            "properties": {
+                "activeAssignment.users.*": null,
+                "displayName": "roleName",
+                "description": "roleDescription",
+                "templateId": "templateId"
+            },
+            "expandObject": "activeAssignment.users"
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "include": "aad-m365-privileged-roles.json"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"eq",
+								"endDateTime"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "Ensure 'Privileged Identity Management' is used to manage roles",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "eid_pim_not_in_use",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "userPrincipalName": "User Principal Name",
+                    "id": "Id",
+                    "roleName": "Role Assigned"
+                }
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "isManual": false,
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "userPrincipalName": "User Principal Name",
+                    "id": "Id",
+                    "roleName": "Role Assigned"
+                }
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure \u0027Privileged Identity Management\u0027 is used to manage roles",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "userPrincipalName",
+                "resourceId": "id",
+                "resourceType": "EntraPIMUser"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_pim_not_in_use",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id",
+		"userPrincipalName"
+        
+    ],
+    "id": "entraid_1149"
 }
-

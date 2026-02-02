@@ -1,155 +1,158 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Network Security Groups",
-  "serviceName": "Network",
-  "displayName": "Ensure that _ARG_0_ access from the Internet is evaluated and restricted",
-  "description": "_ARG_2_",
-  "rationale": "_ARG_3_",
-  "impact": null,
-  "remediation": {
-    "text": null,
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/virtual-network/security-overview"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "_ARG_4_",
-      "reference": "_ARG_5_",
-	  "profile": "Level 1"
-    },
-    [
-      "_ARG_6_"
-    ]
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_nsg_rules",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "operator": "and",
-        "filter": [
-          {
-            "include": "allow-tcp.json"
-          },
-          {
-            "include": "exposed-to-the-internet.json"
-          }
-        ]
-      },
-      {
-        "connectOperator": "and",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "DestinationPortRange",
-                "like",
-                "*_ARG_1_*"
-              ],
-              [
-                "DestinationPortRanges",
-                "like",
-                "*_ARG_1_*"
-              ]
-            ],
-            "operator": "or"
-          }
-        ]
-      },
-      {
-        "connectOperator": "and",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "Priority",
-                "notlike",
-                "65*"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": "true"
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Network Security Groups",
+    "serviceName": "Network",
+    "displayName": "Ensure that _ARG_0_ access from the Internet is evaluated and restricted",
+    "description": "_ARG_2_",
+    "rationale": "_ARG_3_",
+    "impact": null,
+    "remediation": {
+        "text": null,
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/virtual-network/security-overview"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "_ARG_4_",
+            "reference": "_ARG_5_",
+            "profile": "Level 1"
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        [
+            "_ARG_6_"
+        ]
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_nsg_rules",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "operator": "and",
+                "filter": [
+                    {
+                        "include": "allow-tcp.json"
+                    },
+                    {
+                        "include": "exposed-to-the-internet.json"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "DestinationPortRange",
+                                "like",
+                                "*_ARG_1_*"
+                            ],
+                            [
+                                "DestinationPortRanges",
+                                "like",
+                                "*_ARG_1_*"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "Priority",
+                                "notlike",
+                                "65*"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_nsg_security_port_open_all",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": "true"
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_nsg_security_port_open_all",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_179"
 }
-

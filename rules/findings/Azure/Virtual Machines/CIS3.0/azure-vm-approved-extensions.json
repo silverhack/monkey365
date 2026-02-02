@@ -1,127 +1,130 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Azure Virtual Machines",
-  "serviceName": "Compute",
-  "displayName": "Ensure that only approved extensions are installed",
-  "description": "For added security, only install organization-approved extensions on VMs.",
-  "rationale": "Azure virtual machine extensions are small applications that provide post-deployment configuration and automation tasks on Azure virtual machines. These extensions run with administrative privileges and could potentially access anything on a virtual machine. The Azure Portal and community provide several such extensions. Each organization should carefully evaluate these extensions and ensure that only those that are approved for use are actually implemented.",
-  "impact": "",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Virtual machines`\r\n\t\t\t\t\t2. For each virtual machine, go to `Settings`\r\n\t\t\t\t\t3. Click on `Extensions`\r\n\t\t\t\t\t4. Ensure that the listed extensions are approved for use.",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/virtual-machines/windows/extensions-features",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "8.7",
-	  "profile": "Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_virtual_machines",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "resources",
-                "ne"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "name": "VM Name",
-          "location": "Location",
-          "isAVAgentInstalled": "Antimalware agent installed",
-          "resources.name": "Extension"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "name",
-            "location",
-            "ResourceGroupName",
-            "isAVAgentInstalled",
-            "resources"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Azure Virtual Machines",
+    "serviceName": "Compute",
+    "displayName": "Ensure that only approved extensions are installed",
+    "description": "For added security, only install organization-approved extensions on VMs.",
+    "rationale": "Azure virtual machine extensions are small applications that provide post-deployment configuration and automation tasks on Azure virtual machines. These extensions run with administrative privileges and could potentially access anything on a virtual machine. The Azure Portal and community provide several such extensions. Each organization should carefully evaluate these extensions and ensure that only those that are approved for use are actually implemented.",
+    "impact": "",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Virtual machines`\r\n\t\t\t\t\t2. For each virtual machine, go to `Settings`\r\n\t\t\t\t\t3. Click on `Extensions`\r\n\t\t\t\t\t4. Ensure that the listed extensions are approved for use.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/virtual-machines/windows/extensions-features",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "8.7",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_virtual_machines",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"ne",
+                                "resources"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_os_allowed_extensions",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "VM Name",
+                    "location": "Location",
+                    "isAVAgentInstalled": "Antimalware agent installed",
+                    "resources.name": "Extension"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "name",
+                        "location",
+                        "ResourceGroupName",
+                        "isAVAgentInstalled",
+                        "resources"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_os_allowed_extensions",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_213"
 }
-

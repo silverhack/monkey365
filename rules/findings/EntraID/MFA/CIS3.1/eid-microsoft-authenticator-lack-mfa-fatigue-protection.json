@@ -1,168 +1,171 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "General",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure Microsoft Authenticator is configured to protect against MFA fatigue",
-  "description": "Microsoft has released additional settings to enhance the configuration of the Microsoft Authenticator application. These settings provide additional information and context to users who receive MFA passwordless and push requests, such as geographic location the request came from, the requesting application and requiring a number match.\r\n\t\t\t\t  Ensure the following are `Enabled`.\r\n\r\n\t\t\t\t  * `Require number matching for push notifications`\r\n\t\t\t\t  * `Show application name in push and passwordless notifications`\r\n\t\t\t\t  * `Show geographic location in push and passwordless notifications`",
-  "rationale": "As the use of strong authentication has become more widespread, attackers have started to exploit the tendency of users to experience `MFA fatigue`. This occurs when users are repeatedly asked to provide additional forms of identification, leading them to eventually approve requests without fully verifying the source. To counteract this, number matching can be employed to ensure the security of the authentication process. With this method, users are prompted to confirm a number displayed on their original device and enter it into the device being used for MFA. Additionally, other information such as geolocation and application details are displayed to enhance the end user\u0027s awareness. Among these 3 options, number matching provides the strongest net security gain.",
-  "impact": "Additional interaction will be required by end users using number matching as opposed to simply pressing \"Approve\" for login attempts.",
-  "remediation": {
-    "text": "1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com. \r\n\t\t\t\t2. Click to expand `Protection \u003e Authentication methods` select `Policies`. \r\n\t\t\t\t3. Select `Microsoft Authenticator`\r\n\t\t\t\t4. Under `Enable and Target` ensure the setting is set to `Enable`.\r\n\t\t\t\t5. Select `Configure`\r\n\t\t\t\t6. Set the following Microsoft Authenticator settings: \r\n\t\t\t\t\t* `Require number matching for push notifications Status` is set to `Enabled`, Target `All users`\r\n\t\t\t\t\t* `Show application name in push and passwordless notifications` is set to `Enabled`, Target `All users`\r\n\t\t\t\t\t* `Show geographic location in push and passwordless notifications` is set to `Enabled`, Target `All users`\r\n\t\t\t\t*Note*: Valid groups such as break glass accounts can be excluded per organization policy.",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-default-enablement",
-    "https://techcommunity.microsoft.com/t5/microsoft-entra-blog/defend-your-users-from-mfa-fatigue-attacks/ba-p/2365677",
-    "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-mfa-number-match"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "5.2.3.1",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "aad_auth_method_policies",
-    "subPath": "authenticationMethodConfigurations",
-    "selectCondition": [
-      "id",
-      "eq",
-      "MicrosoftAuthenticator"
-    ],
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "featureSettings.displayAppInformationRequiredState.state",
-                "eq",
-                "enabled"
-              ],
-              [
-                "featureSettings.displayAppInformationRequiredState.includeTarget.id",
-                "eq",
-                "all_users"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      },
-      {
-        "connectOperator": "and",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "featureSettings.numberMatchingRequiredState.state",
-                "eq",
-                "enabled"
-              ],
-              [
-                "featureSettings.numberMatchingRequiredState.includeTarget.id",
-                "eq",
-                "all_users"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      },
-      {
-        "connectOperator": "and",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "featureSettings.displayLocationInformationRequiredState.state",
-                "eq",
-                "enabled"
-              ],
-              [
-                "featureSettings.displayLocationInformationRequiredState.includeTarget.id",
-                "eq",
-                "all_users"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      }
-    ],
-    "shouldExist": "true",
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    ],
+    "provider": "EntraID",
+    "serviceType": "General",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure Microsoft Authenticator is configured to protect against MFA fatigue",
+    "description": "Microsoft has released additional settings to enhance the configuration of the Microsoft Authenticator application. These settings provide additional information and context to users who receive MFA passwordless and push requests, such as geographic location the request came from, the requesting application and requiring a number match.\r\n\t\t\t\t  Ensure the following are `Enabled`.\r\n\r\n\t\t\t\t  * `Require number matching for push notifications`\r\n\t\t\t\t  * `Show application name in push and passwordless notifications`\r\n\t\t\t\t  * `Show geographic location in push and passwordless notifications`",
+    "rationale": "As the use of strong authentication has become more widespread, attackers have started to exploit the tendency of users to experience `MFA fatigue`. This occurs when users are repeatedly asked to provide additional forms of identification, leading them to eventually approve requests without fully verifying the source. To counteract this, number matching can be employed to ensure the security of the authentication process. With this method, users are prompted to confirm a number displayed on their original device and enter it into the device being used for MFA. Additionally, other information such as geolocation and application details are displayed to enhance the end user\u0027s awareness. Among these 3 options, number matching provides the strongest net security gain.",
+    "impact": "Additional interaction will be required by end users using number matching as opposed to simply pressing \"Approve\" for login attempts.",
+    "remediation": {
+        "text": "1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com. \r\n\t\t\t\t2. Click to expand `Protection \u003e Authentication methods` select `Policies`. \r\n\t\t\t\t3. Select `Microsoft Authenticator`\r\n\t\t\t\t4. Under `Enable and Target` ensure the setting is set to `Enable`.\r\n\t\t\t\t5. Select `Configure`\r\n\t\t\t\t6. Set the following Microsoft Authenticator settings: \r\n\t\t\t\t\t* `Require number matching for push notifications Status` is set to `Enabled`, Target `All users`\r\n\t\t\t\t\t* `Show application name in push and passwordless notifications` is set to `Enabled`, Target `All users`\r\n\t\t\t\t\t* `Show geographic location in push and passwordless notifications` is set to `Enabled`, Target `All users`\r\n\t\t\t\t*Note*: Valid groups such as break glass accounts can be excluded per organization policy.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-default-enablement",
+        "https://techcommunity.microsoft.com/t5/microsoft-entra-blog/defend-your-users-from-mfa-fatigue-attacks/ba-p/2365677",
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-mfa-number-match"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "5.2.3.1",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_auth_method_policies",
+        "subPath": "authenticationMethodConfigurations",
+        "selectCondition": [
+            "id",
+            "eq",
+            "MicrosoftAuthenticator"
+        ],
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "featureSettings.displayAppInformationRequiredState.state",
+                                "eq",
+                                "enabled"
+                            ],
+                            [
+                                "featureSettings.displayAppInformationRequiredState.includeTarget.id",
+                                "eq",
+                                "all_users"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "featureSettings.numberMatchingRequiredState.state",
+                                "eq",
+                                "enabled"
+                            ],
+                            [
+                                "featureSettings.numberMatchingRequiredState.includeTarget.id",
+                                "eq",
+                                "all_users"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "featureSettings.displayLocationInformationRequiredState.state",
+                                "eq",
+                                "enabled"
+                            ],
+                            [
+                                "featureSettings.displayLocationInformationRequiredState.includeTarget.id",
+                                "eq",
+                                "all_users"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "Authentication Method",
+                    "state": "State"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": "",
-        "message": "Microsoft Authenticator was not configured to protect against MFA fatigue",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": "Id",
-        "resourceId": "Id",
-        "resourceType": "@odata.type"
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "aad_mfa_fatigue_not_configured",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "text": {
+            "data": {
+                "properties": {                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": "",
+                "message": "Microsoft Authenticator was not configured to protect against MFA fatigue",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "Id",
+                "resourceId": null,
+                "resourceType": "EntraAuthMethodPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "aad_mfa_fatigue_not_configured",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1146"
 }
-

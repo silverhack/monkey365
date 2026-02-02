@@ -1,131 +1,134 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Defender for Cloud",
-  "serviceName": "Subscription",
-  "displayName": "Ensure That Microsoft Defender for (Managed Instance) Azure SQL Databases Is Set To 'On'",
-  "description": "Turning on Microsoft Defender for Azure SQL Databases enables threat detection for Managed Instance Azure SQL databases, providing threat intelligence, anomaly detection, and behavior analytics in Microsoft Defender for Cloud.",
-  "rationale": "Enabling Microsoft Defender for Azure SQL Databases allows for greater defense-in-depth, includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database.",
-  "impact": "Turning on Microsoft Defender for Cloud in Microsoft Defender for Cloud incurs an additional cost per resource.",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. Click `Select types >` in the row for `Databases`.\r\n\t\t\t\t\t6. Set the toggle switch next to `Azure SQL Databases` to `On`.\r\n\t\t\t\t\t7 Select `Continue`.\r\n\t\t\t\t\t7 Select `Save`.",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview",
-    "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
-    "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/update",
-    "https://docs.microsoft.com/en-us/powershell/module/az.security/get-azsecuritypricing",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security#es-1-use-endpoint-detection-and-response-edr"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "3.1.7.3",
-	  "profile":"Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_pricing_tier",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "name",
-                "eq",
-                "SqlServers"
-              ],
-              [
-                "properties.pricingTier",
-                "eq",
-                "Free"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      }
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "name": "Resource Name",
-          "properties.pricingTier": "Pricing Tier"
-        },
-        "expandObject": null
-      },
-      "table": "asList",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-        "Pricing Tier"
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": null,
-        "showModalButton": null,
-        "directLink": null
-      }
+    ],
+    "provider": "Azure",
+    "serviceType": "Defender for Cloud",
+    "serviceName": "Subscription",
+    "displayName": "Ensure That Microsoft Defender for (Managed Instance) Azure SQL Databases Is Set To \u0027On\u0027",
+    "description": "Turning on Microsoft Defender for Azure SQL Databases enables threat detection for Managed Instance Azure SQL databases, providing threat intelligence, anomaly detection, and behavior analytics in Microsoft Defender for Cloud.",
+    "rationale": "Enabling Microsoft Defender for Azure SQL Databases allows for greater defense-in-depth, includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database.",
+    "impact": "Turning on Microsoft Defender for Cloud in Microsoft Defender for Cloud incurs an additional cost per resource.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. Click `Select types \u003e` in the row for `Databases`.\r\n\t\t\t\t\t6. Set the toggle switch next to `Azure SQL Databases` to `On`.\r\n\t\t\t\t\t7 Select `Continue`.\r\n\t\t\t\t\t7 Select `Save`.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/defender-for-cloud/alerts-overview",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/list",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/pricings/update",
+        "https://docs.microsoft.com/en-us/powershell/module/az.security/get-azsecuritypricing",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-endpoint-security#es-1-use-endpoint-detection-and-response-edr"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "3.1.7.3",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_pricing_tier",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "name",
+                                "eq",
+                                "SqlServers"
+                            ],
+                            [
+                                "properties.pricingTier",
+                                "eq",
+                                "Free"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_defender_missing_sql_server_protection",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Resource Name",
+                    "properties.pricingTier": "Pricing Tier"
+                },
+                "expandObject": null
+            },
+            "table": "asList",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                "Pricing Tier"
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": null,
+                "showModalButton": null,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_defender_missing_sql_server_protection",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_152"
 }
-

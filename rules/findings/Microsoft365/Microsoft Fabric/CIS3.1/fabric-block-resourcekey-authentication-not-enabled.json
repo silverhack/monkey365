@@ -1,143 +1,140 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Fabric",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure 'Block ResourceKey Authentication' is 'Enabled'",
-  "description": "This setting blocks the use of resource key based authentication. The Block ResourceKey Authentication setting applies to streaming and PUSH datasets. If blocked users will not be allowed send data to streaming and PUSH datasets using the API with a resource key. The recommended state is Enabled.",
-  "rationale": "Resource keys are a form of authentication that allows users to access Power BI resources (such as reports, dashboards, and datasets) without requiring individual user accounts. While convenient, this method bypasses the organization's centralized identity and access management controls. Enabling ensures that access to Power BI resources is tied to the organization's authentication mechanisms, providing a more secure and controlled environment.",
-  "impact": "Developers will need to request a special exception in order to use this feature.",
-  "remediation": {
-    "text": "
-			###### Ensure ResourceKey Authentication is Enabled: 
-			1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal 
-			2. Select Tenant settings. 
-			3. Scroll to Developer settings. 
-			4. Set Block ResourceKey Authentication to Enabled 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-developer",
-	"https://learn.microsoft.com/en-us/power-bi/connect-data/service-real-time-streaming"
-  ],
-  "compliance": [
-    {
-		"name": "CIS Microsoft 365 Foundations Benchmark",
-		"version": "5.0.0",
-		"reference": "9.1.9",
-		"profile": [
-			"E3 Level 1",
-			"E5 Level 1"
-		]
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "m365_fabric_tenant",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "settingName",
-                "eq",
-                "BlockResourceKeyAuthentication"
-              ],
-			  [
-                "enabled",
-                "ne",
-                "True"
-              ]
-            ],
-			"operator": "and"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "title": "Title",
-          "enabled": "Enabled",
-          "tenantSettingGroup": "Group",
-          "enabledSecurityGroups": "Security Groups"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "title",
-            "enabled",
-            "location",
-            "tenantSettingGroup",
-            "enabledSecurityGroups"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Fabric",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure \u0027Block ResourceKey Authentication\u0027 is \u0027Enabled\u0027",
+    "description": "This setting blocks the use of resource key based authentication. The Block ResourceKey Authentication setting applies to streaming and PUSH datasets. If blocked users will not be allowed send data to streaming and PUSH datasets using the API with a resource key. The recommended state is Enabled.",
+    "rationale": "Resource keys are a form of authentication that allows users to access Power BI resources (such as reports, dashboards, and datasets) without requiring individual user accounts. While convenient, this method bypasses the organization\u0027s centralized identity and access management controls. Enabling ensures that access to Power BI resources is tied to the organization\u0027s authentication mechanisms, providing a more secure and controlled environment.",
+    "impact": "Developers will need to request a special exception in order to use this feature.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### Ensure ResourceKey Authentication is Enabled: \r\n\t\t\t1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal \r\n\t\t\t2. Select Tenant settings. \r\n\t\t\t3. Scroll to Developer settings. \r\n\t\t\t4. Set Block ResourceKey Authentication to Enabled \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-developer",
+        "https://learn.microsoft.com/en-us/power-bi/connect-data/service-real-time-streaming"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "9.1.9",
+            "profile": [
+                "E3 Level 1",
+                "E5 Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "m365_fabric_tenant",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "settingName",
+                                "eq",
+                                "BlockResourceKeyAuthentication"
+                            ],
+                            [
+                                "enabled",
+                                "ne",
+                                "True"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure 'Block ResourceKey Authentication' is 'Enabled'",
-        "defaultMessage": "Ensure 'Block ResourceKey Authentication' is 'Enabled'"
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "fabric_block_resourcekey_authentication_not_enabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "title": "Title",
+                    "enabled": "Enabled",
+                    "tenantSettingGroup": "Group",
+                    "enabledSecurityGroups": "Security Groups"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "title",
+                        "enabled",
+                        "location",
+                        "tenantSettingGroup",
+                        "enabledSecurityGroups"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure \u0027Block ResourceKey Authentication\u0027 is \u0027Enabled\u0027",
+                "defaultMessage": "Ensure \u0027Block ResourceKey Authentication\u0027 is \u0027Enabled\u0027"
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "fabric_block_resourcekey_authentication_not_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "microsoft365_2146"
 }
-

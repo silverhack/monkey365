@@ -1,134 +1,137 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Storage Accounts",
-  "serviceName": "Storage",
-  "displayName": "Ensure the 'Minimum TLS version' for storage accounts is set to 'Version 1.2'",
-  "description": "In some cases, Azure Storage sets the minimum TLS version to be version 1.0 by default. TLS 1.0 is a legacy version and has known vulnerabilities. This minimum TLS version can be configured to be later protocols such as TLS 1.2.",
-  "rationale": "TLS 1.0 has known vulnerabilities and has been replaced by later versions of the TLS protocol. Continued use of this legacy protocol affects the security of data in transit.",
-  "impact": "When set to TLS 1.2 all requests must leverage this version of the protocol. Applications leveraging legacy versions of the protocol will fail.",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Storage Accounts`\r\n\t\t\t\t\t2. For each storage account, go to `Configuration`\r\n\t\t\t\t\t3. Under `Setting` section, Click on `Configuration`\r\n\t\t\t\t\t3. Ensure that the `minimum TLS version` to `1.2`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer",
-    "https://docs.microsoft.com/en-us/azure/storage/common/storage-security-guide",
-    "https://docs.microsoft.com/en-us/azure/storage/blobs/security-recommendations#encryption-in-transit",
-    "https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_list",
-    "https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_update",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "4.15",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_storage_accounts",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "properties.minimumTlsVersion",
-                "ne",
-                "TLS1_2"
-              ],
-			  [
-                "properties.minimumTlsVersion",
-                "ne",
-                "TLS1_3"
-              ]
-            ],
-			"operator":"or"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "name": "Name",
-          "location": "Location",
-          "ResourceGroupName": "ResourceGroupName",
-          "properties.minimumTlsVersion": "TLS version"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "properties"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Storage Accounts",
+    "serviceName": "Storage",
+    "displayName": "Ensure the \u0027Minimum TLS version\u0027 for storage accounts is set to \u0027Version 1.2\u0027",
+    "description": "In some cases, Azure Storage sets the minimum TLS version to be version 1.0 by default. TLS 1.0 is a legacy version and has known vulnerabilities. This minimum TLS version can be configured to be later protocols such as TLS 1.2.",
+    "rationale": "TLS 1.0 has known vulnerabilities and has been replaced by later versions of the TLS protocol. Continued use of this legacy protocol affects the security of data in transit.",
+    "impact": "When set to TLS 1.2 all requests must leverage this version of the protocol. Applications leveraging legacy versions of the protocol will fail.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Storage Accounts`\r\n\t\t\t\t\t2. For each storage account, go to `Configuration`\r\n\t\t\t\t\t3. Under `Setting` section, Click on `Configuration`\r\n\t\t\t\t\t3. Ensure that the `minimum TLS version` to `1.2`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer",
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-security-guide",
+        "https://docs.microsoft.com/en-us/azure/storage/blobs/security-recommendations#encryption-in-transit",
+        "https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_list",
+        "https://docs.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest#az_storage_account_update",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-data-protection#dp-4-encrypt-sensitive-information-in-transit"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "4.15",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_storage_accounts",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "properties.minimumTlsVersion",
+                                "ne",
+                                "TLS1_2"
+                            ],
+                            [
+                                "properties.minimumTlsVersion",
+                                "ne",
+                                "TLS1_3"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "storage_accounts_minimum_tls_version_not_configured",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "Location",
+                    "ResourceGroupName": "ResourceGroupName",
+                    "properties.minimumTlsVersion": "TLS version"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "properties"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "storage_accounts_minimum_tls_version_not_configured",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_194"
 }
-

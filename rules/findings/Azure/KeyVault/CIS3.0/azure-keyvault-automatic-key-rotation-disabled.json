@@ -1,138 +1,128 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Azure KeyVault",
-  "serviceName": "Storage",
-  "displayName": "Ensure Automatic Key Rotation is Enabled Within Azure Key Vault for the Supported Services",
-  "description": "Automatic Key Rotation is available in Public Preview. The currently supported applications are Key Vault, Managed Disks, and Storage accounts accessing keys within Key Vault. The number of supported applications will incrementally increased.",
-  "rationale": "Once set up, Automatic Private Key Rotation removes the need for manual administration when keys expire at intervals determined by your organization's policy. The recommended key lifetime is 2 years. Your organization should determine its own key expiration policy.",
-  "impact": "There are an additional costs per operation in running the needed applications.",
-  "remediation": {
-    "text": "
-		###### Remediate from Azure Portal
-		1. From Azure Portal select the Portal Menu in the top left. 
-		2. Select Key Vaults. 
-		3. Select a Key Vault to audit. 
-		4. Under Objects select Keys. 
-		5. Select a key to audit. 
-		6. In the top row select Rotation policy. 
-		7. Select an Expiry time. 
-		8. Set Enable auto rotation to Enabled. 
-		9. Set an appropriate Rotation option and Rotation time. 
-		10. Optionally set the Notification time. 
-		11. Select Save. 
-		12. Repeat steps 3-11 for each Key Vault and Key. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/key-vault/keys/how-to-configure-key-rotation",
-	"https://docs.microsoft.com/en-us/azure/storage/common/customer-managed-keys-overview#update-the-key-version",
-	"https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disks-enable-customer-managed-keys-powershell#set-up-an-azure-key-vault-and-diskencryptionset-optionally-with-automatic-key-rotation",
-	"https://azure.microsoft.com/en-us/updates/public-preview-automatic-key-rotation-of-customermanaged-keys-for-encrypting-azure-managed-disks/",
-	"https://docs.microsoft.com/en-us/cli/azure/keyvault/key/rotation-policy?view=azure-cli-latest#az-keyvault-key-rotation-policy-update"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "3.3.8",
-	  "profile":"Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_keyvault",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-				"ne",
-                "objects.keys.rotationPolicy"
-              ]
-            ]
-          }
-        ]
-      }
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-		"properties": {
-          "name": "Key Vault Name",
-          "location": "Location",
-          "allowAccessFromAllNetworks": "Allow Access From All Networks"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "true",
-        "showModalButton": "true",
-        "directLink": null
-      }
+    ],
+    "provider": "Azure",
+    "serviceType": "Azure KeyVault",
+    "serviceName": "Storage",
+    "displayName": "Ensure Automatic Key Rotation is Enabled Within Azure Key Vault for the Supported Services",
+    "description": "Automatic Key Rotation is available in Public Preview. The currently supported applications are Key Vault, Managed Disks, and Storage accounts accessing keys within Key Vault. The number of supported applications will incrementally increased.",
+    "rationale": "Once set up, Automatic Private Key Rotation removes the need for manual administration when keys expire at intervals determined by your organization\u0027s policy. The recommended key lifetime is 2 years. Your organization should determine its own key expiration policy.",
+    "impact": "There are an additional costs per operation in running the needed applications.",
+    "remediation": {
+        "text": "\r\n\t\t###### Remediate from Azure Portal\r\n\t\t1. From Azure Portal select the Portal Menu in the top left. \r\n\t\t2. Select Key Vaults. \r\n\t\t3. Select a Key Vault to audit. \r\n\t\t4. Under Objects select Keys. \r\n\t\t5. Select a key to audit. \r\n\t\t6. In the top row select Rotation policy. \r\n\t\t7. Select an Expiry time. \r\n\t\t8. Set Enable auto rotation to Enabled. \r\n\t\t9. Set an appropriate Rotation option and Rotation time. \r\n\t\t10. Optionally set the Notification time. \r\n\t\t11. Select Save. \r\n\t\t12. Repeat steps 3-11 for each Key Vault and Key. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/key-vault/keys/how-to-configure-key-rotation",
+        "https://docs.microsoft.com/en-us/azure/storage/common/customer-managed-keys-overview#update-the-key-version",
+        "https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disks-enable-customer-managed-keys-powershell#set-up-an-azure-key-vault-and-diskencryptionset-optionally-with-automatic-key-rotation",
+        "https://azure.microsoft.com/en-us/updates/public-preview-automatic-key-rotation-of-customermanaged-keys-for-encrypting-azure-managed-disks/",
+        "https://docs.microsoft.com/en-us/cli/azure/keyvault/key/rotation-policy?view=azure-cli-latest#az-keyvault-key-rotation-policy-update"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "3.3.8",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_keyvault",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"ne",
+                                "objects.keys.rotationPolicy"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_key_vault_automatic_key_rotation_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Key Vault Name",
+                    "location": "Location",
+                    "allowAccessFromAllNetworks": "Allow Access From All Networks"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "true",
+                "showModalButton": "true",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_key_vault_automatic_key_rotation_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_173"
 }
-

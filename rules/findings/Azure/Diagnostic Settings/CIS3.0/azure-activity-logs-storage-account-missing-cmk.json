@@ -1,114 +1,106 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Diagnostic Settings",
-  "serviceName": "Subscription",
-  "displayName": "Ensure the storage account containing the container with activity logs is encrypted with Customer Managed Key (CMK)",
-  "description": "Storage accounts with the activity log exports can be configured to use Customer Managed Keys (CMK).",
-  "rationale": "Configuring the storage account with the activity log export container to use CMKs provides additional confidentiality controls on log data, as a given user must have read permission on the corresponding storage account and must be granted decrypt permission by the CMK.",
-  "impact": "*NOTE* : You must have your key vault setup to utilize this. All Audit Logs will be encrypted with a key you provide. You will need to set up customer managed keys separately, and you will select which key to use via the instructions here. You will be responsible for the lifecycle of the keys, and will need to manually replace them at your own determined intervals to keep the data secure.",
-  "remediation": {
-    "text": "
-			###### Remediate from Azure Portal 
-			1. Go to Monitor. 
-			2. Select Activity log. 
-			3. Select Export Activity Logs. 
-			4. Select a Subscription. 
-			5. Note the name of the Storage Account for the diagnostic setting. 
-			6. Navigate to Storage accounts. 
-			7. Click on the storage account. 
-			8. Under Security + networking, click Encryption. 
-			9. Next to Encryption type, select Customer-managed keys. 
-			10. Complete the steps to configure a customer-managed key for encryption of the storage account.  
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-5-use-customer-managed-key-option-in-data-at-rest-encryption-when-required",
-	"https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/activity-log?tabs=cli#managing-legacy-log-profiles"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "6.1.3",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Diagnostic Settings",
+    "serviceName": "Subscription",
+    "displayName": "Ensure the storage account containing the container with activity logs is encrypted with Customer Managed Key (CMK)",
+    "description": "Storage accounts with the activity log exports can be configured to use Customer Managed Keys (CMK).",
+    "rationale": "Configuring the storage account with the activity log export container to use CMKs provides additional confidentiality controls on log data, as a given user must have read permission on the corresponding storage account and must be granted decrypt permission by the CMK.",
+    "impact": "*NOTE* : You must have your key vault setup to utilize this. All Audit Logs will be encrypted with a key you provide. You will need to set up customer managed keys separately, and you will select which key to use via the instructions here. You will be responsible for the lifecycle of the keys, and will need to manually replace them at your own determined intervals to keep the data secure.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### Remediate from Azure Portal \r\n\t\t\t1. Go to Monitor. \r\n\t\t\t2. Select Activity log. \r\n\t\t\t3. Select Export Activity Logs. \r\n\t\t\t4. Select a Subscription. \r\n\t\t\t5. Note the name of the Storage Account for the diagnostic setting. \r\n\t\t\t6. Navigate to Storage accounts. \r\n\t\t\t7. Click on the storage account. \r\n\t\t\t8. Under Security + networking, click Encryption. \r\n\t\t\t9. Next to Encryption type, select Customer-managed keys. \r\n\t\t\t10. Complete the steps to configure a customer-managed key for encryption of the storage account.  \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-5-use-customer-managed-key-option-in-data-at-rest-encryption-when-required",
+        "https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/activity-log?tabs=cli#managing-legacy-log-profiles"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "6.1.3",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "storage_account_storing_activity_logs_lack_cmk",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "storage_account_storing_activity_logs_lack_cmk",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_162"
 }
-

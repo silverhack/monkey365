@@ -1,135 +1,138 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Subscription Security",
-  "serviceName": "Subscription",
-  "displayName": "Ensure That No Custom Subscription Administrator Roles Exist",
-  "description": "The principle of least privilege should be followed and only necessary privileges should be assigned instead of allowing full administrative access.",
-  "rationale": "Custom roles in Azure with administrative access can obfuscate the permissions granted and introduce complexity and blind spots to the management of privileged identities. For less mature security programs without regular identity audits, the creation of Custom roles should be avoided entirely. For more mature security programs with regular identity audits, Custom Roles should be audited for use and assignment, used minimally, and the principle of least privilege should be observed when granting permissions.",
-  "impact": "Subscriptions will need to be handled by Administrators with permissions. ",
-  "remediation": {
-    "text": "###### Using Azure Command Line Interface 2.0\r\n\t\t\t\t\t`az role definition list`\r\n\t\t\t\t\tCheck for entries with `assignableScope` of **/** or a `subscription`, and an action of `*`.  \r\n\t\t\t\t\tVerify the usage and impact of removing the role identified:\r\n\t\t\t\t\t`az role definition delete --name \u0027rolename\u0027`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/billing/billing-add-change-azure-subscription-administrator",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-5-automate-entitlement-management",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-7-follow-just-enough-administration-least-privilege-principle"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "2.2.3",
-	  "profile":"Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_role_definitions",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "operator": "and",
-        "filter": [
-          {
-            "include": "subscription-role-permissions.json"
-          },
-          {
-            "conditions": [
-              [
-                "properties.type",
-                "eq",
-                "CustomRole"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "properties.roleName": "Role Name",
-          "properties.type": "Type",
-          "properties.description": "Description",
-          "properties.createdOn": "Created"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Subscription Security",
+    "serviceName": "Subscription",
+    "displayName": "Ensure That No Custom Subscription Administrator Roles Exist",
+    "description": "The principle of least privilege should be followed and only necessary privileges should be assigned instead of allowing full administrative access.",
+    "rationale": "Custom roles in Azure with administrative access can obfuscate the permissions granted and introduce complexity and blind spots to the management of privileged identities. For less mature security programs without regular identity audits, the creation of Custom roles should be avoided entirely. For more mature security programs with regular identity audits, Custom Roles should be audited for use and assignment, used minimally, and the principle of least privilege should be observed when granting permissions.",
+    "impact": "Subscriptions will need to be handled by Administrators with permissions. ",
+    "remediation": {
+        "text": "###### Using Azure Command Line Interface 2.0\r\n\t\t\t\t\t`az role definition list`\r\n\t\t\t\t\tCheck for entries with `assignableScope` of **/** or a `subscription`, and an action of `*`.  \r\n\t\t\t\t\tVerify the usage and impact of removing the role identified:\r\n\t\t\t\t\t`az role definition delete --name \u0027rolename\u0027`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/billing/billing-add-change-azure-subscription-administrator",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-1-protect-and-limit-highly-privileged-users",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-5-automate-entitlement-management",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-2-restrict-administrative-access-to-business-critical-systems",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-privileged-access#pa-7-follow-just-enough-administration-least-privilege-principle"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "2.2.3",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_role_definitions",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "operator": "and",
+                "filter": [
+                    {
+                        "include": "subscription-role-permissions.json"
+                    },
+                    {
+                        "conditions": [
+                            [
+                                "properties.type",
+                                "eq",
+                                "CustomRole"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_subscription_custom_role_definition",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "properties.roleName": "Role Name",
+                    "properties.type": "Type",
+                    "properties.description": "Description",
+                    "properties.createdOn": "Created"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_subscription_custom_role_definition",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_203"
 }
-

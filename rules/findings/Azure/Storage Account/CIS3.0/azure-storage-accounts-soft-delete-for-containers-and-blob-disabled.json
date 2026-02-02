@@ -1,139 +1,134 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Storage Accounts",
-  "serviceName": "Storage",
-  "displayName": "Ensure Soft Delete is Enabled for Azure Containers and Blob Storage",
-  "description": "The Azure Storage blobs contain data like ePHI or Financial, which can be secret or personal. Data that is erroneously modified or deleted by an application or other storage account user will cause data loss or unavailability. It is recommended that both Azure Containers with attached Blob Storage and standalone containers with Blob Storage be made recoverable by enabling the soft delete configuration. This is to save and recover data when blobs or blob snapshots are deleted.",
-  "rationale": 'Containers and Blob Storage data can be incorrectly deleted. An attacker/malicious user may do this deliberately in order to cause disruption. Deleting an Azure Storage blob causes immediate data loss. Enabling this configuration for Azure storage ensures that even if blobs/data were deleted from the storage account, Blobs/data objects are recoverable for a particular time which is set in the "Retention policies", ranging from 7 days to 365 days.',
-  "impact": "Additional storage costs may be incurred as snapshots are retained.",
-  "remediation": {
-    "text": "
-		###### Remediate from Azure Portal 
-		1. Go to Storage Accounts. 
-		2. For each Storage Account, under Data management, go to Data protection. 
-		3. Check the box next to Enable soft delete for blobs. 
-		4. Check the box next to Enable soft delete for containers. 
-		5. Set the retention period for both to a sufficient length for your organization. 
-		6. Click Save. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-soft-delete",
-	"https://docs.microsoft.com/en-us/azure/storage/blobs/soft-delete-container-overview",
-	"https://docs.microsoft.com/en-us/azure/storage/blobs/soft-delete-container-enable?tabs=azure-portal"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "4.10",
-	  "profile": "Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_storage_accounts",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "dataProtection.properties.deleteRetentionPolicy.enabled",
-                "eq",
-                "False"
-              ],
-			  [
-                "dataProtection.properties.containerDeleteRetentionPolicy.enabled",
-                "eq",
-                "False"
-              ]
-            ],
-			"operator":"or"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-		"properties": {
-          "name": "Name",
-          "CreationTime": "Creation Time",
-          "location": "Location",
-          "dataProtection.properties.deleteRetentionPolicy.enabled": "SoftDelete"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-			"*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "true",
-        "showModalButton": "true",
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Storage Accounts",
+    "serviceName": "Storage",
+    "displayName": "Ensure Soft Delete is Enabled for Azure Containers and Blob Storage",
+    "description": "The Azure Storage blobs contain data like ePHI or Financial, which can be secret or personal. Data that is erroneously modified or deleted by an application or other storage account user will cause data loss or unavailability. It is recommended that both Azure Containers with attached Blob Storage and standalone containers with Blob Storage be made recoverable by enabling the soft delete configuration. This is to save and recover data when blobs or blob snapshots are deleted.",
+    "rationale": "Containers and Blob Storage data can be incorrectly deleted. An attacker/malicious user may do this deliberately in order to cause disruption. Deleting an Azure Storage blob causes immediate data loss. Enabling this configuration for Azure storage ensures that even if blobs/data were deleted from the storage account, Blobs/data objects are recoverable for a particular time which is set in the \"Retention policies\", ranging from 7 days to 365 days.",
+    "impact": "Additional storage costs may be incurred as snapshots are retained.",
+    "remediation": {
+        "text": "\r\n\t\t###### Remediate from Azure Portal \r\n\t\t1. Go to Storage Accounts. \r\n\t\t2. For each Storage Account, under Data management, go to Data protection. \r\n\t\t3. Check the box next to Enable soft delete for blobs. \r\n\t\t4. Check the box next to Enable soft delete for containers. \r\n\t\t5. Set the retention period for both to a sufficient length for your organization. \r\n\t\t6. Click Save. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-soft-delete",
+        "https://docs.microsoft.com/en-us/azure/storage/blobs/soft-delete-container-overview",
+        "https://docs.microsoft.com/en-us/azure/storage/blobs/soft-delete-container-enable?tabs=azure-portal"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "4.10",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_storage_accounts",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "dataProtection.properties.deleteRetentionPolicy.enabled",
+                                "eq",
+                                "False"
+                            ],
+                            [
+                                "dataProtection.properties.containerDeleteRetentionPolicy.enabled",
+                                "eq",
+                                "False"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "storage_accounts_soft_delete_containers_and_blob_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "CreationTime": "Creation Time",
+                    "location": "Location",
+                    "dataProtection.properties.deleteRetentionPolicy.enabled": "SoftDelete"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "true",
+                "showModalButton": "true",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "storage_accounts_soft_delete_containers_and_blob_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_198"
 }
-

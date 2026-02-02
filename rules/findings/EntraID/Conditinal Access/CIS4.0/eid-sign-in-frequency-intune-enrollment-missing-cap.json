@@ -1,0 +1,209 @@
+{
+    "args": [
+        
+    ],
+    "provider": "EntraID",
+    "serviceType": "Conditional Access",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure sign-in frequency for Intune Enrollment is set to 'Every time'",
+    "description": "Sign-in frequency defines the time period before a user is asked to sign in again when attempting to access a resource. The Microsoft Entra ID default configuration for user sign-in frequency is a rolling window of 90 days.
+		The recommended state is a `Sign-in frequency` of `Every time` for `Microsoft Intune Enrollment` 
+		*Note*: Microsoft accounts for a five-minute clock skew when 'every time' is selected in a conditional access policy, ensuring that users are not prompted more frequently than once every five minutes. 
+	",
+    "rationale": "Intune Enrollment is considered a sensitive action and should be safeguarded. An attack path exists that allows for a bypass of device compliance Conditional Access rule. This could allow compromised credentials to be used through a newly registered device enrolled in Intune, enabling persistence and privilege escalation.\r\n Setting sign-in frequency to every time limits the timespan an attacker could use fresh credentials to enroll a new device to Intune.",
+    "impact": "New users enrolling into Intune through an automated process may need to sign-in again if the enrollment process goes on for too long.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-session-lifetime#require-reauthentication-every-time",
+        "https://blackhat.com/eu-24/briefings/schedule/#unveiling-the-power-of-intune-leveraging-intune-for-breaking-into-your-cloud-and-on-premise-42176",
+        "https://www.glueckkanja.com/blog/security/2025/01/compliant-device-bypass-en/"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "5.2.2.11",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_conditional_access_policy",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "state",
+                                "eq",
+                                "enabled"
+                            ],
+                            [
+                                "conditions.users.includeUsers",
+                                "eq",
+                                "All"
+                            ],
+                            [
+                                "conditions.applications.includeApplications",
+                                "match",
+                                "d4ebce55-015a-49b5-a083-c84d1797ae8c"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "grantControls.operator",
+                                "eq",
+                                "OR"
+                            ],
+                            [
+                                "grantControls.builtInControls",
+                                "match",
+                                "mfa"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "or",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "grantControls.operator",
+                                "eq",
+                                "OR"
+                            ],
+                            [
+                                "grantControls.authenticationStrength.id",
+                                "match",
+                                "00000000-0000-0000-0000-000000000004"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "sessionControls.signInFrequency.isEnabled",
+                                "eq",
+                                "enabled"
+                            ],
+                            [
+                                "sessionControls.signInFrequency.frequencyInterval",
+                                "eq",
+                                "everyTime"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "grantControls.operator": "Operator",
+                    "grantControls.builtInControls": "BuiltIn Controls"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "grantControls.operator": "Operator",
+                    "grantControls.builtInControls": "BuiltIn Controls"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    "displayName"
+                ],
+                "message": "The {displayName} policy is not configured to require a compliant or hybrid Entra ID joined device",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraConditionalAccess"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "aad_cap_sign_in_frequency_intune_enrollment_not_present",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1172"
+}

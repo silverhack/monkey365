@@ -1,0 +1,118 @@
+{
+    "args": [
+        
+    ],
+    "provider": "Microsoft365",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure mailbox audit actions are configured",
+    "description": "Mailbox audit logging is turned on by default in all organizations. This effort started in January 2019, and means that certain actions performed by mailbox owners, delegates, and admins are automatically logged. The corresponding mailbox audit records are available for admins to search in the mailbox audit log.\r\nMailboxes and shared mailboxes have actions assigned to them individually in order to audit the data the organization determines valuable at the mailbox level.\r\nThe recommended state per mailbox is `AuditEnabled` to `True` including all default audit actions with additional actions outlined below in the audit and remediation sections.\r\n*Note:* Audit (Standard) licensing allows for up to 180 days log retention as of October 2023.",
+    "rationale": "Whether it is for regulatory compliance or for tracking unauthorized configuration changes in Microsoft 365, enabling mailbox auditing and ensuring the proper mailbox actions are accounted for allows for Microsoft 365 teams to run security operations, forensics or general investigations on mailbox activities.\r\nThe following mailbox types ignore the organizational default and must have `AuditEnabled` set to `True` at the mailbox level in order to capture relevant audit data.
+		* Resource Mailboxes 
+		* Public Folder Mailboxes 
+		* DiscoverySearch Mailbox
+	",
+    "impact": "Adding additional audit action types and increasing the AuditLogAgeLimit from 90 to 180 days will have a limited impact on mailbox storage. Mailbox audit log records are stored in a subfolder (named Audits) in the Recoverable Items folder in each user's mailbox.
+		* Mailbox audit records count against the storage quota of the Recoverable Items folder. 
+		* Mailbox audit records also count against the folder limit for the Recoverable Items folder. A maximum of 3 million items (audit records) can be stored in the Audits subfolder. 
+	",
+    "remediation": {
+        "text": null,
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/purview/audit-mailboxes?view=o365-worldwide"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "6.1.2",
+            "profile": "E5 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure mailbox auditing for E5 users is Enabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_audit_E5_users_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "microsoft365_2142"
+}

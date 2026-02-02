@@ -1,126 +1,135 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Users",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure That 'Guest users access restrictions' is set to 'Guest user access is restricted to properties and memberships of their own directory objects'",
-  "description": "Limit guest user permissions.",
-  "rationale": "Limiting guest access ensures that guest accounts do not have permission for certain directory tasks, such as enumerating users, groups or other directory resources, and cannot be assigned to administrative roles in your directory. Guest access has three levels of restriction.\r\n\t\t\t\t\r\n\t\t1. Guest users have the same access as members (most inclusive)\r\n\t\t2. Guest users have limited access to properties and memberships of directory objects (default value)\r\n\t\t3. Guest user access is restricted to properties and memberships of their own directory objects (most restrictive)\r\n\t\t\r\n\t\tThe recommended option is the 3rd, most restrictive: `Guest user access is restricted to their own directory object`.",
-  "impact": "This may create additional requests for permissions to access resources that administrators will need to approve.",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t\t2. Go to `External Identities`\r\n\t\t\t\t\t\t3. Go to `External collaboration settings`\r\n\t\t\t\t\t\t4. Under `Guest user access`, change `Guest user access restrictions` to be `Guest user access is restricted to properties and memberships of their own directory objects`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions#member-and-guest-users",
-    "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/users-restrict-guest-permissions",
-    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-privileged-access#pa-5-automate-entitlement-management",
-    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
-    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "2.15",
-	  "profile":"Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "aad_authorization_policy",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "TenantAuthPolicy.guestUserRoleId",
-                "ne",
-                "2af84b1e-32c8-42b7-82bc-daa82404023b"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "displayName": "Display Name",
-          "description": "Description",
-          "TenantAuthPolicy.guestUserRoleId": "Permission Level"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "False",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Users",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure that guest user access is restricted",
+    "description": "Microsoft Entra ID, part of Microsoft Entra, allows you to restrict what external guest users can see in their organization in Microsoft Entra ID. Guest users are set to a limited permission level by default in Microsoft Entra ID, while the default for member users is the full set of user permissions.\r\nThese directory level permissions are enforced across Microsoft Entra services including Microsoft Graph, PowerShell v2, the Azure portal, and My Apps portal. Microsoft 365 services leveraging Microsoft 365 groups for collaboration scenarios are also affected, specifically Outlook, Microsoft Teams, and SharePoint. They do not override the SharePoint or Microsoft Teams guest settings.\r\nThe recommended state is at least *Guest users have limited access to properties and memberships of directory objects* or more restrictive.",
+    "rationale": "By limiting guest access to the most restrictive state this helps prevent malicious group and user object enumeration in the Microsoft 365 environment. This first step, known as reconnaissance in The Cyber Kill Chain, is often conducted by attackers prior to more advanced targeted attacks.",
+    "impact": "This may create additional requests for permissions to access resources that administrators will need to approve.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t\t2. Go to `External Identities`\r\n\t\t\t\t\t\t3. Go to `External collaboration settings`\r\n\t\t\t\t\t\t4. Under `Guest user access`, change `Guest user access restrictions` to be `Guest user access is restricted to properties and memberships of their own directory objects`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions#member-and-guest-users",
+        "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/users-restrict-guest-permissions",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-privileged-access#pa-5-automate-entitlement-management",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-governance-strategy#gs-2-define-enterprise-segmentation-strategy",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "5.1.6.2",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_authorization_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "tenantAuthPolicy.guestUserRoleId",
+                                "ne",
+                                "2af84b1e-32c8-42b7-82bc-daa82404023b"
+                            ],
+							[
+                                "tenantAuthPolicy.guestUserRoleId",
+                                "ne",
+                                "10dae51f-b6af-4016-8d66-8c2a99b929b3"
+                            ]
+                        ],
+						"operator":"or"
+                    }
+                ]
+            }
         ],
-        "message": "Guest users access restrictions is not correctly set",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "eid_guest_access_object_restriction_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Display Name",
+                    "description": "Description",
+                    "tenantAuthPolicy.guestUserRoleId": "Permission Level"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "False",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"tenantAuthPolicy":"tenantAuthPolicy"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Guest users access restrictions is not correctly set",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "tenantAuthPolicy.displayName",
+                "resourceId": "tenantAuthPolicy.id",
+                "resourceType": "EntraAuthorizationPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_guest_access_object_restriction_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"tenantAuthPolicy.id"
+    ],
+    "id": "entraid_1136"
 }
-

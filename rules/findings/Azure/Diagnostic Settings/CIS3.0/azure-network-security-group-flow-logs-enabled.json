@@ -1,126 +1,109 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Diagnostic Settings",
-  "serviceName": "Subscription",
-  "displayName": "Ensure that Network Security Group Flow logs are captured and sent to Log Analytics",
-  "description": "Ensure that network flow logs are captured and fed into a central log analytics workspace.",
-  "rationale": "Network Flow Logs provide valuable insight into the flow of traffic around your network and feed into both Azure Monitor and Azure Sentinel (if in use), permitting the generation of visual flow diagrams to aid with analyzing for lateral movement, etc.",
-  "impact": "The impact of configuring NSG Flow logs is primarily one of cost and configuration. If deployed, it will create storage accounts that hold minimal amounts of data on a 5-day lifecycle before feeding to Log Analytics Workspace. This will increase the amount of data stored and used by Azure Monitor.",
-  "remediation": {
-    "text": "
-			###### Remediate from Azure Portal 
-			1. Navigate to Network Watcher. 
-			2. Under Logs, select Flow logs. 
-			3. Select + Create. 
-			4. Select the desired Subscription. 
-			5. For Flow log type, select Network security group. 
-			6. Select + Select target resource. 
-			7. Select Network security group. 
-			8. Select a network security group. 
-			9. Click Confirm selection. 
-			10. Select or create a new Storage Account. 
-			11. If using a v2 storage account, input the retention in days to retain the log. 
-			12. Click Next. 
-			13. Under Analytics, for Flow log version, select Version 2. 
-			14. Check the box next to Enable traffic analytics. 
-			15. Select a processing interval. 
-			16. Select a Log Analytics Workspace. 
-			17. Select Next. 
-			18. Optionally add Tags. 
-			19. Select Review + create. 
-			20. Select Create. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-nsg-flow-logging-portal",
-	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-4-enable-network-logging-for-security-investigation"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "6.1.5",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "asList",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": null,
-        "showModalButton": null,
-        "directLink": null
-      }
+    ],
+    "provider": "Azure",
+    "serviceType": "Diagnostic Settings",
+    "serviceName": "Subscription",
+    "displayName": "Ensure that Network Security Group Flow logs are captured and sent to Log Analytics",
+    "description": "Ensure that network flow logs are captured and fed into a central log analytics workspace.",
+    "rationale": "Network Flow Logs provide valuable insight into the flow of traffic around your network and feed into both Azure Monitor and Azure Sentinel (if in use), permitting the generation of visual flow diagrams to aid with analyzing for lateral movement, etc.",
+    "impact": "The impact of configuring NSG Flow logs is primarily one of cost and configuration. If deployed, it will create storage accounts that hold minimal amounts of data on a 5-day lifecycle before feeding to Log Analytics Workspace. This will increase the amount of data stored and used by Azure Monitor.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### Remediate from Azure Portal \r\n\t\t\t1. Navigate to Network Watcher. \r\n\t\t\t2. Under Logs, select Flow logs. \r\n\t\t\t3. Select + Create. \r\n\t\t\t4. Select the desired Subscription. \r\n\t\t\t5. For Flow log type, select Network security group. \r\n\t\t\t6. Select + Select target resource. \r\n\t\t\t7. Select Network security group. \r\n\t\t\t8. Select a network security group. \r\n\t\t\t9. Click Confirm selection. \r\n\t\t\t10. Select or create a new Storage Account. \r\n\t\t\t11. If using a v2 storage account, input the retention in days to retain the log. \r\n\t\t\t12. Click Next. \r\n\t\t\t13. Under Analytics, for Flow log version, select Version 2. \r\n\t\t\t14. Check the box next to Enable traffic analytics. \r\n\t\t\t15. Select a processing interval. \r\n\t\t\t16. Select a Log Analytics Workspace. \r\n\t\t\t17. Select Next. \r\n\t\t\t18. Optionally add Tags. \r\n\t\t\t19. Select Review + create. \r\n\t\t\t20. Select Create. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-nsg-flow-logging-portal",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-4-enable-network-logging-for-security-investigation"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "6.1.5",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "nsg_flow_logs_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "expandObject": null
+            },
+            "table": "asList",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": null,
+                "showModalButton": null,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "nsg_flow_logs_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_168"
 }
-

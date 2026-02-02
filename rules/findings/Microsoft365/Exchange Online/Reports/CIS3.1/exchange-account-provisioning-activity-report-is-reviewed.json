@@ -1,114 +1,111 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Exchange Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure the Account Provisioning Activity report is reviewed at least weekly",
-  "description": "The Account Provisioning Activity report details any account provisioning that was attempted by an external application.",
-  "rationale": "If the organization doesn't usually use a third-party provider to manage accounts, any entry on the list is likely illicit. Otherwise, it is recommended to monitor transaction volumes and look for new or unusual third party applications that may be managing users. If anything unusual is observed, the provider should be contacted to determine the legitimacy of the action.",
-  "impact": null,
-  "remediation": {
-    "text": "
-			###### To review the Account Provisioning Activity report: 
-			1. Navigate to Microsoft 365 Defender https://security.microsoft.com. 
-			2. Click on Audit. 
-			3. Set Activities to Added user for User administration activities. 
-			4. Set Start Date and End Date. 
-			5. Click Search. 
-			6. Review. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "2.3.1",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "info",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure the Account Provisioning Activity report is reviewed at least weekly",
+    "description": "The Account Provisioning Activity report details any account provisioning that was attempted by an external application.",
+    "rationale": "If the organization doesn\u0027t usually use a third-party provider to manage accounts, any entry on the list is likely illicit. Otherwise, it is recommended to monitor transaction volumes and look for new or unusual third party applications that may be managing users. If anything unusual is observed, the provider should be contacted to determine the legitimacy of the action.",
+    "impact": null,
+    "remediation": {
+        "text": "\r\n\t\t\t###### To review the Account Provisioning Activity report: \r\n\t\t\t1. Navigate to Microsoft 365 Defender https://security.microsoft.com. \r\n\t\t\t2. Click on Audit. \r\n\t\t\t3. Set Activities to Added user for User administration activities. \r\n\t\t\t4. Set Start Date and End Date. \r\n\t\t\t5. Click Search. \r\n\t\t\t6. Review. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "2.3.1",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "info",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "Ensure the Account Provisioning Activity report is reviewed at least weekly",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_account_provisioning_activity_report_is_reviewed",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure the Account Provisioning Activity report is reviewed at least weekly",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_account_provisioning_activity_report_is_reviewed",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "microsoft365_2134"
 }
-

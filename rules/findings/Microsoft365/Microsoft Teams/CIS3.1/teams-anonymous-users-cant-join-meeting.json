@@ -1,137 +1,133 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Microsoft Teams",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure anonymous users can't join a meeting",
-  "description": "This policy setting can prevent anyone other than invited attendees (people directly invited by the organizer, or to whom an invitation was forwarded) from bypassing the lobby and entering the meeting.",
-  "rationale": "
-		For meetings that could contain sensitive information, it is best to allow the meeting organizer to vet anyone not directly sent an invite before admitting them to the meeting. This will also prevent the anonymous user from using the meeting link to have meetings at unscheduled times. 
-		**Note** : Those companies that don't normally operate at a Level 2 environment, but do deal with sensitive information, may want to consider this policy setting. 
-  ",
-  "impact": "Individuals who were not sent or forwarded a meeting invite will not be able to join the meeting automatically.",
-  "remediation": {
-    "text": "
-			###### To remediate using the UI: 
-			1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com. 
-			2. Click to expand Meetings select Meeting policies. 
-			3. Click Global (Org-wide default) 
-			4. Under meeting join & lobby set Anonymous users can join a meeting to Off.
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/MicrosoftTeams/configure-meetings-sensitive-protection"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "8.5.1",
-	  "profile": "E3 Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "o365_teams_skype_meeting_policies",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "Identity",
-                "eq",
-                "Global"
-              ],
-			  [
-                "AllowAnonymousUsersToJoinMeeting",
-                "eq",
-                "true"
-              ]
-            ],
-			"operator":"and"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-		"properties": {
-          "Identity": "Identity",
-          "AllowAnonymousUsersToJoinMeeting": "Allow Anonymous Users To Join Meeting",
-          "AllowAnonymousUsersToStartMeeting": "Anonymour Users Can Start a Meeting"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Microsoft Teams",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure anonymous users can\u0027t join a meeting",
+    "description": "This policy setting can prevent anyone other than invited attendees (people directly invited by the organizer, or to whom an invitation was forwarded) from bypassing the lobby and entering the meeting.",
+    "rationale": "\r\n\t\tFor meetings that could contain sensitive information, it is best to allow the meeting organizer to vet anyone not directly sent an invite before admitting them to the meeting. This will also prevent the anonymous user from using the meeting link to have meetings at unscheduled times. \r\n\t\t**Note** : Those companies that don\u0027t normally operate at a Level 2 environment, but do deal with sensitive information, may want to consider this policy setting. \r\n  ",
+    "impact": "Individuals who were not sent or forwarded a meeting invite will not be able to join the meeting automatically.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com. \r\n\t\t\t2. Click to expand Meetings select Meeting policies. \r\n\t\t\t3. Click Global (Org-wide default) \r\n\t\t\t4. Under meeting join \u0026 lobby set Anonymous users can join a meeting to Off.\r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/MicrosoftTeams/configure-meetings-sensitive-protection"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "8.5.1",
+            "profile": "E3 Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_teams_skype_meeting_policies",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "Identity",
+                                "eq",
+                                "Global"
+                            ],
+                            [
+                                "AllowAnonymousUsersToJoinMeeting",
+                                "eq",
+                                "true"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure anonymous users can't join a meeting",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "teams_anonymous_users_not_restricted_join_meeting",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "Identity": "Identity",
+                    "AllowAnonymousUsersToJoinMeeting": "Allow Anonymous Users To Join Meeting",
+                    "AllowAnonymousUsersToStartMeeting": "Anonymour Users Can Start a Meeting"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure anonymous users can\u0027t join a meeting",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "Description",
+                "resourceId": null,
+                "resourceType": "TeamsMeetingPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "teams_anonymous_users_not_restricted_join_meeting",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"Description",
+		"ConfigId",
+		"Key.SchemaId.XName.name"
+    ],
+    "id": "microsoft365_2166"
 }
-

@@ -1,133 +1,124 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "General",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure that account 'Lockout Threshold' is less than or equal to '10'",
-  "description": "The account lockout threshold determines how many failed login attempts are permitted prior to placing the account in a locked-out state and initiating a variable lockout duration.",
-  "rationale": "Account lockout is a method of protecting against brute-force and password spray attacks. Once the lockout threshold has been exceeded, the account enters a lockedout state which prevents all login attempts for a variable duration. The lockout in combination with a reasonable duration reduces the total number of failed login attempts that a malicious actor can execute in a given period of time.",
-  "impact": "
-				If account lockout threshold is set too low (less than 3), users may experience frequent lockout events and the resulting security alerts may contribute to alert fatigue. 
-				If account lockout threshold is set too high (more than 10), malicious actors can programmatically execute more password attempts in a given period of time.
-  ",
-  "remediation": {
-    "text": "
-			###### Remediate from Azure Portal 
-			1. From Azure Home select the Portal Menu. 
-			2. Select Microsoft Entra ID. 
-			3. Under Manage, select Security. 
-			4. Under Manage, select Authentication methods. 
-			5. Under Manage, select Password protection. 
-			6. Set the Lockout threshold to 10 or fewer. 
-			7. Click Save.
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-password-smart-lockout#manage-microsoft-entra-smart-lockout-values"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "2.6",
-	  "profile": "Level 1"
-    }
-  ],
-  "level": "low",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "aad_password_protection_policy",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "lockoutThreshold",
-                "gt",
-                "10"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-	"isManual":"false",
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "General",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure that account \u0027Lockout Threshold\u0027 is less than or equal to \u002710\u0027",
+    "description": "The account lockout threshold determines how many failed login attempts are permitted prior to placing the account in a locked-out state and initiating a variable lockout duration.",
+    "rationale": "Account lockout is a method of protecting against brute-force and password spray attacks. Once the lockout threshold has been exceeded, the account enters a lockedout state which prevents all login attempts for a variable duration. The lockout in combination with a reasonable duration reduces the total number of failed login attempts that a malicious actor can execute in a given period of time.",
+    "impact": "\r\n\t\t\t\tIf account lockout threshold is set too low (less than 3), users may experience frequent lockout events and the resulting security alerts may contribute to alert fatigue. \r\n\t\t\t\tIf account lockout threshold is set too high (more than 10), malicious actors can programmatically execute more password attempts in a given period of time.\r\n  ",
+    "remediation": {
+        "text": "\r\n\t\t\t###### Remediate from Azure Portal \r\n\t\t\t1. From Azure Home select the Portal Menu. \r\n\t\t\t2. Select Microsoft Entra ID. \r\n\t\t\t3. Under Manage, select Security. \r\n\t\t\t4. Under Manage, select Authentication methods. \r\n\t\t\t5. Under Manage, select Password protection. \r\n\t\t\t6. Set the Lockout threshold to 10 or fewer. \r\n\t\t\t7. Click Save.\r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-password-smart-lockout#manage-microsoft-entra-smart-lockout-values"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "2.6",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "low",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_password_protection_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "lockoutThreshold",
+                                "gt",
+                                "10"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": "Ensure that account 'Lockout Threshold' is less than or equal to '10'"
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "eid_incorrect_account_lockout_threshold",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "isManual": "false",
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": "Ensure that account \u0027Lockout Threshold\u0027 is less than or equal to \u002710\u0027"
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_incorrect_account_lockout_threshold",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "entraid_1151"
 }
-

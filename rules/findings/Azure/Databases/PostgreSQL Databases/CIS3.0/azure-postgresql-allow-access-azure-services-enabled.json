@@ -1,134 +1,137 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "PostgreSQL Server",
-  "serviceName": "Databases",
-  "displayName": "Ensure 'Allow public access from any Azure service within Azure to this server' for PostgreSQL flexible server is disabled",
-  "description": "Disable access from Azure services to PostgreSQL Database Server.",
-  "rationale": "If access from Azure services is enabled, the server\u0027s firewall will accept connections from all Azure resources, including resources not in your subscription. This is usually not a desired configuration. Instead, setup firewall rules to allow access from specific network ranges or VNET rules to allow access from specific virtual networks.",
-  "impact": null,
-  "remediation": {
-    "text": "",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/postgresql/concepts-firewall-rules",
-    "https://docs.microsoft.com/en-us/azure/postgresql/howto-manage-firewall-using-cli",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-4-protect-applications-and-services-from-external-network-attacks",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "5.2.5",
-	  "profile": "Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_postgresql_servers",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "StartIpAddress",
-                "eq",
-                "0.0.0.0"
-              ],
-              [
-                "EndIpAddress",
-                "eq",
-                "0.0.0.0"
-              ]
-            ],
-            "operator": "and",
-			"whereObject": "fwrules"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "serverName": "Server Name",
-          "RuleName": "Rule Name",
-          "StartIpAddress": "Start IP Address",
-		  "EndIpAddress": "End IP Address"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "fwrules"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "true",
-        "showModalButton": "true",
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "PostgreSQL Server",
+    "serviceName": "Databases",
+    "displayName": "Ensure \u0027Allow public access from any Azure service within Azure to this server\u0027 for PostgreSQL flexible server is disabled",
+    "description": "Disable access from Azure services to PostgreSQL Database Server.",
+    "rationale": "If access from Azure services is enabled, the server\u0027s firewall will accept connections from all Azure resources, including resources not in your subscription. This is usually not a desired configuration. Instead, setup firewall rules to allow access from specific network ranges or VNET rules to allow access from specific virtual networks.",
+    "impact": null,
+    "remediation": {
+        "text": "",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/postgresql/concepts-firewall-rules",
+        "https://docs.microsoft.com/en-us/azure/postgresql/howto-manage-firewall-using-cli",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-4-protect-applications-and-services-from-external-network-attacks",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-network-security#ns-1-implement-security-for-internal-traffic"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "5.2.5",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_postgresql_servers",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "StartIpAddress",
+                                "eq",
+                                "0.0.0.0"
+                            ],
+                            [
+                                "EndIpAddress",
+                                "eq",
+                                "0.0.0.0"
+                            ]
+                        ],
+                        "operator": "and",
+                        "whereObject": "fwrules"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "postgresql_allow_azure_services_enabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "serverName": "Server Name",
+                    "RuleName": "Rule Name",
+                    "StartIpAddress": "Start IP Address",
+                    "EndIpAddress": "End IP Address"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "fwrules"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "true",
+                "showModalButton": "true",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "postgresql_allow_azure_services_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_124"
 }
-

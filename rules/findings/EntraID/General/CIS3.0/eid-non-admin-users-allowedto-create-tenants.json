@@ -1,122 +1,127 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "General",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure that 'Restrict non-admin users from creating tenants' is set to 'Yes'",
-  "description": "Require administrators or appropriately delegated users to create new tenants.",
-  "rationale": "It is recommended to only allow an administrator to create new tenants. This prevent users from creating new Microsoft Entra ID or Azure AD B2C tenants and ensures that only authorized users are able to do so.",
-  "impact": "Enforcing this setting will ensure that only authorized users are able to create new tenants.",
-  "remediation": {
-    "text": null,
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions",
-	"https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#tenant-creator",
-	"https://blog.admindroid.com/disable-users-creating-new-azure-ad-tenants-in-microsoft-365/"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "2.3"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "aad_authorization_policy",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "TenantAuthPolicy.defaultUserRolePermissions.allowedToCreateTenants",
-                "eq",
-                "true"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-	"isManual":"false",
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "General",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure that \u0027Restrict non-admin users from creating tenants\u0027 is set to \u0027Yes\u0027",
+    "description": "Require administrators or appropriately delegated users to create new tenants.",
+    "rationale": "It is recommended to only allow an administrator to create new tenants. This prevent users from creating new Microsoft Entra ID or Azure AD B2C tenants and ensures that only authorized users are able to do so.",
+    "impact": "Enforcing this setting will ensure that only authorized users are able to create new tenants.",
+    "remediation": {
+        "text": null,
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions",
+        "https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#tenant-creator",
+        "https://blog.admindroid.com/disable-users-creating-new-azure-ad-tenants-in-microsoft-365/"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "2.3"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_authorization_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "tenantAuthPolicy.defaultUserRolePermissions.allowedToCreateTenants",
+                                "eq",
+                                "true"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "Restrict non-admin users from creating tenants is disabled",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "eid_non_admin_allowed_tenant_creation",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "isManual": "false",
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "tenantAuthPolicy.displayName": "Display Name",
+                    "tenantAuthPolicy.description": "Description",
+                    "tenantAuthPolicy.defaultUserRolePermissions.allowedToCreateTenants": "Allowed to Create Tenants"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"tenantAuthPolicy":"tenantAuthPolicy"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Restrict non-admin users from creating tenants is disabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "tenantAuthPolicy.displayName",
+                "resourceId": "tenantAuthPolicy.id",
+                "resourceType": "EntraAuthorizationPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_non_admin_allowed_tenant_creation",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"tenantAuthPolicy.id"
+    ],
+    "id": "entraid_1124"
 }
-

@@ -1,129 +1,132 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Storage Accounts",
-  "serviceName": "Storage",
-  "displayName": "Ensure storage for critical data are encrypted with Customer Managed Key",
-  "description": "Enable sensitive data encryption at rest using Customer Managed Keys rather than Microsoft Managed keys.",
-  "rationale": "By default, data in the storage account is encrypted using Microsoft Managed Keys at rest. All Azure Storage resources are encrypted, including blobs, disks, files, queues, and tables. All object metadata is also encrypted. However, if you want to control and manage this encryption key yourself, you can specify a customer-managed key, that key is used to protect and control access to the key that encrypts your data. You can also choose to automatically update the key version used for Azure Storage encryption whenever a new version is available in the associated Key Vault.",
-  "impact": "If the key expires by setting the \u0027activation date\u0027 and \u0027expiration date\u0027 of the key, the user must rotate the key manually.  \r\n\t\t\t\tUsing Customer Managed Keys may also incur additional man-hour requirements to create, store, manage, and protect the keys as needed.",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Storage Accounts`.\r\n\t\t\t\t\t2. For each storage account, go to `Encryption`\r\n\t\t\t\t\t3. Set Customer Managed Keys\r\n\t\t\t\t\t4. Select the Encryption key and enter the appropriate setting value\r\n\t\t\t\t\t5. Click `Save`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption",
-    "https://docs.microsoft.com/en-us/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest",
-    "https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption#azure-storage-encryption-versus-disk-encryption",
-    "https://docs.microsoft.com/en-us/security/benchmark/azure/security-controls-v2-data-protection#dp-1-discovery,-classify-and-label-sensitive-data"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "4.11",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_storage_accounts",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "usingOwnKey",
-                "eq",
-                "False"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "name": "Name",
-          "location": "Location",
-          "ResourceGroupName": "ResourceGroupName",
-          "usingOwnKey": "Customer Managed Key"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "name",
-            "location",
-            "ResourceGroupName",
-            "usingOwnKey"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Storage Accounts",
+    "serviceName": "Storage",
+    "displayName": "Ensure storage for critical data are encrypted with Customer Managed Key",
+    "description": "Enable sensitive data encryption at rest using Customer Managed Keys rather than Microsoft Managed keys.",
+    "rationale": "By default, data in the storage account is encrypted using Microsoft Managed Keys at rest. All Azure Storage resources are encrypted, including blobs, disks, files, queues, and tables. All object metadata is also encrypted. However, if you want to control and manage this encryption key yourself, you can specify a customer-managed key, that key is used to protect and control access to the key that encrypts your data. You can also choose to automatically update the key version used for Azure Storage encryption whenever a new version is available in the associated Key Vault.",
+    "impact": "If the key expires by setting the \u0027activation date\u0027 and \u0027expiration date\u0027 of the key, the user must rotate the key manually.  \r\n\t\t\t\tUsing Customer Managed Keys may also incur additional man-hour requirements to create, store, manage, and protect the keys as needed.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Storage Accounts`.\r\n\t\t\t\t\t2. For each storage account, go to `Encryption`\r\n\t\t\t\t\t3. Set Customer Managed Keys\r\n\t\t\t\t\t4. Select the Encryption key and enter the appropriate setting value\r\n\t\t\t\t\t5. Click `Save`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption",
+        "https://docs.microsoft.com/en-us/azure/security/fundamentals/data-encryption-best-practices#protect-data-at-rest",
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-service-encryption#azure-storage-encryption-versus-disk-encryption",
+        "https://docs.microsoft.com/en-us/security/benchmark/azure/security-controls-v2-data-protection#dp-1-discovery,-classify-and-label-sensitive-data"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "4.11",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_storage_accounts",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "usingOwnKey",
+                                "eq",
+                                "False"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "storage_accounts_missing_cmk_encryption",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "Location",
+                    "ResourceGroupName": "ResourceGroupName",
+                    "usingOwnKey": "Customer Managed Key"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "name",
+                        "location",
+                        "ResourceGroupName",
+                        "usingOwnKey"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "storage_accounts_missing_cmk_encryption",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_193"
 }
-

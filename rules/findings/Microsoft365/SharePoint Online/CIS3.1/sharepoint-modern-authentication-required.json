@@ -1,125 +1,127 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "SharePoint Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure modern authentication for SharePoint applications is required",
-  "description": "Modern authentication in Microsoft 365 enables authentication features like multifactor authentication (MFA) using smart cards, certificate-based authentication (CBA), and third-party SAML identity providers.",
-  "rationale": "Strong authentication controls, such as the use of multifactor authentication, may be circumvented if basic authentication is used by SharePoint applications. Requiring modern authentication for SharePoint applications ensures strong authentication mechanisms are used when establishing sessions between these applications, SharePoint, and connecting users.",
-  "impact": "Strong authentication controls, such as the use of multifactor authentication, may be circumvented if basic authentication is used by SharePoint applications. Requiring modern authentication for SharePoint applications ensures strong authentication mechanisms are used when establishing sessions between these applications, SharePoint, and connecting users.",
-  "remediation": {
-    "text": "
-			###### To audit using the UI: 
-			1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint. 
-			2. Click to expand Policies select Access control. 
-			3. Select Apps that don't use modern authentication and ensure that it is set to Block access. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "7.2.1",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "o365_spo_tenant_admin_details",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "LegacyAuthProtocolsEnabled",
-                "eq",
-                "true"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "RootSiteUrl": "Root Site",
-          "LegacyAuthProtocolsEnabled": "Legacy Auth Protocols Enabled"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "RootSiteUrl",
-			"LegacyAuthProtocolsEnabled"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "SharePoint Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure modern authentication for SharePoint applications is required",
+    "description": "Modern authentication in Microsoft 365 enables authentication features like multifactor authentication (MFA) using smart cards, certificate-based authentication (CBA), and third-party SAML identity providers.",
+    "rationale": "Strong authentication controls, such as the use of multifactor authentication, may be circumvented if basic authentication is used by SharePoint applications. Requiring modern authentication for SharePoint applications ensures strong authentication mechanisms are used when establishing sessions between these applications, SharePoint, and connecting users.",
+    "impact": "Strong authentication controls, such as the use of multifactor authentication, may be circumvented if basic authentication is used by SharePoint applications. Requiring modern authentication for SharePoint applications ensures strong authentication mechanisms are used when establishing sessions between these applications, SharePoint, and connecting users.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### To audit using the UI: \r\n\t\t\t1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint. \r\n\t\t\t2. Click to expand Policies select Access control. \r\n\t\t\t3. Select Apps that don\u0027t use modern authentication and ensure that it is set to Block access. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "7.2.1",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_spo_tenant_admin_details",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "LegacyAuthProtocolsEnabled",
+                                "eq",
+                                "true"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "Ensure modern authentication for SharePoint applications is required",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "spo_modern_authentication_for_apps_not_required",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "RootSiteUrl": "Root Site",
+                    "LegacyAuthProtocolsEnabled": "Legacy Auth Protocols Enabled"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "RootSiteUrl",
+                        "LegacyAuthProtocolsEnabled"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure modern authentication for SharePoint applications is required",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "RootSiteUrl",
+                "resourceId": null,
+                "resourceType": "SPOTenantAdmin"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "spo_modern_authentication_for_apps_not_required",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"_ObjectType_",
+		"_ObjectIdentity_",
+		"RootSiteUrl"
+    ],
+    "id": "microsoft365_2192"
 }
-

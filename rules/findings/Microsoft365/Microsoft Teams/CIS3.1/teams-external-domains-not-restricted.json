@@ -1,124 +1,135 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Microsoft Teams",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure external domains are restricted in the Teams admin center",
-  "description": "
-		This policy controls whether external domains are allowed, blocked or permitted based on an allowlist or denylist. When external domains are allowed, users in your organization can chat, add users to meetings, and use audio video conferencing with users in external organizations. 
-		The recommended state is `Allow only specific external domains or Block all external domains`. 
-  ",
-  "rationale": "
-		Allowlisting external domains that an organization is collaborating with allows for stringent controls over who an organization's users are allowed to make contact with. Some real-world attacks and exploits delivered via Teams over external access channels include: 
-		* DarkGate malware 
-		* Social engineering / Phishing attacks by `Midnight Blizzard` 
-		* GIFShell 
-		* Username enumeration
-  ",
-  "impact": "The impact in terms of the type of collaboration users are allowed to participate in and the I.T. resources expended to manage an allowlist will increase. If a user attempts to join the inviting organization's meeting they will be prevented from joining unless they were created as a guest in EntraID or their domain was added to the allowed external domains list.",
-  "remediation": {
-    "text": "
-			###### To remediate using the UI: 
-			1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com/. 
-			2. Click to expand Users select External access. 
-			3. Under Teams and Skype for Business users in external organizations set Choose which external domains your users have access to to one of the following: 
-			  * Allow only specific external domains 
-			  * Block all external domains 
-			4. Click Save. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/microsoftteams/trusted-organizations-external-meetings-chat?tabs=organization-settings",
-	"https://cybersecurity.att.com/blogs/security-essentials/darkgate-malware-delivered-via-microsoft-teams-detection-and-response",
-	"https://www.microsoft.com/en-us/security/blog/2023/08/02/midnight-blizzard-conducts-targeted-social-engineering-over-microsoft-teams/",
-	"https://www.bitdefender.com/blog/hotforsecurity/gifshell-attack-lets-hackers-create-reverse-shell-through-microsoft-teams-gifs/"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "4.0.0",
-      "reference": "8.2.1",
-	  "profile": "E3 Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Microsoft Teams",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure external domains are restricted in the Teams admin center",
+    "description": "\r\n\t\tThis policy controls whether external domains are allowed, blocked or permitted based on an allowlist or denylist. When external domains are allowed, users in your organization can chat, add users to meetings, and use audio video conferencing with users in external organizations. \r\n\t\tThe recommended state is `Allow only specific external domains or Block all external domains`. \r\n  ",
+    "rationale": "\r\n\t\tAllowlisting external domains that an organization is collaborating with allows for stringent controls over who an organization\u0027s users are allowed to make contact with. Some real-world attacks and exploits delivered via Teams over external access channels include: \r\n\t\t* DarkGate malware \r\n\t\t* Social engineering / Phishing attacks by `Midnight Blizzard` \r\n\t\t* GIFShell \r\n\t\t* Username enumeration\r\n  ",
+    "impact": "The impact in terms of the type of collaboration users are allowed to participate in and the I.T. resources expended to manage an allowlist will increase. If a user attempts to join the inviting organization\u0027s meeting they will be prevented from joining unless they were created as a guest in EntraID or their domain was added to the allowed external domains list.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com/. \r\n\t\t\t2. Click to expand Users select External access. \r\n\t\t\t3. Under Teams and Skype for Business users in external organizations set Choose which external domains your users have access to to one of the following: \r\n\t\t\t  * Allow only specific external domains \r\n\t\t\t  * Block all external domains \r\n\t\t\t4. Click Save. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/microsoftteams/trusted-organizations-external-meetings-chat?tabs=organization-settings",
+        "https://cybersecurity.att.com/blogs/security-essentials/darkgate-malware-delivered-via-microsoft-teams-detection-and-response",
+        "https://www.microsoft.com/en-us/security/blog/2023/08/02/midnight-blizzard-conducts-targeted-social-engineering-over-microsoft-teams/",
+        "https://www.bitdefender.com/blog/hotforsecurity/gifshell-attack-lets-hackers-create-reverse-shell-through-microsoft-teams-gifs/"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "8.2.1",
+            "profile": "E3 Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_teams_external_access_policies",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "Identity",
+                                "eq",
+                                "Global"
+                            ],
+                            [
+                                "EnableFederationAccess",
+                                "eq",
+                                "true"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure external domains are restricted in the Teams admin center",
-        "defaultMessage": "Ensure external domains are restricted in the Teams admin center"
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "teams_external_domains_not_restricted",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "ConfigId": "Config Id",
+                    "Identity": "Identity",
+                    "EnableFederationAccess": "Enable Federation Access"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure external domains are restricted in the Teams admin center",
+                "defaultMessage": "Ensure external domains are restricted in the Teams admin center"
+            },
+            "properties": {
+                "resourceName": "Identity",
+                "resourceId": "ConfigId",
+                "resourceType": "TeamsExternalAccessPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "teams_external_domains_not_restricted",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"ConfigId",
+		"Identity"
+    ],
+    "id": "microsoft365_2170"
 }
-

@@ -1,178 +1,169 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Fabric",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure access to APIs by Service Principals is restricted",
-  "description": "
-		Web apps registered in Microsoft Entra ID use an assigned service principal to access Power BI APIs without a signed-in user. This setting allows an app to use service principal authentication. 
-		The recommended state is `Enabled for a subset of the organization` or `Disabled`. 
-  ",
-  "rationale": "Leaving API access unrestricted increases the attack surface in the event an adversary gains access to a Service Principal. APIs are a feature-rich method for programmatic access to many areas of Power Bi and should be guarded closely.",
-  "impact": "Disabled is the default behavior.",
-  "remediation": {
-    "text": "
-			###### To remediate using the UI: 
-			1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal 
-			2. Select Tenant settings. 
-			3. Scroll to Developer settings. 
-			4. Set Service principals can use Fabric APIs to one of these states: 
-			  * State 1: Disabled 
-			  * State 2: Enabled with Specific security groups selected and defined. 
-			**Important** : If the organization doesn't actively use this feature it is recommended to keep it Disabled. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/fabric/admin/service-admin-portal-developer"
-  ],
-  "compliance": [
-    {
-		"name": "CIS Microsoft 365 Foundations Benchmark",
-		"version": "5.0.0",
-		"reference": "9.1.10",
-		"profile": [
-			"E3 Level 1",
-			"E5 Level 1"
-		]
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "m365_fabric_tenant",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-	  {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "settingName",
-                "eq",
-                "ServicePrincipalAccessGlobalAPIs"
-              ],
-			  [
-                "enabled",
-                "eq",
-                "True"
-              ],
-			  [
-                "enabledSecurityGroups.Count",
-                "eq",
-                "0"
-              ]
-            ],
-			"operator": "and"
-          }
-        ]
-      },
-	  {
-        "connectOperator": "or",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "settingName",
-                "eq",
-                "ServicePrincipalAccessPermissionAPIs"
-              ],
-			  [
-                "enabled",
-                "eq",
-                "True"
-              ],
-			  [
-                "enabledSecurityGroups.Count",
-                "eq",
-                "0"
-              ]
-            ],
-			"operator": "and"
-          }
-        ]
-	  }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "title": "Title",
-          "enabled": "Enabled",
-          "tenantSettingGroup": "Group",
-          "enabledSecurityGroups": "Security Groups"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "title",
-            "enabled",
-            "location",
-            "tenantSettingGroup",
-            "enabledSecurityGroups"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Fabric",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure access to APIs by Service Principals is restricted",
+    "description": "\r\n\t\tWeb apps registered in Microsoft Entra ID use an assigned service principal to access Power BI APIs without a signed-in user. This setting allows an app to use service principal authentication. \r\n\t\tThe recommended state is `Enabled for a subset of the organization` or `Disabled`. \r\n  ",
+    "rationale": "Leaving API access unrestricted increases the attack surface in the event an adversary gains access to a Service Principal. APIs are a feature-rich method for programmatic access to many areas of Power Bi and should be guarded closely.",
+    "impact": "Disabled is the default behavior.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal \r\n\t\t\t2. Select Tenant settings. \r\n\t\t\t3. Scroll to Developer settings. \r\n\t\t\t4. Set Service principals can use Fabric APIs to one of these states: \r\n\t\t\t  * State 1: Disabled \r\n\t\t\t  * State 2: Enabled with Specific security groups selected and defined. \r\n\t\t\t**Important** : If the organization doesn\u0027t actively use this feature it is recommended to keep it Disabled. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/fabric/admin/service-admin-portal-developer"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "9.1.10",
+            "profile": [
+                "E3 Level 1",
+                "E5 Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "m365_fabric_tenant",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "settingName",
+                                "eq",
+                                "ServicePrincipalAccessGlobalAPIs"
+                            ],
+                            [
+                                "enabled",
+                                "eq",
+                                "True"
+                            ],
+                            [
+                                "enabledSecurityGroups.Count",
+                                "eq",
+                                "0"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "or",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "settingName",
+                                "eq",
+                                "ServicePrincipalAccessPermissionAPIs"
+                            ],
+                            [
+                                "enabled",
+                                "eq",
+                                "True"
+                            ],
+                            [
+                                "enabledSecurityGroups.Count",
+                                "eq",
+                                "0"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure access to APIs by Service Principals is restricted",
-        "defaultMessage": "Ensure access to APIs by Service Principals is restricted"
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "fabric_api_access_to_service_principals_not_restricted",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "title": "Title",
+                    "enabled": "Enabled",
+                    "tenantSettingGroup": "Group",
+                    "enabledSecurityGroups": "Security Groups"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "title",
+                        "enabled",
+                        "location",
+                        "tenantSettingGroup",
+                        "enabledSecurityGroups"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure access to APIs by Service Principals is restricted",
+                "defaultMessage": "Ensure access to APIs by Service Principals is restricted"
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "fabric_api_access_to_service_principals_not_restricted",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "microsoft365_2154"
 }
-

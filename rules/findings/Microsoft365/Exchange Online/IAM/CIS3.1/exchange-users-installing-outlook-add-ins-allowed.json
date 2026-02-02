@@ -1,112 +1,133 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Exchange Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure users installing Outlook add-ins is not allowed",
-  "description": "Specify the administrators and users who can install and manage add-ins for Outlook in Exchange Online By default, users can install add-ins in their Microsoft Outlook Desktop client, allowing data access within the client application.",
-  "rationale": "Attackers exploit vulnerable or custom add-ins to access user data. Disabling user-installed add-ins in Microsoft Outlook reduces this threat surface.",
-  "impact": "Implementing this change will impact both end users and administrators. End users will be unable to integrate third-party applications they desire, and administrators may receive requests to grant permission for necessary third-party apps.",
-  "remediation": {
-  "text": "
-	###### To remediate using the UI: 
-	1. Navigate to Exchange admin center https://admin.exchange.microsoft.com. 
-	2. Click to expand Roles select User roles. 
-	3. Select Default Role Assignment Policy. 
-	4. In the properties pane on the right click on Manage permissions. 
-	5. Under Other roles uncheck My Custom Apps, My Marketplace Apps and My ReadWriteMailboxApps. 
-	6. Click Save changes. 
-  ",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/add-ins-for-outlook/specify-who-can-install-and-manage-add-ins?source=recommendations",
-	"https://learn.microsoft.com/en-us/exchange/permissions-exo/role-assignment-policies"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "6.3.1",
-	  "profile": "E3 Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure users installing Outlook add-ins is not allowed",
+    "description": "Specify the administrators and users who can install and manage add-ins for Outlook in Exchange Online By default, users can install add-ins in their Microsoft Outlook Desktop client, allowing data access within the client application.",
+    "rationale": "Attackers exploit vulnerable or custom add-ins to access user data. Disabling user-installed add-ins in Microsoft Outlook reduces this threat surface.",
+    "impact": "Implementing this change will impact both end users and administrators. End users will be unable to integrate third-party applications they desire, and administrators may receive requests to grant permission for necessary third-party apps.",
+    "remediation": {
+        "text": "\r\n\t###### To remediate using the UI: \r\n\t1. Navigate to Exchange admin center https://admin.exchange.microsoft.com. \r\n\t2. Click to expand Roles select User roles. \r\n\t3. Select Default Role Assignment Policy. \r\n\t4. In the properties pane on the right click on Manage permissions. \r\n\t5. Under Other roles uncheck My Custom Apps, My Marketplace Apps and My ReadWriteMailboxApps. \r\n\t6. Click Save changes. \r\n  ",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/add-ins-for-outlook/specify-who-can-install-and-manage-add-ins?source=recommendations",
+        "https://learn.microsoft.com/en-us/exchange/permissions-exo/role-assignment-policies"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "6.3.1",
+            "profile": "E3 Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_exo_role_assignment_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "compliant",
+                                "eq",
+                                "false"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "Ensure users installing Outlook add-ins is not allowed",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_users_allowed_to_install_outlook_addIns",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "Id",
+					"Identity": "Identity",
+                    "description": "description",
+					"compliant": "compliant",
+					"nonCompliantRoles": "nonCompliantRoles"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"id": "Id",
+					"Identity": "Identity",
+                    "description": "description",
+					"compliant": "compliant",
+					"nonCompliantRoles": "nonCompliantRoles"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure users installing Outlook add-ins is not allowed",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "Identity",
+                "resourceId": "Id",
+                "resourceType": "EXORoleAssignmentPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_users_allowed_to_install_outlook_addIns",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"Id",
+		"Identity"
+    ],
+    "id": "microsoft365_2124"
 }
-

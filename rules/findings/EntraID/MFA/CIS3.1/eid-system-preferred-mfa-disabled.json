@@ -1,0 +1,149 @@
+{
+    "args": [
+        
+    ],
+    "provider": "EntraID",
+    "serviceType": "Conditional Access",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure system-preferred multifactor authentication is enabled",
+    "description": "System-preferred multifactor authentication (MFA) prompts users to sign in by using the most secure method they registered.\r\nThe user is prompted to sign-in with the most secure method according to the below order. The order of authentication methods is dynamic. It's updated by Microsoft as the security landscape changes, and as better authentication methods emerge.
+		* Temporary Access Pass 
+		* Passkey (FIDO2) 
+		* Microsoft Authenticator notifications 
+		* External authentication methods 
+		* Time-based one-time password (TOTP) 
+		* Telephony 
+		* Certificate-based authentication
+		
+		The recommended state is `Enabled`. 
+
+	",
+    "rationale": "Regardless of the authentication method enabled by an administrator or set as preferred by the user, the system will dynamically select the most secure option available at the time of authentication. This approach acts as an additional safeguard to prevent the use of weaker methods, such as voice calls, SMS, and email OTPs, which may have been inadvertently left enabled due to misconfiguration or lack of configuration hardening.\r\nEnforcing the default behavior also ensures the feature is not disabled.",
+    "impact": "The Microsoft managed value of system-preferred MFA is Enabled and as such enforces the default behavior. No additional impact is expected.\r\n*Note:* Due to known issues with certificate-based authentication (CBA) and systempreferred MFA, Microsoft moved CBA to the bottom of the list. It is still considered a strong authentication method.",
+    "remediation": {
+        "text": "Remediation steps will depend on the status of the personnel in question or configuration of Conditional Access policies.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-system-preferred-multifactor-authentication",
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-system-preferred-multifactor-authentication#how-does-system-preferred-mfa-determine-the-most-secure-method"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "5.2.3.6",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_auth_method_policies",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "systemCredentialPreferences.state",
+                                "eq",
+                                "default"
+                            ],
+                            [
+                                "systemCredentialPreferences.includeTargets.id",
+                                "eq",
+                                "all_users"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "Id",
+                    "displayName": "displayName",
+                    "description": "description",
+                    "systemCredentialPreferences.state": "State",
+                    "systemCredentialPreferences.includeTargets": "Target"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"id": "Id",
+                    "displayName": "displayName",
+                    "description": "description",
+                    "systemCredentialPreferences.state": "State",
+                    "systemCredentialPreferences.includeTargets": "Target"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure system-preferred multifactor authentication is enabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraAuthMethodSetting"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "aad_system_preferred_mfa_not_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1169"
+}

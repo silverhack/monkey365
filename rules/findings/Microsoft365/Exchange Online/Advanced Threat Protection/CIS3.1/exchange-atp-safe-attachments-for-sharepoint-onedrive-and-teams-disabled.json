@@ -1,103 +1,140 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Exchange Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure Safe Attachments for SharePoint, OneDrive, and Microsoft Teams is Enabled",
-  "description": "Safe Attachments for SharePoint, OneDrive, and Microsoft Teams scans these services for malicious files.",
-  "rationale": "Safe Attachments for SharePoint, OneDrive, and Microsoft Teams protect organizations from inadvertently sharing malicious files. When a malicious file is detected that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization's security team.",
-  "impact": "Impact associated with Safe Attachments is minimal, and equivalent to impact associated with anti-virus scanners in an environment.",
-  "remediation": {
-    "text": "",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-attachments?view=o365-worldwide"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "2.1.5",
-	  "profile": "E5 Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure Safe Attachments for SharePoint, OneDrive, and Microsoft Teams is Enabled",
+    "description": "Safe Attachments for SharePoint, OneDrive, and Microsoft Teams scans these services for malicious files.",
+    "rationale": "Safe Attachments for SharePoint, OneDrive, and Microsoft Teams protect organizations from inadvertently sharing malicious files. When a malicious file is detected that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization\u0027s security team.",
+    "impact": "Impact associated with Safe Attachments is minimal, and equivalent to impact associated with anti-virus scanners in an environment.",
+    "remediation": {
+        "text": "",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-attachments?view=o365-worldwide"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "2.1.5",
+            "profile": "E5 Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_exo_atp_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "EnableATPForSPOTeamsODB",
+                                "eq",
+                                "false"
+                            ],
+							[
+                                "EnableSafeDocs",
+                                "eq",
+                                "false"
+                            ],
+							[
+                                "AllowSafeDocsOpen",
+                                "eq",
+                                "false"
+                            ]
+                        ],
+						"operator": "or"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure Safe Attachments for SharePoint, OneDrive, and Microsoft Teams is Enabled",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_safe_attachment_policy_office_apps_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "Identity": "Identity",
+                    "EnableATPForSPOTeamsODB": "ATP For Office 365",
+                    "EnableSafeDocs": "SafeDocs Enabled",
+					"AllowSafeDocsOpen": "Enable SafeDocs Open"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "Identity": "Identity",
+                    "EnableATPForSPOTeamsODB": "ATP For Office 365",
+                    "EnableSafeDocs": "SafeDocs Enabled",
+					"AllowSafeDocsOpen": "Enable SafeDocs Open"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure Safe Attachments for SharePoint, OneDrive, and Microsoft Teams is Enabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "Identity",
+                "resourceId": "ExchangeObjectId",
+                "resourceType": "EXOATPPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_safe_attachment_policy_office_apps_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "microsoft365_2102"
 }
-

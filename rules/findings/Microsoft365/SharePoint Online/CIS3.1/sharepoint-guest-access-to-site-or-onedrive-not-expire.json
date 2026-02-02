@@ -1,141 +1,133 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "SharePoint Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure guest access to a site or OneDrive will expire automatically",
-  "description": "
-		This policy setting configures the expiration time for each guest that is invited to the SharePoint site or with whom users share individual files and folders with. 
-		The recommended state is 30 or less.
-  ",
-  "rationale": "
-		This setting ensures that guests who no longer need access to the site or link no longer have access after a set period of time. Allowing guest access for an indefinite amount of time could lead to loss of data confidentiality and oversight. 
-		**Note** : Guest membership applies at the Microsoft 365 group level. Guests who have permission to view a SharePoint site or use a sharing link may also have access to a Microsoft Teams team or security group. 
-  ",
-  "impact": "
-		Site collection administrators will have to renew access to guests who still need access after 30 days. They will receive an e-mail notification once per week about guest access that is about to expire. 
-		**Note** : The guest expiration policy only applies to guests who use sharing links or guests who have direct permissions to a SharePoint site after the guest policy is enabled. The guest policy does not apply to guest users that have pre-existing permissions or access through a sharing link before the guest expiration policy is applied. 
-  ",
-  "remediation": {
-    "text": "
-		###### To remediate using the UI: 
-		1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint 
-		2. Click to expand Policies > Sharing. 
-		3. Scroll to and expand More external sharing settings. 
-		4. Set Guest access to a site or OneDrive will expire automatically after this many days to 30
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "7.2.9",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "o365_spo_tenant_admin_details",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "ExternalUserExpirationRequired",
-                "eq",
-                "False"
-              ],
-			  [
-                "ExternalUserExpireInDays",
-                "lt",
-                "30"
-              ]
-            ],
-			"operator":"or"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-		"properties": {
-		  "RootSiteUrl": "Root Site",
-		  "ExternalUserExpirationRequired": "External users expiration required",
-          "ExternalUserExpireInDays": "External users expire in days"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "SharePoint Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure guest access to a site or OneDrive will expire automatically",
+    "description": "\r\n\t\tThis policy setting configures the expiration time for each guest that is invited to the SharePoint site or with whom users share individual files and folders with. \r\n\t\tThe recommended state is 30 or less.\r\n  ",
+    "rationale": "\r\n\t\tThis setting ensures that guests who no longer need access to the site or link no longer have access after a set period of time. Allowing guest access for an indefinite amount of time could lead to loss of data confidentiality and oversight. \r\n\t\t**Note** : Guest membership applies at the Microsoft 365 group level. Guests who have permission to view a SharePoint site or use a sharing link may also have access to a Microsoft Teams team or security group. \r\n  ",
+    "impact": "\r\n\t\tSite collection administrators will have to renew access to guests who still need access after 30 days. They will receive an e-mail notification once per week about guest access that is about to expire. \r\n\t\t**Note** : The guest expiration policy only applies to guests who use sharing links or guests who have direct permissions to a SharePoint site after the guest policy is enabled. The guest policy does not apply to guest users that have pre-existing permissions or access through a sharing link before the guest expiration policy is applied. \r\n  ",
+    "remediation": {
+        "text": "\r\n\t\t###### To remediate using the UI: \r\n\t\t1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint \r\n\t\t2. Click to expand Policies \u003e Sharing. \r\n\t\t3. Scroll to and expand More external sharing settings. \r\n\t\t4. Set Guest access to a site or OneDrive will expire automatically after this many days to 30\r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "7.2.9",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_spo_tenant_admin_details",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "ExternalUserExpirationRequired",
+                                "eq",
+                                "False"
+                            ],
+                            [
+                                "ExternalUserExpireInDays",
+                                "lt",
+                                "30"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure guest access to a site or OneDrive will expire automatically",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "spo_guest_access_not_expiring",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "RootSiteUrl": "Root Site",
+                    "ExternalUserExpirationRequired": "External users expiration required",
+                    "ExternalUserExpireInDays": "External users expire in days"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure guest access to a site or OneDrive will expire automatically",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "RootSiteUrl",
+                "resourceId": null,
+                "resourceType": "SPOTenantAdmin"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "spo_guest_access_not_expiring",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"_ObjectType_",
+		"_ObjectIdentity_",
+		"RootSiteUrl"
+    ],
+    "id": "microsoft365_2188"
 }
-

@@ -1,129 +1,126 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "General",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure 'LinkedIn account connections' is disabled",
-  "description": "LinkedIn account connections allow users to connect their Microsoft work or school account with LinkedIn. After a user connects their accounts, information and highlights from LinkedIn are available in some Microsoft apps and services.",
-  "rationale": "Disabling LinkedIn integration prevents potential phishing attacks and risk scenarios where an external party could accidentally disclose sensitive information.",
-  "impact": "Users will not be able to sync contacts or use LinkedIn integration.",
-  "remediation": {
-    "text": "
-			###### To disable LinkedIn account connections: 
-			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/. 
-			2. Click to expand Identity > Users select User settings. 
-			3. Under LinkedIn account connections select No. 
-			4. Click Save. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/linkedin-integration",
-	"https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/linkedin-user-consent"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "5.1.2.6",
-	  "profile": "E3 Level 2"
-    }
-  ],
-  "level": "info",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "aad_directory_properties",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "enableLinkedInAppFamily",
-                "eq",
-                "0"
-              ]
-            ]
-          }
-        ]
-      }
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "displayName": "Display Name",
-          "usersCanRegisterApps": "User can register apps",
-          "enableLinkedInAppFamily": "Linkedin Sync enabled"
-        },
-        "expandObject": null
-      },
-      "table": "asList",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-        "Linkedin Sync enabled"
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": null,
-        "showModalButton": null,
-        "directLink": null
-      }
+    ],
+    "provider": "EntraID",
+    "serviceType": "General",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure \u0027LinkedIn account connections\u0027 is disabled",
+    "description": "LinkedIn account connections allow users to connect their Microsoft work or school account with LinkedIn. After a user connects their accounts, information and highlights from LinkedIn are available in some Microsoft apps and services.",
+    "rationale": "Disabling LinkedIn integration prevents potential phishing attacks and risk scenarios where an external party could accidentally disclose sensitive information.",
+    "impact": "Users will not be able to sync contacts or use LinkedIn integration.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### To disable LinkedIn account connections: \r\n\t\t\t1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/. \r\n\t\t\t2. Click to expand Identity \u003e Users select User settings. \r\n\t\t\t3. Under LinkedIn account connections select No. \r\n\t\t\t4. Click Save. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/linkedin-integration",
+        "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/linkedin-user-consent"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "3.1.0",
+            "reference": "5.1.2.6",
+            "profile": "E3 Level 2"
+        }
+    ],
+    "level": "info",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_directory_properties",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "enableLinkedInAppFamily",
+                                "eq",
+                                "0"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "LinkedIn contact synchronization is enabled",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "eid_linkedin_sync_enabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Display Name",
+                    "usersCanRegisterApps": "User can register apps",
+                    "enableLinkedInAppFamily": "Linkedin Sync enabled"
+                },
+                "expandObject": null
+            },
+            "table": "asList",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                "Linkedin Sync enabled"
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": null,
+                "showModalButton": null,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "LinkedIn contact synchronization is enabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_linkedin_sync_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "entraid_1123"
 }
-

@@ -1,144 +1,141 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Fabric",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure 'Interact with and share R and Python' visuals is 'Disabled'",
-  "description": "Power BI allows the integration of R and Python scripts directly into visuals. This feature allows data visualizations by incorporating custom calculations, statistical analyses, machine learning models, and more using R or Python scripts. Custom visuals can be created by embedding them directly into Power BI reports. Users can then interact with these visuals and see the results of the custom code within the Power BI interface.",
-  "rationale": "Disabling this feature can reduce the attack surface by preventing potential malicious code execution leading to data breaches, or unauthorized access. The potential for sensitive or confidential data being leaked to unintended users is also increased with the use of scripts.",
-  "impact": "Use of R and Python scripting will require exceptions for developers, along with more stringent code review.",
-  "remediation": {
-    "text": "
-			###### Configure the recommended state: 
-			1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal 
-			2. Select Tenant settings. 
-			3. Scroll to R and Python visuals settings. 
-			4. Set Interact with and share R and Python visuals to Disabled 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-r-python-visuals",
-	"https://learn.microsoft.com/en-us/power-bi/visuals/service-r-visuals",
-	"https://www.r-project.org/"
-  ],
-  "compliance": [
-    {
-		"name": "CIS Microsoft 365 Foundations Benchmark",
-		"version": "5.0.0",
-		"reference": "9.1.5",
-		"profile": [
-			"E3 Level 1",
-			"E5 Level 1"
-		]
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "m365_fabric_tenant",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "settingName",
-                "eq",
-                "RScriptVisual"
-              ],
-			  [
-                "enabled",
-                "ne",
-                "True"
-              ]
-            ],
-			"operator": "and"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "title": "Title",
-          "enabled": "Enabled",
-          "tenantSettingGroup": "Group",
-          "enabledSecurityGroups": "Security Groups"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "title",
-            "enabled",
-            "location",
-            "tenantSettingGroup",
-            "enabledSecurityGroups"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Fabric",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure \u0027Interact with and share R and Python\u0027 visuals is \u0027Disabled\u0027",
+    "description": "Power BI allows the integration of R and Python scripts directly into visuals. This feature allows data visualizations by incorporating custom calculations, statistical analyses, machine learning models, and more using R or Python scripts. Custom visuals can be created by embedding them directly into Power BI reports. Users can then interact with these visuals and see the results of the custom code within the Power BI interface.",
+    "rationale": "Disabling this feature can reduce the attack surface by preventing potential malicious code execution leading to data breaches, or unauthorized access. The potential for sensitive or confidential data being leaked to unintended users is also increased with the use of scripts.",
+    "impact": "Use of R and Python scripting will require exceptions for developers, along with more stringent code review.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### Configure the recommended state: \r\n\t\t\t1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal \r\n\t\t\t2. Select Tenant settings. \r\n\t\t\t3. Scroll to R and Python visuals settings. \r\n\t\t\t4. Set Interact with and share R and Python visuals to Disabled \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-r-python-visuals",
+        "https://learn.microsoft.com/en-us/power-bi/visuals/service-r-visuals",
+        "https://www.r-project.org/"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "9.1.5",
+            "profile": [
+                "E3 Level 1",
+                "E5 Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "m365_fabric_tenant",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "settingName",
+                                "eq",
+                                "RScriptVisual"
+                            ],
+                            [
+                                "enabled",
+                                "ne",
+                                "True"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure 'Interact with and share R and Python' visuals is 'Disabled'",
-        "defaultMessage": "Ensure 'Interact with and share R and Python' visuals is 'Disabled'"
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "fabric_interact_R_and_python_not_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "title": "Title",
+                    "enabled": "Enabled",
+                    "tenantSettingGroup": "Group",
+                    "enabledSecurityGroups": "Security Groups"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "title",
+                        "enabled",
+                        "location",
+                        "tenantSettingGroup",
+                        "enabledSecurityGroups"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure \u0027Interact with and share R and Python\u0027 visuals is \u0027Disabled\u0027",
+                "defaultMessage": "Ensure \u0027Interact with and share R and Python\u0027 visuals is \u0027Disabled\u0027"
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "fabric_interact_R_and_python_not_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "microsoft365_2151"
 }
-

@@ -1,165 +1,178 @@
-﻿{
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Conditional Access",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure that a Conditional Access Policy exists to require device marked as compliant",
-  "description": "Use Conditional Access to require a user\u0027s device to be either Microsoft Entra hybrid joined or compliant during authentication.",
-  "rationale": "The security risk of an adversary authenticating to the tenant from their own device is reduced by requiring a managed device to authenticate. Managed devices are under the provisioning and control of the agency.",
-  "impact": "",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa",
-    "https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access",
-    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/troubleshoot-conditional-access-what-if",
-    "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/plan-conditional-access",
-    "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-7-restrict-resource-access-based-on--conditions"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "4.0.0",
-      "reference": "5.2.2.10",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "aad_conditional_access_policy",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "operator": "and",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "state",
-                "eq",
-                "true"
-              ],
-              [
-                "conditions.users.includeUsers",
-                "eq",
-                "All"
-              ],
-              [
-                "conditions.applications.includeApplications",
-                "eq",
-                "All"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      },
-      {
-        "connectOperator": "and",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "grantControls.operator",
-                "eq",
-                "OR"
-              ],
-              [
-                "grantControls.builtInControls",
-                "match",
-                "compliantDevice"
-              ],
-              [
-                "grantControls.builtInControls",
-                "match",
-                "domainJoinedDevice"
-              ]
-            ],
-            "operator": "and"
-          }
-        ]
-      }
+{
+    "args": [
+        
     ],
-    "shouldExist": "true",
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "displayName": "Name",
-          "state": "Status",
-          "conditions.applications.includeApplications": "Applications",
-          "conditions.users.includeUsers": "Users",
-          "grantControls.operator": "Operator",
-          "grantControls.builtInControls": "BuiltIn Controls"
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Conditional Access",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure a managed device is required for authentication",
+    "description": "Conditional Access (CA) can be configured to enforce access based on the device's compliance status or whether it is Entra hybrid joined. Collectively this allows CA to classify devices as managed or unmanaged, providing more granular control over authentication policies.\r\n When using `Require device to be marked as compliant`, the device must pass checks configured in *Compliance* policies defined within Intune (Endpoint Manager). Before these checks can be applied, the device must first be enrolled in Intune MDM.\r\n By selecting `Require Microsoft Entra hybrid joined device` this means the device must first be synchronized from an on-premises Active Directory to qualify for authentication.\r\n When configured to the recommended state below only one condition needs to be met for the user to authenticate from the device. This functions as an `OR` operator. The recommended state is:
+		* Require device to be marked as compliant 
+		* Require Microsoft Entra hybrid joined device 
+		* Require one of the selected controls 
+	",
+    "rationale": "`Managed` devices are considered more secure because they often have additional configuration hardening enforced through centralized management such as Intune or Group Policy. These devices are also typically equipped with MDR/EDR, managed patching and alerting systems. As a result, they provide a safer environment for users to authenticate and operate from.\r\n This policy also ensures that attackers must first gain access to a compliant or trusted device before authentication is permitted, reducing the risk posed by compromised account credentials. When combined with other distinct Conditional Access (CA) policies, such as requiring multi-factor authentication, this adds one additional factor before authentication is permitted.\r\n Note: Avoid combining these two settings with other `Grant` settings in the same policy. In a single policy you can only choose between `Require all the selected controls` or `Require one of the selected controls`, which limits the ability to integrate this recommendation with others in this benchmark. CA policies function as an `AND` operator across multiple policies. The goal here is to both (Require MFA for all users) `AND` (Require device to be marked as compliant `OR` Require Microsoft Entra hybrid joined device).",
+    "impact": "Unmanaged devices will not be permitted as a valid authenticator. As a result this may require the organization to mature their device enrollment and management. The following devices can be considered managed:
+		* Entra hybrid joined from Active Directory 
+		* Entra joined and enrolled in Intune, with compliance policies 
+		* Entra registered and enrolled in Intune, with compliances policies
+		
+		If `Guest` or `external users` are collaborating with the organization, they must either be excluded or onboarded with a compliant device to authenticate. Failure to adequately survey the environment and test the Conditional Access (CA) policy in the Report-only state could result in access disruptions for these guest users. 
+	",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa",
+        "https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access",
+        "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/troubleshoot-conditional-access-what-if",
+        "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/plan-conditional-access",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-identity-management#im-7-restrict-resource-access-based-on--conditions"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "5.2.2.9",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_conditional_access_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          "displayName"
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "state",
+                                "eq",
+                                "enabled"
+                            ],
+                            [
+                                "conditions.users.includeUsers",
+                                "eq",
+                                "All"
+                            ],
+                            [
+                                "conditions.applications.includeApplications",
+                                "eq",
+                                "All"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "grantControls.operator",
+                                "eq",
+                                "OR"
+                            ],
+                            [
+                                "grantControls.builtInControls",
+                                "match",
+                                "compliantDevice|domainJoinedDevice"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-      "message": "The {displayName} policy is not configured to require a compliant device",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": "displayName",
-        "resourceId": "id",
-        "resourceType": "@odata.context"
-      },
-      "onlyStatus": true
-    }
-  },
-  "idSuffix": "eid_cap_require_device_compliance_not_enabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "grantControls.operator": "Operator",
+                    "grantControls.builtInControls": "BuiltIn Controls"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "grantControls.operator": "Operator",
+                    "grantControls.builtInControls": "BuiltIn Controls"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    "displayName"
+                ],
+                "message": "The {displayName} policy is not configured to require a compliant device",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraConditionalAccess"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "eid_cap_require_device_compliance_not_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1121"
 }

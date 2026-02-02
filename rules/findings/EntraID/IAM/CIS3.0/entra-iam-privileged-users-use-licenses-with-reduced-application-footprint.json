@@ -1,111 +1,140 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Entra Identity Governance",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure administrative accounts use licenses with a reduced application footprint",
-  "description": "Administrative accounts are special privileged accounts that could have varying levels of access to data, users, and settings. A license can enable an account to gain access to a variety of different applications, depending on the license assigned. The recommended state is to not license a privileged account or use Microsoft Entra ID P1 or Microsoft Entra ID P2 licenses.",
-  "rationale": "Ensuring administrative accounts do not use licenses with applications assigned to them will reduce the attack surface of high privileged identities in the organization's environment. Granting access to a mailbox or other collaborative tools increases the likelihood that privileged users might interact with these applications, raising the risk of exposure to social engineering attacks or malicious content. These activities should be restricted to an unprivileged `daily driver` account.",
-  "impact": "Administrative users will have to switch accounts and utilize login/logout functionality when performing administrative tasks, as well as not benefiting from SSO.",
-  "remediation": {
-    "text": "
-		###### Remediate from UI
-
-		1. Navigate to Microsoft 365 admin center https://admin.microsoft.com. 
-		2. Click to expand Users select Active users 
-		3. Click Add a user. 
-		4. Fill out the appropriate fields for Name, user, etc. 
-		5. When prompted to assign licenses select as needed Microsoft Entra ID P1 or Microsoft Entra ID P2, then click Next. 
-		6. Under the Option settings screen you may choose from several types of privileged roles. Choose Admin center access followed by the appropriate role then click Next.
-		7. Select Finish adding. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/microsoft-365/admin/add-users/add-users?view=o365-worldwide",
-	"https://learn.microsoft.com/en-us/microsoft-365/enterprise/protect-your-global-administrator-accounts?view=o365-worldwide",
-	"https://learn.microsoft.com/en-us/entra/fundamentals/whatis",
-	"https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "4.0.0",
-      "reference": "1.1.4",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": "true"
-  },
-  "output": {
-    "html": {
-      "data": {
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": "",
-          "limit": null
-        },
-        "showGoToButton": "False",
-        "showModalButton": "False",
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Entra Identity Governance",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure administrative accounts use licenses with a reduced application footprint",
+    "description": "Administrative accounts are special privileged accounts that could have varying levels of access to data, users, and settings. A license can enable an account to gain access to a variety of different applications, depending on the license assigned. The recommended state is to not license a privileged account or use Microsoft Entra ID P1 or Microsoft Entra ID P2 licenses.",
+    "rationale": "Ensuring administrative accounts do not use licenses with applications assigned to them will reduce the attack surface of high privileged identities in the organization\u0027s environment. Granting access to a mailbox or other collaborative tools increases the likelihood that privileged users might interact with these applications, raising the risk of exposure to social engineering attacks or malicious content. These activities should be restricted to an unprivileged `daily driver` account.",
+    "impact": "Administrative users will have to switch accounts and utilize login/logout functionality when performing administrative tasks, as well as not benefiting from SSO.",
+    "remediation": {
+        "text": "\r\n\t\t###### Remediate from UI\r\n\r\n\t\t1. Navigate to Microsoft 365 admin center https://admin.microsoft.com. \r\n\t\t2. Click to expand Users select Active users \r\n\t\t3. Click Add a user. \r\n\t\t4. Fill out the appropriate fields for Name, user, etc. \r\n\t\t5. When prompted to assign licenses select as needed Microsoft Entra ID P1 or Microsoft Entra ID P2, then click Next. \r\n\t\t6. Under the Option settings screen you may choose from several types of privileged roles. Choose Admin center access followed by the appropriate role then click Next.\r\n\t\t7. Select Finish adding. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-      },
-      "status": {
-        "keyName": [
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/microsoft-365/admin/add-users/add-users?view=o365-worldwide",
+        "https://learn.microsoft.com/en-us/microsoft-365/enterprise/protect-your-global-administrator-accounts?view=o365-worldwide",
+        "https://learn.microsoft.com/en-us/entra/fundamentals/whatis",
+        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "4.0.0",
+            "reference": "1.1.4",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_role_assignment",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+		"data": {
+            "properties": {
+                "effectiveUsers.*": null,
+                "displayName": "roleName",
+                "description": "roleDescription",
+                "templateId": "templateId"
+            },
+            "expandObject": "effectiveUsers"
+        },
+        "query": [
+			{
+                "filter": [
+                    {
+                        "include": "_ARG_0_"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+				"filter": [
+                    {
+                        "conditions": [
+                            [
+                                "null",
+                                "ne",
+                                "assignedLicenses"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-      "message": "",
-      "defaultMessage": "Ensure administrative accounts use licenses with a reduced application footprint"
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": true
-    }
-  },
-  "idSuffix": "eid_privileged_users_reduced_application_footprint_license",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": "true"
+    },
+    "output": {
+        "html": {
+            "data": {
+				"properties": {
+					"userPrincipalName": "User Principal Name",
+                    "id": "Object Id",
+                    "roleName": "Role Assigned"
+                }
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": "",
+                    "limit": null
+                },
+                "showGoToButton": "False",
+                "showModalButton": "False",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {                
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": "Ensure administrative accounts use licenses with a reduced application footprint"
+            },
+            "properties": {
+                "resourceName": "userPrincipalName",
+                "resourceId": "id",
+                "resourceType": "EntraUser"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "eid_privileged_users_reduced_application_footprint_license",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "entraid_1141"
 }
-

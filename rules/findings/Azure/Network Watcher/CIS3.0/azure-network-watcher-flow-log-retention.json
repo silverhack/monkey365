@@ -1,126 +1,129 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Network Watcher",
-  "serviceName": "Network",
-  "displayName": "Ensure that Network Security Group Flow Log retention period is 'greater than 90 days'",
-  "description": "Network Security Group Flow Logs should be enabled and the retention period set to greater than or equal to 90 days.",
-  "rationale": "Flow logs enable capturing information about IP traffic flowing in and out of network security groups. Logs can be used to check for anomalies and give insight into suspected breaches.",
-  "impact": "This will keep IP traffic logs for longer than 90 days. As a level 2, first determine your need to retain data, then apply your selection here. As this is data stored for longer, your monthly storage costs will increase depending on your data use.",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Network Watcher`\r\n\t\t\t\t\t2. Select `NSG flow logs` blade in the Logs section\r\n\t\t\t\t\t3. Select each Network Security Group from the list\r\n\t\t\t\t\t4. Ensure `Status` is set to `On`\r\n\t\t\t\t\t5. Ensure `Retention (days)` setting `greater than 90 days`\r\n\t\t\t\t\t6. Select your storage account in the `Storage account` field\r\n\t\t\t\t\t7. Select `Save`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-nsg-flow-logging-overview"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "7.5",
-	  "profile": "Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_network_watcher_flow_logs",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "enabled",
-                "ne",
-                "true"
-              ],
-              [
-                "retentionPolicyDays",
-                "lt",
-                "90"
-              ]
-            ],
-            "operator": "or"
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Network Watcher",
+    "serviceName": "Network",
+    "displayName": "Ensure that Network Security Group Flow Log retention period is \u0027greater than 90 days\u0027",
+    "description": "Network Security Group Flow Logs should be enabled and the retention period set to greater than or equal to 90 days.",
+    "rationale": "Flow logs enable capturing information about IP traffic flowing in and out of network security groups. Logs can be used to check for anomalies and give insight into suspected breaches.",
+    "impact": "This will keep IP traffic logs for longer than 90 days. As a level 2, first determine your need to retain data, then apply your selection here. As this is data stored for longer, your monthly storage costs will increase depending on your data use.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Network Watcher`\r\n\t\t\t\t\t2. Select `NSG flow logs` blade in the Logs section\r\n\t\t\t\t\t3. Select each Network Security Group from the list\r\n\t\t\t\t\t4. Ensure `Status` is set to `On`\r\n\t\t\t\t\t5. Ensure `Retention (days)` setting `greater than 90 days`\r\n\t\t\t\t\t6. Select your storage account in the `Storage account` field\r\n\t\t\t\t\t7. Select `Save`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-nsg-flow-logging-overview"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "7.5",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_network_watcher_flow_logs",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "enabled",
+                                "ne",
+                                "true"
+                            ],
+                            [
+                                "retentionPolicyDays",
+                                "lt",
+                                "90"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "network_watcher_flowlogs_retention_days",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "network_watcher_flowlogs_retention_days",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_182"
 }
-

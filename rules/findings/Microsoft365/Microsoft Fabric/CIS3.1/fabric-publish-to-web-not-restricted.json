@@ -1,182 +1,175 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Fabric",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure 'Publish to web' is restricted",
-  "description": "Power BI enables users to share reports and materials directly on the internet from both the application's desktop version and its web user interface. This functionality generates a publicly reachable web link that doesn't necessitate authentication or the need to be an AAD user in order to access and view it. The recommended state is Enabled for a subset of the organization or Disabled.",
-  "rationale": "When using Publish to Web anyone on the Internet can view a published report or visual. Viewing requires no authentication. It includes viewing detail-level data that your reports aggregate. By disabling the feature, restricting access to certain users and allowing existing embed codes organizations can mitigate the exposure of confidential or proprietary information.",
-  "impact": "Depending on the organization's utilization administrators may experience more overhead managing embed codes, and requests.",
-  "remediation": {
-    "text": "
-			###### Restrict Publish to web: 
-			1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal 
-			2. Select Tenant settings. 
-			3. Scroll to Export and Sharing settings. 
-			4. Set Publish to web to one of these states: 
-			* State 1: Disabled 
-			* State 2: Enabled with Choose how embed codes work set to Only allow existing codes AND Specific security groups selected and defined 
-
-			**Important** : If the organization doesn't actively use this feature it is recommended to keep it Disabled. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-publish-to-web",
-	"https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-export-sharing#publish-to-web"
-  ],
-  "compliance": [
-    {
-		"name": "CIS Microsoft 365 Foundations Benchmark",
-		"version": "5.0.0",
-		"reference": "9.1.4",
-		"profile": [
-			"E3 Level 1",
-			"E5 Level 1"
-		]
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "m365_fabric_tenant",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "settingName",
-                "eq",
-                "ElevatedGuestsTenant"
-              ]
-            ]
-          }
-        ]
-      },
-	  {
-        "connectOperator": "and",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "enabled",
-                "eq",
-                "True"
-              ],
-			  [
-                "enabledSecurityGroups.Count",
-                "eq",
-                "0"
-              ]
-            ],
-			"operator": "and"
-          }
-        ]
-	  },
-	  {
-        "connectOperator": "or",
-        "filter": [
-          {
-            "conditions": [
-              [
-                "name",
-                "eq",
-                "CreateP2w"
-              ],
-              [
-                "value",
-                "eq",
-                "true"
-              ]
-            ],
-            "operator": "and",
-            "whereObject": "properties"
-          }
-        ]
-	  }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          "title": "Title",
-          "enabled": "Enabled",
-          "tenantSettingGroup": "Group",
-          "enabledSecurityGroups": "Security Groups"
-        },
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "title",
-            "enabled",
-            "location",
-            "tenantSettingGroup",
-            "enabledSecurityGroups"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Fabric",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure \u0027Publish to web\u0027 is restricted",
+    "description": "Power BI enables users to share reports and materials directly on the internet from both the application\u0027s desktop version and its web user interface. This functionality generates a publicly reachable web link that doesn\u0027t necessitate authentication or the need to be an AAD user in order to access and view it. The recommended state is Enabled for a subset of the organization or Disabled.",
+    "rationale": "When using Publish to Web anyone on the Internet can view a published report or visual. Viewing requires no authentication. It includes viewing detail-level data that your reports aggregate. By disabling the feature, restricting access to certain users and allowing existing embed codes organizations can mitigate the exposure of confidential or proprietary information.",
+    "impact": "Depending on the organization\u0027s utilization administrators may experience more overhead managing embed codes, and requests.",
+    "remediation": {
+        "text": "\r\n\t\t\t###### Restrict Publish to web: \r\n\t\t\t1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal \r\n\t\t\t2. Select Tenant settings. \r\n\t\t\t3. Scroll to Export and Sharing settings. \r\n\t\t\t4. Set Publish to web to one of these states: \r\n\t\t\t* State 1: Disabled \r\n\t\t\t* State 2: Enabled with Choose how embed codes work set to Only allow existing codes AND Specific security groups selected and defined \r\n\r\n\t\t\t**Important** : If the organization doesn\u0027t actively use this feature it is recommended to keep it Disabled. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-publish-to-web",
+        "https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-export-sharing#publish-to-web"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "9.1.4",
+            "profile": [
+                "E3 Level 1",
+                "E5 Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "m365_fabric_tenant",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "settingName",
+                                "eq",
+                                "ElevatedGuestsTenant"
+                            ]
+                        ]
+                    }
+                ]
+            },
+            {
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "enabled",
+                                "eq",
+                                "True"
+                            ],
+                            [
+                                "enabledSecurityGroups.Count",
+                                "eq",
+                                "0"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "or",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "name",
+                                "eq",
+                                "CreateP2w"
+                            ],
+                            [
+                                "value",
+                                "eq",
+                                "true"
+                            ]
+                        ],
+                        "operator": "and",
+                        "whereObject": "properties"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure 'Publish to web' is restricted",
-        "defaultMessage": "Ensure 'Publish to web' is restricted"
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "fabric_publish_to_web_not_restricted",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "title": "Title",
+                    "enabled": "Enabled",
+                    "tenantSettingGroup": "Group",
+                    "enabledSecurityGroups": "Security Groups"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "title",
+                        "enabled",
+                        "location",
+                        "tenantSettingGroup",
+                        "enabledSecurityGroups"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure \u0027Publish to web\u0027 is restricted",
+                "defaultMessage": "Ensure \u0027Publish to web\u0027 is restricted"
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "fabric_publish_to_web_not_restricted",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "microsoft365_2152"
 }
-

@@ -1,128 +1,129 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Defender for Cloud",
-  "serviceName": "Subscription",
-  "displayName": "Ensure that Auto provisioning of 'Log Analytics agent for Azure VMs' is Set to 'On'",
-  "description": "Enable automatic provisioning of the monitoring agent to collect security data. 
-				*DEPRECATION PLANNED:* The Log Analytics Agent is slated for deprecation in August 2024. The Microsoft Defender for Endpoint agent, in tandem with new agentless capabilities will be providing replacement functionality. More detail is available here: https://techcommunity.microsoft.com/t5/microsoft-defender-for-cloud/microsoftdefender-for-cloud-strategy-and-plan-towards-log/ba-p/3883341.
-  ",
-  "rationale": "When `Log Analytics agent for Azure VMs` is turned on, Microsoft Defender for Cloud provisions the Microsoft Monitoring Agent on all existing supported Azure virtual machines and any new ones that are created. The Microsoft Monitoring Agent scans for various security-related configurations and events such as system updates, OS vulnerabilities, endpoint protection, and provides alerts.",
-  "impact": null,
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Pricing \u0026 settings` blade\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Click on `Data Collection`\r\n\t\t\t\t\t5. Set `Automatic provisioning` to `On`\r\n\t\t\t\t\t6. Select `Save`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/security-center/security-center-data-security",
-    "https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection",
-    "https://msdn.microsoft.com/en-us/library/mt704062.aspx",
-    "https://msdn.microsoft.com/en-us/library/mt704063.aspx",
-    "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/list",
-    "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/create",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "3.1.1.1",
-	  "profile":"Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "az_vm_provisioning_status",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "autoprovision",
-                "ne",
-                "On"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "Azure",
+    "serviceType": "Defender for Cloud",
+    "serviceName": "Subscription",
+    "displayName": "Ensure that Auto provisioning of \u0027Log Analytics agent for Azure VMs\u0027 is Set to \u0027On\u0027",
+    "description": "Enable automatic provisioning of the monitoring agent to collect security data. \r\n\t\t\t\t*DEPRECATION PLANNED:* The Log Analytics Agent is slated for deprecation in August 2024. The Microsoft Defender for Endpoint agent, in tandem with new agentless capabilities will be providing replacement functionality. More detail is available here: https://techcommunity.microsoft.com/t5/microsoft-defender-for-cloud/microsoftdefender-for-cloud-strategy-and-plan-towards-log/ba-p/3883341.\r\n  ",
+    "rationale": "When `Log Analytics agent for Azure VMs` is turned on, Microsoft Defender for Cloud provisions the Microsoft Monitoring Agent on all existing supported Azure virtual machines and any new ones that are created. The Microsoft Monitoring Agent scans for various security-related configurations and events such as system updates, OS vulnerabilities, endpoint protection, and provides alerts.",
+    "impact": null,
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Pricing \u0026 settings` blade\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Click on `Data Collection`\r\n\t\t\t\t\t5. Set `Automatic provisioning` to `On`\r\n\t\t\t\t\t6. Select `Save`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/security-center/security-center-data-security",
+        "https://docs.microsoft.com/en-us/azure/security-center/security-center-enable-data-collection",
+        "https://msdn.microsoft.com/en-us/library/mt704062.aspx",
+        "https://msdn.microsoft.com/en-us/library/mt704063.aspx",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/list",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/create",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-incident-response#ir-2-preparation--setup-incident-notification"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "3.1.1.1",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_vm_provisioning_status",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "autoprovision",
+                                "ne",
+                                "On"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_vm_autoprovision_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_vm_autoprovision_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_142"
 }
-

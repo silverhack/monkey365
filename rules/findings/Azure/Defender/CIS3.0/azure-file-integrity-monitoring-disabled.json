@@ -1,120 +1,110 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Defender for Cloud",
-  "serviceName": "Subscription",
-  "displayName": "Ensure that 'File Integrity Monitoring' component status is set to 'On'",
-  "description": "File Integrity Monitoring (FIM) is a feature that monitors critical system files in Windows or Linux for potential signs of attack or compromise.",
-  "rationale": "FIM provides a detection mechanism for compromised files. When FIM is enabled, critical system files are monitored for changes that might indicate a threat actor is attempting to modify system files for lateral compromise within a host operating system.",
-  "impact": "
-		File Integrity Monitoring requires licensing and is included in these plans: 
-		* Defender for Servers plan 2
-  ",
-  "remediation": {
-    "text": "
-		###### Audit from Azure Portal 
-		1. From the Azure Portal Home page, select Microsoft Defender for Cloud 
-		2. Under Management select Environment Settings 
-		3. Select a subscription 
-		4. Under Settings > Defender Plans, click Settings & monitoring 
-		5. Under the Component column, locate the row for File Integrity Monitoring 
-		6. Select On 
-		7. Click Continue in the top left 
-
-		Repeat the above for any additional subscriptions. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/file-integrity-monitoring-overview",
-	"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-incident-response#ir-2-preparation---setup-incident-notification",
-	"https://learn.microsoft.com/en-us/azure/defender-for-cloud/file-integrity-monitoring-enable-defender-endpoint"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "3.1.3.5",
-	  "profile":"Level 2"
-	  
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "asList",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": null,
-        "showModalButton": null,
-        "directLink": null
-      }
+    ],
+    "provider": "Azure",
+    "serviceType": "Defender for Cloud",
+    "serviceName": "Subscription",
+    "displayName": "Ensure that \u0027File Integrity Monitoring\u0027 component status is set to \u0027On\u0027",
+    "description": "File Integrity Monitoring (FIM) is a feature that monitors critical system files in Windows or Linux for potential signs of attack or compromise.",
+    "rationale": "FIM provides a detection mechanism for compromised files. When FIM is enabled, critical system files are monitored for changes that might indicate a threat actor is attempting to modify system files for lateral compromise within a host operating system.",
+    "impact": "\r\n\t\tFile Integrity Monitoring requires licensing and is included in these plans: \r\n\t\t* Defender for Servers plan 2\r\n  ",
+    "remediation": {
+        "text": "\r\n\t\t###### Audit from Azure Portal \r\n\t\t1. From the Azure Portal Home page, select Microsoft Defender for Cloud \r\n\t\t2. Under Management select Environment Settings \r\n\t\t3. Select a subscription \r\n\t\t4. Under Settings \u003e Defender Plans, click Settings \u0026 monitoring \r\n\t\t5. Under the Component column, locate the row for File Integrity Monitoring \r\n\t\t6. Select On \r\n\t\t7. Click Continue in the top left \r\n\r\n\t\tRepeat the above for any additional subscriptions. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/file-integrity-monitoring-overview",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-incident-response#ir-2-preparation---setup-incident-notification",
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/file-integrity-monitoring-enable-defender-endpoint"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "3.1.3.5",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "az_file_integrity_monitoring_for_machines_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "expandObject": null
+            },
+            "table": "asList",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": null,
+                "showModalButton": null,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "az_file_integrity_monitoring_for_machines_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_160"
 }
-

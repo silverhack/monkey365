@@ -1,114 +1,144 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Microsoft365",
-  "serviceType": "Exchange Online",
-  "serviceName": "Microsoft 365",
-  "displayName": "Ensure email from external senders is identified",
-  "description": "
-		External callouts provide a native experience to identify emails from senders outside the organization. This is achieved by presenting a new tag on emails called `External` (the string is localized based on the client language setting) and exposing related user interface at the top of the message reading view to see and verify the real sender's email address. 
-		Once this feature is enabled via PowerShell, it might take 24-48 hours for users to start seeing the External sender tag in email messages received from external sources (outside of your organization), providing their Outlook version supports it. The recommended state is ExternalInOutlook set to Enabled True 
-  ",
-  "rationale": "Tagging emails from external senders helps to inform end users about the origin of the email. This can allow them to proceed with more caution and make informed decisions when it comes to identifying spam or phishing emails. Note: Existing emails in a user's inbox from external senders are not tagged retroactively.",
-  "impact": "Mail flow rules using external tagging will need to be disabled before enabling this to avoid duplicate `External` tags.",
-  "remediation": {
-  "text": "
-	###### To enable external tagging using PowerShell: 
-	1. Connect to Exchange online using Connect-ExchangeOnline. 
-	2. Run the following PowerShell command:
-	```PowerShell 
-	Set-ExternalInOutlook -Enabled $true 
-	```
-  ",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://techcommunity.microsoft.com/t5/exchange-team-blog/native-external-sender-callouts-on-email-in-outlook/ba-p/2250098",
-	"https://learn.microsoft.com/en-us/powershell/module/exchange/set-externalinoutlook?view=exchange-ps"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft 365 Foundations Benchmark",
-      "version": "3.1.0",
-      "reference": "6.2.3",
-	  "profile": "E3 Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "Normal",
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": "True",
-        "showModalButton": "True",
-        "directLink": null
-      }
+    "provider": "Microsoft365",
+    "serviceType": "Exchange Online",
+    "serviceName": "Microsoft 365",
+    "displayName": "Ensure email from external senders is identified",
+    "description": "\r\n\t\tExternal callouts provide a native experience to identify emails from senders outside the organization. This is achieved by presenting a new tag on emails called `External` (the string is localized based on the client language setting) and exposing related user interface at the top of the message reading view to see and verify the real sender\u0027s email address. \r\n\t\tOnce this feature is enabled via PowerShell, it might take 24-48 hours for users to start seeing the External sender tag in email messages received from external sources (outside of your organization), providing their Outlook version supports it. The recommended state is ExternalInOutlook set to Enabled True \r\n  ",
+    "rationale": "Tagging emails from external senders helps to inform end users about the origin of the email. This can allow them to proceed with more caution and make informed decisions when it comes to identifying spam or phishing emails. Note: Existing emails in a user\u0027s inbox from external senders are not tagged retroactively.",
+    "impact": "Mail flow rules using external tagging will need to be disabled before enabling this to avoid duplicate `External` tags.",
+    "remediation": {
+        "text": "\r\n\t###### To enable external tagging using PowerShell: \r\n\t1. Connect to Exchange online using Connect-ExchangeOnline. \r\n\t2. Run the following PowerShell command:\r\n\t```PowerShell \r\n\tSet-ExternalInOutlook -Enabled $true \r\n\t```\r\n  ",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://techcommunity.microsoft.com/t5/exchange-team-blog/native-external-sender-callouts-on-email-in-outlook/ba-p/2250098",
+        "https://learn.microsoft.com/en-us/powershell/module/exchange/set-externalinoutlook?view=exchange-ps"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "6.2.3",
+            "profile": "E3 Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "o365_exo_externalIn_config",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "operator": "or",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "Enabled",
+                                "eq",
+                                "false"
+                            ]
+                        ]
+                    },
+                    {
+                        "conditions": [
+                            [
+                                "Enabled",
+                                "eq",
+                                "true"
+                            ],
+                            [
+                                "AllowList.Count",
+                                "gt",
+                                "0"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
         ],
-        "message": "Ensure email from external senders is identified",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "m365_exo_external_sender_identifier_not_configured",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "Identity": "Identity",
+                    "Enabled": "Enabled",
+                    "AllowList": "AllowList"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "Identity": "Identity",
+                    "Enabled": "Enabled",
+                    "AllowList": "AllowList"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure email from external senders is identified",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "Identity",
+                "resourceId": "Identity",
+                "resourceType": "EXOExternalSenderIdentification"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "m365_exo_external_sender_identifier_not_configured",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"Identity"
+    ],
+    "id": "microsoft365_2126"
 }
-

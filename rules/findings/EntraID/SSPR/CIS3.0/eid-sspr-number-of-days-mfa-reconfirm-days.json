@@ -1,124 +1,127 @@
 {
-  "args": [
-    
-  ],
-  "provider": "EntraID",
-  "serviceType": "Identity Protection",
-  "serviceName": "Microsoft Entra ID",
-  "displayName": "Ensure that 'Number of days before users are asked to reconfirm their authentication information' is not set to '0'",
-  "description": "Ensure that the number of days before users are asked to re-confirm their authentication information is not set to 0.",
-  "rationale": "This setting is necessary if you have setup 'Require users to register when signing in option'. If authentication re-confirmation is disabled, registered users will never be prompted to re-confirm their existing authentication information. If the authentication information for a user changes, such as a phone number or email, then the password reset information for that user reverts to the previously registered authentication information.",
-  "impact": "",
-  "remediation": {
-    "text": "###### From Azure Console\r\n\t\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t\t2. Go to `Users`\r\n\t\t\t\t\t\t3. Go to `Password reset`\r\n\t\t\t\t\t\t4. Go to `Registration`\r\n\t\t\t\t\t\t4. Ensure that `Number of days before users are asked to re-confirm their authentication information` is not set to `0`",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-    "https://docs.microsoft.com/en-us/azure/active-directory/active-directory-passwords-how-it-works#notifications",
-    "https://docs.microsoft.com/en-us/azure/active-directory/authentication/howto-sspr-deployment",
-    "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "2.9",
-	  "profile":"Level 1"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    "Microsoft 365 CIS benchmark",
-    "CIS Microsoft Azure Foundations"
-  ],
-  "rule": {
-    "path": "aad_password_reset_policy",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-      {
-        "filter": [
-          {
-            "conditions": [
-              [
-                "registrationReconfirmIntevalInDays",
-                "eq",
-                "0"
-              ]
-            ]
-          }
-        ]
-      }
+    "args": [
+        
     ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "properties": {
-          
-        },
-        "expandObject": null
-      },
-      "table": null,
-      "decorate": [
-        
-      ],
-      "emphasis": [
-        
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            "*"
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-		"isManual":false,
-        "showGoToButton": false,
-        "showModalButton": false,
-        "directLink": null
-      }
+    "provider": "EntraID",
+    "serviceType": "Identity Protection",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure that \u0027Number of days before users are asked to reconfirm their authentication information\u0027 is not set to \u00270\u0027",
+    "description": "Ensure that the number of days before users are asked to re-confirm their authentication information is not set to 0.",
+    "rationale": "This setting is necessary if you have setup \u0027Require users to register when signing in option\u0027. If authentication re-confirmation is disabled, registered users will never be prompted to re-confirm their existing authentication information. If the authentication information for a user changes, such as a phone number or email, then the password reset information for that user reverts to the previously registered authentication information.",
+    "impact": "",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t\t1. Go to `Microsoft Entra ID`\r\n\t\t\t\t\t\t2. Go to `Users`\r\n\t\t\t\t\t\t3. Go to `Password reset`\r\n\t\t\t\t\t\t4. Go to `Registration`\r\n\t\t\t\t\t\t4. Ensure that `Number of days before users are asked to re-confirm their authentication information` is not set to `0`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/active-directory/active-directory-passwords-how-it-works#notifications",
+        "https://docs.microsoft.com/en-us/azure/active-directory/authentication/howto-sspr-deployment",
+        "https://docs.microsoft.com/en-us/azure/security/benchmarks/security-controls-v2-governance-strategy#gs-6-define-identity-and-privileged-access-strategy"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "2.9",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        "Microsoft 365 CIS benchmark",
+        "CIS Microsoft Azure Foundations"
+    ],
+    "rule": {
+        "path": "aad_password_reset_policy",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "registrationReconfirmIntevalInDays",
+                                "eq",
+                                "0"
+                            ]
+                        ]
+                    }
+                ]
+            }
         ],
-        "message": "The Number of days before users are asked to re-confirm their authentication information is not set",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "eid_sspr_mfa_auth_reconfirm_disabled",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "isManual": false,
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "The Number of days before users are asked to re-confirm their authentication information is not set",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_sspr_mfa_auth_reconfirm_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "entraid_1165"
 }
-

@@ -1,123 +1,114 @@
 {
-  "args": [
-    
-  ],
-  "provider": "Azure",
-  "serviceType": "Defender for Cloud",
-  "serviceName": "Subscription",
-  "displayName": "Ensure that 'Agentless discovery for Kubernetes' component status 'On'",
-  "description": "Enable automatic discovery and configuration scanning of the Microsoft Kubernetes clusters.",
-  "rationale": "As with any compute resource, Container environments require hardening and run-time protection to ensure safe operations and detection of threats and vulnerabilities.",
-  "impact": "
-				Agentless discovery for Kubernetes requires licensing and is included in:<br/>
-				* Defender CSPM 
-				* Defender for Containers plans.
-  ",
-  "remediation": {
-    "text": "###### Audit from Azure Portal
-			1. From the Azure Portal Home page, select Microsoft Defender for Cloud 
-			2. Under Management select Environment Settings 
-			3. Select a subscription 
-			4. Under Settings > Defender Plans, click Settings & monitoring 
-			5. Locate the row for Agentless discovery for Kubernetes 
-			6. Select On 
-			7. Click Continue in the top left 
-
-			Repeat the above for any additional subscriptions. 
-	",
-    "code": {
-      "powerShell": null,
-      "iac": null,
-      "terraform": null,
-      "other": null
-    }
-  },
-  "recommendation": null,
-  "references": [
-		"https://docs.microsoft.com/en-us/azure/defender-for-cloud/defender-for-containers-introduction",
-		"https://docs.microsoft.com/en-us/azure/defender-for-cloud/enable-data-collection?tabs=autoprovision-containers",
-		"https://msdn.microsoft.com/en-us/library/mt704062.aspx",
-		"https://msdn.microsoft.com/en-us/library/mt704063.aspx",
-		"https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/list",
-		"https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/create",
-		"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-incident-response#ir-2-preparation---setup-incident-notification"
-  ],
-  "compliance": [
-    {
-      "name": "CIS Microsoft Azure Foundations",
-      "version": "3.0.0",
-      "reference": "3.1.4.2",
-	  "profile":"Level 2"
-    }
-  ],
-  "level": "medium",
-  "tags": [
-    
-  ],
-  "rule": {
-    "path": "",
-    "subPath": null,
-    "selectCondition": {
-      
-    },
-    "query": [
-    ],
-    "shouldExist": null,
-    "returnObject": null,
-    "removeIfNotExists": null
-  },
-  "output": {
-    "html": {
-      "data": {
-        "expandObject": null
-      },
-      "table": "asList",
-      "decorate": [
+    "args": [
         
-      ],
-      "emphasis": [
-      ],
-      "actions": {
-        "objectData": {
-          "properties": [
-            
-          ],
-          "expandObject": null,
-          "limit": null
-        },
-        "showGoToButton": null,
-        "showModalButton": null,
-        "directLink": null
-      }
+    ],
+    "provider": "Azure",
+    "serviceType": "Defender for Cloud",
+    "serviceName": "Subscription",
+    "displayName": "Ensure that \u0027Agentless discovery for Kubernetes\u0027 component status \u0027On\u0027",
+    "description": "Enable automatic discovery and configuration scanning of the Microsoft Kubernetes clusters.",
+    "rationale": "As with any compute resource, Container environments require hardening and run-time protection to ensure safe operations and detection of threats and vulnerabilities.",
+    "impact": "\r\n\t\t\t\tAgentless discovery for Kubernetes requires licensing and is included in:\u003cbr/\u003e\r\n\t\t\t\t* Defender CSPM \r\n\t\t\t\t* Defender for Containers plans.\r\n  ",
+    "remediation": {
+        "text": "###### Audit from Azure Portal\r\n\t\t\t1. From the Azure Portal Home page, select Microsoft Defender for Cloud \r\n\t\t\t2. Under Management select Environment Settings \r\n\t\t\t3. Select a subscription \r\n\t\t\t4. Under Settings \u003e Defender Plans, click Settings \u0026 monitoring \r\n\t\t\t5. Locate the row for Agentless discovery for Kubernetes \r\n\t\t\t6. Select On \r\n\t\t\t7. Click Continue in the top left \r\n\r\n\t\t\tRepeat the above for any additional subscriptions. \r\n\t",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
     },
-    "text": {
-      "data": {
-        "properties": {
-          
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/defender-for-cloud/defender-for-containers-introduction",
+        "https://docs.microsoft.com/en-us/azure/defender-for-cloud/enable-data-collection?tabs=autoprovision-containers",
+        "https://msdn.microsoft.com/en-us/library/mt704062.aspx",
+        "https://msdn.microsoft.com/en-us/library/mt704063.aspx",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/list",
+        "https://docs.microsoft.com/en-us/rest/api/securitycenter/autoprovisioningsettings/create",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-incident-response#ir-2-preparation---setup-incident-notification"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "3.0.0",
+            "reference": "3.1.4.2",
+            "profile": "Level 2"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {
+            
         },
-        "expandObject": null
-      },
-      "status": {
-        "keyName": [
-          
+        "query": [
+            
         ],
-        "message": "",
-        "defaultMessage": null
-      },
-      "properties": {
-        "resourceName": null,
-        "resourceId": null,
-        "resourceType": null
-      },
-      "onlyStatus": false
-    }
-  },
-  "idSuffix": "azure_defender_missing_agentless_discovery_for_kubernetes",
-  "notes": [
-    
-  ],
-  "categories": [
-    
-  ]
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "expandObject": null
+            },
+            "table": "asList",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": null,
+                "showModalButton": null,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_defender_missing_agentless_discovery_for_kubernetes",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_140"
 }
-
