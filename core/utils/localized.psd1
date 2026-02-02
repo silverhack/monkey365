@@ -183,4 +183,6 @@ NotConnectedTo                   = Not connected to {0}
 SPNotAllowedAuthFlowErrorMessage = Service principal authentication flow is not supported for {0}
 CompressingJob                   = Compressing Monkey data into {0}
 TokenAcquiredGenericMessage      = A new token was successfully acquired
+LocalCDNMessage                  = Local CDN set at {0}
+LocalCDNErrorMessage             = Unable to produce local html report. The error was {0}
 '@;
