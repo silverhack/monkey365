@@ -34,7 +34,8 @@ If($null -ne $isO365Object){
         }
         $null = Start-Logger @l_param
     }
-
+    #Update PsObject
+    Update-PsObject
 }
 
 

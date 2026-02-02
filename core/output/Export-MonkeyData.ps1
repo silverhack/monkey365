@@ -98,26 +98,56 @@ Function Export-MonkeyData{
                         'Scan Date' = $MonkeyExportObject.executionInfo.ScanDate;
                         'Monkey Version' = Get-MonkeyVersion;
                     }
+                    #Check if localassetspath has a valid scheme
+                    If($localHtmlReport -and $localAssetsPath){
+                        If($localAssetsPath | Test-IsValidUrl){
+                            #This assumes that a local CDN is used to serve static files
+                            $msg = @{
+                                Message = ($message.LocalCDNMessage -f $localAssetsPath);
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'verbose';
+                                InformationAction = $O365Object.InformationAction;
+                                Verbose = $O365Object.verbose;
+                                Tags = @('Monkey365LocalCDN');
+                            }
+                            Write-Verbose @msg
+                            $downloaded = $true
+                        }
+                    }
                     #Download assets and produce local report
                     If($localHtmlReport -and $localAssetsPath -and $assetsRepository){
-                        If(-NOT [System.IO.Path]::IsPathRooted($O365Object.internal_config.htmlSettings.localHtmlReport.assetsPath)){
-                            $localAssetsPath = ("{0}{1}{2}" -f $O365Object.Localpath, [System.IO.Path]::DirectorySeparatorChar, $O365Object.internal_config.htmlSettings.localHtmlReport.assetsPath)
+                        If($localAssetsPath | Test-IsValidUrl){
+                            #This assumes that a local CDN is used to serve static files
+                            $msg = @{
+                                Message = ($message.LocalCDNMessage -f $localAssetsPath);
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'verbose';
+                                InformationAction = $O365Object.InformationAction;
+                                Verbose = $O365Object.verbose;
+                                Tags = @('Monkey365LocalCDN');
+                            }
+                            Write-Verbose @msg
+                            $downloaded = $true
                         }
-                        $p = @{
-                            Url = $assetsRepository;
-                            SHA256 = $true;
-                            IncludeVersionId = $true;
-                            Output = $localAssetsPath;
-                            Verbose = $O365Object.verbose;
-                            Debug = $O365Object.debug;
-                            InformationAction = $O365Object.InformationAction;
+                        Else{
+                            If(-NOT [System.IO.Path]::IsPathRooted($O365Object.internal_config.htmlSettings.localHtmlReport.assetsPath)){
+                                $localAssetsPath = ("{0}{1}{2}" -f $O365Object.Localpath, [System.IO.Path]::DirectorySeparatorChar, $O365Object.internal_config.htmlSettings.localHtmlReport.assetsPath)
+                            }
+                            $p = @{
+                                Url = $assetsRepository;
+                                SHA256 = $true;
+                                IncludeVersionId = $true;
+                                Output = $localAssetsPath;
+                                Verbose = $O365Object.verbose;
+                                Debug = $O365Object.debug;
+                                InformationAction = $O365Object.InformationAction;
+                            }
+                            $downloaded = Update-MonkeyAsset @p
                         }
-                        $downloaded = Update-MonkeyAsset @p
                         If($downloaded){
                             #Produce report
                             #Set params
                             $p = @{
-                                ConfigFile = ("{0}{1}{2}{3}config.json" -f $localAssetsPath, [System.IO.Path]::DirectorySeparatorChar,"assets",[System.IO.Path]::DirectorySeparatorChar);
                                 Report = $matchedRules;
                                 ExecutionInfo = $O365Object.executionInfo;
                                 Instance = $O365Object.Instance;
@@ -127,6 +157,13 @@ Function Export-MonkeyData{
                                 Verbose = $O365Object.verbose;
                                 Debug = $O365Object.debug;
                                 InformationAction = $O365Object.InformationAction;
+                            }
+                            #If $localAssetsPath is a local URL, monkey365 needs to download the config file before producing report
+                            If($localAssetsPath | Test-IsValidUrl){
+                                [void]$p.Add('LocalRepository',$localAssetsPath);
+                            }
+                            Else{
+                                [void]$p.Add('ConfigFile',("{0}{1}{2}{3}config.json" -f $localAssetsPath, [System.IO.Path]::DirectorySeparatorChar,"assets",[System.IO.Path]::DirectorySeparatorChar));
                             }
                             New-HtmlReport @p
                         }
