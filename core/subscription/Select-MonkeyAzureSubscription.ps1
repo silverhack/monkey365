@@ -39,32 +39,32 @@ Function Select-MonkeyAzureSubscription{
         $AllSubscriptions = @()
         #Create selected subscriptions and sub vars
         $selected_subscriptions = $sub = $null
-        if($null -ne $O365Object.auth_tokens.ResourceManager){
+        If($null -ne $O365Object.auth_tokens.ResourceManager){
             $sparam = @{
                 AuthObject = $O365Object.auth_tokens.ResourceManager
                 Endpoint = $O365Object.Environment.ResourceManager
             }
             $sub = Get-MonkeySubscriptionInfo @sparam
         }
-        if($null -ne $sub){
-            if($null -ne $O365Object.Tenant -and $O365Object.Tenant.psobject.Properties.Item('TenantName')){
+        If($null -ne $sub){
+            If($null -ne $O365Object.Tenant -and $O365Object.Tenant.psobject.Properties.Item('TenantName')){
                 Write-Information -MessageData ("Subscription was found on {0} Tenant" -f $O365Object.Tenant.TenantName) -InformationAction $InformationAction
             }
-            elseif ($O365Object.psobject.Properties.Item('TenantId')){
+            ElseIf ($O365Object.psobject.Properties.Item('TenantId')){
                 Write-Information -MessageData ("subscription was found on {0} Tenant" -f $O365Object.tenantId) -InformationAction $InformationAction
             }
-            else{
+            Else{
                 Write-Information -MessageData ("Subscription {0} was found" -f $sub.DisplayName) -InformationAction $InformationAction
             }
             $sub | Add-Member -type NoteProperty -name TenantID -value $O365Object.TenantId -Force
-            if($null -ne $O365Object.Tenant){
-                if($null -ne $O365Object.Tenant.Psobject.Properties.Item('TenantName')){
+            If($null -ne $O365Object.Tenant){
+                If($null -ne $O365Object.Tenant.Psobject.Properties.Item('TenantName')){
                     $sub | Add-Member -type NoteProperty -name TenantName -value $O365Object.Tenant.TenantName -Force
                 }
-                elseif($null -ne $O365Object.Tenant.Psobject.Properties.Item('displayName')){
+                ElseIf($null -ne $O365Object.Tenant.Psobject.Properties.Item('displayName')){
                     $sub | Add-Member -type NoteProperty -name TenantName -value $O365Object.Tenant.displayName -Force
                 }
-                else{
+                Else{
                     $msg = @{
                         MessageData = ($message.EntraIDTenantNameError);
                         callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -79,7 +79,7 @@ Function Select-MonkeyAzureSubscription{
             }
             $AllSubscriptions+=$sub
         }
-        else{
+        Else{
             $msg = @{
                 MessageData = ($message.AzureSubscriptionNotFound -f $O365Object.TenantId);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -91,32 +91,32 @@ Function Select-MonkeyAzureSubscription{
         }
     }
     Process{
-        if($AllSubscriptions.Count -gt 0){
-            if($AllSubscriptions.Count -eq 1){
+        If($AllSubscriptions.Count -gt 0){
+            If($AllSubscriptions.Count -eq 1){
                 $selected_subscriptions = $AllSubscriptions
             }
-            elseif($O365Object.initParams.ContainsKey('AllSubscriptions') -and $O365Object.initParams.AllSubscriptions -eq $true){
+            ElseIf($O365Object.initParams.ContainsKey('AllSubscriptions') -and $O365Object.initParams.AllSubscriptions -eq $true){
                 $selected_subscriptions = $AllSubscriptions
             }
-            elseif($O365Object.initParams.ContainsKey('Subscriptions')){
+            ElseIf($O365Object.initParams.ContainsKey('Subscriptions')){
                 $selected_subscriptions = @()
                 foreach($subscriptionId in $O365Object.initParams.Subscriptions.Split(' ')){
                     $sub = $AllSubscriptions | Where-Object {$_.subscriptionId -eq $subscriptionId} | Select-Object * -ErrorAction Ignore
-                    if($sub){$selected_subscriptions += $sub}
+                    If($sub){$selected_subscriptions += $sub}
                 }
             }
-            else{
-                if($PSEdition -eq "Desktop"){
+            Else{
+                If($PSEdition -eq "Desktop"){
                     $selected_subscriptions = $AllSubscriptions | Out-GridView -Title "Choose a Source Subscription ..." -PassThru
                 }
-                else{
+                Else{
                     $selected_subscriptions = Select-MonkeySubscriptionConsole -Subscriptions $AllSubscriptions
                 }
             }
         }
     }
     End{
-        if($null -ne $selected_subscriptions){
+        If($null -ne $selected_subscriptions){
             return $selected_subscriptions
         }
     }
