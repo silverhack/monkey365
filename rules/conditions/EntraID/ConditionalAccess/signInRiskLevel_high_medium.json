@@ -1,0 +1,13 @@
+{
+	filter: [
+		{
+			conditions : [
+				[
+					"conditions.signInRiskLevels",
+					"match",
+					"high|medium"
+				]
+			]
+		}
+	]
+}
