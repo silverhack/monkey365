@@ -53,6 +53,10 @@ function Get-MonkeyAADRMTemplate {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADRMTemplate";
 			ApiType = $null;
+            objectType = 'AADRMTemplate';
+            immutableProperties = @(
+                'TemplateId'
+            );
 			description = "Collector to get information about AADRM templates";
 			Group = @(
 				"Purview";

@@ -52,6 +52,11 @@ function Get-MonkeyPIMRoleAssignment {
 			resourceName = $null;
 			collectorName = "Get-MonkeyPIMRoleAssignment";
 			ApiType = "MSGraph";
+            objectType = 'EntraPIMRBAC';
+            immutableProperties = @(
+                'templateId',
+                'name'
+            );
 			description = "Collector to get information about role assignment from PIM";
 			Group = @(
 				"EntraID"

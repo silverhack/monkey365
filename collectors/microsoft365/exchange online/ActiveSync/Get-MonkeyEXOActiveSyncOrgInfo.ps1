@@ -53,6 +53,11 @@ function Get-MonkeyEXOActiveSyncOrgInfo {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOActiveSyncOrgInfo";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeAntiPhishFilterPolicy';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about ActiveSync organisation settings from Exchange Online";
 			Group = @(
 				"ExchangeOnline"

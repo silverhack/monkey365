@@ -53,6 +53,11 @@ function Get-MonkeyEXOMailBoxRetentionPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOMailBoxRetentionPolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeRetentionPolicy';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about mailbox retention policies in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

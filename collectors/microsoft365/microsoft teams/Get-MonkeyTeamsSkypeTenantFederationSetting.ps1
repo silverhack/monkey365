@@ -52,6 +52,12 @@ function Get-MonkeyTeamsSkypeTenantFederationSetting {
 			resourceName = $null;
 			collectorName = "Get-MonkeyTeamsSkypeTenantFederationSetting";
 			ApiType = $null;
+            objectType = 'TenantFederationSettings';
+            immutableProperties = @(
+                'Identity',
+                'ConfigId',
+                'Key.SchemaId.XName.name'
+            );
 			description = "Collector to get information about Teams Tenant federation settings (Skype)";
 			Group = @(
 				"MicrosoftTeams"

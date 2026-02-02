@@ -52,6 +52,12 @@ function Get-MonkeyFabricWorkspace {
 			resourceName = $null;
 			collectorName = "Get-MonkeyFabricWorkspace";
 			ApiType = $null;
+            objectType = 'FabricWorkspace';
+            immutableProperties = @(
+                'id',
+                'name',
+                'type'
+            );
 			description = "Collector to get information about workspaces from Microsoft Fabric";
 			Group = @(
 				"MicrosoftFabric"

@@ -53,6 +53,11 @@ function Get-MonkeyEXOAuthenticationPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOAuthenticationPolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeAuthenticationPolicy';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about Auth policy in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

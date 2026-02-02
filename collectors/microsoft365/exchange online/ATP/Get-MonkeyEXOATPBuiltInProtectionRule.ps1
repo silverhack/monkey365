@@ -52,6 +52,11 @@ function Get-MonkeyEXOATPBuiltInProtectionRule {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOATPBuiltInProtectionRule";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeBuiltInPresetPolicy';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ImmutableId.Guid'
+            );
 			description = "Collector to get information about the rule for the Built-in protection preset security policy in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

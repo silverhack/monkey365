@@ -52,6 +52,12 @@ function Get-MonkeySharePointOnlineTenantSyncClientRestriction {
 			resourceName = $null;
 			collectorName = "Get-MonkeySharePointOnlineTenantSyncClientRestriction";
 			ApiType = "CSOM";
+            objectType = 'sharepointTenantSyncClientRestriction';
+            immutableProperties = @(
+                '_ObjectType_',
+                '_ObjectIdentity_',
+                'RootSiteUrl'
+            );
 			description = "Collector to get information about SPS Tenant Sync Client Restriction";
 			Group = @(
 				"SharePointOnline"

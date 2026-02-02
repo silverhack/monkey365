@@ -52,6 +52,12 @@ function Get-MonkeySharePointOnlineExternalLink {
 			resourceName = $null;
 			collectorName = "Get-MonkeySharePointOnlineExternalLink";
 			ApiType = "CSOM";
+            objectType = 'sharepointExternalLink';
+            immutableProperties = @(
+                'Site',
+                'FileID',
+                'Name'
+            );
 			description = "Collector to get information about O365 Sharepoint Online external links";
 			Group = @(
 				"SharePointOnline"

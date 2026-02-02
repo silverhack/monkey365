@@ -53,6 +53,11 @@ function Get-MonkeyEXORoleManagement {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXORoleManagement";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeRBAC';
+            immutableProperties = @(
+                'OrganizationId',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about management roles in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

@@ -52,6 +52,11 @@ function Get-MonkeyAADSetting {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADSetting";
 			ApiType = "MSGraph";
+            objectType = 'EntraSettings';
+            immutableProperties = @(
+                'id',
+                'displayName'
+            );
 			description = "Collector to get settings from Microsoft Entra ID";
 			Group = @(
 				"EntraID"

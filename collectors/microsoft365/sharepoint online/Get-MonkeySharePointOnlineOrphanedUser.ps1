@@ -52,6 +52,12 @@ function Get-MonkeySharePointOnlineOrphanedUser {
 			resourceName = $null;
 			collectorName = "Get-MonkeySharePointOnlineOrphanedUser";
 			ApiType = "CSOM";
+            objectType = 'sharepointUser';
+            immutableProperties = @(
+                '_ObjectType_',
+                '_ObjectIdentity_',
+                'Id'
+            );
 			description = "Collector to get information about SharePoint Online orphaned users and groups";
 			Group = @(
 				"SharePointOnline"

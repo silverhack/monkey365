@@ -63,7 +63,7 @@ function Get-MonkeyEXOArcConfig {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"o365_exo_org_config"
+				"o365_exo_arc_config"
 			);
 			dependsOn = @(
 

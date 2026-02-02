@@ -51,8 +51,9 @@
           {
             "conditions": [
               [
-                "securityProfile.securityType.TrustedLaunch",
-                "ne"
+				"",
+				"ne",
+                "securityProfile.securityType.TrustedLaunch",				
               ]
             ]
           }

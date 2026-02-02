@@ -53,6 +53,11 @@ function Get-MonkeyEXOATPPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOATPPolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeATPPolicy';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about ATP policy from Exchange Online";
 			Group = @(
 				"ExchangeOnline"

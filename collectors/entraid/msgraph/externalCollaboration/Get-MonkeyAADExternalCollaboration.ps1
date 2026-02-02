@@ -52,6 +52,11 @@ function Get-MonkeyAADExternalCollaboration {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADExternalCollaboration";
 			ApiType = "MSGraph";
+            objectType = 'EntraExternalCollaborationSettings';
+            immutableProperties = @(
+                'id',
+                'displayName'
+            );
 			description = "Collector to get information about external collaboration from Microsoft Entra ID";
 			Group = @(
 				"EntraID"
@@ -63,7 +68,8 @@ function Get-MonkeyAADExternalCollaboration {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"aad_domains"
+				"aad_cross_tenant_accessPolicy",
+                "aad_external_collaboration_settings"
 			);
 			dependsOn = @(
 

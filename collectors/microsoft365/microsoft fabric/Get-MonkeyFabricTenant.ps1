@@ -52,6 +52,10 @@ function Get-MonkeyFabricTenant {
 			resourceName = $null;
 			collectorName = "Get-MonkeyFabricTenant";
 			ApiType = $null;
+            objectType = 'FabricTenant';
+            immutableProperties = @(
+                'settingName'
+            );
 			description = "Collector to get information about tenant from Microsoft Fabric";
 			Group = @(
 				"MicrosoftFabric"

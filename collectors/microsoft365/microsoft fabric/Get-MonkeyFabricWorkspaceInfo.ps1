@@ -52,6 +52,12 @@ function Get-MonkeyFabricWorkspaceInfo {
 			resourceName = $null;
 			collectorName = "Get-MonkeyFabricWorkspaceInfo";
 			ApiType = $null;
+            objectType = 'FabricWorkspaceInfo';
+            immutableProperties = @(
+                'id',
+                'name',
+                'type'
+            );
 			description = "Collector to get information about workspaces, datasets, etc.. from Microsoft PowerBI";
 			Group = @(
 				"MicrosoftFabric"

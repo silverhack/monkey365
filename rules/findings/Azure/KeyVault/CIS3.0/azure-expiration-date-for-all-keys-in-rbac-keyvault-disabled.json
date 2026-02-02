@@ -51,8 +51,8 @@
                 "true"
               ],
               [
-                "objects.keys.attributes.exp",
-                "ne"
+				"ne",
+                "objects.keys.attributes.exp"
               ]
             ],
             "operator": "and"

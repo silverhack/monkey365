@@ -37,6 +37,7 @@ function Get-MonkeyAADAuthMethodPolicy {
             https://github.com/silverhack/monkey365
     #>
 
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments","",Scope = "Function")]
 	[CmdletBinding()]
 	param(
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
@@ -52,6 +53,10 @@ function Get-MonkeyAADAuthMethodPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADAuthMethodPolicy";
 			ApiType = "MSGraph";
+            objectType = 'EntraAuthMethodPolicy';
+            immutableProperties = @(
+                'id'
+            );
 			description = "Collector to get information about authentication methods from Microsoft Entra ID";
 			Group = @(
 				"EntraID"
@@ -98,7 +103,7 @@ function Get-MonkeyAADAuthMethodPolicy {
 		}
 		Write-Information @msg
 		$p = @{
-			APIVersion = $aadConf.api_version;
+			APIVersion = 'beta';
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;

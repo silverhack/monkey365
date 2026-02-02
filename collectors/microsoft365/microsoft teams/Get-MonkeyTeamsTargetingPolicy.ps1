@@ -52,6 +52,13 @@ function Get-MonkeyTeamsTargetingPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyTeamsTargetingPolicy";
 			ApiType = $null;
+            objectType = 'TeamsTargetingPolicy';
+            immutableProperties = @(
+                'ConfigId',
+                'Identity',
+                'ManageTagsPermissionMode',
+                'Key.SchemaId.XName.name'
+            );
 			description = "Collector to get information about Teams targeting policy";
 			Group = @(
 				"MicrosoftTeams"

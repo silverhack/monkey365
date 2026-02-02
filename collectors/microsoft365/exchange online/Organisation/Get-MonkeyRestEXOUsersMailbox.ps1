@@ -93,7 +93,7 @@ function Get-MonkeyRestEXOUsersMailbox {
 			Authentication = $exo_auth;
 			Environment = $Environment;
 			ResponseFormat = 'clixml';
-			Command = 'Get-MailBox -ResultSize unlimited';
+			Command = 'Get-Mailbox -ResultSize unlimited';
 			Method = "POST";
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
@@ -102,7 +102,7 @@ function Get-MonkeyRestEXOUsersMailbox {
 		$mailBoxes = Get-PSExoAdminApiObject @param
 		if ($mailboxes) {
 			#Get mailbox Forwarding
-			$forwarding_mailboxes = $mailboxes | Select-Object UserPrincipalName,ForwardingSmtpAddress,DeliverToMailboxAndForward
+			$forwarding_mailboxes = $mailboxes | Select-Object @{Name='userPrincipalName';Expression={$_.UserPrincipalName}},@{Name='identity';Expression={$_.Identity}}, @{Name='ExchangeObjectId';Expression={$_.ExchangeObjectId.Guid}}, @{Name='ForwardingSmtpAddress';Expression={$_.ForwardingSmtpAddress}},@{Name='DeliverToMailboxAndForward';Expression={$_.DeliverToMailboxAndForward}}
 			#Getting mailbox permissions
 			$p = @{
 				ScriptBlock = { Get-PSExoMailBoxPermission -MailBox $_ };

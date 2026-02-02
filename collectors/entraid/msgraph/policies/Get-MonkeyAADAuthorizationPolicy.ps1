@@ -52,6 +52,11 @@ function Get-MonkeyAADAuthorizationPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADAuthorizationPolicy";
 			ApiType = "MSGraph";
+            objectType = 'EntraAuthorizationPolicy';
+            immutableProperties = @(
+                'tenantFlowsPolicyId',
+                'tenantAuthPolicyId'
+            );
 			description = "Collector to get information about authorization policy from Microsoft Entra ID";
 			Group = @(
 				"EntraID"

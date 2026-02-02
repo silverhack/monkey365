@@ -52,6 +52,11 @@ function Get-MonkeySharePointOnlineExternalUser {
 			resourceName = $null;
 			collectorName = "Get-MonkeySharePointOnlineExternalUser";
 			ApiType = "CSOM";
+            objectType = 'sharepointExternalUser';
+            immutableProperties = @(
+                '_ObjectType_',
+                'Url'
+            );
 			description = "Collector to get information about SPS external users";
 			Group = @(
 				"SharePointOnline"

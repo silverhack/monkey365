@@ -53,6 +53,11 @@ function Get-MonkeyEXODLPCompliancePolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXODLPCompliancePolicy";
 			ApiType = $null;
+            objectType = 'PurviewCompliancePolicy';
+            immutableProperties = @(
+                'OrganizationId',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about DLP compliance policies in Microsoft Exchange Online";
 			Group = @(
 				"Purview"

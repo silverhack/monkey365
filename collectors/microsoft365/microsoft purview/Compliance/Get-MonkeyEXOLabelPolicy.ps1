@@ -53,6 +53,11 @@ function Get-MonkeyEXOLabelPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOLabelPolicy";
 			ApiType = $null;
+            objectType = 'PurviewLabelPolicy';
+            immutableProperties = @(
+                'OrganizationId',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about label policies from Exchange Online";
 			Group = @(
 				"Purview"
@@ -79,7 +84,7 @@ function Get-MonkeyEXOLabelPolicy {
 				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance label policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $InformationAction;
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompLabelPolicyInfo');
 			}
 			Write-Information @msg
@@ -100,10 +105,22 @@ function Get-MonkeyEXOLabelPolicy {
 			}
 			#Get label policy
 			$label_policy = Get-PSExoAdminApiObject @p
+            If($null -ne $label_policy){
+                $label_policy = [System.Collections.Generic.List[System.Object]]::new()
+                $mockLabel = [PsCustomObject]@{
+                    Name = 'Monkey365LabelNotSet';
+                    Comment = 'Label Policies were not found'
+                    Guid = [System.GUID]::Empty.Guid;
+                    ExchangeObjectId = [System.GUID]::Empty.Guid;
+                    IsValid = $false;
+                    Enabled = $false;
+                }
+                [void]$label_policy.Add($mockLabel);
+            }
 		}
 	}
-	end {
-		if ($null -ne $label_policy) {
+	End {
+		If ($null -ne $label_policy) {
 			$label_policy.PSObject.TypeNames.Insert(0,'Monkey365.SecurityCompliance.labelPolicy')
 			[pscustomobject]$obj = @{
 				Data = $label_policy;
@@ -111,7 +128,7 @@ function Get-MonkeyEXOLabelPolicy {
 			}
 			$returnData.o365_secomp_label_policy = $obj
 		}
-		else {
+		Else {
 			$msg = @{
 				MessageData = ($message.MonkeyEmptyResponseMessage -f "Security and Compliance label policy",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);

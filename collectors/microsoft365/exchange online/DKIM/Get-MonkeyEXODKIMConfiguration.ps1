@@ -53,6 +53,11 @@ function Get-MonkeyEXODKIMConfiguration {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXODKIMConfiguration";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeDKIM';
+            immutableProperties = @(
+                'OrganizationId',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about DKIM from Exchange Online";
 			Group = @(
 				"ExchangeOnline"

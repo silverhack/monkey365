@@ -52,6 +52,12 @@ function Get-MonkeyTeamsAppPermissionPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyTeamsAppPermissionPolicy";
 			ApiType = $null;
+            objectType = 'TeamsAppPermissionPolicy';
+            immutableProperties = @(
+                'Identity',
+                'ConfigId',
+                'Key.SchemaId.XName.name'
+            );
 			description = "Collector to get information about Teams application permission policy";
 			Group = @(
 				"MicrosoftTeams"
@@ -63,7 +69,7 @@ function Get-MonkeyTeamsAppPermissionPolicy {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"o365_teams_skype_app_policies"
+				"o365_teams_app_permission_policies"
 			);
 			dependsOn = @(
 
@@ -101,12 +107,12 @@ function Get-MonkeyTeamsAppPermissionPolicy {
 	}
 	end {
 		if ($app_policies) {
-			$app_policies.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Skype.Application.Policies')
+			$app_policies.PSObject.TypeNames.Insert(0,'Monkey365.Teams.Skype.Application.Permission.Policies')
 			[pscustomobject]$obj = @{
 				Data = $app_policies;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.o365_teams_skype_app_policies = $obj
+			$returnData.o365_teams_app_permission_policies = $obj
 		}
 		else {
 			$msg = @{

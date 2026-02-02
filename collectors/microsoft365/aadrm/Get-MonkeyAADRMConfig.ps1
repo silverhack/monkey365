@@ -53,6 +53,10 @@ function Get-MonkeyAADRMConfig {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADRMConfig";
 			ApiType = $null;
+            objectType = 'AADRMConfig';
+            immutableProperties = @(
+                'RightsManagementServiceId'
+            );
 			description = "Collector to get information about AADRM config";
 			Group = @(
 				"Purview";

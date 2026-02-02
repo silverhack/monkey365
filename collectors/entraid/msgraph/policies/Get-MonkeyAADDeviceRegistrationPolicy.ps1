@@ -52,6 +52,10 @@ function Get-MonkeyAADDeviceRegistrationPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADDeviceRegistrationPolicy";
 			ApiType = "MSGraph";
+            objectType = 'EntraDeviceRegistrationPolicy';
+            immutableProperties = @(
+                'id'
+            );
 			description = "Collector to get information about device registration policy from Microsoft Entra ID";
 			Group = @(
 				"EntraID"

@@ -53,6 +53,11 @@ function Get-MonkeyRestEXOCASMailbox {
 			resourceName = $null;
 			collectorName = "Get-MonkeyRestEXOCASMailbox";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeCASMailbox';
+            immutableProperties = @(
+                'DistinguishedName',
+                'Identity'
+            );
 			description = "Collector to get information about mailboxes in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

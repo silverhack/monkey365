@@ -52,6 +52,12 @@ function Get-MonkeyTeamsSkypeMeetingPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyTeamsSkypeMeetingPolicy";
 			ApiType = $null;
+            objectType = 'TeamsMeetingPolicy';
+            immutableProperties = @(
+                'Description',
+                'ConfigId',
+                'Key.SchemaId.XName.name'
+            );
 			description = "Collector to get information about Teams meeting policies (Skype)";
 			Group = @(
 				"MicrosoftTeams"

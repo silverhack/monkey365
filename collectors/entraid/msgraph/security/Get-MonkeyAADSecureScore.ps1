@@ -52,6 +52,10 @@ function Get-MonkeyAADSecureScore {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADSecureScore";
 			ApiType = "MSGraph";
+            objectType = 'EntraSecureScore';
+            immutableProperties = @(
+                'id'
+            );
 			description = "Collector to get information about Microsoft Entra ID secure score";
 			Group = @(
 				"EntraID"

@@ -52,6 +52,10 @@ function Get-MonkeyAADAudit {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADAudit";
 			ApiType = "MSGraph";
+            objectType = 'EntraAuditLog';
+            immutableProperties = @(
+                'id'
+            );
 			description = "Collector to get audit logs from Microsoft Entra ID";
 			Group = @(
 				"EntraID"

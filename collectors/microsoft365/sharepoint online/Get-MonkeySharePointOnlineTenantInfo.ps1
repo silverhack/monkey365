@@ -53,6 +53,11 @@ function Get-MonkeySharePointOnlineTenantInfo {
 			resourceName = $null;
 			collectorName = "Get-MonkeySharePointOnlineTenantInfo";
 			ApiType = "CSOM";
+            objectType = 'sharepointTenantDetails';
+            immutableProperties = @(
+                '_ObjectType_',
+                'Url'
+            );
 			description = "Collector to get information about SPS Tenant information";
 			Group = @(
 				"SharePointOnline"

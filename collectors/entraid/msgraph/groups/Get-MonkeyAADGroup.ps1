@@ -52,6 +52,10 @@ function Get-MonkeyAADGroup {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADGroup";
 			ApiType = "MSGraph";
+            objectType = 'EntraGroup';
+            immutableProperties = @(
+                'id'
+            );
 			description = "Collector to get information about groups from Microsoft Entra ID";
 			Group = @(
 				"EntraID"

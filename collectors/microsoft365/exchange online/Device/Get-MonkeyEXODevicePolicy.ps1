@@ -53,6 +53,11 @@ function Get-MonkeyEXODevicePolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXODevicePolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeDevicePolicy';
+            immutableProperties = @(
+                'OrganizationId',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about device policy From Microsoft Exchange Online";
 			Group = @(
 				"ExchangeOnline"

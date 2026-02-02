@@ -52,6 +52,11 @@ function Get-MonkeyAADUser {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADUser";
 			ApiType = "MSGraph";
+            objectType = 'EntraUser';
+            immutableProperties = @(
+                'id',
+                'userPrincipalName'
+            );
 			description = "Collector to get users from Microsoft Entra ID";
 			Group = @(
 				"EntraID"

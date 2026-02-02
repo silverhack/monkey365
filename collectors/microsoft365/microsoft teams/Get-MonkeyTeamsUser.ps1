@@ -52,6 +52,11 @@ function Get-MonkeyTeamsUser {
 			resourceName = $null;
 			collectorName = "Get-MonkeyTeamsUser";
 			ApiType = $null;
+            objectType = 'teamsUser';
+            immutableProperties = @(
+                'objectId',
+                'userPrincipalName'
+            );
 			description = "Collector to get information about Teams users";
 			Group = @(
 				"MicrosoftTeams"

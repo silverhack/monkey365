@@ -52,6 +52,7 @@ function Get-MonkeySharePointOnlineSiteAccessRequest {
 			resourceName = $null;
 			collectorName = "Get-MonkeySharePointOnlineSiteAccessRequest";
 			ApiType = "CSOM";
+            objectType = 'sharepointSiteAccessRequest';
 			description = "Collector to get information about SPS access requests";
 			Group = @(
 				"SharePointOnline"

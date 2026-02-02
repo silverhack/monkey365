@@ -53,6 +53,11 @@ function Get-MonkeyEXOHostedContentFilterPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOHostedContentFilterPolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeHostedContentFilterPolicy';
+            immutableProperties = @(
+                'policyId',
+                'ruleId'
+            );
 			description = "Collector to get information about hosted content filter policy in Exchange Online";
 			Group = @(
 				"ExchangeOnline"
@@ -72,10 +77,6 @@ function Get-MonkeyEXOHostedContentFilterPolicy {
 			enabled = $true;
 			supportClientCredential = $true
 		}
-		#Get Tenant info
-		$tenant_info = $O365Object.Tenant
-		#Get available domains for organisation
-		$org_domains = $tenant_info.Domains | Select-Object -ExpandProperty id
 	}
 	process {
 		$msg = @{
@@ -87,29 +88,6 @@ function Get-MonkeyEXOHostedContentFilterPolicy {
 		}
 		Write-Information @msg
 		$hosted_content_filter = Get-HostedContentFilterInfo
-		if ($null -ne $hosted_content_filter) {
-			foreach ($content_filter in @($hosted_content_filter)) {
-				if ($content_filter.Policy.AllowedSenderDomains.Count -gt 0) {
-					$params = @{
-						ReferenceObject = $org_domains;
-						DifferenceObject = $content_filter.Policy.AllowedSenderDomains;
-						IncludeEqual = $true;
-						ExcludeDifferent = $true;
-					}
-					$org_whitelisted = Compare-Object @params
-					#Check if own domain is already whitelisted
-					if ($org_whitelisted) {
-						$content_filter | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $true
-					}
-					else {
-						$content_filter | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $false
-					}
-				}
-				else {
-					$content_filter | Add-Member -Type NoteProperty -Name IsCompanyWhiteListed -Value $false
-				}
-			}
-		}
 	}
 	end {
 		if ($null -ne $hosted_content_filter) {

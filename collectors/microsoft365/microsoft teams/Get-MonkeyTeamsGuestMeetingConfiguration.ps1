@@ -52,6 +52,12 @@ function Get-MonkeyTeamsGuestMeetingConfiguration {
 			resourceName = $null;
 			collectorName = "Get-MonkeyTeamsGuestMeetingConfiguration";
 			ApiType = $null;
+            objectType = 'TeamsGuestMeetingConfiguration';
+            immutableProperties = @(
+                'Identity',
+                'ConfigId',
+                'Key.SchemaId.XName.name'
+            );
 			description = "Collector to get information about Teams guest meeting configuration";
 			Group = @(
 				"MicrosoftTeams"

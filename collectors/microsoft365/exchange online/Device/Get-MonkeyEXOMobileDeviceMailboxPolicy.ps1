@@ -53,6 +53,11 @@ function Get-MonkeyEXOMobileDeviceMailboxPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOMobileDeviceMailboxPolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeDevicePolicy';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about mobile device mailbox in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

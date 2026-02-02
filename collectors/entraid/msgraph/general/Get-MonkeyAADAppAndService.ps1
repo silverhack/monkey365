@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyEXOPolicyConfig {
+function Get-MonkeyAADAppAndService {
 <#
         .SYNOPSIS
-		Collector to get information about policy config in Exchange Online
+		Collector to get properties and relationships of a adminAppsAndServices object
 
         .DESCRIPTION
-		Collector to get information about policy config in Exchange Online
+		Collector to get properties and relationships of a adminAppsAndServices object
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyEXOPolicyConfig {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyEXOPolicyConfig
+            File Name	: Get-MonkeyAADAppAndService
             Version     : 1.0
 
         .LINK
@@ -43,19 +43,22 @@ function Get-MonkeyEXOPolicyConfig {
 		[string]$collectorId
 	)
 	begin {
-		$exo_policy_config = $null;
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "exo0026";
-			Provider = "Microsoft365";
-			Resource = "ExchangeOnline";
+			Id = "aad0046";
+			Provider = "EntraID";
+			Resource = "EntraID";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyEXOPolicyConfig";
-			ApiType = "ExoApi";
-			description = "Collector to get information about policy config in Exchange Online";
+			collectorName = "Get-MonkeyAADAppAndService";
+			ApiType = "MSGraph";
+            objectType = 'EntraAppAndService';
+            immutableProperties = @(
+                '@odata.context'
+            );
+			description = "Collector to get properties and relationships of a adminAppsAndServices object";
 			Group = @(
-				"ExchangeOnline"
+				"EntraID"
 			);
 			Tags = @(
 
@@ -64,7 +67,7 @@ function Get-MonkeyEXOPolicyConfig {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"o365_exo_policy_config"
+				"aad_app_and_services"
 			);
 			dependsOn = @(
 
@@ -72,49 +75,42 @@ function Get-MonkeyEXOPolicyConfig {
 			enabled = $true;
 			supportClientCredential = $true
 		}
-		#Get instance
-		$Environment = $O365Object.Environment
-		#Get Exchange Online Auth token
-		$ExoAuth = $O365Object.auth_tokens.ExchangeOnline
+		$settings = $null
 	}
 	process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Exchange Online policy config",$O365Object.TenantID);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID App And Services",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
-			Tags = @('ExoPolicyConfigInfo');
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('EntraIDInfo');
 		}
 		Write-Information @msg
 		$p = @{
-			Authentication = $ExoAuth;
-			Environment = $Environment;
-			ResponseFormat = 'clixml';
-			Command = 'Get-PolicyConfig';
-			Method = "POST";
+			APIVersion = 'beta';
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;
 		}
-		$exo_policy_config = Get-PSExoAdminApiObject @p
+		$settings = Get-MonkeyMSGraphAppAndService @p
 	}
-	end {
-		if ($null -ne $exo_policy_config) {
-			$exo_policy_config.PSObject.TypeNames.Insert(0,'Monkey365.ExchangeOnline.PolicyConfig')
+	End {
+		If ($null -ne $settings) {
+			$settings.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.AppServices')
 			[pscustomobject]$obj = @{
-				Data = $exo_policy_config;
+				Data = $settings;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.o365_exo_policy_config = $obj
+			$returnData.aad_app_and_services = $obj;
 		}
-		else {
+		Else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Exchange Online policy config",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID App And Services",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('ExoPolicyConfigResponse');
 				Verbose = $O365Object.Verbose;
+				Tags = @('EntraIDEmptyResponse')
 			}
 			Write-Verbose @msg
 		}

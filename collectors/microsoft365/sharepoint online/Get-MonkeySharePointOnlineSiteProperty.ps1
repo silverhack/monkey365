@@ -52,6 +52,12 @@ function Get-MonkeySharePointOnlineSiteProperty {
 			resourceName = $null;
 			collectorName = "Get-MonkeySharePointOnlineSiteProperty";
 			ApiType = "CSOM";
+            objectType = 'sharepointSiteProperty';
+            immutableProperties = @(
+                '_ObjectType_',
+                '_ObjectIdentity_',
+                'Url'
+            );
 			description = "Collector to extract information about SharePoint Online site properties";
 			Group = @(
 				"SharePointOnline"

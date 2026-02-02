@@ -52,6 +52,13 @@ function Get-MonkeyTeamsTenant {
 			resourceName = $null;
 			collectorName = "Get-MonkeyTeamsTenant";
 			ApiType = $null;
+            objectType = 'teamsTenant';
+            immutableProperties = @(
+                'city',
+                'displayName',
+                'objectId',
+                'countryLetterCode'
+            );
 			description = "Collector to get information about Teams tenant";
 			Group = @(
 				"MicrosoftTeams"

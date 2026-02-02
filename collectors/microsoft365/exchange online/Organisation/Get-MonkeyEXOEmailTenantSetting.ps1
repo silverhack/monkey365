@@ -52,6 +52,11 @@ function Get-MonkeyEXOEmailTenantSetting {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOEmailTenantSetting";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeTenantSettings';
+            immutableProperties = @(
+                'Identity',
+                'DistinguishedName'
+            );
 			description = "Collector to get information about email tenant settings in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

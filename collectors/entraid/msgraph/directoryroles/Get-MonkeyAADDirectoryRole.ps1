@@ -53,6 +53,11 @@ function Get-MonkeyAADDirectoryRole {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADDirectoryRole";
 			ApiType = "MSGraph";
+            objectType = 'EntraDirectoryRole';
+            immutableProperties = @(
+                'id',
+                'displayName'
+            );
 			description = "Collector to get Directoryroles from Microsoft Entra ID";
 			Group = @(
 				"EntraID"

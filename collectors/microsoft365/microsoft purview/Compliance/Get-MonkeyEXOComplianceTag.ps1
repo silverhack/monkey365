@@ -52,7 +52,12 @@ function Get-MonkeyEXOComplianceTag {
 			ResourceType = $null;
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOComplianceTag";
-			ApiType = $null;
+			ApiType = "ExoApi";
+            objectType = 'PurviewRetentionLabel';
+            immutableProperties = @(
+                'OrganizationId',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about compliance tags from Exchange Online";
 			Group = @(
 				"Purview"
@@ -79,7 +84,7 @@ function Get-MonkeyEXOComplianceTag {
 				MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Security and Compliance tags",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = 'info';
-				InformationAction = $InformationAction;
+				InformationAction = $O365Object.InformationAction;
 				Tags = @('SecCompTagsInfo');
 			}
 			Write-Information @msg

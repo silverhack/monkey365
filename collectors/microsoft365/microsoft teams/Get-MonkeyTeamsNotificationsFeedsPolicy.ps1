@@ -52,6 +52,12 @@ function Get-MonkeyTeamsNotificationsFeedsPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyTeamsNotificationsFeedsPolicy";
 			ApiType = $null;
+            objectType = 'TeamsNotificationAndFeedsPolicy';
+            immutableProperties = @(
+                'Identity',
+                'ConfigId',
+                'Key.SchemaId.XName.name'
+            );
 			description = "Collector to get information about notifications and feed policy in Teams";
 			Group = @(
 				"MicrosoftTeams"

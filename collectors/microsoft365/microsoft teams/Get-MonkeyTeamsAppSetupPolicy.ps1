@@ -52,6 +52,12 @@ function Get-MonkeyTeamsAppSetupPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyTeamsAppSetupPolicy";
 			ApiType = $null;
+            objectType = 'TeamsAppSetupPolicy';
+            immutableProperties = @(
+                'Identity',
+                'ConfigId',
+                'Key.SchemaId.XName.name'
+            );
 			description = "Collector to get information about Teams application setup policies";
 			Group = @(
 				"MicrosoftTeams"

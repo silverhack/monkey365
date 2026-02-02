@@ -53,6 +53,12 @@ function Get-MonkeySeCompRoleManagement {
 			resourceName = $null;
 			collectorName = "Get-MonkeySeCompRoleManagement";
 			ApiType = $null;
+            objectType = 'PurviewRBAC';
+            immutableProperties = @(
+                'OrganizationId',
+                'ExchangeObjectId.Guid'
+            );
+
 			description = "Collector to get information about management roles in Exchange Online Security & Compliance";
 			Group = @(
 				"Purview"
@@ -79,8 +85,6 @@ function Get-MonkeySeCompRoleManagement {
 		#Get switch
 		$getExoGroups = [System.Convert]::ToBoolean($O365Object.internal_config.o365.ExchangeOnline.GetPurViewGroups)
 		$secomp_role_groups = $null
-		#Get libs for runspace
-		$rsOptions = Initialize-MonkeyScan -Provider Microsoft365 | Where-Object { $_.scanName -eq 'Purview' }
 	}
 	process {
 		if ($exo_auth -and $getExoGroups -and $Uri) {
@@ -107,18 +111,12 @@ function Get-MonkeySeCompRoleManagement {
 			$secomp_role_groups = Get-PSExoAdminApiObject @p
 			#Getting members
 			if ($secomp_role_groups) {
-				#Set new vars
-				$vars = $O365Object.runspace_vars
-				$param = @{
-					Command = "Get-PSExoUser";
-					ImportCommands = $rsOptions.libCommands;
-					ImportVariables = $vars;
-					ImportModules = $O365Object.runspaces_modules;
-					StartUpScripts = $O365Object.runspace_init;
-					ThrowOnRunspaceOpenError = $true;
-					Debug = $O365Object.Debug;
-					Verbose = $O365Object.Verbose;
-					Throttle = $O365Object.nestedRunspaceMaxThreads;
+                $param = @{
+					ScriptBlock = { Get-PSExoUser -User $_ };
+					Runspacepool = $O365Object.monkey_runspacePool;
+					ReuseRunspacePool = $true;
+					Debug = $O365Object.VerboseOptions.Debug;
+					Verbose = $O365Object.VerboseOptions.Verbose;
 					MaxQueue = $O365Object.MaxQueue;
 					BatchSleep = $O365Object.BatchSleep;
 					BatchSize = $O365Object.BatchSize;
@@ -131,7 +129,7 @@ function Get-MonkeySeCompRoleManagement {
 						$role_group.members.Clear()
 						#Get objects
 						foreach ($member in $members) {
-							$obj = Invoke-MonkeyJob @param -Arguments @{ User = $member; AuthenticationObject = $exo_auth }
+							$obj = $member | Invoke-MonkeyJob @param
 							if ($obj) {
 								[void]$role_group.members.Add($obj)
 							}
@@ -151,7 +149,7 @@ function Get-MonkeySeCompRoleManagement {
 									Authentication = $ExoAuth;
 									EndPoint = $Uri;
 									ResponseFormat = 'clixml';
-									Command = ('Get-Group -Identity {0} -ErrorAction Ignore' -f $member);
+									Command = ('Get-Group -Identity {0} -ErrorAction SilentlyContinue' -f $member);
 									Method = "POST";
 									InformationAction = $O365Object.InformationAction;
 									Verbose = $O365Object.Verbose;

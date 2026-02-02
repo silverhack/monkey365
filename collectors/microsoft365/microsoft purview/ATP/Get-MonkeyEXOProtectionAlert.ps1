@@ -53,6 +53,11 @@ function Get-MonkeyEXOProtectionAlert {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOProtectionAlert";
 			ApiType = $null;
+            objectType = 'PurviewAlertPolicy';
+            immutableProperties = @(
+                'Id',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about protection alert in Exchange Online";
 			Group = @(
 				"Purview"

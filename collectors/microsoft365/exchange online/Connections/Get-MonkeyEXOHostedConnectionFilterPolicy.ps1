@@ -53,6 +53,11 @@ function Get-MonkeyEXOHostedConnectionFilterPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOHostedConnectionFilterPolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeHostedConnectionFilterPolicy';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about hosted connection filter policy in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

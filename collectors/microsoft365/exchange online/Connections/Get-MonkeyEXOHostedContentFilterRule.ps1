@@ -53,6 +53,11 @@ function Get-MonkeyEXOHostedContentFilterRule {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOHostedContentFilterRule";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeHostedContentFilterRule';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about hosted content filter rules in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

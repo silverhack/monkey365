@@ -64,8 +64,8 @@
           {
             "conditions": [
               [
-                "objects.keys.rotationPolicy",
-                "ne"
+				"ne",
+                "objects.keys.rotationPolicy"
               ]
             ]
           }

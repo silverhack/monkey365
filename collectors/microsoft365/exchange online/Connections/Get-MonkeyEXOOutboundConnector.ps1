@@ -53,6 +53,11 @@ function Get-MonkeyEXOOutboundConnector {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOOutboundConnector";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeOutboundConnector';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about outbound connector in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

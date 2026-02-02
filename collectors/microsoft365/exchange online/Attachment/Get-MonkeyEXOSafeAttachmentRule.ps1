@@ -53,6 +53,11 @@ function Get-MonkeyEXOSafeAttachmentRule {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOSafeAttachmentRule";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeSafeAttachmentRule';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ImmutableId.Guid'
+            );
 			description = "Collector to get information about safe attachment rules in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

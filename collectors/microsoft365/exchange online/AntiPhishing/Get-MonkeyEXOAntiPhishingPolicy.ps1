@@ -53,6 +53,11 @@ function Get-MonkeyEXOAntiPhishingPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOAntiPhishingPolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeAntiPhishingPolicy';
+            immutableProperties = @(
+                'policyId',
+                'ruleId'
+            );
 			description = "Collector to get information about antiphishing policy from Exchange Online";
 			Group = @(
 				"ExchangeOnline"

@@ -53,6 +53,11 @@ function Get-MonkeyEXOTransportConfig {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOTransportConfig";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeTransportConfig';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about transport config in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

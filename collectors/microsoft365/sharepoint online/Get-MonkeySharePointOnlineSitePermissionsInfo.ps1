@@ -52,6 +52,12 @@ function Get-MonkeySharePointOnlineSitePermissionsInfo {
 			resourceName = $null;
 			collectorName = "Get-MonkeySharePointOnlineSitePermissionsInfo";
 			ApiType = "CSOM";
+            objectType = 'sharepointSitePermission';
+            immutableProperties = @(
+                'objectType',
+                'title',
+                'objectPath'
+            );
 			description = "Collector to get information about Sharepoint Online site permissions";
 			Group = @(
 				"SharePointOnline"

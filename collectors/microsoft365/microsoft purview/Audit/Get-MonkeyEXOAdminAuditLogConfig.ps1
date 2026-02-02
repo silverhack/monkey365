@@ -53,6 +53,11 @@ function Get-MonkeyEXOAdminAuditLogConfig {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOAdminAuditLogConfig";
 			ApiType = $null;
+            objectType = 'PurviewAuditLogSettings';
+            immutableProperties = @(
+                'OrganizationId',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about audit log config from Exchange Online";
 			Group = @(
 				"Purview"

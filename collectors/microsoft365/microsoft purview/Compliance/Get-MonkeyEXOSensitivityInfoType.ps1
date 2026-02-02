@@ -53,6 +53,11 @@ function Get-MonkeyEXOSensitivityInfoType {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOSensitivityInfoType";
 			ApiType = $null;
+            objectType = 'PurviewSensitivityInfoType';
+            immutableProperties = @(
+                'Id',
+                'Publisher'
+            );
 			description = "Collector to get information about sensitive information types that are defined for organisation";
 			Group = @(
 				"Purview"

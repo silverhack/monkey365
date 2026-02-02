@@ -53,6 +53,11 @@ function Get-MonkeyEXOOutboundSpamFilterPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOOutboundSpamFilterPolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeOutboundSpamFilterPolicy';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about outbound spam filter policy in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

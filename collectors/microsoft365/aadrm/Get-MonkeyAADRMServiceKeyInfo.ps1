@@ -53,6 +53,10 @@ function Get-MonkeyAADRMServiceKeyInfo {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADRMServiceKeyInfo";
 			ApiType = $null;
+            objectType = 'AADRMServiceKey';
+            immutableProperties = @(
+                'KeyIdentifier'
+            );
 			description = "Collector to get information about AADRM service key status";
 			Group = @(
 				"Purview";

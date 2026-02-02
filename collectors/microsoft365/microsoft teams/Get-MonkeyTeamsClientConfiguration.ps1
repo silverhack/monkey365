@@ -52,6 +52,12 @@ function Get-MonkeyTeamsClientConfiguration {
 			resourceName = $null;
 			collectorName = "Get-MonkeyTeamsClientConfiguration";
 			ApiType = $null;
+            objectType = 'TeamsClientConfiguration';
+            immutableProperties = @(
+                'Identity',
+                'ConfigId',
+                'Key.SchemaId.XName.name'
+            );
 			description = "Collector to get information about Teams client configuration";
 			Group = @(
 				"MicrosoftTeams"

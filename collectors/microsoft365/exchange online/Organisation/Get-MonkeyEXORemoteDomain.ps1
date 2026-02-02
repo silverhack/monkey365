@@ -53,6 +53,11 @@ function Get-MonkeyEXORemoteDomain {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXORemoteDomain";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeRemoteDomain';
+            immutableProperties = @(
+                'OrganizationId',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about remote domain in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

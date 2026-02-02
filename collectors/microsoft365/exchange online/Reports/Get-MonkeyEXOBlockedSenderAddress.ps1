@@ -53,6 +53,11 @@ function Get-MonkeyEXOBlockedSenderAddress {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOBlockedSenderAddress";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeBlockedSenderAddress';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about blocked sender address in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

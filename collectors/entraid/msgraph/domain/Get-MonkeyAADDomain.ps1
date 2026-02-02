@@ -52,6 +52,10 @@ function Get-MonkeyAADDomain {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADDomain";
 			ApiType = "MSGraph";
+            objectType = 'EntraDomain';
+            immutableProperties = @(
+                'id'
+            );
 			description = "Collector to get information about domain from Microsoft Entra ID";
 			Group = @(
 				"EntraID"

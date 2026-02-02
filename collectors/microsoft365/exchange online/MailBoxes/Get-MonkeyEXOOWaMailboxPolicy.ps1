@@ -53,6 +53,11 @@ function Get-MonkeyEXOOWAMailboxPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOOWAMailboxPolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeMailBoxPolicy';
+            immutableProperties = @(
+                'DistinguishedName',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about OWA mailbox policy in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

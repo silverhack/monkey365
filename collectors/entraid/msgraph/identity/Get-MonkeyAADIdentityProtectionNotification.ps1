@@ -52,6 +52,10 @@ function Get-MonkeyAADIdentityProtectionNotification {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADIdentityProtectionNotification";
 			ApiType = "MSGraph";
+            objectType = 'EntraIdentityProtectionNotification';
+            immutableProperties = @(
+                '@odata.context'
+            );
 			description = "Collector to get notification settings for Entra ID Identity Protection";
 			Group = @(
 				"EntraID"

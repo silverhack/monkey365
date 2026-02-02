@@ -53,6 +53,11 @@ function Get-MonkeyEXOOrgConfig {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOOrgConfig";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeOrgConfig';
+            immutableProperties = @(
+                'OrganizationId',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about organisation config in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

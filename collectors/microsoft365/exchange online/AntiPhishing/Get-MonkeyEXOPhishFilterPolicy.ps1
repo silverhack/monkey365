@@ -53,6 +53,11 @@ function Get-MonkeyEXOPhishFilterPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOPhishFilterPolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeAntiPhishFilterPolicy';
+            immutableProperties = @(
+                'SpoofedSender',
+                'TrueSender'
+            );
 			description = "Collector to get information about Phish filter policy in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

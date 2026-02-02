@@ -72,31 +72,33 @@ Function Get-DesktopLib(){
 
 Function Install-MsalLibrary(){
     try{
-        $params = @{
-            LiteralPath = $Assemblies;
-            IgnoreWarnings = $true;
-            WarningVariable = "warnVar";
-            WarningAction = "SilentlyContinue"
-        }
-        Add-Type @params | Out-Null
-        if ($PSVersionTable.PSVersion -ge [version]'6.0') {
-            $Assemblies.Add('System.Console.dll')
-        }
-        if (-not ([System.Management.Automation.PSTypeName]'DeviceCodeHelper').Type){
-            $cs_path = ("{0}/helpers/devicecode.cs" -f $PSScriptRoot)
-            $exists = [System.IO.File]::Exists($cs_path)
-            if($exists){
-                $params = @{
-                    LiteralPath = $cs_path;
-                    ReferencedAssemblies = $Assemblies;
-                    IgnoreWarnings = $true;
-                    WarningVariable = "warnVar";
-                    WarningAction = "SilentlyContinue"
-                }
-                Add-Type @params
+        If (-not ([System.Management.Automation.PSTypeName]'Microsoft.Identity.Client.IPublicClientApplication').Type){
+            $params = @{
+                LiteralPath = $Assemblies;
+                IgnoreWarnings = $true;
+                WarningVariable = "warnVar";
+                WarningAction = "SilentlyContinue"
             }
-            else{
-                Write-Verbose "Unable to load [DeviceCodeHelper]"
+            Add-Type @params | Out-Null
+            If ($PSVersionTable.PSVersion -ge [version]'6.0') {
+                $Assemblies.Add('System.Console.dll')
+            }
+            If (-not ([System.Management.Automation.PSTypeName]'DeviceCodeHelper').Type){
+                $cs_path = ("{0}/helpers/devicecode.cs" -f $PSScriptRoot)
+                $exists = [System.IO.File]::Exists($cs_path)
+                If($exists){
+                    $params = @{
+                        LiteralPath = $cs_path;
+                        ReferencedAssemblies = $Assemblies;
+                        IgnoreWarnings = $true;
+                        WarningVariable = "warnVar";
+                        WarningAction = "SilentlyContinue"
+                    }
+                    Add-Type @params
+                }
+                Else{
+                    Write-Verbose "Unable to load [DeviceCodeHelper]"
+                }
             }
         }
     }
@@ -124,7 +126,7 @@ $content = $all_files.ForEach({
 . ([scriptblock]::Create($content))
 
 $osInfo = Get-OsInfo
-if($null -ne $osInfo){
+If($null -ne $osInfo){
     if($osInfo.IsUserInteractive -eq $false){
         Write-Verbose ($script:messages.OSVersionMessage -f "Headless", "Core")
         $AssembliesExists = Get-CoreLib
@@ -153,7 +155,7 @@ if($null -ne $osInfo){
                 Install-MsalLibrary
             }
         }
-        else{
+        Else{
             Write-Verbose ($script:messages.OSVersionMessage -f "Windows", "Core")
             $AssembliesExists = Get-CoreLib
             if($AssembliesExists){

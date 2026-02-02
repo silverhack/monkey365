@@ -52,6 +52,10 @@ function Get-MonkeyEXOExternalInConfig {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOExternalInConfig";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeExternalInConfig';
+            immutableProperties = @(
+                'Identity'
+            );
 			description = "Collector to get information about the configuration of external sender identification in Exchange Online";
 			Group = @(
 				"ExchangeOnline"
@@ -63,7 +67,7 @@ function Get-MonkeyEXOExternalInConfig {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"o365_exo_org_config"
+				"o365_exo_externalIn_config"
 			);
 			dependsOn = @(
 

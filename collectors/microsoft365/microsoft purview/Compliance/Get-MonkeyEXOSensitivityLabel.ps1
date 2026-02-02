@@ -53,6 +53,11 @@ function Get-MonkeyEXOSensitivityLabel {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOSensitivityLabel";
 			ApiType = $null;
+            objectType = 'PurviewSensitivityLabel';
+            immutableProperties = @(
+                'OrganizationId',
+                'ExchangeObjectId.Guid'
+            );
 			description = "Collector to get information about sensitivity labels from Exchange Online";
 			Group = @(
 				"Purview"

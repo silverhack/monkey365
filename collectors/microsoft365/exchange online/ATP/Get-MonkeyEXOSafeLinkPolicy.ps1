@@ -53,6 +53,11 @@ function Get-MonkeyEXOSafeLinkPolicy {
 			resourceName = $null;
 			collectorName = "Get-MonkeyEXOSafeLinkPolicy";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeSafeLinkPolicy';
+            immutableProperties = @(
+                'policyId',
+                'ruleId'
+            );
 			description = "Collector to get information about safe link policy in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

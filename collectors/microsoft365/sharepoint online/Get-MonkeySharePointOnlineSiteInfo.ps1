@@ -52,6 +52,12 @@ function Get-MonkeySharePointOnlineSiteInfo {
 			resourceName = $null;
 			collectorName = "Get-MonkeySharePointOnlineSiteInfo";
 			ApiType = "CSOM";
+            objectType = 'sharepointSite';
+            immutableProperties = @(
+                '_ObjectType_',
+                '_ObjectIdentity_',
+                'Id'
+            );
 			description = "Collector to get information about Sharepoint Online sites";
 			Group = @(
 				"SharePointOnline"

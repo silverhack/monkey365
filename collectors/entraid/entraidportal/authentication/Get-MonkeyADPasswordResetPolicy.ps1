@@ -70,7 +70,7 @@ function Get-MonkeyADPasswordResetPolicy {
 
 			);
 			enabled = $true;
-			supportClientCredential = $true
+			supportClientCredential = $false
 		}
 		#Get Azure Active Directory Auth
 		$AADAuth = $O365Object.auth_tokens.AzurePortal
@@ -80,14 +80,14 @@ function Get-MonkeyADPasswordResetPolicy {
 			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Microsoft Entra ID password reset policy",$O365Object.TenantID);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
+			InformationAction = $O365Object.InformationAction;
 			Tags = @('AzurePortalSSPRPolicy');
 		}
 		Write-Information @msg
 		#Query
 		$params = @{
 			Authentication = $AADAuth;
-			Query = 'PasswordReset/PasswordResetPolicies';
+			Query = 'PasswordReset/PasswordResetPolicies?getPasswordResetEnabledGroup=true';
 			Environment = $Environment;
 			ContentType = 'application/json';
 			Method = "GET";

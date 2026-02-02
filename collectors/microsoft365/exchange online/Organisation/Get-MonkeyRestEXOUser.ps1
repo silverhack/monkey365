@@ -53,6 +53,11 @@ function Get-MonkeyRestEXOUser {
 			resourceName = $null;
 			collectorName = "Get-MonkeyRestEXOUser";
 			ApiType = "ExoApi";
+            objectType = 'ExchangeUser';
+            immutableProperties = @(
+                'OrganizationId',
+                'Identity'
+            );
 			description = "Collector to get information about users in Exchange Online";
 			Group = @(
 				"ExchangeOnline"

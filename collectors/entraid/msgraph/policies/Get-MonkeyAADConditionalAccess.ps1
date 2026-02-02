@@ -52,6 +52,10 @@ function Get-MonkeyAADConditionalAccess {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADConditionalAccess";
 			ApiType = "MSGraph";
+            objectType = 'EntraConditionalAccess';
+            immutableProperties = @(
+                'id'
+            );
 			description = "Collector to get information about conditional access policy from Microsoft Entra ID";
 			Group = @(
 				"EntraID"
@@ -99,7 +103,6 @@ function Get-MonkeyAADConditionalAccess {
 		Write-Information @msg
 		$p = @{
 			APIVersion = $aadConf.api_version;
-			Detailed = $true;
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;

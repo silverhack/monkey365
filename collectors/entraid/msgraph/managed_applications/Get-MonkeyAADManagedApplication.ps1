@@ -52,6 +52,7 @@ function Get-MonkeyAADManagedApplication {
 			resourceName = $null;
 			collectorName = "Get-MonkeyAADManagedApplication";
 			ApiType = "MSGraph";
+            objectType = 'EntraManagedApplication';
 			description = "Collector to get managed applications from Microsoft Entra ID";
 			Group = @(
 				"EntraID"
