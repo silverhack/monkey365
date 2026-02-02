@@ -170,8 +170,11 @@ Function Get-SafeLinksInfo{
                 $slPsObject = New-Object -TypeName PsObject -Property @{
                     policyName = $policyName;
                     isEnabled = $enabled;
-                    Policy = $slPolicy;
-                    Rule = $associated_rule;
+                    isBuiltin = $slPolicy.IsBuiltInProtection;
+                    policy = $slPolicy;
+                    policyId = $slPolicy.Guid.Guid;
+                    rule = $associated_rule;
+                    ruleId = If($associated_rule){$associated_rule.Guid.Guid};
                 }
                 #Add to array
                 [void]$safeLinksInfo.Add($slPsObject)

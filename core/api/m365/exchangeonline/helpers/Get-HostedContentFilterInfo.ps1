@@ -41,6 +41,8 @@ Function Get-HostedContentFilterInfo{
         $Environment = $O365Object.Environment
         #Get Exchange Online Auth token
         $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
+        #Get org domain Ids
+		$org_domains = $O365Object.Tenant.domains | Select-Object -ExpandProperty id
         #InitParams
         $p = @{
             Authentication = $ExoAuth;
@@ -186,12 +188,36 @@ Function Get-HostedContentFilterInfo{
                     }
                 }
                 $policyName = $hostedPolicy.Name;
+                #Check if own domains are whitelisted
+                $org_whitelisted = $null;
+                If ($hostedPolicy.AllowedSenderDomains.Count -gt 0) {
+                    $p = @{
+	                    ReferenceObject = $org_domains;
+	                    DifferenceObject = $hostedPolicy.AllowedSenderDomains;
+	                    IncludeEqual = $true;
+	                    ExcludeDifferent = $true;
+                    }
+                    $_result = Compare-Object @p
+                    If($null -ne $_result){
+                        $org_whitelisted = @($_result).Where({$_.SideIndicator -eq "=="});
+                    }
+                }
+                If($null -eq $org_whitelisted){
+                    $org_whitelisted = $false;
+                }
+                Else{
+                    $org_whitelisted = $true;
+                }
                 $hostedPsObject = New-Object -TypeName PsObject -Property @{
                     policyName = $policyName;
                     isEnabled = $enabled;
-                    Policy = $hostedPolicy;
-                    Rule = $associated_rule;
-                    QuarantinePolicy = $quarantine_policy;
+                    policy = $hostedPolicy;
+                    isDefault = $hostedPolicy.IsDefault;
+                    isOrgWhitelisted = $org_whitelisted;
+                    policyId = If($hostedPolicy){$hostedPolicy.Guid.Guid};
+                    rule = $associated_rule;
+                    ruleId = If($associated_rule){$associated_rule.Guid.Guid};
+                    quarantinePolicy = $quarantine_policy;
                 }
                 #Add to array
                 [void]$HostedContentFilterStatus.Add($hostedPsObject)

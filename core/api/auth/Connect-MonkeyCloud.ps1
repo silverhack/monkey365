@@ -219,50 +219,52 @@ Function Connect-MonkeyCloud{
     Else{
         $O365Object.onlineServices.EntraID = $true
     }
-    #Get actual userId
-    If($O365Object.isConfidentialApp){
-        $O365Object.userId = $O365Object.me.id;
-    }
-    Else{
-        $authObject = $O365Object.auth_tokens.GetEnumerator() | Where-Object {$null -ne $_.Value} | Select-Object -ExpandProperty Value -First 1
-        If($null -ne $authObject){
-            $O365Object.userId = $authObject | Get-UserIdFromToken
+    If($O365Object.onlineServices.EntraID){
+        #Get actual userId
+        If($O365Object.isConfidentialApp){
+            $O365Object.userId = $O365Object.me.id;
         }
-    }
-    #Get Azure AD permissions
-    If($O365Object.isConfidentialApp){
-        $app_Permissions = Get-MonkeyMSGraphObjectDirectoryRole -ObjectId $O365Object.me.id -ObjectType servicePrincipal
-        If($app_Permissions){
-            $O365Object.aadPermissions = $app_Permissions
+        Else{
+            $authObject = $O365Object.auth_tokens.GetEnumerator() | Where-Object {$null -ne $_.Value} | Select-Object -ExpandProperty Value -First 1
+            If($null -ne $authObject){
+                $O365Object.userId = $authObject | Get-UserIdFromToken
+            }
         }
-    }
-    Else{
-        $user_permissions = Get-MonkeyMSGraphObjectDirectoryRole -ObjectId $O365Object.userId -ObjectType user
-        If($user_permissions){
-            $O365Object.aadPermissions = $user_permissions
+        #Get Azure AD permissions
+        If($O365Object.isConfidentialApp){
+            $app_Permissions = Get-MonkeyMSGraphObjectDirectoryRole -ObjectId $O365Object.me.id -ObjectType servicePrincipal
+            If($app_Permissions){
+                $O365Object.aadPermissions = $app_Permissions
+            }
         }
-    }
-    #Check If user can request MFA for users
-    #Check Global Admin permissions
-    $ga = Test-MonkeyAADIAM -RoleTemplateId 62e90394-69f5-4237-9190-012177145e10
-    #Check Authentication administrator permissions
-    $aa = Test-MonkeyAADIAM -RoleTemplateId c4e39bd9-1100-46d3-8c65-fb160da0071f
-    #Check Privileged Authentication administrator permissions
-    $paa = Test-MonkeyAADIAM -RoleTemplateId 7be44c8a-adaf-4e2a-84d6-ab2649e08a13
-    If($ga){
-        $O365Object.canRequestMFAForUsers = $true
-    }
-    ElseIf($aa){
-        $O365Object.canRequestMFAForUsers = $true
-    }
-    ElseIf($paa){
-        $O365Object.canRequestMFAForUsers = $true
-    }
-    ElseIf($O365Object.isConfidentialApp){
-        $O365Object.canRequestMFAForUsers = $true
-    }
-    Else{
-        $O365Object.canRequestMFAForUsers = $false
+        Else{
+            $user_permissions = Get-MonkeyMSGraphObjectDirectoryRole -ObjectId $O365Object.userId -ObjectType user
+            If($user_permissions){
+                $O365Object.aadPermissions = $user_permissions
+            }
+        }
+        #Check If user can request MFA for users
+        #Check Global Admin permissions
+        $ga = Test-MonkeyAADIAM -RoleTemplateId 62e90394-69f5-4237-9190-012177145e10
+        #Check Authentication administrator permissions
+        $aa = Test-MonkeyAADIAM -RoleTemplateId c4e39bd9-1100-46d3-8c65-fb160da0071f
+        #Check Privileged Authentication administrator permissions
+        $paa = Test-MonkeyAADIAM -RoleTemplateId 7be44c8a-adaf-4e2a-84d6-ab2649e08a13
+        If($ga){
+            $O365Object.canRequestMFAForUsers = $true
+        }
+        ElseIf($aa){
+            $O365Object.canRequestMFAForUsers = $true
+        }
+        ElseIf($paa){
+            $O365Object.canRequestMFAForUsers = $true
+        }
+        ElseIf($O365Object.isConfidentialApp){
+            $O365Object.canRequestMFAForUsers = $true
+        }
+        Else{
+            $O365Object.canRequestMFAForUsers = $false
+        }
     }
     #Check If requestMFA for users must be enabled by config
     try{

@@ -44,7 +44,11 @@ Function Get-MonkeyMSGraphAuthorizationPolicy{
     )
     try{
         #Set var
-        $auth_policy = [ordered]@{
+        $auth_policy = [PsCustomObject]@{
+            tenantAuthPolicy = $null;
+            tenantAuthPolicyId = $null;
+            tenantFlowsPolicy = $null;
+            tenantFlowsPolicyId = $null;
         }
         $Environment = $O365Object.Environment
         #Get Graph Auth
@@ -61,8 +65,18 @@ Function Get-MonkeyMSGraphAuthorizationPolicy{
             Debug = $O365Object.debug;
         }
         $tenant_auth_policy = Get-MonkeyMSGraphObject @params
-        #Add to dict
-        $auth_policy.Add('TenantAuthPolicy',$tenant_auth_policy)
+        If($APIVersion.ToLower() -eq 'beta'){
+            #normalize data to match with V1.0
+            $permissionGrant = $tenant_auth_policy | Select-Object -ExpandProperty permissionGrantPolicyIdsAssignedToDefaultUserRole -ErrorAction Ignore
+            If ($null -ne $permissionGrant){
+                $tenant_auth_policy.defaultUserRolePermissions | Add-Member -MemberType NoteProperty -Name permissionGrantPoliciesAssigned -Value $permissionGrant -Force
+            }
+        }
+        #Add to Object
+        If($tenant_auth_policy){
+            $auth_policy.tenantAuthPolicy = $tenant_auth_policy;
+            $auth_policy.tenantAuthPolicyId = $tenant_auth_policy.id;
+        }
         #Get flows policy
         $params = @{
             Authentication = $graphAuth;
@@ -76,10 +90,12 @@ Function Get-MonkeyMSGraphAuthorizationPolicy{
             Debug = $O365Object.debug;
         }
         $tenant_flows_policy = Get-MonkeyMSGraphObject @params
-        #Add to dict
-        $auth_policy.Add('TenantFlowsPolicy',$tenant_flows_policy)
-        $globalAuthPolicy = New-Object PSObject -Property $auth_policy
-        return $globalAuthPolicy
+        #Add to object
+        If($tenant_flows_policy){
+            $auth_policy.tenantFlowsPolicy = $tenant_flows_policy;
+            $auth_policy.tenantFlowsPolicyId = $tenant_flows_policy.id;
+        }
+        return $auth_policy
     }
     catch{
         $msg = @{

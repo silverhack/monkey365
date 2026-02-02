@@ -30,6 +30,9 @@ Function Get-MonkeyMsGraphMFAUserDetail {
         [Parameter(Mandatory=$True, ParameterSetName = 'UserId', ValueFromPipeline = $True)]
         [String]$UserId,
 
+        [Parameter(Mandatory=$false)]
+        [String[]]$Select,
+
         [parameter(Mandatory=$false,HelpMessage="API version")]
         [ValidateSet("v1.0","beta")]
         [String]$APIVersion = "v1.0"
@@ -63,11 +66,11 @@ Function Get-MonkeyMsGraphMFAUserDetail {
         [array]$mfa_methods = @()
         $mfaenabled = $mfaStatus = $auth_details = $null
         #Check if userId
-        if($PSCmdlet.ParameterSetName -eq 'UserId'){
+        If($PSCmdlet.ParameterSetName -eq 'UserId'){
             $User = Get-MonkeyMSGraphUser @PSBoundParameters
         }
         #Get Authentication details
-        if($O365Object.canRequestMFAForUsers -eq $true -or $O365Object.isConfidentialApp -eq $True){
+        If($O365Object.canRequestMFAForUsers -eq $true -or $O365Object.isConfidentialApp -eq $True){
             $params = @{
                 Authentication = $graphAuth;
                 ObjectType = ("users/{0}/authentication/methods" -f $user.id);

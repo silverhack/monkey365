@@ -170,8 +170,10 @@ Function Get-SafeAttachmentInfo{
                 $saPsObject = New-Object -TypeName PsObject -Property @{
                     policyName = $policyName;
                     isEnabled = $enabled;
-                    Policy = $saPolicy;
-                    Rule = $associated_rule;
+                    policy = $saPolicy;
+                    policyId = $saPolicy.Guid.Guid;
+                    rule = $associated_rule;
+                    ruleId = IF($associated_rule){$associated_rule.ImmutableId.Guid};
                 }
                 #Add to array
                 [void]$SafeAttachmentStatus.Add($saPsObject)

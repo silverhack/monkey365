@@ -154,8 +154,11 @@ Function Get-AntiPhishingInfo{
                 $phishPsObject = New-Object -TypeName PsObject -Property @{
                     policyName = $policyName;
                     isEnabled = $enabled;
-                    Policy = $phishPolicy;
-                    Rule = $associated_rule;
+                    isDefault = $phishPolicy.IsDefault;
+                    policy = $phishPolicy;
+                    policyId = $phishPolicy.Guid.Guid;
+                    rule = $associated_rule;
+                    ruleId = IF($associated_rule){$associated_rule.Guid.Guid};
                 }
                 #Add to array
                 [void]$PhishFilterStatus.Add($phishPsObject)

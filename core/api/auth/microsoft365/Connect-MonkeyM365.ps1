@@ -216,18 +216,16 @@ Function Connect-MonkeyM365{
                 }
                 Write-Information @msg
                 $O365Object.auth_tokens.SharePointAdminOnline = Connect-MonkeySPO @p -Admin
-                #Connect to root site If ScanSites param is present or If ScanAllSites is true
-                If(($O365Object.initParams.ContainsKey('ScanSites') -and @($O365Object.initParams.ScanSites).Count -gt 0) -or $scanSites){
-                    $msg = @{
-                        MessageData = ($message.TokenRequestInfoMessage -f "SharePoint Online")
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'info';
-                        InformationAction = $O365Object.InformationAction;
-                        Tags = @('TokenRequestInfoMessage');
-                    }
-                    Write-Information @msg
-                    $O365Object.auth_tokens.SharePointOnline = Connect-MonkeySPO @p -RootSite
+                #Always try to connect to root site
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "SharePoint Online")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
                 }
+                Write-Information @msg
+                $O365Object.auth_tokens.SharePointOnline = Connect-MonkeySPO @p -RootSite
                 If($null -ne $O365Object.auth_tokens.SharePointAdminOnline){
                     #Check If user is SharePoint administrator
                     $p = @{
@@ -259,6 +257,15 @@ Function Connect-MonkeyM365{
                     ElseIf($scanSites -and $null -ne $O365Object.auth_tokens.SharePointOnline){
                         $p = @{
                             All = $scanSites;
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                        }
+                        #Get Webs for user
+                        $O365Object.spoSites = Get-MonkeyCSOMSite @p
+                    }
+                    Else{
+                        $p = @{
                             InformationAction = $O365Object.InformationAction;
                             Verbose = $O365Object.verbose;
                             Debug = $O365Object.debug;
@@ -413,7 +420,7 @@ Function Connect-MonkeyM365{
                 #Connect to Admin blade
                 $p = @{
                     Resource = $O365Object.Environment.OfficeAdminPortal;
-                    AzureService = "AzurePowershell";
+                    AzureService = "AzureCli";
                     InformationAction = $O365Object.InformationAction;
                     Verbose = $O365Object.verbose;
                     Debug = $O365Object.debug;

@@ -53,6 +53,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
         $graphAuth = $O365Object.auth_tokens.MSGraph
         $new_arg = @{
             APIVersion = $APIVersion;
+            Select = $O365Object.userProperties;
         }
         #Set Job params
         If($O365Object.isConfidentialApp){
@@ -158,7 +159,7 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                         #Invoke job
                         $members = $allIds | Invoke-MonkeyJob @jobParam
                         If($null -ne $members -and @($members).Count -gt 0){
-                            foreach($member in @($members)){
+                            ForEach($member in @($members)){
                                 [void]$extendedUniqueUsers.Add($member);
                             }
                         }

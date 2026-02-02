@@ -43,6 +43,7 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
     try{
         $new_arg = @{
             APIVersion = 'beta';
+            Select = $O365Object.userProperties;
         }
         #Set Job params
         #Set Job params
@@ -131,7 +132,7 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                 $role = @($roleTemplates).Where({$_.id -eq $policy.roleDefinitionId})
                 if($role.Count -gt 0){
                     $roleObject = $role | New-MonkeyPIMRoleObject
-                    $roleObject.policy = $policy;
+                    $roleObject.policy = ($policy | Invoke-MonkeyMSGraphPIMRoleSettingsAnalyzer);
                     [void]$allroleAssignments.Add($roleObject);
                 }
                 Start-Sleep -Milliseconds 500;
@@ -165,7 +166,7 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                 $myRole.activeAssignment.isUsed = $true;
                 $myRole.roleInUse = $true;
                 $activeMembers = $activeRole.Group | Select-Object principalId,startDateTime,endDateTime,assignmentType,memberType -ErrorAction Ignore
-                if($null -ne $activeMembers){
+                If($null -ne $activeMembers){
                     #Set array
                     $allUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
                     $allServicePrincipals = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()

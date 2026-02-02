@@ -56,7 +56,7 @@ Function Connect-MonkeyAzure{
         }
     }
     Process{
-        if($null -ne $O365Object.auth_tokens.ResourceManager){
+        If($null -ne $O365Object.auth_tokens.ResourceManager){
             $O365Object.subscriptions = Select-MonkeyAzureSubscription
         }
     }

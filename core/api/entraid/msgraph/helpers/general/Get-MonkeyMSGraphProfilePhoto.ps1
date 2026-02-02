@@ -144,9 +144,32 @@ Function Get-MonkeyMSGraphProfilePhoto {
     End{
         If($null -ne $profilePhoto -and $profilePhoto -is [System.Net.Http.HttpResponseMessage]){
             Try{
-                $stream = $profilePhoto.Content.ReadAsStreamAsync()
-                $memoryStream = $stream.GetAwaiter().GetResult()
-                return [Convert]::ToBase64String($memoryStream.ToArray())
+                If($profilePhoto.StatusCode -eq [System.Net.HttpStatusCode]::OK){
+                    $stream = $profilePhoto.Content.ReadAsStreamAsync()
+                    $memoryStream = $stream.GetAwaiter().GetResult()
+                    return [Convert]::ToBase64String($memoryStream.ToArray())
+                }
+                Else{
+                    $oId = $null
+                    If($PSCmdlet.ParameterSetName -eq 'UserId'){
+                        $oId = $UserId;
+                    }
+                    ElseIf($PSCmdlet.ParameterSetName -eq 'ServicePrincipalId'){
+                        $oId = $ServicePrincipalId;
+                    }
+                    ElseIf($PSCmdlet.ParameterSetName -eq 'ApplicationId'){
+                        $oId = $ApplicationId;
+                    }
+                    $msg = @{
+                        MessageData = ("Unable to get profile picture for {0} object Id. The HTTP error code was: {1}" -f $oId, $profilePhoto.StatusCode);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'verbose';
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Tags = @('Monkey365MSGraphProfilePhotoError');
+                    }
+                    Write-Verbose @msg
+                }
             }
             Catch{
                 Write-Error $_

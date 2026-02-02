@@ -168,7 +168,7 @@ Function Get-PSExoAdminApiObject{
                     }
                 }
             }
-            if($Command){
+            If($Command){
                 #Add response format
                 [void]$requestHeader.Add('X-ResponseFormat',$ResponseFormat);
                 #Add serialization level

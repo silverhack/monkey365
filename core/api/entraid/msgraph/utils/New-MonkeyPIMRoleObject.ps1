@@ -55,19 +55,19 @@ Function New-MonkeyPIMRoleObject {
                 policy = $null;
                 roleInUse = $false;
                 activeAssignment = [PsCustomObject]@{
-                    users = $null;
-                    groups = $null;
-                    servicePrincipals = $null;
+                    users = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new();
+                    groups = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new();
+                    servicePrincipals = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new();
                     isUsed = $false;
-                    duplicateUsers = $null;
+                    duplicateUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new();
                     totalActiveMembers = $null;
                 }
                 eligibleAssignment = [PsCustomObject]@{
-                    users = $null;
-                    groups = $null;
-                    servicePrincipals = $null;
+                    users = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new();
+                    groups = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new();
+                    servicePrincipals = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new();
                     isUsed = $false;
-                    duplicateUsers = $null;
+                    duplicateUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new();
                     totalEligibleMembers = $null;
                 }
                 totalMembers = $null;

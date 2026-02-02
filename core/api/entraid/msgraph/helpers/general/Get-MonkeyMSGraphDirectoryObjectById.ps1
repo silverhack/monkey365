@@ -38,63 +38,59 @@ Function Get-MonkeyMSGraphDirectoryObjectById{
     #>
     [CmdletBinding()]
 	Param (
-        [Parameter(Mandatory=$true, ValueFromPipeline = $True)]
+        [Parameter(Mandatory=$true)]
         [String[]]$Ids,
 
         [parameter(Mandatory=$false)]
         [ValidateSet("v1.0","beta")]
         [String]$APIVersion = "v1.0"
     )
-    Begin{
+    Try{
         $Environment = $O365Object.Environment
         #Get Graph Auth
         $graphAuth = $O365Object.auth_tokens.MSGraph
-        $dataDict = [ordered]@{
-            ids = $null;
-        }
-    }
-    Process{
-        try{
-            $all_ids = New-Object System.Collections.Generic.List[System.String]
-            foreach($id in $Ids.GetEnumerator()){
+        $slicedIds = [System.Collections.Generic.List[System.Object]]::new()
+        #Get sliced ids to avoid 1000 limit in MSGraph
+        $Ids | Split-Array -Elements 990 | ForEach-Object {
+            $all_ids = [System.Collections.Generic.List[System.String]]::new()
+            foreach($id in $_.GetEnumerator()){
                 [void]$all_ids.Add($id)
             }
-            $dataDict.ids = $all_ids.ToArray()
-            $postData = $dataDict | ConvertTo-Json
-            #Construct query
-            $params = @{
-                Authentication = $graphAuth;
-                ObjectType = 'directoryObjects/getByIds';
-                Environment = $Environment;
-                Method = "Post";
-                Data= $postData;
-                APIVersion = $APIVersion;
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-            }
-            $response = Get-MonkeyMSGraphObject @params
-            if($response){
-                return $response
-            }
+            $dataDict = @{
+                ids = $all_ids.ToArray();
+            } | ConvertTo-Json
+            [void]$slicedIds.Add($dataDict);
         }
-        catch{
-            $msg = @{
-			    MessageData = ($message.MSGraphDirectoryObjectError);
-			    callStack = (Get-PSCallStack | Select-Object -First 1);
-			    logLevel = 'verbose';
-			    InformationAction = $InformationAction;
-			    Tags = @('DirectoryObjectError');
-		    }
-		    Write-Verbose @msg
-            $msg.MessageData = $_
-            $msg.LogLevel = "Verbose"
-            $msg.Tags+= "DirectoryObjectError"
-		    Write-Verbose @msg
+        If($slicedIds.Count -gt 0){
+            ForEach($batchId in $slicedIds){
+                #Construct query
+                $p = @{
+                    Authentication = $graphAuth;
+                    ObjectType = 'directoryObjects/getByIds';
+                    Environment = $Environment;
+                    Method = "Post";
+                    Data= $batchId;
+                    APIVersion = $APIVersion;
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                Get-MonkeyMSGraphObject @p
+            }
         }
     }
-    End{
-        #Nothing to do here
+    Catch{
+        $msg = @{
+			MessageData = ($message.MSGraphDirectoryObjectError);
+			callStack = (Get-PSCallStack | Select-Object -First 1);
+			logLevel = 'verbose';
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('DirectoryObjectError');
+		}
+		Write-Verbose @msg
+        $msg.MessageData = $_
+        $msg.LogLevel = "Verbose"
+        $msg.Tags+= "DirectoryObjectError"
+		Write-Verbose @msg
     }
 }
-

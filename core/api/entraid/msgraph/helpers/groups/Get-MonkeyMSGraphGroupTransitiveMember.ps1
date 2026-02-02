@@ -80,7 +80,7 @@ Function Get-MonkeyMSGraphGroupTransitiveMember{
         if($group_members){
             foreach($member in $group_members){
                 If($member.'@odata.type' -eq "#microsoft.graph.group"){
-                    if($member.id -notin $Parents){
+                    If($member.id -notin $Parents){
                         $Parents +=$member.id
                         $p = @{
                             groupId = $member.id

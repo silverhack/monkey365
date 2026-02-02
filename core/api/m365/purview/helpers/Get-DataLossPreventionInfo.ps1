@@ -144,8 +144,11 @@ Function Get-DataLossPreventionInfo{
                 $DLPObject = New-Object -TypeName PsObject -Property @{
                     policyName = $policyName;
                     isEnabled = $enabled;
-                    Policy = $DLPPolicy;
-                    Rule = $associated_rule;
+                    policy = $DLPPolicy;
+                    policyId = $DLPPolicy.ExchangeObjectId.Guid;
+                    rule = $associated_rule;
+                    ruleName = $associated_rule.Name;
+                    ruleId = $associated_rule.ExchangeObjectId.Guid;
                     raw_sits = $sits;
                     sits = $all_sits;
                 }
