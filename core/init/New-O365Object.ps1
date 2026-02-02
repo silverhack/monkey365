@@ -306,6 +306,12 @@ Function New-O365Object{
                 throw ("{0} diagnostic settings file does not exists" -f $json_path)
             }
             $diag_settings_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
+            #Get L2Extensions
+            $json_path = ("{0}/core/utils/extensions/l2extensions.json" -f $ScriptPath)
+            If (!(Test-Path -Path $json_path)){
+                throw ("{0} l2 extensions file was not found" -f $json_path)
+            }
+            $l2Extensions = (Get-Content $json_path -Raw) | ConvertFrom-Json
             ############ Get Ruleset info ################
             $ruleSet = $rulesPath = $null;
             #Get ruleset
@@ -475,7 +481,7 @@ Function New-O365Object{
                 MaxQueue = $internal_config_json.performance.nestedRunspaces.MaxQueue;
                 nestedRunspaces = @{
                     BatchSleep = ($internal_config_json.performance.BatchSleep * 2);
-                    BatchSize = ($internal_config_json.performance.BatchSize * 2);
+                    BatchSize = ($internal_config_json.performance.BatchSize / 2);
                     MaxQueue = $internal_config_json.performance.nestedRunspaces.MaxQueue;
                 }
                 nestedRunspaceMaxThreads = $nestedMaxThreads;
@@ -490,6 +496,7 @@ Function New-O365Object{
                 ruleset = $ruleSet;
                 rulesPath = $rulesPath;
                 Compress = $MyParams.Compress;
+                l2Extensions = $l2Extensions;
             }
             #Create new object
             $MonkeyObj = New-Object -TypeName PSCustomObject -Property $tmp_object
