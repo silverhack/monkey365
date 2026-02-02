@@ -7,7 +7,7 @@
   <a href="https://github.com/silverhack/monkey365"><img alt="ScriptAnalyzer" src="https://github.com/silverhack/monkey365/actions/workflows/scriptanalyzer.yml/badge.svg"></a>
   <a href="https://github.com/silverhack/monkey365"><img alt="Lines" src="https://img.shields.io/endpoint?url=https://ghloc.vercel.app/api/silverhack/monkey365/badge?filter=.ps1$,.psm1$&style=flat&logoColor=white&label=Lines%20of%20Code"></a>
   <a href="https://twitter.com/tr1ana"><img alt="Twitter" src="https://img.shields.io/twitter/follow/tr1ana?style=social"></a>
-  <a href="https://github.com/silverhack/monkey365/releases"><img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/silverhack/monkey365/total"></a>
+  <a href="https://github.com/silverhack/monkey365/releases"><img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/silverhack/monkey365/total?style=flat&logo=powershell&label=GitHub%20Release%20Download"></a>
   <a href="https://www.powershellgallery.com/packages/monkey365"><img alt="PowerShell Gallery" src="https://img.shields.io/powershellgallery/v/monkey365.svg?label=latest+version"></a>
   <a href="https://www.powershellgallery.com/packages/monkey365"><img alt="PowerShell Gallery Downloads" src="https://img.shields.io/powershellgallery/dt/monkey365.svg?style=flat&logo=powershell&label=PSGallery%20Download"></a>
 </p>
