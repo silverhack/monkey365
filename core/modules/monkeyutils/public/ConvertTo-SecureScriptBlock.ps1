@@ -62,8 +62,26 @@ Function ConvertTo-SecureScriptBlock{
                     $sbTest = $sbTest -ireplace [regex]::Escape($allow), "eq"
                 }
             }
+            $double_quotes ='".*?"'
+            $single_quotes ='''.*?'''
             #Replace Where if any
             $sbTest = $sbTest.Replace('Where', ' -and ').Replace('{','').Replace('}','')
+            #Replace @ and |
+            $sbTest = $sbTest.Replace('@', '').Replace('|','')
+            #Remove string with double quotes
+            $_matches = [regex]::Matches($sbTest.ToString(), $double_quotes)
+            If($_matches.Count -gt 0){
+                ForEach($match in $_matches.GetEnumerator()){
+                    $sbTest = $sbTest -replace [regex]::Escape($match.Value), 0
+                }
+            }
+            #Remove string with quotes
+            $_matches = [regex]::Matches($sbTest.ToString(), $single_quotes)
+            If($_matches.Count -gt 0){
+                ForEach($match in $_matches.GetEnumerator()){
+                    $sbTest = $sbTest -replace [regex]::Escape($match.Value), 0
+                }
+            }
             #Create an scriptblock that will not be executed
             $ScriptBlock = [scriptblock]::Create($sbTest)
             try{

@@ -73,11 +73,17 @@ Function Invoke-MonkeyOutput{
         [ValidateSet("CSV","JSON","CLIXML")]
         [String]$ExportTo = "JSON",
 
-        [Parameter(Mandatory= $True, HelpMessage = 'Please specify folder to export results')]
+        [Parameter(Mandatory= $false, HelpMessage = 'Please specify folder to export results')]
         [System.IO.DirectoryInfo]$OutDir,
 
         [parameter(Mandatory=$false, HelpMessage="Skip findings with level good")]
-        [Switch]$SkipGood
+        [Switch]$SkipGood,
+
+        [parameter(Mandatory=$false, HelpMessage="Compress JSON")]
+        [Switch]$CompressJson,
+
+        [parameter(Mandatory=$false, HelpMessage="Return raw object")]
+        [Switch]$ReturnObject
     )
     Begin{
         $allObjects = [System.Collections.Generic.List[System.Object]]::new()
@@ -153,20 +159,55 @@ Function Invoke-MonkeyOutput{
         If($null -ne $allObjects -and $allObjects.Count -gt 0){
             Switch($ExportTo.ToLower()){
                 'json'{
-                    $jsonFile = ("{0}/monkey365{1}{2}.json" -f $OutDir, $PSBoundParameters['TenantId'].Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
-                    $convertedObjects = $allObjects | Convert-ObjectToCamelCaseObject -psName "MonkeyFindingObject" | ConvertTo-Json -Depth 100 | Format-Json
+                    If($PSBoundParameters.ContainsKey('OutDir') -and $PSBoundParameters['OutDir']){
+                        $jsonFile = ("{0}/monkey365{1}{2}.json" -f $OutDir, $PSBoundParameters['TenantId'].Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
+                    }
+                    Else{
+                        $jsonFile = ("monkey365{0}{1}.json" -f $PSBoundParameters['TenantId'].Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
+                    }
+                    If($PSBoundParameters.ContainsKey('CompressJson') -and $PSBoundParameters['CompressJson'].IsPresent){
+                        $convertedObjects = $allObjects | Convert-ObjectToCamelCaseObject -psName "MonkeyFindingObject" | ConvertTo-Json -Depth 100 -Compress
+                    }
+                    Else{
+                        $convertedObjects = $allObjects | Convert-ObjectToCamelCaseObject -psName "MonkeyFindingObject" | ConvertTo-Json -Depth 100 | Format-Json
+                    }
                     If($convertedObjects){
-                        $convertedObjects | Out-File -FilePath $jsonFile
+                        If($PSBoundParameters.ContainsKey('ReturnObject') -and $PSBoundParameters['ReturnObject'].IsPresent){
+                            $convertedObjects
+                        }
+                        Else{
+                            $convertedObjects | Out-File -FilePath $jsonFile
+                        }
                     }
 
                 }
                 'csv'{
-                    $csvFile = ("{0}/monkey365{1}{2}.csv" -f $OutDir, $PSBoundParameters['TenantId'].Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
-                    $allObjects | Export-Csv -NoTypeInformation -Path $csvFile
+                    If($PSBoundParameters.ContainsKey('OutDir') -and $PSBoundParameters['OutDir']){
+                        $csvFile = ("{0}/monkey365{1}{2}.csv" -f $OutDir, $PSBoundParameters['TenantId'].Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
+                    }
+                    Else{
+                        $csvFile = ("monkey365{0}{1}.csv" -f $PSBoundParameters['TenantId'].Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
+                    }
+                    If($ReturnObject){
+                        $allObjects | ConvertTo-Csv -NoTypeInformation
+                    }
+                    Else{
+                        $allObjects | Export-Csv -NoTypeInformation -Path $csvFile
+                    }
                 }
                 'clixml'{
-                    $xmlFile = ("{0}/monkey365{1}{2}.xml" -f $OutDir, $PSBoundParameters['TenantId'].Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
-                    $allObjects | Export-DataToCliXml -Path $xmlFile
+                    If($PSBoundParameters.ContainsKey('OutDir') -and $PSBoundParameters['OutDir']){
+                        $xmlFile = ("{0}/monkey365{1}{2}.xml" -f $OutDir, $PSBoundParameters['TenantId'].Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
+                    }
+                    Else{
+                        $xmlFile = ("monkey365{0}{1}.xml" -f $PSBoundParameters['TenantId'].Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
+                    }
+                    If($ReturnObject){
+                        $allObjects | Export-DataToCliXml
+                    }
+                    Else{
+                        $allObjects | Export-DataToCliXml -Path $xmlFile
+                    }
                 }
             }
         }

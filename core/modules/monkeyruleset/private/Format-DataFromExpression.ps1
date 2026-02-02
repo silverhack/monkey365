@@ -131,13 +131,9 @@ Function Format-DataFromExpression {
                     $allExpressions = [System.Collections.Generic.List[System.Object]]::new()
                     #Set null
                     $_expressions = $null;
-                    #check if PsObject
-                    $isPsCustomObject = ([System.Management.Automation.PSCustomObject]).IsAssignableFrom($PSBoundParameters['Expressions'].GetType())
-                    #check if PsObject
-                    $isPsObject = ([System.Management.Automation.PSObject]).IsAssignableFrom($PSBoundParameters['Expressions'].GetType())
-                    If(-NOT $isPsCustomObject -and -NOT $isPsObject){
+                    If($null -ne $PSBoundParameters['Expressions']){
                         #Check if dictionary
-                        If(([System.Collections.IDictionary]).IsAssignableFrom($Expressions.GetType())){
+                        If(([System.Collections.IDictionary]).IsAssignableFrom($PSBoundParameters['Expressions'].GetType())){
                             #Check if * in properties
                             If($PSBoundParameters['Expressions'].Values.Where({$_ -eq "*"}) -or $PSBoundParameters['Expressions'].keys.Where({$_ -eq "*"})){
                                 $_expressions = "*"
@@ -145,8 +141,6 @@ Function Format-DataFromExpression {
                             Else{
                                 #Set new psObject
                                 $_expressions = New-Object -TypeName PSCustomObject -Property $PSBoundParameters['Expressions']
-                                #Set pscustomobject
-                                $isPsCustomObject = $true
                             }
                         }
                         ## Iterate over all child objects in cases in which InputObject is an array
@@ -172,8 +166,6 @@ Function Format-DataFromExpression {
                                     }
                                     #Set new psObject
                                     $_expressions = New-Object -TypeName PSCustomObject -Property $props
-                                    #Set pscustomobject
-                                    $isPsCustomObject = $true
                                 }
                                 Catch{
                                     Write-Error "Unable to format expression from array"
@@ -201,56 +193,72 @@ Function Format-DataFromExpression {
                                     }
                                     #Set new psObject
                                     $_expressions = New-Object -TypeName PSCustomObject -Property $props
-                                    #Set pscustomobject
-                                    $isPsCustomObject = $true
                                 }
                                 Catch{
                                     Write-Error "Unable to format expression from string"
                                 }
                             }
                         }
+                        ElseIf($PSBoundParameters['Expressions'] | Test-IsPsObject){
+                            If($PSBoundParameters['Expressions'].PsObject.Properties.Name -match "\*"){
+                                If($PSBoundParameters.ContainsKey('ExpandObject') -and $PSBoundParameters['ExpandObject']){
+                                    $newHashTable = [ordered]@{}
+                                    $_output = $newProps = $null
+                                    If($PSBoundParameters['ExpandObject'].Trim().ToString().Contains('.')){
+                                        If(($InputObject.psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){
+                                            $_output = $InputObject.GetPropertyByPath($PSBoundParameters['ExpandObject'].ToString().Trim())
+                                        }
+                                        Else{
+                                            Write-Verbose "GetPropertyByPath method was not loaded"
+                                        }
+                                    }
+                                    Else{
+                                        $_output = $InputObject | Select-Object -ExpandProperty $PSBoundParameters['ExpandObject'] -ErrorAction Ignore
+                                    }
+                                    If($null -ne $_output){
+                                        $newProps = $_output | Select-Object -First 1 -ErrorAction Ignore | Select-Object -Property {$_.Psobject.Properties.Name} | Select-Object -ExpandProperty '$_.Psobject.Properties.Name'
+                                    }
+                                    If($null -ne $newProps){
+                                        #Create new object
+                                        Foreach($elem in $PSBoundParameters['Expressions'].PsObject.Properties){
+                                            If($elem.Name -notmatch $PSBoundParameters['ExpandObject']){
+                                                [void]$newHashTable.Add($elem.Name,$elem.Value)
+                                            }
+                                        }
+                                        Foreach($prop in $newProps){
+                                            [void]$newHashTable.Add(("{0}.{1}" -f $PSBoundParameters['ExpandObject'],$prop),$prop)
+                                        }
+                                        #Create new object
+                                        $_expressions = New-Object -TypeName PSCustomObject -Property $newHashTable
+                                    }
+                                    Else{
+                                        Write-Verbose ("Unable to get PsObject properties from {0}. Empty object returned" -f $PSBoundParameters['ExpandObject'])
+                                    }
+                                }
+                                Else{
+                                    $_expressions = "*"
+                                }
+                            }
+                            ElseIf(-not $PSBoundParameters['Expressions'].PsObject.Properties.GetEnumerator().MoveNext()){
+                                #Empty psObject
+                                $_expressions = "*"
+                            }
+                            Else{
+                                $_expressions = $PSBoundParameters['Expressions'];
+                            }
+                        }
                         Else{
-                            Write-Warning "Unable to evaluate expressions"
+                            Write-Warning "Unable to evaluate expressions. Unrecognized expression object"
                         }
                     }
                     Else{
-                        If($PSBoundParameters['Expressions'].PsObject.Properties.Name -match "\*"){
-                            If($PSBoundParameters.ContainsKey('ExpandObject') -and $PSBoundParameters['ExpandObject']){
-                                $newHashTable = [ordered]@{}
-                                $newProps = $InputObject | Select-Object -ExpandProperty $PSBoundParameters['ExpandObject'] | Select-Object -First 1 | Select-Object -Property {$_.Psobject.Properties.Name} | Select-Object -ExpandProperty '$_.Psobject.Properties.Name'
-                                If($null -ne $newProps){
-                                    #Create new object
-                                    Foreach($elem in $PSBoundParameters['Expressions'].PsObject.Properties){
-                                        If($elem.Name -notmatch $PSBoundParameters['ExpandObject']){
-                                            [void]$newHashTable.Add($elem.Name,$elem.Value)
-                                        }
-                                    }
-                                    Foreach($prop in $newProps){
-                                        [void]$newHashTable.Add(("{0}.{1}" -f $PSBoundParameters['ExpandObject'],$prop),$prop)
-                                    }
-                                    #Create new object
-                                    $_expressions = New-Object -TypeName PSCustomObject -Property $newHashTable
-                                }
-                                Else{
-                                    Write-Verbose ("Unable to get PsObject properties from {0}. Empty object returned" -f $PSBoundParameters['ExpandObject'])
-                                }
-                            }
-                            Else{
-                                $_expressions = "*"
-                            }
-                        }
-                        ElseIf(-not $PSBoundParameters['Expressions'].PsObject.Properties.GetEnumerator().MoveNext()){
-                            #Empty psObject
-                            $_expressions = "*"
-                        }
-                        Else{
-                            $_expressions = $PSBoundParameters['Expressions'];
-                        }
+                        #Empty expressions object
+                        $_expressions = "*"
                     }
                     If($null -ne $_expressions){
                         #String expressions won't be evaluated
-                        If($_expressions -isnot [System.String]){
-                            If($PSBoundParameters.ContainsKey('ExpandObject') -and $PSBoundParameters['ExpandObject'] -and ($isPsCustomObject -or $isPsObject)){
+                        If($_expressions | Test-IsPsObject){
+                            If($PSBoundParameters.ContainsKey('ExpandObject') -and $PSBoundParameters['ExpandObject']){
                                 ForEach($element in $_expressions.PsObject.Properties){
                                     $property = [System.Text.StringBuilder]::new()
                                     If($element.Name.StartsWith($PSBoundParameters['ExpandObject'])){
@@ -405,7 +413,7 @@ Function Format-DataFromExpression {
                             }
                         }
                         Else{
-                            Write-Warning "GetPropertyByPath method was not loaded"
+                            Write-Verbose "GetPropertyByPath method was not loaded"
                         }
                     }
                     Else{

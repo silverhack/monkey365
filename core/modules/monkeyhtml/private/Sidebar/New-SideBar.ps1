@@ -86,9 +86,14 @@ function New-SideBar{
         #Create a element and combine with img and span tags
         $a_href = New-HtmlTag @a_element
         #Create Monkey365 IMG
-        If($Script:mode -eq 'cdn'){
+        If($Script:mode -eq 'cdn' -or $Script:mode -eq 'localcdn'){
             $baseUrl = ("{0}/{1}" -f $Script:Repository,'assets/inc-monkey/logo/MonkeyLogo.png');
-            $_iconPath = Convert-UrlToJsDelivr -Url $baseUrl -Latest
+            If($Script:mode -eq 'cdn'){
+                $_iconPath = Convert-UrlToJsDelivr -Url $baseUrl -Latest
+            }
+            Else{
+                $_iconPath = $baseUrl;
+            }
         }
         Else{
             $_iconPath = ("{0}/{1}" -f $Script:LocalPath,'assets/inc-monkey/logo/MonkeyLogo.png');

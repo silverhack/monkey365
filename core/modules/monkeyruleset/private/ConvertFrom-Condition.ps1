@@ -74,24 +74,42 @@ function ConvertFrom-Condition{
             $Conditions = $tmp
         }
         Foreach($condition in $Conditions.GetEnumerator()){
-            $validcmpOperator = Get-ComparisonOperator -InputObject $condition
-            If($null -ne $validcmpOperator -and $validcmpOperator -eq 1){
-                If($condition.Count -eq 2){
-                    $condition+=$null
+            If ($condition -is [System.Collections.IEnumerable] -and $condition -isnot [string]){
+                $newCondition = [System.Collections.Generic.List[System.String]]::new();
+                ForEach($cond in $condition){
+                    [void]$newCondition.Add($cond);
                 }
-                If($condition[0] -eq [String]::Empty){$condition[0]= $null}
-                $filter = [ordered]@{
-                    LeftItem = $condition[0];
-                    Operator = $condition[1];
-                    RightItem = $condition[2];
+                If($newCondition.Count -gt 3){
+                    $op = $newCondition[1];
+                    $invalidQuery = (@($newCondition) -join ' ')
+                    Write-Warning -Message ($Script:messages.StatementErrorMessage -f $op,$invalidQuery)
                 }
-                $q = Get-NewFilter @filter
-                [void]$arrQuery.Add($q)
+                If($newCondition.Count -eq 2){
+                    [void]$newCondition.Insert(0,$null)
+                }
+                If($newCondition[0] -eq [String]::Empty){
+                    $newCondition[0]= $null
+                }
+                #Get valid operator
+                $validcmpOperator = Get-ComparisonOperator -InputObject $newCondition
+                If($null -ne $validcmpOperator -and $validcmpOperator -eq 1){
+                    $filter = [ordered]@{
+                        LeftItem = $newCondition[0];
+                        Operator = $newCondition[1];
+                        RightItem = $newCondition[2];
+                    }
+                    $q = Get-NewFilter @filter
+                    [void]$arrQuery.Add($q)
+                }
+                Else{
+                    $op = $newCondition[1];
+                    $invalidQuery = (@($newCondition) -join ' ')
+                    Write-Warning -Message ($Script:messages.StatementErrorMessage -f $op,$invalidQuery)
+                }
             }
             Else{
-                $op = $condition[1];
                 $invalidQuery = (@($condition) -join ' ')
-                Write-Warning -Message ($Script:messages.StatementErrorMessage -f $op,$invalidQuery)
+                Write-Warning -Message ($Script:messages.StatementErrorMessage -f $null,$invalidQuery)
             }
         }
     }

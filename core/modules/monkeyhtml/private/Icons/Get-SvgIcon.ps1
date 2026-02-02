@@ -100,12 +100,17 @@ Function Get-SvgIcon{
             If($null -eq $icon){
                 $icon = 'assets/inc-azicons/general/10001-icon-service-All-Resources.svg'
             }
-            If($Script:mode -eq 'cdn'){
+            If($Script:mode -eq 'cdn' -or $Script:mode -eq 'localcdn'){
                 $baseUrl = ("{0}/{1}" -f $Script:Repository,$icon);
-                $_iconPath = Convert-UrlToJsDelivr -Url $baseUrl -Latest
+                If($Script:mode -eq 'cdn'){
+                    $_iconPath = Convert-UrlToJsDelivr -Url $baseUrl -Latest
+                }
+                Else{
+                    $_iconPath = $baseUrl;
+                }
                 If($PSBoundParameters.ContainsKey('Raw') -and $PSBoundParameters['Raw'].IsPresent){
                     Try{
-                        $content = Invoke-WebRequest -Uri $_iconPath
+                        $content = Invoke-WebRequest -Uri $_iconPath -UseBasicParsing
                         $streamReader = [System.IO.StreamReader]::new($content.RawContentStream,[System.Text.Encoding]::UTF8);
                         [xml]$iconXml = $streamReader.ReadToEnd();
                         $streamReader.Close();

@@ -37,19 +37,25 @@ function Export-DataToCliXml {
         [ValidateNotNullOrEmpty()]
         [PSObject[]]$InputObject,
 
-        [Parameter(Mandatory=$true, HelpMessage="File")]
+        [Parameter(Mandatory=$false, HelpMessage="File")]
         [String]$Path
     )
     Begin {
         $sw = $xw = $null
         $type = [PSObject].Assembly.GetType('System.Management.Automation.Serializer')
         $ctor = $type.GetConstructor('instance,nonpublic', $null, @([System.Xml.XmlWriter]), $null)
-        #CreateNew
-        $mode = "CreateNew"
-        $fs = New-Object System.IO.FileStream $Path, $mode, 'Write', 'None'
-        $sw = [System.IO.StreamWriter]::new($fs)
-        $xw = [System.Xml.XmlTextWriter]::new($sw)
-        $serializer = $ctor.Invoke($xw)
+        If($PSBoundParameters.ContainsKey('Path') -and $PSBoundParameters['Path']){
+            #CreateNew
+            $mode = "CreateNew"
+            $fs = New-Object System.IO.FileStream $Path, $mode, 'Write', 'None'
+            $sw = [System.IO.StreamWriter]::new($fs)
+            $xw = [System.Xml.XmlTextWriter]::new($sw)
+        }
+        Else{
+            $sw = [System.IO.StringWriter]::new();
+            $xw = [System.Xml.XmlTextWriter]::new($sw);
+        }
+        $serializer = $ctor.Invoke($xw);
         Write-Verbose -Message ($Script:messages.CliXmlOutputMessage -f $Path);
     }
     Process {

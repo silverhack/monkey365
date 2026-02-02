@@ -41,7 +41,7 @@ Function Get-Status{
         [String]$Level
     )
     Process{
-        if($null -eq $Level -or ($Level -eq [System.String]::Empty)){
+        If($null -eq $Level -or ($Level -eq [System.String]::Empty)){
             [Ocsf.StateId]::Unknown.ToString();
         }
         Else{

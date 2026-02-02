@@ -1,4 +1,4 @@
-# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ Function ConvertTo-OCSFObject{
         #Set new dict
         $newPsboundParams = [ordered]@{}
         $param = $Metadata.Parameters.Keys
-        foreach($p in $param.GetEnumerator()){
+        ForEach($p in $param.GetEnumerator()){
             If($p -eq "InputObject"){continue}
             If($PSBoundParameters.ContainsKey($p)){
                 $newPsboundParams.Add($p,$PSBoundParameters[$p])
@@ -87,33 +87,13 @@ Function ConvertTo-OCSFObject{
     }
     Process{
         Try{
-            Foreach($finding in @($InputObject)){
+            ForEach($finding in @($InputObject)){
                 If($finding.statusCode.Trim().ToLower() -eq 'pass' -or $finding.statusCode.Trim().ToLower() -eq 'manual' -or $finding.output.text.onlyStatus -or $null -eq $finding.output.text.out){
-                    $newFinding = $finding | Get-OcsfDetectionFindingObject @newPsboundParams
-                    If($null -ne $newFinding){
-                        $newFinding.StatusDetail = $finding.output.text.status.defaultMessage
-                        #$newFinding | Convert-ObjectToCamelCaseObject -psName "MonkeyFindingObject" | ConvertTo-Json -Depth 100 | Format-Json
-                        $newFinding
-                    }
+                    $finding | Get-OcsfDetectionFindingObject @newPsboundParams
                 }
                 Else{
                     Foreach($obj in @($finding.output.text.out)){
-                        $newFinding = $finding | Get-OcsfDetectionFindingObject @newPsboundParams
-                        If($null -ne $newFinding){
-                            #Get Status detail
-                            $status = $finding.output.text.status
-                            $newFinding.StatusDetail = Get-FindingLegend -InputObject $obj -StatusObject $status
-                            #Update resource type, resource Name, Id, etc..
-                            $p = @{
-                                Data = $obj;
-                                Finding = $finding;
-                                Object = $newFinding;
-                            }
-                            $newFinding = Update-OCSFObject @p
-                            If($null -ne $newFinding){
-                                $newFinding
-                            }
-                        }
+                        $finding | Get-OcsfDetectionFindingObject @newPsboundParams -Data $obj
                     }
                 }
             }

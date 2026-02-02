@@ -89,7 +89,7 @@ Function Resolve-Filter{
                 $whereObject = $InputObject.whereObject
                 New-Variable -Name queryIsOpen -Value $True -Scope Script -Force
                 #Potential where Object outside pipeline
-                ('$_.{0}.Where({{' -f $whereObject)
+                ('@($_.{0}).Where({{' -f $whereObject)
             }
             'whereObject'
             {
@@ -98,13 +98,13 @@ Function Resolve-Filter{
                 if($condition){
                     $query = ConvertFrom-Condition @condition
                     if($null -ne $whereObject -and $null -ne $query){
-                        ('$_.{0}.Where({{{1}}})' -f $whereObject,$query)
+                        ('@($_.{0}).Where({{{1}}})' -f $whereObject,$query)
                     }
                 }
                 Else{
                     New-Variable -Name queryIsOpen -Value $True -Scope Script -Force
                     #Potential where Object outside pipeline
-                    ('${0}.Where({' -f $whereObject)
+                    ('@(${0}).Where({' -f $whereObject)
                 }
             }
             'getValue'

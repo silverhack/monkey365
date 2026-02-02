@@ -70,6 +70,9 @@ Function Get-NewFilter{
             Elseif($LeftCastValue -is [System.Collections.IEnumerable] -and $LeftCastValue -isnot [System.String]){
                 $tmp_filter = ('@({0})' -f ('"' + ($LeftCastValue -join '","')+ '"'))
             }
+            ElseIf($LeftCastValue -is [System.String] -and $LeftCastValue.Contains('@')){
+                $tmp_filter = ("$_.'{0}'" -f $LeftItem)
+            }
             Else{
                 $tmp_filter = ('$_.{0}' -f $LeftItem)
             }
@@ -104,6 +107,24 @@ Function Get-NewFilter{
             ElseIf($pipeline){
                 $tmp_filter = ('$_ -{0} {1}' -f $Operator, $rightCondition)
             }
+            ElseIf($LeftItem.Contains('@odata.type')){
+                #First remove odata.type
+                $leftQuery = $LeftItem -replace ".@odata.type",""
+                If($leftQuery.Contains('.')){
+                    $_leftItem = [System.Text.StringBuilder]::new()
+                    ForEach($part in $leftQuery.Split('.')){
+                        [void]$_leftItem.Append($part);
+                        [void]$_leftItem.Append('.')
+                    }
+                    $tmp_filter = ('$_.{0}"{1}" -{2} {3}' -f $_leftItem.ToString(),'@odata.type', $Operator, $rightCondition)
+                }
+                Else{
+                    $tmp_filter = ('$_.{0}."{1}" -{2} {3}' -f $leftQuery,'@odata.type', $Operator, $rightCondition)
+                }
+            }
+            ElseIf($Operator.ToLower() -eq 'in' -or $Operator.ToLower() -eq 'notin'){
+                $tmp_filter = ('"{0}" -{1} $_.{2}' -f $LeftItem, $Operator, $RightCastValue)
+            }
             Else{
                 $tmp_filter = ('$_.{0} -{1} {2}' -f $LeftItem, $Operator, $rightCondition)
             }
@@ -114,6 +135,9 @@ Function Get-NewFilter{
             }
             ElseIf($pipeline){
                 $tmp_filter = ('$_ -{0} ${1}' -f $Operator, $RightCastValue)
+            }
+            ElseIf($LeftItem.Contains('@')){
+                $tmp_filter = ('$_."{0}" -{1} {2}' -f $LeftItem, $Operator, $RightCastValue)
             }
             Else{
                 $tmp_filter = ('$_.{0} -{1} ${2}' -f $LeftItem, $Operator, $RightCastValue)
@@ -137,6 +161,9 @@ Function Get-NewFilter{
             }
             ElseIf($pipeline){
                 $tmp_filter = ('$_ -{0} {1}' -f $Operator, $RightCastValue)
+            }
+            ElseIf($LeftItem.Contains('@')){
+                $tmp_filter = ('$_."{0}" -{1} {2}' -f $LeftItem, $Operator, $RightCastValue)
             }
             Else{
                 $tmp_filter = ('$_.{0} -{1} {2}' -f $LeftItem, $Operator, $RightCastValue)

@@ -69,7 +69,7 @@ Function Test-isValidRule{
                 $missingElements+='rule'
             }
             If($missingElements.Count -eq 0){
-                Write-Verbose ($Script:messages.ValidObjectMessage -f "rule")
+                Write-Verbose ($Script:messages.ValidObjectMessage -f $InputObject.displayName, "rule")
                 return $true
             }
             Else{

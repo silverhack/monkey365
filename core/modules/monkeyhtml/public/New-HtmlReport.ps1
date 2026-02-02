@@ -55,6 +55,9 @@ Function New-HtmlReport{
         })]
         [System.IO.FileInfo]$ConfigFile,
 
+        [Parameter(Mandatory=$true, ParameterSetName = 'LocalCDN', HelpMessage="Load resources from local source")]
+        [String]$LocalRepository,
+
         [Parameter(Mandatory=$true, ParameterSetName = 'CDN', HelpMessage="Load resources from external source")]
         [String]$Repository,
 
@@ -226,6 +229,9 @@ Function New-HtmlReport{
             #Set out file
             If($PSCmdlet.ParameterSetName.ToLower() -eq "cdn"){
                 $outFile = ("{0}{1}monkey365_cdn_{2}{3}.html" -f $Script:OutDir, [System.IO.Path]::DirectorySeparatorChar, $ExecutionInfo.tenant.tenantId.Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
+            }
+            ElseIf($PSCmdlet.ParameterSetName.ToLower() -eq "localcdn"){
+                $outFile = ("{0}{1}monkey365_localcdn_{2}{3}.html" -f $Script:OutDir, [System.IO.Path]::DirectorySeparatorChar, $ExecutionInfo.tenant.tenantId.Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))
             }
             Else{
                 $outFile = ("{0}{1}monkey365_local_{2}{3}.html" -f $Script:OutDir, [System.IO.Path]::DirectorySeparatorChar, $ExecutionInfo.tenant.tenantId.Replace('-',''), ([System.DateTime]::UtcNow).ToString("yyyyMMddHHmmss"))

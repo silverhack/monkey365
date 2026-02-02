@@ -119,7 +119,7 @@ Function ConvertTo-GenericPsObject{
                                 $status = $finding.output.text.status
                                 $newFinding.status = Get-FindingLegend -InputObject $obj -StatusObject $status
                                 #Get Name
-                                $newFinding.resourceName = Get-ObjectName -InputObject $obj
+                                $newFinding.resourceName = $obj | Get-PropertyFromPsObject -Property "name"
                                 #Get Type
                                 $newFinding.resourceType = Get-ObjectResourceType -InputObject $obj
                                 #Get Id
@@ -167,15 +167,15 @@ Function ConvertTo-GenericPsObject{
                                 #Get Name
                                 $resourceName = $finding.output.text.properties.resourceName
                                 If($resourceName){
-                                    $newFinding.resourceName = $obj | Get-PropertyFromPsObject -ResourceName $resourceName
+                                    $newFinding.resourceName = $obj | Get-PropertyFromPsObject -Property $resourceName
                                 }
                                 Else{
-                                    $newFinding.resourceName = Get-ObjectName -InputObject $obj
+                                    $newFinding.resourceName = $obj | Get-PropertyFromPsObject -Property "name"
                                 }
                                 #Get Type
                                 $resourceType = $finding.output.text.properties.resourceType
                                 If($resourceType){
-                                    $newFinding.resourceType = $obj | Get-PropertyFromPsObject -ResourceName $resourceType
+                                    $newFinding.resourceType = $resourceType
                                 }
                                 Else{
                                     $newFinding.resourceType = Get-ObjectResourceType -InputObject $obj
@@ -183,7 +183,7 @@ Function ConvertTo-GenericPsObject{
                                 #Get Id
                                 $resourceId = $finding.output.text.properties.resourceId
                                 If($resourceId){
-                                    $newFinding.resourceId = $obj | Get-PropertyFromPsObject -ResourceName $resourceId
+                                    $newFinding.resourceId = $obj | Get-PropertyFromPsObject -Property $resourceId
                                 }
                                 Else{
                                     $newFinding.resourceId = Get-ObjectResourceId -InputObject $obj

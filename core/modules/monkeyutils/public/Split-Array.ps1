@@ -45,6 +45,7 @@ Function Split-Array {
     End {
         if ($queue.Count) {
           , $queue.ToArray()
+          $queue.Clear()
         }
     }
 }

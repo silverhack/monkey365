@@ -259,7 +259,7 @@ Function New-FindingCard{
                                 ShowModalButton = $showModalButton;
                                 ShowGoToButton = $showGoToButton;
                             }
-                            If($null -ne $TableOption -and $TableOption -ne "Normal"){
+                            If($null -ne $TableOption -and $TableOption -ne "default"){
                                 [void]$p.Add('AsList',$True);
                             }
                             If($null -ne $extraFormat -and @($extraFormat).Count -gt 0){

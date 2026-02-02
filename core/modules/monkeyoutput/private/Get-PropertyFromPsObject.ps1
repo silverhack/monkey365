@@ -41,12 +41,17 @@ Function Get-PropertyFromPsObject {
         [AllowEmptyString()]
         [Object]$InputObject,
 
-        [parameter(Mandatory=$true, HelpMessage="Resource name")]
-        [String]$ResourceName
+        [parameter(Mandatory=$true, HelpMessage="Property name")]
+        [String]$Property
     )
     Process{
         If($PSBoundParameters.ContainsKey('InputObject') -and $PSBoundParameters['InputObject']){
-            $PSBoundParameters['InputObject'] | Select-Object -ExpandProperty ($PSBoundParameters['ResourceName']) -ErrorAction Ignore
+            If(($PSBoundParameters['InputObject'].psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){
+                $PSBoundParameters['InputObject'].GetPropertyByPath($PSBoundParameters['Property'].Trim())
+            }
+            Else{
+                $PSBoundParameters['InputObject'] | Select-Object -ExpandProperty ($PSBoundParameters['Property']) -ErrorAction Ignore
+            }
         }
     }
 }

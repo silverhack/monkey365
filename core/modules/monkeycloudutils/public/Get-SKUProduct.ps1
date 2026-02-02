@@ -43,7 +43,7 @@ Function Get-SKUProduct{
     try{
         $licenses = 'https://download.microsoft.com/download/e/3/e/e3e9faf2-f28b-490a-9ada-c6089a1fc5b0/Product%20names%20and%20service%20plan%20identifiers%20for%20licensing.csv'
         #Get CSV licenses
-        $metadata = Invoke-WebRequest -Uri $licenses -Method Get
+        $metadata = Invoke-WebRequest -Uri $licenses -Method Get -UseBasicParsing
         #Convert To CSV
         $csv = [System.Text.Encoding]::UTF8.GetString($metadata.Content) | ConvertFrom-Csv
         #Convert to RAW object

@@ -45,7 +45,7 @@ Function Update-MonkeyAsset{
         [Parameter(Mandatory=$false, HelpMessage="Check integrity with SHA256")]
         [Switch]$SHA256,
 
-        [Parameter(Mandatory=$false, HelpMessage="Check integrity with SHA256")]
+        [Parameter(Mandatory=$false, HelpMessage="Check integrity with SHA512")]
         [Switch]$SHA512,
 
         [Parameter(Mandatory=$false, HelpMessage="Add a file with version ID")]
@@ -95,7 +95,13 @@ Function Update-MonkeyAsset{
         #Get release
         Try{
             If($null -ne $repoUrl){
-                $latest = Invoke-WebRequest -Uri $repoUrl -Headers $headers -UserAgent "Monkey365" -ErrorAction Ignore
+                $param = @{
+                    Uri = $repoUrl;
+                    Headers = $headers;
+                    UserAgent = "Monkey365";
+                    UseBasicParsing = $true;
+                }
+                $latest = Invoke-WebRequest @param -ErrorAction Ignore
                 If($null -ne $latest -and $latest.StatusCode -eq [System.Net.HttpStatusCode]::OK){
                     Try{
                         $content = $latest.Content | ConvertFrom-Json -ErrorAction Ignore
@@ -139,7 +145,12 @@ Function Update-MonkeyAsset{
                     $assetsUrl = $content.assets.Where({$_.name -like '*zip*' -and $_.content_type -eq 'application/zip'}) | Select-Object -ExpandProperty browser_download_url -ErrorAction Ignore
                     If($assetsUrl){
                         Write-Information ("Downloading content from {0}" -f $assetsUrl) -InformationAction $InformationPreference
-                        $zip = Invoke-WebRequest -Uri $assetsUrl -UserAgent "Monkey365" -ErrorAction Ignore
+                        $param = @{
+                            Uri = $assetsUrl;
+                            UserAgent = "Monkey365";
+                            UseBasicParsing = $true;
+                        }
+                        $zip = Invoke-WebRequest @param -ErrorAction Ignore
                         $array = $zip.RawContentStream.ToArray()
                         [byte[]]$checksum = $cryptography.ComputeHash($array);
                         $shaZip = [System.BitConverter]::ToString($checksum).Replace('-', [String]::Empty).ToLowerInvariant()
@@ -152,7 +163,12 @@ Function Update-MonkeyAsset{
                     $shaurl = $content.assets.Where({$_.name -like ('*{0}*' -f $method.ToLower())}) | Select-Object -ExpandProperty browser_download_url -ErrorAction Ignore
                     If($shaurl){
                         Write-Information ("Downloading content from {0}" -f $shaurl) -InformationAction $InformationPreference
-                        $shaFile = Invoke-WebRequest -Uri $shaurl -UserAgent "Monkey365" -ErrorAction Ignore
+                        $param = @{
+                            Uri = $shaurl;
+                            UserAgent = "Monkey365";
+                            UseBasicParsing = $true;
+                        }
+                        $shaFile = Invoke-WebRequest @param -ErrorAction Ignore
                         $sr = [System.IO.StreamReader]::new($shaFile.RawContentStream);
                         $Hash = $sr.ReadToEnd();
                         $Hash = $Hash.Trim()

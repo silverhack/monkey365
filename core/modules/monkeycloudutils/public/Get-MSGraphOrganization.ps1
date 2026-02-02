@@ -54,7 +54,7 @@ Function Get-MSGraphOrganization{
             }
             #Create authorization header
             $Authorization = $AuthObject.CreateAuthorizationHeader()
-            $Tenants = Invoke-WebRequest $uri -Method Get -Headers @{Authorization=$Authorization};
+            $Tenants = Invoke-WebRequest $uri -Method Get -Headers @{Authorization=$Authorization} -UseBasicParsing;
             $Tenants = (ConvertFrom-Json $Tenants.Content).value;
             if($Tenants){
                 foreach($organization in @($Tenants)){

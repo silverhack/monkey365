@@ -174,10 +174,10 @@ Function Get-HtmlHeader{
                             );
                             If($null -ne $properties){
                                 ForEach($prop in $properties.Psobject.Properties){
-                                    If($prop.Name -eq 'crossorigin' -and $Script:mode -ne 'cdn'){
+                                    If($prop.Name -eq 'crossorigin' -and ($Script:mode -ne 'cdn' -or $Script:mode -ne 'localcdn')){
                                         continue
                                     }
-                                    If($prop.Name -eq 'integrity' -and $Script:mode -ne 'cdn'){
+                                    If($prop.Name -eq 'integrity' -and ($Script:mode -ne 'cdn' -or $Script:mode -ne 'localcdn')){
                                         continue
                                     }
                                     If($Script:mode -eq 'cdn' -and $prop.Name -in @("src","href")){
@@ -190,6 +190,10 @@ Function Get-HtmlHeader{
                                         Else{
                                             Write-Warning $Script:messages.BaseUrlErrorMessage
                                         }
+                                    }
+                                    ElseIf($Script:mode -eq 'localcdn' -and $prop.Name -in @("src","href")){
+                                        $_url = ("{0}/{1}" -f $Script:Repository,$prop.Value);
+                                        [void]$tag.SetAttribute($prop.Name,$_url)
                                     }
                                     Else{
                                         If($prop.Name -in @("src","href")){

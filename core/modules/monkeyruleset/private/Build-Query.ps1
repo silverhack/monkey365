@@ -74,6 +74,9 @@ Function Build-Query{
                         Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $InputObject.displayName)
                     }
                 }
+                Else{
+                    Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $InputObject.displayName)
+                }
             }
             Elseif($null -ne (Get-Variable -Name AllRules -ErrorAction Ignore)){
                 foreach($unitRule in $Script:AllRules){
@@ -105,6 +108,9 @@ Function Build-Query{
                         Else{
                             Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $unitRule.displayName)
                         }
+                    }
+                    Else{
+                        Write-Warning -Message ($Script:messages.BuildQueryErrorMessage -f $InputObject.displayName)
                     }
                 }
             }

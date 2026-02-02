@@ -131,8 +131,8 @@ Function Invoke-MonkeyJob{
         Else {
             $MaxQueue = $MaxQueue
         }
-        if($PSBoundParameters.ContainsKey('Runspacepool') -and $PSBoundParameters['Runspacepool']){
-            if($Runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::BeforeOpen){
+        If($PSBoundParameters.ContainsKey('Runspacepool') -and $PSBoundParameters['Runspacepool']){
+            If($Runspacepool.RunspacePoolStateInfo.State -eq [System.Management.Automation.Runspaces.RunspaceState]::BeforeOpen){
                 #Open runspace
                 Write-Verbose $script:messages.OpenRunspaceMessage
                 $Runspacepool.Open()
@@ -265,10 +265,10 @@ Function Invoke-MonkeyJob{
             if($MyMonkeyJobs.Count -gt 0){
                 Write-Verbose ($script:messages.TerminateJobMessage -f $MyMonkeyJobs.Count)
                 If($reuseRSP){
-                    #$MyMonkeyJobs | Remove-MonkeyJob -KeepRunspacePool
+                    $MyMonkeyJobs | Remove-MonkeyJob -KeepRunspacePool
                 }
                 Else{
-                    #$MyMonkeyJobs | Remove-MonkeyJob
+                    $MyMonkeyJobs | Remove-MonkeyJob
                 }
             }
             #Stop timer

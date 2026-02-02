@@ -41,9 +41,9 @@ Function New-OcsfMetadataObject{
         #Get Product
         $properties = @('name','vendorName','version')
         $product = [Ocsf.Objects.Product]::new() | Select-Object $properties
-        $properties = @('eventCode','product','version')
+        $properties = @('eventCode','product','version','TenantId')
         $metadata = [Ocsf.Objects.Metadata]::new() | Select-Object $properties
-        if($null -ne $product -and $null -ne $metadata){
+        If($null -ne $product -and $null -ne $metadata){
             $metadata.Product = $product
             return $metadata
         }

@@ -38,26 +38,28 @@ Function Get-FindingLegend {
 	[CmdletBinding()]
     [OutputType([System.String])]
 	Param (
-        [parameter(Mandatory=$false, HelpMessage="MonkeyObject")]
+        [parameter(Mandatory=$false, ValueFromPipeline = $True, HelpMessage="MonkeyObject")]
         [Object]$InputObject,
 
         [parameter(Mandatory=$true, HelpMessage="Status Object")]
         [Object]$StatusObject
     )
-    #Create a dictionary
-    $dict = @{}
-    If($PSBoundParameters.ContainsKey('InputObject') -and $PSBoundParameters['InputObject']){
-        Foreach($key in @($StatusObject.keyName).GetEnumerator()){
-            If($dict.ContainsKey($key)){continue}
-            $dict.Add($key,$InputObject.GetPropertyByPath($key))
+    Process{
+        #Create a dictionary
+        $dict = @{}
+        If($PSBoundParameters.ContainsKey('InputObject') -and $PSBoundParameters['InputObject']){
+            ForEach($key in @($StatusObject.keyName).GetEnumerator()){
+                If($dict.ContainsKey($key)){continue}
+                $dict.Add($key,$InputObject.GetPropertyByPath($key))
+            }
         }
+        #match/replace
+        $statusMsg = $StatusObject.message
+        ForEach($elem in $dict.GetEnumerator()){
+            $a = $elem.Name
+            $m = ("\{$a\}")
+            $statusMsg = $statusMsg -replace $m, $elem.Value
+        }
+        return $statusMsg
     }
-    #match/replace
-    $statusMsg = $StatusObject.message
-    foreach($elem in $dict.GetEnumerator()){
-        $a = $elem.Name
-        $m = ("\{$a\}")
-        $statusMsg = $statusMsg -replace $m, $elem.Value
-    }
-    return $statusMsg
 }

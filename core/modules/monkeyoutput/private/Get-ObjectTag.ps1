@@ -45,9 +45,9 @@ Function Get-ObjectTag {
         try{
             If($PSBoundParameters.ContainsKey('InputObject') -and $PSBoundParameters['InputObject']){
                 $tags = $PSBoundParameters['InputObject'] | Select-Object -ExpandProperty tags -ErrorAction Ignore
-                if($null -ne $tags -and @($tags.Psobject.Properties).Count -gt 0){
+                If($null -ne $tags -and @($tags.Psobject.Properties).Count -gt 0){
                     $t = @($tags.Psobject.Properties | Select-Object Name,Value).Foreach({($_.Name,$_.Value) -join " "});
-                    if($t){
+                    If($t){
                         [System.String]::Join(' ',$t)
                     }
                 }

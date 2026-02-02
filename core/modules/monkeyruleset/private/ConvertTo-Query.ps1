@@ -84,6 +84,7 @@ function ConvertTo-Query{
                 }
                 Else{
                     Write-Warning -Message $Script:messages.BuildQueryGenericErrorMessage
+                    Write-Warning ($InputObject | ConvertTo-Json -Depth 20 | Out-String)
                 }
             }
             Else{

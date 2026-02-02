@@ -49,7 +49,7 @@ Function Get-TenantInfo{
             }
             $Authorization = $AuthObject.CreateAuthorizationHeader()
             $uri = ("{0}/{1}/tenantDetails?api-version=1.6" -f $AuthObject.resource, $Tenant)
-            $Tenants = Invoke-WebRequest $uri -Method Get -Headers @{Authorization=$Authorization};
+            $Tenants = Invoke-WebRequest $uri -Method Get -Headers @{Authorization=$Authorization} -UseBasicParsing;
             return (ConvertFrom-Json $Tenants.Content).value;
         }
         else{

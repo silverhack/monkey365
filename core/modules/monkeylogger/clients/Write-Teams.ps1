@@ -68,6 +68,8 @@ Function Write-Teams {
                         Method = 'Post';
                         Body = $json_body;
                         ContentType = 'application/json';
+                        UseBasicParsing = $True;
+
                     }
                     Invoke-WebRequest @p
                 }

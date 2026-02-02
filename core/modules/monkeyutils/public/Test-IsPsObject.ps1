@@ -1,4 +1,4 @@
-# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Get-ObjectName {
+Function Test-IsPsObject{
     <#
         .SYNOPSIS
-        Get name property for object
+        Check if inputobject is a PsObject
+
         .DESCRIPTION
-        Get name property for object
+
         .INPUTS
 
         .OUTPUTS
@@ -27,23 +28,32 @@ Function Get-ObjectName {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-ObjectName
+            File Name	: Test-IsPsObject
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-    [CmdletBinding()]
-    [OutputType([System.String])]
-	Param (
-        [parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Finding Object")]
+    [cmdletbinding()]
+    [OutputType([System.Boolean])]
+    Param (
+        [parameter(Mandatory=$false, ValueFromPipeline = $true, HelpMessage="InputObjec")]
         [AllowNull()]
-        [AllowEmptyString()]
         [Object]$InputObject
     )
     Process{
-        If($PSBoundParameters.ContainsKey('InputObject') -and $PSBoundParameters['InputObject']){
-            $PSBoundParameters['InputObject'] | Select-Object -ExpandProperty name -ErrorAction Ignore
+        If($null -eq $InputObject){
+            return $false
+        }
+        #check if PsObject
+        $isPsCustomObject = ([System.Management.Automation.PSCustomObject]).IsAssignableFrom($InputObject.GetType())
+        #check if PsObject
+        $isPsObject = ([System.Management.Automation.PSObject]).IsAssignableFrom($InputObject.GetType())
+        If($isPsCustomObject -or $isPsObject){
+            return $true
+        }
+        Else{
+            return $false
         }
     }
 }

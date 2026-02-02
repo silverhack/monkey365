@@ -41,18 +41,25 @@ Function Get-SeverityId{
         [String]$Level
     )
     Process{
-        if($null -eq $Level -or ($Level -eq [System.String]::Empty)){
-            [Ocsf.SeverityId]::Unknown.value__
+        If($null -eq $Level -or ($Level -eq [System.String]::Empty)){
+            return [Ocsf.SeverityId]::Unknown.value__
         }
-        Else{
+        If($Level.ToLower() -eq 'info'){
+            $Level = 'informational'
+        }
+        Try{
             $fw = [System.Globalization.CultureInfo]::CurrentCulture.TextInfo.ToTitleCase($Level.Split(' ')[0].ToLower())
             $_level = $Level.Replace($Level.Split(' ')[0],$fw);
-            if([Ocsf.SeverityId]::IsDefined([Ocsf.SeverityId],$_level)){
-                ([Ocsf.SeverityId]$_level).value__;
+            If([Ocsf.SeverityId]::IsDefined([Ocsf.SeverityId],$_level)){
+                return ([Ocsf.SeverityId]$_level).value__;
             }
             Else{
-                [Ocsf.SeverityId]::Unknown.value__;
+                return [Ocsf.SeverityId]::Unknown.value__;
             }
+        }
+        Catch{
+            Write-Error $_.Exception.Message
+            return [Ocsf.SeverityId]::Unknown.value__;
         }
     }
 }

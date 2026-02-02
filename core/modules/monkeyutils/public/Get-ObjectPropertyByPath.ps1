@@ -51,7 +51,12 @@ Function Get-ObjectPropertyByPath {
         $isPsObject = ([System.Management.Automation.PSObject]).IsAssignableFrom($InputObject.GetType())
         If($isPsCustomObject -or $isPsObject){
             If($PSBoundParameters.ContainsKey('Property') -and $PSBoundParameters['Property']){
-                If($PSBoundParameters['Property'].Trim().ToString().Contains('.')){
+                #Check if property is null or empty
+                If([string]::IsNullOrEmpty($PSBoundParameters['Property'].Trim().ToString())){
+                    $InputObject
+                }
+                #Check if nested property
+                ElseIf($PSBoundParameters['Property'].Trim().ToString().Contains('.')){
                     #Get query object
                     If(($InputObject.psobject.Methods.Where({$_.MemberType -eq 'ScriptMethod' -and $_.Name -eq 'GetPropertyByPath'})).Count -gt 0){
                         $InputObject.GetPropertyByPath($PSBoundParameters['Property'])
@@ -66,7 +71,8 @@ Function Get-ObjectPropertyByPath {
                 }
             }
             Else{
-                return $null
+                #Nothing to filter
+                return $InputObject
             }
         }
         Else{

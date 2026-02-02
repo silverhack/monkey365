@@ -42,7 +42,7 @@ Function Get-Remediation{
     Process{
         Try{
             $remediationObject = new-OcsfRemediationObject
-            if($null -ne $remediationObject){
+            If($null -ne $remediationObject){
                 $remediationObject.Description = $InputObject.remediation.text | Convert-MarkDownToPlainText | Remove-TabAndNewLine;
                 $remediationObject.References = $InputObject.references
                 #return object

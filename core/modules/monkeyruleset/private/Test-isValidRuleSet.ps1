@@ -66,7 +66,10 @@ Function Test-isValidRuleSet{
             return $false;
         }
         if($missingElements.Count -eq 0){
-            Write-Verbose ($Script:messages.ValidObjectMessage -f "ruleset")
+            $name = $Object.framework | Select-Object -ExpandProperty name -ErrorAction Ignore
+            $version = $Object.framework | Select-Object -ExpandProperty version -ErrorAction Ignore
+            $fullName = ("{0} {1}" -f $name,$version);
+            Write-Verbose ($Script:messages.ValidObjectMessage -f $fullName, "ruleset")
             return $true
         }
         else{

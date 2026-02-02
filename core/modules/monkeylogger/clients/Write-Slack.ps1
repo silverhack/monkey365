@@ -76,6 +76,7 @@ Function Write-Slack {
                         Method = 'Post';
                         Body = $body;
                         ContentType = 'application/json';
+                        UseBasicParsing = $True;
                     }
                     Invoke-WebRequest @p
                 }

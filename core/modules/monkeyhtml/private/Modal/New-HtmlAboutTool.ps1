@@ -68,9 +68,14 @@ Function New-HtmlAboutTool{
         )
         #Tool image
         #Create Monkey365 IMG
-        If($Script:mode -eq 'cdn'){
+        If($Script:mode -eq 'cdn' -or $Script:mode -eq 'localcdn'){
             $baseUrl = ("{0}/{1}" -f $Script:Repository,'assets/inc-monkey/logo/MonkeyLogo.png');
-            $img_src = Convert-UrlToJsDelivr -Url $baseUrl -Latest
+            If($Script:mode -eq 'cdn'){
+                $img_src = Convert-UrlToJsDelivr -Url $baseUrl -Latest
+            }
+            Else{
+                $img_src = $baseUrl;
+            }
         }
         Else{
             $img_src = ("{0}/{1}" -f $Script:LocalPath,'assets/inc-monkey/logo/MonkeyLogo.png');

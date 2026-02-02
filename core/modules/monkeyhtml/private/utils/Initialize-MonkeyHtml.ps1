@@ -61,6 +61,9 @@ Function Initialize-MonkeyHtml{
         [Parameter(Mandatory=$true, ParameterSetName = 'CDN', HelpMessage="Load resources from external source")]
         [System.Uri]$Repository,
 
+        [Parameter(Mandatory=$true, ParameterSetName = 'LocalCDN', HelpMessage="Load resources from local source")]
+        [System.Uri]$LocalRepository,
+
         [Parameter(Mandatory=$false, HelpMessage="Repository branch")]
         [String]$Branch = "main",
 
@@ -134,7 +137,7 @@ Function Initialize-MonkeyHtml{
                 'cdn'{
                     $_url = ("{0}/assets/config.json" -f $PSBoundParameters['Repository']);
                     $baseUrl = Convert-UrlToJsDelivr -Url $_url -Latest
-                    $content = Invoke-WebRequest -Uri $baseUrl
+                    $content = Invoke-WebRequest -Uri $baseUrl -UseBasicParsing
                     If($null -ne $content){
                         Try{
                             $_config = $content.Content | ConvertFrom-Json
@@ -147,6 +150,33 @@ Function Initialize-MonkeyHtml{
                         Catch{
                             throw ("[MonkeyHtmlError] {0}: {1}" -f $Script:messages.ConfigFileErrorMessage,$_.Exception.Message)
                         }
+                    }
+                }
+                'localcdn'{
+                    Try{
+                        $_url = ("{0}/assets/config.json" -f $PSBoundParameters['LocalRepository']);
+                        $param = @{
+                            Uri = $_url;
+                            UserAgent = "Monkey365";
+                            UseBasicParsing = $true;
+                        }
+                        $rawContent = Invoke-WebRequest @param -ErrorAction Ignore
+                        If($null -ne $rawContent -and $rawContent.StatusCode -eq 200){
+                            $sr = [System.IO.StreamReader]::new($rawContent.RawContentStream);
+                            $configObj = $sr.ReadToEnd() | ConvertFrom-Json
+                            $sr.Close();
+                            $sr.Dispose();
+                            If($null -ne $configObj){
+                                Set-Variable -Name Config -Value $configObj -Scope Script -Force
+                                Set-Variable -Name Repository -Value $PSBoundParameters['LocalRepository'] -Scope Script -Force
+                                Set-Variable -Name Branch -Value "localCDN" -Scope Script -Force
+                                Write-Verbose ($Script:messages.InitializeVarsInfoMessage -f "repository config object")
+                                Write-Verbose ($Script:messages.InitializeVarsInfoMessage -f "repository")
+                            }
+                        }
+                    }
+                    Catch{
+                        throw ("[MonkeyHtmlError] {0}: {1}" -f $Script:messages.ConfigFileErrorMessage,$_.Exception.Message)
                     }
                 }
             }

@@ -57,13 +57,13 @@ Function Get-HTMLNavBarGitHubInfo{
         }
         $BaseUrl = $Url -replace "github.com","api.github.com/repos"
         Try{
-            $repo = Invoke-WebRequest -Uri $BaseUrl -UserAgent "Monkey365" -ErrorAction Ignore
+            $repo = Invoke-WebRequest -Uri $BaseUrl -UserAgent "Monkey365" -UseBasicParsing -ErrorAction Ignore
             $content = $repo.Content | ConvertFrom-Json
             #Get StarGazers
             $stargazers = $content | Select-Object -ExpandProperty stargazers_count -ErrorAction Ignore
             #Get latest release
             $repoUrl = ("{0}/releases/latest" -f $BaseUrl);
-            $repo = Invoke-WebRequest -Uri $repoUrl -UserAgent "Monkey365" -ErrorAction Ignore
+            $repo = Invoke-WebRequest -Uri $repoUrl -UserAgent "Monkey365" -UseBasicParsing -ErrorAction Ignore
             $content = $repo.Content | ConvertFrom-Json
             #Get tag name
             $version = $content | Select-Object -ExpandProperty tag_name -ErrorAction Ignore

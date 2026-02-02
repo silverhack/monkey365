@@ -53,21 +53,43 @@ Function Invoke-UnitRule{
             #Get extra validation
             $moreThan = $InputObject.rule | Select-Object -ExpandProperty moreThan -ErrorAction Ignore | Convert-Value
             $lessThan = $InputObject.rule | Select-Object -ExpandProperty lessThan -ErrorAction Ignore | Convert-Value
+            $atLeast = $InputObject.rule | Select-Object -ExpandProperty atLeast -ErrorAction Ignore | Convert-Value
             $shouldExist = $InputObject.rule | Select-Object -ExpandProperty shouldExist -ErrorAction Ignore
             $returnObject = $InputObject.rule | Select-Object -ExpandProperty returnObject -ErrorAction Ignore
             $showAll = $InputObject.rule | Select-Object -ExpandProperty showAll -ErrorAction Ignore
             #Check for moreThan exception rule
             If($null -ne $moreThan){
-                $count = @($matched_elements).Count
-                if($count -le $moreThan){
+                If($null -eq $matched_elements){
+                    $count = 0;
+                }
+                Else{
+                    $count = @($matched_elements).Count
+                }
+                If($count -le $moreThan){
                     $matched_elements = $null
                 }
             }
             #Check for lessThan exception rule
             ElseIf($null -ne $lessThan){
-                $count = @($matched_elements).Count
-                If($null -eq $count){$count = 1}
+                If($null -eq $matched_elements){
+                    $count = 0;
+                }
+                Else{
+                    $count = @($matched_elements).Count
+                }
                 If($count -gt $lessThan){
+                    $matched_elements = $null
+                }
+            }
+            #Check for atLeast exception rule
+            ElseIf($null -ne $atLeast){
+                If($null -eq $matched_elements){
+                    $count = 0;
+                }
+                Else{
+                    $count = @($matched_elements).Count
+                }
+                If($count -ge $atLeast){
                     $matched_elements = $null
                 }
             }
@@ -75,11 +97,7 @@ Function Invoke-UnitRule{
             If($null -ne $shouldExist){
                 If($null -eq $matched_elements){
                     If($null -ne $returnObject){
-                        $_retObj = New-Object -TypeName PSCustomObject
-                        Foreach($element in $returnObject.psObject.Properties){
-                            $_retObj | Add-Member -Type NoteProperty -name $element.Name -value $element.Value
-                        }
-                        $matched_elements = $_retObj
+                        $matched_elements = $returnObject
                     }
                     Elseif($null -eq $returnObject){
                         $matched_elements = $ObjectsToCheck

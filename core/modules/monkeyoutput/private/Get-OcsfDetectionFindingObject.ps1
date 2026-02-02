@@ -1,4 +1,4 @@
-# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -40,6 +40,9 @@ Function Get-OcsfDetectionFindingObject{
         [parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="Finding")]
         [Object]$InputObject,
 
+        [parameter(Mandatory=$false, HelpMessage="Resource data")]
+        [Object]$Data,
+
         [parameter(Mandatory=$false, HelpMessage="Product Name")]
         [String]$ProductName,
 
@@ -65,78 +68,133 @@ Function Get-OcsfDetectionFindingObject{
         [ValidateSet("Azure","EntraId","Microsoft365")]
         [String]$Provider = "Azure"
     )
+    Begin{
+        #Get Metadata
+        $Metadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-Metadata")
+        #Set new dict
+        $metadataPsboundParams = [ordered]@{}
+        $param = $Metadata.Parameters.Keys
+        ForEach($p in $param.GetEnumerator()){
+            If($p -eq "InputObject"){continue}
+            If($PSBoundParameters.ContainsKey($p)){
+                $metadataPsboundParams.Add($p,$PSBoundParameters[$p])
+            }
+        }
+        #Get Finding info params
+        $FindingInfoMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-FindingInfo")
+        #Set new dict
+        $findingInfoPsboundParams = [ordered]@{}
+        $param = $FindingInfoMetadata.Parameters.Keys
+        ForEach($p in $param.GetEnumerator()){
+            If($p -eq "InputObject"){continue}
+            If($PSBoundParameters.ContainsKey($p)){
+                $findingInfoPsboundParams.Add($p,$PSBoundParameters[$p])
+            }
+        }
+        #Get cloud param
+        $CloudObjMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-CloudObject")
+        #Set new dict
+        $cloudPsboundParams = [ordered]@{}
+        $param = $CloudObjMetadata.Parameters.Keys
+        ForEach($p in $param.GetEnumerator()){
+            If($PSBoundParameters.ContainsKey($p)){
+                $cloudPsboundParams.Add($p,$PSBoundParameters[$p])
+            }
+        }
+    }
     Process{
+        #Set detection finding obj
         $detectionFindingObj = New-OcsfDetectionFindingObject
         #Add timestamp
         $detectionFindingObj.time = $InputObject.timestamp;
         #Add activity Id
         $detectionFindingObj.ActivityId = [Ocsf.ActivityId]::Create.value__
         $detectionFindingObj.ActivityName = [Ocsf.ActivityId]::Create.ToString()
-        $detectionFindingObj.Severity = Get-Severity -Level $InputObject.level
-        $detectionFindingObj.SeverityId = Get-SeverityId -Level $InputObject.level
+        $detectionFindingObj.Severity = $InputObject.level | Get-Severity
+        $detectionFindingObj.SeverityId = $InputObject.level | Get-SeverityId
         #Get StatusCode
         $detectionFindingObj.statusCode = $InputObject.statusCode
         #Get Remediation
-        $detectionFindingObj.Remediation = Get-Remediation -InputObject $InputObject
-        #Get Metadata
-        $Metadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-Metadata")
-        #Set new dict
-        $newPsboundParams = [ordered]@{}
-        $param = $Metadata.Parameters.Keys
-        foreach($p in $param.GetEnumerator()){
-            if($PSBoundParameters.ContainsKey($p)){
-                $newPsboundParams.Add($p,$PSBoundParameters[$p])
-            }
-        }
-        $detectionFindingObj.Metadata = Get-Metadata @newPsboundParams
-        #Get FindingInfo
-        $FindingInfoMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-FindingInfo")
-        #Set new dict
-        $newPsboundParams = [ordered]@{}
-        $param = $FindingInfoMetadata.Parameters.Keys
-        foreach($p in $param.GetEnumerator()){
-            if($PSBoundParameters.ContainsKey($p)){
-                $newPsboundParams.Add($p,$PSBoundParameters[$p])
-            }
-        }
-        $detectionFindingObj.FindingInfo = Get-FindingInfo @newPsboundParams
+        $detectionFindingObj.Remediation = $InputObject | Get-Remediation
+        #Get metadata from inputobject
+        $detectionFindingObj.Metadata = $InputObject | Get-Metadata @metadataPsboundParams
+        #Get Finding info
+        $detectionFindingObj.FindingInfo = $InputObject | Get-FindingInfo @findingInfoPsboundParams
         ##Fill Category and Class##
         $detectionFindingObj.CategoryId = [Ocsf.CategoryId]::Findings.value__
         $detectionFindingObj.CategoryName = [Ocsf.CategoryId]::Findings.ToString()
         $detectionFindingObj.ClassId = [Ocsf.ClassId]::Detection.value__
         $detectionFindingObj.ClassName = [Ocsf.ClassId]::Detection.ToString()
-        #Get Cloud object
-        $CloudObjMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "Get-CloudObject")
-        #Set new dict
-        $newPsboundParams = [ordered]@{}
-        $param = $CloudObjMetadata.Parameters.Keys
-        foreach($p in $param.GetEnumerator()){
-            if($PSBoundParameters.ContainsKey($p)){
-                $newPsboundParams.Add($p,$PSBoundParameters[$p])
-            }
-        }
-        $detectionFindingObj.Cloud = Get-CloudObject @newPsboundParams
+        #Get cloud object
+        $detectionFindingObj.Cloud = Get-CloudObject @cloudPsboundParams
         ####Calc Type Id class_uid * 100 + activity_id ###
         $detectionFindingObj.typeId = ([Ocsf.ClassId]::Detection.value__ * 100) + [Ocsf.ActivityId]::Create.value__
         $detectionFindingObj.TypeName = [Ocsf.TypeId]::Create.ToString()
         #Get Status
-        $detectionFindingObj.Status = Get-Status -Level $InputObject.level;
-        $detectionFindingObj.StatusId = Get-StatusId -Level $InputObject.level;
-        #Get Resource details
-        $resourceDetails = New-OcsfResourceDetailsObject
-        if($resourceDetails){
-            $resourceDetails.Group.Name = $InputObject.serviceType
-            $resourceDetails.CloudPartition = [Ocsf.Objects.Entity.AccountType]::AzureADAccount
-            $detectionFindingObj.Resources = $resourceDetails;
-        }
+        $detectionFindingObj.Status = $InputObject.level | Get-Status
+        $detectionFindingObj.StatusId = $InputObject.level | Get-StatusId
         #Add Unmapped data
         $unmapped = [PsCustomObject]@{
             Provider = $InputObject.metadata.Provider;
             PluginId = $InputObject.metadata.Id;
             ApiType = $InputObject.metadata.ApiType;
             Resource = $InputObject.metadata.Resource;
+            ruleId = $InputObject.id;
+            immutableId = $null;
         }
         $detectionFindingObj.unmapped = $unmapped;
+        #Get resource details param
+        $ResourcesObjMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "New-OcsfResourceDetailsObject")
+        #Set new dict
+        $resourceDetailsPsboundParams = [ordered]@{}
+        $param = $ResourcesObjMetadata.Parameters.Keys
+        ForEach($p in $param.GetEnumerator()){
+            If($PSBoundParameters.ContainsKey($p)){
+                $resourceDetailsPsboundParams.Add($p,$PSBoundParameters[$p])
+            }
+        }
+        $detectionFindingObj.Resources = New-OcsfResourceDetailsObject @resourceDetailsPsboundParams
+        #Set status
+        If($PSBoundParameters.ContainsKey('Data') -and $PSBoundParameters['Data']){
+            #Get Status from inputobject
+            Try{
+                $status = $InputObject.output.text.status;
+                $detectionFindingObj.StatusDetail = $PSBoundParameters['Data'] | Get-FindingLegend -StatusObject $status
+            }
+            Catch{
+                Write-Warning ("Unable to get status from {0}" -f $InputObject.displayName)
+                Write-Error $_.Exception.Message
+            }
+            #Get Immutable Id;
+            $properties = $InputObject | Select-Object -ExpandProperty immutable_properties -ErrorAction Ignore
+            If($null -ne $properties){
+                $p = @{
+                    Properties = $properties
+                    TenantId = $PSBoundParameters['TenantId']
+                }
+                $immutableId = $PSBoundParameters['Data'] | Get-ImmutableId @p
+                If($null -ne $immutableId){
+                    $detectionFindingObj.unmapped.immutableId = $immutableId
+                }
+                Else{
+                    Write-Warning ("immutable Id failed for {0}" -f $InputObject.displayName)
+                }
+            }
+            Else{
+                Write-Verbose ("immutable properties were not found for {0}" -f $InputObject.displayName)
+            }
+        }
+        Else{
+            #Get default status message
+            Try{
+                $detectionFindingObj.StatusDetail = $InputObject.output.text.status.defaultMessage
+            }
+            Catch{
+                Write-Warning ("Unable to get default status from {0}" -f $InputObject.displayName)
+                Write-Error $_.Exception.Message
+            }
+        }
+        #return object
         return $detectionFindingObj
     }
 }

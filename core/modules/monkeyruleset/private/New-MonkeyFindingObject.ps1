@@ -91,7 +91,7 @@ Function New-MonkeyFindingObject {
                         Expressions = $InputObject.output.text.data.properties;
                         ExpandObject = $InputObject.output.text.data.expandObject ;
                     }
-                    $dataOut = $PSBoundParameters['AffectedObjects'] | Format-DataFromExpression @p
+                    $dataOut = $PSBoundParameters['AffectedObjects'] | Format-DataFromExpression @p -RuleName $InputObject.displayName
                     #Add to object
                     $InputObject.output.text | Add-Member -Type NoteProperty -name out -value $dataOut -Force
                 }
@@ -113,7 +113,7 @@ Function New-MonkeyFindingObject {
                     If($limit){
                         [void]$p.Add('Limit',$InputObject.output.html.actions.objectData.limit)
                     }
-                    $dataOut = $PSBoundParameters['AffectedObjects'] | Format-DataFromExpression @p
+                    $dataOut = $PSBoundParameters['AffectedObjects'] | Format-DataFromExpression @p -RuleName $InputObject.displayName
                     Foreach($obj in @($dataOut)){
                         $id = ("MonkeyRawObject_{0}" -f [System.Guid]::NewGuid().Guid.Replace('-','').ToString())
                         $newObj = [psobject]@{
