@@ -9,7 +9,7 @@
   <a href="https://twitter.com/tr1ana"><img alt="Twitter" src="https://img.shields.io/twitter/follow/tr1ana?style=social"></a>
   <a href="https://github.com/silverhack/monkey365/releases"><img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/silverhack/monkey365/total"></a>
   <a href="https://www.powershellgallery.com/packages/monkey365"><img alt="PowerShell Gallery" src="https://img.shields.io/powershellgallery/v/monkey365.svg?label=latest+version"></a>
-  <a href="https://www.powershellgallery.com/packages/monkey365"><img alt="PowerShell Gallery Downloads" src="https://img.shields.io/powershellgallery/dt/monkey365.svg?label=downloads"></a>
+  [![PSGallery Downloads](https://img.shields.io/powershellgallery/dt/monkey365.svg?style=flat&logo=powershell&label=PSGallery%20Downloads)](https://www.powershellgallery.com/packages/monkey365)
 </p>
 
 <p
@@ -125,7 +125,7 @@ By default, the HTML report shows you the CIS (Center for Internet Security) Ben
 The following standards are supported by Monkey365:
 
 * CIS Microsoft Azure Foundations Benchmark v3.0.0
-* CIS Microsoft 365 Foundations Benchmark v3.0.0 and v4.0.0
+* CIS Microsoft 365 Foundations Benchmark v3.0.0, v4.0.0 and V5.0.0
 
 More standards will be added in next releases (NIST, HIPAA, GDPR, PCI-DSS, etc..) as they are available.
 
