@@ -131,7 +131,7 @@
 		"m365-user-owned-apps-and-services-allowed.json": [
             {
                 "enabled": true,
-                "level": "low",
+                "level": "medium",
                 "compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -193,7 +193,7 @@
                 ]
             }
         ],
-		"exchange-atp-safe-links-office365-apps-disabled.json": [
+		"exchange-atp-safe-links-office-disabled.json": [
             {
                 "enabled": true,
                 "level": "medium",
@@ -365,7 +365,7 @@
 		"exhange-inbound-anti-spam-policies-allowed-domains.json": [
             {
                 "enabled": true,
-                "level": "medium",
+                "level": "high",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -430,7 +430,7 @@
 		"purview-audit-log-search-disabled.json": [
             {
                 "enabled": true,
-                "level": "medium",
+                "level": "high",
 				"compliance": [
                     {
                         "name": "CIS Microsoft 365 Foundations",
@@ -466,7 +466,7 @@
                 ]
             }
         ],
-		"purview-sharepoint-online-lack-of-information-protection-policies.json": [
+		"purview-lack-of-information-protection-label-policies.json": [
             {
                 "enabled": true,
                 "level": "medium",
