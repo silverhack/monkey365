@@ -26,7 +26,7 @@ The HTML report is entirely independent of the JSON or CSV report. As a result, 
 
 ## Exporting options
 
-Monkey365 HTML reports uses CDN (jsDelivr) to load assets by default. The base [configuration](../configuration/configuration-file.md) is as follows:
+Monkey365 HTML reports use the `jsDelivr` CDN to load resources directly from GitHub. By default, `htmlReportFromCDN` is set to `true`, and the `assetsRepository` property points to the standard assets repository at https://github.com/silverhack/monkey365assets. The base [configuration](../configuration/configuration-file.md) is structured as follows:
 
 ```json 
 "htmlSettings": {
@@ -39,18 +39,35 @@ Monkey365 HTML reports uses CDN (jsDelivr) to load assets by default. The base [
 	"htmlReportFromCDN": "true"
 },
 ```
-As an alternative, you can enable the legacy mode, which will download a local copy of all the assets and set local links within the report.
+
+As an alternative, you can enable the legacy UNC mode. This mode downloads a local copy of all required assets and updates the report to use local links. To activate it, specify a local or UNC path in the `assetsPath` property and set `enabled` to `true`.
 
 ???+ note
 	Downloading assets significantly increases the size of a report. The size can exceed 20MB.
 
 ### In-House CDN
 
-There is an option to use an in-house CDN by configuring CDN URL via `assetsRepository` property (defaults to https://github.com/silverhack/monkey365assets).
+There is an option to use an in-house CDN by configuring your own GitHub repository via `assetsRepository` property (defaults to https://github.com/silverhack/monkey365assets).
 
 * Download assets via GitHub
 * Unpack it and upload files into your CDN (e.g. private GitHub repository)
 * Set the `assetsRepository`property to new CDN link
+
+### Local Server
+
+Monkey365 can also serve static HTML assets (CSS, JavaScript, images, fonts, and more) through a dedicated local web server endpoint rather than loading them from GitHub. To enable this option, set the assetsPath property to the base URL where the static assets are hosted.
+
+```json
+"htmlSettings": {
+    "convertPassFindingToGood": true,
+        "assetsRepository":"https://github.com/silverhack/monkey365assets",
+	"localHtmlReport": {
+	    "assetsPath": "http(s)://your_local_server/localassets/",
+	    "enabled": "true"
+	},
+    "htmlReportFromCDN": "true"
+}
+```
 
 ## Compliance
 
@@ -122,7 +139,7 @@ In the above example, this will result in the data being rendered in a single ta
 
 ![](../assets/images/tableAsList.png)
 
-### Normal Table
+### Default Table
 
 In this example, the following code that was extracted from the <a href='https://github.com/silverhack/monkey365/blob/main/rules/findings/Azure/Storage%20Accounts/CIS1.4/azure-storage-accounts-https-traffic-enabled.json' target='_blank'>azure-storage-accounts-https-traffic-enabled.json</a> Monkey365 rule is used to render data for *Storage accounts missing key rotation* finding into a default table.
 
@@ -137,7 +154,7 @@ In this example, the following code that was extracted from the <a href='https:/
         },
         "expandObject": null
       },
-      "table": "Normal",
+      "table": "default",
       "decorate": [
         
       ],
@@ -170,11 +187,11 @@ Table elements can be configured to show raw data on Bootstrap Modal. In order t
       }
 }
 ```
-The above example will result in the data being rendered in a single table formatted as normal table, and a modal button in last column.
+The above example will result in the data being rendered in a single table formatted as default table, and a modal button in last column.
 
 ![](../assets/images/modalButton.png)
 
-**Note** This feature is only supported in tables formatted as a ```Normal``` table.
+**Note** This feature is only supported in tables formatted as a ```default``` table.
 
 <!--
 
@@ -200,10 +217,10 @@ Table elements can be configured to add a direct link to the Azure console secti
       }
 }
 ```
-The above example will result in the data being rendered in a single table formatted as normal table, and a direct link button in last column.
+The above example will result in the data being rendered in a single table formatted as default table, and a direct link button in last column.
 
 ![](../assets/images/directLinkButton.png)
 
-**Note** This feature is only supported in tables formatted as a ```Normal``` table. Please, also note that since this feature is experimental, we welcome your feedback.
+**Note** This feature is only supported in tables formatted as a ```default``` table. Please, also note that since this feature is experimental, we welcome your feedback.
 
 -->
