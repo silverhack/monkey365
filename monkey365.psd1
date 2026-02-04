@@ -83,7 +83,8 @@ FunctionsToExport = @(
     'Get-AstFunction',
     'Get-ObjectPropertyByPath',
     'Register-Monkey365Application',
-    'Test-IsPsObject'
+    'Test-IsPsObject',
+    'Get-HashFromString'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
