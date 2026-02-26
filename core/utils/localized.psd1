@@ -185,4 +185,9 @@ CompressingJob                   = Compressing Monkey data into {0}
 TokenAcquiredGenericMessage      = A new token was successfully acquired
 LocalCDNMessage                  = Local CDN set at {0}
 LocalCDNErrorMessage             = Unable to produce local html report. The error was {0}
+ValidTokenInfoMessage            = A valid access token was found for {0}
+ImportTokenInfoMessage           = Import token into Monkey365
+MixedTokensErrorMessage          = Unable to import access tokens. Missing TenantId parameter or mixed tokens detected
+SPOTokenImportErrorMessage       = Unable to import access token for SharePoint Online. Unable to get valid URL
+ConnectImportTokenErrorMessage   = Unable to execute Monkey365 using external access tokens
 '@;

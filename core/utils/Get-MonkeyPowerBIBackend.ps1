@@ -42,7 +42,7 @@ Function Get-MonkeyPowerBIBackend{
         $rawQuery = ('{0}/v1.0/myorg/admin/groups?$top=1' -f $O365Object.Environment.PowerBIAPI);
         #Get Auth header
         $AuthHeader = @{
-            Authorization = $O365Object.auth_tokens.PowerBI.CreateAuthorizationHeader();
+            Authorization = ("Bearer {0}" -f $O365Object.auth_tokens.PowerBI.AccessToken);
         }
     }
     Process{
