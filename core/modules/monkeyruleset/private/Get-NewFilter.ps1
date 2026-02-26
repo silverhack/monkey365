@@ -102,10 +102,10 @@ Function Get-NewFilter{
         ElseIf($RightCastValue -is [string]){
             $rightCondition = Get-CastValue -InputObject $RightCastValue
             If($nullLeft){
-                $tmp_filter = ('$null -{0} {1}' -f $Operator, $rightCondition)
+                $tmp_filter = ('$null -{0} $_.{1}' -f $Operator, $RightCastValue)
             }
             ElseIf($pipeline){
-                $tmp_filter = ('$_ -{0} {1}' -f $Operator, $rightCondition)
+                $tmp_filter = ('$_ -{0} $_.{1}' -f $Operator, $RightCastValue)
             }
             ElseIf($LeftItem.Contains('@odata.type')){
                 #First remove odata.type
@@ -157,10 +157,10 @@ Function Get-NewFilter{
         }
         Else{
             If($nullLeft){
-                $tmp_filter = ('$null -{0} {1}' -f $Operator, $RightCastValue)
+                $tmp_filter = ('$null -{0} $_.{1}' -f $Operator, $RightCastValue)
             }
             ElseIf($pipeline){
-                $tmp_filter = ('$_ -{0} {1}' -f $Operator, $RightCastValue)
+                $tmp_filter = ('$_ -{0} $_.{1}' -f $Operator, $RightCastValue)
             }
             ElseIf($LeftItem.Contains('@')){
                 $tmp_filter = ('$_."{0}" -{1} {2}' -f $LeftItem, $Operator, $RightCastValue)

@@ -57,9 +57,9 @@ Function ConvertTo-SecureScriptBlock{
             $allowedVariables = [string[]] @('*')
             #Remove Property references
             $sbTest = $InputObject.Replace('.','')
-            foreach($allow in $allowed){
-                if([regex]::isMatch($sbTest.ToLower(),("-{0}" -f $allow.ToLower()))){
-                    $sbTest = $sbTest -ireplace [regex]::Escape($allow), "eq"
+            ForEach($allow in $allowed){
+                If([regex]::isMatch($sbTest.ToLower(),("-{0}" -f $allow.ToLower()))){
+                    $sbTest = $sbTest -ireplace [regex]::Escape(("-{0}" -f $allow.ToLower())), "-eq"
                 }
             }
             $double_quotes ='".*?"'

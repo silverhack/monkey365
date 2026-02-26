@@ -131,7 +131,7 @@ Function Get-MonkeyEnvironment{
                 AADPortal = "https://main.iam.ad.ext.azure.com/api/";
                 AADRM = "https://aadrm.us";
                 Forms = "https://forms.office.com";
-                Storage = "https://storage.azure.com/";
+                Storage = "https://storage.azure.us/";
                 Vaults = "https://vault.azure.net";
                 Servicemanagement = 'https://management.core.usgovcloudapi.net/';
                 Security = 'https://s2.security.ext.azure.com/api/';

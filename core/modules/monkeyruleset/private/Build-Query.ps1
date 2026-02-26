@@ -65,7 +65,7 @@ Function Build-Query{
                     [void]$finalquery.Append((" {0}" -f $q));
                 }
                 If($finalquery.Length -gt 0){
-                    $safeQuery = $finalquery | ConvertTo-SecureScriptBlock
+                    $safeQuery = $finalquery.ToString().Trim() | ConvertTo-SecureScriptBlock
                     if($safeQuery){
                         $InputObject | Add-Member -type NoteProperty -name query -value $safeQuery
                         return $InputObject
@@ -101,7 +101,7 @@ Function Build-Query{
                         [void]$finalquery.Append((" {0}" -f $q));
                     }
                     If($finalquery.Length -gt 0){
-                        $safeQuery = $finalquery.ToString() | ConvertTo-SecureScriptBlock
+                        $safeQuery = $finalquery.ToString().Trim() | ConvertTo-SecureScriptBlock
                         If($safeQuery){
                             $unitRule | Add-Member -type NoteProperty -name query -value $safeQuery
                         }

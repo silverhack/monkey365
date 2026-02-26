@@ -41,40 +41,39 @@ Function Get-MonkeySubscriptionInfo{
         [Parameter(Mandatory = $false, HelpMessage = 'Endpoint')]
         [String]$Endpoint
     )
-    try{
-        [System.Uri]$audience = $Endpoint
-    }
-    catch{
-        Write-Warning $_
-        $audience = $null
-    }
-    if($null -ne $audience){
-        if(Test-IsValidAudience -token $AuthObject.AccessToken -audience $audience.Authority){
-            $Authorization = $AuthObject.CreateAuthorizationHeader()
-            # Set HTTP request headers to include Authorization header
-            $requestHeader = @{
-                "x-ms-version" = "2014-10-01";
-                "Authorization" = $Authorization
+    Try{
+        #Get Authorization Header
+        $methods = $AuthObject | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
+        #Get Authorization Header
+        If($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
+            $AuthHeader = $AuthObject.CreateAuthorizationHeader()
+        }
+        Else{
+            $AuthHeader = ("Bearer {0}" -f $AuthObject.AccessToken)
+        }
+        $requestHeader = @{
+            "Authorization" = $AuthHeader
+        }
+        $Server = [System.Uri]::new($Endpoint)
+        $uri = [System.Uri]::new($Server,"/subscriptions?api-version=2022-09-01")
+        $final_uri = $uri.ToString()
+        try{
+            $p = @{
+                Uri = $final_uri;
+                Method = "Get";
+                Headers = $requestHeader;
+                ContentType = 'application/json'
             }
-            $Server = [System.Uri]::new($Endpoint)
-            $uri = [System.Uri]::new($Server,"/subscriptions?api-version=2022-09-01")
-            $final_uri = $uri.ToString()
-            try{
-                $p = @{
-                    Uri = $final_uri;
-                    Method = "Get";
-                    Headers = $requestHeader;
-                    ContentType = 'application/json'
-                }
-                $subs = Invoke-RestMethod @p
-                if($subs.Value){
-                    return $subs.Value
-                }
-            }
-            catch{
-                Write-Verbose $_
+            $subs = Invoke-RestMethod @p
+            If($subs.Value){
+                return $subs.Value
             }
         }
+        Catch{
+            Write-Verbose $_
+        }
+    }
+    Catch{
+        Write-Error $_.Exception
     }
 }
-

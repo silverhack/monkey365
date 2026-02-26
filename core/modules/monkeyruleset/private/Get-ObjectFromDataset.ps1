@@ -108,6 +108,7 @@ Function Get-ObjectFromDataset{
                                         $dataObjects = $dataObjects | Format-DataFromExpression @p -RuleName $InputObject.displayName
                                     }
                                 }
+                                #Check if filter should be applied before execute query
                                 #return dataObjects
                                 return $dataObjects
                             }
