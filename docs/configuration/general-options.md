@@ -83,6 +83,11 @@ Use this flag to list available frameworks:
 Invoke-Monkey365 -ListFramework
 ```
 
+```-AccessToken```
+
+Use this flag to provide external access tokens. More information can be seen [here](../authentication/access_token.md)
+
+
 ## Listing collectors
 
 The `-ListCollector` flag is used to display a list of available collectors within Monkey365. Collectors are modular components that gather specific sets of data from cloud environments such as Azure, Microsoft 365, or Entra ID.

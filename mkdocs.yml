@@ -13,82 +13,93 @@ hooks:
 - docs_overrides/hooks/year.py
 
 theme:
-  language: en
   name: material
+  language: en
   font:
     text: Roboto
   palette:
-    - scheme: default
-      toggle:
-        icon: material/toggle-switch
-        name: Switch to dark mode
+    - scheme: slate
       primary: black
       accent: blue
-    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+    - scheme: default
+      primary: black
       toggle:
         icon: material/toggle-switch-off-outline
-        name: Switch to light mode
-      primary: black
+        name: Switch to dark mode
   logo: assets/images/MonkeyLogo.png
   favicon: assets/images/favicon.ico
   icon:
     repo: fontawesome/brands/github
   features:
-  - navigation.instant
-  - navigation.indexes
-  - navigation.sections:
-      level: 1
-  - navigation.tabs
-  - content.code.annotate
+    - navigation.instant
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections:
+        level: 1
+    - navigation.expand
+    - navigation.top
+    - navigation.indexes
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.annotate
+    - content.icons
 
 nav:
   - Home: index.md
-  - Getting started:
-    - Overview:
-      - Installation: install/install-instructions.md
-      - Permissions: getting_started/permissions.md
-      - Basic Usage: getting_started/basic-usage.md
-    - Configuration:
-      - General Options: configuration/general-options.md
-      - Azure Options: configuration/azure-options.md
-      - Microsoft365 Options: configuration/microsoft365-options.md
-      - Configuration File: configuration/configuration-file.md
-      - Handle Rate Limit: configuration/rate-limit.md
-    - Authentication:
+  - Quick Start:
+      - Install Monkey365: install/install-instructions.md
+      - Required Permissions: getting_started/permissions.md
+      - Run Your First Scan: getting_started/basic-usage.md
+      - Example Reports:
+        - Azure: sample/monkey365_azure.html
+  - Run & Configure:
+      - Configuration (Overview):
+          - Global Options: configuration/general-options.md
+          - Azure Options: configuration/azure-options.md
+          - Microsoft 365 Options: configuration/microsoft365-options.md
+          - Configuration File: configuration/configuration-file.md
+          - Rate Limits & Throttling: configuration/rate-limit.md
+      - Docker: docker/docker.md
+  - Authentication:
       - Overview: authentication/overview.md
-      - Authentication Flows:
-        - Web Browser Interactive: authentication/authFlows/interactive.md
-        - Device Code: authentication/authFlows/devicecode.md
-        - Service Principal: authentication/authFlows/sp.md
-        - Resource Owner Password Credential: authentication/authFlows/ropc.md
-      - Supported Authentication Methods Matrix: authentication/supported_auth_methods_byapp.md
-      - Service Principal Authentication:
-        - Manual Setup: authentication/sp_authentication/getting_started.md
-        - Automatic Setup: authentication/sp_authentication/automatic_setup.md
+      - Choose an Auth Flow:
+          - Web Browser Interactive: authentication/authFlows/interactive.md
+          - Device Code: authentication/authFlows/devicecode.md
+          - Service Principal: authentication/authFlows/sp.md
+          - ROPC (Username/Password): authentication/authFlows/ropc.md
+      - Service Principal Setup:
+          - Manual Setup: authentication/sp_authentication/getting_started.md
+          - Automatic Setup: authentication/sp_authentication/automatic_setup.md
+      - Supported Methods Matrix: authentication/supported_auth_methods_byapp.md
+      - Using Microsoft Graph Client Id: authentication/using_mggraph_client_id.md
+      - Passing Access Tokens: authentication/access_token.md
       - Authentication Prompts: authentication/authprompts.md
-      - Current limitations: authentication/limitations.md
-    - Docker:
-      - Overview: docker/docker.md
-    - Export Data:
-      - Overview: exporting/exporting-data.md
-      - CSV: exporting/export-csv.md
-      - JSON: exporting/export-json.md
-      - CLIXML: exporting/export-clixml.md
-      - HTML: exporting/export-html.md
-    - Logging:
-      - Introduction: logging/introduction.md
-      - Channels: logging/channels.md
-      - File logger: logging/File.md
-      - Slack logger: logging/Slack.md
-      - Teams logger: logging/Teams.md
-    - Security Checks:
+      - Current Limitations: authentication/limitations.md
+  - Reports, Exporting & Logging:
+      - Export Data:
+          - Overview: exporting/exporting-data.md
+          - CSV: exporting/export-csv.md
+          - JSON: exporting/export-json.md
+          - CLIXML: exporting/export-clixml.md
+          - HTML: exporting/export-html.md
+      - Logging:
+          - Introduction: logging/introduction.md
+          - Channels: logging/channels.md
+          - File Logger: logging/File.md
+          - Slack Logger: logging/Slack.md
+          - Teams Logger: logging/Teams.md
+  - Custom Checks and Rulesets:
       - Overview: security_checks/overview.md
-      - Create a custom rule: security_checks/custom-rule.md
-      - Custom ruleset: security_checks/custom-ruleset.md
-  - License and Contributing: license/license-contributing.md
-  - Support: support/support.md
-  - Disclaimer: support/disclaimer.md
-  - Sample Report: sample/monkey365.html
+      - Create a Custom Rule: security_checks/custom-rule.md
+      - Custom Ruleset: security_checks/custom-ruleset.md
+  - Help:
+      - Support: support/support.md
+      - Disclaimer: support/disclaimer.md
+      - License and Contributing: license/license-contributing.md
 
 extra:
   consent:

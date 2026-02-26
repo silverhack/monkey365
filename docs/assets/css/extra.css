@@ -1,14 +1,62 @@
-.container {
-    font-family: arial;
-    font-size: 24px;
-    margin: 25px;
-    width: 350px;
-    height: 200px;
-    outline: dashed 1px black;
-  }
-
-  .center {
+.center {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.center-badges {
+  text-align: center;
+}
+.center-badges img {
+  display: inline-block;
+}
+
+
+
+/* Logo spacing (first image on the page) */
+.md-content img[alt="Monkey365 logo"] {
+  display: block;
+  margin: 0.25rem 0 0.75rem 0;
+  border-radius: 14px;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: color-mix(in srgb, var(--md-default-bg-color) 80%, white 20%);
+  padding: 6px;
+}
+
+/* Badges row: give consistent spacing */
+.md-content a > img[src*="img.shields.io"] {
+  margin-right: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+/* Buttons: add breathing room when multiple buttons are stacked */
+.md-content .md-button {
+  margin-right: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Code block in "Start in 3 commands" should look crisp */
+.md-content pre > code {
+  border-radius: 0.9rem;
+}
+
+/* Screenshots and diagrams: constrain width + subtle frame */
+.md-content img[alt="Example HTML report"],
+.md-content img[alt="Monkey365 architecture"] {
+  display: block;
+  max-width: min(980px, 100%);
+  width: 100%;
+  height: auto;
+  margin: 0.75rem 0 1rem 0;
+  border-radius: 1rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Mobile: reduce shadows slightly */
+@media (max-width: 600px) {
+  .md-content img[alt="Example HTML report"],
+  .md-content img[alt="Monkey365 architecture"] {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   }
+}
