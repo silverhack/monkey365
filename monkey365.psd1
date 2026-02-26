@@ -12,10 +12,10 @@
 RootModule = 'monkey365.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.96'
+ModuleVersion = '0.96.5'
 
 # Supported PSEditions
-# CompatiblePSEditions = @()
+CompatiblePSEditions = @('Desktop', 'Core')
 
 # ID used to uniquely identify this module
 GUID = 'b040dfab-f762-4ce1-bcc4-1b3963603ff1'
@@ -27,7 +27,7 @@ Author = 'Juan Garrido'
 CompanyName = 'monkey365'
 
 # Copyright statement for this module
-Copyright = '(c)2021 Juan Garrido. All rights reserved.'
+Copyright = '(c)2021-2026 Juan Garrido. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'Monkey365 provides a tool that enables security consultants to efficiently perform security configuration reviews across Microsoft 365, Azure subscriptions, and Microsoft Entra ID.'
@@ -74,7 +74,7 @@ NestedModules = @(
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
     'Invoke-Monkey365',
-    'Get-MonkeyJobError'
+    'Get-MonkeyJobError',
     'Convert-MarkDownToHtml',
     'Convert-MarkDownToPlainText',
     'Copy-PsObject',
@@ -116,6 +116,10 @@ PrivateData = @{
             "Microsoft365-Security",
             "Azure",
             "AzureAD",
+            'EntraID',
+            'Security-Assessment',
+            'Cloud-Security',
+            'Configuration-Review',
             "EntraID-Security-Assessment",
             "Microsoft-Entra",
             "Cloud-Security-Configuration-Review",
@@ -134,10 +138,17 @@ PrivateData = @{
         # A URL to an icon representing this module.
         IconUri = 'https://user-images.githubusercontent.com/5271640/181045413-1d17333c-0533-404a-91be-2070ccc6ee29.png'
 
+        # Repository URI and Bug tracker
+        RepositoryUri = 'https://github.com/silverhack/monkey365'
+        BugTrackerUri = 'https://github.com/silverhack/monkey365/issues'
+
         #Prerelease = 'beta'
 
         # ReleaseNotes of this module
-        ReleaseNotes = '*'
+        ReleaseNotes = 'https://github.com/silverhack/monkey365/releases'
+
+        # Set true to require explicit acceptance when using Install-Module
+        RequireLicenseAcceptance = $false
 
         # External dependent modules of this module
         # ExternalModuleDependencies = ''

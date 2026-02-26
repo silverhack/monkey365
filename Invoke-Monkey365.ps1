@@ -305,6 +305,9 @@ Function Invoke-Monkey365{
         [Parameter(Mandatory=$false, HelpMessage="Force to load MSAL Desktop PowerShell Core on Windows")]
         [Switch]$ForceMSALDesktop,
 
+        [Parameter(Mandatory=$false, HelpMessage="Pass tokens from others tools, such as az cli")]
+        [Object]$AccessToken,
+
         [Parameter(Mandatory=$false, HelpMessage="List available collectors")]
         [Switch]$ListCollector,
 
@@ -396,13 +399,13 @@ Function Invoke-Monkey365{
         }
         #Add parameters for Microsoft365 instance
         If($null -ne (Get-Variable -Name Instance -ErrorAction Ignore) -and $Instance -eq 'Microsoft365'){
-            #Create the -ScanSites string parameter
+            #Create the -SpoSites string parameter
             $attributeCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
             # define a new parameter attribute
             $rg_attr_name = New-Object System.Management.Automation.ParameterAttribute
             $rg_attr_name.Mandatory = $false
             $attributeCollection.Add($rg_attr_name)
-            $rg_pname = 'ScanSites'
+            $rg_pname = 'SpoSites'
             $rg_type_dynParam = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter($rg_pname,
             [string[]], $attributeCollection)
             $paramDictionary.Add($rg_pname, $rg_type_dynParam)
@@ -595,8 +598,26 @@ Function Invoke-Monkey365{
         ################### End Validate parameters #####################
         #Initialize authentication parameters
         Initialize-AuthenticationParam
-        #Connect
-        Connect-MonkeyCloud
+        If($PSBoundParameters.ContainsKey('AccessToken') -and $PSBoundParameters['AccessToken']){
+            Import-ExternalAccessToken -InputObject $PSBoundParameters['AccessToken']
+            If($O365Object.auth_tokens.GetEnumerator().Where({$null -ne $_.value}).Count -gt 0){
+                Connect-MonkeyCloud -Connected
+            }
+            Else{
+                $msg = @{
+                    MessageData = ($message.ConnectImportTokenErrorMessage);
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'warning';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('Monkey365ExternalAccessTokenError');
+                }
+                Write-Warning @msg
+            }
+        }
+        Else{
+            #Connect
+            Connect-MonkeyCloud
+        }
         #Start Watcher
         If($null -ne (Get-Command -Name "Watch-AccessToken" -ErrorAction ignore)){
             Watch-AccessToken
