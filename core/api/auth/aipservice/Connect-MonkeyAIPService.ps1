@@ -65,19 +65,19 @@ Function Connect-MonkeyAIPService{
                     Debug = $O365Object.debug;
                 }
                 $O365Object.auth_tokens.AADRM = Connect-MonkeyGenericApplication @p
-                If($null -ne $O365Object.auth_tokens.AADRM){
-                    #Get Service locator url
-                    $service_locator = Get-AADRMServiceLocatorUrl
-                    If($null -ne $service_locator){
-                        #set internal object
-                        If($O365Object.Environment.ContainsKey('aadrm_service_locator')){
-                            $O365Object.Environment.aadrm_service_locator = $service_locator;
-                        }
-                        Else{
-                            $O365Object.Environment.Add('aadrm_service_locator',$service_locator)
-                        }
-                        $O365Object.onlineServices.Item($service) = $true
+            }
+            If($null -ne $O365Object.auth_tokens.AADRM){
+                #Get Service locator url
+                $service_locator = Get-AADRMServiceLocatorUrl
+                If($null -ne $service_locator){
+                    #set internal object
+                    If($O365Object.Environment.ContainsKey('aadrm_service_locator')){
+                        $O365Object.Environment.aadrm_service_locator = $service_locator;
                     }
+                    Else{
+                        $O365Object.Environment.Add('aadrm_service_locator',$service_locator)
+                    }
+                    $O365Object.onlineServices.Item($service) = $true
                 }
             }
         }

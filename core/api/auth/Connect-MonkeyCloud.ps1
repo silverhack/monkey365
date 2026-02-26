@@ -35,7 +35,10 @@ Function Connect-MonkeyCloud{
     #>
 
     [CmdletBinding()]
-    Param ()
+    Param (
+        [parameter(Mandatory=$false, HelpMessage="Used when tokens are imported from init param")]
+        [Switch]$Connected
+    )
     #Using MSAL authentication
     If($null -ne $O365Object.msal_application_args){
         #Connect to MSGraph
@@ -47,7 +50,9 @@ Function Connect-MonkeyCloud{
             Tags = @('TokenRequestInfoMessage');
         }
         Write-Information @msg
-        $O365Object.auth_tokens.MSGraph = Connect-MonkeyMSGraph
+        If(!$Connected.IsPresent){
+            $O365Object.auth_tokens.MSGraph = Connect-MonkeyMSGraph
+        }
         If($null -ne $O365Object.auth_tokens.MSGraph){
             #Check If valid TenantId
             If($null -ne $O365Object.TenantId){
@@ -108,14 +113,16 @@ Function Connect-MonkeyCloud{
         }
         Write-Information @msg
         #Connect to Resource management
-        $p = @{
-            Resource = $O365Object.Environment.ResourceManager;
-            AzureService = "AzurePowershell";
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
+        If(!$Connected.IsPresent){
+            $p = @{
+                Resource = $O365Object.Environment.ResourceManager;
+                AzureService = "AzurePowershell";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $O365Object.auth_tokens.ResourceManager = Connect-MonkeyGenericApplication @p
         }
-        $O365Object.auth_tokens.ResourceManager = Connect-MonkeyGenericApplication @p
     }
     #Select tenant
     If($null -eq $O365Object.TenantId -and $null -ne $O365Object.auth_tokens.ResourceManager){
@@ -145,14 +152,16 @@ Function Connect-MonkeyCloud{
         }
         Write-Information @msg
         #Connect to Microsoft legacy Graph
-        $p = @{
-            Resource = $O365Object.Environment.Graph;
-            AzureService = "AzurePowershell";
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
+        If(!$Connected.IsPresent){
+            $p = @{
+                Resource = $O365Object.Environment.Graph;
+                AzureService = "AzurePowershell";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $O365Object.auth_tokens.Graph = Connect-MonkeyGenericApplication @p
         }
-        $O365Object.auth_tokens.Graph = Connect-MonkeyGenericApplication @p
         #Connect to Azure Portal
         If($O365Object.isConfidentialApp -eq $false -and $O365Object.IncludeEntraID){
             $msg = @{
@@ -163,24 +172,32 @@ Function Connect-MonkeyCloud{
                 Tags = @('TokenRequestInfoMessage');
             }
             Write-Information @msg
-            $p = @{
-                Resource = (Get-WellKnownAzureService -AzureService AzurePortal);
-                AzureService = "AzurePowershell";
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
+            If(!$Connected.IsPresent){
+                $p = @{
+                    Resource = (Get-WellKnownAzureService -AzureService AzurePortal);
+                    AzureService = "AzurePowershell";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                $O365Object.auth_tokens.AzurePortal = Connect-MonkeyGenericApplication @p
             }
-            $O365Object.auth_tokens.AzurePortal = Connect-MonkeyGenericApplication @p
-            #$O365Object.auth_tokens.AzurePortal = Connect-MonkeyAzurePortal
         }
-        #Get Tenant Information
-        Get-TenantInformation
     }
+    $p = @{
+        InformationAction = $O365Object.InformationAction;
+        Verbose = $O365Object.verbose;
+        Debug = $O365Object.Debug;
+    }
+    #Get information about current identity
+    $O365Object.me = Get-MonkeyMe @p
+    #Get Tenant Information
+    Get-TenantInformation
     #Check If Azure services is selected
     If($O365Object.initParams.Instance -eq "Azure"){
-        Connect-MonkeyAzure
+        Connect-MonkeyAzure @PSBoundParameters
         #Set Azure connections to True If connection and subscription are present
-        If($null -ne $O365Object.auth_tokens.ResourceManager -and $null -ne $O365Object.auth_tokens.Graph -and $null -ne $O365Object.auth_tokens.MSGraph -and $null -ne $O365Object.subscriptions){
+        If($null -ne $O365Object.auth_tokens.ResourceManager -and $null -ne $O365Object.auth_tokens.MSGraph -and $null -ne $O365Object.subscriptions){
             $O365Object.onlineServices.Azure = $True
         }
         Else{
@@ -190,20 +207,13 @@ Function Connect-MonkeyCloud{
     }
     #Check If Microsoft 365 is selected
     ElseIf($O365Object.initParams.Instance -eq "Microsoft365"){
-        Connect-MonkeyM365
+        Connect-MonkeyM365 @PSBoundParameters
     }
     #Get licensing information
     $O365Object.Licensing = Get-MonkeySKUInfo
     #Check If current identity can request users and groups from Microsoft Graph
-    $p = @{
-        InformationAction = $O365Object.InformationAction;
-        Verbose = $O365Object.verbose;
-        Debug = $O365Object.Debug;
-    }
     $O365Object.canRequestUsersFromMsGraph = Test-CanRequestUser @p
     $O365Object.canRequestGroupsFromMsGraph = Test-CanRequestGroup @p
-    #Get information about current identity
-    $O365Object.me = Get-MonkeyMe @p
     #Check If connected to Azure AD
     If($O365Object.canRequestUsersFromMsGraph -eq $false -and $null -eq $O365Object.Tenant.CompanyInfo){
         $msg = @{
@@ -227,7 +237,7 @@ Function Connect-MonkeyCloud{
         Else{
             $authObject = $O365Object.auth_tokens.GetEnumerator() | Where-Object {$null -ne $_.Value} | Select-Object -ExpandProperty Value -First 1
             If($null -ne $authObject){
-                $O365Object.userId = $authObject | Get-UserIdFromToken
+                $O365Object.userId = $O365Object.me.id;
             }
         }
         #Get Azure AD permissions
@@ -298,15 +308,16 @@ Function Connect-MonkeyCloud{
         }
         Write-Information @msg
         #Connect to PIM
-        $p = @{
-            Resource = (Get-WellKnownAzureService -AzureService MSPIM);
-            AzureService = "AzurePowershell";
-            InformationAction = $O365Object.InformationAction;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
+        If(!$Connected.IsPresent){
+            $p = @{
+                Resource = (Get-WellKnownAzureService -AzureService MSPIM);
+                AzureService = "AzurePowershell";
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+            }
+            $O365Object.auth_tokens.MSPIM = Connect-MonkeyGenericApplication @p
         }
-        $O365Object.auth_tokens.MSPIM = Connect-MonkeyGenericApplication @p
-        #$O365Object.auth_tokens.MSPIM = Connect-MonkeyPIM
     }
     #Get collectors
     $p = @{

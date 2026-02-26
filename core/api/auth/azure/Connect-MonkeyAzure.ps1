@@ -34,17 +34,17 @@ Function Connect-MonkeyAzure{
             https://github.com/silverhack/monkey365
     #>
     [CmdletBinding()]
-    Param ()
+    Param (
+        [parameter(Mandatory=$false, HelpMessage="Used when tokens are imported from init param")]
+        [Switch]$Connected
+    )
     Begin{
         $azure_services = @{
             ResourceManager = $O365Object.Environment.ResourceManager;
-            Graph = $O365Object.Environment.Graph;
             ServiceManagement = $O365Object.Environment.Servicemanagement;
-            AzurePortal = Get-WellKnownAzureService -AzureService AzurePortal;
             SecurityPortal = $O365Object.Environment.Servicemanagement;
             AzureStorage = $O365Object.Environment.Storage;
             AzureVault = $O365Object.Environment.Vaults;
-            MSGraph =$O365Object.Environment.Graphv2;
             LogAnalytics = $O365Object.Environment.LogAnalytics;
         }
         $app_params = @{
@@ -61,8 +61,8 @@ Function Connect-MonkeyAzure{
         }
     }
     End{
-        if($null -ne $O365Object.subscriptions -and $null -ne $app_params){
-            foreach($service in $azure_services.GetEnumerator()){
+        If($null -ne $O365Object.subscriptions -and $null -ne $app_params){
+            ForEach($service in $azure_services.GetEnumerator()){
                 $msg = @{
                     MessageData = ($message.TokenRequestInfoMessage -f $service.Name)
                     callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -80,15 +80,17 @@ Function Connect-MonkeyAzure{
                 #Add resource parameter
                 $new_params.Resource = $service.Value
                 try{
-                    $O365Object.auth_tokens.$($azure_service) = Connect-MonkeyGenericApplication @new_params
-                    $msg = @{
-                        MessageData = ($message.TokenAcquiredInfoMessage -f $service.Name)
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'info';
-                        InformationAction = $O365Object.InformationAction;
-                        Tags = @('TokenAcquiredMessage');
+                    IF(!$Connected.IsPresent){
+                        $O365Object.auth_tokens.$($azure_service) = Connect-MonkeyGenericApplication @new_params
+                        $msg = @{
+                            MessageData = ($message.TokenAcquiredInfoMessage -f $service.Name)
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'info';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('TokenAcquiredMessage');
+                        }
+                        Write-Information @msg
                     }
-                    Write-Information @msg
                 }
                 catch{
                     $msg = @{
