@@ -20,7 +20,7 @@ Currently, you can use tab completion in Monkey365 to complete `Collect`, `Insta
 
 ## SharePoint Online
 
-The `-ScanSites` option allows you to specify one or more SharePoint URLs manually. This parameter is particularly helpful when Monkey365 cannot automatically detect the root SharePoint URL.
+The `-SpoSites` option allows you to specify one or more SharePoint URLs manually. This parameter is particularly helpful when Monkey365 cannot automatically detect the root SharePoint URL.
 
 ```PowerShell
 
@@ -30,7 +30,7 @@ $param = @{
     PromptBehavior = 'SelectAccount';
     IncludeEntraID = $true;
     ExportTo = 'HTML';
-    ScanSites = "https://your-domain.sharepoint.com";
+    SpoSites = "https://your-domain.sharepoint.com";
 }
 Invoke-Monkey365 @param
 ```
