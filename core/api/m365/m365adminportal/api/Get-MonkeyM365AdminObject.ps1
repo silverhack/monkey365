@@ -81,7 +81,14 @@ Function Get-MonkeyM365AdminObject{
              break
         }
         #Get Authorization Header
-        $AuthHeader = $Authentication.CreateAuthorizationHeader()
+        $methods = $Authentication | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
+        #Get Authorization Header
+        If($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
+            $AuthHeader = $Authentication.CreateAuthorizationHeader()
+        }
+        Else{
+            $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
+        }
         #Get internal Path
         switch ($InternalPath) {
             'settings'{$base_uri = 'settings'}

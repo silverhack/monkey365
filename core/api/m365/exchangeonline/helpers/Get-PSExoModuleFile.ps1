@@ -36,12 +36,20 @@ Function Get-PSExoModuleFile{
     [cmdletbinding()]
     Param (
         [parameter(Mandatory=$false, HelpMessage="Purview")]
-        [Switch]$Purview
+        [Switch]$Purview,
+
+        [parameter(Mandatory=$false, HelpMessage="Authentication Object")]
+        [Object]$Authentication
     )
     Try{
         If($PSBoundParameters['Purview'] -and $PSBoundParameters['Purview'].IsPresent){
             #Get Security and Compliance Auth token
-			$ExoAuth = $O365Object.auth_tokens.ComplianceCenter
+			If($PSBoundParameters.ContainsKey('Authentication') -and $PSBoundParameters['Authentication']){
+                $ExoAuth = $PSBoundParameters['Authentication']
+            }
+            Else{
+                $ExoAuth = $O365Object.auth_tokens.ComplianceCenter
+            }
             #Get TenantId from token
             #$tid = Read-JWTtoken -token $O365Object.auth_tokens.ComplianceCenter.AccessToken | Select-Object -ExpandProperty tid -ErrorAction Ignore
 			#Get Backend Uri
@@ -99,7 +107,12 @@ Function Get-PSExoModuleFile{
             #Get environment
             $Environment = $O365Object.Environment
             #Get Auth token
-            $exoAuth = $O365Object.auth_tokens.ExchangeOnline
+            If($PSBoundParameters.ContainsKey('Authentication') -and $PSBoundParameters['Authentication']){
+                $ExoAuth = $PSBoundParameters['Authentication']
+            }
+            Else{
+                $ExoAuth = $O365Object.auth_tokens.ExchangeOnline
+            }
             #Get Module file
             $param = @{
                 Authentication = $exoAuth;

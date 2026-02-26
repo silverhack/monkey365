@@ -53,7 +53,7 @@ Function Get-MonkeyCSOMOffice365Tenant{
                 }
                 #Execute query
                 $m365_tenant = Invoke-MonkeyCSOMRequest @p
-                if($m365_tenant){
+                If($m365_tenant){
                     #Add url
                     $m365_tenant | Add-Member -type NoteProperty -name Url -value $O365Object.auth_tokens.SharePointAdminOnline.Resource -Force
                     return $m365_tenant

@@ -71,7 +71,14 @@ Function Invoke-MonkeyCSOMDefaultRequest{
             break
         }
         #Get Authorization Header
-        $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
+        $methods = $Authentication | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
+        #Get Authorization Header
+        If($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
+            $AuthHeader = $Authentication.CreateAuthorizationHeader()
+        }
+        Else{
+            $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
+        }
         #Set Endpoint
         if($Endpoint){
             $Server = [System.Uri]::new($Endpoint)

@@ -48,7 +48,15 @@ Function Test-SiteConnection{
             Write-Warning -Message ($message.NullAuthenticationDetected -f "SharePoint Online Web API")
             return
         }
-        $sps_web_auth = $Authentication.CreateAuthorizationHeader()
+        #Get Authorization Header
+        $methods = $Authentication | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
+        #Get Authorization Header
+        If($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
+            $sps_web_auth = $Authentication.CreateAuthorizationHeader()
+        }
+        Else{
+            $sps_web_auth = ("Bearer {0}" -f $Authentication.AccessToken)
+        }
         $headers = @{
             Authorization=$sps_web_auth;
         }

@@ -101,7 +101,14 @@ Function Get-MonkeyTeamsObject{
             'TeamsTenant'{$path = 'Teams.Tenant'}
         }
         #Get Authorization Header
-        $AuthHeader = $Authentication.CreateAuthorizationHeader()
+        $methods = $Authentication | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
+        #Get Authorization Header
+        If($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
+            $AuthHeader = $Authentication.CreateAuthorizationHeader()
+        }
+        Else{
+            $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
+        }
         #set msgraph uri
         $base_uri = ("{0}/{1}" -f $Environment.Teams, $path)
         $my_filter = $null
