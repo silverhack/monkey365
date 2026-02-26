@@ -107,16 +107,14 @@ Function Get-MonkeyRMObject{
              break
         }
         #Get Authorization Header
-        <#
         $methods = $Authentication | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
-        if($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
+        #Get Authorization Header
+        If($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
             $AuthHeader = $Authentication.CreateAuthorizationHeader()
         }
-        else{
+        Else{
             $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
         }
-        #>
-        $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
         #set rm uri
         if($null -ne $Authentication.Psobject.Properties.Item('subscriptionId')){
             $base_uri = ("subscriptions/{0}" -f $Authentication.subscriptionId)
