@@ -79,7 +79,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="blue">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -100,7 +100,9 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="." title="Monkey365" class="md-header__button md-logo" aria-label="Monkey365" data-md-component="logo">
       
@@ -134,9 +136,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
     
-      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
       </label>
     
@@ -144,9 +146,9 @@
     
     
     
-    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
     
-      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
       </label>
     
@@ -184,6 +186,8 @@
         </button>
       </nav>
       
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
     </form>
     <div class="md-search__output">
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
@@ -214,14 +218,8 @@
     
   </nav>
   
-</header>
     
-    <div class="md-container" data-md-component="container">
       
-      
-        
-          
-            
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
@@ -254,6 +252,28 @@
   
     
     
+      <li class="md-tabs__item">
+        <a href="install/install-instructions/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Quick Start
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
       
   
   
@@ -262,13 +282,13 @@
     
     
       <li class="md-tabs__item">
-        <a href="install/install-instructions/" class="md-tabs__link">
+        <a href="configuration/general-options/" class="md-tabs__link">
           
   
   
     
   
-  Getting started
+  Run & Configure
 
         </a>
       </li>
@@ -284,17 +304,20 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="license/license-contributing/" class="md-tabs__link">
-        
+    
+    
+      <li class="md-tabs__item">
+        <a href="authentication/overview/" class="md-tabs__link">
+          
   
   
     
   
-  License and Contributing
+  Authentication
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -303,17 +326,30 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="support/support/" class="md-tabs__link">
-        
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="exporting/exporting-data/" class="md-tabs__link">
+          
   
   
     
   
-  Support
+  Reports, Exporting & Logging
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
+  
+
+    
   
 
       
@@ -322,17 +358,20 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="support/disclaimer/" class="md-tabs__link">
-        
+    
+    
+      <li class="md-tabs__item">
+        <a href="security_checks/overview/" class="md-tabs__link">
+          
   
   
     
   
-  Disclaimer
+  Custom Checks and Rulesets
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -341,24 +380,33 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="sample/monkey365.html" class="md-tabs__link">
-        
+    
+    
+      <li class="md-tabs__item">
+        <a href="support/support/" class="md-tabs__link">
+          
   
   
     
   
-  Sample Report
+  Help
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
     </ul>
   </div>
 </nav>
-          
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
         
       
       <main class="md-main" data-md-component="main">
@@ -366,7 +414,9 @@
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -448,12 +498,6 @@
       
         
       
-        
-      
-        
-      
-        
-      
     
     
     
@@ -465,7 +509,9 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -473,7 +519,7 @@
   
   
   <span class="md-ellipsis">
-    Getting started
+    Quick Start
     
   </span>
   
@@ -484,56 +530,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            Getting started
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Overview
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1">
-            <span class="md-nav__icon md-icon"></span>
-            Overview
+            Quick Start
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -549,7 +546,7 @@
   
   
   <span class="md-ellipsis">
-    Installation
+    Install Monkey365
     
   </span>
   
@@ -572,7 +569,7 @@
   
   
   <span class="md-ellipsis">
-    Permissions
+    Required Permissions
     
   </span>
   
@@ -595,7 +592,77 @@
   
   
   <span class="md-ellipsis">
-    Basic Usage
+    Run Your First Scan
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Example Reports
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Example Reports
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sample/monkey365_azure.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Azure
     
   </span>
   
@@ -613,6 +680,62 @@
   
 
               
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Run & Configure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Run & Configure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -644,15 +767,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1" >
         
           
-          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
-    Configuration
+    Configuration (Overview)
     
   </span>
   
@@ -660,10 +785,10 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
             <span class="md-nav__icon md-icon"></span>
-            Configuration
+            Configuration (Overview)
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -679,7 +804,7 @@
   
   
   <span class="md-ellipsis">
-    General Options
+    Global Options
     
   </span>
   
@@ -725,7 +850,7 @@
   
   
   <span class="md-ellipsis">
-    Microsoft365 Options
+    Microsoft 365 Options
     
   </span>
   
@@ -771,7 +896,7 @@
   
   
   <span class="md-ellipsis">
-    Handle Rate Limit
+    Rate Limits & Throttling
     
   </span>
   
@@ -796,8 +921,42 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="docker/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
+      
+        
+      
+        
       
         
       
@@ -822,10 +981,12 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -838,8 +999,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             Authentication
           </label>
@@ -896,15 +1057,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_2" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
         
           
-          <label class="md-nav__link" for="__nav_2_3_2" id="__nav_2_3_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
-    Authentication Flows
+    Choose an Auth Flow
     
   </span>
   
@@ -912,10 +1075,10 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
-            Authentication Flows
+            Choose an Auth Flow
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1000,7 +1163,7 @@
   
   
   <span class="md-ellipsis">
-    Resource Owner Password Credential
+    ROPC (Username/Password)
     
   </span>
   
@@ -1014,29 +1177,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="authentication/supported_auth_methods_byapp/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Supported Authentication Methods Matrix
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1066,15 +1206,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
         
           
-          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
-    Service Principal Authentication
+    Service Principal Setup
     
   </span>
   
@@ -1082,10 +1224,10 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_3_4">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
-            Service Principal Authentication
+            Service Principal Setup
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1150,6 +1292,75 @@
   
   
     <li class="md-nav__item">
+      <a href="authentication/supported_auth_methods_byapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Supported Methods Matrix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="authentication/using_mggraph_client_id/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Using Microsoft Graph Client Id
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="authentication/access_token/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Passing Access Tokens
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="authentication/authprompts/" class="md-nav__link">
         
   
@@ -1178,7 +1389,7 @@
   
   
   <span class="md-ellipsis">
-    Current limitations
+    Current Limitations
     
   </span>
   
@@ -1195,16 +1406,17 @@
     </li>
   
 
-              
-            
-              
-                
+    
+      
+      
   
   
   
   
     
     
+      
+        
       
         
       
@@ -1219,15 +1431,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
-    Docker
+    Reports, Exporting & Logging
     
   </span>
   
@@ -1235,10 +1449,10 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            Docker
+            Reports, Exporting & Logging
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1248,37 +1462,6 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="docker/docker/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Overview
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
     
     
       
@@ -1303,10 +1486,12 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1" >
         
           
-          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
             
   
   
@@ -1319,8 +1504,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_5">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
             <span class="md-nav__icon md-icon"></span>
             Export Data
           </label>
@@ -1479,10 +1664,12 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
         
           
-          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
             
   
   
@@ -1495,8 +1682,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_6">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
             <span class="md-nav__icon md-icon"></span>
             Logging
           </label>
@@ -1560,7 +1747,7 @@
   
   
   <span class="md-ellipsis">
-    File logger
+    File Logger
     
   </span>
   
@@ -1583,7 +1770,7 @@
   
   
   <span class="md-ellipsis">
-    Slack logger
+    Slack Logger
     
   </span>
   
@@ -1606,7 +1793,7 @@
   
   
   <span class="md-ellipsis">
-    Teams logger
+    Teams Logger
     
   </span>
   
@@ -1625,8 +1812,15 @@
 
               
             
-              
-                
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
   
   
   
@@ -1651,15 +1845,17 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
-    Security Checks
+    Custom Checks and Rulesets
     
   </span>
   
@@ -1667,10 +1863,10 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
-            Security Checks
+            Custom Checks and Rulesets
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1709,7 +1905,7 @@
   
   
   <span class="md-ellipsis">
-    Create a custom rule
+    Create a Custom Rule
     
   </span>
   
@@ -1732,7 +1928,7 @@
   
   
   <span class="md-ellipsis">
-    Custom ruleset
+    Custom Ruleset
     
   </span>
   
@@ -1749,14 +1945,6 @@
     </li>
   
 
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
     
       
       
@@ -1764,24 +1952,53 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="license/license-contributing/" class="md-nav__link">
+    
+    
+      
         
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
-    License and Contributing
+    Help
     
   </span>
   
 
-      </a>
-    </li>
-  
-
-    
-      
-      
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Help
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
   
   
   
@@ -1801,9 +2018,10 @@
     </li>
   
 
-    
-      
-      
+              
+            
+              
+                
   
   
   
@@ -1823,25 +2041,34 @@
     </li>
   
 
-    
-      
-      
+              
+            
+              
+                
   
   
   
   
     <li class="md-nav__item">
-      <a href="sample/monkey365.html" class="md-nav__link">
+      <a href="license/license-contributing/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Sample Report
+    License and Contributing
     
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1854,7 +2081,9 @@
             
             
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -1877,6 +2106,8 @@
               <article class="md-content__inner md-typeset">
                 
                   
+  
+
 
 
   
@@ -1885,11 +2116,18 @@
 
 <h1 id="monkey365">Monkey365<a class="headerlink" href="#monkey365" title="Permanent link">&para;</a></h1>
 <div class="center">
-<img src='assets/images/monkey365.png' />
+<img src='assets/images/MonkeyLogo.png' />
 </div>
 
+<p><a href="https://github.com/silverhack/monkey365/releases"><img alt="GitHub release" src="https://img.shields.io/github/v/release/silverhack/monkey365?display_name=tag&amp;sort=semver" /></a>
+<a href="https://www.powershellgallery.com/packages/monkey365/"><img alt="PowerShell Gallery" src="https://img.shields.io/powershellgallery/v/monkey365" /></a>
+<a href="https://github.com/silverhack/monkey365/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/silverhack/monkey365" /></a>
+<a href="https://github.com/silverhack/monkey365/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/silverhack/monkey365?style=social" /></a>
+<a href="https://twitter.com/tr1ana"><img alt="Follow @tr1ana" src="https://img.shields.io/twitter/follow/tr1ana?style=social" /></a>
+<a href="https://github.com/silverhack/monkey365/releases"><img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/silverhack/monkey365/total?style=flat&amp;logo=powershell&amp;label=GitHub%20Release%20Download" /></a>
+<a href="https://www.powershellgallery.com/packages/monkey365"><img alt="PowerShell Gallery Downloads" src="https://img.shields.io/powershellgallery/dt/monkey365.svg?style=flat&amp;logo=powershell&amp;label=PSGallery%20Download" /></a></p>
 <p>Monkey365 is an Open Source security tool that can be used to easily conduct not only Microsoft 365, but also Azure subscriptions and Microsoft Entra ID security configuration reviews without the significant overhead of learning tool APIs or complex admin panels from the start.</p>
-<p>Monkey365 has been designed to tackle these difficulties and get results fast and without any requirements. The results will be visualised in a simplified HTML report to quickly identify potential issues. As such, security consultants will be able to effectively address issues from a single vulnerability report.</p>
+<p>Monkey365 has been designed to tackle these difficulties and get results fast and without any requirements. The results can be visualised in a simplified HTML report to quickly identify potential issues. As such, security consultants will be able to effectively address issues from a single vulnerability report. Click through findings, and evidence in a report format suitable for reviews.</p>
 <p><img alt="" src="assets/images/htmlreport.png" /></p>
 <p>To help with this effort, Monkey365 also provides several ways to identify security gaps in the desired tenant setup and configuration. Monkey365 provides valuable recommendations on how to best configure those settings to get the most out of your Microsoft 365 tenant or Azure subscription.</p>
 <h1 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h1>
@@ -1898,13 +2136,53 @@
 </div>
 
 <p>Monkey365 works in three phases. In the first phase, collectors will issue queries against the multiple data sources to retrieve the desired metadata about targeted tenant or subscription, and then will collect information. Once all the necessary metadata is collected, the result is passed to an internal module in order to start the verifying phase, in which the tool uses the data collected in first phase to perform query search with a default set of rules, as a mechanism to evaluate the configuration and to search for potential misconfigurations and security issues. The third phase starts to generate reports, such as an HTML report containing structured data for quick checking and verification of the results.</p>
-<h1 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h1>
+<h1 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="c">#Install module</span>
+<span class="nb">Install-Module</span> <span class="n">Monkey365</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+<span class="c">#Set params</span>
+<span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Microsoft365&#39;</span><span class="p">;</span>
+    <span class="n">Collect</span> <span class="p">=</span> <span class="s1">&#39;ExchangeOnline&#39;</span><span class="p">,</span><span class="s1">&#39;MicrosoftTeams&#39;</span><span class="p">,</span><span class="s1">&#39;Purview&#39;</span><span class="p">,</span><span class="s1">&#39;SharePointOnline&#39;</span><span class="p">;</span>
+    <span class="n">PromptBehavior</span> <span class="p">=</span> <span class="s1">&#39;SelectAccount&#39;</span><span class="p">;</span>
+    <span class="n">IncludeEntraID</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">;</span>
+    <span class="n">ExportTo</span> <span class="p">=</span> <span class="s1">&#39;HTML&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c">#Execute monkey365</span>
+<span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
+</code></pre></div>
+<hr />
+<p><a class="md-button md-button--primary" href="install/install-instructions/">Getting started</a>
+<a class="md-button" href="getting_started/basic-usage/">Quick start</a>
+<a class="md-button" href="authentication/overview/">Authentication</a>
+<a class="md-button" href="sample/monkey365_azure.html">Sample report</a></p>
+<div class="admonition warning">
+<p class="admonition-title">Permissions required</p>
+<p>Monkey365 needs appropriate permissions to read tenant and subscription configuration data.<br />
+Review: <a href="getting_started/permissions/">Required permissions →</a></p>
+</div>
+<hr />
+<h1 id="automation-friendly-output">Automation-friendly output<a class="headerlink" href="#automation-friendly-output" title="Permanent link">&para;</a></h1>
+<p>Export results as <strong>JSON</strong>, <strong>CSV</strong>, or <strong>CLIXML</strong> for pipelines and post-processing.</p>
 <ul>
-<li><a href="install/install-instructions/">Getting Started</a></li>
-<li><a href="license/license-contributing/">License and Contributing</a></li>
-<li><a href="support/support/">Support</a></li>
-<li><a href="support/disclaimer/">Disclaimer</a></li>
-<li><a href="sample/monkey365.html">Sample report</a></li>
+<li><a href="exporting/exporting-data/">Exporting overview</a></li>
+<li><a href="exporting/export-json/">Export JSON</a></li>
+<li><a href="exporting/export-csv/">Export CSV</a></li>
+<li><a href="exporting/export-html/">Export HTML</a></li>
+</ul>
+<h1 id="extensible-security-checks">Extensible security checks<a class="headerlink" href="#extensible-security-checks" title="Permanent link">&para;</a></h1>
+<p>Create custom rules and rulesets for organization-specific controls.</p>
+<ul>
+<li><a href="security_checks/overview/">Security checks overview</a></li>
+<li><a href="security_checks/custom-rule/">Create a custom rule</a></li>
+<li><a href="security_checks/custom-ruleset/">Custom ruleset</a></li>
+</ul>
+<h1 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Configure scan behavior → <a href="configuration/general-options/">General options</a></li>
+<li>Azure-specific tuning → <a href="configuration/azure-options/">Azure options</a></li>
+<li>Microsoft 365 tuning → <a href="configuration/microsoft365-options/">Microsoft 365 options</a></li>
+<li>Handle throttling → <a href="configuration/rate-limit/">Rate limits &amp; retry</a></li>
+<li>Logging (File/Slack/Teams) → <a href="logging/introduction/">Logging introduction</a></li>
 </ul>
 
 
@@ -1921,6 +2199,8 @@
   
 
 
+  
+
 
 
                 
@@ -1930,6 +2210,12 @@
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
         
       </main>
       
@@ -2064,7 +2350,7 @@
     
     
       
-      <script id="__config" type="application/json">{"base": ".", "features": ["navigation.instant", "navigation.indexes", {"navigation.sections": {"level": 1}}, "navigation.tabs", "content.code.annotate"], "search": "assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": ".", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", {"navigation.sections": {"level": 1}}, "navigation.expand", "navigation.top", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight", "content.code.annotate", "content.icons"], "search": "assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="assets/javascripts/bundle.13a4f30d.min.js"></script>

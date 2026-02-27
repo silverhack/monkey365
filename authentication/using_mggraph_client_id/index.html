@@ -12,28 +12,28 @@
         <meta name="author" content="Juan Garrido">
       
       
-        <link rel="canonical" href="https://silverhack.github.io/monkey365/authentication/authFlows/sp/">
+        <link rel="canonical" href="https://silverhack.github.io/monkey365/authentication/using_mggraph_client_id/">
       
       
-        <link rel="prev" href="../devicecode/">
+        <link rel="prev" href="../supported_auth_methods_byapp/">
       
       
-        <link rel="next" href="../ropc/">
+        <link rel="next" href="../access_token/">
       
       
-      <link rel="icon" href="../../../assets/images/favicon.ico">
+      <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
-        <title>Service Principal - Monkey365</title>
+        <title>Using Microsoft Graph Client Id - Monkey365</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -52,9 +52,9 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/css/extra.css">
+      <link rel="stylesheet" href="../../assets/css/extra.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -90,7 +90,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#service-principal-authentication" class="md-skip">
+        <a href="#using-the-microsoft-graph-client-id" class="md-skip">
           Skip to content
         </a>
       
@@ -106,9 +106,9 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="Monkey365" class="md-header__button md-logo" aria-label="Monkey365" data-md-component="logo">
+    <a href="../.." title="Monkey365" class="md-header__button md-logo" aria-label="Monkey365" data-md-component="logo">
       
-  <img src="../../../assets/images/MonkeyLogo.png" alt="logo">
+  <img src="../../assets/images/MonkeyLogo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -125,7 +125,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Service Principal
+              Using Microsoft Graph Client Id
             
           </span>
         </div>
@@ -232,7 +232,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -253,7 +253,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../install/install-instructions/" class="md-tabs__link">
+        <a href="../../install/install-instructions/" class="md-tabs__link">
           
   
   
@@ -282,7 +282,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../configuration/general-options/" class="md-tabs__link">
+        <a href="../../configuration/general-options/" class="md-tabs__link">
           
   
   
@@ -309,7 +309,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../overview/" class="md-tabs__link">
+        <a href="../overview/" class="md-tabs__link">
           
   
   
@@ -338,7 +338,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../exporting/exporting-data/" class="md-tabs__link">
+        <a href="../../exporting/exporting-data/" class="md-tabs__link">
           
   
   
@@ -363,7 +363,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../security_checks/overview/" class="md-tabs__link">
+        <a href="../../security_checks/overview/" class="md-tabs__link">
           
   
   
@@ -385,7 +385,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../support/support/" class="md-tabs__link">
+        <a href="../../support/support/" class="md-tabs__link">
           
   
   
@@ -427,9 +427,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="Monkey365" class="md-nav__button md-logo" aria-label="Monkey365" data-md-component="logo">
+    <a href="../.." title="Monkey365" class="md-nav__button md-logo" aria-label="Monkey365" data-md-component="logo">
       
-  <img src="../../../assets/images/MonkeyLogo.png" alt="logo">
+  <img src="../../assets/images/MonkeyLogo.png" alt="logo">
 
     </a>
     Monkey365
@@ -456,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -531,7 +531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../install/install-instructions/" class="md-nav__link">
+      <a href="../../install/install-instructions/" class="md-nav__link">
         
   
   
@@ -554,7 +554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting_started/permissions/" class="md-nav__link">
+      <a href="../../getting_started/permissions/" class="md-nav__link">
         
   
   
@@ -577,7 +577,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting_started/basic-usage/" class="md-nav__link">
+      <a href="../../getting_started/basic-usage/" class="md-nav__link">
         
   
   
@@ -647,7 +647,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../sample/monkey365_azure.html" class="md-nav__link">
+      <a href="../../sample/monkey365_azure.html" class="md-nav__link">
         
   
   
@@ -789,7 +789,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../configuration/general-options/" class="md-nav__link">
+      <a href="../../configuration/general-options/" class="md-nav__link">
         
   
   
@@ -812,7 +812,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../configuration/azure-options/" class="md-nav__link">
+      <a href="../../configuration/azure-options/" class="md-nav__link">
         
   
   
@@ -835,7 +835,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../configuration/microsoft365-options/" class="md-nav__link">
+      <a href="../../configuration/microsoft365-options/" class="md-nav__link">
         
   
   
@@ -858,7 +858,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../configuration/configuration-file/" class="md-nav__link">
+      <a href="../../configuration/configuration-file/" class="md-nav__link">
         
   
   
@@ -881,7 +881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../configuration/rate-limit/" class="md-nav__link">
+      <a href="../../configuration/rate-limit/" class="md-nav__link">
         
   
   
@@ -912,7 +912,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../docker/docker/" class="md-nav__link">
+      <a href="../../docker/docker/" class="md-nav__link">
         
   
   
@@ -1006,7 +1006,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../overview/" class="md-nav__link">
+      <a href="../overview/" class="md-nav__link">
         
   
   
@@ -1026,10 +1026,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -1048,11 +1046,13 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
         
           
           <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
@@ -1068,7 +1068,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_2">
             <span class="md-nav__icon md-icon"></span>
             Choose an Auth Flow
@@ -1082,7 +1082,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../interactive/" class="md-nav__link">
+      <a href="../authFlows/interactive/" class="md-nav__link">
         
   
   
@@ -1105,7 +1105,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../devicecode/" class="md-nav__link">
+      <a href="../authFlows/devicecode/" class="md-nav__link">
         
   
   
@@ -1125,30 +1125,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Service Principal
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../authFlows/sp/" class="md-nav__link">
         
   
   
@@ -1159,75 +1139,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#service-principal-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      Service Principal Authentication
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage Examples
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Usage Examples">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#client-secret-in-command-line-flag" class="md-nav__link">
-    <span class="md-ellipsis">
-      Client secret in command-line flag
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#client-certificate-in-command-line-flag" class="md-nav__link">
-    <span class="md-ellipsis">
-      Client certificate in command-line flag
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      References
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1240,7 +1151,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ropc/" class="md-nav__link">
+      <a href="../authFlows/ropc/" class="md-nav__link">
         
   
   
@@ -1320,7 +1231,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sp_authentication/getting_started/" class="md-nav__link">
+      <a href="../sp_authentication/getting_started/" class="md-nav__link">
         
   
   
@@ -1343,7 +1254,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sp_authentication/automatic_setup/" class="md-nav__link">
+      <a href="../sp_authentication/automatic_setup/" class="md-nav__link">
         
   
   
@@ -1374,7 +1285,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../supported_auth_methods_byapp/" class="md-nav__link">
+      <a href="../supported_auth_methods_byapp/" class="md-nav__link">
         
   
   
@@ -1394,10 +1305,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../using_mggraph_client_id/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Using Microsoft Graph Client Id
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1408,6 +1341,44 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#enabling-microsoft-graph-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enabling Microsoft Graph Authentication
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#microsoft-graph-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Microsoft Graph Permissions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1420,7 +1391,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../access_token/" class="md-nav__link">
+      <a href="../access_token/" class="md-nav__link">
         
   
   
@@ -1443,7 +1414,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../authprompts/" class="md-nav__link">
+      <a href="../authprompts/" class="md-nav__link">
         
   
   
@@ -1466,7 +1437,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../limitations/" class="md-nav__link">
+      <a href="../limitations/" class="md-nav__link">
         
   
   
@@ -1600,7 +1571,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../exporting/exporting-data/" class="md-nav__link">
+      <a href="../../exporting/exporting-data/" class="md-nav__link">
         
   
   
@@ -1623,7 +1594,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../exporting/export-csv/" class="md-nav__link">
+      <a href="../../exporting/export-csv/" class="md-nav__link">
         
   
   
@@ -1646,7 +1617,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../exporting/export-json/" class="md-nav__link">
+      <a href="../../exporting/export-json/" class="md-nav__link">
         
   
   
@@ -1669,7 +1640,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../exporting/export-clixml/" class="md-nav__link">
+      <a href="../../exporting/export-clixml/" class="md-nav__link">
         
   
   
@@ -1692,7 +1663,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../exporting/export-html/" class="md-nav__link">
+      <a href="../../exporting/export-html/" class="md-nav__link">
         
   
   
@@ -1778,7 +1749,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../logging/introduction/" class="md-nav__link">
+      <a href="../../logging/introduction/" class="md-nav__link">
         
   
   
@@ -1801,7 +1772,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../logging/channels/" class="md-nav__link">
+      <a href="../../logging/channels/" class="md-nav__link">
         
   
   
@@ -1824,7 +1795,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../logging/File/" class="md-nav__link">
+      <a href="../../logging/File/" class="md-nav__link">
         
   
   
@@ -1847,7 +1818,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../logging/Slack/" class="md-nav__link">
+      <a href="../../logging/Slack/" class="md-nav__link">
         
   
   
@@ -1870,7 +1841,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../logging/Teams/" class="md-nav__link">
+      <a href="../../logging/Teams/" class="md-nav__link">
         
   
   
@@ -1959,7 +1930,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../security_checks/overview/" class="md-nav__link">
+      <a href="../../security_checks/overview/" class="md-nav__link">
         
   
   
@@ -1982,7 +1953,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../security_checks/custom-rule/" class="md-nav__link">
+      <a href="../../security_checks/custom-rule/" class="md-nav__link">
         
   
   
@@ -2005,7 +1976,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../security_checks/custom-ruleset/" class="md-nav__link">
+      <a href="../../security_checks/custom-ruleset/" class="md-nav__link">
         
   
   
@@ -2086,7 +2057,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../support/support/" class="md-nav__link">
+      <a href="../../support/support/" class="md-nav__link">
         
   
   
@@ -2109,7 +2080,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../support/disclaimer/" class="md-nav__link">
+      <a href="../../support/disclaimer/" class="md-nav__link">
         
   
   
@@ -2132,7 +2103,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../license/license-contributing/" class="md-nav__link">
+      <a href="../../license/license-contributing/" class="md-nav__link">
         
   
   
@@ -2172,6 +2143,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2180,51 +2153,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#service-principal-authentication" class="md-nav__link">
+  <a href="#enabling-microsoft-graph-authentication" class="md-nav__link">
     <span class="md-ellipsis">
-      Service Principal Authentication
+      Enabling Microsoft Graph Authentication
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage-examples" class="md-nav__link">
+  <a href="#microsoft-graph-permissions" class="md-nav__link">
     <span class="md-ellipsis">
-      Usage Examples
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Usage Examples">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#client-secret-in-command-line-flag" class="md-nav__link">
-    <span class="md-ellipsis">
-      Client secret in command-line flag
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#client-certificate-in-command-line-flag" class="md-nav__link">
-    <span class="md-ellipsis">
-      Client certificate in command-line flag
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      References
+      Microsoft Graph Permissions
     </span>
   </a>
   
@@ -2249,40 +2189,71 @@
   
 
 
-  <h1>Service Principal</h1>
-
-<h2 id="service-principal-authentication">Service Principal Authentication<a class="headerlink" href="#service-principal-authentication" title="Permanent link">&para;</a></h2>
-<p>This type of grant is commonly used for machine-to-machine interactions that must run in the background, such as daemons, or service accounts. In this case, Microsoft Entra ID authenticates and authorizes the app rather than a user. During this step, the client has to authenticate itself to Microsoft Entra ID. The Microsoft identity platform allows the confidential client to authenticate using a shared secret, certificate or federated credential.</p>
-<h2 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h2>
-<h3 id="client-secret-in-command-line-flag">Client secret in command-line flag<a class="headerlink" href="#client-secret-in-command-line-flag" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
-    <span class="n">ClientId</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
-    <span class="n">ClientSecret</span> <span class="p">=</span> <span class="p">(</span><span class="s2">&quot;MySuperClientSecret&quot;</span> <span class="p">|</span> <span class="nb">ConvertTo-SecureString</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
-    <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Azure&#39;</span><span class="p">;</span>
-    <span class="n">Collect</span> <span class="p">=</span> <span class="s1">&#39;All&#39;</span><span class="p">;</span>
-    <span class="n">subscriptions</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
-    <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
-    <span class="n">ExportTo</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;HTML&quot;</span><span class="p">);</span>
+<h1 id="using-the-microsoft-graph-client-id">Using the Microsoft Graph Client ID<a class="headerlink" href="#using-the-microsoft-graph-client-id" title="Permanent link">&para;</a></h1>
+<p>Monkey365 supports multiple authentication methods when connecting to Microsoft Entra ID. By default, Monkey365 uses the <strong>Azure PowerShell client ID</strong> <code>1950a258-227b-4e31-a9cf-717495945fc2</code>. </p>
+<p>This <a href='https://learn.microsoft.com/en-us/troubleshoot/entra/entra-id/governance/verify-first-party-apps-sign-in#application-ids-of-microsoft-tenant-owned-applications' target='_blank'>client ID</a> is <strong>pre‑authorized by Microsoft</strong> for a <strong>limited set of Microsoft Graph scopes</strong>. Using the default clientId is enough for basic configuration review, but the application do <strong>not</strong> include many of the advanced or privileged scopes required for deeper Entra ID assessments, so there will be collectors that won't be allowed to fetch results due to lack of granted scopes. </p>
+<p>To support more advanced scenarios, Monkey365 also allows authentication using Microsoft's tenant‑owned Microsoft Graph Client ID <code>14d82eec-204b-4c2f-b7e8-296a70dab67e</code></p>
+<p>Using this client ID enables Monkey365 to request additional Microsoft Graph scopes that are <strong>not available</strong> through the <strong>Azure PowerShell client ID</strong>, such as <code>RoleManagement.Read.Directory</code> or <code>PrivilegedAccess.Read.AzureADGroup</code>. Using this clientId provides Monkey365 with broader visibility into privileged roles, access policies or directory‑wide configuration.</p>
+<h2 id="enabling-microsoft-graph-authentication">Enabling Microsoft Graph Authentication<a class="headerlink" href="#enabling-microsoft-graph-authentication" title="Permanent link">&para;</a></h2>
+<p>To switch from the default Azure PowerShell client ID to the Microsoft‑owned Graph Client ID, set the <code>useMgGraph</code> property to <code>true</code> in your <a href="../../configuration/configuration-file/">monkey365.config</a> configuration file:</p>
+<p><div class="highlight"><pre><span></span><code><span class="nt">&quot;mgGraph&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;useMgGraph&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">    </span><span class="err">...</span>
 <span class="p">}</span>
-<span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
 </code></pre></div>
-<h3 id="client-certificate-in-command-line-flag">Client certificate in command-line flag<a class="headerlink" href="#client-certificate-in-command-line-flag" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
-    <span class="n">ClientId</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
-    <span class="n">certificate</span> <span class="p">=</span> <span class="s1">&#39;C:\monkey365\testapp.pfx&#39;</span><span class="p">;</span>
-    <span class="n">CertFilePassword</span> <span class="p">=</span> <span class="p">(</span><span class="s2">&quot;MySuperCertSecret&quot;</span> <span class="p">|</span> <span class="nb">ConvertTo-SecureString</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">);</span>
-    <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Microsoft365&#39;</span><span class="p">;</span>
-    <span class="n">Collect</span> <span class="p">=</span> <span class="s1">&#39;SharePointOnline&#39;</span><span class="p">;</span>
-    <span class="n">TenantID</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
-    <span class="n">ExportTo</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;HTML&quot;</span><span class="p">);</span>
+When enabled, Monkey365 will automatically use the Microsoft Graph Client ID during authentication and request the required permissions.</p>
+<h2 id="microsoft-graph-permissions">Microsoft Graph Permissions<a class="headerlink" href="#microsoft-graph-permissions" title="Permanent link">&para;</a></h2>
+<p>When the Microsoft Graph Client ID is selected, Monkey365 will request the following Microsoft Graph scopes:</p>
+<ul>
+<li>User.Read.All</li>
+<li>Application.Read.All</li>
+<li>Policy.Read.All</li>
+<li>Organization.Read.All</li>
+<li>OrgSettings-AppsAndServices.Read.All</li>
+<li>RoleManagement.Read.Directory</li>
+<li>GroupMember.Read.All</li>
+<li>Directory.Read.All</li>
+<li>PrivilegedEligibilitySchedule.Read.AzureADGroup</li>
+<li>PrivilegedAccess.Read.AzureADGroup</li>
+<li>RoleManagementPolicy.Read.AzureADGroup</li>
+<li>Group.Read.All</li>
+<li>SecurityEvents.Read.All</li>
+<li>IdentityRiskEvent.Read.All</li>
+<li>UserAuthenticationMethod.Read.All</li>
+<li>AuditLog.Read.All</li>
+<li>AccessReview.Read.All</li>
+</ul>
+<p>These permissions allow Monkey365 to perform a comprehensive security and configuration assessment across Entra ID, including privileged access, audit logs, identity protection, and directory‑wide configuration.</p>
+<p>The above scopes are configurable and can be set in <a href="../../configuration/configuration-file/">monkey365.config</a> configuration file under the scopes section, as shown below:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;mgGraph&quot;</span><span class="p">:{</span>
+<span class="w">    </span><span class="nt">&quot;useMgGraph&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;scopes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="s2">&quot;User.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Application.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Policy.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Organization.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;OrgSettings-AppsAndServices.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;RoleManagement.Read.Directory&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;GroupMember.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Directory.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;PrivilegedEligibilitySchedule.Read.AzureADGroup&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;PrivilegedAccess.Read.AzureADGroup&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;RoleManagementPolicy.Read.AzureADGroup&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;Group.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;SecurityEvents.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;IdentityRiskEvent.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;UserAuthenticationMethod.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;AuditLog.Read.All&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">&quot;AccessReview.Read.All&quot;</span>
+<span class="w">    </span><span class="p">]</span>
 <span class="p">}</span>
-<span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
+<span class="p">}</span>
 </code></pre></div>
-<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<p><a href='https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread' target='_blank'>https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread</a></p>
-<p><a href='https://learn.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app' target='_blank'>https://learn.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app</a></p>
-<p><a href='https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps' target='_blank'>https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps</a></p>
-<p><a href='https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azureacs' target='_blank'>https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azureacs</a></p>
+<details class="note" open="open">
+<summary>Note</summary>
+<p>If you are authenticating with the Microsoft Graph Client ID for the first time, you will be prompted to grant the necessary permissions, as shown below:
+<img alt="" src="../../assets/images/consent.png" /></p>
+</details>
 
 
 
@@ -2447,10 +2418,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", {"navigation.sections": {"level": 1}}, "navigation.expand", "navigation.top", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight", "content.code.annotate", "content.icons"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", {"navigation.sections": {"level": 1}}, "navigation.expand", "navigation.top", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight", "content.code.annotate", "content.icons"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
     
   </body>
