@@ -15,7 +15,7 @@ RootModule = 'monkey365.psm1'
 ModuleVersion = '0.96.5'
 
 # Supported PSEditions
-CompatiblePSEditions = @('Desktop', 'Core')
+#CompatiblePSEditions = @()
 
 # ID used to uniquely identify this module
 GUID = 'b040dfab-f762-4ce1-bcc4-1b3963603ff1'
