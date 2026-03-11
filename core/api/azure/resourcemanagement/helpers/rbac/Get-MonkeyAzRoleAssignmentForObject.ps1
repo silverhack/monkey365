@@ -57,7 +57,7 @@ Function Get-MonkeyAzRoleAssignmentForObject{
         [String]$ResourceGroup,
 
         [parameter(Mandatory=$true, ParameterSetName = 'Subscription', HelpMessage="Subscription")]
-        [String]$Subscription,
+        [Switch]$Subscription,
 
         [parameter(Mandatory=$false, HelpMessage="At scope query")]
         [Switch]$AtScope
@@ -67,25 +67,36 @@ Function Get-MonkeyAzRoleAssignmentForObject{
         #Get resource management Auth
         $rmAuth = $O365Object.auth_tokens.ResourceManager
         #Get API version
-        $apiDetails = $O365Object.internal_config.resourceManager | Where-Object {$_.Name -eq 'roleAssignments'} | Select-Object -ExpandProperty resource -ErrorAction Ignore
+        $apiDetails = $O365Object.internal_config.resourceManager.Where({$_.Name -eq 'roleAssignments'}) | Select-Object -ExpandProperty resource -ErrorAction Ignore
         if($null -eq $apiDetails){
             $msg = @{
                 MessageData = ($message.MonkeyInternalConfigError);
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'verbose';
                 InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
                 Tags = @('Monkey365ConfigError');
             }
             Write-Verbose @msg
-            break
+            #Fallback
+            $apiDetails = [PsCustomObject]@{
+                provider = 'Microsoft.Authorization';
+                api_version = '2022-04-01';
+            }
         }
     }
     Process{
         switch ($PSCmdlet.ParameterSetName.ToLower()){
             "CurrentUser"{
-                if($O365Object.userPrincipalName){
+                If($O365Object.userPrincipalName -or $null -ne $O365Object.userId){
+                    If($O365Object.userPrincipalName){
+                        $upn = $O365Object.userPrincipalName;
+                    }
+                    Else{
+                        $upn = $O365Object.userId;
+                    }
                     $msg = @{
-                        MessageData = ($message.RbacPermissionsMessage -f $O365Object.userPrincipalName, "user");
+                        MessageData = ($message.RbacPermissionsMessage -f $upn, "user");
                         callStack = (Get-PSCallStack | Select-Object -First 1);
                         logLevel = 'info';
                         InformationAction = $O365Object.InformationAction;
@@ -95,7 +106,7 @@ Function Get-MonkeyAzRoleAssignmentForObject{
                     #Get current Id
                     $objectId = $O365Object.userId
                 }
-                elseif($O365Object.isConfidentialApp){
+                ElseIf($O365Object.isConfidentialApp){
                     $msg = @{
                         MessageData = ($message.RbacPermissionsMessage -f $O365Object.clientApplicationId, "client application");
                         callStack = (Get-PSCallStack | Select-Object -First 1);

@@ -56,7 +56,7 @@ Function Get-MonkeyAzIAMPermission{
         [String]$ResourceGroup,
 
         [parameter(Mandatory=$true, ParameterSetName = 'Subscription', HelpMessage="Subscription")]
-        [String]$Subscription,
+        [Switch]$Subscription,
 
         [parameter(Mandatory=$false, HelpMessage="At scope query")]
         [Switch]$AtScope

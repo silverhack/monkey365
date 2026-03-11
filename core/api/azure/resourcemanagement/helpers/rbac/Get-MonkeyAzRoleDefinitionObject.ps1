@@ -47,6 +47,7 @@ Function Get-MonkeyAzRoleDefinitionObject {
         [String]$Id
     )
     Begin{
+        $p = $null;
         $Environment = $O365Object.Environment
         #Get resource management Auth
         $rmAuth = $O365Object.auth_tokens.ResourceManager
@@ -61,7 +62,11 @@ Function Get-MonkeyAzRoleDefinitionObject {
                 Tags = @('Monkey365ConfigError');
             }
             Write-Verbose @msg
-            break
+            #Fallback
+            $apiDetails = [PsCustomObject]@{
+                provider = 'Microsoft.Authorization';
+                api_version = '2022-04-01';
+            }
         }
         #Get RoleAssignments at the specified scope and any of its child scopes
 		#https://docs.microsoft.com/en-us/azure/active-directory/role-based-access-control-manage-access-rest
@@ -82,7 +87,6 @@ Function Get-MonkeyAzRoleDefinitionObject {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 		    }
-            $roleDefinition = Get-MonkeyRMObject @p
         }
         elseif($PSCmdlet.ParameterSetName -eq 'RoleObjectName'){
             $p = @{
@@ -98,7 +102,6 @@ Function Get-MonkeyAzRoleDefinitionObject {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 		    }
-            $roleDefinition = Get-MonkeyRMObject @p
         }
         elseif($PSCmdlet.ParameterSetName -eq 'Id'){
             $p = @{
@@ -112,7 +115,6 @@ Function Get-MonkeyAzRoleDefinitionObject {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 		    }
-            $roleDefinition = Get-MonkeyRMObject @p
         }
         else{
             $p = @{
@@ -127,12 +129,9 @@ Function Get-MonkeyAzRoleDefinitionObject {
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 		    }
-            $roleDefinition = Get-MonkeyRMObject @p
         }
-        #Get results
-        if($null -ne $roleDefinition){
-            #Return role definition
-            return $roleDefinition
+        If($null -ne $p){
+            Get-MonkeyRMObject @p
         }
     }
     End{

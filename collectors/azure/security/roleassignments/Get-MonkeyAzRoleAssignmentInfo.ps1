@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-function Get-MonkeyAzRoleAssignment {
+function Get-MonkeyAzRoleAssignmentInfo {
 <#
         .SYNOPSIS
 		Collector to get Role assignments from Azure
@@ -30,7 +30,7 @@ function Get-MonkeyAzRoleAssignment {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAZRoleAssignment
+            File Name	: Get-MonkeyAzRoleAssignmentInfo
             Version     : 1.0
 
         .LINK
@@ -50,7 +50,7 @@ function Get-MonkeyAzRoleAssignment {
 			Resource = "RoleAssignment";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyAZRoleAssignment";
+			collectorName = "Get-MonkeyAzRoleAssignmentInfo";
 			ApiType = "resourceManagement";
 			description = "Collector to get Role assignments from Azure";
 			Group = @(
@@ -63,9 +63,8 @@ function Get-MonkeyAzRoleAssignment {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"az_rbac_users";
-				"az_classic_admins";
-				"az_role_definitions"
+				"az_role_assignment",
+				"az_classic_admins"
 			);
 			dependsOn = @(
 
@@ -85,10 +84,8 @@ function Get-MonkeyAzRoleAssignment {
 		Write-Information @msg
 		#Get classic administrators
 		$classic_admins = Get-MonkeyAzClassicAdministrator
-		#Get Role definitions
-		$role_definintions = Get-MonkeyAzRoleDefinitionObject
 		#Get role assignment
-		$role_assignment = Get-MonkeyAzIAMPermission
+		$role_assignment = Get-MonkeyAzRoleAssignment
 	}
 	end {
 		if ($role_assignment) {
@@ -97,7 +94,7 @@ function Get-MonkeyAzRoleAssignment {
 				Data = $role_assignment;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.az_rbac_users = $obj
+			$returnData.az_role_assignment = $obj
 		}
 		else {
 			$msg = @{
@@ -125,25 +122,6 @@ function Get-MonkeyAzRoleAssignment {
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureClassicAdminsEmptyResponse');
-				Verbose = $O365Object.Verbose;
-			}
-			Write-Verbose @msg
-		}
-		if ($role_definintions) {
-			$role_definintions.PSObject.TypeNames.Insert(0,'Monkey365.Azure.RoleDefinitions')
-			[pscustomobject]$obj = @{
-				Data = $role_definintions;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.az_role_definitions = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Role Definitions",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Tags = @('AzureRoleDefinitionsEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
