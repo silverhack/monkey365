@@ -84,6 +84,8 @@ Function Get-MonkeyAzRoleAssignmentForObject{
                 api_version = '2022-04-01';
             }
         }
+        #Set Null
+        $p = $null
     }
     Process{
         switch ($PSCmdlet.ParameterSetName.ToLower()){
@@ -118,27 +120,39 @@ Function Get-MonkeyAzRoleAssignmentForObject{
                     #Get current Id
                     $objectId = $O365Object.clientApplicationId
                 }
-                #Set filter
-                if($AtScope.IsPresent){
-                    $filter = ("atScope() and assignedTo('{0}')" -f $objectId)
+                If($null -ne $objectId){
+                    #Set filter
+                    if($AtScope.IsPresent){
+                        $filter = ("atScope() and assignedTo('{0}')" -f $objectId)
+                    }
+                    else{
+                        $filter = ("assignedTo('{0}')" -f $objectId)
+                    }
+                    #Construct query
+                    $p = @{
+		                Authentication = $rmAuth;
+			            Provider = $apiDetails.provider;
+                        ObjectType = 'roleAssignments';
+                        Filter = $filter;
+			            Environment = $Environment;
+			            ContentType = 'application/json';
+			            Method = "GET";
+                        APIVersion = $apiDetails.api_version;
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+		            }
                 }
-                else{
-                    $filter = ("assignedTo('{0}')" -f $objectId)
+                Else{
+                    $msg = @{
+                        MessageData = "Unable to Get ObjectId";
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('AzureRbacWarning');
+                    }
+                    Write-Warning @msg                    
                 }
-                #Construct query
-                $p = @{
-		            Authentication = $rmAuth;
-			        Provider = $apiDetails.provider;
-                    ObjectType = 'roleAssignments';
-                    Filter = $filter;
-			        Environment = $Environment;
-			        ContentType = 'application/json';
-			        Method = "GET";
-                    APIVersion = $apiDetails.api_version;
-                    InformationAction = $O365Object.InformationAction;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-		        }
             }
             "PrincipalId"{
                 #Set filter
@@ -300,6 +314,8 @@ Function Get-MonkeyAzRoleAssignmentForObject{
         }
     }
     End{
-        Get-MonkeyRMObject @p
+        If($null -ne $p){
+            Get-MonkeyRMObject @p
+        }
     }
 }
