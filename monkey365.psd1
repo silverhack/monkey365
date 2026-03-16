@@ -12,7 +12,7 @@
 RootModule = 'monkey365.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.96.5'
+ModuleVersion = '0.96.6'
 
 # Supported PSEditions
 #CompatiblePSEditions = @()
@@ -137,10 +137,6 @@ PrivateData = @{
 
         # A URL to an icon representing this module.
         IconUri = 'https://user-images.githubusercontent.com/5271640/181045413-1d17333c-0533-404a-91be-2070ccc6ee29.png'
-
-        # Repository URI and Bug tracker
-        RepositoryUri = 'https://github.com/silverhack/monkey365'
-        BugTrackerUri = 'https://github.com/silverhack/monkey365/issues'
 
         #Prerelease = 'beta'
 
