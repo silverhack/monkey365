@@ -68,18 +68,35 @@ Function Get-AvailableRule{
                 }
                 #Select path
                 $_path = $rule.rule | Select-Object -ExpandProperty path | Select-Object -Unique
-                $exists = $Script:Dataset | Select-Object -ExpandProperty $_path -ErrorAction Ignore
-                If($exists){
-                    $ruleObj.path = $_path;
-                    $ruleObj.skipped = $false;
-                    $ruleObj.reason = "Data exists in dataset";
-                }
-                Else{
+                If($null -eq $_path){
                     #removing rule
                     Write-Verbose -Message ($Script:messages.UnitItemNotFound -f $rule.displayName)
-                    $ruleObj.path = $_path;
+                    $ruleObj.path = $null;
                     $ruleObj.skipped = $true;
                     $ruleObj.reason = "Data is not present in dataset";
+                    
+                }
+                ElseIf($_path.Length -eq 0){
+                    #removing rule
+                    Write-Verbose -Message ($Script:messages.UnitItemNotFound -f $rule.displayName)
+                    $ruleObj.path = $null;
+                    $ruleObj.skipped = $true;
+                    $ruleObj.reason = "Data is not present in dataset";
+                }
+                Else{
+                    $exists = $Script:Dataset | Select-Object -ExpandProperty $_path -ErrorAction Ignore
+                    If($exists){
+                        $ruleObj.path = $_path;
+                        $ruleObj.skipped = $false;
+                        $ruleObj.reason = "Data exists in dataset";
+                    }
+                    Else{
+                        #removing rule
+                        Write-Verbose -Message ($Script:messages.UnitItemNotFound -f $rule.displayName)
+                        $ruleObj.path = $_path;
+                        $ruleObj.skipped = $true;
+                        $ruleObj.reason = "Data is not present in dataset";
+                    }
                 }
                 #Add to array
                 $formattedRules.Add($ruleObj)

@@ -68,6 +68,7 @@ Function Resolve-Include{
                 Catch{
                     Write-Warning $_.Exception.Message
                     Write-Verbose $_.Exception
+                    Write-Warning -Message ($Script:messages.FileNotFoundGenericMessage -f $includeFile)
                 }
             }
             Else{

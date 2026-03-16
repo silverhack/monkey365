@@ -66,6 +66,9 @@ Function New-MonkeyFindingObject {
             If($null -eq $Metadata){
                 $Metadata = New-EmptyMetadataObject
             }
+            #Normalize IdSuffix
+            $InputObject.idSuffix = $InputObject.idSuffix.Replace('.','_').Replace(' ','_').ToLower();
+            #Add properties
             $InputObject | Add-Member -Type NoteProperty -name metadata -value $Metadata -Force
             $InputObject | Add-Member -Type NoteProperty -name affectedResources -value $AffectedObjects -Force
             $InputObject | Add-Member -Type NoteProperty -name resources -value $Resources -Force
@@ -170,7 +173,7 @@ Function New-MonkeyFindingObject {
             $InputObject | Add-Member -Type ScriptMethod -Name getNewIdSuffix -Value {
                 If($null -ne $this.idSuffix.Replace(' ','_')){
                     $guid = [System.Guid]::NewGuid().ToString('N')
-                    return ("{0}_{1}" -f $this.idSuffix, $guid)
+                    return ("{0}_{1}" -f $this.idSuffix, $guid).ToLower()
                 }
             } -Force
             return $InputObject

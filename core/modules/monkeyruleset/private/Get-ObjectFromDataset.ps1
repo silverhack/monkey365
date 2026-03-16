@@ -117,6 +117,12 @@ Function Get-ObjectFromDataset{
                             Write-Warning -Message ($Script:messages.PathNotFoundErrorMessage -f $InputObject.rule.path.Trim().ToString())
                         }
                     }
+                    ElseIf($InputObject -is [System.String]){
+                        $_objects = Get-ObjectPropertyByPath -InputObject $Script:Dataset -Property $InputObject
+                        If($null -ne $_objects){
+                            $_objects | Select-Object -ExpandProperty Data -ErrorAction Ignore
+                        }
+                    }
                 }
             }
             Else{
