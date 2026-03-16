@@ -41,25 +41,13 @@
     "rule": {
         "path": "m365_fabric_tenant",
         "subPath": null,
-        "selectCondition": {
-            
-        },
+        "selectCondition":[
+				"settingName",
+				"eq",
+				"ShareLinkToEntireOrg"
+		],
         "query": [
             {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "settingName",
-                                "eq",
-                                "ShareLinkToEntireOrg"
-                            ]
-                        ]
-                    }
-                ]
-            },
-            {
-                "connectOperator": "and",
                 "filter": [
                     {
                         "conditions": [
@@ -70,16 +58,30 @@
                             ],
                             [
                                 "enabledSecurityGroups.Count",
-                                "eq",
+                                "gt",
                                 "0"
                             ]
                         ],
                         "operator": "and"
                     }
                 ]
+            },
+			{
+                "connectOperator": "or",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "enabled",
+                                "eq",
+                                "False"
+                            ]
+                        ]
+                    }
+                ]
             }
         ],
-        "shouldExist": null,
+        "shouldExist": true,
         "returnObject": null,
         "removeIfNotExists": null
     },

@@ -41,25 +41,13 @@
     "rule": {
         "path": "m365_fabric_tenant",
         "subPath": null,
-        "selectCondition": {
-            
-        },
-        "query": [
+        "selectCondition":[
+				"settingName",
+				"eq",
+				"PublishToWeb"
+		],
+		"query": [
             {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "settingName",
-                                "eq",
-                                "ElevatedGuestsTenant"
-                            ]
-                        ]
-                    }
-                ]
-            },
-            {
-                "connectOperator": "and",
                 "filter": [
                     {
                         "conditions": [
@@ -70,7 +58,7 @@
                             ],
                             [
                                 "enabledSecurityGroups.Count",
-                                "eq",
+                                "gt",
                                 "0"
                             ]
                         ],
@@ -78,8 +66,8 @@
                     }
                 ]
             },
-            {
-                "connectOperator": "or",
+			{
+                "connectOperator": "and",
                 "filter": [
                     {
                         "conditions": [
@@ -91,16 +79,30 @@
                             [
                                 "value",
                                 "eq",
-                                "true"
+                                "false"
                             ]
                         ],
-                        "operator": "and",
+						"operator": "and",
                         "whereObject": "properties"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "or",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "enabled",
+                                "eq",
+                                "False"
+                            ]
+                        ]
                     }
                 ]
             }
         ],
-        "shouldExist": null,
+        "shouldExist": true,
         "returnObject": null,
         "removeIfNotExists": null
     },

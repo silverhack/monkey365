@@ -40,19 +40,16 @@
     "rule": {
         "path": "m365_fabric_tenant",
         "subPath": null,
-        "selectCondition": {
-            
-        },
+        "selectCondition":[
+				"settingName",
+				"eq",
+				"ServicePrincipalAccessGlobalAPIs"
+		],
         "query": [
             {
                 "filter": [
                     {
                         "conditions": [
-                            [
-                                "settingName",
-                                "eq",
-                                "ServicePrincipalAccessGlobalAPIs"
-                            ],
                             [
                                 "enabled",
                                 "eq",
@@ -60,7 +57,7 @@
                             ],
                             [
                                 "enabledSecurityGroups.Count",
-                                "eq",
+                                "gt",
                                 "0"
                             ]
                         ],
@@ -68,33 +65,22 @@
                     }
                 ]
             },
-            {
+			{
                 "connectOperator": "or",
                 "filter": [
                     {
                         "conditions": [
                             [
-                                "settingName",
-                                "eq",
-                                "ServicePrincipalAccessPermissionAPIs"
-                            ],
-                            [
                                 "enabled",
                                 "eq",
-                                "True"
-                            ],
-                            [
-                                "enabledSecurityGroups.Count",
-                                "eq",
-                                "0"
+                                "False"
                             ]
-                        ],
-                        "operator": "and"
+                        ]
                     }
                 ]
             }
         ],
-        "shouldExist": null,
+        "shouldExist": true,
         "returnObject": null,
         "removeIfNotExists": null
     },
