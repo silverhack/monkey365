@@ -151,7 +151,7 @@ Function Get-MonkeyAzRoleAssignmentForObject{
                         InformationAction = $O365Object.InformationAction;
                         Tags = @('AzureRbacWarning');
                     }
-                    Write-Warning @msg                    
+                    Write-Warning @msg
                 }
             }
             "PrincipalId"{
