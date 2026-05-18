@@ -1012,6 +1012,8 @@
       
         
       
+        
+      
     
     
     
@@ -1386,6 +1388,29 @@
   
   <span class="md-ellipsis">
     Passing Access Tokens
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../authentication/manual_token_retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Manual Token Retrieval
     
   </span>
   
@@ -2193,27 +2218,27 @@
 <td style="text-align: left;">Fetch information from Microsoft Purview</td>
 </tr>
 <tr>
-<td>MicrosoftTeams</td>
-<td style="text-align: left;">Collect configuration and policy details from Microsoft Teams, including app permission policies, app setup policies, guest access and calling settings, among other operational components.</td>
+<td>MicrosoftFabric</td>
+<td style="text-align: left;">Collect tenant information from Microsoft Fabric</td>
 </tr>
 <tr>
-<td>AdminPortal</td>
-<td style="text-align: left;">Fetch basic information from Microsoft 365 admin portal</td>
+<td>MicrosoftTeams</td>
+<td style="text-align: left;">Collect configuration and policy details from Microsoft Teams, including app permission policies, app setup policies, guest access and calling settings, among other operational components.</td>
 </tr>
 </tbody>
 </table>
 <p>Currently, you can use tab completion in Monkey365 to complete <code>Collect</code>, <code>Instance</code> and <code>PromptBehavior</code> names. You can autocomplete by pressing the <code>[TAB]</code> and the option will fill in. If more than one option is available, you can press <code>[TAB]</code> twice to display the next possible choice.</p>
 <h2 id="sharepoint-online">SharePoint Online<a class="headerlink" href="#sharepoint-online" title="Permanent link">&para;</a></h2>
 <p>The <code>-SpoSites</code> option allows you to specify one or more SharePoint URLs manually. This parameter is particularly helpful when Monkey365 cannot automatically detect the root SharePoint URL.</p>
-<div class="highlight"><pre><span></span><code><span class="nv">$param</span> <span class="p">=</span> <span class="p">@{</span>
+<div class="highlight"><pre><span></span><code><span class="nv">$p</span> <span class="p">=</span> <span class="p">@{</span>
     <span class="n">Instance</span> <span class="p">=</span> <span class="s1">&#39;Microsoft365&#39;</span><span class="p">;</span>
-    <span class="n">Collect</span> <span class="p">=</span> <span class="s1">&#39;ExchangeOnline&#39;</span><span class="p">,</span><span class="s1">&#39;MicrosoftTeams&#39;</span><span class="p">,</span><span class="s1">&#39;Purview&#39;</span><span class="p">,</span><span class="s1">&#39;SharePointOnline&#39;</span><span class="p">;</span>
+    <span class="n">Collect</span> <span class="p">=</span> <span class="p">@(</span><span class="s1">&#39;ExchangeOnline&#39;</span><span class="p">,</span><span class="s1">&#39;MicrosoftTeams&#39;</span><span class="p">,</span><span class="s1">&#39;Purview&#39;</span><span class="p">,</span><span class="s1">&#39;SharePointOnline&#39;</span><span class="p">);</span>
     <span class="n">PromptBehavior</span> <span class="p">=</span> <span class="s1">&#39;SelectAccount&#39;</span><span class="p">;</span>
     <span class="n">IncludeEntraID</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">;</span>
     <span class="n">ExportTo</span> <span class="p">=</span> <span class="s1">&#39;HTML&#39;</span><span class="p">;</span>
     <span class="n">SpoSites</span> <span class="p">=</span> <span class="s2">&quot;https://your-domain.sharepoint.com&quot;</span><span class="p">;</span>
 <span class="p">}</span>
-<span class="nb">Invoke-Monkey365</span> <span class="nv">@param</span>
+<span class="nb">Invoke-Monkey365</span> <span class="nv">@p</span>
 </code></pre></div>
 
 

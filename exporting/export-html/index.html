@@ -962,6 +962,8 @@
       
         
       
+        
+      
     
     
     
@@ -1353,6 +1355,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../authentication/manual_token_retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Manual Token Retrieval
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../authentication/authprompts/" class="md-nav__link">
         
   
@@ -1668,6 +1693,15 @@
   
     <nav class="md-nav" aria-label="Exporting options">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#assets-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assets configuration
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#in-house-cdn" class="md-nav__link">
@@ -2261,6 +2295,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#assets-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assets configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#in-house-cdn" class="md-nav__link">
     <span class="md-ellipsis">
       In-House CDN
@@ -2389,17 +2432,46 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>The HTML report is entirely independent of the JSON or CSV report. As a result, all components are designed to be compatible with both Microsoft 365 and Azure providers. The HTML report will adjust the rendering of various components based on the content.</p>
 <h2 id="exporting-options">Exporting options<a class="headerlink" href="#exporting-options" title="Permanent link">&para;</a></h2>
-<p>Monkey365 HTML reports use the <code>jsDelivr</code> CDN to load resources directly from GitHub. By default, <code>htmlReportFromCDN</code> is set to <code>true</code>, and the <code>assetsRepository</code> property points to the standard assets repository at https://github.com/silverhack/monkey365assets. The base <a href="../../configuration/configuration-file/">configuration</a> is structured as follows:</p>
+<p>Monkey365 HTML reports use the <code>jsDelivr</code> CDN to serve resources directly from GitHub repositories. By default, <code>htmlReportFromCDN</code> is set to <code>true</code>, and the <code>assets</code> are loaded from the official Monkey365 assets repository through <code>jsDelivr</code>. The base <a href="../../configuration/configuration-file/">configuration</a> is structured as follows:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&quot;htmlSettings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;convertPassFindingToGood&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;assetsRepository&quot;</span><span class="p">:</span><span class="s2">&quot;https://github.com/silverhack/monkey365assets&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;assets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;repository&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/silverhack/monkey365assets&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;branch&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;useLatestTag&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="nt">&quot;localHtmlReport&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;assetsPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;localassets&quot;</span><span class="p">,</span>
 <span class="w">        </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="nt">&quot;htmlReportFromCDN&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
-<span class="p">},</span>
+<span class="p">}</span>
 </code></pre></div>
+<h3 id="assets-configuration">Assets configuration<a class="headerlink" href="#assets-configuration" title="Permanent link">&para;</a></h3>
+<p>The assets section controls how Monkey365 references HTML report resources through the jsDelivr CDN.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>repository</code></td>
+<td>GitHub repository containing the HTML report assets. Set to the standard assets repository at https://github.com/silverhack/monkey365assets</td>
+</tr>
+<tr>
+<td><code>branch</code></td>
+<td>Specific branch used by jsDelivr when serving assets</td>
+</tr>
+<tr>
+<td><code>useLatestTag</code></td>
+<td>When set to <code>true</code>, jsDelivr serves assets from the latest available release tag instead of the configured branch</td>
+</tr>
+</tbody>
+</table>
+<p>If <code>useLatestTag</code> is enabled, Monkey365 will reference assets from the latest published release available in the repository. Otherwise, assets will be served from the branch specified in the branch property.</p>
 <p>As an alternative, you can enable the legacy UNC mode. This mode downloads a local copy of all required assets and updates the report to use local links. To activate it, specify a local or UNC path in the <code>assetsPath</code> property and set <code>enabled</code> to <code>true</code>.</p>
 <details class="note" open="open">
 <summary>Note</summary>
@@ -2410,20 +2482,25 @@
 <ul>
 <li>Download assets via GitHub</li>
 <li>Unpack it and upload files into your CDN (e.g. private GitHub repository)</li>
-<li>Set the <code>assetsRepository</code>property to new CDN link</li>
+<li>Set the <code>repository</code>property to new CDN link</li>
 </ul>
 <h3 id="local-server">Local Server<a class="headerlink" href="#local-server" title="Permanent link">&para;</a></h3>
-<p>Monkey365 can also serve static HTML assets (CSS, JavaScript, images, fonts, and more) through a dedicated local web server endpoint rather than loading them from GitHub. To enable this option, set the assetsPath property to the base URL where the static assets are hosted.</p>
+<p>Monkey365 can also serve static HTML assets (CSS, JavaScript, images, fonts, and more) from a local web server instead of using the jsDelivr CDN. To enable this option, set localHtmlReport.enabled to true and configure assetsPath with the base URL where the static assets are hosted.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&quot;htmlSettings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;convertPassFindingToGood&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;assetsRepository&quot;</span><span class="p">:</span><span class="s2">&quot;https://github.com/silverhack/monkey365assets&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;assets&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;repository&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://github.com/silverhack/monkey365assets&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;branch&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;useLatestTag&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="nt">&quot;localHtmlReport&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nt">&quot;assetsPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http(s)://your_local_server/localassets/&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
+<span class="w">        </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="nt">&quot;htmlReportFromCDN&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;true&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
+<p>You can host the assets on any internal or external web server that is accessible from the system where the HTML report is opened.</p>
 <h2 id="compliance">Compliance<a class="headerlink" href="#compliance" title="Permanent link">&para;</a></h2>
 <p>A <a href="../../security_checks/overview/">ruleset</a> allows you to organize multiple rules that work towards a common goal. These rulesets represent your governance rules that you want Monkey365 to analyze for you. Monkey365 will alert you when a rule is violated.</p>
 <p>Monkey365 includes a variety of default rules and rulesets that can be modified. Additionally, you can configure your own compliance rules.</p>

@@ -12,28 +12,28 @@
         <meta name="author" content="Juan Garrido">
       
       
-        <link rel="canonical" href="https://silverhack.github.io/monkey365/authentication/sp_authentication/automatic_setup/">
+        <link rel="canonical" href="https://silverhack.github.io/monkey365/authentication/manual_token_retrieval/">
       
       
-        <link rel="prev" href="../getting_started/">
+        <link rel="prev" href="../access_token/">
       
       
-        <link rel="next" href="../../supported_auth_methods_byapp/">
+        <link rel="next" href="../authprompts/">
       
       
-      <link rel="icon" href="../../../assets/images/favicon.ico">
+      <link rel="icon" href="../../assets/images/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
-        <title>Automatic Setup - Monkey365</title>
+        <title>Manual Token Retrieval - Monkey365</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -52,9 +52,9 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/css/extra.css">
+      <link rel="stylesheet" href="../../assets/css/extra.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -90,7 +90,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started" class="md-skip">
+        <a href="#manual-token-retrieval" class="md-skip">
           Skip to content
         </a>
       
@@ -106,9 +106,9 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="Monkey365" class="md-header__button md-logo" aria-label="Monkey365" data-md-component="logo">
+    <a href="../.." title="Monkey365" class="md-header__button md-logo" aria-label="Monkey365" data-md-component="logo">
       
-  <img src="../../../assets/images/MonkeyLogo.png" alt="logo">
+  <img src="../../assets/images/MonkeyLogo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -125,7 +125,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Automatic Setup
+              Manual Token Retrieval
             
           </span>
         </div>
@@ -232,7 +232,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -253,7 +253,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../install/install-instructions/" class="md-tabs__link">
+        <a href="../../install/install-instructions/" class="md-tabs__link">
           
   
   
@@ -282,7 +282,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../configuration/general-options/" class="md-tabs__link">
+        <a href="../../configuration/general-options/" class="md-tabs__link">
           
   
   
@@ -309,7 +309,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../overview/" class="md-tabs__link">
+        <a href="../overview/" class="md-tabs__link">
           
   
   
@@ -338,7 +338,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../exporting/exporting-data/" class="md-tabs__link">
+        <a href="../../exporting/exporting-data/" class="md-tabs__link">
           
   
   
@@ -363,7 +363,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../security_checks/overview/" class="md-tabs__link">
+        <a href="../../security_checks/overview/" class="md-tabs__link">
           
   
   
@@ -385,7 +385,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../support/support/" class="md-tabs__link">
+        <a href="../../support/support/" class="md-tabs__link">
           
   
   
@@ -427,9 +427,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="Monkey365" class="md-nav__button md-logo" aria-label="Monkey365" data-md-component="logo">
+    <a href="../.." title="Monkey365" class="md-nav__button md-logo" aria-label="Monkey365" data-md-component="logo">
       
-  <img src="../../../assets/images/MonkeyLogo.png" alt="logo">
+  <img src="../../assets/images/MonkeyLogo.png" alt="logo">
 
     </a>
     Monkey365
@@ -456,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -531,7 +531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../install/install-instructions/" class="md-nav__link">
+      <a href="../../install/install-instructions/" class="md-nav__link">
         
   
   
@@ -554,7 +554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting_started/permissions/" class="md-nav__link">
+      <a href="../../getting_started/permissions/" class="md-nav__link">
         
   
   
@@ -577,7 +577,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting_started/basic-usage/" class="md-nav__link">
+      <a href="../../getting_started/basic-usage/" class="md-nav__link">
         
   
   
@@ -647,7 +647,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../sample/monkey365_azure.html" class="md-nav__link">
+      <a href="../../sample/monkey365_azure.html" class="md-nav__link">
         
   
   
@@ -789,7 +789,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../configuration/general-options/" class="md-nav__link">
+      <a href="../../configuration/general-options/" class="md-nav__link">
         
   
   
@@ -812,7 +812,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../configuration/azure-options/" class="md-nav__link">
+      <a href="../../configuration/azure-options/" class="md-nav__link">
         
   
   
@@ -835,7 +835,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../configuration/microsoft365-options/" class="md-nav__link">
+      <a href="../../configuration/microsoft365-options/" class="md-nav__link">
         
   
   
@@ -858,7 +858,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../configuration/configuration-file/" class="md-nav__link">
+      <a href="../../configuration/configuration-file/" class="md-nav__link">
         
   
   
@@ -881,7 +881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../configuration/rate-limit/" class="md-nav__link">
+      <a href="../../configuration/rate-limit/" class="md-nav__link">
         
   
   
@@ -912,7 +912,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../docker/docker/" class="md-nav__link">
+      <a href="../../docker/docker/" class="md-nav__link">
         
   
   
@@ -1008,7 +1008,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../overview/" class="md-nav__link">
+      <a href="../overview/" class="md-nav__link">
         
   
   
@@ -1084,7 +1084,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../authFlows/interactive/" class="md-nav__link">
+      <a href="../authFlows/interactive/" class="md-nav__link">
         
   
   
@@ -1107,7 +1107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../authFlows/devicecode/" class="md-nav__link">
+      <a href="../authFlows/devicecode/" class="md-nav__link">
         
   
   
@@ -1130,7 +1130,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../authFlows/sp/" class="md-nav__link">
+      <a href="../authFlows/sp/" class="md-nav__link">
         
   
   
@@ -1153,7 +1153,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../authFlows/ropc/" class="md-nav__link">
+      <a href="../authFlows/ropc/" class="md-nav__link">
         
   
   
@@ -1181,10 +1181,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -1199,11 +1197,13 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
         
           
           <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
@@ -1219,7 +1219,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             Service Principal Setup
@@ -1233,12 +1233,112 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting_started/" class="md-nav__link">
+      <a href="../sp_authentication/getting_started/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     Manual Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sp_authentication/automatic_setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automatic Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../supported_auth_methods_byapp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Supported Methods Matrix
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../using_mggraph_client_id/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Using Microsoft Graph Client Id
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../access_token/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Passing Access Tokens
     
   </span>
   
@@ -1270,113 +1370,13 @@
   
   
   <span class="md-ellipsis">
-    Automatic Setup
-    
-  </span>
-  
-
-      </a>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../supported_auth_methods_byapp/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Supported Methods Matrix
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../using_mggraph_client_id/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Using Microsoft Graph Client Id
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../access_token/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Passing Access Tokens
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../manual_token_retrieval/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
     Manual Token Retrieval
     
   </span>
   
 
       </a>
+      
     </li>
   
 
@@ -1389,7 +1389,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../authprompts/" class="md-nav__link">
+      <a href="../authprompts/" class="md-nav__link">
         
   
   
@@ -1412,7 +1412,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../limitations/" class="md-nav__link">
+      <a href="../limitations/" class="md-nav__link">
         
   
   
@@ -1546,7 +1546,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../exporting/exporting-data/" class="md-nav__link">
+      <a href="../../exporting/exporting-data/" class="md-nav__link">
         
   
   
@@ -1569,7 +1569,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../exporting/export-csv/" class="md-nav__link">
+      <a href="../../exporting/export-csv/" class="md-nav__link">
         
   
   
@@ -1592,7 +1592,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../exporting/export-json/" class="md-nav__link">
+      <a href="../../exporting/export-json/" class="md-nav__link">
         
   
   
@@ -1615,7 +1615,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../exporting/export-clixml/" class="md-nav__link">
+      <a href="../../exporting/export-clixml/" class="md-nav__link">
         
   
   
@@ -1638,7 +1638,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../exporting/export-html/" class="md-nav__link">
+      <a href="../../exporting/export-html/" class="md-nav__link">
         
   
   
@@ -1724,7 +1724,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../logging/introduction/" class="md-nav__link">
+      <a href="../../logging/introduction/" class="md-nav__link">
         
   
   
@@ -1747,7 +1747,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../logging/channels/" class="md-nav__link">
+      <a href="../../logging/channels/" class="md-nav__link">
         
   
   
@@ -1770,7 +1770,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../logging/File/" class="md-nav__link">
+      <a href="../../logging/File/" class="md-nav__link">
         
   
   
@@ -1793,7 +1793,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../logging/Slack/" class="md-nav__link">
+      <a href="../../logging/Slack/" class="md-nav__link">
         
   
   
@@ -1816,7 +1816,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../logging/Teams/" class="md-nav__link">
+      <a href="../../logging/Teams/" class="md-nav__link">
         
   
   
@@ -1905,7 +1905,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../security_checks/overview/" class="md-nav__link">
+      <a href="../../security_checks/overview/" class="md-nav__link">
         
   
   
@@ -1928,7 +1928,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../security_checks/custom-rule/" class="md-nav__link">
+      <a href="../../security_checks/custom-rule/" class="md-nav__link">
         
   
   
@@ -1951,7 +1951,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../security_checks/custom-ruleset/" class="md-nav__link">
+      <a href="../../security_checks/custom-ruleset/" class="md-nav__link">
         
   
   
@@ -2032,7 +2032,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../support/support/" class="md-nav__link">
+      <a href="../../support/support/" class="md-nav__link">
         
   
   
@@ -2055,7 +2055,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../support/disclaimer/" class="md-nav__link">
+      <a href="../../support/disclaimer/" class="md-nav__link">
         
   
   
@@ -2078,7 +2078,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../license/license-contributing/" class="md-nav__link">
+      <a href="../../license/license-contributing/" class="md-nav__link">
         
   
   
@@ -2138,47 +2138,27 @@
   
 
 
-<h1 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h1>
-<p>Monkey365 includes a built-in utility that streamlines the creation and configuration of Entra ID applications for the following Microsoft services:</p>
-<ul>
-<li>Microsoft Graph</li>
-<li>Microsoft Teams</li>
-<li>Exchange Online</li>
-<li>SharePoint Online</li>
-</ul>
-<p>The utility automates the creation of an Entra ID application, configures permissions based on the selected services, and generates a certificate for authentication, which it then uploaded. It also assigns service-specific roles to the application. For instance, if SharePoint Online is chosen, the utility will grant the application the <code>SharePoint Online Administrator</code>role. If Exchange Online is chosen, the helper will grant the application the <code>Global Reader</code> role.</p>
-<h1 id="automatic-application-setup-with-monkey365">Automatic Application Setup with Monkey365<a class="headerlink" href="#automatic-application-setup-with-monkey365" title="Permanent link">&para;</a></h1>
-<h2 id="running-the-utility-with-default-settings">Running the Utility with Default Settings<a class="headerlink" href="#running-the-utility-with-default-settings" title="Permanent link">&para;</a></h2>
-<p>To run the utility with default settings from the Monkey365 installation directory, use the following:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">$p</span> <span class="p">=</span> <span class="p">@{</span>
-    <span class="n">TenantId</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
-    <span class="n">Services</span> <span class="p">=</span> <span class="s1">&#39;ExchangeOnline&#39;</span><span class="p">,</span><span class="s1">&#39;MicrosoftGraph&#39;</span><span class="p">,</span><span class="s1">&#39;MicrosoftTeams&#39;</span><span class="p">,</span><span class="s1">&#39;SharePointOnline&#39;</span><span class="p">;</span>
+<h1 id="manual-token-retrieval">Manual Token Retrieval<a class="headerlink" href="#manual-token-retrieval" title="Permanent link">&para;</a></h1>
+<p>In cases where users cannot request or obtain the required Microsoft Graph permissions for the Microsoft's tenant‑owned Microsoft Graph Client ID, users could authenticate directly through their own browser session and then manually extract the resulting tokens tied to Microsoft Graph for use within Monkey365. It is intended solely for cases where the standard Microsoft Graph client ID cannot be used and no automated authorization flow is available. The video below demonstrates the manual steps involved in retrieving this token.</p>
+<video controls src="https://github.com/user-attachments/assets/01996399-56f7-43c9-89c4-54118fcb1551">
+
+https://github.com/user-attachments/assets/01996399-56f7-43c9-89c4-54118fcb1551
+
+</video>
+
+<p>Once the token has been obtained, it can be passed directly to Monkey365 using the following example:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$graph</span> <span class="p">=</span> <span class="s2">&quot;ey0....&quot;</span>
+
+<span class="nv">$p</span> <span class="p">=</span> <span class="p">@{</span>
+    <span class="n">AccessToken</span> <span class="p">=</span> <span class="nv">$graph</span><span class="p">;</span>
+    <span class="n">IncludeEntraId</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">;</span>
+    <span class="n">TenantId</span> <span class="p">=</span> <span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="p">;</span>
+    <span class="n">ExportTo</span> <span class="p">=</span> <span class="p">@(</span><span class="s1">&#39;HTML&#39;</span><span class="p">);</span>
+    <span class="n">Verbose</span> <span class="p">=</span> <span class="nv">$true</span><span class="p">;</span>
+    <span class="n">InformationAction</span> <span class="p">=</span> <span class="s2">&quot;Continue&quot;</span>
 <span class="p">}</span>
-<span class="nb">Register-Monkey365Application</span> <span class="nv">@p</span>
+<span class="nb">Invoke-Monkey365</span> <span class="nv">@p</span>
 </code></pre></div>
-<h2 id="customizing-parameters-eg-certificate">Customizing Parameters (e.g., Certificate)<a class="headerlink" href="#customizing-parameters-eg-certificate" title="Permanent link">&para;</a></h2>
-<p>To override default settings—such as specifying a custom certificate—use this version of the script:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">$p</span> <span class="p">=</span> <span class="p">@{</span>
-    <span class="n">TenantId</span> <span class="p">=</span> <span class="s1">&#39;00000000-0000-0000-0000-000000000000&#39;</span><span class="p">;</span>
-    <span class="n">Services</span> <span class="p">=</span> <span class="s1">&#39;ExchangeOnline&#39;</span><span class="p">,</span><span class="s1">&#39;MicrosoftGraph&#39;</span><span class="p">,</span><span class="s1">&#39;MicrosoftTeams&#39;</span><span class="p">,</span><span class="s1">&#39;SharePointOnline&#39;</span><span class="p">;</span>
-    <span class="n">Certificate</span> <span class="p">=</span> <span class="s1">&#39;C:\Monkey365.cer&#39;</span>
-<span class="p">}</span>
-<span class="nb">Register-Monkey365Application</span> <span class="nv">@p</span>
-</code></pre></div>
-<p>After registering the application, you may need to manually grant admin consent for required permissions. To do this, navigate to:</p>
-<pre><code>* Azure Entra ID &gt; App registrations
-* Select the Monkey365 app
-* Go to API permissions, and click !Grant admin consent for *your organisation*.
-</code></pre>
-<details class="note" open="open">
-<summary>Note</summary>
-<p>You will need the following for Monkey365:</p>
-<ul>
-<li>Tenant ID: Found under Azure Entra ID &gt; Overview.</li>
-<li>Client ID: From the app registration overview.</li>
-<li>Certificate: The one you created earlier.</li>
-</ul>
-</details>
 
 
 
@@ -2343,10 +2323,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", {"navigation.sections": {"level": 1}}, "navigation.expand", "navigation.top", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight", "content.code.annotate", "content.icons"], "search": "../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", {"navigation.sections": {"level": 1}}, "navigation.expand", "navigation.top", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight", "content.code.annotate", "content.icons"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
     
   </body>
