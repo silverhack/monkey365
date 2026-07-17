@@ -962,8 +962,6 @@
       
         
       
-        
-      
     
     
     
@@ -1445,29 +1443,6 @@
   
   <span class="md-ellipsis">
     Authentication Prompts
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../limitations/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Current Limitations
     
   </span>
   
@@ -2262,14 +2237,6 @@
 <td>✔️</td>
 </tr>
 <tr>
-<td>Microsoft 365 backend API</td>
-<td>✔️</td>
-<td>✔️</td>
-<td>❌️<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></td>
-<td>❌️<sup id="fnref2:2"><a class="footnote-ref" href="#fn:2">2</a></sup></td>
-<td>✔️</td>
-</tr>
-<tr>
 <td>Purview</td>
 <td>✔️</td>
 <td>✔️</td>
@@ -2289,7 +2256,7 @@
 <td>SharePoint Online</td>
 <td>✔️</td>
 <td>✔️</td>
-<td>❌️<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></td>
+<td>❌️<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">2</a></sup></td>
 <td>✔️</td>
 <td>✔️</td>
 </tr>
@@ -2349,14 +2316,6 @@
 <td>✔️</td>
 </tr>
 <tr>
-<td>Microsoft 365 backend API</td>
-<td>✔️</td>
-<td>✔️</td>
-<td>❌️<sup id="fnref3:2"><a class="footnote-ref" href="#fn:2">2</a></sup></td>
-<td>❌️<sup id="fnref4:2"><a class="footnote-ref" href="#fn:2">2</a></sup></td>
-<td>✔️</td>
-</tr>
-<tr>
 <td>Purview</td>
 <td>✔️</td>
 <td>✔️</td>
@@ -2374,11 +2333,11 @@
 </tr>
 <tr>
 <td>SharePoint Online</td>
-<td>❌️<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup></td>
 <td>✔️</td>
-<td>❌️<sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">3</a></sup></td>
 <td>✔️</td>
-<td>❌️<sup id="fnref2:4"><a class="footnote-ref" href="#fn:4">4</a></sup></td>
+<td>❌️<sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">2</a></sup></td>
+<td>✔️</td>
+<td>✔️</td>
 </tr>
 <tr>
 <td>Microsoft Fabric</td>
@@ -2396,14 +2355,11 @@
 <li id="fn:1">
 <p>Service Principal authentication is not supported in <a href='https://main.iam.ad.ext.azure.com/qos' target='_blank'>backend Entra ID APIs (ADIbizaUX)</a>&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
-<li id="fn:2">
-<p>Service Principal authentication is not supported in Microsoft 365 backend APIs&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:2" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:2" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
-</li>
 <li id="fn:3">
-<p>Authentication with client secret is not supported in SharePoint Online. You can find more information <a href='https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread#:~:text=FAQ' target='_blank'>here</a> and <a href='https://medium.com/@rawandhawez/sharepoint-app-only-auth-when-client-secrets-fail-and-certificates-prevail-ca230b91a601' target='_blank'>here</a>&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+<p>Authentication with client secret is not supported in SharePoint Online. You can find more information <a href='https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread#:~:text=FAQ' target='_blank'>here</a> and <a href='https://medium.com/@rawandhawez/sharepoint-app-only-auth-when-client-secrets-fail-and-certificates-prevail-ca230b91a601' target='_blank'>here</a>&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
-<li id="fn:4">
-<p>SharePoint Online Management Shell Client Id is not supporting interactive authentication in .NET core. You can find more information <a href="../limitations/">here</a>&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+<li id="fn:2">
+<p>Service Principal authentication is not supported in Microsoft 365 backend APIs&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 3 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
