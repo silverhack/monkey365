@@ -35,6 +35,7 @@ Function Get-MonkeyAzContainerProperty {
         .LINK
             https://github.com/silverhack/monkey365
     #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "", Scope="Function")]
 	[CmdletBinding()]
 	Param (
         [Parameter(Mandatory=$True, ValueFromPipeline = $True)]
@@ -57,7 +58,7 @@ Function Get-MonkeyAzContainerProperty {
 			        Tags = @('AzureContainerLogInfo');
 		        }
 		        Write-Information @msg
-                $logs = $containerName | Get-MonkeyAzContainerLog -ApiVersion $ApiVersion
+                $logs = $containerName | Get-MonkeyAzContainerLog
                 #Add to object
                 $containerObj | Add-Member -MemberType NoteProperty -Name logs -Value $logs -Force
                 #Add to array

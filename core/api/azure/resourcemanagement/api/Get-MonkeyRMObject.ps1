@@ -37,56 +37,56 @@ Function Get-MonkeyRMObject{
     #>
     [CmdletBinding()]
     Param (
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$true, HelpMessage='Authentication Object')]
         [Object]$Authentication,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$true, HelpMessage='Environment')]
         [Object]$Environment,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Resource Group')]
         [String]$ResourceGroup,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Provider')]
         [String]$Provider,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Object Type')]
         [String]$ObjectType,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Object Id')]
         [String]$ObjectId,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Filter')]
         [String]$Filter,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Expand')]
         [String[]]$Expand,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Select properties')]
         [String[]]$Select,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Top')]
         [String]$Top,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Query')]
         [String]$Query,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Headers to append')]
         [System.Collections.Hashtable]$Headers,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Method')]
         [ValidateSet("CONNECT","GET","POST","HEAD","PUT")]
         [String]$Method = "GET",
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Content Type')]
         [String]$ContentType = "application/json",
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='POST Data')]
         [Object]$Data,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='Own Query')]
         [String]$OwnQuery,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [Parameter(Mandatory = $false, HelpMessage='API Version')]
         [String]$APIVersion
     )
     Begin{

@@ -49,6 +49,7 @@ Function Get-MonkeyAzDiagnosticSettingForResource {
     )
     Process{
         try{
+            $diagObj = $null;
             $Id = $InputObject | Select-Object -ExpandProperty id -ErrorAction Ignore
             If($null -ne $Id){
                 $p = @{

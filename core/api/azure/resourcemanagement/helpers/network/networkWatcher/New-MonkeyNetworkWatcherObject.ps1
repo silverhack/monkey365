@@ -46,16 +46,16 @@ Function New-MonkeyNetworkWatcherObject {
         try{
             #Create ordered dictionary
             $NWObject = [ordered]@{
-                id = $InputObject.Id;
-		        name = $InputObject.Name;
-                type = $InputObject.type;
-                location = $InputObject.location;
-		        tags = if($null -ne $InputObject.Psobject.Properties.Item('tags')){$InputObject.tags}else{$null};
-                properties = $InputObject.properties;
-                provisioningState = $InputObject.properties.provisioningState;
-                resourceGroupName = if($null -ne $InputObject.Psobject.Properties.Item('id') -and $null -ne $InputObject.id){$InputObject.id.Split("/")[4]};
+                id = $InputObject | Select-Object -ExpandProperty id -ErrorAction Ignore;
+		        name = $InputObject | Select-Object -ExpandProperty name -ErrorAction Ignore;
+                type = $InputObject | Select-Object -ExpandProperty type -ErrorAction Ignore;
+                location = $InputObject | Select-Object -ExpandProperty location -ErrorAction Ignore;
+		        tags = $InputObject | Select-Object -ExpandProperty tags -ErrorAction Ignore;
+                properties = $InputObject | Select-Object -ExpandProperty properties -ErrorAction Ignore;
+                provisioningState = $InputObject.properties | Select-Object -ExpandProperty provisioningState -ErrorAction Ignore;
+                resourceGroupName = If($null -ne $InputObject.Psobject.Properties.Item('id') -and $null -ne $InputObject.id){$InputObject.id.Split("/")[4]};
                 locks = $null;
-                flowLogs = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new();
+                flowLogs = $null;
                 rawObject = $InputObject;
             }
             #Create PsObject

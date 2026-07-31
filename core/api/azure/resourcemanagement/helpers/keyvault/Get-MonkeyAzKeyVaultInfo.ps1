@@ -1,4 +1,4 @@
-# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,124 +36,92 @@ Function Get-MonkeyAzKeyVaultInfo {
             https://github.com/silverhack/monkey365
     #>
 
-	[cmdletbinding(DefaultParameterSetName='KeyVault')]
+	[cmdletbinding()]
 	Param (
-        [Parameter(Mandatory=$true, ValueFromPipeline = $True, ParameterSetName = 'Id')]
-        [String]$Id,
-
-        [Parameter(Mandatory=$true, ValueFromPipeline = $True, ParameterSetName = 'KeyVault')]
-        [Object]$KeyVault,
+        [Parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Key Vault Object")]
+        [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2024-11-01"
+        [String]$APIVersion = "2026-02-01"
     )
+    Begin{
+        $config = @($O365Object.internal_config.resourceManager).Where({$_.Name -eq "DiagnosticSettings"}) | Select-Object -ExpandProperty resource -ErrorAction Ignore
+        If($config){
+            $diag_settings_api_Version = $config.api_version;
+        }
+        Else{
+            #Fallback
+            $diag_settings_api_Version = "2021-05-01-preview"
+        }
+    }
     Process{
         try{
-            $vaultObject = $null;
-            if($PSCmdlet.ParameterSetName -eq 'Id'){
+            $p = @{
+			    Id = $InputObject.id;
+                ApiVersion = $APIVersion;
+                Verbose = $O365Object.verbose;
+                Debug = $O365Object.debug;
+                InformationAction = $O365Object.InformationAction;
+		    }
+		    $_obj = Get-MonkeyAzObjectById @p
+            If($null -ne $_obj){
+                $vaultObject = $_obj | New-MonkeyVaultObject
+                #Get metadata for keys
                 $p = @{
-			        Id = $Id;
-                    ApiVersion = $APIVersion;
+                    KeyVault = $vaultObject;
+                    ObjectType = 'keys';
+                    RotationPolicy = $true
                     Verbose = $O365Object.verbose;
                     Debug = $O365Object.debug;
                     InformationAction = $O365Object.InformationAction;
-		        }
-		        $vaultObject = Get-MonkeyAzObjectById @p
-            }
-            else{
-                $p = @{
-			        Id = $KeyVault.Id;
-                    ApiVersion = $APIVersion;
-                    Verbose = $O365Object.verbose;
-                    Debug = $O365Object.debug;
-                    InformationAction = $O365Object.InformationAction;
-		        }
-		        $vaultObject = Get-MonkeyAzObjectById @p
-            }
-            If($null -ne $vaultObject){
-                $vaultObj = $vaultObject | New-MonkeyVaultObject
-                If($null -ne $vaultObj){
-                    #Get Network properties
-	                If ($null -ne $vaultObj.properties.PsObject.Properties.Item('publicNetworkAccess') -and  $vaultObj.properties.publicNetworkAccess.ToLower() -eq "enabled") {
-                        $vaultObj.allowAccessFromAllNetworks = $true
-	                }
-                    Elseif ($null -ne $vaultObj.networkAcls -and $vaultObj.networkAcls.bypass -eq "AzureServices" -and $vaultObj.networkAcls.defaultAction -eq "Allow") {
-	                    $vaultObj.allowAccessFromAllNetworks = $true
-	                }
-                    Else{
-                        $vaultObj.allowAccessFromAllNetworks = $false
-                    }
-                    #Get keys
-                    $p = @{
-                        KeyVault = $vaultObj;
-                        ObjectType = 'keys';
-                        RotationPolicy = $true
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
-                        InformationAction = $O365Object.InformationAction;
-                    }
-                    $keys = Get-MonkeyAzKeyVaultObject @p
-                    If($keys){
-                        $vaultObj.objects.keys = $keys;
-                    }
-                    #Get secrets
-                    $p = @{
-                        KeyVault = $vaultObj;
-                        ObjectType = 'secrets';
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
-                        InformationAction = $O365Object.InformationAction;
-                    }
-                    $secrets = Get-MonkeyAzKeyVaultObject @p
-                    If($secrets){
-                        $vaultObj.objects.secrets = $secrets;
-                    }
-                    #Get certificates
-                    $p = @{
-                        KeyVault = $vaultObj;
-                        ObjectType = 'certificates';
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
-                        InformationAction = $O365Object.InformationAction;
-                    }
-                    $certificates = Get-MonkeyAzKeyVaultObject @p
-                    If($certificates){
-                        $vaultObj.objects.certificates = $certificates;
-                    }
-                    #Get Diagnostic settings
-                    $p = @{
-                        Id = $vaultObj.Id;
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
-                        InformationAction = $O365Object.InformationAction;
-                    }
-                    $diag = Get-MonkeyAzDiagnosticSettingsById @p
-                    If($diag){
-                        $vaultObj.diagnosticSettings.enabled = $true;
-                        $vaultObj.diagnosticSettings.name = $diag.name;
-                        $vaultObj.diagnosticSettings.id = $diag.id;
-                        $vaultObj.diagnosticSettings.properties = $diag.properties;
-                        $vaultObj.diagnosticSettings.rawData = $diag;
-                    }
-                    #Get locks
-                    $vaultObj.locks = $vaultObj | Get-MonkeyAzLockInfo
-                    <#
-                    #Get key rotation policy
-                    If($null -ne $vaultObj.objects.keys){
-                        ForEach($key in @($vaultObj.objects.keys)){
-                            $rotationPolicy = Get-MonkeyAzKeyVaultKeyRotationPolicy -key $key
-                            If($rotationPolicy){
-                                $key | Add-Member -Type NoteProperty -Name rotationPolicy -Value $rotationPolicy
-                            }
-                            Else{
-                                $key | Add-Member -Type NoteProperty -Name rotationPolicy -Value $null
-                            }
-                        }
-                    }
-                    #>
-                    #return object
-                    return $vaultObj
                 }
+                $vaultObject.objects.keys = Get-MonkeyAzKeyVaultObject @p
+                #Get metadata for secrets
+                $p = @{
+                    KeyVault = $vaultObject;
+                    ObjectType = 'secrets';
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                $vaultObject.objects.secrets = Get-MonkeyAzKeyVaultObject @p
+                #Get metadata for certificates
+                $p = @{
+                    KeyVault = $vaultObject;
+                    ObjectType = 'certificates';
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                $vaultObject.objects.certificates = Get-MonkeyAzKeyVaultObject @p
+                #Get Diagnostic settings
+                $p = @{
+                    Id = $vaultObject.Id;
+                    ApiVersion = $diag_settings_api_Version;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                $diag = Get-MonkeyAzDiagnosticSettingsById @p
+                If($diag){
+                    $vaultObject.diagnosticSettings.enabled = $true;
+                    $vaultObject.diagnosticSettings.name = $diag.name;
+                    $vaultObject.diagnosticSettings.id = $diag.id;
+                    $vaultObject.diagnosticSettings.properties = $diag.properties;
+                    $vaultObject.diagnosticSettings.rawData = $diag;
+                }
+                #Get locks
+                $vaultObject.locks = $vaultObject | Get-MonkeyAzLockInfo
+                # Get Private Endpoint connections
+                $p = @{
+					InputObject = $vaultObject;
+                    APIVersion = $APIVersion;
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+				}
+		        $vaultObject.networking.privateEndpointConnections = Get-MonkeyAzGenericPrivateEndpoint @p
+                return $vaultObject
             }
         }
         Catch{

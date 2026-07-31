@@ -60,7 +60,7 @@ Function Get-MonkeyAzSubscriptionPolicy {
         $policy = $null
     }
     Process{
-        if($PSCmdlet.ParameterSetName -eq 'PolicyName'){
+        If($PSCmdlet.ParameterSetName -eq 'PolicyName'){
             $msg = @{
                 MessageData = $message.AzureSubscriptionPolicy;
                 callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -77,15 +77,14 @@ Function Get-MonkeyAzSubscriptionPolicy {
             $p = @{
 		        Authentication = $rmAuth;
                 OwnQuery = $final_uri;
+                Environment = $O365Object.Environment;
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 		    }
-            $policy = Get-MonkeyRMObject @p
-            #return policy
-            return $policy
+            Get-MonkeyRMObject @p
         }
-        else{
+        Else{
             $msg = @{
                 MessageData = $message.AzureSubscriptionPolicy;
                 callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -102,13 +101,12 @@ Function Get-MonkeyAzSubscriptionPolicy {
             $p = @{
 		        Authentication = $rmAuth;
                 OwnQuery = $final_uri;
+                Environment = $O365Object.Environment;
                 InformationAction = $O365Object.InformationAction;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
 		    }
-            $policy = Get-MonkeyRMObject @p
-            #return policy
-            return $policy
+            Get-MonkeyRMObject @p
         }
     }
     End{

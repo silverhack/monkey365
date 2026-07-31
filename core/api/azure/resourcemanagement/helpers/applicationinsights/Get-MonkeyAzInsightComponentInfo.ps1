@@ -45,6 +45,16 @@ Function Get-MonkeyAzInsightComponentInfo {
         [parameter(Mandatory=$false, HelpMessage="API version")]
         [String]$APIVersion = "2020-02-02"
     )
+    Begin{
+        $config = @($O365Object.internal_config.resourceManager).Where({$_.Name -eq "DiagnosticSettings"}) | Select-Object -ExpandProperty resource -ErrorAction Ignore
+        If($config){
+            $diag_settings_api_Version = $config.api_version;
+        }
+        Else{
+            #Fallback
+            $diag_settings_api_Version = "2021-05-01-preview"
+        }
+    }
     Process{
         try{
             $msg = @{
@@ -69,6 +79,7 @@ Function Get-MonkeyAzInsightComponentInfo {
                 $insightComponentObj.locks = $insightComponentObj | Get-MonkeyAzLockInfo
                 $p = @{
 		            Id = $insightComponentObj.Id;
+                    ApiVersion = $diag_settings_api_Version;
                     Verbose = $O365Object.verbose;
                     Debug = $O365Object.debug;
                     InformationAction = $O365Object.InformationAction;

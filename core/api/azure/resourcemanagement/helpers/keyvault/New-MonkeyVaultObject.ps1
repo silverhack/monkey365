@@ -1,4 +1,4 @@
-# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,21 +46,31 @@ Function New-MonkeyVaultObject {
         try{
             #Create ordered dictionary
             $KeyVaultObject = [ordered]@{
-                id = $InputObject.Id;
-		        name = $InputObject.Name;
-                type = $InputObject.type;
-                location = $InputObject.location;
-		        tags = if($null -ne $InputObject.Psobject.Properties.Item('tags')){$InputObject.tags}else{$null};
-                sku = $InputObject.properties.sku;
-                tenantId = $InputObject.properties.tenantId;
-                provisioningState = $InputObject.properties.provisioningState;
-                properties = $InputObject.properties;
+                id = $InputObject | Select-Object -ExpandProperty Id -ErrorAction Ignore;
+		        name = $InputObject | Select-Object -ExpandProperty Name -ErrorAction Ignore;
+                type = $InputObject | Select-Object -ExpandProperty type -ErrorAction Ignore;
+                location = $InputObject | Select-Object -ExpandProperty location -ErrorAction Ignore;
+		        tags = $InputObject | Select-Object -ExpandProperty tags -ErrorAction Ignore;
+                properties = $InputObject | Select-Object -ExpandProperty properties -ErrorAction Ignore;
+                resourceGroupName = $InputObject.Id.Split("/")[4];
+                kind = $InputObject | Select-Object -ExpandProperty kind -ErrorAction Ignore;
+                sku = $InputObject.properties | Select-Object -ExpandProperty sku -ErrorAction Ignore;
+                tenantId = $InputObject.properties | Select-Object -ExpandProperty tenantId -ErrorAction Ignore;
+                provisioningState = $InputObject.properties | Select-Object -ExpandProperty provisioningState -ErrorAction Ignore;
                 enableRbacAuthorization = if($null -ne $InputObject.Psobject.Properties.Item('enableRbacAuthorization')){$InputObject.properties.enableRbacAuthorization}else{$false};
                 locks = $null;
-                resourceGroupName = $InputObject.Id.Split("/")[4];
-                privateEndpointConnections = if($null -ne $InputObject.properties.PsObject.Properties.Item('privateEndpointConnections')){$InputObject.properties.privateEndpointConnections}else{$null};
-                allowAccessFromAllNetworks = $null;
-                networkAcls = if($null -ne $InputObject.properties.PsObject.Properties.Item('networkAcls')){$InputObject.properties.networkAcls}else{$null};
+                networking = [PSCustomObject]@{
+                    bypassAzureServices = $InputObject.properties.networkAcls.bypass -match 'AzureServices';
+                    allowAccessFromAllNetworks = if ($InputObject.properties.networkAcls.virtualNetworkRules.Count -eq 0 -and $InputObject.properties.networkAcls.ipRules.Count -eq 0 -and $InputObject.properties.networkAcls.defaultAction -eq 'Allow'){$true}else{$false};
+                    publicNetworkAccess = $InputObject.properties | Select-Object -ExpandProperty publicNetworkAccess -ErrorAction Ignore
+                    networkAclBypass = $InputObject.properties.networkAcls | Select-Object -ExpandProperty bypass -ErrorAction Ignore
+                    ipRules = $InputObject.properties.networkAcls| Select-Object -ExpandProperty ipRules -ErrorAction Ignore
+                    virtualNetworkRules = $InputObject.properties.networkAcls | Select-Object -ExpandProperty virtualNetworkRules -ErrorAction Ignore
+                    subnet = $InputObject.properties.networkAcls.virtualNetworkRules | Select-Object -ExpandProperty id -ErrorAction Ignore
+                    privateEndpointConnections = $InputObject.properties | Select-Object -ExpandProperty privateEndpointConnections -ErrorAction Ignore ;
+                    networkSecurityPerimeterConfigurations = $null;
+                    privateLinkResources = $null;
+                };
                 protection = [PSCustomObject]@{
                     enablePurgeProtection = If($null -ne $InputObject.Properties.PsObject.Properties.Item('enablePurgeProtection')){$InputObject.Properties.enablePurgeProtection}Else{$false};
                     softDeleteEnabled = if($null -ne $InputObject.properties.PsObject.Properties.Item('enableSoftDelete')){$InputObject.properties.enableSoftDelete}else{$false};

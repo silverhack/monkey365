@@ -43,7 +43,7 @@ Function Get-MonkeyAzVirtualMachineInfo {
         [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2024-07-01"
+        [String]$APIVersion = "2026-03-01"
     )
     Begin{
         $config = @($O365Object.internal_config.resourceManager).Where({$_.Name -eq "DiagnosticSettings"}) | Select-Object -ExpandProperty resource -ErrorAction Ignore

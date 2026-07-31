@@ -42,7 +42,7 @@ Function Get-MonkeyAzVirtualMachineScaleSetInfo {
         [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2024-11-01"
+        [String]$APIVersion = "2026-03-01"
     )
     Begin{
         $config = @($O365Object.internal_config.resourceManager).Where({$_.Name -eq "DiagnosticSettings"}) | Select-Object -ExpandProperty resource -ErrorAction Ignore
@@ -101,30 +101,32 @@ Function Get-MonkeyAzVirtualMachineScaleSetInfo {
                     }
                 }
                 #######Get update config########
-                If($scaleSetObject.properties.virtualMachineProfile.storageProfile.osDisk.osType -eq 'windows'){
-                    $enableAutomaticUpdates = $scaleSetObject.properties.virtualMachineProfile.osProfile.windowsConfiguration.PsObject.Properties.Item('enableAutomaticUpdates');
-                    If($null -eq $enableAutomaticUpdates){
-                        $scaleSetObject.automaticUpdates.enabled = $false;
-                    }
-                    Else{
-                        $scaleSetObject.automaticUpdates.enabled = $scaleSetObject.properties.virtualMachineProfile.osProfile.windowsConfiguration.enableAutomaticUpdates;
-                    }
-                }
-                Else{
-                    If($null -eq $scaleSetObject.properties.virtualMachineProfile.osProfile.linuxConfiguration.PsObject.Properties.Item('enableAutomaticUpdates')){
-                        $scaleSetObject.automaticUpdates.enabled = $false;
-                    }
-                    Else{
-                        $patchMode = $scaleSetObject.properties.virtualMachineProfile.osProfile.linuxConfiguration.patchSettings.patchMode
-                        If($patchMode -eq 'Manual'){
-                            $scaleSetObject.automaticUpdates.enabled = $false
+                If($null -ne ($scaleSetObject.properties | Select-Object -ExpandProperty virtualMachineProfile -ErrorAction Ignore)){
+                    If($scaleSetObject.properties.virtualMachineProfile.storageProfile.osDisk.osType -eq 'windows'){
+                        $enableAutomaticUpdates = $scaleSetObject.properties.virtualMachineProfile.osProfile.windowsConfiguration.PsObject.Properties.Item('enableAutomaticUpdates');
+                        If($null -eq $enableAutomaticUpdates){
+                            $scaleSetObject.automaticUpdates.enabled = $false;
                         }
                         Else{
-                            $scaleSetObject.automaticUpdates.enabled = $True
+                            $scaleSetObject.automaticUpdates.enabled = $scaleSetObject.properties.virtualMachineProfile.osProfile.windowsConfiguration.enableAutomaticUpdates;
                         }
                     }
+                    Else{
+                        If($null -eq $scaleSetObject.properties.virtualMachineProfile.osProfile.linuxConfiguration.PsObject.Properties.Item('enableAutomaticUpdates')){
+                            $scaleSetObject.automaticUpdates.enabled = $false;
+                        }
+                        Else{
+                            $patchMode = $scaleSetObject.properties.virtualMachineProfile.osProfile.linuxConfiguration.patchSettings.patchMode
+                            If($patchMode -eq 'Manual'){
+                                $scaleSetObject.automaticUpdates.enabled = $false
+                            }
+                            Else{
+                                $scaleSetObject.automaticUpdates.enabled = $True
+                            }
+                        }
+                    }
+                    $scaleSetObject.automaticUpdates.rawObject = $scaleSetObject.properties.virtualMachineProfile.osProfile;
                 }
-                $scaleSetObject.automaticUpdates.rawObject = $scaleSetObject.properties.virtualMachineProfile.osProfile;
                 #Get locks
                 $scaleSetObject.locks = $scaleSetObject | Get-MonkeyAzLockInfo
                 #return object

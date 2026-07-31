@@ -35,11 +35,15 @@ Function Update-MonkeyAzNetworkForVMScaleSet {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+
 	[CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
 	Param (
         [Parameter(Mandatory=$True, ValueFromPipeline = $True)]
-        [Object]$InputObject
+        [Object]$InputObject,
+
+        [parameter(Mandatory=$false, HelpMessage="API version")]
+        [String]$APIVersion = "2026-03-01"
     )
     Process{
         try{
@@ -50,19 +54,22 @@ Function Update-MonkeyAzNetworkForVMScaleSet {
             #Get Subnet, network interface and Virtual network
             #Get network configuration
             $networkIfaceConfiguration = $InputObject.GetPropertyByPath('properties.virtualMachineProfile.networkProfile.networkInterfaceConfigurations');
-            ForEach($ifaceConf in @($networkIfaceConfiguration)){
+            ForEach($ifaceConf in @($networkIfaceConfiguration).Where({$null -ne $_})){
                 $nsgId = $ifaceConf.GetPropertyByPath('properties.networkSecurityGroup.id');
-                $nsgObject = $O365Object.all_resources.Where({$_.id -match $nsgId});
-                ForEach($nsg in @($nsgObject).Where({$null -ne $_})){
-                    $nsgobj = $nsg | Get-MonkeyAzNetworkSecurityGroupInfo
-                    If($nsgobj){
-                        [void]$nsgs.Add($nsgobj);
+                If($null -ne $nsgId){
+                    $nsgObject = $O365Object.all_resources.Where({$_.id -eq $nsgId});
+                    ForEach($nsg in @($nsgObject).Where({$null -ne $_})){
+                        $nsgobj = $nsg | Get-MonkeyAzNetworkSecurityGroupInfo
+                        If($nsgobj){
+                            [void]$nsgs.Add($nsgobj);
+                        }
                     }
                 }
                 #Get virtual networks and subnet
                 $ipConfigurations = $ifaceConf.GetPropertyByPath('properties.ipConfigurations')
-                ForEach($ipConf in @($ipConfigurations)){
+                ForEach($ipConf in @($ipConfigurations).Where({$null -ne $_})){
                     $subnetId = $ipConf.GetPropertyByPath('properties.subnet.id');
+                    $vnetworkId = $null
                     If($subnetId){
                         $subnet = $subnetId | Get-MonkeyAzSubnetById
                         If($subnet){
@@ -71,7 +78,7 @@ Function Update-MonkeyAzNetworkForVMScaleSet {
                         #Get virtual network Id
                         $vnetId = $subnetId.Remove($subnetId.LastIndexOf('/subnets/'));
                         If($vnetId){
-                            $vnetworkObj = $O365Object.all_resources.Where({$_.id -match $vnetId});
+                            $vnetworkObj = $O365Object.all_resources.Where({$_.id -eq $vnetId});
                             If($vnetworkObj){
                                 $vnetworkObject = $vnetworkObj | Get-MonkeyAzVirtualNetworkInfo
                                 If($vnetworkObject){

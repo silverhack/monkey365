@@ -38,21 +38,15 @@ Function Get-MonkeyAzStorageAccountDataProtection {
 
 	[CmdletBinding()]
 	Param (
-        [Parameter(Mandatory=$True, ValueFromPipeline = $True)]
-        [Object]$StorageAccount,
+        [Parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="Storage account object")]
+        [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2021-06-01"
+        [String]$APIVersion = "2025-06-01"
     )
-    Begin{
-        #new Restore object policy
-        $PolicyObj = [PSCustomObject]@{
-            enabled = $false;
-        }
-    }
     Process{
         $p = @{
-			Id = $StorageAccount.Id;
+			Id = $InputObject.Id;
             Resource = "blobServices/default";
             ApiVersion = $APIVersion;
             Verbose = $O365Object.verbose;
@@ -60,27 +54,63 @@ Function Get-MonkeyAzStorageAccountDataProtection {
             InformationAction = $O365Object.InformationAction;
 		}
 		$dataProtection = Get-MonkeyAzObjectById @p
-        if($dataProtection){
+        If($null -ne $dataProtection){
+            #Add cors rules if any
+            $InputObject.dataProtection.cors = $dataProtection.properties.cors
+            #Check for static website
+            If($null -eq $dataProtection.properties.PsObject.Properties.Item('staticWebsite')){
+                $InputObject.dataProtection.staticWebsite.enabled = $false
+            }
+            Else{
+                $InputObject.dataProtection.staticWebsite.enabled = $dataProtection.properties.staticWebsite | Select-Object -ExpandProperty enabled -ErrorAction Ignore
+            }
             #Check for versioning
-            if($null -eq $dataProtection.properties.PsObject.Properties.Item('isVersioningEnabled')){
-                $dataProtection.properties | Add-Member -Type NoteProperty -Name isVersioningEnabled -Value $false
+            If($null -eq $dataProtection.properties.PsObject.Properties.Item('isVersioningEnabled')){
+                $InputObject.dataProtection.isVersioningEnabled = $false
+            }
+            Else{
+                $InputObject.dataProtection.isVersioningEnabled = $dataProtection.properties.isVersioningEnabled
             }
             #Check for restore policy
-            if($null -eq $dataProtection.properties.PsObject.Properties.Item('restorePolicy')){
-                $dataProtection.properties | Add-Member -Type NoteProperty -Name restorePolicy -Value $PolicyObj
+            If($null -eq $dataProtection.properties.PsObject.Properties.Item('restorePolicy')){
+                $InputObject.dataProtection.restorePolicy.enabled = $false
+            }
+            Else{
+                $InputObject.dataProtection.restorePolicy.enabled = $dataProtection.properties.restorePolicy | Select-Object -ExpandProperty enabled -ErrorAction Ignore
+                $InputObject.dataProtection.restorePolicy.days = $dataProtection.properties.restorePolicy | Select-Object -ExpandProperty days -ErrorAction Ignore
+                $InputObject.dataProtection.restorePolicy.lastEnabledTime = $dataProtection.properties.restorePolicy | Select-Object -ExpandProperty lastEnabledTime -ErrorAction Ignore
+                $InputObject.dataProtection.restorePolicy.minRestoreTime = $dataProtection.properties.restorePolicy | Select-Object -ExpandProperty minRestoreTime -ErrorAction Ignore
             }
             #Check for container policy
-            if($null -eq $dataProtection.properties.PsObject.Properties.Item('containerDeleteRetentionPolicy')){
-                $dataProtection.properties | Add-Member -Type NoteProperty -Name containerDeleteRetentionPolicy -Value $PolicyObj
+            If($null -eq $dataProtection.properties.PsObject.Properties.Item('containerDeleteRetentionPolicy')){
+                $InputObject.dataProtection.containerDeleteRetentionPolicy.enabled = $false
+            }
+            Else{
+                $InputObject.dataProtection.containerDeleteRetentionPolicy.enabled = $dataProtection.properties.containerDeleteRetentionPolicy | Select-Object -ExpandProperty enabled -ErrorAction Ignore
+                $InputObject.dataProtection.containerDeleteRetentionPolicy.days = $dataProtection.properties.containerDeleteRetentionPolicy | Select-Object -ExpandProperty days -ErrorAction Ignore
+                $InputObject.dataProtection.containerDeleteRetentionPolicy.allowPermanentDelete = $dataProtection.properties.containerDeleteRetentionPolicy | Select-Object -ExpandProperty allowPermanentDelete -ErrorAction Ignore
             }
             #Check for change feed policy
-            if($null -eq $dataProtection.properties.PsObject.Properties.Item('changeFeed')){
-                $dataProtection.properties | Add-Member -Type NoteProperty -Name changeFeed -Value $PolicyObj
+            If($null -eq $dataProtection.properties.PsObject.Properties.Item('changeFeed')){
+                $InputObject.dataProtection.changeFeed.enabled = $false
             }
-            $StorageAccount.dataProtection = $dataProtection
+            Else{
+                $InputObject.dataProtection.changeFeed.enabled = $dataProtection.properties.changeFeed | Select-Object -ExpandProperty enabled -ErrorAction Ignore
+                $InputObject.dataProtection.changeFeed.retentionInDays = $dataProtection.properties.changeFeed | Select-Object -ExpandProperty retentionInDays -ErrorAction Ignore
+            }
+            #Check for delete retention policy
+            If($null -eq $dataProtection.properties.PsObject.Properties.Item('deleteRetentionPolicy')){
+                $InputObject.dataProtection.deleteRetentionPolicy.enabled = $false
+            }
+            Else{
+                $InputObject.dataProtection.deleteRetentionPolicy.enabled = $dataProtection.properties.deleteRetentionPolicy | Select-Object -ExpandProperty enabled -ErrorAction Ignore
+                $InputObject.dataProtection.deleteRetentionPolicy.days = $dataProtection.properties.deleteRetentionPolicy | Select-Object -ExpandProperty days -ErrorAction Ignore
+                $InputObject.dataProtection.deleteRetentionPolicy.allowPermanentDelete = $dataProtection.properties.deleteRetentionPolicy | Select-Object -ExpandProperty allowPermanentDelete -ErrorAction Ignore
+            }
+            #Add raw object
+            $InputObject.dataProtection.rawObject = $dataProtection
         }
-    }
-    End{
-        $StorageAccount
+        #return object
+        return $InputObject
     }
 }

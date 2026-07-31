@@ -36,15 +36,16 @@ Function Get-MonkeyAzClassicAdministrator {
             https://github.com/silverhack/monkey365
     #>
 	[CmdletBinding()]
+    [OutputType([System.Collections.Generic.List[System.Object]])]
 	Param ()
     Begin{
-        $all_classic_admins = New-Object System.Collections.Generic.List[System.Object]
+        $all_classic_admins = [System.Collections.Generic.List[System.Object]]::new()
         $classicAdmins = $null
         $Environment = $O365Object.Environment
         #Get resource management Auth
         $rmAuth = $O365Object.auth_tokens.ResourceManager
         #Get Azure config
-        $azureApiAuthConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureAuthorization" } | Select-Object -ExpandProperty resource
+        $azureApiAuthConfig = $O365Object.internal_config.ResourceManager.Where({ $_.Name -eq "azureAuthorization" }) | Select-Object -ExpandProperty resource -ErrorAction Ignore
     }
     Process{
         try{

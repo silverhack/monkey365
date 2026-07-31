@@ -39,8 +39,6 @@ Function Get-AzVmSecurityBaseline {
         [object]$vm
     )
     Begin{
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
         #Get Environment
         $Environment = $O365Object.Environment
         #Get Azure LogAnalytics Auth

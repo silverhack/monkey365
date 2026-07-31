@@ -38,11 +38,11 @@ Function Get-MonkeyAzStorageAccountInfo {
 
 	[CmdletBinding()]
 	Param (
-        [Parameter(Mandatory=$True, ValueFromPipeline = $True)]
+        [Parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="Storage account object")]
         [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2024-01-01"
+        [String]$APIVersion = "2025-08-01"
     )
     Process{
         try{
@@ -56,78 +56,54 @@ Function Get-MonkeyAzStorageAccountInfo {
 		    $strAccount = Get-MonkeyAzObjectById @p
             if($strAccount){
                 $strObject = $strAccount | New-MonkeyStorageAccountObject
-                #Check if infrastructure encryption is enabled
-				if ($null -eq $strAccount.Properties.encryption.PSObject.Properties.Item('requireInfrastructureEncryption')) {
-					$strObject.requireInfrastructureEncryption = $false
-				}
-				else {
-					$strObject.requireInfrastructureEncryption = $strObject.Properties.encryption.requireInfrastructureEncryption
-				}
-                $k1 = $strObject.Properties.keyCreationTime.key1
-                If($null -ne $k1){
-                    #set key1 last rotation
-				    $strObject.keyRotation.key1.lastRotationDate = $strObject.Properties.keyCreationTime.key1
-				    $today = Get-Date
-				    $date_key1 = Get-Date $k1
-				    If (($today - $date_key1).TotalDays -lt 90) {
-					    $strObject.keyRotation.key1.isRotated = $true
-				    }
-                    Else{
-                        $strObject.keyRotation.key1.isRotated = $false
-                    }
-                }
-                Else{
-                    $strObject.keyRotation.key1.isRotated = $false
-                    #Set last rotation date to never
-                    $d = [System.DateTime]::new(1970,1,1)
-                    $strObject.keyRotation.key1.lastRotationDate = $d.ToString("yyyy-MM-ddThh:mm:ss.fffZ");
-                }
-				$k2 = $strObject.Properties.keyCreationTime.key2
-                If($null -ne $k2){
-                    #set key2 last rotation
-				    $strObject.keyRotation.key2.lastRotationDate = $strObject.Properties.keyCreationTime.key2
-                    $date_key2 = Get-Date $k2
-				    If (($today - $date_key2).TotalDays -lt 90) {
-					    $strObject.keyRotation.key2.isRotated = $true
-				    }
-                    Else{
-                        $strObject.keyRotation.key2.isRotated = $false
-                    }
-                }
-                Else{
-                    $strObject.keyRotation.key2.isRotated = $false
-                    #Set last rotation date to never
-                    $d = [System.DateTime]::new(1970,1,1)
-                    $strObject.keyRotation.key2.lastRotationDate = $d.ToString("yyyy-MM-ddThh:mm:ss.fffZ");
-                }
-				If ($null -ne $strObject.Properties.encryption.PSObject.Properties.Item('keyvaultproperties') -and $strObject.Properties.encryption.keyvaultproperties) {
-					$strObject.keyvaulturi = $strObject.Properties.encryption.keyvaultproperties.keyvaulturi
-					$strObject.keyname = $strObject.Properties.encryption.keyvaultproperties.keyname
-					$strObject.keyversion = $strObject.Properties.encryption.keyvaultproperties.keyversion
-					$strObject.usingOwnKey = $true
+                #Format keys
+                $strObject = $strObject | Format-StorageAccountKeyCreation
+                #Get KeyVault info from storage account
+				If ($null -ne $strObject.properties.encryption.PSObject.Properties.Item('keyvaultproperties') -and $strObject.properties.encryption.keyvaultproperties) {
+					$strObject.encryption.keyVault.keyvaulturi = $strObject.properties.encryption.keyvaultproperties | Select-Object -ExpandProperty keyvaulturi -ErrorAction Ignore
+					$strObject.encryption.keyVault.keyname = $strObject.Properties.encryption.keyvaultproperties | Select-Object -ExpandProperty keyname -ErrorAction Ignore
+					$strObject.encryption.keyVault.keyversion = $strObject.Properties.encryption.keyvaultproperties | Select-Object -ExpandProperty keyversion -ErrorAction Ignore
+					$strObject.encryption.keyVault.enabled = $true
 				}
 				#Get Storage account data protection
 				$p = @{
-					StorageAccount = $strObject;
-					APIVersion = "2021-06-01";
+					InputObject = $strObject;
+					APIVersion = $APIVersion;
 					Verbose = $O365Object.Verbose;
 					Debug = $O365Object.Debug;
 					InformationAction = $O365Object.InformationAction;
 				}
 				$strObject = Get-MonkeyAzStorageAccountDataProtection @p
+                #Get Storage account file protection policies
+				$p = @{
+					Id = $strObject.id;
+					APIVersion = $APIVersion;
+					Verbose = $O365Object.Verbose;
+					Debug = $O365Object.Debug;
+					InformationAction = $O365Object.InformationAction;
+				}
+				$strObject.fileProtection = Get-MonkeyAzStorageAccountFileProtection @p
 				#Get Storage account ATP settings
 				$p = @{
 					Resource = $strObject;
-					APIVersion = "2017-08-01-preview";
+					APIVersion = "2019-01-01";
 					Verbose = $O365Object.Verbose;
 					Debug = $O365Object.Debug;
 					InformationAction = $O365Object.InformationAction;
 				}
 				$atp = Get-MonkeyAzAdvancedThreatProtection @p
-				if ($atp) {
-					$strObject.advancedProtectionEnabled = $atp.Properties.isEnabled
-					$strObject.atpRawObject = $atp
+				If ($atp) {
+					$strObject.threatProtection.advancedProtection.enabled = $atp.properties | Select-Object -ExpandProperty isEnabled -ErrorAction Ignore
+					$strObject.threatProtection.advancedProtection.rawObject = $atp
 				}
+                #Get Storage account Defender settings
+				$p = @{
+					InputObject = $strObject;
+					Verbose = $O365Object.Verbose;
+					Debug = $O365Object.Debug;
+					InformationAction = $O365Object.InformationAction;
+				}
+				$strObject.threatProtection.defenderForStorage = Get-MonkeyAzDefenderForStorageSetting @p
 				#Get Diagnostic settings for file
 				$p = @{
 					StorageAccount = $strObject;
@@ -164,31 +140,60 @@ Function Get-MonkeyAzStorageAccountInfo {
 					InformationAction = $O365Object.InformationAction;
 				}
 				$strObject.diagnosticSettings.table = Get-MonkeyAzStorageAccountDiagnosticSetting @p
-				#Find public blobs
-				$p = @{
-					StorageAccount = $strObject;
-					Verbose = $O365Object.Verbose;
-					Debug = $O365Object.Debug;
-					InformationAction = $O365Object.InformationAction;
-				}
-				$public = Find-MonkeyAzStoragePublicBlob @p
-				if ($public) {
-					$strObject.containers = $public
-				}
+				# Get container info
+                $p = @{
+			        InputObject = $strObject;
+                    ApiVersion = $APIVersion;
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+		        }
+                $strObject.dataStorage.containers = Get-MonkeyAzStorageAccountContainerInfo @p
+                # Get file shares
+                $p = @{
+			        Id = $strObject.id;
+                    ApiVersion = $APIVersion;
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+		        }
+                $strObject.dataStorage.fileShares = Get-MonkeyAzStorageAccountFileShare @p
 				#Check if key reminders is set
-				if ($null -eq $strObject.Properties.PSObject.Properties.Item('keyPolicy')) {
-					$kp = @{
-						keyExpirationPeriodInDays = $null;
-						enableAutoRotation = $null;
-					}
-					$strObject.Properties | Add-Member -Type NoteProperty -Name keyPolicy -Value $kp
+				If ($null -ne $strObject.properties.PSObject.Properties.Item('keyPolicy')) {
+					$strObject.keys.keyPolicy.keyExpirationPeriodInDays = $strObject.properties.keyPolicy | Select-Object -ExpandProperty keyExpirationPeriodInDays -ErrorAction Ignore
+                    $strObject.keys.keyPolicy.enableAutoRotation = $strObject.properties.keyPolicy | Select-Object -ExpandProperty enableAutoRotation -ErrorAction Ignore
 				}
-                #Check if AllowSharedKeyAccess property
-                if ($null -eq $strObject.Properties.PSObject.Properties.Item('allowSharedKeyAccess')) {
-                    $strObject.Properties | Add-Member -Type NoteProperty -Name allowSharedKeyAccess -Value $true
-                }
                 #Get locks
                 $strObject.locks = $strObject | Get-MonkeyAzLockInfo
+                #Get potential SFTP local users
+                $p = @{
+			        Id = $strObject.Id;
+                    Resource = "localusers";
+                    ApiVersion = $APIVersion;
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+		        }
+		        $strObject.sftp.localUsers = Get-MonkeyAzObjectById @p
+                #Get Private Endpoint connections for storage account
+                $p = @{
+                    InputObject = $strObject;
+                    ApiVersion = $APIVersion;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                $strObject.networking.privateEndpointConnections = Get-MonkeyAzGenericPrivateEndpoint @p
+                #Get network security perimeter for storage account
+                $p = @{
+                    Id = $strObject.Id;
+                    Resource = "networkSecurityPerimeterConfigurations";
+                    ApiVersion = $APIVersion;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                    InformationAction = $O365Object.InformationAction;
+                }
+                $strObject.networking.networkSecurityPerimeterConfigurations = Get-MonkeyAzObjectById @p
 				#return object
 				return $strObject
             }

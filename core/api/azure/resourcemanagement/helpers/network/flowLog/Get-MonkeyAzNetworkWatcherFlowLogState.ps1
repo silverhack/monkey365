@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Get-MonkeyAzNetworkWatcherFlowLog {
+Function Get-MonkeyAzNetworkWatcherFlowLogState {
     <#
         .SYNOPSIS
-		Get Azure Network Watcher Flow Log metadata
+		Get Azure Network Watcher Flow Log metadata status of flow log and traffic analytics on a specified resource.
 
         .DESCRIPTION
-		Get Azure Network Watcher Flow Log metadata
+		Get Azure Network Watcher Flow Log metadata status of flow log and traffic analytics on a specified resource.
 
         .INPUTS
 
@@ -29,7 +29,7 @@ Function Get-MonkeyAzNetworkWatcherFlowLog {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAzNetworkWatcherFlowLog
+            File Name	: Get-MonkeyAzNetworkWatcherFlowLogState
             Version     : 1.0
 
         .LINK
@@ -56,7 +56,7 @@ Function Get-MonkeyAzNetworkWatcherFlowLog {
 			}
 			Write-Information @msg
             #Get Network Security groups
-            $nsg = @($O365Object.all_resources).Where({ $_.type -like 'Microsoft.Network/networkSecurityGroups' -or $_.type -like 'Microsoft.ClassicNetwork/networkSecurityGroups' }) | Select-Object id,location -ErrorAction Ignore
+            $nsg = $O365Object.all_resources.Where({ $_.type -like 'Microsoft.Network/networkSecurityGroups' -or $_.type -like 'Microsoft.ClassicNetwork/networkSecurityGroups' }) | Select-Object id,location -ErrorAction Ignore
             #Get region
             $nwsRegion = @($nsg).Where({ $_.location -eq $InputObject.location }) | Select-Object -ExpandProperty id -ErrorAction Ignore
             If ($nwsRegion) {
@@ -75,8 +75,7 @@ Function Get-MonkeyAzNetworkWatcherFlowLog {
 		            }
 		            $flowLogCnf = Get-MonkeyAzObjectById @p
                     If($flowLogCnf){
-                        $flowObj = $flowLogCnf | New-MonkeyNetworkWatcherFlowLogObject
-                        return $flowObj
+                        $flowLogCnf | New-MonkeyNetworkWatcherFlowLogObject
                     }
                 }
             }

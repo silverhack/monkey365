@@ -72,7 +72,15 @@ Function Get-MonkeyServiceManagementObject{
         [String]$startCon = ("Starting Azure Service Management Rest Query on {0} to get {1}" -f $Environment.ServiceManagement, $ObjectType)
         $statusBar.Status = $startCon
         #$AuthHeader = $Authentication.Result.CreateAuthorizationHeader()
-        $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
+        #Get Authorization Header
+        $methods = $Authentication | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
+        #Get Authorization Header
+        If($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
+            $AuthHeader = $Authentication.CreateAuthorizationHeader()
+        }
+        Else{
+            $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
+        }
         $URI = '{0}/{1}/services/{2}' -f $Environment.ServiceManagement, $Authentication.subscriptionId, $ObjectType
     }
     Process{

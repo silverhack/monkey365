@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function New-MonkeyVirtualNetworkObject {
+Function New-MonkeyNetworkSecurityGroupObject {
 <#
         .SYNOPSIS
-		Create a new Virtual Network object
+		Create a new network security group object
 
         .DESCRIPTION
-		Create a new Virtual Network object
+		Create a new network security group object
 
         .INPUTS
 
@@ -29,7 +29,7 @@ Function New-MonkeyVirtualNetworkObject {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: New-MonkeyVirtualNetworkObject
+            File Name	: New-MonkeyNetworkSecurityGroupObject
             Version     : 1.0
 
         .LINK
@@ -39,28 +39,25 @@ Function New-MonkeyVirtualNetworkObject {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
 	[CmdletBinding()]
 	Param (
-        [parameter(Mandatory= $True, ValueFromPipeline = $True, HelpMessage="virtual network object")]
+        [parameter(Mandatory= $True, ValueFromPipeline = $True, HelpMessage="NSG object")]
         [Object]$InputObject
     )
     Process{
         try{
             #Create ordered dictionary
-            $VNObject = [ordered]@{
-                id = $InputObject | Select-Object -ExpandProperty id -ErrorAction Ignore;
-		        name = $InputObject | Select-Object -ExpandProperty name -ErrorAction Ignore;
-                type = $InputObject | Select-Object -ExpandProperty type -ErrorAction Ignore;
-                location = $InputObject | Select-Object -ExpandProperty location -ErrorAction Ignore;
-		        tags = $InputObject | Select-Object -ExpandProperty tags -ErrorAction Ignore;
-                properties = $InputObject | Select-Object -ExpandProperty properties -ErrorAction Ignore;
+            $nsgObject = [ordered]@{
+                id = $InputObject.Id;
+		        name = $InputObject.Name;
+                type = $InputObject.type;
+                location = $InputObject.location;
+		        tags = $InputObject.tags;
+                properties = $InputObject.properties;
                 resourceGroupName = $InputObject.Id.Split("/")[4];
-                authenticationType = $InputObject.properties | Select-Object -ExpandProperty authenticationType -ErrorAction Ignore;
-                connectionStatus = $InputObject.properties | Select-Object -ExpandProperty connectionStatus -ErrorAction Ignore;
-                locks = $null;
-                enableDdosProtection = $InputObject.properties | Select-Object -ExpandProperty enableDdosProtection -ErrorAction Ignore;
-                encryption = [PSCustomObject]@{
-                    enabled = If($null -ne $InputObject.properties.Psobject.Properties.Item('encryption')){$InputObject.properties.encryption.enabled}else{$false};
-                    enforcement = If($null -ne $InputObject.properties.Psobject.Properties.Item('encryption')){$InputObject.properties.encryption.enforcement}else{$null};
-                };
+                provisioningState = $InputObject.properties | Select-Object -ExpandProperty provisioningState -ErrorAction Ignore
+                subnets = $InputObject.properties | Select-Object -ExpandProperty subnets -ErrorAction Ignore
+                networkinterfaces = $InputObject.properties | Select-Object -ExpandProperty networkinterfaces -ErrorAction Ignore
+                securityRules = $InputObject.properties | Select-Object -ExpandProperty securityRules -ErrorAction Ignore
+                defaultSecurityRules = $InputObject.properties | Select-Object -ExpandProperty defaultSecurityRules -ErrorAction Ignore
                 diagnosticSettings = [PSCustomObject]@{
                     enabled = $false;
                     name = $null;
@@ -68,25 +65,26 @@ Function New-MonkeyVirtualNetworkObject {
                     properties = $null;
                     rawData = $null;
                 };
+                locks = $null;
                 rawObject = $InputObject;
             }
             #Create PsObject
-            $_obj = New-Object -TypeName PsObject -Property $VNObject
+            $_obj = New-Object -TypeName PsObject -Property $nsgObject
             #return object
             return $_obj
         }
         catch{
             $msg = @{
-			    MessageData = ($message.MonkeyObjectCreationFailed -f "Virtual Network object");
+			    MessageData = $_;
 			    callStack = (Get-PSCallStack | Select-Object -First 1);
 			    logLevel = 'error';
 			    InformationAction = $O365Object.InformationAction;
-			    Tags = @('VirtualNetworkObjectError');
+			    Tags = @('NSGObjectError');
 		    }
 		    Write-Error @msg
             $msg.MessageData = $_
             $msg.LogLevel = "Verbose"
-            $msg.Tags+= "VirtualNetworkObjectError"
+            $msg.Tags+= "NSGObjectError"
             [void]$msg.Add('verbose',$O365Object.verbose)
 		    Write-Verbose @msg
         }

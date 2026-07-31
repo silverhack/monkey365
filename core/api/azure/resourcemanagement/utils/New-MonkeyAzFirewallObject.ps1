@@ -50,6 +50,7 @@ Function New-MonkeyAzFirewallObject {
 		        name = $InputObject.Name;
                 location = $InputObject.location;
                 sku = $InputObject.properties.sku;
+                type = if($null -ne $InputObject.PsObject.properties.Item('type')){$InputObject.type}else{$null};
                 provisioningState = $InputObject.properties.provisioningState;
                 threatIntelMode = $InputObject.properties.threatIntelMode;
                 networkRuleCollections = $InputObject.properties.networkRuleCollections;

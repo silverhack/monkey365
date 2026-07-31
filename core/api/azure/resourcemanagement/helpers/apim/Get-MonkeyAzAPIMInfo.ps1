@@ -44,6 +44,16 @@ Function Get-MonkeyAzAPIMInfo {
         [parameter(Mandatory=$false, HelpMessage="API version")]
         [String]$APIVersion = "2022-09-01-preview"
     )
+    Begin{
+        $config = @($O365Object.internal_config.resourceManager).Where({$_.Name -eq "DiagnosticSettings"}) | Select-Object -ExpandProperty resource -ErrorAction Ignore
+        If($config){
+            $diag_settings_api_Version = $config.api_version;
+        }
+        Else{
+            #Fallback
+            $diag_settings_api_Version = "2021-05-01-preview"
+        }
+    }
     Process{
         try{
             $p = @{
@@ -89,6 +99,7 @@ Function Get-MonkeyAzAPIMInfo {
                     If($InputObject.supportsDiagnosticSettings -eq $True){
                         $p = @{
 		                    Id = $apimObject.Id;
+                            ApiVersion = $diag_settings_api_Version;
                             Verbose = $O365Object.verbose;
                             Debug = $O365Object.debug;
                             InformationAction = $O365Object.InformationAction;

@@ -39,14 +39,16 @@ Function Get-MonkeyAzNetworkWatcherInfo {
 	[CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
 	Param (
-        [Parameter(Mandatory=$True, ValueFromPipeline = $True)]
+        [Parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="Network Watcher Object")]
         [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2024-05-01"
+        [String]$APIVersion = "2025-05-01"
     )
     Process{
         try{
+            #Set array
+            $allFlowLogs = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new();
             $msg = @{
 				MessageData = ($message.AzureUnitResourceMessage -f $InputObject.Name,"Azure Network Watcher");
 				callStack = (Get-PSCallStack | Select-Object -First 1);
@@ -62,20 +64,28 @@ Function Get-MonkeyAzNetworkWatcherInfo {
                 Debug = $O365Object.debug;
                 InformationAction = $O365Object.InformationAction;
 		    }
-		    $nw = Get-MonkeyAzObjectById @p
-            if($null -ne $nw){
-                $networkWatcher = $nw | New-MonkeyNetworkWatcherObject
-                #Get Locks
-                $networkWatcher.locks = $networkWatcher | Get-MonkeyAzLockInfo
-                #Get flow log
-                $flowLogs = $networkWatcher | Get-MonkeyAzNetworkWatcherFlowLog
-                If($flowLogs){
-                    ForEach($flow in @($flowLogs)){
-                        $networkWatcher.flowLogs.Add($flow);
-                    }
+		    $_object = Get-MonkeyAzObjectById @p
+            If($null -ne $_object){
+                $networkWatcherObj = $_object | New-MonkeyNetworkWatcherObject
+                #Get Associated flog log if any
+                $p = @{
+			        Id = $networkWatcherObj.Id;
+                    Resource = "flowLogs";
+                    ApiVersion = $APIVersion;
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+		        }
+                $flowLogs = Get-MonkeyAzObjectById @p
+                ForEach($flowLog in @($flowLogs).Where({$null -ne $_})){
+                    [void]$allFlowLogs.Add($flowLog);
                 }
-                #Return object
-                return $networkWatcher
+                #Add to object
+		        $networkWatcherObj.flowLogs = $allFlowLogs;
+                #Get Locks
+                $networkWatcherObj.locks = $networkWatcherObj | Get-MonkeyAzLockInfo
+                #return object
+                return $networkWatcherObj
             }
         }
         catch{

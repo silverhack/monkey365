@@ -38,7 +38,7 @@ Function Get-MonkeyAzKeyVaultObject {
 
 	[CmdletBinding()]
 	Param (
-        [Parameter(Mandatory=$True, ParameterSetName = 'KeyVault')]
+        [Parameter(Mandatory=$True,ValueFromPipeline = $True, HelpMessage="Vault object")]
         [Object]$KeyVault,
 
         [parameter(Mandatory=$false, HelpMessage="Object Type")]
@@ -51,121 +51,136 @@ Function Get-MonkeyAzKeyVaultObject {
         [Parameter(Mandatory=$false)]
         [Switch]$RotationPolicy
     )
-    try{
-        $objects = $null;
-        $Auth = $O365Object.auth_tokens.AzureVault
-        #set Uri
-        If($ObjectType -eq 'keys'){
-            [URI]$URI = ("{0}keys?api-version={1}" -f $KeyVault.Properties.vaultUri,'7.4')
-        }
-        ElseIf($ObjectType -eq 'secrets'){
-            [URI]$URI = ("{0}secrets?api-version={1}" -f $KeyVault.Properties.vaultUri,'7.4')
-        }
-        Else{
-            [URI]$URI = ("{0}certificates?api-version={1}" -f $KeyVault.Properties.vaultUri,'7.4')
-        }
-        #Get object
-        if($null -ne $Auth -and $null -ne $URI){
-            $params = @{
-				Authentication = $Auth;
-				OwnQuery = $URI;
-				Environment = $O365Object.Environment;
-				ContentType = 'application/json';
-				Method = "GET";
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-			}
-			$objects = Get-MonkeyRMObject @params
-        }
-        If($null -ne $objects){
-            ForEach($obj in @($objects)){
-                #Set expiration Time
-                If($null -eq $obj.attributes.psobject.Properties.Item('exp')){
-                    $obj.attributes | Add-Member -Type NoteProperty -Name exp -Value $null
+    Process{
+        Try{
+            #Set array
+            $allObjects = [System.Collections.Generic.List[System.Object]]::new()
+            #Set null
+            $objects = $null;
+            $Auth = $O365Object.auth_tokens.AzureVault
+            #set Uri
+            Switch($ObjectType.ToLower()){
+                'keys'{
+                    [URI]$uri = ("{0}keys?api-version={1}" -f $KeyVault.properties.vaultUri,'7.4')
                 }
-                #Set days since last update
-                Try{
-                    $updated = $obj.attributes.updated
-                    $updatedTime = (([System.DateTimeOffset]::FromUnixTimeSeconds($updated)).DateTime).ToString("s")
-                    $today = Get-Date
-                    $timeSpan = New-TimeSpan -Start $updatedTime -End $today
-                    $obj.attributes | Add-Member -Type NoteProperty -Name daysSinceLastUpdate -Value $timeSpan.Days
+                'secrets'{
+                    [URI]$uri = ("{0}secrets?api-version={1}" -f $KeyVault.properties.vaultUri,'7.4')
                 }
-                Catch{
-                    $obj.attributes | Add-Member -Type NoteProperty -Name daysSinceLastUpdate -Value $null
+                'certificates'{
+                    [URI]$uri = ("{0}certificates?api-version={1}" -f $KeyVault.properties.vaultUri,'7.4')
+                }
+                default{
+                    [URI]$uri = ("{0}keys?api-version={1}" -f $KeyVault.properties.vaultUri,'7.4')
                 }
             }
-            If($GetProperties.IsPresent){
-                foreach($obj in @($objects)){
-                    #Construct URI
-                    $query = $URI.Query
-                    if($null -ne $obj.Psobject.Properties.Item('kid')){
-                        $newUri = ("{0}{1}" -f $obj.kid,$query)
+            #Get object
+            If($null -ne $Auth -and $null -ne $URI){
+                $p = @{
+				    Authentication = $Auth;
+				    OwnQuery = $URI;
+				    Environment = $O365Object.Environment;
+				    ContentType = 'application/json';
+				    Method = "GET";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+			    }
+			    $objects = Get-MonkeyRMObject @p
+                ForEach($object in @($objects).Where({$null -ne $_})){
+                    #Check if key is not managed key
+                    $managedKey = $object | Select-Object -ExpandProperty managed -ErrorAction Ignore
+                    #Set expiration Time
+                    If($null -eq $object.attributes.psObject.Properties.Item('exp')){
+                        $object.attributes | Add-Member -Type NoteProperty -Name exp -Value $null
                     }
-                    elseif($null -ne $obj.Psobject.Properties.Item('id')){
-                        $newUri = ("{0}{1}" -f $obj.id,$query)
+                    #Set days since last update, expiration in months, etc..
+                    Try{
+                        $updated = $object.attributes.updated
+                        $updatedTime = (([System.DateTimeOffset]::FromUnixTimeSeconds($updated)).DateTime).ToString("s")
+                        $today = Get-Date
+                        $timeSpan = New-TimeSpan -Start $updatedTime -End $today
+                        $object.attributes | Add-Member -Type NoteProperty -Name daysSinceLastUpdate -Value $timeSpan.Days -Force
+                        #Set expiration date in months
+                        $exp = $object.attributes.exp
+                        $expiryTime = (([System.DateTimeOffset]::FromUnixTimeSeconds($exp)).DateTime).ToString("s")
+                        $today = Get-Date
+                        $timeSpan = New-TimeSpan -Start $today -End $expiryTime
+                        $months = [Math]::Round($timeSpan.TotalDays / 30, 1)
+                        $object.attributes | Add-Member -Type NoteProperty -Name expireinMonths -Value $months -Force
+                        $object.attributes | Add-Member -Type NoteProperty -Name expirationDate -Value $expiryTime -Force
                     }
-                    else{
-                        $newUri = $null;
+                    Catch{
+                        $object.attributes | Add-Member -Type NoteProperty -Name daysSinceLastUpdate -Value $null -Force
+                        $object.attributes | Add-Member -Type NoteProperty -Name expireinMonths -Value $null -Force
+                        $object.attributes | Add-Member -Type NoteProperty -Name expirationDate -Value $null -Force
                     }
-                    if($null -ne $newUri){
-                        $p = @{
-				            Authentication = $Auth;
-				            OwnQuery = $newUri;
-				            Environment = $O365Object.Environment;
-				            ContentType = 'application/json';
-				            Method = "GET";
-                            InformationAction = $O365Object.InformationAction;
-                            Verbose = $O365Object.verbose;
-                            Debug = $O365Object.debug;
-			            }
-			            $properties = Get-MonkeyRMObject @p
-                        if($properties){
-                            $obj | Add-Member -Type NoteProperty -Name properties -Value $properties
+                    If($PSBoundParameters.ContainsKey('GetProperties') -and $PSBoundParameters['GetProperties'].IsPresent){
+                        #Construct URI
+                        $query = $URI.Query
+                        If($null -ne $object.Psobject.Properties.Item('kid')){
+                            $newUri = ("{0}{1}" -f $object.kid,$query)
                         }
-                    }
-                }
-            }
-            If($RotationPolicy.IsPresent -and $ObjectType -eq "keys"){
-                foreach($obj in @($objects)){
-                    #Construct URI
-                    $query = $URI.Query
-                    if($null -ne $obj.Psobject.Properties.Item('kid')){
-                        $newUri = ("{0}/rotationpolicy{1}" -f $obj.kid,$query)
-                    }
-                    elseif($null -ne $obj.Psobject.Properties.Item('id')){
-                        $newUri = ("{0}/rotationpolicy{1}" -f $obj.id,$query)
-                    }
-                    else{
-                        $newUri = $null;
-                    }
-                    if($null -ne $newUri){
-                        $p = @{
-				            Authentication = $Auth;
-				            OwnQuery = $newUri;
-				            Environment = $O365Object.Environment;
-				            ContentType = 'application/json';
-				            Method = "GET";
-                            InformationAction = $O365Object.InformationAction;
-                            Verbose = $O365Object.verbose;
-                            Debug = $O365Object.debug;
-			            }
-			            $_rotationPolicy = Get-MonkeyRMObject @p
-                        if($rotationPolicy){
-                            $obj | Add-Member -Type NoteProperty -Name rotationPolicy -Value $_rotationPolicy
+                        ElseIf($null -ne $object.Psobject.Properties.Item('id')){
+                            $newUri = ("{0}{1}" -f $object.id,$query)
                         }
                         Else{
-                            $obj | Add-Member -Type NoteProperty -Name rotationPolicy -Value $null
+                            $newUri = $null;
+                        }
+                        If($null -ne $newUri){
+                            $p = @{
+				                Authentication = $Auth;
+				                OwnQuery = $newUri;
+				                Environment = $O365Object.Environment;
+				                ContentType = 'application/json';
+				                Method = "GET";
+                                InformationAction = $O365Object.InformationAction;
+                                Verbose = $O365Object.verbose;
+                                Debug = $O365Object.debug;
+			                }
+			                $properties = Get-MonkeyRMObject @p
+                            $object | Add-Member -Type NoteProperty -Name properties -Value $properties -Force
                         }
                     }
+                    If($PSBoundParameters.ContainsKey('RotationPolicy') -and $PSBoundParameters['RotationPolicy'].IsPresent -and $ObjectType.ToLower() -eq "keys"){
+                        If($null -eq $managedKey){
+                            #Construct URI
+                            $query = $uri.Query
+                            If($null -ne $object.Psobject.Properties.Item('kid')){
+                                $newUri = ("{0}/rotationpolicy{1}" -f $object.kid,$query)
+                            }
+                            ElseIf($null -ne $object.Psobject.Properties.Item('id')){
+                                $newUri = ("{0}/rotationpolicy{1}" -f $object.id,$query)
+                            }
+                            Else{
+                                $newUri = $null;
+                            }
+                            If($null -ne $newUri){
+                                $p = @{
+				                    Authentication = $Auth;
+				                    OwnQuery = $newUri;
+				                    Environment = $O365Object.Environment;
+				                    ContentType = 'application/json';
+				                    Method = "GET";
+                                    InformationAction = $O365Object.InformationAction;
+                                    Verbose = $O365Object.verbose;
+                                    Debug = $O365Object.debug;
+			                    }
+			                    $_rotationPolicy = Get-MonkeyRMObject @p
+                                $object | Add-Member -Type NoteProperty -Name rotationPolicy -Value $_rotationPolicy -Force
+                            }
+                        }
+                    }
+                    If($managedKey -and $ObjectType.ToLower() -eq 'keys'){
+                        continue
+                    }
+                    #Add to array
+                    [void]$allObjects.Add($object);
                 }
             }
-            #return data
-            return $objects
+            Write-Output $allObjects -NoEnumerate
         }
-    }
-    catch{
-        Write-Verbose $_
+        Catch{
+            Write-Verbose $_
+        }
     }
 }

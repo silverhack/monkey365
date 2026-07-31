@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function Get-MonkeyAzDataFactoryPrivateEndpointConnection {
+Function Get-MonkeyAzStorageAccountFileShare {
     <#
         .SYNOPSIS
-		Get private endpoint connections for Azure Data Factory
+		Lists all shares
 
         .DESCRIPTION
-		Get private endpoint connections for Azure Data Factory
+		Lists all shares
 
         .INPUTS
 
@@ -29,38 +29,35 @@ Function Get-MonkeyAzDataFactoryPrivateEndpointConnection {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAzDataBrickPrivateEndpointConnection
+            File Name	: Get-MonkeyAzStorageAccountFileShare
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "", Scope="Function")]
 	[CmdletBinding()]
 	Param (
-        [Parameter(Mandatory=$True, ValueFromPipeline = $True)]
-        [Object]$InputObject,
+        [Parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="Id")]
+        [String]$Id,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2018-06-01"
+        [String]$APIVersion = "2025-08-01"
     )
     Process{
-        try{
+        Try{
             $p = @{
-                Id = $InputObject.Id;
-                Resource = "privateEndpointConnections";
+			    Id = $Id;
+                Resource = "fileServices/default/shares";
                 ApiVersion = $APIVersion;
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
                 InformationAction = $O365Object.InformationAction;
-            }
-            Get-MonkeyAzObjectById @p
+		    }
+		    Get-MonkeyAzObjectById @p
         }
-        catch{
-            Write-Verbose $_
+        Catch{
+            Write-Error $_
         }
-    }
-    End{
-        #Nothing to do here
     }
 }

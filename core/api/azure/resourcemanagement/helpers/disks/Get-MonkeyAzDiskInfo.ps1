@@ -43,7 +43,7 @@ Function Get-MonkeyAzDiskInfo {
         [Object]$InputObject,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2024-03-02"
+        [String]$APIVersion = "2026-03-02"
     )
     Process{
         try{

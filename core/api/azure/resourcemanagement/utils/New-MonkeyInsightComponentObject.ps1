@@ -55,6 +55,14 @@ Function New-MonkeyInsightComponentObject {
                 properties = $InputObject.properties;
                 resourceGroupName = $InputObject.Id.Split("/")[4];
                 locks = $null;
+                networking = [PSCustomObject]@{
+                    publicNetworkAccessForIngestion = $InputObject.properties | Select-Object -ExpandProperty publicNetworkAccessForIngestion -ErrorAction Ignore
+                    publicNetworkAccessForQuery = $InputObject.properties | Select-Object -ExpandProperty publicNetworkAccessForQuery -ErrorAction Ignore
+                    PrivateLinkScopedResources = [PSCustomObject]@{
+                        ResourceId = If($InputObject.properties.Psobject.Properties.Item('PrivateLinkScopedResources')){$InputObject.properties.PrivateLinkScopedResources | Select-Object -ExpandProperty ResourceId -ErrorAction Ignore}Else{$null};
+                        ScopeId = If($InputObject.properties.Psobject.Properties.Item('PrivateLinkScopedResources')){$InputObject.properties.PrivateLinkScopedResources | Select-Object -ExpandProperty ScopeId -ErrorAction Ignore}Else{$null};
+                    };
+                };
                 diagnosticSettings = [PSCustomObject]@{
                     enabled = $false;
                     name = $null;
