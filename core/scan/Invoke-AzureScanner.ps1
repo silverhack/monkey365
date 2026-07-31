@@ -63,7 +63,7 @@ Function Invoke-AzureScanner{
                     }
                     Write-Information @msg
                     #Add current subscription to O365Object
-                    $O365Object.current_subscription = Resolve-AzureSubscription -Subscription $azSubscription
+                    $O365Object.current_subscription = $azSubscription | Resolve-AzureSubscription
                     #Update authentication objects
                     Update-MonkeyAuthObject
                     $O365Object.azPermissions = Get-MonkeyAzIAMPermission -CurrentUser
