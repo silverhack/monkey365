@@ -125,56 +125,34 @@ $content = $all_files.ForEach({
 #Set-Content -Path $tmpFile -Value $content
 . ([scriptblock]::Create($content))
 
-$osInfo = Get-OsInfo
-If($null -ne $osInfo){
-    If($osInfo.IsUserInteractive -eq $false){
-        Write-Verbose ($script:messages.OSVersionMessage -f "Headless", "Core")
-        $AssembliesExists = Get-CoreLib
-        if($AssembliesExists){
-            Install-MsalLibrary
-        }
-    }
-    ElseIf ($PSVersionTable.PSEdition -eq 'Desktop'){
+If($Script:IsWindowsEnvironment){
+    If ($PSVersionTable.PSEdition.ToLower() -eq 'desktop'){
         Write-Verbose ($script:messages.OSVersionMessage -f "Windows", "Desktop")
         $AssembliesExists = Get-DesktopLib
         If($AssembliesExists){
             Install-MsalLibrary
         }
     }
-    ElseIf (($PSVersionTable.PSEdition -eq 'Core') -and $Script:IsLinuxEnvironment){
-        Write-Verbose ($script:messages.OSVersionMessage -f "Unix", "Core")
-        $AssembliesExists = Get-CoreLib
-        if($AssembliesExists){
-            Install-MsalLibrary
-        }
-    }
-    ElseIf (($PSVersionTable.PSEdition -eq 'Core') -and $Script:IsWindowsEnvironment){
-        if($ForceDesktop){
+    Else{
+        If($ForceDesktop){
             $AssembliesExists = Get-DeskLibForCore
-            if($AssembliesExists){
+            If($AssembliesExists){
                 Install-MsalLibrary
             }
         }
         Else{
             Write-Verbose ($script:messages.OSVersionMessage -f "Windows", "Core")
             $AssembliesExists = Get-CoreLib
-            if($AssembliesExists){
+            If($AssembliesExists){
                 Install-MsalLibrary
             }
         }
     }
-    Else{
-        Write-Warning -Message 'Unable to determine if OS is Windows or Linux. Loading MSAL Core'
-        $AssembliesExists = Get-CoreLib
-        if($AssembliesExists){
-            Install-MsalLibrary
-        }
-    }
 }
 Else{
-    Write-Warning -Message 'Unable to determine if OS is Windows or Linux. Loading MSAL Core'
+    Write-Verbose ($script:messages.OSVersionMessage -f "Unix", "Core")
     $AssembliesExists = Get-CoreLib
-    if($AssembliesExists){
+    If($AssembliesExists){
         Install-MsalLibrary
     }
 }
