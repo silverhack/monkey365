@@ -1,4 +1,4 @@
-# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,16 +13,13 @@
 # limitations under the License.
 
 
-
-function Get-MonkeyAzSecurityPolicy {
+function Get-MonkeyAzDefender {
 <#
         .SYNOPSIS
-		Collector to get information about Security Policies from Azure
-        https://msdn.microsoft.com/en-us/library/azure/mt704061.aspx
+		Collector to get defender metadata (pricing, assessments, policy assignments, etc..) from Azure
 
         .DESCRIPTION
-		Collector to get information about Security Policies from Azure
-        https://msdn.microsoft.com/en-us/library/azure/mt704061.aspx
+		Collector to get defender metadata (pricing, assessments, policy assignments, etc..) from Azure
 
         .INPUTS
 
@@ -33,7 +30,7 @@ function Get-MonkeyAzSecurityPolicy {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAzSecurityPolicy
+            File Name	: Get-MonkeyAzDefender
             Version     : 1.0
 
         .LINK
@@ -48,14 +45,14 @@ function Get-MonkeyAzSecurityPolicy {
 	begin {
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "az00100";
+			Id = "az00072";
 			Provider = "Azure";
 			Resource = "Subscription";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyAzSecurityPolicy";
+			collectorName = "Get-MonkeyAzDefender";
 			ApiType = "resourceManagement";
-			description = "Collector to get information about Azure security policies";
+			description = "Collector to get defender metadata (pricing, assessments, policy assignments, etc..) from Azure";
 			Group = @(
 				"Subscription"
 			);
@@ -66,7 +63,7 @@ function Get-MonkeyAzSecurityPolicy {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"az_security_policies"
+				"az_defender"
 			);
 			dependsOn = @(
 
@@ -74,46 +71,41 @@ function Get-MonkeyAzSecurityPolicy {
 			enabled = $true;
 			supportClientCredential = $true
 		}
-		#Get config
-		$AzureSecPolicies = $O365Object.internal_config.ResourceManager.Where({$_.Name -eq "azureSecurityPolicies"}) | Select-Object -ExpandProperty resource -ErrorAction Ignore
 	}
-	process {
+	Process{
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Security Policies",$O365Object.current_subscription.displayName);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Defender",$O365Object.current_subscription.displayName);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
 			InformationAction = $O365Object.InformationAction;
-			Tags = @('AzureSecPoliciesInfo');
+			Tags = @('AzureDefenderInfo');
 		}
 		Write-Information @msg
-		#List All Security Policies
-        $policiesId = ("{0}/providers/{1}/policies" -f $O365Object.current_subscription.id, $AzureSecPolicies.provider)
+        #Get Defender metadata
         $p = @{
-			Id = $policiesId;
-            ApiVersion = $AzureSecPolicies.api_version;
-            Verbose = $O365Object.verbose;
-            Debug = $O365Object.debug;
             InformationAction = $O365Object.InformationAction;
-		}
-		$policies = Get-MonkeyAzObjectById @p
-        If($null -ne $policies){
-            $policies.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Policies')
+			Verbose = $O365Object.Verbose;
+            Debug = $O365Object.debug;
+        }
+        $defender = Get-MonkeyAzDefenderInfo @p
+        If($null -ne $defender){
+            $defender.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Defender')
 			[pscustomobject]$obj = @{
-				Data = $policies;
+				Data = $defender;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.az_security_policies = $obj
+			$returnData.az_defender = $obj
         }
         Else{
             $msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Policies",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Defender",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('AzureSubscriptionPoliciesEmptyResponse');
+				Tags = @('AzurePricingEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
-			Write-Verbose @msg
+			Write-Verbose @msg            
         }
 	}
 }

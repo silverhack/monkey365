@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-
-
-function Get-MonkeyAzBotChannel {
+Function Get-MonkeyAzBotChannel {
 <#
         .SYNOPSIS
 		Azure Bots
@@ -77,49 +74,49 @@ function Get-MonkeyAzBotChannel {
 			enabled = $true;
 			supportClientCredential = $true
 		}
-		#Import Localized data
-		$LocalizedDataParams = $O365Object.LocalizedDataParams
-		Import-LocalizedData @LocalizedDataParams;
-		#Get Environment
-		$Environment = $O365Object.Environment
-		#Get Azure Active Directory Auth
-		$rm_auth = $O365Object.auth_tokens.ResourceManager
 		#Get Config
 		$AzureBot = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureBotServices" } | Select-Object -ExpandProperty resource
+        #Get Bot resources
+		$all_bots = $O365Object.all_resources.Where({ $_.type -like '*Microsoft.BotService*' })
+        $botServices = [System.Collections.Generic.List[System.Object]]::new()
 	}
 	process {
-		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Bots",$O365Object.current_subscription.displayName);
-			callStack = (Get-PSCallStack | Select-Object -First 1);
-			logLevel = 'info';
-			InformationAction = $InformationAction;
-			Tags = @('AzureBotsInfo');
-		}
-		Write-Information @msg
-		#List All Azure Bots
-		$params = @{
-			Authentication = $rm_auth;
-			Provider = $AzureBot.Provider;
-			ObjectType = 'botServices';
-			Environment = $Environment;
-			ContentType = 'application/json';
-			Method = "GET";
-			APIVersion = $AzureBot.api_version;
-		}
-		$azureBots = Get-MonkeyRMObject @params
+        If($all_bots.Count -gt 0){
+		    $msg = @{
+			    MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Bot Services",$O365Object.current_subscription.displayName);
+			    callStack = (Get-PSCallStack | Select-Object -First 1);
+			    logLevel = 'info';
+			    InformationAction = $O365Object.InformationAction;
+			    Tags = @('AzureBotsInfo');
+		    }
+		    Write-Information @msg
+            ForEach($bot in $all_bots.GetEnumerator()){
+		        $p = @{
+					Id = $bot.Id;
+					APIVersion = $AzureBot.api_version;
+					Verbose = $O365Object.Verbose;
+					Debug = $O365Object.Debug;
+					InformationAction = $O365Object.InformationAction;
+				}
+				$_bot = Get-MonkeyAzObjectById @p
+                If($_bot){
+                    [void]$botServices.Add($_bot);
+                }
+            }
+        }
 	}
-	end {
-		if ($azureBots) {
-			$azureBots.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Bots')
+	End {
+		If ($botServices.Count -gt 0) {
+			$botServices.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Bots')
 			[pscustomobject]$obj = @{
-				Data = $azureBots;
+				Data = $botServices;
 				Metadata = $monkey_metadata;
 			}
 			$returnData.az_bots = $obj
 		}
 		else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Bots",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Bot Services",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
@@ -130,12 +127,3 @@ function Get-MonkeyAzBotChannel {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-

@@ -15,12 +15,12 @@
 function Get-MonkeyAZCloudStorageAccount {
 <#
         .SYNOPSIS
-		Collector extract Storage Account information from Azure
+		Collector to extract Storage Account information from Azure
         https://docs.microsoft.com/en-us/azure/azure-policy/scripts/ensure-https-stor-acct
         https://docs.microsoft.com/en-us/azure/azure-policy/scripts/ensure-store-file-enc
 
         .DESCRIPTION
-		Collector extract Storage Account information from Azure
+		Collector to extract Storage Account information from Azure
         https://docs.microsoft.com/en-us/azure/azure-policy/scripts/ensure-https-stor-acct
         https://docs.microsoft.com/en-us/azure/azure-policy/scripts/ensure-store-file-enc
 
@@ -77,8 +77,7 @@ function Get-MonkeyAZCloudStorageAccount {
 		#Get Config
 		$strConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureStorage" } | Select-Object -ExpandProperty resource
 		#Get Storage accounts
-		$storage_accounts = $O365Object.all_resources | Where-Object { $_.type -like 'Microsoft.Storage/storageAccounts' }
-		if (-not $storage_accounts) { continue }
+        $storage_accounts = $O365Object.all_resources.Where({$_.type -match '^Microsoft\.Storage/storageAccounts$'});
 		#Set null
 		$all_str_accounts = $null
 	}
@@ -108,27 +107,25 @@ function Get-MonkeyAZCloudStorageAccount {
 				BatchSize = $O365Object.BatchSize;
 			}
 			$all_str_accounts = $storage_accounts | Invoke-MonkeyJob @p
-		}
-	}
-	end {
-		if ($all_str_accounts) {
-			$all_str_accounts.PSObject.TypeNames.Insert(0,'Monkey365.Azure.StorageAccounts')
-			[pscustomobject]$obj = @{
-				Data = $all_str_accounts;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.az_storage_accounts = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Storage accounts",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Tags = @('AzureStorageAccountsEmptyResponse');
-				Verbose = $O365Object.Verbose;
-			}
-			Write-Verbose @msg
+            If ($all_str_accounts) {
+			    $all_str_accounts.PSObject.TypeNames.Insert(0,'Monkey365.Azure.StorageAccounts')
+			    [pscustomobject]$obj = @{
+				    Data = $all_str_accounts;
+				    Metadata = $monkey_metadata;
+			    }
+			    $returnData.az_storage_accounts = $obj
+		    }
+            Else {
+			    $msg = @{
+				    MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Storage accounts",$O365Object.TenantID);
+				    callStack = (Get-PSCallStack | Select-Object -First 1);
+				    logLevel = "verbose";
+				    InformationAction = $O365Object.InformationAction;
+				    Tags = @('AzureStorageAccountsEmptyResponse');
+				    Verbose = $O365Object.Verbose;
+			    }
+			    Write-Verbose @msg
+		    }
 		}
 	}
 }

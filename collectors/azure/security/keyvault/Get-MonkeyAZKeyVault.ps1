@@ -74,7 +74,7 @@ function Get-MonkeyAZKeyVault {
 		#Get Config
 		$keyvault_Config = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureKeyVault" } | Select-Object -ExpandProperty resource
 		#Get Keyvaults
-		$KeyVaults = $O365Object.all_resources.Where({ $_.type -like 'Microsoft.KeyVault/*' })
+		$KeyVaults = $O365Object.all_resources.Where({ $_.type -match '^Microsoft\.KeyVault/vaults$' })
 		#Set list
 		$all_keyvault = $null
 	}
@@ -92,7 +92,7 @@ function Get-MonkeyAZKeyVault {
 				APIVersion = $keyvault_Config.api_version;
 			}
 			$p = @{
-				ScriptBlock = { Get-MonkeyAzKeyVaultInfo -KeyVault $_ };
+				ScriptBlock = { Get-MonkeyAzKeyVaultInfo -InputObject $_ };
 				Arguments = $new_arg;
 				Runspacepool = $O365Object.monkey_runspacePool;
 				ReuseRunspacePool = $true;

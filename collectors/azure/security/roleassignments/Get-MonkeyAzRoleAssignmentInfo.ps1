@@ -86,6 +86,8 @@ function Get-MonkeyAzRoleAssignmentInfo {
 		$classic_admins = Get-MonkeyAzClassicAdministrator
 		#Get role assignment
 		$role_assignment = Get-MonkeyAzRoleAssignment
+        #Get Role definitions
+		$role_definintions = Get-MonkeyAzRoleDefinitionObject
 	}
 	end {
 		if ($role_assignment) {
@@ -122,6 +124,25 @@ function Get-MonkeyAzRoleAssignmentInfo {
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
 				Tags = @('AzureClassicAdminsEmptyResponse');
+				Verbose = $O365Object.Verbose;
+			}
+			Write-Verbose @msg
+		}
+        if ($role_definintions) {
+			$role_definintions.PSObject.TypeNames.Insert(0,'Monkey365.Azure.RoleDefinitions')
+			[pscustomobject]$obj = @{
+				Data = $role_definintions;
+				Metadata = $monkey_metadata;
+			}
+			$returnData.az_role_definitions = $obj
+		}
+		else {
+			$msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Role Definitions",$O365Object.TenantID);
+				callStack = (Get-PSCallStack | Select-Object -First 1);
+				logLevel = "verbose";
+				InformationAction = $O365Object.InformationAction;
+				Tags = @('AzureRoleDefinitionsEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg

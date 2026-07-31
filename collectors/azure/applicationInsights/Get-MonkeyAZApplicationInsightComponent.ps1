@@ -75,19 +75,19 @@ function Get-MonkeyAZApplicationInsightComponent {
 		$config = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureInsightsComponent" } | Select-Object -ExpandProperty resource
 		#Get instances
 		$Instances = $O365Object.all_resources.Where({ $_.Id -like '*microsoft.insights/components*' })
-		if (-not $Instances) { continue }
-		$AllInstances = $null
+        #Set list
+		$allComponents = [System.Collections.Generic.List[System.Object]]::new()
 	}
 	Process {
 		$msg = @{
 			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Insights Component",$O365Object.current_subscription.displayName);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
+			InformationAction = $O365Object.InformationAction;
 			Tags = @('AzureInsightsInfo');
 		}
 		Write-Information @msg
-        if ($Instances.Count -gt 0) {
+        If ($Instances.Count -gt 0) {
 			$new_arg = @{
 				APIVersion = $config.api_version;
 			}
@@ -103,27 +103,15 @@ function Get-MonkeyAZApplicationInsightComponent {
 				BatchSize = $O365Object.nestedRunspaces.BatchSize;
 			}
 			$AllInstances = $Instances | Invoke-MonkeyJob @p
+            ForEach($instance in @($AllInstances).Where({$null -ne $_})){
+                [void]$allComponents.Add($instance);
+            }
 		}
-	}
-	End {
-		if ($AllInstances) {
-			$AllInstances.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Application.Insights.Components')
-			[pscustomobject]$obj = @{
-				Data = $AllInstances;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.az_insight_component = $obj
+        $allComponents.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Application.Insights.Components')
+		[pscustomobject]$obj = @{
+			Data = $allComponents;
+			Metadata = $monkey_metadata;
 		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Insights Component",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Tags = @('AzureInsightsEmptyResponse');
-				Verbose = $O365Object.Verbose;
-			}
-			Write-Verbose @msg
-		}
+		$returnData.az_insight_component = $obj
 	}
 }

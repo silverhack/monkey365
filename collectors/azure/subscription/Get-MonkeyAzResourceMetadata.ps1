@@ -1,4 +1,4 @@
-# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeySubscriptionPolicy {
+function Get-MonkeyAzResourceMetadata {
 <#
         .SYNOPSIS
-		Collector to get subscription policies in Azure
+		Collector to get information about resources within a subscription
 
         .DESCRIPTION
-		Collector to get subscription policies in Azure
+		Collector to get information about resources within a subscription
 
         .INPUTS
 
@@ -30,32 +30,31 @@ function Get-MonkeySubscriptionPolicy {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeySubscriptionPolicy
+            File Name	: Get-MonkeyAzResourceMetadata
             Version     : 1.0
 
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns","",Scope = "Function")]
 	[CmdletBinding()]
 	param(
 		[Parameter(Mandatory = $false,HelpMessage = "Background Collector ID")]
 		[string]$collectorId
 	)
-	begin {
+	Begin {
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "az00044";
+			Id = "az00165";
 			Provider = "Azure";
-			Resource = "SubscriptionPolicy";
+			Resource = "Subscription";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeySubscriptionPolicy";
+			collectorName = "Get-MonkeyAzResourceMetadata";
 			ApiType = "resourceManagement";
-			description = "Collector to get subscription policies in Azure";
+			description = "Collector to get information about resources within a subscription";
 			Group = @(
-				"Subscription";
-				"General"
+				"Subscription"
 			);
 			Tags = @(
 
@@ -64,7 +63,7 @@ function Get-MonkeySubscriptionPolicy {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"az_subscription_policies"
+				"az_all_resources"
 			);
 			dependsOn = @(
 
@@ -73,51 +72,35 @@ function Get-MonkeySubscriptionPolicy {
 			supportClientCredential = $true
 		}
 	}
-	process {
+	Process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"subscription policies",$O365Object.current_subscription.displayName);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Resources",$O365Object.current_subscription.displayName);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
-			Tags = @('AzureSubscriptionPolicyInfo');
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('AzureResourcesInfo');
 		}
 		Write-Information @msg
-		#Get subscription Policies
-		$p = @{
-			InformationAction = $InformationAction;
-			Verbose = $O365Object.Verbose;
-			Debug = $O365Object.Debug;
-		}
-		$subscriptionPolicies = Get-MonkeyAzSubscriptionPolicy @p
-	}
-	end {
-		if ($subscriptionPolicies) {
-			$subscriptionPolicies.PSObject.TypeNames.Insert(0,'Monkey365.Azure.SubscriptionPolicies')
+        #return object
+        If ($O365Object.all_resources) {
+            $allResources = $O365Object.all_resources;
+			$allResources.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Resources')
 			[pscustomobject]$obj = @{
-				Data = $subscriptionPolicies;
+				Data = $allResources;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.az_subscription_policies = $obj
+			$returnData.az_all_resources = $obj;
 		}
-		else {
+		Else {
 			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "subscription policies",$O365Object.TenantID);
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Resources",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('AzureSubscriptionPolicyEmptyResponse');
+				Tags = @('AzureSubscriptionEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
 		}
 	}
 }
-
-
-
-
-
-
-
-
-

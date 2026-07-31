@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-function Get-MonkeyAZSecurityRecommendation {
+function Get-MonkeyAZAdvisorSecurityRecommendation {
 <#
         .SYNOPSIS
-		Collector to get security recommendations from Azure
+		Collector to get cached security recommendations from Azure Advisor
 
         .DESCRIPTION
-		Collector to get security recommendations from Azure
+		Collector to get cached security recommendations from Azure Advisor
 
         .INPUTS
 
@@ -30,7 +30,7 @@ function Get-MonkeyAZSecurityRecommendation {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: Get-MonkeyAZSecurityRecommendation
+            File Name	: Get-MonkeyAZAdvisorSecurityRecommendation
             Version     : 1.0
 
         .LINK
@@ -50,12 +50,11 @@ function Get-MonkeyAZSecurityRecommendation {
 			Resource = "Subscription";
 			ResourceType = $null;
 			resourceName = $null;
-			collectorName = "Get-MonkeyAZSecurityRecommendation";
+			collectorName = "Get-MonkeyAZAdvisorSecurityRecommendation";
 			ApiType = "resourceManagement";
-			description = "Collector to get security recommendations from Azure";
+			description = "Collector to get cached security recommendations from Azure Advisor";
 			Group = @(
-				"Subscription";
-				"DefenderForCloud"
+				"Subscription"
 			);
 			Tags = @(
 
@@ -64,7 +63,7 @@ function Get-MonkeyAZSecurityRecommendation {
 				"https://silverhack.github.io/monkey365/"
 			);
 			ruleSuffixes = @(
-				"az_security_tips"
+				"az_advisor_recommendations"
 			);
 			dependsOn = @(
 
@@ -72,18 +71,18 @@ function Get-MonkeyAZSecurityRecommendation {
 			enabled = $true;
 			supportClientCredential = $true
 		}
-		#Get Config
-		$AzureAdvisorConfig = $O365Object.internal_config.ResourceManager | Where-Object { $_.Name -eq "azureRecommendations" } | Select-Object -ExpandProperty resource
 	}
-	process {
+	Process {
 		$msg = @{
-			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Security recommendations",$O365Object.current_subscription.displayName);
+			MessageData = ($message.MonkeyGenericTaskMessage -f $collectorId,"Azure Advisor Security recommendations",$O365Object.current_subscription.displayName);
 			callStack = (Get-PSCallStack | Select-Object -First 1);
 			logLevel = 'info';
-			InformationAction = $InformationAction;
-			Tags = @('AzureSecRecommendationInfo');
+			InformationAction = $O365Object.InformationAction;
+			Tags = @('AzureAdvisorInfo');
 		}
 		Write-Information @msg
+        #Get Config
+		$AzureAdvisorConfig = $O365Object.internal_config.ResourceManager.Where({$_.Name -eq "azureRecommendations"}) | Select-Object -ExpandProperty resource -ErrorAction Ignore
 		#Get security recommendations
 		$p = @{
 			Id = $O365Object.current_subscription.Id;
@@ -94,35 +93,24 @@ function Get-MonkeyAZSecurityRecommendation {
 			InformationAction = $O365Object.InformationAction;
 		}
 		$azure_recommendations = Get-MonkeyAzObjectById @p
-	}
-	end {
-		if ($azure_recommendations) {
-			$azure_recommendations.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Recommendations')
+        If($null -ne $azure_recommendations){
+            $azure_recommendations.PSObject.TypeNames.Insert(0,'Monkey365.Azure.Advisor.Recommendations')
 			[pscustomobject]$obj = @{
 				Data = $azure_recommendations;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.az_security_tips = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Security Recommendations",$O365Object.TenantID);
+			$returnData.az_advisor_recommendations = $obj
+        }
+        Else{
+            $msg = @{
+				MessageData = ($message.MonkeyEmptyResponseMessage -f "Azure Advisor Security Recommendations",$O365Object.TenantID);
 				callStack = (Get-PSCallStack | Select-Object -First 1);
 				logLevel = "verbose";
 				InformationAction = $O365Object.InformationAction;
-				Tags = @('AzureSecRecommendationsEmptyResponse');
+				Tags = @('AzureAdvisorEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
 			Write-Verbose @msg
-		}
+        }
 	}
 }
-
-
-
-
-
-
-
-
-
