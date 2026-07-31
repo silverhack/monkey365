@@ -3,7 +3,7 @@
         
     ],
     "provider": "EntraID",
-    "serviceType": "Entra Identity Governance",
+    "serviceType": "Entra Role Assignment",
     "serviceName": "Microsoft Entra ID",
     "displayName": "Ensure Administrative accounts are separate and cloud-only",
     "description": "Administrative accounts are special privileged accounts that could have varying levels of access to data, users, and settings. Regular user accounts should never be utilized for administrative tasks and care should be taken, in the case of a hybrid environment, to keep Administrative accounts separated from on-prem accounts. Administrative accounts should not have applications assigned so that they have no access to potentially vulnerable services (EX. email, Teams, SharePoint, etc.) and only access to perform tasks as needed for administrative purposes.\r\n\t\t\t\t  Ensure administrative accounts are `cloud-only`.",

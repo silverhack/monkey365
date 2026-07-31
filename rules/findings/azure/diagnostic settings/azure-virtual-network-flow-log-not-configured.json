@@ -23,8 +23,8 @@
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "6.1.1.7",
+            "version": "6.0.0",
+            "reference": "6.1.1.6",
             "profile": [
                 "Level 2"
             ]

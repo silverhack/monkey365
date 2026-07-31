@@ -1,0 +1,140 @@
+{
+    "args": [],
+    "provider": "EntraID",
+    "serviceType": "Entra Role Assignment",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure 'Tenant Creator' role assignments are periodically reviewed",
+    "description": "Perform a periodic review of the Tenant Creator role assignment to ensure that the assignments are accurate and appropriate.<br/><br/>This recommendation should be applied alongside the recommendation \"Ensure that 'Restrict non-admin users from creating tenants' is set to 'Yes'\".",
+    "rationale": "Unnecessary assignments increase the risk of privilege escalation and unauthorized access.",
+    "impact": "Verify that the Tenant Creator role is no longer required by any assignments before removal to avoid disruption of critical functions.",
+    "remediation": {
+        "text": "
+			##### Remediate from Azure Portal 
+			1. Go to Microsoft Entra ID. 
+			2. Under Manage, click Roles and administrators. 
+			3. In the search bar, type Tenant Creator. 
+			4. Click the role. 
+			5. Click the name of an assignment. 
+			6. Check the box next to the Tenant Creator role. 
+			7. Click X Remove assignments. 
+			8. Click Yes. 
+			9. Repeat steps 1-8 for each assignment requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/active-directory-b2c/tenant-management-check-tenant-creation-permission",
+        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#tenant-creator"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "5.3.6",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "aad_role_assignment",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "data": {
+            "properties": {
+                "effectiveUsers.*": null,
+                "RoleName": "roleName",
+                "description": "roleDescription",
+                "templateId": "templateId"
+            },
+            "expandObject": "effectiveUsers"
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "templateId",
+                                "eq",
+                                "112ca1a2-15ad-4102-995e-45b0bc479a6a"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": "true"
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "userPrincipalName": "User Principal Name",
+                    "id": "Object Id",
+                    "roleName": "Role Assigned"
+                }
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"userPrincipalName",
+						"roleName",
+						"roleDescription"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "userPrincipalName": "User Principal Name",
+                    "id": "Object Id",
+                    "roleName": "Role Assigned"
+                }
+            },
+            "status": {
+                "keyName": [
+					"userPrincipalName"
+				],
+                "message": "The user {userPrincipalName} has the 'Tenant Creator' role assigned",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "userPrincipalName",
+                "resourceId": "id",
+                "resourceType": "EntraUser"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_tenant_creator_role_is_reviewed",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": ""
+}

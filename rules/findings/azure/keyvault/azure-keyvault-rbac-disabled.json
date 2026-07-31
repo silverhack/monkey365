@@ -2,7 +2,7 @@
     "provider": "Azure",
     "serviceType": "Azure KeyVault",
     "serviceName": "Storage",
-    "displayName": "Ensure that Role Based Access Control for Azure Key Vault is enabled"
+    "displayName": "Ensure that Role Based Access Control for Azure Key Vault is enabled",
     "description": "\r\n\t\t\tThe recommended way to access Key Vaults is to use the Azure Role-Based Access Control (RBAC) permissions model. \r\n\t\t\tAzure RBAC is an authorization system built on Azure Resource Manager that provides fine-grained access management of Azure resources. It allows users to manage Key, Secret, and Certificate permissions. It provides one place to manage all permissions across all key vaults. \r\n  ",
     "rationale": "The new RBAC permissions model for Key Vaults enables a much finer grained access control for key vault secrets, keys, certificates, etc., than the vault access policy. This in turn will permit the use of privileged identity management over these roles, thus securing the key vaults with JIT Access management.",
     "impact": "Implementation needs to be properly designed from the ground up, as this is a fundamental change to the way key vaults are accessed/managed. Changing permissions to key vaults will result in loss of service as permissions are re-applied. For the least amount of downtime, map your current groups and users to their corresponding permission needs.",

@@ -1,0 +1,2096 @@
+{
+	"about": "This ruleset contains a collection of rules for Azure based on CIS benchmark. The rules are used as a mechanism to evaluate the configuration of Azure resources and to determine whether controls within a standard are being adhered to. Rules are also divided into categories and subcategories according to the rule's type. This will ensures that Azure cloud will meet the industry standards.",
+	"framework": {
+		"name" : "CIS Microsoft Azure Foundations",
+		"version" : "6.0.0",
+		"tou" : "https://www.cisecurity.org/terms-of-use-for-non-member-cis-products",
+		"url" : "https://www.cisecurity.org/benchmark/azure"
+	},
+	"extends":[
+		"cis_azure_compute_services_2.0.json",
+		"cis_azure_database_services_2.0.json"
+	],
+	"rules": {
+		"azure-databricks-not-deployed-under-managed-vnet.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.1"
+					}
+				]
+			}
+		],
+		"azure-databricks-subnet-lacks-nsg.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.2"
+					}
+				]
+			}
+		],
+		"azure-databricks-traffic-not-encrypted-between-worker-nodes.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.3"
+					}
+				]
+			}
+		],
+		"azure-databricks-identities-not-synced-with-entra.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.4"
+					}
+				]
+			}
+		],
+		"azure-databricks-unity-catalog-not-configured.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.5"
+					}
+				]
+			}
+		],
+		"azure-databricks-usage-not-restricted.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.6"
+					}
+				]
+			}
+		],
+		"azure-databricks-diagnostic-log-delivery-not-configured.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.7"
+					}
+				]
+			}
+		],
+		"azure-databricks-lacks-cmk-encryption.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.8"
+					}
+				]
+			}
+		],
+		"azure-databricks-public-ip-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.9"
+					}
+				]
+			}
+		],
+		"azure-databricks-public-access-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.10"
+					}
+				]
+			}
+		],
+		"azure-databricks-lacks-private-endpoint.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.11"
+					}
+				]
+			}
+		],
+		"azure-databricks-groups-are-reviewed.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "2.1.12"
+					}
+				]
+			}
+		],
+		"azure-virtual-machine-mfa-enabled-identities.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "3.1.1"
+					}
+				]
+			}
+		],
+		"entra-security-defaults-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.1.1"
+					}
+				]
+			}
+		],
+		"eid-register-or-joined-devices-require-mfa-settings.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.1.2"
+					}
+				]
+			}
+		],
+		"eid-per-user-mfa-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.1.3"
+					}
+				]
+			}
+		],
+		"entra-users-remember-mfa-on-devices-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.1.4"
+					}
+				]
+			}
+		],
+		"eid-ensure-admin-accounts-are-not-used-for-daily-operations.json": [
+			{
+				"args":[
+					"aad-m365-privileged-roles.json"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.3.1"
+					}
+				]
+			}
+		],
+		"eid-ensure-guest-users-are-reviewed.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.3.2"
+					}
+				]
+			}
+		],
+		"subscription-user-access-administrator-role-not-restricted.json": [
+			{
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.3.3"
+					}
+				]
+			}
+		],
+		"subscription-privileged-role-assignments-are-reviewed.json": [
+			{
+				"args":[
+					"azure-privileged-roles.json"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.3.4"
+					}
+				]
+			}
+		],
+		"subscription-disabled-accounts-with-high-level-permissions.json": [
+			{
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.3.5"
+					}
+				]
+			}
+		],
+		"eid-tenant-creator-role-is-reviewed.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.3.6"
+					}
+				]
+			}
+		],
+		"subscription-non-privileged-role-assignments-are-reviewed.json": [
+			{
+				"args":[
+					"azure-non-privileged-roles.json"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.3.7"
+					}
+				]
+			}
+		],
+		"azure-custom-administrator-role-set.json": [
+			{
+				"args":[
+					"subscription-role-permissions.json"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.4"
+					}
+				]
+			}
+		],
+		"azure-custom-role-admin-lock-not-set.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.5"
+					}
+				]
+			}
+		],
+		"azure-subscription-leaving-entering-not-compliant.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.6"
+					}
+				]
+			}
+		],
+		"azure-excessive-number-of-owners.json": [
+			{
+				"args":[
+					2,
+					3
+				],
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "5.7"
+					}
+				]
+			}
+		],
+		"azure-missing-diagnostic-logs-for-subscription-activity-log.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.1.1"
+					}
+				]
+			}
+		],
+		"azure-diagnostic-log-for-subscription-activity-log-missing-categories.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.1.2"
+					}
+				]
+			}
+		],
+		"azure-diagnostic-log-for-subscription-activity-log-storage-lacks-cmk.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.1.3"
+					}
+				]
+			}
+		],
+		"azure-keyvault-diagnostic-setting-logging-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.1.4"
+					}
+				]
+			}
+		],
+		"azure-network-security-group-flow-log-not-configured.json": [
+			{
+				"enabled": true,
+				"level": "info",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.1.5"
+					}
+				]
+			}
+		],
+		"azure-virtual-network-flow-log-not-configured.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.1.6"
+					}
+				]
+			}
+		],
+		"entra-activity-logs-for-microsoft-graph-missing-diagnostic-setting.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.1.7"
+					}
+				]
+			}
+		],
+		"entra-activity-logs-for-entra-missing-diagnostic-setting.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.1.8"
+					}
+				]
+			}
+		],
+		"entra-intune-logs-missing-diagnostic-setting.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.1.9"
+					}
+				]
+			}
+		],
+		"azure-activity-log-missing-alert.json": [
+			{
+				"args": [
+					"Create Policy Assignment",
+					"Monitoring for create policy assignment events gives insight into changes done in `Azure policy assignments` and can reduce the time it takes to detect unsolicited changes.", 
+					"Create policy assignment (Policy assignment)",
+					"6.0.0",
+					"6.1.2.1",
+					"Microsoft.Authorization/policyAssignments/write",
+					"001"
+				],
+				"enabled": true,
+				"level": "medium"
+			},
+			{
+				"args": [
+					"Delete Policy Assignment",
+					"Monitoring for delete policy assignment events gives insight into changes done in `azure policy assignments` and can reduce the time it takes to detect unsolicited changes.", 
+					"Delete policy assignment (Policy assignment)",
+					"6.0.0",
+					"6.1.2.2",
+					"Microsoft.Authorization/policyAssignments/delete",
+					"002"
+				],
+				"enabled": true,
+				"level": "medium"
+			},
+			{
+				"args": [
+					"Create or Update Network Security Group",
+					"Monitoring for Create or Update Network Security Group events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.", 
+					"Create or Update Network Security Group (Network Security Group)",
+					"6.0.0",
+					"6.1.2.3",
+					"Microsoft.Network/networkSecurityGroups/write",
+					"003"
+				],
+				"enabled": true,
+				"level": "medium"
+			},
+			{
+				"args": [
+					"Delete Network Security Group",
+					"Monitoring for `Delete Network Security Group` events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.", 
+					"Delete Network Security Group (Network Security Group)",
+					"6.0.0",
+					"6.1.2.4",
+					"Microsoft.Network/networkSecurityGroups/delete",
+					"004"
+				],
+				"enabled": true,
+				"level": "medium"
+			},
+			{
+				"args": [
+					"Create or Update Security Solution",
+					"Monitoring for Create or Update Security Solution events gives insight into changes to the active security solutions and may reduce the time it takes to detect suspicious activity.", 
+					"Create or Update Security Solutions (Security Solutions)",
+					"6.0.0",
+					"6.1.2.5",
+					"Microsoft.Security/securitySolutions/write",
+					"005"
+				],
+				"enabled": true,
+				"level": "medium"
+			},
+			{
+				"args": [
+					"Delete Security Solution",
+					"Monitoring for Delete Security Solution events gives insight into changes to the active security solutions and may reduce the time it takes to detect suspicious activity.", 
+					"Delete Security Solutions (Security Solutions)",
+					"6.0.0",
+					"6.1.2.6",
+					"Microsoft.Security/securitySolutions/delete",
+					"006"
+				],
+				"enabled": true,
+				"level": "medium"
+			},
+			{
+				"args": [
+					"Create or Update SQL Server Firewall Rule",
+					"Monitoring for Create or Update SQL Server Firewall Rule events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.", 
+					"Create/Update server firewall rule (Server Firewall Rule)",
+					"6.0.0",
+					"6.1.2.7",
+					"Microsoft.Sql/servers/firewallRules/write",
+					"007",
+					"There will be a substantial increase in log size if there are a large number of administrative actions on a server."
+				],
+				"enabled": true,
+				"level": "medium"
+			},
+			{
+				"args": [
+					"Delete SQL Server Firewall Rule",
+					"Monitoring for Delete SQL Server Firewall Rule events gives insight into SQL network access changes and may reduce the time it takes to detect suspicious activity.", 
+					"Delete server firewall rule (Server Firewall Rule)",
+					"6.0.0",
+					"6.1.2.8",
+					"Microsoft.Sql/servers/firewallRules/delete",
+					"008",
+					"There will be a substantial increase in log size if there are a large number of administrative actions on a server."
+				],
+				"enabled": true,
+				"level": "medium"
+			},
+			{
+				"args": [
+					"Create or Update Public IP Addresses",
+					"Monitoring for Create or Update Public IP Address events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
+					"Create or Update Public Ip Address (Public Ip Address)",
+					"6.0.0",
+					"6.1.2.9",
+					"Microsoft.Network/publicIPAddresses/write",
+					"009",
+					"There will be a substantial increase in log size if there are a large number of administrative actions on a server."
+				],
+				"enabled": true,
+				"level": "medium"
+			},
+			{
+				"args": [
+					"Delete Public IP Address",
+					"Monitoring for Delete Public IP Address events gives insight into network access changes and may reduce the time it takes to detect suspicious activity.",
+					"Delete Public Ip Address (Public Ip Address)",
+					"6.0.0",
+					"6.1.2.10",
+					"Microsoft.Network/publicIPAddresses/delete",
+					"010",
+					"There will be a substantial increase in log size if there are a large number of administrative actions on a server."
+				],
+				"enabled": true,
+				"level": "medium"
+			},
+			{
+				"args": [
+					"Service Health",
+					"Monitoring for Service Health events provides insight into service issues, planned maintenance, security advisories, and other changes that may affect the Azure services and regions in use.",
+					"Service health",
+					"6.0.0",
+					"6.1.2.11",
+					"ServiceHealth",
+					"011",
+					"There is no charge for creating activity log alert rules."
+				],
+				"enabled": true,
+				"level": "medium"
+			}
+		],
+		"azure-application-insight-not-set.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.3.1"
+					}
+				]
+			}
+		],
+		"azure-monitor-resource-logging-not-set.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.4"
+					}
+				]
+			}
+		],
+		"azure-basic-sku-for-production-resources-detected.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.1.5"
+					}
+				]
+			}
+		],
+		"azure-mission-critical-resource-locks-not-set.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "6.2"
+					}
+				]
+			}
+		],
+		"azure-nsg-port-exposed-to-internet.json": [
+			{
+				"args": [
+					"RDP",
+					"Network security groups should be periodically evaluated for port misconfigurations. Where RDP is not explicitly required and narrowly configured for resources attached to a network security group, Internet-level access to Azure resources should be restricted or eliminated.",
+					"The potential security problem with using RDP over the Internet is that attackers can use various brute force techniques to gain access to Azure Virtual Machines. Once the attackers gain access, they can use a virtual machine as a launch point for compromising other machines on an Azure Virtual Network or even attack networked devices outside of Azure.",
+					"3389",
+					"nsg-allow-tcp.json",
+					"001"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.1"
+					}
+				]
+			},
+			{
+				"args": [
+					"SSH",
+					"Network security groups should be periodically evaluated for port misconfigurations. Where SSH is not explicitly required and narrowly configured for resources attached to a network security group, Internet-level access to Azure resources should be restricted or eliminated.",
+					"The potential security problem with using SSH over the Internet is that attackers can use various brute force techniques to gain access to Azure Virtual Machines. Once the attackers gain access, they can use a virtual machine as a launch point for compromising other machines on the Azure Virtual Network or even attack networked devices outside of Azure.",
+					"22",
+					"nsg-allow-tcp.json",
+					"002"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.2"
+					}
+				]
+			},
+			{
+				"args": [
+					"DNS",
+					"Network security groups should be periodically evaluated for port misconfigurations. Where UDP is not explicitly required and narrowly configured for resources attached to a network security group, Internet-level access to Azure resources should be restricted or eliminated.",
+					"The potential security problem with broadly exposing UDP services over the Internet is that attackers can use DDoS amplification techniques to reflect spoofed UDP traffic from Azure Virtual Machines. The most common types of these attacks exploit exposed DNS, NTP, SSDP, SNMP, CLDAP, and other UDP-based services as amplification sources to disrupt services on other machines within the Azure Virtual Network, or even attack networked devices outside of Azure.",
+					"53",
+					"nsg-allow-udp.json",
+					"003"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.3"
+					}
+				]
+			},
+			{
+				"args": [
+					"NTP",
+					"Network security groups should be periodically evaluated for port misconfigurations. Where UDP is not explicitly required and narrowly configured for resources attached to a network security group, Internet-level access to Azure resources should be restricted or eliminated.",
+					"The potential security problem with broadly exposing UDP services over the Internet is that attackers can use DDoS amplification techniques to reflect spoofed UDP traffic from Azure Virtual Machines. The most common types of these attacks exploit exposed DNS, NTP, SSDP, SNMP, CLDAP, and other UDP-based services as amplification sources to disrupt services on other machines within the Azure Virtual Network, or even attack networked devices outside of Azure.",
+					"123",
+					"nsg-allow-udp.json",
+					"004"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.3"
+					}
+				]
+			},
+			{
+				"args": [
+					"SNMP",
+					"Network security groups should be periodically evaluated for port misconfigurations. Where UDP is not explicitly required and narrowly configured for resources attached to a network security group, Internet-level access to Azure resources should be restricted or eliminated.",
+					"The potential security problem with broadly exposing UDP services over the Internet is that attackers can use DDoS amplification techniques to reflect spoofed UDP traffic from Azure Virtual Machines. The most common types of these attacks exploit exposed DNS, NTP, SSDP, SNMP, CLDAP, and other UDP-based services as amplification sources to disrupt services on other machines within the Azure Virtual Network, or even attack networked devices outside of Azure.",
+					"161",
+					"nsg-allow-udp.json",
+					"005"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.3"
+					}
+				]
+			},
+			{
+				"args": [
+					"CLDAP",
+					"Network security groups should be periodically evaluated for port misconfigurations. Where UDP is not explicitly required and narrowly configured for resources attached to a network security group, Internet-level access to Azure resources should be restricted or eliminated.",
+					"The potential security problem with broadly exposing UDP services over the Internet is that attackers can use DDoS amplification techniques to reflect spoofed UDP traffic from Azure Virtual Machines. The most common types of these attacks exploit exposed DNS, NTP, SSDP, SNMP, CLDAP, and other UDP-based services as amplification sources to disrupt services on other machines within the Azure Virtual Network, or even attack networked devices outside of Azure.",
+					"389",
+					"nsg-allow-udp.json",
+					"006"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.3"
+					}
+				]
+			},
+			{
+				"args": [
+					"SSDP",
+					"Network security groups should be periodically evaluated for port misconfigurations. Where UDP is not explicitly required and narrowly configured for resources attached to a network security group, Internet-level access to Azure resources should be restricted or eliminated.",
+					"The potential security problem with broadly exposing UDP services over the Internet is that attackers can use DDoS amplification techniques to reflect spoofed UDP traffic from Azure Virtual Machines. The most common types of these attacks exploit exposed DNS, NTP, SSDP, SNMP, CLDAP, and other UDP-based services as amplification sources to disrupt services on other machines within the Azure Virtual Network, or even attack networked devices outside of Azure.",
+					"1900",
+					"nsg-allow-udp.json",
+					"007"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.3"
+					}
+				]
+			},
+			{
+				"args": [
+					"HTTP",
+					"Network security groups should be periodically evaluated for port misconfigurations. Where HTTP(S) is not explicitly required and narrowly configured for resources attached to a network security group, Internet-level access to Azure resources should be restricted or eliminated.",
+					"The potential security problem with using HTTP(S) over the Internet is that attackers can use various brute force techniques to gain access to Azure resources. Once the attackers gain access, they can use the resource as a launch point for compromising other resources within the Azure tenant.",
+					"80",
+					"nsg-allow-tcp.json",
+					"008"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.4"
+					}
+				]
+			},
+			{
+				"args": [
+					"HTTPS",
+					"Network security groups should be periodically evaluated for port misconfigurations. Where HTTP(S) is not explicitly required and narrowly configured for resources attached to a network security group, Internet-level access to Azure resources should be restricted or eliminated.",
+					"The potential security problem with using HTTP(S) over the Internet is that attackers can use various brute force techniques to gain access to Azure resources. Once the attackers gain access, they can use the resource as a launch point for compromising other resources within the Azure tenant.",
+					"443",
+					"nsg-allow-tcp.json",
+					"008"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.4"
+					}
+				]
+			}
+		],
+		"azure-network-security-group-flow-log-retention-days-not-compliant.json": [
+			{
+				"args": [
+					"90"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.5"
+					}
+				]
+			}
+		],
+		"azure-network-watcher-not-enabled-for-region.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.6"
+					}
+				]
+			}
+		],
+		"azure-public-ip-address-detected.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.7"
+					}
+				]
+			}
+		],
+		"azure-virtual-network-flow-log-retention-days-not-compliant.json": [
+			{
+				"args": [
+					"90"
+				],
+				"enabled": true,
+				"level": "low",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.8"
+					}
+				]
+			}
+		],
+		"azure-vpn-gateway-missing-entra-only-authentication.json": [
+			{
+				"enabled": true,
+				"level": "low",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.9"
+					}
+				]
+			}
+		],
+		"azure-app-gateway-missing-waf.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.10"
+					}
+				]
+			}
+		],
+		"azure-subnet-not-associated-to-network-security-group.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.11"
+					}
+				]
+			}
+		],
+		"azure-app-gateway-min-tls-not-compliant.json": [
+			{
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.12"
+					}
+				]
+			}
+		],
+		"azure-app-gateway-missing-http20.json": [
+			{
+				"enabled": true,
+				"level": "low",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.13"
+					}
+				]
+			}
+		],
+		"azure-app-gateway-missing-waf-body-inspection.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.14"
+					}
+				]
+			}
+		],
+		"azure-app-gateway-missing-bot-inspection.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.15"
+					}
+				]
+			}
+		],
+		"azure-platform-as-a-service-missing-network-security-perimeter.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "7.16"
+					}
+				]
+			}
+		],
+		"azure-defender-missing-protection-plan-dynamic.json": [
+			{
+				"args":[
+					"Ensure Microsoft Defender CSPM is set to 'On'",
+					"Enable Microsoft Defender CSPM to continuously assess cloud resources for security misconfigurations, compliance risks, and exposure to threats.",
+					"Microsoft Defender CSPM provides detailed visibility into the security state of assets and workloads and offers hardening guidance to help improve security posture.",
+					"Enabling Microsoft Defender CSPM incurs hourly charges for each billable compute, database, and storage resource. This can lead to significant costs in larger environments. Careful planning and cost analysis are recommended before enabling the service. Refer to https://azure.microsoft.com/en-us/pricing/details/defender-forcloud/#pricing for pricing information.",
+					"Under `Cloud Security Posture Management (CSPM)`, in the row for `Defender CSPM`, ensure Status is set to `On`.",
+					"https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-cloud-security-posture-management",
+					"CloudPosture",
+					"CloudPosture",
+					"001"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.1.1",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			},
+			{
+				"args":[
+					"Ensure Microsoft Defender for APIs is set to 'On'",
+					"Microsoft Defender for APIs offers full lifecycle protection, detection, and response coverage for APIs.\r\nWhile an automated assessment procedure exists for this recommendation, the assessment status remains manual. Due to its potentially high cost, Microsoft Defender for APIs may not be suitable for all environments and should be evaluated carefully before implementation.",
+					"Microsoft Defender for APIs helps provide visibility into business-critical APIs, assess and improve their security posture, prioritize vulnerability remediation, and detect threats in real time.",
+					"Microsoft Defender for APIs uses a tiered pricing model, billed per subscription per hour, with each tier allowing a set limit of API calls. In high-traffic environments, this may result in significant or prohibitive costs. Careful evaluation of API usage patterns and pricing tiers is essential before enabling the service. Refer to https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/#pricing for pricing information.",
+					"Under `Cloud Workload Protection (CWP)`, in the row for `APIs`, ensure Status is set to `On`.",
+					"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-apis-introduction",
+					"Api",
+					"Api",
+					"002"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.2.1",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			},
+			{
+				"args":[
+					"Ensure that Defender for Servers is set to 'On'",
+					"The Defender for Servers plan in Microsoft Defender for Cloud reduces security risk by providing actionable recommendations to improve and remediate machine security posture. Defender for Servers also helps to protect machines against real-time security threats and attacks.",
+					"Enabling Defender for Servers allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
+					"Enabling Defender for Servers in Microsoft Defender for Cloud incurs an additional cost per resource. Refer to https://azure.microsoft.com/en-us/pricing/details/defender-forcloud/ and https://azure.microsoft.com/en-us/pricing/calculator/ to estimate potential costs.\r\n* Plan 1: Subscription only\r\n* Plan 2: Subscription and workspace",
+					"Under `Cloud Workload Protection (CWP)`, in the row for `Servers`, ensure Status is set to `On`.",
+					"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-servers-overview",
+					"VirtualMachines",
+					"VirtualMachines",
+					"003"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.3.1",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			},
+			{
+				"args":[
+					"Ensure That Microsoft Defender for Containers Is Set To 'On'",
+					"Microsoft Defender for Containers helps improve, monitor, and maintain the security of containerized assets—including Kubernetes clusters, nodes, workloads, container registries, and images—across multi-cloud and on-premises environments.",
+					"Enabling Microsoft Defender for Containers enhances defense-in-depth by providing advanced threat detection, vulnerability assessment, and security monitoring for containerized environments, leveraging insights from the Microsoft Security Response Center (MSRC).",
+					"Microsoft Defender for Containers incurs a charge per vCore. Refer to https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/ and https://azure.microsoft.com/en-us/pricing/calculator/ to estimate potential costs.",
+					"Under `Cloud Workload Protection (CWP)`, in the row for `Containers`, ensure that the `Status` is set to `On` and `Monitoring coverage` displays `Full`.",
+					"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-containers-introduction",
+					"ContainerRegistry",
+					"ContainerRegistry",
+					"004"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.4.1",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			},
+			{
+				"args":[
+					"Ensure That Microsoft Defender for Storage Is Set To 'On'",
+					"Turning on Microsoft Defender for Storage enables threat detection for Storage, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
+					"Enabling Microsoft Defender for Storage allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
+					"Turning on Microsoft Defender for Storage incurs an additional cost per resource.",
+					"Ensure `Status` is set to `On` for `Storage`.",
+					"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-storage-azure-portal-enablement?tabs=enable-subscription",
+					"StorageAccounts",
+					"StorageAccounts",
+					"005"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.5.1",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			},
+			{
+				"args":[
+					"Ensure That Microsoft Defender for App Services Is Set To 'On'",
+					"Turning on Microsoft Defender for App Service enables threat detection for App Service, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
+					"Enabling Microsoft Defender for App Service allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
+					"Turning on Microsoft Defender for Storage incurs an additional cost per resource.",
+					"Ensure `Status` is set to `On` for `App Service`.",
+					"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-app-service-introduction",
+					"AppServices",
+					"AppServices",
+					"006"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.6.1",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			},
+			{
+				"args":[
+					"Ensure That Microsoft Defender for Azure Cosmos DB Is Set To 'On'",
+					"Microsoft Defender for Azure Cosmos DB scans all incoming network requests for threats to your Azure Cosmos DB resources.",
+					"In scanning Azure Cosmos DB requests within a subscription, requests are compared to a heuristic list of potential security threats. These threats could be a result of a security breach within your services, thus scanning for them could prevent a potential security threat from being introduced.",
+					"Enabling Microsoft Defender for Azure Cosmos DB requires enabling Microsoft Defender for your subscription. Both will incur additional charges.",
+					"On the `Database` row click on `Select types` > Ensure the toggle switch next to `Azure Cosmos DB` is set to `On` ",
+					"https://learn.microsoft.com/en-us/azure/cosmos-db/defender-for-cosmos-db",
+					"CosmosDbs",
+					"CosmosDbs",
+					"007"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.7.1",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			},
+			{
+				"args":[
+					"Ensure That Microsoft Defender for Open-Source Relational Databases Is Set To 'On'",
+					"Turning on Microsoft Defender for Open-source relational databases enables threat detection for Open-source relational databases, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
+					"Enabling Microsoft Defender for Open-source relational databases allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
+					"Turning on Microsoft Defender for Open-source relational databases incurs an additional cost per resource.",
+					"On the `Database` row click on `Select types` > Ensure the toggle switch next to `Open-source relational databases` is set to `On` ",
+					"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-databases-introduction",
+					"OpenSourceRelationalDatabases",
+					"OpenSourceRelationalDatabases",
+					"008"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.7.2",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			},
+			{
+				"args":[
+					"Ensure That Microsoft Defender for (Managed Instance) Azure SQL Databases Is Set To 'On'",
+					"Turning on Microsoft Defender for Azure SQL Databases enables threat detection for Managed Instance Azure SQL databases, providing threat intelligence, anomaly detection, and behavior analytics in Microsoft Defender for Cloud.",
+					"Enabling Microsoft Defender for Azure SQL Databases allows for greater defense-indepth, includes functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database.",
+					"Turning on Microsoft Defender for Azure SQL Databases incurs an additional cost per resource.",
+					"On the `Database` row click on `Select types` > Ensure the toggle switch next to `Azure SQL Databases` is set to `On` ",
+					"https://learn.microsoft.com/en-us/azure/azure-sql/database/azure-defender-for-sql?view=azuresql",
+					"SqlServers",
+					"SqlServers",
+					"009"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.7.3",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			},
+			{
+				"args":[
+					"Ensure That Microsoft Defender for SQL Servers on Machines Is Set To 'On'",
+					"Turning on Microsoft Defender for SQL servers on machines enables threat detection for SQL servers on machines, providing threat intelligence, anomaly detection, and behavior analytics in Microsoft Defender for Cloud.",
+					"Enabling Microsoft Defender for SQL servers on machines allows for greater defensein-depth, functionality for discovering and classifying sensitive data, surfacing and mitigating potential database vulnerabilities, and detecting anomalous activities that could indicate a threat to your database.",
+					"Turning on Microsoft Defender for SQL servers on machines incurs an additional cost per resource.",
+					"On the `Database` row click on `Select types` > Ensure the toggle switch next to ` SQL servers on machines` is set to `On` ",
+					"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-sql-on-machines-overview",
+					"SqlServerVirtualMachines",
+					"SqlServerVirtualMachines",
+					"010"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.7.4",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			},
+			{
+				"args":[
+					"Ensure That Microsoft Defender for Key Vault Is Set To 'On'",
+					"Turning on Microsoft Defender for Key Vault enables threat detection for Key Vault, providing threat intelligence, anomaly detection, and behavior analytics in the Microsoft Defender for Cloud.",
+					"Enabling Microsoft Defender for Key Vault allows for greater defense-in-depth, with threat detection provided by the Microsoft Security Response Center (MSRC).",
+					"Turning on Microsoft Defender for Key Vault incurs an additional cost per resource.",
+					"Ensure Status is set to `On` for `Key Vault`.",
+					"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-key-vault-introduction",
+					"KeyVaults",
+					"KeyVaults",
+					"011"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.8.1",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			},
+			{
+				"args":[
+					"Ensure That Microsoft Defender for Resource Manager Is Set To 'On'",
+					"Microsoft Defender for Resource Manager scans incoming administrative requests to change your infrastructure from both CLI and the Azure portal.",
+					"Scanning resource requests lets you be alerted every time there is suspicious activity in order to prevent a security threat from being introduced.",
+					"Enabling Microsoft Defender for Resource Manager requires enabling Microsoft Defender for your subscription. Both will incur additional charges.",
+					"Ensure Status is set to `On` for `Resource Manager`.",
+					"https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-resource-manager-introduction",
+					"Arm",
+					"Arm",
+					"012"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.9.1",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-defender-vulnerability-assessment-for-machines-disabled-plan.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.3.2"
+					}
+				]
+			}
+		],
+		"azure-defender-disabled-setting-dynamic.json": [
+			{
+				"args":[
+					"Ensure that 'Endpoint protection' component status is set to 'On'",
+					"The Endpoint protection component enables Microsoft Defender for Endpoint (formerly 'Advanced Threat Protection' or 'ATP' or 'WDATP' - see additional info) to communicate with Microsoft Defender for Cloud.",
+					"Microsoft Defender for Endpoint integration brings comprehensive Endpoint Detection and Response (EDR) capabilities within Microsoft Defender for Cloud. This integration helps to spot abnormalities, as well as detect and respond to advanced attacks on endpoints monitored by Microsoft Defender for Cloud.",
+					"Endpoint protection requires licensing and is included in these plans:\r\n* Defender for Servers plan 1 \r\n * Defender for Servers plan 2",
+					"Ensure the Status for `Endpoint protection` is set to `On`.",
+					"https://learn.microsoft.com/en-us/azure/defender-for-cloud/integration-defender-for-endpoint",
+					"WDATP",
+					"WDATP",
+					"001"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.3.3",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-defender-agentless-scanning-for-machines-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.3.4"
+					}
+				]
+			}
+		],
+		"azure-defender-file-integrity-monitoring-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.3.5"
+					}
+				]
+			}
+		],
+		"azure-defender-recommendation-apply-system-updates-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.10",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-defender-cloud-security-benchmark-policies-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.11",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-defender-atp-alerts-for-storage-accounts-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.5.2"
+					}
+				]
+			}
+		],
+		"azure-defender-notify-alerts-to-owners-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.12"
+					}
+				]
+			}
+		],
+		"azure-defender-security-contact-additional-email-not-configured.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.13"
+					}
+				]
+			}
+		],
+		"azure-defender-security-contact-send-email-high-alerts-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.14"
+					}
+				]
+			}
+		],
+		"azure-defender-notify-about-attack-path-alerts-disabled.json": [
+			{
+				"enabled": true,
+				"level": "low",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.15",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-defender-esam-disabled.json": [
+			{
+				"enabled": true,
+				"level": "info",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.1.16",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-defender-missing-iot-protection-plan.json": [
+			{
+				"enabled": true,
+				"level": "info",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.2.1",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-expiration-date-for-all-keys-in-rbac-keyvault-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.3.1",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-expiration-date-for-all-keys-in-non-rbac-keyvault-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.3.2",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-expiration-date-for-all-secrets-in-rbac-keyvault-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.3.3",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-expiration-date-for-all-secrets-in-non-rbac-keyvault-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.3.4",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-keyvault-purge-protection-not-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.3.5",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-keyvault-rbac-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.3.6",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-keyvault-public-network-access-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.3.7",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-keyvault-private-endpoint-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.3.8",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-keyvault-automatic-key-rotation-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.3.9",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-keyvault-managed-hsm-not-used.json": [
+			{
+				"enabled": true,
+				"level": "low",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.3.10",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-keyvault-certificate-validity-period-not-compliant.json": [
+			{
+				"args":[
+					12
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.3.11",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-subscription-lacks-bastion-host.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.4.1",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-virtual-network-lacks-ddos-protection.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "8.5",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-soft-delete-disabled-for-file-share.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.1.1",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-smb-version-for-file-share-not-compliant.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.1.2",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-smb-channel-encryption-for-file-share-not-compliant.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.1.3",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-soft-delete-for-blob-not-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.2.1",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-soft-delete-for-container-not-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.2.2",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-blob-versioning-not-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.2.3",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-key-rotation-reminder-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.1.1",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-access-key-rotation-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.1.2",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-key-access-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.1.3",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-private-endpoint-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.2.1",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-public-network-access-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.2.2",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-default-network-access-rule-allow.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.2.3",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-entra-authentication-not-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.3.1",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-secure-transfer-disabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.4",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-trusted-ms-services-bypass.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.5",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-minimum-tls-not-configured.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.6",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-cross-tenant-replication-enabled.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.7",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-blob-anonymous-access-allowed.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.8",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-delete-lock-not-set.json": [
+			{
+				"enabled": true,
+				"level": "info",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.9",
+						"profile": [
+							"Level 1"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-read-only-lock-not-set.json": [
+			{
+				"enabled": true,
+				"level": "info",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.10",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		],
+		"azure-storage-account-geo-redundancy-storage-not-set.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "CIS Microsoft Azure Foundations",
+                        "version": "6.0.0",
+                        "reference": "9.3.11",
+						"profile": [
+							"Level 2"
+						]
+					}
+				]
+			}
+		]
+	}
+}
