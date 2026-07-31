@@ -38,37 +38,30 @@ Function Resolve-AzureSubscription{
 
     [cmdletbinding()]
     param(
-        [Parameter(Mandatory=$true, HelpMessage="Subscription object")]
-        [Object]$Subscription
+        [Parameter(Mandatory=$True, ValueFromPipeline = $True, HelpMessage="Subscription object")]
+        [Object]$InputObject
     )
-    Begin{
-        $state = $null
-        $subscriptionId = $null
-        $EmptyGuid = [System.Guid]::empty
-        #Get Subscription details
-        if($null -ne $Subscription.Psobject.Properties.Item('subscriptionId')){
-            $subscriptionId = $Subscription.subscriptionId;
-        }
-        if($null -ne $Subscription.Psobject.Properties.Item('state')){
-            $state = $Subscription.state
-        }
-        $isValidSubscription = [System.Guid]::TryParse($subscriptionId,[System.Management.Automation.PSReference]$EmptyGuid)
-    }
     Process{
-        if($isValidSubscription -eq $false -or $state -eq 'Disabled'){
-            $msg = @{
-                MessageData = ($message.AzureSubscriptionError -f $Subscription.displayName, $state);
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'warning';
-                InformationAction = $InformationAction;
-                Tags = @('ExpiredSubscription');
+        $isValidSubscription = $false
+        $EmptyGuid = [System.Guid]::empty
+        $subscriptionId = $InputObject | Select-Object -ExpandProperty subscriptionId -ErrorAction Ignore
+        $state = $InputObject | Select-Object -ExpandProperty state -ErrorAction Ignore
+        $displayName = $InputObject | Select-Object -ExpandProperty displayName -ErrorAction Ignore
+        If($null -ne $subscriptionId -and $null -ne $state){
+            $isValidSubscription = [System.Guid]::TryParse($subscriptionId,[System.Management.Automation.PSReference]$EmptyGuid)
+            If($isValidSubscription -eq $false -or $state -eq 'Disabled'){
+                $msg = @{
+                    MessageData = ($message.AzureSubscriptionError -f $displayName, $state);
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'warning';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('ExpiredSubscription');
+                }
+                Write-Warning @msg
+                #Change Id value to point subscriptionId
+                $InputObject.Id = $InputObject.subscriptionId
             }
-            Write-Warning @msg
-            #Change Id value to point subscriptionId
-            $Subscription.Id = $Subscription.subscriptionId
         }
-    }
-    End{
-        return $Subscription
+        return $InputObject
     }
 }

@@ -36,7 +36,7 @@ Function Select-MonkeyAzureSubscription{
 
     Begin{
         #Create Array for subscriptions
-        $AllSubscriptions = @()
+        $AllSubscriptions = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
         #Create selected subscriptions and sub vars
         $selected_subscriptions = $sub = $null
         If($null -ne $O365Object.auth_tokens.ResourceManager){
@@ -44,40 +44,42 @@ Function Select-MonkeyAzureSubscription{
                 AuthObject = $O365Object.auth_tokens.ResourceManager
                 Endpoint = $O365Object.Environment.ResourceManager
             }
-            $sub = Get-MonkeySubscriptionInfo @sparam
+            $_subscriptions = Get-MonkeySubscriptionInfo @sparam
         }
-        If($null -ne $sub){
-            If($null -ne $O365Object.Tenant -and $O365Object.Tenant.psobject.Properties.Item('TenantName')){
-                Write-Information -MessageData ("Subscription was found on {0} Tenant" -f $O365Object.Tenant.TenantName) -InformationAction $InformationAction
-            }
-            ElseIf ($O365Object.psobject.Properties.Item('TenantId')){
-                Write-Information -MessageData ("subscription was found on {0} Tenant" -f $O365Object.tenantId) -InformationAction $InformationAction
-            }
-            Else{
-                Write-Information -MessageData ("Subscription {0} was found" -f $sub.DisplayName) -InformationAction $InformationAction
-            }
-            $sub | Add-Member -type NoteProperty -name TenantID -value $O365Object.TenantId -Force
-            If($null -ne $O365Object.Tenant){
-                If($null -ne $O365Object.Tenant.Psobject.Properties.Item('TenantName')){
-                    $sub | Add-Member -type NoteProperty -name TenantName -value $O365Object.Tenant.TenantName -Force
+        If($_subscriptions){
+            ForEach($_subscription in @($_subscriptions).Where({$null -ne $_})){
+                If($null -ne $O365Object.Tenant -and $O365Object.Tenant.psobject.Properties.Item('TenantName')){
+                    Write-Information -MessageData ("Subscription was found on {0} Tenant" -f $O365Object.Tenant.TenantName) -InformationAction $O365Object.InformationAction
                 }
-                ElseIf($null -ne $O365Object.Tenant.Psobject.Properties.Item('displayName')){
-                    $sub | Add-Member -type NoteProperty -name TenantName -value $O365Object.Tenant.displayName -Force
+                ElseIf ($O365Object.psobject.Properties.Item('TenantId')){
+                    Write-Information -MessageData ("subscription was found on {0} Tenant" -f $O365Object.tenantId) -InformationAction $O365Object.InformationAction
                 }
                 Else{
-                    $msg = @{
-                        MessageData = ($message.EntraIDTenantNameError);
-                        callStack = (Get-PSCallStack | Select-Object -First 1);
-                        logLevel = 'warning';
-                        InformationAction = $O365Object.InformationAction;
-                        Tags = @('EntraIDTenantNameNotFound');
-                    }
-                    Write-Warning @msg
-                    $sub | Add-Member -type NoteProperty -name TenantName -value $null -Force
+                    Write-Information -MessageData ("Subscription {0} was found" -f $_subscription.DisplayName) -InformationAction $O365Object.InformationAction
                 }
-                $sub | Add-Member -type NoteProperty -name Tenant -value $O365Object.Tenant -Force
+                $_subscription | Add-Member -type NoteProperty -name TenantID -value $O365Object.TenantId -Force
+                If($null -ne $O365Object.Tenant){
+                    If($null -ne $O365Object.Tenant.Psobject.Properties.Item('TenantName')){
+                        $_subscription | Add-Member -type NoteProperty -name TenantName -value $O365Object.Tenant.TenantName -Force
+                    }
+                    ElseIf($null -ne $O365Object.Tenant.Psobject.Properties.Item('displayName')){
+                        $_subscription | Add-Member -type NoteProperty -name TenantName -value $O365Object.Tenant.displayName -Force
+                    }
+                    Else{
+                        $msg = @{
+                            MessageData = ($message.EntraIDTenantNameError);
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('EntraIDTenantNameNotFound');
+                        }
+                        Write-Warning @msg
+                        $_subscription | Add-Member -type NoteProperty -name TenantName -value $null -Force
+                    }
+                    $_subscription | Add-Member -type NoteProperty -name Tenant -value $O365Object.Tenant -Force
+                }
+                [void]$AllSubscriptions.Add($_subscription);
             }
-            $AllSubscriptions+=$sub
         }
         Else{
             $msg = @{
@@ -100,9 +102,11 @@ Function Select-MonkeyAzureSubscription{
             }
             ElseIf($O365Object.initParams.ContainsKey('Subscriptions')){
                 $selected_subscriptions = @()
-                foreach($subscriptionId in $O365Object.initParams.Subscriptions.Split(' ')){
+                ForEach($subscriptionId in $O365Object.initParams.Subscriptions.Split(' ')){
                     $sub = $AllSubscriptions | Where-Object {$_.subscriptionId -eq $subscriptionId} | Select-Object * -ErrorAction Ignore
-                    If($sub){$selected_subscriptions += $sub}
+                    If($sub){
+                        $selected_subscriptions += $sub
+                    }
                 }
             }
             Else{

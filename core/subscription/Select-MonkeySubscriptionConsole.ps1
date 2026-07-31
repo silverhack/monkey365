@@ -36,41 +36,40 @@ Function Select-MonkeySubscriptionConsole{
 
     [CmdletBinding()]
     Param (
-        [parameter(Mandatory=$True, ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$True)]
         [object]$Subscriptions
     )
-    Begin{
+    Try{
+        #Set null
         $selected_subscriptions = $choices = $null;
-        try{
-            if($Subscriptions.Count -gt 0){
-                $choices = @()
-                For($index = 0; $index -lt $Subscriptions.Count; $index++){
-                    $Subscriptions[$index] | Add-Member -type NoteProperty -name Id -value $index -Force
-                    [psobject]$s = @{
+        Try{
+            If(@($Subscriptions).Count -gt 0){
+                $choices = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+                For($index = 0; $index -lt @($Subscriptions).Count; $index++){
+                    $newChoice = [PsCustomObject]@{
                         id = $index+1
                         displayName = $Subscriptions[$index].displayName
+                        subscriptionId = $Subscriptions[$index].subscriptionId
                     }
-                    $choices+=$s
+                    [void]$choices.Add($newChoice)
                 }
             }
         }
-        catch{
+        Catch{
             Write-Warning "Unable to create subscription choices"
             $msg = @{
                 MessageData = $_.Exception;
                 callStack = (Get-PSCallStack | Select-Object -First 1);
                 logLevel = 'debug';
-                InformationAction = $script:InformationAction;
+                InformationAction = $O365Object.InformationAction;
                 Tags = @('SubscriptionChoicesError');
             }
             Write-Debug @msg
             $choices = $null
         }
-    }
-    Process{
-        if($null -ne $choices){
+        If($null -ne $choices){
             while ($true) {
-                $choices | Select-Object Id,DisplayName | Format-Table -AutoSize | Out-Host
+                $choices | Select-Object id,displayName, subscriptionId | Format-Table -AutoSize | Out-Host
                 $sbsID = Read-Host "Enter the [ID] number to select a subscription. Type 0 or Q to quit. Type A for all"
                 if ($sbsID -eq '0' -or $sbsID -eq 'Q') { break }  # exit from the loop, user quits
                 if ($sbsID -eq 'A') {$selected_subscriptions = $Subscriptions; break }  # exit from the loop, user quits
@@ -78,7 +77,7 @@ Function Select-MonkeySubscriptionConsole{
                 $badInput = $true
                 if ($sbsID -notmatch '\D') {    # if the input does not contain an non-digit
                     $index = [int]$sbsID - 1
-                    if ($index -ge 0 -and $index -lt $Subscriptions.Count) {
+                    if ($index -ge 0 -and $index -lt @($Subscriptions).Count) {
                         $badInput = $false
                         # everything OK and subscription is selected
                         $msg = @{
@@ -108,9 +107,10 @@ Function Select-MonkeySubscriptionConsole{
                 }
             }
         }
-    }
-    End{
         return $selected_subscriptions
+    }
+    Catch{
+        Write-Error $_.Exception.Message
     }
 }
 
