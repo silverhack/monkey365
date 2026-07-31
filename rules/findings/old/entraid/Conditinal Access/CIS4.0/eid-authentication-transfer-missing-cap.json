@@ -1,0 +1,207 @@
+{
+    "provider": "EntraID",
+    "serviceType": "Conditional Access",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure authentication transfer is blocked",
+    "description": "Authentication transfer is a flow that lets users seamlessly transfer authenticated state from one device to another. For example, users might see a QR code in the desktop version of Outlook that, when scanned on their mobile device, transfers their authenticated state to the mobile device.\r\nThe recommended state is to block `Authentication transfer`.",
+    "rationale": "Blocking authentication transfer helps protect against token theft and replay attacks by preventing the use of device tokens to silently authenticate on other devices or browsers. When authentication transfer is enabled, a threat actor who gains access to one device can access resources to unapproved devices, bypassing standard authentication and device compliance checks. When administrators block this flow, organizations can ensure that each authentication request must originate from the original device, maintaining the integrity of the device compliance and user session context.",
+    "impact": "Users will no longer be able to use authentication transfer to sign into mobile versions of Microsoft apps (e.g., scanning a QR code in Outlook desktop to sign into Outlook mobile). Each device will require independent, interactive sign-in subject to applicable Conditional Access policies.",
+    "remediation": {
+        "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-block-authentication-flows#authentication-transfer-policies",
+		"https://learn.microsoft.com/en-us/entra/fundamentals/zero-trust-protect-identities#authentication-transfer-is-blocked",
+		"https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-authentication-flows",
+		"https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-authentication-transfer"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "7.0.0",
+            "reference": "5.2.2.17",
+            "profile": [
+				"E3 Level 1",
+				"E5 Level 1"
+			]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_conditional_access_policy",
+        "subPath": null,
+        "selectCondition": [
+			{
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "conditions.authenticationFlows.transferMethods",
+                                "eq",
+                                "authenticationTransfer"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "state",
+                                "eq",
+                                "enabled"
+                            ],
+                            [
+                                "conditions.users.includeUsers",
+                                "eq",
+                                "All"
+                            ],
+                            [
+                                "conditions.applications.includeApplications",
+                                "match",
+                                "All"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"MicrosoftAdminPortals",
+                                "notin",
+                                "conditions.applications.excludeApplications"
+                            ],
+                            [
+								"Office365",
+                                "notin",
+                                "conditions.applications.excludeApplications"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            },
+            {
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "conditions.authenticationFlows.transferMethods",
+                                "eq",
+                                "authenticationTransfer"
+                            ]
+                        ]
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "grantControls.builtInControls",
+                                "match",
+                                "block"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": true,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "conditions.authenticationFlows.transferMethods": "Transfer Methods",
+                    "grantControls.builtInControls": "Control"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "displayName": "Name",
+                    "state": "Status",
+                    "conditions.applications.includeApplications": "Applications",
+                    "conditions.users.includeUsers": "Users",
+                    "conditions.authenticationFlows.transferMethods": "Transfer Methods",
+                    "grantControls.builtInControls": "Control"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    "displayName"
+                ],
+                "message": "The {displayName} policy is not configured to block authentication transfer",
+                "defaultMessage": "Ensure authentication transfer is blocked"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraConditionalAccess"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "aad_cap_authentication_transfer_not_present",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1174"
+}

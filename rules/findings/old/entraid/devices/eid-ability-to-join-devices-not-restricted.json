@@ -1,0 +1,130 @@
+{
+    "provider": "EntraID",
+    "serviceType": "Devices",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure the ability to join devices to Entra is restricted",
+    "description": "This setting enables you to select the users who can register their devices as Microsoft Entra joined devices.\r\nThe recommended state is `Selected` or `None`.\r\nNote: This setting is applicable only to Microsoft Entra join on Windows 10 or newer. This setting doesn't apply to Microsoft Entra hybrid joined devices, Microsoft Entra joined VMs in Azure, or Microsoft Entra joined devices that use Windows Autopilot selfdeployment mode because these methods work in a userless context.",
+	"rationale": "If a threat actor compromises a standard user account, they can enroll a rogue device under that user's identity. This device may inherit MDM policies and appear compliant, giving attackers persistent access to cloud resources without triggering MFA.\r\nIn a 2023 blog, Microsoft IR reports that it has detected threat actors registering their own devices to the Microsoft Entra tenant, giving them a platform to escalate the cyberattack. While simply joining a device to a Microsoft Entra tenant may present limited immediate risk, it could allow a threat actor to establish a foothold in the environment.",
+    "impact": "Restricting the setting requires IT teams to assign enrollment permissions to specific staff, such as helpdesk or provisioning personnel, which may impact user-driven Autopilot scenarios and increase administrative overhead for device onboarding and support.",
+    "remediation": {
+        "text": "Remediate from Azure Portal
+			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
+			2. Click to expand Entra ID > Devices select Device settings.
+			3. Set `Users may join devices to Microsoft Entra` to `Selected` (and add members) or `None`.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/devices/manage-device-identities#configure-device-settings",
+        "https://www.microsoft.com/en-us/security/blog/2023/12/05/microsoft-incident-response-lessons-on-preventing-cloud-identity-compromise/#poor-device",
+		"https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "7.0.0",
+            "reference": "5.1.4.1",
+            "profile": [
+                "E3 Level 2",
+				"E5 Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "aad_device_settings",
+        "subPath": null,
+        "selectCondition": [],
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "azureADJoin.allowedToJoin.@odata.type",
+                                "eq",
+                                "enumeratedDeviceRegistrationMembership"
+                            ],
+							[
+                                "azureADJoin.allowedToJoin.@odata.type",
+                                "eq",
+                                "noDeviceRegistrationMembership"
+                            ]
+                        ],
+						"operator":"or"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": true,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Display Name",
+                    "multiFactorAuthConfiguration": "Require MFA setting",
+                    "userDeviceQuota": "User Device Quota",
+					"azureADJoin.allowedToJoin.@odata.type":"Type"
+                },
+                "expandObject": null
+            },
+            "table": "asList",
+            "decorate": [],
+            "emphasis": [
+                "Type"
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "displayName": "Display Name",
+                    "multiFactorAuthConfiguration": "Require MFA setting",
+                    "userDeviceQuota": "User Device Quota"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "Ensure the ability to join devices to Entra is restricted",
+                "defaultMessage": "Ensure the ability to join devices to Entra is restricted"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraDeviceRegistrationPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_allow_to_join_devices_not_restricted",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_tenant_003"
+}

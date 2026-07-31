@@ -1,0 +1,145 @@
+{
+    "provider": "EntraID",
+    "serviceType": "General",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure the email OTP authentication method is disabled",
+    "description": "Authentication methods support a wide variety of scenarios for signing in to Microsoft 365 resources. Some of these methods are inherently more secure than others but require more investment in time to get users enrolled and operational.\r\nThe email one-time passcode feature is a way to authenticate B2B collaboration users when they can't be authenticated through other means, such as Microsoft Entra ID, Microsoft account (MSA), or social identity providers. When a B2B guest user tries to redeem your invitation or sign in to your shared resources, they can request a temporary passcode, which is sent to their email address. Then they enter this passcode to continue signing in.\r\nThe recommended state is to `Disable` email OTP.",
+    "rationale": "Traditional MFA methods such as SMS codes, email-based OTPs, and push notifications are becoming less effective against today’s attackers. Sophisticated phishing campaigns have demonstrated that second factors can be intercepted or spoofed. Attackers now exploit social engineering, man-in-the-middle tactics, and user fatigue (e.g., MFA bombing) to bypass these mechanisms. These risks are amplified in distributed, cloud-first organizations with hybrid workforces and varied device ecosystems.",
+    "impact": "Disabling Email OTP will prevent one-time pass codes from being sent to unverified guest users accessing Microsoft 365 resources on the tenant such as `@yahoo.com`. They will be required to use a personal Microsoft account, a managed Microsoft Entra account, be part of a federation or be configured as a guest in the host tenant's Microsoft Entra ID.",
+    "remediation": {
+        "text": "
+			##### To remediate using the UI:
+			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
+			2. Click to expand Entra ID > Authentication methods.
+			3. Select `Policies`.
+			4. Click on `Email OTP`.
+			5. Change the `Enable` toggle to the off position
+			6. Click `Save`
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-methods-manage",
+        "https://learn.microsoft.com/en-us/entra/external-id/one-time-passcode",
+		"https://learn.microsoft.com/en-us/security/zero-trust/sfi/phishing-resistant-mfa#context-and-problem"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "6.0.1",
+            "reference": "5.2.3.7",
+            "profile": [
+				"E3 Level 2",
+				"E5 Level 2"
+			]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_auth_method_policies",
+        "subPath": "authenticationMethodConfigurations",
+		"selectCondition": {
+			"conditions": [
+				[
+					"id",
+					"eq",
+					"Email"
+				]
+			]
+		},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "state",
+                                "eq",
+                                "enabled"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "Id",
+					"@odata.type": "Type",
+                    "state": "state",
+                    "allowExternalIdToUseEmailOtp": "allowExternalIdToUseEmailOtp"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"id": "Id",
+					"@odata.type": "Type",
+                    "state": "state",
+                    "allowExternalIdToUseEmailOtp": "allowExternalIdToUseEmailOtp"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "Ensure the email OTP authentication method is disabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "id",
+                "resourceId": "id",
+                "resourceType": "EntraAuthMethodSetting"
+            },
+            "onlyStatus": true
+        }
+    },
+    "idSuffix": "entra_email_otp_authentication_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1169"
+}
