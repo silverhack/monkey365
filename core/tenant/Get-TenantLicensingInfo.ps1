@@ -46,14 +46,10 @@ Function Get-TenantLicensingInfo{
             EntraIDP1 = $null;
             EntraIDP2 = $null;
             ATPEnabled = $null;
-            ProductInfo = [PsCustomObject]@{
-                displayName = $null;
-                Id = $null;
-                capabilityStatus = $null;
-                consumedUnits = $null;
-                prepaidUnits = $null;
-                accountName = $null;
-            };
+            E5 = $null;
+            E3 = $null;
+            ActiveLicenses = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+            DisabledLicenses = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
         }
     }
     Process{
@@ -66,16 +62,16 @@ Function Get-TenantLicensingInfo{
             #Check if ATP is enabled
             $licensingInfo.ATPEnabled = Find-M365License -SKU $SKU -AdvancedThreatProtection
             #Check if E3 license is enabled
-            $e3License = Find-M365License -SKU $SKU -E3License
-            If($null -ne $e3License){
-                [void]$allLicenses.Add($e3License);
+            $licensingInfo.E3 = Find-M365License -SKU $SKU -E3License
+            ForEach($license in @($licensingInfo.E3).GetEnumerator()){
+                [void]$allLicenses.Add($license);
             }
             #Check if E5 license is enabled
-            $e5License = Find-M365License -SKU $SKU -E5License
-            If($null -ne $e5License){
-                [void]$allLicenses.Add($e5License);
+            $licensingInfo.E5 = Find-M365License -SKU $SKU -E5License
+            ForEach($license in @($licensingInfo.E5).GetEnumerator()){
+                [void]$allLicenses.Add($license);
             }
-            If($null -eq $e3License -and $null -eq $e5License){
+            If($licensingInfo.E3.Count -eq 0 -and $licensingInfo.E5.Count -eq 0){
                 #Check if non E3/E5 license is enabled
                 $genericLicense = Find-M365License -SKU $SKU -GenericLicense
                 If($null -ne $genericLicense){
@@ -83,24 +79,17 @@ Function Get-TenantLicensingInfo{
                 }
             }
             #Find Active license
-            $activeLicense = $allLicenses.Where({$_.capabilityStatus -eq "Enabled"});
-            If($activeLicense.Count -gt 0){
-                $licensingInfo.ProductInfo.displayName = $activeLicense.skuPartNumber
-                $licensingInfo.ProductInfo.Id = $activeLicense.skuId
-                $licensingInfo.ProductInfo.accountName = $activeLicense.accountName
-                $licensingInfo.ProductInfo.capabilityStatus = $activeLicense.capabilityStatus
-                $licensingInfo.ProductInfo.prepaidUnits = $activeLicense.prepaidUnits
-                $licensingInfo.ProductInfo.consumedUnits = $activeLicense.consumedUnits
+            $activeLicenses = $allLicenses.Where({$_.capabilityStatus -eq "Enabled"});
+            If($activeLicenses.Count -gt 0){
+                ForEach($activeLicense in $activeLicenses){
+                    [void]$licensingInfo.ActiveLicenses.Add($activeLicense);        
+                }
             }
-            Else{
-                $suspendedLicense = $allLicenses.Where({$_.capabilityStatus -eq "Suspended"});
-                If($suspendedLicense.Count -gt 0){
-                    $licensingInfo.ProductInfo.displayName = $suspendedLicense.skuPartNumber
-                    $licensingInfo.ProductInfo.Id = $suspendedLicense.skuId
-                    $licensingInfo.ProductInfo.accountName = $suspendedLicense.accountName
-                    $licensingInfo.ProductInfo.capabilityStatus = $suspendedLicense.capabilityStatus
-                    $licensingInfo.ProductInfo.prepaidUnits = $suspendedLicense.prepaidUnits
-                    $licensingInfo.ProductInfo.consumedUnits = $suspendedLicense.consumedUnits
+            #Find suspended licenses
+            $suspendedLicenses = $allLicenses.Where({$_.capabilityStatus -eq "Suspended"});
+            If($suspendedLicenses.Count -gt 0){
+                ForEach($suspendedLicense in $suspendedLicenses){
+                    [void]$licensingInfo.SuspendedLicenses.Add($suspendedLicense);        
                 }
             }
         }
