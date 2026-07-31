@@ -1,0 +1,115 @@
+{
+    "provider": "Azure",
+    "serviceType": "Security Services",
+    "serviceName": "Security Services",
+    "displayName": "Ensure that Azure Key Vault Managed HSM is used when required",
+    "description": "Azure Key Vault Managed HSM is a fully managed, highly available, single-tenant cloud service that safeguards cryptographic keys using FIPS 140-2 Level 3 validated HSMs.<br/><br/>Note: While an automated assessment procedure exists for this recommendation, the assessment status remains manual, as this recommendation to use Managed HSM applies only to scenarios where specific regulatory and compliance requirements mandate the use of a dedicated hardware security module.",
+    "rationale": "Managed HSM is a fully managed, highly available, single-tenant service that ensures FIPS 140-2 Level 3 compliance. It provides centralized key management, isolated access control, and private endpoints for secure access. Integrated with Azure services, it supports migration from Key Vault, ensures data residency, and offers monitoring and auditing for enhanced security.",
+    "impact": "Managed HSM incurs a cost per month for each actively used HSM-protected key, depending on the key type and quantity. Each key version is billed separately.<br/><br/>Additionally, there is an hourly usage fee per Managed HSM pool. Refer to https://azure.microsoft.com/en-us/pricing/details/key-vault/ to estimate potential costs.",
+    "remediation": {
+        "text": "Remediate from Azure CLI Run the following command to set oid to be the OID of the signed-in user:",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/key-management-choose",
+        "https://learn.microsoft.com/en-us/azure/key-vault/managed-hsm/overview",
+        "https://azure.microsoft.com/en-us/pricing/details/key-vault/",
+        "https://learn.microsoft.com/en-us/azure/key-vault/managed-hsm/quick-create-cli",
+        "https://learn.microsoft.com/en-us/cli/azure/keyvault?view=azure-cli-latest"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "8.3.10",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_all_resources",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "type",
+                                "match",
+                                "^Microsoft\\.KeyVault/managedHSMs$"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": "true",
+        "returnObject": {
+			"type":"Microsoft.KeyVault/managedHSMs",
+			"status":"Missing"
+		},
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_key_vault_managed_hsm_not_used",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_keyvault_010"
+}

@@ -1,0 +1,126 @@
+{
+    "provider": "Azure",
+    "serviceType": "Storage Services",
+    "serviceName": "Storage Services",
+    "displayName": "Ensure Azure Resource Manager ReadOnly locks are considered for Azure Storage Accounts",
+    "description": "Adding an Azure Resource Manager ReadOnly lock can prevent users from accidentally or maliciously deleting a storage account, modifying its properties and containers, or creating access assignments. The lock must be removed before the storage account can be deleted or updated. It provides more protection than a CannotDelete-type of resource manager lock.<br/><br/>This feature prevents POST operations on a storage account and containers to the Azure Resource Manager control plane, management.azure.com. Blocked operations include listKeys which prevents clients from obtaining the account shared access keys.<br/><br/>Microsoft does not recommend ReadOnly locks for storage accounts with Azure Files and Table service containers.<br/><br/>This Azure Resource Manager REST API documentation (spec) provides information about the control plane POST operations for Microsoft.Storage resources.<br/><br/>While an automated assessment procedure exists for this recommendation, the assessment status remains manual. Determining storage accounts that require ReadOnly locks depends on the context and requirements of each organization and environment.",
+    "rationale": "Applying a ReadOnly lock on storage accounts protects the confidentiality and availability of data by preventing the accidental or unauthorized deletion of the entire storage account and modification of the account, container properties, or access permissions. It can offer enhanced protection for blob and queue workloads with tradeoffs in usability and compatibility for clients using account shared access keys.",
+    "impact": "• Prevents the deletion of the Storage account Resource entirely.\n• Prevents the deletion of the parent Resource Group containing the locked Storage account resource.\n• Prevents clients from obtaining the storage account shared access keys using a listKeys operation.\n• Requires Entra credentials to access blob and queue data in the Portal.\n• Data in Azure Files or the Table service may be inaccessible to clients using the account shared access keys.\n• Prevents modification of account properties, network settings, containers, and RBAC assignments.\n• Does not prevent access using existing account shared access keys issued to clients.\n• Does not prevent deletion of containers or other objects within the storage account.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Navigate to the storage account in the Azure portal. 2. Under the Settings section, select Locks. 3. Select Add. 4. Provide a Name, and choose ReadOnly for the type of lock. 5. Add a note about the lock if desired.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/storage/common/lock-account-resource2",
+        "https://learn.microsoft.com/en-us/azure/azure-resource-",
+        "https://github.com/Azure/azure-rest-api-specs/tree/main/specification/storage"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "9.3.10",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "info",
+    "tags": [],
+    "rule": {
+        "path": "az_storage_accounts",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "properties.level",
+                                "eq",
+                                "ReadOnly"
+                            ]
+                        ],
+						"whereObject":"locks"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "Location",
+                    "ResourceGroupName": "ResourceGroupName",
+                    "locks": "Locks"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+                        "name",
+                        "properties",
+						"locks"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "Location",
+                    "ResourceGroupName": "ResourceGroupName",
+                    "locks": "Locks"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure Azure Resource Manager ReadOnly locks are considered for {name} Storage Account",
+                "defaultMessage": "Ensure Azure Resource Manager ReadOnly locks are considered for Azure Storage Accounts"
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "AzureStorageAccount"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "storage_accounts_read_only_lock_not_set",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "azure_storage_020"
+}

@@ -1,0 +1,98 @@
+{
+    "provider": "Azure",
+    "serviceType": "Networking Services",
+    "serviceName": "Networking Services",
+    "displayName": "Ensure that Network Watcher is 'Enabled' for Azure Regions that are in use",
+    "description": "Enable Network Watcher for physical regions in Azure subscriptions.",
+    "rationale": "Network diagnostic and visualization tools available with Network Watcher help users understand, diagnose, and gain insights to the network in Azure.",
+    "impact": "There are additional costs per transaction to run and store network data. For high- volume networks these charges will add up quickly.",
+    "remediation": {
+        "text": "Opting out of Network Watcher automatic enablement is a permanent change. Once you opt-out you cannot opt-in without contacting support. To manually enable Network Watcher in each region where you want to use Network Watcher capabilities, follow the steps below. Remediate from Azure Portal 1. Use the Search bar to search for and click on the Network Watcher service. 2. Click Create. 3. Select a Region from the drop-down menu. 4. Click Add.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/network-watcher/network-watcher-overview",
+        "https://learn.microsoft.com/en-us/cli/azure/network/watcher?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/cli/azure/network/watcher?view=azure-cli-latest#az-network-watcher-configure",
+        "https://learn.microsoft.com/en-us/azure/network-watcher/network-watcher-create?tabs=portal",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-4-enable-network-logging-for-security-investigation",
+        "https://azure.microsoft.com/en-us/pricing/details/network-watcher/"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "7.6",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "network_watcher_disabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_networking_002"
+}

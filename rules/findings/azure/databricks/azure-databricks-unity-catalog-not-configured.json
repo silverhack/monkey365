@@ -1,0 +1,92 @@
+{
+    "provider": "Azure",
+    "serviceType": "Databricks",
+    "serviceName": "Analytics Services",
+    "displayName": "Ensure that Unity Catalog is configured for Azure Databricks",
+    "description": "Unity Catalog is a centralized governance model for managing and securing data in Azure Databricks. It provides fine-grained access control to databases, tables, and views using Microsoft Entra ID identities. Unity Catalog also enhances data lineage, audit logging, and compliance monitoring, making it a critical component for security and governance.",
+    "rationale": "• Enforces centralized access control policies and reduces data security risks.\n• Enables identity-based authentication via Microsoft Entra ID.\n• Improves compliance with industry regulations (e.g. GDPR, HIPAA, SOC 2) by providing audit logs and access visibility.\n• Prevents unauthorized data access through table-, row-, and column-level security (RLS & CLS).",
+    "impact": "• Improperly configured permissions may lead to data exfiltration or unauthorized access.\n• Unity Catalog requires structured governance policies to be effective and prevent overly permissive access.",
+    "remediation": {
+        "text": "Use the remediation procedure written in this article: https://learn.microsoft.com/en-us/azure/databricks/data-governance/unity-catalog/get-started.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/databricks/data-governance/unity-catalog/",
+        "https://learn.microsoft.com/en-us/azure/databricks/admin/users-groups/",
+        "https://learn.microsoft.com/en-us/azure/databricks/data-governance/unity-catalog/enable-workspaces"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "6.0.0",
+            "reference": "2.1.5",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that Unity Catalog is configured for Azure Databricks",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_databricks_unity_catalog_not_configured",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "az_databricks_005"
+}

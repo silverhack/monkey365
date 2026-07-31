@@ -1,0 +1,128 @@
+{
+    "provider": "Azure",
+    "serviceType": "Networking Services",
+    "serviceName": "Networking Services",
+    "displayName": "Ensure that virtual network flow log retention days is set to greater than or equal to _ARG_0_",
+    "description": "Ensure that virtual network flow logs are retained for greater than or equal to _ARG_0_ days.",
+    "rationale": "Virtual network flow logs provide critical visibility into traffic patterns. Logs can be used to check for anomalies and give insight into suspected breaches.",
+    "impact": "• Virtual network flow logs are charged per gigabyte of network flow logs collected and come with a free tier of 5 GB/month per subscription.\n• If traffic analytics is enabled with virtual network flow logs, traffic analytics pricing applies at per gigabyte processing rates.\n• The storage of logs is charged separately, and the cost will depend on the amount of logs and the retention period.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Go to Network Watcher. 2. Under Logs, select Flow logs. 3. Click Add filter. 4. From the Filter drop-down menu, select Flow log type. 5. From the Value drop-down menu, check Virtual network only. 6. Click Apply. 7. Click the name of a virtual network flow log. 8. Under Storage Account, set Retention days to 0, _ARG_0_, or a number greater than _ARG_0_. If Retention days is set to 0, the logs are retained indefinitely with no retention policy. 9. Repeat steps 7 and 8 for each virtual network flow log requiring remediation.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/network-watcher/vnet-flow-logs-manage?tabs=portal",
+        "https://learn.microsoft.com/en-us/cli/azure/network/watcher/flow-log?view=azure-cli-latest"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "7.8",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_network_watcher",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "properties.enabled",
+                                "ne",
+								"true"
+                            ],
+							[
+                                "properties.retentionPolicy.days",
+                                "lt",
+								"_ARG_0_"
+                            ]
+                        ],
+						"operator":"or",
+						"whereObject":"flowLogs"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"flowLogs.id": "id",
+                    "flowLogs.name": "Name",
+                    "flowLogs.location": "Location",
+                    "flowLogs.properties.retentionPolicy.days": "Retention Policy"
+                },
+                "expandObject": "flowLogs"
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"properties"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"flowLogs.id": "id",
+                    "flowLogs.name": "Name",
+                    "flowLogs.location": "Location",
+                    "flowLogs.properties.retentionPolicy.days": "Retention Policy"
+                },
+                "expandObject": "flowLogs"
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that virtual network flow logs are retained for greater than or equal to _ARG_0_ days for {name}",
+                "defaultMessage": "Ensure that virtual network flow logs are retained for greater than or equal to _ARG_0_ days."
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "AzureNetworkFlowLog"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_virtual_network_flow_log_retention_days_not_compliant",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "azure_networking_004"
+}
