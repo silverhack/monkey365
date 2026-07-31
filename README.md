@@ -200,7 +200,7 @@ By default, the HTML report displays CIS (Center for Internet Security) benchmar
 
 Currently supported standards include:
 
-- CIS Microsoft Azure Foundations Benchmark v3.0.0
+- CIS Microsoft Azure Foundations Benchmark v6.0.0
 - CIS Microsoft Azure Database Services Benchmark v2.0.0
 - CIS Microsoft Azure Compute Services Benchmark v2.0.0
 - CIS Microsoft 365 Foundations Benchmark v7.0.0
