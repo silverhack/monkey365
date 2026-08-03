@@ -63,15 +63,15 @@ Function Get-TenantLicensingInfo{
             $licensingInfo.ATPEnabled = Find-M365License -SKU $SKU -AdvancedThreatProtection
             #Check if E3 license is enabled
             $licensingInfo.E3 = Find-M365License -SKU $SKU -E3License
-            ForEach($license in @($licensingInfo.E3).GetEnumerator()){
+            ForEach($license in @($licensingInfo.E3).Where({$null -ne $_}).GetEnumerator()){
                 [void]$allLicenses.Add($license);
             }
             #Check if E5 license is enabled
             $licensingInfo.E5 = Find-M365License -SKU $SKU -E5License
-            ForEach($license in @($licensingInfo.E5).GetEnumerator()){
+            ForEach($license in @($licensingInfo.E5).Where({$null -ne $_}).GetEnumerator()){
                 [void]$allLicenses.Add($license);
             }
-            If($licensingInfo.E3.Count -eq 0 -and $licensingInfo.E5.Count -eq 0){
+            If(@($licensingInfo.E3).Count -eq 0 -and @($licensingInfo.E5).Count -eq 0){
                 #Check if non E3/E5 license is enabled
                 $genericLicense = Find-M365License -SKU $SKU -GenericLicense
                 If($null -ne $genericLicense){
