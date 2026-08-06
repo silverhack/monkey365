@@ -119,8 +119,10 @@ Function Register-Monkey365Application {
         $requiredResourceAccessList = [System.Collections.Generic.List[System.Collections.Hashtable]]::new()
         #Set list for role assignments
         $requiredRoleList = [System.Collections.Generic.List[System.String]]::new();
-        $MSAL = ("{0}{1}core/modules/monkeymsal" -f $O365Object.Localpath,[System.IO.Path]::DirectorySeparatorChar)
-        Import-Module $MSAL -Scope Global -Force
+        $MSAL = Join-Path $Script:ScriptPath 'core/modules/monkeymsal'
+        If (-not (Get-Module -Name monkeymsal)) {
+            Import-Module $MSAL -Force
+        }
         $msalAppMetadata = New-Object -TypeName "System.Management.Automation.CommandMetaData" (Get-Command -Name "New-MonkeyMsalApplication")
         #Set new dict
         $newPsboundParams = [ordered]@{}
@@ -161,19 +163,26 @@ Function Register-Monkey365Application {
             MicrosoftGraph = @{
                 resourceAppId = $applications.Item('MicrosoftGraph');
                 resourceAccess = @{
-                    "Group.Read.All" = "5b567255-7703-4780-807c-7be8301ae99b"
-                    "User.Read.All" = "df021288-bdef-4463-88db-98f22de89214"
+                    "AccessReview.Read.All" = "d07a8cc0-3d51-4b77-b3b0-32704d1f69fa"
+                    "Application.Read.All" = "9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30"
+                    "AuditLog.Read.All" = "b0afded3-3588-46d8-8b3d-9842eff778da"
+                    "DeviceManagementConfiguration.Read.All" = "dc377aa6-52d8-4e23-b271-2a7ae04cedf3"
+                    "DeviceManagementServiceConfig.Read.All" = "06a5fe6d-c49d-46a7-b082-56b1b14103c7"
                     "Directory.Read.All" = "7ab1d382-f21e-4acd-a863-ba3e13f7da61"
-                    "Organization.Read.All" = "498476ce-e0fe-48b0-b801-37ba7e2685c6"
-                    "Policy.Read.All" = "246dd0d5-5bd0-4def-940b-0421030a5b68"
-                    "RoleManagement.Read.Directory" = "483bed4a-2ad3-4361-a73b-c83ccdbdc53c"
+                    "Group.Read.All" = "5b567255-7703-4780-807c-7be8301ae99b"
                     "GroupMember.Read.All" = "98830695-27a2-44f7-8c18-0c3ebc9698f6"
-                    "PrivilegedAccess.Read.AzureADGroup" = "01e37dc9-c035-40bd-b438-b2879c4870a6"
+                    "IdentityRiskEvent.Read.All" = "6e472fd1-ad78-48da-a0f0-97ab2c6b769e"
+                    "Organization.Read.All" = "498476ce-e0fe-48b0-b801-37ba7e2685c6"
+                    "OrgSettings-AppsAndServices.Read.All" = "56c84fa9-ea1f-4a15-90f2-90ef41ece2c9"
+                    "OrgSettings-Forms.Read.All" = "434d7c66-07c6-4b1f-ab21-417cf2cdaaca"
+                    "Policy.Read.All" = "246dd0d5-5bd0-4def-940b-0421030a5b68"
+                    "Policy.Read.AuthenticationMethod" = "8e3bc81b-d2f3-4b7b-838c-32c88218d2f0"
                     "PrivilegedEligibilitySchedule.Read.AzureADGroup" = "edb419d6-7edc-42a3-9345-509bfdf5d87c"
+                    "PrivilegedAccess.Read.AzureADGroup" = "01e37dc9-c035-40bd-b438-b2879c4870a6"
+                    "RoleManagement.Read.Directory" = "483bed4a-2ad3-4361-a73b-c83ccdbdc53c"
                     "RoleManagementPolicy.Read.AzureADGroup" = "69e67828-780e-47fd-b28c-7b27d14864e6"
                     "SecurityEvents.Read.All" = "bf394140-e372-4bf9-a898-299cfc7564e5"
-                    "IdentityRiskEvent.Read.All" = "6e472fd1-ad78-48da-a0f0-97ab2c6b769e"
-                    "Application.Read.All" = "9a5d68dd-52b0-4cc2-bd40-abcf44ac3a30"
+                    "User.Read.All" = "df021288-bdef-4463-88db-98f22de89214"
                     "UserAuthenticationMethod.Read.All" = "38d9df27-64da-44fd-b7c5-a6fbac20248f"
                 }
             }
