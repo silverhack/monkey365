@@ -253,7 +253,6 @@ Function New-HtmlTableFromObject{
                 }
                 #Add showmodal and goto buttons
                 If($PSBoundParameters.ContainsKey('ExtendedData') -and $PSBoundParameters['ExtendedData'] -and (($PSBoundParameters.ContainsKey('ShowModalButton') -and $PSBoundParameters['ShowModalButton'].IsPresent) -or ($PSBoundParameters.ContainsKey('ShowGoToButton') -and $PSBoundParameters['ShowGoToButton'].IsPresent))){
-                    Set-Variable -Name table -Value $newxmlTable -scope Global -Force
                     #Set actions column
                     $thead = $newxmlTable.SelectSingleNode("thead/tr")
                     #Add Actions column
