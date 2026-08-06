@@ -32,19 +32,26 @@ To set up a service principal for use with Monkey365, you’ll need to follow th
 	- Go to API permissions > Add a permission.
 	- Add the necessary **application permissions** for Monkey365:
 		- **Microsoft Graph** (Select Microsoft Graph API under *Commonly used Microsoft APIs*)
-			- User.Read.All,
-			- Application.Read.All,
-			- Policy.Read.All,
-			- Organization.Read.All,
-			- RoleManagement.Read.Directory,
-			- GroupMember.Read.All,
-			- Directory.Read.All,
-			- PrivilegedEligibilitySchedule.Read.AzureADGroup,
-			- PrivilegedAccess.Read.AzureADGroup,
-			- RoleManagementPolicy.Read.AzureADGroup,
-			- Group.Read.All,
-			- SecurityEvents.Read.All,
+			- AccessReview.Read.All
+			- Application.Read.All
+			- AuditLog.Read.All
+			- DeviceManagementConfiguration.Read.All
+			- DeviceManagementServiceConfig.Read.All
+			- Directory.Read.All
+			- Group.Read.All
+			- GroupMember.Read.All
 			- IdentityRiskEvent.Read.All
+			- Organization.Read.All
+			- OrgSettings-AppsAndServices.Read.All
+			- OrgSettings-Forms.Read.All
+			- Policy.Read.All
+			- Policy.Read.AuthenticationMethod
+			- PrivilegedEligibilitySchedule.Read.AzureADGroup
+			- PrivilegedAccess.Read.AzureADGroup
+			- RoleManagement.Read.Directory
+			- RoleManagementPolicy.Read.AzureADGroup
+			- SecurityEvents.Read.All
+			- User.Read.All
 			- UserAuthenticationMethod.Read.All
 			???+ note
 				For Microsoft Teams, the following permissions should be included: 
