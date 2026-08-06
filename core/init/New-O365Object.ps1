@@ -53,15 +53,29 @@ Function New-O365Object{
             $SystemInfo = $UserAgent = $nestedMaxThreads = $internal_config_json = $null
             #Init params
             $init_params = @(
-                'AuditorName','Threads',
-                'PromptBehavior','Environment',
-                'Instance', 'Ruleset','RulesPath','ExportTo',
-                'Collect','WriteLog','TenantId','ClientId',
-                'IncludeEntraID','ImportJob',
-                'SaveProject','ResolveTenantDomainName',
-                'ResolveTenantUserName','ExcludeCollector',
-                'ExcludedResources','ForceMSALDesktop',
-                'Compress'
+                'AuditorName',
+                'Threads',
+                'PromptBehavior',
+                'Environment',
+                'Instance',
+                'Ruleset',
+                'RulesPath',
+                'ExportTo',
+                'Collect',
+                'WriteLog',
+                'TenantId',
+                'ClientId',
+                'IncludeEntraID',
+                'ImportJob',
+                'SaveProject',
+                'ResolveTenantDomainName',
+                'ResolveTenantUserName',
+                'ExcludeCollector',
+                'ExcludedResources',
+                'ForceMSALDesktop',
+                'Compress',
+                'ResourceGroups',
+                'IncludeCollector'
             )
             #Get SystemInfo
             If($null -ne (Get-Command -Name "Get-MonkeySystemInfo" -ErrorAction Ignore)){
@@ -123,8 +137,14 @@ Function New-O365Object{
                 $MyParams.Compress = $false
             }
             #Set Output Dir
-            If($false -eq $MyParams.ContainsKey('OutDir')){
-                $MyParams.OutDir = ("{0}/monkey-reports" -f $ScriptPath)
+            If(-not $MyParams.ContainsKey('OutDir') -or $null -eq $MyParams['OutDir']){
+                $location = Get-Location
+                If ($location.Provider.Name -ne 'FileSystem'){
+                    throw "Unable to determine default output directory. Use -OutDir when current location is not a filesystem path."
+                }
+                $MyParams['OutDir'] = [System.IO.DirectoryInfo]::new(
+                    (Join-Path -Path $location.ProviderPath -ChildPath 'monkey365-output')
+                )
             }
             #Set Environment
             If($null -eq $MyParams.Environment){
@@ -300,6 +320,18 @@ Function New-O365Object{
                 throw ("{0} user properties file does not exists" -f $json_path)
             }
             $user_prop_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
+            #Get basic user Properties
+            $json_path = ("{0}/core/utils/properties/monkeybasicuserprop.json" -f $ScriptPath)
+            If (!(Test-Path -Path $json_path)){
+                throw ("{0} basic user properties file does not exists" -f $json_path)
+            }
+            $basic_user_prop_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
+            #Get group Properties
+            $json_path = ("{0}/core/utils/properties/monkeygroupprop.json" -f $ScriptPath)
+            If (!(Test-Path -Path $json_path)){
+                throw ("{0} group properties file does not exists" -f $json_path)
+            }
+            $group_prop_json = (Get-Content $json_path -Raw) | ConvertFrom-Json
             #Get diag settings unsupported resources
             $json_path = ("{0}/core/utils/diagnosticSettings/unsupportedResources.json" -f $ScriptPath)
             If (!(Test-Path -Path $json_path)){
@@ -450,10 +482,13 @@ Function New-O365Object{
                 WriteLog = $MyParams.WriteLog;
                 userAgent = $UserAgent;
                 userProperties = $user_prop_json;
+                groupProperties = $user_prop_json;
+                basicUserProperties = $basic_user_prop_json;
                 subscriptions = $null;
                 current_subscription = $null;
                 aadPermissions = $null;
                 azPermissions = $null;
+                filterByResourceGroups = $MyParams.ResourceGroups;
                 canRequestMFAForUsers = $null;
                 canRequestUsersFromMsGraph = $null;
                 canRequestGroupsFromMsGraph = $null;
@@ -492,6 +527,7 @@ Function New-O365Object{
                 diag_settings_unsupported_resources = $diag_settings_json;
                 OutDir = $MyParams.OutDir;
                 excludeCollectors = $MyParams.ExcludeCollector;
+                includeCollectors = $MyParams.IncludeCollector;
                 excludedResources = $MyParams.ExcludedResources;
                 ruleset = $ruleSet;
                 rulesPath = $rulesPath;
