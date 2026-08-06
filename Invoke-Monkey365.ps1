@@ -75,16 +75,16 @@ Function Invoke-Monkey365{
         .EXAMPLE
 	        Invoke-Monkey365 -ClientId 00000000-0000-0000-0000-000000000000 -ClientSecret ("MySuperClientSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Azure -Collect All -subscriptions 00000000-0000-0000-0000-000000000000 -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,CSV,JSON,HTML
 
-            This example retrieves information of an Azure subscription and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey-reports folder. The script will connect to Azure using the client credential flow.
+            This example retrieves information of an Azure subscription and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey365-output folder. The script will connect to Azure using the client credential flow.
 
         .EXAMPLE
             Invoke-Monkey365 -certificate C:\monkey365\testapp.pfx -ClientId 00000000-0000-0000-0000-000000000000 -CertFilePassword ("MySuperCertSecret" | ConvertTo-SecureString -AsPlainText -Force) -Instance Microsoft365 -Collect SharePointOnline -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo CLIXML,CSV,JSON,HTML
-	        This example retrieves information of an Microsoft 365 subscription and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey-reports folder. The script will connect to Azure using the certificate credential flow.
+	        This example retrieves information of an Microsoft 365 subscription and will export data driven to CSV, JSON, HTML, XML and Excel format into monkey365-output folder. The script will connect to Azure using the certificate credential flow.
 
         .EXAMPLE
 	        Invoke-Monkey365 -PromptBehavior SelectAccount -Instance Azure -Collect All -TenantID 00000000-0000-0000-0000-000000000000 -ExportTo HTML
 
-            This example retrieves information of an Azure subscription and will export data driven to HTML format into monkey-reports folder. If credentials are not supplied, Monkey365 will prompt for credentials.
+            This example retrieves information of an Azure subscription and will export data driven to HTML format into monkey365-output folder. If credentials are not supplied, Monkey365 will prompt for credentials.
 
         .PARAMETER Environment
 	        Select an Environment of Azure services. Valid options are AzureCloud, Preproduction, China, AzureUSGovernment. Default value is AzureCloud
@@ -115,6 +115,9 @@ Function Invoke-Monkey365{
 
         .PARAMETER ExcludeCollector
 	        Exclude collectors from being executed
+
+        .PARAMETER IncludeCollector
+	        Run one or more specific collectors
 
         .PARAMETER Threads
 	        Change the threads settings. By default, a large number of requests will be made with two threads
@@ -193,6 +196,9 @@ Function Invoke-Monkey365{
         [Parameter(Mandatory=$false, HelpMessage="Collectors to exclude")]
         [string[]]$ExcludeCollector,
 
+        [Parameter(Mandatory=$false, HelpMessage="Collectors to execute")]
+        [string[]]$IncludeCollector,
+
         [parameter(Mandatory= $false, HelpMessage= "Export data to multiple formats")]
         [ValidateSet("CSV","JSON","CLIXML","HTML")]
         [Array]$ExportTo=@(),
@@ -236,20 +242,16 @@ Function Invoke-Monkey365{
         [System.Security.Cryptography.X509Certificates.X509Certificate2] $ClientAssertionCertificate,
 
         # ClientAssertionCertificate of the application requesting the token
-        [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'Certificate')]
-        [parameter(Mandatory= $false, HelpMessage= "pfx certificate file")]
+        [Parameter(Mandatory = $false,ParameterSetName = 'ClientAssertionCertificate-File', HelpMessage = 'pfx certificate file')]
         [ValidateScript(
             {
-            if( -Not ($_ | Test-Path) ){
-                throw ("The cert file does not exist in {0}" -f (Split-Path -Path $_))
+            If (-not (Test-Path -LiteralPath $_ -PathType Leaf)) {
+                throw "The certificate file does not exist or is not a file: '$_'"
             }
-            if(-Not ($_ | Test-Path -PathType Leaf) ){
-                throw "The argument must be a PFX file. Folder paths are not allowed."
+            If ([System.IO.Path]::GetExtension($_) -ine '.pfx') {
+                throw "The certificate file must have a .pfx extension: '$_'"
             }
-            if($_ -notmatch "(\.pfx)"){
-                throw "The certificate specified argument must be of type pfx"
-            }
-            return $true
+            $true
         })]
         [System.IO.FileInfo]$Certificate,
 
@@ -259,26 +261,20 @@ Function Invoke-Monkey365{
 
         [parameter(Mandatory= $false, HelpMessage= "json file with all rules")]
         [ValidateScript({
-            if( -Not (Test-Path -Path $_) ){
+            If (-not (Test-Path -LiteralPath $_ -PathType Leaf)) {
                 throw ("The ruleset does not exist in {0}" -f (Split-Path -Path $_))
             }
-            if(-Not (Test-Path -Path $_ -PathType Leaf) ){
-                throw "The ruleSet argument must be a json file. Folder paths are not allowed."
-            }
-            if($_ -notmatch "(\.json)"){
+            If ([System.IO.Path]::GetExtension($_) -ine '.json') {
                 throw "The file specified in the ruleset argument must be of type json"
             }
-            return $true
+            $true
         })]
         [System.IO.FileInfo]$RuleSet,
 
         [parameter(Mandatory= $false, HelpMessage= "Directory with all rules")]
         [ValidateScript({
-            if( -Not (Test-Path -Path $_) ){
-                throw ("The directory does not exist in {0}" -f (Split-Path -Path $_))
-            }
-            if(-Not (Test-Path -Path $_ -PathType Container) ){
-                throw "The RulesPath argument must be a directory. Files are not allowed."
+            if (-not (Test-Path -LiteralPath $_.FullName -PathType Container)) {
+                throw "The rules directory does not exist or is not a directory: '$_.FullName'"
             }
             return $true
         })]
@@ -449,7 +445,8 @@ Function Invoke-Monkey365{
         #Start Time
         $starttimer = Get-Date
         #####Get Default parameters ########
-        $MyParams = $PSBoundParameters
+        #$MyParams = $PSBoundParameters
+        $MyParams = @{} + $PSBoundParameters
         #Create O365 object
         New-O365Object
         #Set timer
