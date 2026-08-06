@@ -120,6 +120,7 @@ Function Invoke-RuleScan{
                         }
                         Else{
                             Write-Warning ("{0} was not found on dataset or query was invalid" -f $ShadowRule.rule.path)
+                            Write-Warning $ShadowRule.displayName
                             continue
                         }
                         #Check for removeIfNotExists exception rule

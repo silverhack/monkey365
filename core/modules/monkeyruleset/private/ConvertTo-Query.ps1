@@ -117,7 +117,7 @@ function ConvertTo-Query{
         If($null -ne (Get-Variable -Name queryIsOpen -ErrorAction Ignore) -and $queryIsOpen){
             #$finalquery = ("{0}}})" -f $finalquery,$q)
             [void]$finalquery.Append('})');
-            If($atLeast){
+            If($null -ne (Get-Variable -Name atLeast -ErrorAction Ignore) -and $atLeast){
                 [void]$finalquery.Append(('.Count -gt {0}' -f $atLeast));
             }
             Remove-Variable -Name queryIsOpen -Scope Script -Force -ErrorAction Ignore
