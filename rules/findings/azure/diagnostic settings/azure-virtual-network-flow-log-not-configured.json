@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Management and Governance Services",
-    "serviceName": "Management and Governance Services",
+    "serviceType": "Diagnostic Settings",
+    "serviceName": "Diagnostic Settings",
     "displayName": "Ensure that virtual network flow logs are captured and sent to Log Analytics",
     "description": "Ensure that virtual network flow logs are captured and fed into a central log analytics workspace.",
     "rationale": "Virtual network flow logs provide critical visibility into traffic patterns. Sending logs to a Log Analytics workspace enables centralized analysis, correlation, and alerting for faster threat detection and response.",
@@ -23,8 +23,8 @@
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
-            "version": "6.0.0",
-            "reference": "6.1.1.6",
+            "version": "5.0.0",
+            "reference": "6.1.1.7",
             "profile": [
                 "Level 2"
             ]

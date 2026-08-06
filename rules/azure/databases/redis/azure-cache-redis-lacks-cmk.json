@@ -1,0 +1,129 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cache for Redis Enterprise",
+    "serviceName": "Databases",
+    "displayName": "Ensure that Azure Cache for Redis is Using Customer-Managed Keys",
+    "description": "Customer Managed Keys allow you more granular control over the encryption of your information.",
+    "rationale": "Customer Managed Keys increase security of your disk encryption by offering features like custom managed expiration dates, allowing you to set your own key lifecycle.",
+    "impact": "This comes with an increased cost, as only Enterprise tier Azure Cache for Redis supports customer managed keys.",
+    "remediation": {
+        "text": "
+			##### Remediate From Azure Portal 
+			1. Select your Redis Cache. 
+			2. In the left column select Encryption. 
+			3. Select the checkbox to enable Customer Managed keys. 
+			4. Select Add to assign a user managed identity with permissions to access your Azure key vault. 
+			5. Select your subscription and Azure Key vault that contains your customer managed key. Ensure this is in the same region as your Azure Cache for Redis. 
+			6. Select your customer managed key. 
+			7. Click Save.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-how-to-encryption",
+        "https://learn.microsoft.com/en-us/powershell/module/az.redisenterprisecache/get-azredisenterprisecache?view=azps-15.4.0",
+        "https://learn.microsoft.com/en-us/powershell/module/az.redisenterprisecache/update-azredisenterprisecache?view=azps-15.4.0"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.8",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_redis_enterprise",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"ne",
+                                "encryption.customerManagedKeyEncryption.keyEncryptionKeyUrl"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": true,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+				"properties": {
+					"name": "Name",
+					"location": "location",
+					"resourceGroupName": "Resource Group Name",
+					"encryption": "Encryption"
+				},
+				"expandObject": null
+			},
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+						"location",
+						"encryption"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+				"properties": {
+					"name": "Name",
+					"location": "location",
+					"resourceGroupName": "Resource Group Name",
+					"encryption": "Encryption"
+				},
+				"expandObject": null
+			},
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that Azure Cache for Redis is Using Customer-Managed Keys for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cache_redis_enterprise_lacks_cmk",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_redis_enterprise_007"
+}

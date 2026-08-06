@@ -1,0 +1,146 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "_ARG_0_",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure public network access is disabled",
+    "description": "Disable public network access to prevent exposure to the internet and reduce the risk of unauthorized access. Use private endpoints to securely manage access within trusted networks.",
+    "rationale": "Disabling public network access improves security by ensuring that the service is not directly exposed to the public Internet. This has the added benefit of providing more granular control over security settings and configurations for those additional layers of separation.",
+    "impact": "NOTE: Prior to disabling public network access, it is strongly recommended that, for each App Service App, either:\n• complete virtual network integration as described in \"Ensure app is integrated with a virtual network\" OR\n• set up private endpoints/links as described in \"Ensure private endpoints are used to access App Service apps.\" Disabling public network access restricts direct access to the service. This enhances security but will require the configuration of a virtual network and/or private endpoints for any services or users needing access within trusted networks.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal
+			1. Go to App Services.
+			2. Click the name of an app.
+			3. Under Settings, click Networking.
+			4. Under Inbound traffic configuration, click the text next to Public network access.
+			5. Select the radio button next to Disabled.
+			6. Click Save.
+			7. Check the box to confirm the change.
+			8. Click Continue.
+			9. Repeat steps 1-8 for each app requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/networking-features",
+        "https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/cli/azure/resource?view=azure-cli-latest"
+    ],
+    "compliance": [
+        {
+            "name": "_ARG_1_",
+            "version": "_ARG_2_",
+            "reference": "_ARG_3_",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_app_services",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "networking.publicNetworkAccess",
+                                "ne",
+								"Disabled"
+                            ]
+                        ]
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "include": "_ARG_4_"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.publicNetworkAccess":"Public Network Access"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+				{
+					"itemName": "Public Network Access",
+					"itemValue": "enabled",
+					"className": "badge badge-danger badge-xl"
+				}
+			],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"resourceGroupName",
+						"networking"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.publicNetworkAccess":"Public Network Access"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure public network access is disabled for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure__ARG_0__public_network_access_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_app_service__ARG_5_"
+}

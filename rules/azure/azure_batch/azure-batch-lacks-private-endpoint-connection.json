@@ -1,0 +1,91 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Batch",
+    "serviceName": "Batch",
+    "displayName": "Ensure Private endpoints are considered for Batch accounts",
+    "description": "Private endpoints for Azure Batch accounts ensure all network communication occurs over private networks rather than the public internet.",
+    "rationale": "Configuring private endpoints for Azure Batch accounts ensures all network traffic remains within the Microsoft Azure backbone network, eliminating exposure to public internet threats. This meets zero-trust security principles by enforcing network-level isolation and reducing the attack surface. The configuration also enables precise network monitoring through Azure Network Watcher and NSG flow logs.",
+    "impact": "Private endpoints come with an increased cost and complexity.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Navigate to your Batch account 2. Under the Settings drop down, click Networking 3. Click the Private access tab 4. Click + Private endpoint 5. Configure: • Virtual network and subnet • DNS integration (auto-approved recommended) • Target subresource: batchAccount",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/batch/private-connectivityPage"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "15.4",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure Private endpoints are considered for Batch accounts",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_batch_private_endpoint_not_configured",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_batch_002"
+}

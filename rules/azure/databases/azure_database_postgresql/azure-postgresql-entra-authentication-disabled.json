@@ -1,0 +1,125 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Database for PostgreSQL",
+    "serviceName": "Databases",
+    "displayName": "Ensure Azure Database for PostgreSQL uses only Microsoft Entra Authentication",
+    "description": "Ensuring that Microsoft Entra Authentication is the only authentication method prevents the local PostgreSQL authentication from being used.",
+    "rationale": "The use of a centralized Identity and Access Management (IAM) solution such as Microsoft Entra ID is highly recommended for all activity related to Identity, Authentication, Authorization, and Accountability.<br/><br/>Decentralized IAM – such as local authentication methods – may present additional vulnerability and introduce avoidable administrative complexity.",
+    "impact": "",
+    "remediation": {
+        "text": "
+			##### Audit from Azure Portal 
+			1. From Azure Database for PostgreSQL select a server to remediate. 
+			2. Under the Security section, click Authentication 
+			3. In the main window, under the Authentication header where `Authentication method:` provides three options, select Microsoft Entra authentication only.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/postgresql/security/security-entra-concepts",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identity-management"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.2",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_postgresql_servers",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "sqlAd.enabled",
+                                "eq",
+								"False"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"sqlAd.enabled": "Entra Authentication Enabled"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+						"location",
+						"sqlAd"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"sqlAd.enabled": "Entra Authentication Enabled"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure Azure Database for PostgreSQL uses only Microsoft Entra Authentication for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_postgresql_entra_auth_not_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_postgresql_002"
+}

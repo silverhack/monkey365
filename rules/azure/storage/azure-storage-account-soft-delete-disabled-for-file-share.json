@@ -1,0 +1,130 @@
+{
+    "provider": "Azure",
+    "serviceType": "Storage Services",
+    "serviceName": "Storage Services",
+    "displayName": "Ensure soft delete for Azure File Shares is Enabled",
+    "description": "Azure Files offers soft delete for file shares, allowing you to easily recover your data when it is mistakenly deleted by an application or another storage account user.",
+    "rationale": "Important data could be accidentally deleted or removed by a malicious actor. With soft delete enabled, the data is retained for the defined retention period before permanent deletion, allowing for recovery of the data.",
+    "impact": "When a file share is soft-deleted, the used portion of the storage is charged for the indicated soft-deleted period. All other meters are not charged unless the share is restored.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Go to Storage Accounts. 2. For each storage account with file shares, under Data storage, click File shares. 3. Under File share settings, click the value next to Soft delete. 4. Under Soft delete for all file shares, click the toggle to set it to Enabled. 5. Under Retention policies, set an appropriate number of days to retain soft deleted data between 1 and 365, inclusive. 6. Click Save.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/storage/files/storage-files-prevent-file-share-deletion?tabs=azure-portal",
+        "https://learn.microsoft.com/en-us/cli/azure/storage/account/file-service-properties?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/powershell/module/az.storage/get-azstoragefileserviceproperty?view=azps-15.4.0",
+        "https://learn.microsoft.com/en-us/powershell/module/az.storage/update-azstoragefileserviceproperty?view=azps-15.4.0",
+        "https://learn.microsoft.com/en-us/azure/storage/files/storage-files-prevent-file-share-deletion?tabs=azure-portal"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "9.1.1",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_storage_accounts",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "fileProtection.properties.shareDeleteRetentionPolicy.enabled",
+                                "ne",
+                                "True"
+                            ],
+							[
+                                "fileProtection.properties.shareDeleteRetentionPolicy.days",
+                                "lt",
+                                "1"
+                            ]
+                        ],
+						"operator":"or"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "id",
+                    "name": "name",
+                    "location": "Location",
+                    "fileProtection.properties.shareDeleteRetentionPolicy.enabled": "Soft Delete",
+					"fileProtection.properties.shareDeleteRetentionPolicy.days": "Retention Days"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+				{
+					"itemName": "Soft Delete",
+					"itemValue": "False",
+					"className": "badge badge-danger badge-xl"
+				}
+			],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"fileProtection"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure soft delete for Azure File Shares is Enabled for {name} Storage Account",
+                "defaultMessage": "Ensure soft delete for Azure File Shares is Enabled"
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "AzureStorageAccount"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_storage_soft_delete_file_share_not_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"id"
+	],
+    "id": "azure_storage_001"
+}

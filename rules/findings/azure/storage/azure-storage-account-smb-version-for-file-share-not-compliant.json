@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Storage Services",
-    "serviceName": "Storage Services",
+    "serviceType": "Storage Accounts",
+    "serviceName": "Storage",
     "displayName": "Ensure 'SMB protocol version' is set to 'SMB 3.1.1' or higher for SMB file shares",
     "description": "Ensure that SMB file shares are configured to use the latest supported SMB protocol version. Keeping the SMB protocol updated helps mitigate risks associated with older SMB versions, which may contain vulnerabilities and lack essential security controls.",
     "rationale": "Using the latest supported SMB protocol version enhances the security of SMB file shares by preventing the exploitation of known vulnerabilities in outdated SMB versions.",

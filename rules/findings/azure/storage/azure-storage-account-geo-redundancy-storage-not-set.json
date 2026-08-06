@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Storage Services",
-    "serviceName": "Storage Services",
+    "serviceType": "Storage Accounts",
+    "serviceName": "Storage",
     "displayName": "Ensure Redundancy is set to 'geo-redundant storage (GRS)' on critical Azure Storage Accounts",
     "description": "Geo-redundant storage (GRS) in Azure replicates data three times within the primary region using locally redundant storage (LRS) and asynchronously copies it to a secondary region hundreds of miles away. This setup ensures high availability and resilience by providing 16 nines (99.99999999999999%) durability over a year, safeguarding data against regional outages.",
     "rationale": "Enabling GRS protects critical data from regional failures by maintaining a copy in a geographically separate location. This significantly reduces the risk of data loss, supports business continuity, and meets high availability requirements for disaster recovery.",

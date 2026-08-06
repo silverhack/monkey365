@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Security Services",
-    "serviceName": "Security Services",
+    "serviceType": "Azure KeyVault",
+    "serviceName": "Storage",
     "displayName": "Ensure Public Network Access is Disabled",
     "description": "Disable public network access to prevent exposure to the internet and reduce the risk of unauthorized access. Use private endpoints to securely manage access within trusted networks.<br/><br/>When a private endpoint is configured on a key vault, connections from Azure resources within the same subnet will use its private IP address. However, network traffic from the public internet can still connect to the key vault's public endpoint (mykeyvault.vault.azure.net) using its public IP address unless public network access is disabled.<br/><br/>Disabling public network access removes the vault's public endpoint from Azure public DNS, reducing its exposure to the public internet. With a private endpoint configured, network traffic will use the vault's private endpoint IP address for all requests (mykeyvault.vault.privatelink.azure.net).",
     "rationale": "Disabling public network access improves security by ensuring that a service is not exposed on the public internet.<br/><br/>Removing a point of interconnection from the internet edge to your key vault can strengthen the network security boundary of your system and reduce the risk of exposing the control plane or vault objects to untrusted clients.<br/><br/>Although Azure resources are never truly isolated from the public internet, disabling the public endpoint removes a line of sight from the public internet and increases the effort required for an attack.",

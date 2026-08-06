@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Identity Services",
-    "serviceName": "Identity Services",
+    "serviceType": "Subscription Security",
+    "serviceName": "Subscription",
     "displayName": "Ensure that 'Subscription leaving Microsoft Entra tenant' and 'Subscription entering Microsoft Entra tenant' is set to 'Permit no one'",
     "description": "Users who are set as subscription owners are able to make administrative changes to the subscriptions and move them into and out of Microsoft Entra ID.",
     "rationale": "Permissions to move subscriptions in and out of a Microsoft Entra tenant must only be given to appropriate administrative personnel. A subscription that is moved into a Microsoft Entra tenant may be within a folder to which other users have elevated permissions. This prevents loss of data or unapproved changes of the objects within by potential bad actors.",

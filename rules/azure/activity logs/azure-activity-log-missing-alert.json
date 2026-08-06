@@ -1,0 +1,157 @@
+{
+    "provider": "Azure",
+    "serviceType": "Azure Alerts",
+    "serviceName": "Subscription",
+    "displayName": "Ensure that Activity Log Alert exists for _ARG_0_",
+    "description": "Create an activity log alert for the _ARG_0_ event. Consider to add and enable this alert.",
+    "rationale": "_ARG_1_",
+    "impact": "_ARG_7_",
+    "remediation": {
+        "text": "
+			Remediate from Azure Portal
+				1. Navigate to the Monitor blade.
+				2. Select Alerts.
+				3. Select Create.
+				4. Select Alert rule.
+				5. Choose a subscription.
+				6. Select Apply.
+				7. Select the Condition tab.
+				8. Click See all signals.
+				9. Select _ARG_2_.
+				10.Click Apply.
+				11.Select the Actions tab.
+				12.Click Select action groups to select an existing action group, or Create 
+				action group to create a new action group.
+				13.Follow the prompts to choose or create an action group.
+				14.Select the Details tab.
+				15.Select a Resource group, provide an Alert rule name and an optional Alert 
+				rule description.
+				16.Click Review + create.
+				17.Click Create.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-create-activity-log-alert-rule?tabs=activity-log",
+        "https://learn.microsoft.com/en-us/rest/api/monitor/activity-log-alerts/create-or-update?view=rest-monitor-2020-10-01&tabs=HTTP",
+		"https://learn.microsoft.com/en-us/rest/api/monitor/activity-log-alerts/list-by-subscription-id?view=rest-monitor-2020-10-01&tabs=HTTP",
+		"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation",
+		"https://learn.microsoft.com/en-us/rest/api/policy/policy-assignments?view=rest-policy-2023-04-01",
+		"https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-create-log-alert-rule"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "_ARG_3_",
+            "reference": "_ARG_4_",
+            "profile": "Level 1"
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_monitor_alerts",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "operationName",
+                                "match",
+                                "_ARG_5_"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": "true",
+        "returnObject": {
+            "operationName": "_ARG_0_",
+            "Status": "Missing"
+        },
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "description": "Description",
+                    "location": "Location",
+					"categoryName":"categoryName",
+					"enabled": "enabled"
+                },
+                "expandObject": null
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "description": "Description",
+                    "location": "Location",
+					"categoryName":"categoryName",
+					"enabled": "enabled"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+                    
+                ],
+                "message": "The _ARG_0_ alert was not found",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "operationName",
+                "resourceId": "id",
+                "resourceType": "ActivityLogAlert"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_monitor_alert_missing_rule",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "azure_activity_log__ARG_6_"
+}

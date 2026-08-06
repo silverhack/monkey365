@@ -1,0 +1,139 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "_ARG_0_",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure 'HTTP version' is set to '2.0'",
+    "description": "Periodically, newer versions are released for HTTP, either due to security flaws or to include additional functionalities. Using the latest HTTP version allows apps to take advantage of security fixes, if any, and/or new functionalities of the newer version.",
+    "rationale": "Newer versions may contain security enhancements and additional functionalities.<br/><br/>Using the latest version is recommended in order to take advantage of enhancements and new capabilities. With each software installation, organizations need to determine if a given update meets their requirements. They must also verify the compatibility and support provided for any additional software against the update revision that is selected.<br/><br/>HTTP 2.0 has additional performance improvements for the head-of-line blocking problem of the old HTTP version, header compression, and request prioritization. HTTP 2.0 has additional performance improvements for the head-of-line blocking problem of the old HTTP version, header compression, and request prioritization. HTTP 2.0 no longer supports HTTP 1.1's chunked transfer encoding mechanism, as it provides its own, more efficient mechanisms for data streaming.",
+    "impact": "Most modern browsers support the HTTP/2 protocol over TLS only, while non-encrypted traffic continues to use HTTP/1.1. To ensure that client browsers connect to your app with HTTP/2, either purchase an App Service Certificate for your app's custom domain or bind a third-party certificate.\r\n*NOTE*: HTTP/2 cannot be used in tandem with mutual authentication or client certificates.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal 
+			1. Go to the Azure Portal
+			2. Select App Services
+			3. Click on an app
+			4. Select Settings and then Configuration
+			5. Under General Settings, for the Platform Settings, set the HTTP version to 2.0
+			6. Click Save
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+		"https://learn.microsoft.com/en-us/azure/app-service/configure-common?tabs=portal#general-settings",
+		"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-posture-vulnerability-management#pv-3-define-and-establish-secure-configurations-for-compute-resources",
+		"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-posture-vulnerability-management#pv-6-rapidly-and-automatically-remediate-vulnerabilities",
+		"https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest",
+		"https://learn.microsoft.com/en-us/powershell/module/az.websites/get-azwebapp?view=azps-15.4.0"
+	],
+    "compliance": [
+        {
+            "name": "_ARG_1_",
+            "version": "_ARG_2_",
+            "reference": "_ARG_3_",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "info",
+    "tags": [],
+    "rule": {
+        "path": "az_app_services",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "config.properties.http20Enabled",
+                                "ne",
+								"true"
+                            ]
+                        ]
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "include": "_ARG_4_"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"config.properties.http20Enabled":"HTTP2.0 Enabled"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"resourceGroupName",
+						"config"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"config.properties.http20Enabled":"HTTP2.0 Enabled"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure 'HTTP version' is set to '2.0' for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure__ARG_0__http20_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_app_service__ARG_5_"
+}

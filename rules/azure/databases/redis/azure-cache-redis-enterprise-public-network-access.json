@@ -1,0 +1,139 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cache for Redis Enterprise",
+    "serviceName": "Databases",
+    "displayName": "Ensure that 'Public Network Access' is 'Disabled'",
+    "description": "Disabling public network access restricts the service from accessing public networks.",
+    "rationale": "A secure network architecture requires carefully constructed network segmentation.<br/><br/>Public Network Access tends to be overly permissive and introduces unintended vectors for threat activity.",
+    "impact": "Disabling `Public Network Access` forces the requirement of the use of Private Endpoints for network connectivity which will require some additional consideration from a network architecture perspective and will introduce cost based on the inbound/outbound data being processed by the Private Endpoint.<br/><br/>IMPORTANT NOTE: If Azure Cache for Redis has been deployed in a VNet, this recommendation cannot be implemented. See additional information below for more detail.",
+    "remediation": {
+        "text": "
+			##### Remediate From Azure Portal NOTE: A Private Endpoint must exist before the `Disable public network access` button allows the configuration change to be performed via Portal. 
+			1. Search for and open the Azure Cache for Redis service 
+			2. For each instance, repeat the remaining steps 
+			3. Click on the name of the instance 
+			4. In the blade menu on the left, click on Private Endpoint 
+			5. Click the Disable public network access button.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-network-security#ns-2-secure-cloud-services-with-network-controls",
+        "https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-network-isolation",
+        "https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link#how-can-i-change-my-private-endpoint-to-be-disabled-or-enabled-from-public-network-access"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.6",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_redis_enterprise",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "networking.publicNetworkAccess",
+                                "ne",
+								"Disabled"
+                            ],
+							[
+								"eq",
+                                "networking.privateEndpointConnections.id"
+                            ]
+                        ],
+						"operator":"and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+				"properties": {
+					"name": "Name",
+					"location": "location",
+					"resourceGroupName": "Resource Group Name",
+					"networking.publicNetworkAccess": "Public Network Access"
+				},
+				"expandObject": null
+			},
+            "table": "default",
+            "decorate": [
+				{
+					"itemName": "Public Network Access",
+					"itemValue": "enabled",
+					"className": "badge badge-danger badge-xl"
+				}
+			],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+						"location",
+						"networking"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+				"properties": {
+					"name": "Name",
+					"location": "location",
+					"resourceGroupName": "Resource Group Name",
+					"networking.publicNetworkAccess": "Public Network Access"
+				},
+				"expandObject": null
+			},
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that 'Public Network Access' is 'Disabled' for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cache_redis_enterprise_public_network_access",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_redis_enterprise_005"
+}

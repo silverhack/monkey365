@@ -1,0 +1,148 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "_ARG_0_",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure 'Java version' is currently supported",
+    "description": "Periodically, older versions of Java may be deprecated and no longer supported. Using a supported version of Java for App Service apps is recommended to avoid potential unpatched vulnerabilities.",
+    "rationale": "Deprecated and unsupported versions of programming and scripting languages can present vulnerabilities which may not be addressed or may not be addressable.",
+    "impact": "If your app is written using version-dependent features or libraries, they may not be available on more recent versions. If you wish to update, research the impact thoroughly.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal
+			1. Login to Azure Portal using https://portal.azure.com
+			2. Go to App Services
+			3. Click on each App
+			4. Under Settings section, click on Configuration
+			5. Click on the General settings pane and ensure that for a Stack of Java the Major Version and Minor Version reflect a currently supported release, and that the Java web server version is set to the auto-update option.
+
+ 			*NOTE*: No action is required if Java version is set to Off, as Java is not used by your app.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/configure-language-java-deploy-run?tabs=windows&pivots=java-javase",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-posture-vulnerability-management#pv-3-define-and-establish-secure-configurations-for-compute-resources",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-posture-vulnerability-management#pv-6-rapidly-and-automatically-remediate-vulnerabilities",
+        "https://www.oracle.com/java/technologies/java-se-support-roadmap.html",
+        "https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest"
+    ],
+    "compliance": [
+        {
+            "name": "_ARG_1_",
+            "version": "_ARG_2_",
+            "reference": "_ARG_3_",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_app_services",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "stack.java.enabled",
+                                "eq",
+								"true"
+                            ],
+							[
+                                "stack.java.version",
+                                "notmatch",
+								"_ARG_4_"
+                            ]
+                        ],
+						"operator":"and"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "include": "_ARG_5_"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"stack.java.enabled":"Java Enabled",
+					"stack.java.version":"Version"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"resourceGroupName",
+						"stack"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"stack.java.enabled":"Java Enabled",
+					"stack.java.version":"Version"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure 'Java version' is currently supported for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure__ARG_0__latest_java_version",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_app_service__ARG_6_"
+}

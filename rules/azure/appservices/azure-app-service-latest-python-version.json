@@ -1,0 +1,150 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "_ARG_0_",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure 'Python version' is currently supported",
+    "description": "Periodically, older versions of Python may be deprecated and no longer supported.<br/><br/>Using a supported version of Python for App Service apps is recommended to avoid potential unpatched vulnerabilities.",
+    "rationale": "Deprecated and unsupported versions of programming and scripting languages can present vulnerabilities which may not be addressed or may not be addressable.",
+    "impact": "If your app is written using version-dependent features or libraries, they may not be available on more recent versions. If you wish to update, research the impact thoroughly.",
+    "remediation": {
+        "text": "
+			*Note*: No action is required if Python is not in use.
+			#### Remediate from Azure Portal
+			1. Go to App Services.
+			2. Click the name of an app.
+			3. Under Settings, click Configuration.
+			4. In the General settings pane, for a Stack of Python, set the Major version and Minor version to a currently supported release.
+			5. Click Save.
+			6. Click Continue.
+			7. Repeat steps 1-6 for each app requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/configure-common?tabs=portal#configure-language-stack-settings",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-posture-vulnerability-management#pv-7-rapidly-and-automatically-remediate-software-vulnerabilities",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/security-controls-v3-posture-vulnerability-management#pv-3-establish-secure-configurations-for-compute-resources",
+        "https://devguide.python.org/versions/",
+        "https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/powershell/module/az.websites/get-azwebapp?view=azps-15.4.0"
+    ],
+    "compliance": [
+        {
+            "name": "_ARG_1_",
+            "version": "_ARG_2_",
+            "reference": "_ARG_3_",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_app_services",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "stack.python.enabled",
+                                "eq",
+								"true"
+                            ],
+							[
+                                "stack.python.version",
+                                "lt",
+								"_ARG_4_"
+                            ]
+                        ],
+						"operator":"and"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "include": "_ARG_5_"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"stack.python.enabled":"Python Enabled",
+					"stack.python.version":"Version"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"resourceGroupName",
+						"stack"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"stack.python.enabled":"Python Enabled",
+					"stack.python.version":"Version"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure 'Python version' is currently supported for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure__ARG_0__latest_python_version",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_app_service__ARG_6_"
+}

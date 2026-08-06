@@ -1,0 +1,138 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "_ARG_0_",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure end-to-end TLS encryption is enabled",
+    "description": "End-to-end (E2E) TLS encryption ensures that front-end to worker communication within App Service apps is encrypted using TLS. Without this feature, while incoming HTTPS requests are encrypted to the front ends, the traffic from front ends to workers running the application workloads would travel unencrypted inside Azure’s infrastructure.",
+    "rationale": "E2E TLS helps ensure full encryption of traffic between:\n• Clients and front ends\n• Front ends and worker processes hosting the application",
+    "impact": "Enabling end-to-end TLS encryption may introduce minimal latency and require additional configuration of certificates and HTTPS settings to ensure compatibility.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal
+			1. Go to App Services.
+			2. Click the name of an app.
+			3. Under Settings, click Configuration.
+			4. In the General settings pane, under Platform settings, next to Enable end-to-end TLS encryption, click the radio button next to On.
+			5. Click Save.
+			6. Click Continue.
+			7. Repeat steps 1-6 for each app requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/overview-tls#end-to-end-tls-encryption",
+        "https://learn.microsoft.com/en-us/cli/azure/webapp",
+        "https://learn.microsoft.com/en-us/cli/azure/resource"
+    ],
+    "compliance": [
+        {
+            "name": "_ARG_1_",
+            "version": "_ARG_2_",
+            "reference": "_ARG_3_",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_app_services",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "networking.endToEndEncryptionEnabled",
+                                "ne",
+								"true"
+                            ]
+                        ]
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "include": "_ARG_4_"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.endToEndEncryptionEnabled":"E2E Encryption"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"resourceGroupName",
+						"networking"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.endToEndEncryptionEnabled":"E2E Encryption"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure end-to-end TLS encryption is enabled for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure__ARG_0__e2e_encryption_not_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_app_service__ARG_5_"
+}

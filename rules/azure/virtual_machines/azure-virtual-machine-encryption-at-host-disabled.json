@@ -1,0 +1,141 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Virtual Machines",
+    "serviceName": "Compute",
+    "displayName": "Ensure that encryption at host is enabled",
+    "description": "Encryption at host enhances Azure Disk Storage Server-Side Encryption to ensure that all temporary disks and disk caches are encrypted at rest and flow encrypted to the storage clusters.",
+    "rationale": "Encryption at host provides an additional layer of security to protect sensitive information.",
+    "impact": "
+		* Virtual machines must be deallocated for encryption at host to be enabled.
+		* Encryption at host does not use virtual machine CPU, and does not impact virtual machine performance.
+		* Encryption at host cannot be enabled on virtual machines that have ever had Azure Disk Encryption enabled.
+	",
+    "remediation": {
+        "text": "
+			*Note*: Encryption at host must first be enabled in a subscription before it can be used for virtual machines.
+			1. From Azure Portal, select the Cloud Shell icon.
+			2. Run the following command to set the context to the current subscription:
+			```json
+				Set-AzContext -SubscriptionId <subscription-id> 
+			```
+			1. Run the following command to register the encryption at host feature for the subscription: 
+			```json
+				Register-AzProviderFeature -FeatureName 'EncryptionAtHost' -ProviderNamespace 'Microsoft.Compute' 
+			```
+			1. Run the following command to confirm that the RegistrationState is Registered: 
+			```json
+				Get-AzProviderFeature -FeatureName 'EncryptionAtHost' -ProviderNamespace 'Microsoft.Compute' 
+			```
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption-overview",
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption#encryption-at-host---end-to-end-encryption-for-your-vm-data",
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/disks-enable-host-based-encryption-portal?tabs=azure-powershell",
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/linux/disks-enable-host-based-encryption-cli",
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/disks-enable-host-based-encryption-powershell"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "20.11",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_virtual_machines",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"securityProfile.encryptionAtHost",
+                                "ne",
+								"True"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "VM Name",
+                    "location": "Location",
+                    "securityProfile.encryptionAtHost": "Encryption At Host"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "name",
+                        "location",
+                        "securityprofile"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "VM Name",
+                    "location": "Location",
+                    "securityProfile.encryptionAtHost": "Encryption At Host"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that encryption at host is enabled for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_vm_encryption_at_host_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_virtual_machines_002"
+}

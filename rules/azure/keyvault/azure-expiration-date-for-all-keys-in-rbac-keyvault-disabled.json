@@ -1,0 +1,137 @@
+{
+    "provider": "Azure",
+    "serviceType": "Azure KeyVault",
+    "serviceName": "Storage",
+    "displayName": "Ensure that the Expiration Date is set for all Keys in RBAC Key Vaults",
+    "description": "Ensure that all Keys in Role Based Access Control (RBAC) Azure Key Vaults have an expiration date set.",
+    "rationale": "Azure Key Vault enables users to store and use cryptographic keys within the Microsoft Azure environment. The exp (expiration date) attribute identifies the expiration date on or after which the key MUST NOT be used for encryption of new data, wrapping of new keys, and signing. By default, keys never expire. It is thus recommended that keys be rotated in the key vault and set an explicit expiration date for all keys to help enforce the key rotation. This ensures that the keys cannot be used beyond their assigned lifetimes.",
+    "impact": "Keys cannot be used beyond their assigned expiration dates respectively. Keys need to be rotated periodically wherever they are used.",
+    "remediation": {
+        "text": "###### From Azure Portal\r\n\t\t\t\t\t1. Go to `Key vaults`\r\n\t\t\t\t\t2. For each Key vault, click on `Keys`.\r\n\t\t\t\t\t3. Under the `Settings` section, Make sure `Enabled?` is set to Yes\r\n\t\t\t\t\t4. Set an appropriate **expiration date** on all keys.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/general/basic-concepts",
+		"https://learn.microsoft.com/en-us/azure/key-vault/general/about-keys-secrets-certificates",
+		"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-6-use-a-secure-key-management-process",
+		"https://learn.microsoft.com/en-us/powershell/module/az.keyvault/set-azkeyvaultkeyattribute?view=azps-0.10.0"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "8.3.1",
+            "profile": [
+				"Level 1"
+			]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "az_keyvault",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "enableRbacAuthorization",
+                                "eq",
+                                "true"
+                            ],
+                            [
+								"ne",
+                                "objects.keys.attributes.exp"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Key Vault Name",
+                    "location": "Location",
+                    "enableRbacAuthorization": "RBAC Enabled"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"properties",
+						"objects"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "true",
+                "showModalButton": "true",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Key Vault Name",
+                    "location": "Location",
+                    "enableRbacAuthorization": "RBAC Enabled"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+					"name"
+                ],
+                "message": "Ensure that the Expiration Date is set for all Keys for {name} Key Vault",
+                "defaultMessage": "Ensure that the Expiration Date is set for all Keys in RBAC Key Vaults"
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "AzureKeyVault"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_rbac_key_vault_keys_notexpire",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "azure_keyvault_001"
+}

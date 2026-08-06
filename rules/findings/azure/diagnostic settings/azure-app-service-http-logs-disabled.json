@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Management and Governance Services",
-    "serviceName": "Management and Governance Services",
+    "serviceType": "Diagnostic Settings",
+    "serviceName": "Diagnostic Settings",
     "displayName": "Ensure that logging for Azure AppService 'HTTP logs' is enabled",
     "description": "Enable AppServiceHTTPLogs diagnostic log category for Azure App Service instances to ensure all http requests are captured and centrally logged.",
     "rationale": "Capturing web requests can be important supporting information for security analysts performing monitoring and incident response activities. Once logging, these logs can be ingested into SIEM or other central aggregation point for the organization.",

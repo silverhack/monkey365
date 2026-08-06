@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Identity Services",
-    "serviceName": "Identity Services",
+    "serviceType": "Subscription Identity",
+    "serviceName": "Subscription",
     "displayName": "Ensure that all 'privileged' role assignments are periodically reviewed",
     "description": "Periodic review of privileged role assignments is performed to ensure that the privileged roles assigned to users are accurate and appropriate.",
     "rationale": "Privileged roles are crown jewel assets that can be used by malicious insiders, threat actors, and even through mistake to significantly damage an organization in numerous ways. These roles should be periodically reviewed to:\n• identify lingering permissions assignment (e.g. an administrator has been terminated, the administrator account is being retained, but the permissions are no longer necessary and has not been properly addressed by process)\n• detect lateral movement through privilege escalation (e.g. an account with administrative permission has been compromised and is elevating other accounts in an attempt to circumvent detection mechanisms)",

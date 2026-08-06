@@ -1,0 +1,131 @@
+{
+    "provider": "Azure",
+    "serviceType": "Security Services",
+    "serviceName": "Security Services",
+    "displayName": "Ensure certificate 'Validity Period (in months)' is less than or equal to '_ARG_0_'",
+    "description": "Restrict the validity period of certificates stored in Azure Key Vault to _ARG_0_ months or less.",
+    "rationale": "Limiting certificate validity reduces the risk of misuse if compromised and helps ensure timely renewal, improving security and reliability.",
+    "impact": "Minor administrative effort required to ensure certificate renewal and lifecycle management.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Go to Key vaults. 2. Click the name of a key vault. 3. Under Objects, click Certificates. 4. Click the name of a certificate. 5. Click Issuance Policy. 6. Set Validity Period (in months) to an integer between 1 and _ARG_0_, inclusive. 7. Click Save. 8. Repeat steps 1-7 for each key vault and certificate requiring remediation.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/certificates/about-certificates",
+        "https://learn.microsoft.com/en-us/cli/azure/keyvault?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/powershell/module/az.keyvault/?view=azps-15.4.0"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "8.3.11",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_keyvault",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+		"data": {
+            "properties": {
+                "objects.certificates.*": null,
+                "id": "keyVaultId",
+                "name": "name",
+				"location":"location"
+            },
+            "expandObject": "objects.certificates"
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"attributes.expireinMonths",
+                                "gt",
+								"_ARG_0_"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"keyvaultId": "id",
+					"name": "name",
+                    "location": "Location",
+					"id": "KeyId",
+					"attributes.expirationDate":"Expiration Date"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"keyvaultId": "id",
+					"name": "name",
+                    "location": "Location",
+					"id": "KeyId",
+					"attributes.expirationDate":"Expiration Date"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure certificate 'Validity Period (in months)' is less than or equal to '_ARG_0_' for {name}",
+                "defaultMessage": "Ensure certificate 'Validity Period (in months)' is less than or equal to '_ARG_0_'"
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "KeyVaultCertificate"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_key_vault_certificate_validity_non_compliant",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "azure_keyvault_011"
+}

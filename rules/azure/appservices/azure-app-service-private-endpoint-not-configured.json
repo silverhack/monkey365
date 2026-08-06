@@ -1,0 +1,158 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "_ARG_0_",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure private endpoints are used to access App Service",
+    "description": "Use private endpoints to allow clients and services to securely access data located over a network via an encrypted Private Link. To do this, the private endpoint uses an IP address from the VNet for each service. Network traffic between disparate services securely traverses encrypted over the VNet. This VNet can also link addressing space, extending your network and accessing resources on it. Similarly, it can be a tunnel through public networks to connect remote infrastructures together. This creates further security through segmenting network traffic and preventing outside sources from accessing it.",
+    "rationale": "Securing traffic between services through encryption protects the data from easy interception and reading.",
+    "impact": "If an Azure Virtual Network is not implemented correctly, this may result in the loss of critical network traffic.<br/><br/>Private endpoints are charged per hour of use. Refer to https://azure.microsoft.com/en- us/pricing/details/private-link/ and https://azure.microsoft.com/en-us/pricing/calculator/ to estimate potential costs.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal
+			1. Go to App Services.
+			2. Click the name of an app.
+			3. Under Settings, click Networking.
+			4. Under Inbound traffic configuration, click the link next to Private endpoints.
+			5. Click + Add.
+			6. From the drop-down menu, select Express or Advanced.
+			7. If selecting Express:
+				1. Provide a Name, and select a Subscription, Virtual network, and Subnet.
+				2. Click OK. 
+			8. If selecting Advanced:
+				1. Select a Subscription and Resource group, provide an instance Name and Network Interface Name, and select a Region.
+				2. Click Next : Resource. 
+				3. Select a Target sub-resource. 
+				4. Click Next : Virtual Network. 
+				5. Select a Virtual network and a Subnet. 
+				6. Click Next : DNS. 
+				7. Optionally update the DNS configuration. 
+				8. Click Next : Tags. 
+				9. Optionally configure tags. 
+				10. Click Next : Review + create. 
+				11. Click Create.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/overview-private-endpoint#dns",
+        "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns",
+        "https://learn.microsoft.com/en-us/azure/app-service/overview-private-endpoint",
+        "https://azure.microsoft.com/en-us/pricing/details/private-link/"
+    ],
+    "compliance": [
+        {
+            "name": "_ARG_1_",
+            "version": "_ARG_2_",
+            "reference": "_ARG_3_",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_app_services",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "ne",
+								"networking.privateEndpointConnections.id"
+                            ],
+							[
+                                "networking.privateEndpointConnections.properties.provisioningState",
+								"eq",
+								"Succeeded"
+                            ]
+                        ],
+						"operator":"and"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "include": "_ARG_4_"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.privateEndpointConnections.id":"Private Endpoint Id"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"resourceGroupName",
+						"networking"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.privateEndpointConnections.id":"Private Endpoint Id"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure private endpoints are used to access App Service for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure__ARG_0__private_endpoint_not_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_app_service__ARG_5_"
+}

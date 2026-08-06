@@ -1,0 +1,127 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cosmos DB",
+    "serviceName": "Databases",
+    "displayName": "Ensure the firewall does not allow all network traffic",
+    "description": "Do not allow all network traffic. Restrict access to specific IP addresses or ranges.",
+    "rationale": "Allowing all network traffic limits the effectiveness of a firewall.",
+    "impact": "Administrative effort to identify and maintain the list of IP addresses and ranges requiring access to the account.",
+    "remediation": {
+        "text": "
+			##### Remediate from Azure Portal 
+			1. Go to Azure Cosmos DB. 
+			2. Select the name of an Azure Cosmos DB account. 
+			3. Under Settings, select Networking. 
+			4. Under Public access, Firewall > IPs, select the Delete icon next to 0.0.0.0. 
+			5. Select Save. 
+			6. Repeat steps 1-5 for each account requiring remediation. Remediate from Azure CLI For each account requiring remediation, run the following command to update the list of allowed IP addresses, excluding 0.0.0.0
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-gb/azure/cosmos-db/how-to-configure-firewall#allow-requests-from-global-azure-datacenters-or-other-sources-within-azure"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.6",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_cosmosdb",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "networking.ipRules.ipAddressOrRange",
+                                "match",
+                                "0.0.0.0"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.ipRules": "IP rules"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"location",
+						"networking.ipRules"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.ipRules": "IP rules"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure the firewall does not allow all network traffic for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cosmosdb_fw_allow_all_traffic",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+	"id": "azure_cosmosdb_006"
+}

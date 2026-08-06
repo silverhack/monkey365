@@ -1,0 +1,132 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Disks",
+    "serviceName": "Storage",
+    "displayName": "Ensure that 'Enable Data Access Authentication Mode' is 'Checked'",
+    "description": "Data Access Authentication Mode provides a method of uploading or exporting Virtual Machine Disks.",
+    "rationale": "Enabling data access authentication mode adds a layer of protection using an Entra ID role to further restrict users from creating and using Secure Access Signature (SAS) tokens for exporting a detached managed disk or virtual machine state. Users will need the Data operator for managed disk role within Entra ID in order to download a VHD or VM Guest state using a secure URL.",
+    "impact": "To apply this setting, the virtual machine to which the disk or disks are attached will need to be powered down and have its disk detached. Users without the Data operator for managed disk role within Entra ID will not be able to export VHD or VM guest state using the secure download URL.<br/><br/>The following restrictions apply and must be considered when determining if this recommendation is appropriate for your environment:\n• VHDs can't be uploaded to empty snapshots.\n• Azure Backup doesn't currently support disks secured with Microsoft Entra ID.\n• Azure Site Recovery doesn't currently support disks secured with Microsoft Entra ID.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal
+			Part A. Select the Virtual Machine to Remediate 
+				1. Using the search bar, search for and open the Virtual Machines service.
+				2. Click on the name of the Virtual Machine to be remediated. 
+			Part B. Remediate each Virtual Machine Disk individually
+				1. From the selected Virtual Machine resource window, expand the Settings menu item and click Disks.
+				2. For each disk, click the name of the disk to open the disk resource window.
+				3. From the selected Disk resource window, expand the Settings menu item, and click Disk Export. check the checkbox next to Enable Data Access Authentication Mode.
+			Repeat Part B for each Disk attached to a VM. Repeat Parts A and B to remediate all Disks in all VMs.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/linux/download-vhd?tabs=azure-portal#secure-downloads-and-uploads-with-microsoft-entra-id",
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/download-vhd?tabs=azure-portal#secure-downloads-and-uploads-with-microsoft-entra-id"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "20.5",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_managed_disks",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "dataAccessAuthMode",
+                                "eq",
+                                "None"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Disk Name",
+                    "location": "Location",
+                    "skuname": "SKU Name",
+                    "dataAccessAuthMode": "Data Access Auth Mode"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+                        "location",
+                        "dataAccessAuthMode"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Disk Name",
+                    "location": "Location",
+                    "skuname": "SKU Name",
+                    "dataAccessAuthMode": "Data Access Auth Mode"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that 'Enable Data Access Authentication Mode' is 'Checked' for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "disk_data_access_authentication_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_storage_001"
+}

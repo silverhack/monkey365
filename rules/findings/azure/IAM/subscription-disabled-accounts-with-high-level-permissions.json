@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Entra Role Assignment",
-    "serviceName": "Microsoft Entra ID",
+    "serviceType": "Subscription Identity",
+    "serviceName": "Subscription",
     "displayName": "Ensure disabled user accounts do not have read, write, or owner permissions",
     "description": "Ensure that any roles granting read, write, or owner permissions are removed from disabled Azure user accounts.<br/><br/>While an automated assessment procedure exists for this recommendation, the assessment status remains manual. Removing role assignments from disabled user accounts depends on the context and requirements of each organization and environment.",
     "rationale": "Disabled accounts should not retain access to resources, as this poses a security risk.<br/><br/>Removing role assignments mitigates potential unauthorized access and enforces the principle of least privilege.",

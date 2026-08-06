@@ -1,0 +1,129 @@
+{
+    "provider": "Azure",
+    "serviceType": "Networking Services",
+    "serviceName": "Networking Services",
+    "displayName": "Ensure that Public IP addresses are Evaluated on a Periodic Basis",
+    "description": "Public IP Addresses provide tenant accounts with Internet connectivity for resources contained within the tenant. During the creation of certain resources in Azure, a Public IP Address may be created. All Public IP Addresses within the tenant should be periodically reviewed for accuracy and necessity.<br/><br/>While an automated assessment procedure exists for this recommendation, the assessment status remains manual. Evaluating the appropriateness of public IP addresses requires a manual review, as it depends on the specific needs and context of each organization and environment.",
+    "rationale": "Public IP Addresses allocated to the tenant should be periodically reviewed for necessity. Public IP Addresses that are not intentionally assigned and controlled present a publicly facing vector for threat actors and significant risk to the tenant.",
+    "impact": "",
+    "remediation": {
+        "text": "Remediation will vary significantly depending on your organization's security requirements for the resources attached to each individual Public IP address.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/cli/azure/network/public-ip?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-network-security"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "7.7",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_publicIPAddress",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "eq",
+								"associatedTo"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Public IP",
+                    "location": "Location",
+                    "resourceGroupName": "Resource Group",
+                    "ipAddress": "IP Address",
+                    "publicIPAllocationMethod": "Allocation Method",
+                    "associatedTo": "Associated To"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "name",
+                        "location",
+                        "resourceGroupName",
+                        "ipAddress",
+                        "publicIPAllocationMethod",
+                        "associatedTo"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Public IP",
+                    "location": "Location",
+                    "resourceGroupName": "Resource Group",
+                    "ipAddress": "IP Address",
+                    "publicIPAllocationMethod": "Allocation Method",
+                    "associatedTo": "Associated To"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that Public IP addresses are Evaluated on a Periodic Basis for {name}",
+                "defaultMessage": "Ensure that Public IP addresses are Evaluated on a Periodic Basis"
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "AzurePublicIp"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_unassigned_public_ip_address",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "azure_networking_003"
+}

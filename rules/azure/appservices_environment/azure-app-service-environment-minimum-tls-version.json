@@ -1,0 +1,129 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "App Service Environments",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure App Service Environment has TLS 1.0 and 1.1 disabled",
+    "description": "The TLS (Transport Layer Security) protocol secures the transmission of data over the internet using standard encryption technology. TLS versions 1.0 and 1.1 have been deprecated, and their use is generally discouraged. Disable all inbound TLS 1.0 and TLS 1.1 traffic for all the apps in an App Service Environment.",
+    "rationale": "TLS 1.0 and 1.1 are outdated and vulnerable to security risks.",
+    "impact": "Disallowing TLS 1.0 and 1.1 may affect compatibility with clients and backend services.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal
+			1. Go to App Service Environments.
+			2. Click the name of an App Service Environment.
+			3. Under Settings, click Configuration.
+			4. Next to Allow TLS 1.0 and 1.1, click the radio button next to Off.
+			5. Click Save.
+			6. Click Continue.
+			7. Repeat steps 1-6 for each App Service Environment requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/environment/app-serviceapp-service-environment-custom-settings",
+        "https://learn.microsoft.com/en-us/cli/azure/appservice/ase"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "2.9",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_app_service_environment",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "clusterSettings.DisableTls1",
+								"ne",
+								"1"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"clusterSettings":"Cluster Settings"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"properties",
+						"clusterSettings"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"clusterSettings":"Cluster Settings"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure App Service Environment has TLS 1.0 and 1.1 disabled for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_app_service_environment_tls_10_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_appservice_environment_005"
+}

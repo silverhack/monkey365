@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Storage Services",
-    "serviceName": "Storage Services",
+    "serviceType": "Storage Accounts",
+    "serviceName": "Storage",
     "displayName": "Ensure soft delete for Azure File Shares is Enabled",
     "description": "Azure Files offers soft delete for file shares, allowing you to easily recover your data when it is mistakenly deleted by an application or another storage account user.",
     "rationale": "Important data could be accidentally deleted or removed by a malicious actor. With soft delete enabled, the data is retained for the defined retention period before permanent deletion, allowing for recovery of the data.",

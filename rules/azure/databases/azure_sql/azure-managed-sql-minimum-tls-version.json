@@ -1,0 +1,119 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "SQL Database",
+    "serviceName": "Databases",
+    "displayName": "Ensure 'Minimum TLS Version' is set to 'TLS 1.2' or higher",
+    "description": "Note: It is no longer possible to set the minimal TLS version of SQL server to lower than\n1.2. Azure ended support for TLS 1.0 and 1.1 in August 2025.<br/><br/>Setting the 'Minimum TLS version' to 'TLS 1.2' or higher reduces TLS protocol vulnerabilities by preventing the use of significantly outdated versions of TLS.",
+    "rationale": "The Secure Sockets Layer (SSL) protocol encrypts network traffic transiting between server and client.<br/><br/>Using only the most recent versions of SSL protocols (TLS version 1.2 and higher) eliminates susceptibility to known exploited vulnerabilities of outdated versions of TLS. If TLS 1.2 does not provide additional granular configuration options for supported cipher suites, there's a chance that default ciphers which employ Cipher Block Chaining (CBC) mode may be enabled which would introduce Padding Oracle types of vulnerabilities.<br/><br/>TLS 1.3 does not support CBC mode ciphers by default and by default supports GCM ciphers which include an extra authentication step during the clear text to cipher text encryption process.<br/><br/>TLS version 1.3 is preferable where it is possible to implement.<br/><br/>Versions 1.0 and 1.1 of TLS are no longer considered secure. These versions should not be used or permitted where data integrity and confidentiality are required.",
+    "impact": "No impact to cost or performance.",
+    "remediation": {
+        "text": "",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.8",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_sql_managed_servers",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "networking.minimumTlsVersion",
+                                "notmatch",
+								"1.2|1.3"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Server Name",
+                    "location": "Location",
+                    "resourceGroupName": "Resource group name",
+                    "fqdn": "FQDN",
+                    "networking.minimumTlsVersion": "Minimum TLS Version"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+                        "name",
+                        "location",
+                        "networking"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Server Name",
+                    "location": "Location",
+                    "resourceGroupName": "Resource group name",
+                    "fqdn": "FQDN",
+                    "networking.minimumTlsVersion": "Minimum TLS Version"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure 'Minimum TLS Version' is set to 'TLS 1.2' or higher for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_managed_sql_minimum_tls_version",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_managed_sql_002"
+}

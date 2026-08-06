@@ -1,0 +1,124 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cache for Redis Enterprise",
+    "serviceName": "Databases",
+    "displayName": "Ensure 'Microsoft Entra Authentication' is 'Enabled'",
+    "description": "Ensuring that Microsoft Entra Authentication is `Enabled` provides a natively integrated use of identities already defined with Microsoft Entra ID.",
+    "rationale": "The use of a centralized Identity and Access Management (IAM) solution such as Microsoft Entra ID is highly recommended for all activity related to Identity, Authentication, Authorization, and Accountability.<br/><br/>Decentralized IAM – such as local authentication methods – may present additional vulnerability and introduce avoidable administrative complexity.",
+    "impact": "Free tiers exist for the licensing of Microsoft Entra ID if required.",
+    "remediation": {
+        "text": "
+			##### Remediate From Azure Portal 
+			1. Search for and open the Azure Cache for Redis service 
+			2. For each instance, repeat the remaining steps 
+			3. Click on the name of the instance 
+			4. In the blade menu on the left, click on Authentication 
+			5. Check the checkbox next to Enable Microsoft Entra Authentication
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identity-management",
+        "https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-azure-active-directory-for-authentication"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.1",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_redis_enterprise",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "eq",
+                                "databaseAccessPolicyAssignments"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+						"location",
+						"databaseAccessPolicyAssignments"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure 'Microsoft Entra Authentication' is 'Enabled' for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cache_redis_enterprise_entra_auth_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_redis_001"
+}

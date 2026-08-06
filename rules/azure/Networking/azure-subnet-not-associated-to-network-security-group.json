@@ -1,0 +1,88 @@
+{
+    "provider": "Azure",
+    "serviceType": "Networking Services",
+    "serviceName": "Networking Services",
+    "displayName": "Ensure subnets are associated with network security groups",
+    "description": "Protect subnet resources by ensuring subnets are associated with network security groups, which can filter inbound and outbound traffic using security rules.",
+    "rationale": "Unprotected subnets can expose resources to unauthorized access.",
+    "impact": "Minor administrative effort is required to ensure subnets are associated with network security groups. There is no cost to create or use network security groups.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Go to Virtual networks. 2. Click the name of a virtual network. 3. Under Settings, click Subnets. 4. Click the name of a subnet. 5. Under Security, next to Network security group, click None to display the drop-down menu. 6. Select a network security group. 7. Click Save. 8. Repeat steps 1-7 for each virtual network and subnet requiring remediation.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview",
+        "https://learn.microsoft.com/en-us/cli/azure/network/vnet?view=azure-cli-latest"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "7.11",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [],
+    "id": "azure_networking_007"
+}

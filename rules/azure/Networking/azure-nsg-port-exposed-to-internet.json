@@ -1,0 +1,178 @@
+{
+    "provider": "Azure",
+    "serviceType": "Network Security Groups",
+    "serviceName": "Network",
+    "displayName": "Ensure that _ARG_0_ access from the Internet is evaluated and restricted",
+    "description": "_ARG_1_",
+    "rationale": "_ARG_2_",
+    "impact": null,
+    "remediation": {
+        "text": "
+			Remediate from Azure Portal
+				1. Go to Network security groups.
+				2. Click the name of a network security group.
+				3. Under Settings, click Inbound security rules.
+				4. Check the box next to any inbound security rule matching: 
+				  * Port: _ARG_3_
+				  * Protocol: TCP or Any
+				  * Source: 0.0.0.0/0, Internet, or Any
+				  * Action: Allow
+				5. Click Delete.
+				6. Click Yes.
+				7. Repeat steps 1-6 for each network security group requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/network-bestpractices#disable-rdpssh-access-to-virtual-machines",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-networksecurity#ns-1-establish-network-segmentation-boundaries",
+        "https://learn.microsoft.com/en-us/azure/expressroute/",
+        "https://learn.microsoft.com/en-us/azure/vpn-gateway/tutorialsite-to-site-portal",
+        "https://learn.microsoft.com/en-us/azure/vpn-gateway/point-tosite-certificate-gateway"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "7.1",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_nsg_rules",
+        "subPath": null,
+        "selectCondition": {
+		},
+		"data": {
+            "properties": {
+                "id": "id",
+                "name": "name",
+                "location": "location",
+				"provisioningState":"provisioningState",
+				"securityRules.*": null
+            },
+            "expandObject": "securityRules"
+        },
+        "query": [
+			{
+				"operator": "and",
+                "filter": [
+                    {
+                        "include": "_ARG_4_"
+                    },
+                    {
+                        "include": "nsg-service-exposed-to-the-internet.json"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "properties.priority",
+                                "notlike",
+                                "65*"
+                            ]
+                        ]
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "properties.flattenedDestinationPortRange",
+                                "contains",
+                                "_ARG_3_"
+                            ],
+							[
+                                "properties.flattenedDestinationPortRanges",
+                                "contains",
+                                "_ARG_3_"
+                            ]
+                        ],
+						"operator":"or"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "Location",
+                    "properties.description": "ruleName",
+                    "properties.direction": "direction",
+					"properties.destinationPortRange": "destinationPortRange",
+					"properties.destinationPortRanges": "destinationPortRanges"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "Location",
+                    "properties.description": "ruleName",
+                    "properties.direction": "direction",
+					"properties.destinationPortRange": "destinationPortRange",
+					"properties.destinationPortRanges": "destinationPortRanges"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+					"id"
+				],
+                "message": "Ensure that _ARG_0_ access from the Internet is evaluated and restricted for {id}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_nsg_security_port__ARG_3_open_all",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"id"
+	],
+    "id": "azure_networking__ARG_5_"
+}

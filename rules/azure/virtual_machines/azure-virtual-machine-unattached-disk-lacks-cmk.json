@@ -1,0 +1,146 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Disks",
+    "serviceName": "Compute",
+    "displayName": "Ensure that 'Unattached disks' are encrypted with 'Customer Managed Key' (CMK)",
+    "description": "Ensure that unattached disks in a subscription are encrypted with a Customer Managed Key (CMK).",
+    "rationale": "Managed disks are encrypted by default with Platform-managed keys. Using Customer- managed keys may provide an additional level of security or meet an organization's regulatory requirements. Encrypting managed disks ensures that its entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads.<br/><br/>Even if the disk is not attached to any of the VMs, there is always a risk where a compromised user account with administrative access to VM service can mount/attach these data disks, which may lead to sensitive information disclosure and tampering.",
+    "impact": "NOTE: You must have your key vault set up to utilize this. Encryption is available only on Standard tier VMs. This might cost you more.<br/><br/>Utilizing and maintaining Customer-managed keys will require additional work to create, protect, and rotate keys.",
+    "remediation": {
+        "text": "
+			If data stored in the disk is no longer useful, refer to Azure documentation to delete unattached data disks at:
+			* https://docs.microsoft.com/en-us/rest/api/compute/disks/delete
+			* https://docs.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-delete
+			If data stored in the disk is important, to encrypt the disk refer to azure documentation at:
+			* https://docs.microsoft.com/en-us/azure/virtual-machines/disks-enable-customer-managed-keys-portal
+			* https://docs.microsoft.com/en-us/rest/api/compute/disks/update#encryptionsettings
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/disk-encryption-overview",
+        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/asset-inventory",
+        "https://learn.microsoft.com/en-us/rest/api/compute/disks/delete?view=rest-compute-2025-04-01&tabs=HTTP",
+        "https://learn.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-delete",
+        "https://learn.microsoft.com/en-us/rest/api/compute/disks/update?view=rest-compute-2025-04-01&tabs=HTTP#encryptionsettings",
+        "https://learn.microsoft.com/en-us/cli/azure/disk?view=azure-cli-latest#az-disk-update",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-5-use-customer-managed-key-option-in-data-at-rest-encryption-when-required"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "20.3",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_managed_disks",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "diskState",
+                                "eq",
+                                "Unattached"
+                            ],
+                            [
+                                "encryption.sseEncryption",
+                                "ne",
+                                "EncryptionAtRestWithCustomerKey"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Disk Name",
+					"diskState": "State",
+                    "location": "Location",
+                    "sku.name": "SKU Name",
+                    "properties.osType": "OS Type",
+                    "encryption.sseEncryption": "SSE Encryption"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "name",
+						"diskState",
+                        "location",
+                        "sku",
+                        "properties.osType",
+                        "sse_encryption"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Disk Name",
+					"diskState": "State",
+                    "location": "Location",
+                    "sku.name": "SKU Name",
+                    "properties.osType": "OS Type",
+                    "encryption.sseEncryption": "SSE Encryption"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that 'Unattached disks' are encrypted with 'Customer Managed Key' (CMK) for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "unattached_disk_sse_encryption_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_storage_004"
+}

@@ -1,0 +1,128 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "App Service Environments",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure App Service Environment has internal encryption enabled",
+    "description": "The App Service Environment operates as a black box system where you cannot see the internal components or the communication within the system. To enable higher throughput, encryption is not enabled by default between internal components. The system is secure as the traffic is inaccessible to being monitored or accessed.<br/><br/>However, if you have a compliance requirement that requires complete encryption of the data path from end to end, you can enable encryption of the complete data path with a clusterSetting.",
+    "rationale": "Setting InternalEncryption to true encrypts internal network traffic in your App Service Environment between the front ends and workers, encrypts the pagefile, and also encrypts the worker disks.",
+    "impact": "At the point that this setting becomes desirable, an architectural review to evaluate a move to Azure Confidential Computing should be considered.<br/><br/>After the InternalEncryption clusterSetting is enabled, there can be an impact to your system performance and the additional resource demand will likely also increase the associated cost. When you make the change to enable InternalEncryption, your App Service Environment will be in an unstable state until the change is fully propagated.<br/><br/>Complete propagation of the change can take a few hours to complete, depending on how many instances you have in your App Service Environment. Azure recommends that you do not enable InternalEncryption on an App Service Environment while it is in use. If you need to enable InternalEncryption on an actively used App Service Environment, Azure recommends that you divert traffic to a backup environment until the operation completes.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal
+			1. Go to App Service Environments.
+			2. Click the name of an App Service Environment.
+			3. Under Settings, click Configuration.
+			4. Next to Internal encryption, click the radio button next to On.
+			5. Click Save.
+			6. Click Continue.
+			7. Repeat steps 1-6 for each App Service Environment requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/environment/app-service-app-service-environment-custom-settings",
+        "https://learn.microsoft.com/en-us/cli/azure/appservice/ase?view=azure-cli-latest"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "2.8",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_app_service_environment",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+								"ne",
+                                "clusterSettings.internalEncryption"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"clusterSettings":"Cluster Settings"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"properties",
+						"clusterSettings"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"clusterSettings":"Cluster Settings"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure App Service Environment has internal encryption enabled for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_app_service_environment_lacks_internal_encryption",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_appservice_environment_002"
+}

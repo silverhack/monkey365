@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Identity Services",
-    "serviceName": "Identity Services",
+    "serviceType": "Subscription Identity",
+    "serviceName": "Subscription",
     "displayName": "Ensure that use of the 'User Access Administrator' role is restricted",
     "description": "The User Access Administrator role grants the ability to view all resources and manage access assignments at any subscription or management group level within the tenant.<br/><br/>Due to its high privilege level, this role assignment should be removed immediately after completing the necessary changes at the root scope to minimize security risks.",
     "rationale": "The User Access Administrator role provides extensive access control privileges.<br/><br/>Unnecessary assignments heighten the risk of privilege escalation and unauthorized access. Removing the role immediately after use minimizes security exposure.",

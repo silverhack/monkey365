@@ -1,0 +1,137 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Database for PostgreSQL",
+    "serviceName": "Databases",
+    "displayName": "Ensure Private Endpoints Are Used for Azure Database for PostgeSQL",
+    "description": "Private links make resources available via a private endpoint to a network you select.<br/><br/>Tunneling between subscriptions, resource groups, without the need for traditional network routing.",
+    "rationale": "For sensitive data, private endpoints allow granular control of which services can communicate with PostgreSQL Servers and ensure that this network traffic is private.<br/><br/>This can be set this up on a case by case basis for each service to be connected.",
+    "impact": "A private endpoint will expose your PostgreSQL database to the network selected, where it can be accessed by either IP or FQDN.",
+    "remediation": {
+        "text": "
+			##### Audit from Azure Portal 
+			1. From Azure Database for PostgreSQL flexible servers select a server to audit. 
+			2. In the column expand > Settings. 
+			3. Select Networking. 
+			4. Scroll down to the bottom, and select + Create private endpoint. 
+			5. Select a subscription and resource group. 
+			6. Enter an instance name, network interface name, and select the same region that your PostgreSQL server is in. 
+			7. Verify that the information on Resource is correct. Then select Next 
+			8. Select the virtual network, and subnet and select Next. 
+			9. Choose whether to use a dynamic or static IP address and select Next. 
+			10. Choose Yes or No on Integreate with private DNS zone. 
+			11. If Yes then select the subscription and resource group, then select Next. 
+			12. Enter any desired tags, then select Next. 
+			13. Verify the information, then select Create.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/postgresql/network/concepts-networking-private-link"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.4",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_postgresql_servers",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"ne",
+                                "privateEndpointConnections.id"
+                            ],
+							[
+                                "networking.privateEndpointConnections.privateLinkServiceConnectionState.status",
+                                "eq",
+								"Approved"
+                            ]
+                        ],
+						"operator":"and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+						"location",
+						"networking"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure Private Endpoints Are Used for Azure Database for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_postgresql_lack_private_endpoint",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_postgresql_004"
+}

@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Storage Services",
-    "serviceName": "Storage Services",
+    "serviceType": "Storage Accounts",
+    "serviceName": "Storage",
     "displayName": "Ensure 'Allow storage account key access' for Azure Storage Accounts is 'Disabled'",
     "description": "Every secure request to an Azure Storage account must be authorized. By default, requests can be authorized with either Microsoft Entra credentials or by using the account access key for Shared Key authorization.",
     "rationale": "Microsoft Entra ID provides superior security and ease of use compared to Shared Key and is recommended by Microsoft. To require clients to use Microsoft Entra ID for authorizing requests, you can disallow requests to the storage account that are authorized with Shared Key.",

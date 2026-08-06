@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Security Services",
-    "serviceName": "Security Services",
+    "serviceType": "Subscription Security",
+    "serviceName": "Subscription",
     "displayName": "Ensure That 'All users with the following roles' is set to 'Owner'",
     "description": "Enable security alert emails to subscription owners.",
     "rationale": "Enabling security alert emails to subscription owners ensures that they receive security alert emails from Microsoft. This ensures that they are aware of any potential security issues and can mitigate the risk in a timely fashion.",

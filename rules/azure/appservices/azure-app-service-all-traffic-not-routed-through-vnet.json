@@ -1,0 +1,138 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "_ARG_0_",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure all traffic is routed through the virtual network",
+    "description": "Enable vnetRouteAllEnabled to ensure all outbound traffic is routed through the integrated virtual network.<br/><br/>This recommendation should be applied after integrating an App Service app with a virtual network.",
+    "rationale": "Routing all outbound traffic through the virtual network enhances security.",
+    "impact": "Additional configuration may be required to ensure that traffic is routed properly.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal
+			1. Go to App Services.
+			2. Click the name of an app.
+			3. Under Settings, click Networking.
+			4. Under Outbound traffic configuration, next to Virtual network integration, click the virtual network and subnet name.
+			5. Under Application routing, check the box next to Outbound internet traffic.
+			6. Click Apply. 
+			7. Repeat steps 1-6 for each app requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/configure-vnet-integration-routing#configure-application-routing",
+        "https://learn.microsoft.com/en-us/cli/azure/webapp",
+        "https://learn.microsoft.com/en-us/cli/azure/resource"
+    ],
+    "compliance": [
+        {
+            "name": "_ARG_1_",
+            "version": "_ARG_2_",
+            "reference": "_ARG_3_",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_app_services",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "properties.vnetRouteAllEnabled",
+								"ne",
+								"True"
+                            ]
+                        ]
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "include": "_ARG_4_"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"properties.vnetRouteAllEnabled":"Route all traffic"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"resourceGroupName",
+						"properties.vnetRouteAllEnabled"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"properties.vnetRouteAllEnabled":"Route all traffic"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure all traffic is routed through the virtual network for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure__ARG_0__routing_all_traffic_not_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_app_service__ARG_5_"
+}

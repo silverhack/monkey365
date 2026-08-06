@@ -1,0 +1,148 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "_ARG_0_",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure managed identities are configured",
+    "description": "Managed identities from Microsoft Entra ID allow App Service apps to securely access other Azure services without the need to provision or rotate any secrets.",
+    "rationale": "Using managed identities with App Service apps eliminates the need to store and manage credentials to access Azure resources.",
+    "impact": "Minor administrative overhead to configure and manage role assignments for managed identities.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal
+			1. Go to App Services.
+			2. Click the name of an app.
+			3. Under Settings, click Identity.
+			4. To add a system assigned managed identity:
+				1. In the System assigned pane, under Status, click On.
+				2. Click Save.
+				3. Click Yes.
+			5. To add a user assigned managed identity:
+				1. In the User assigned pane, click Add.
+				2. Use the filter box to search for a managed identity.
+				3. Select the identity.
+				4. Click Add.
+			6. Repeat steps 1-5 for each app requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identity-management#im-1-use-centralized-identity-and-authentication-system",
+        "https://learn.microsoft.com/en-us/azure/app-service/overview-managed-identity?tabs=portal%2Chttp",
+        "https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/powershell/module/az.websites/get-azwebapp?view=azps-15.4.0",
+        "https://learn.microsoft.com/en-us/powershell/module/az.websites/set-azwebapp?view=azps-15.4.0"
+    ],
+    "compliance": [
+        {
+            "name": "_ARG_1_",
+            "version": "_ARG_2_",
+            "reference": "_ARG_3_",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_app_services",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "identity.enabled",
+                                "eq",
+								"false"
+                            ]
+                        ]
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "include": "_ARG_4_"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"identity.enabled":"Managed Identity",
+					"identity.type":"Managed Identity Type"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"resourceGroupName",
+						"identity"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"identity.enabled":"Managed Identity",
+					"identity.type":"Managed Identity Type"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure managed identities are configured for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure__ARG_0__managed_identity_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_app_service__ARG_5_"
+}

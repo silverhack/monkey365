@@ -1,0 +1,138 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "_ARG_0_",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure configuration is routed through the virtual network",
+    "description": "By default, configuration traffic for App Service apps goes directly over the public route.<br/><br/>Container image pulls and content sharing can be routed through the virtual network integration.<br/><br/>This recommendation should be applied after integrating an App Service app with a virtual network.",
+    "rationale": "Route container image pulls and content sharing through a virtual network integration for increased security and control.",
+    "impact": "Additional configuration may be required to ensure that traffic is routed properly.",
+    "remediation": {
+        "text": "Remediation should be done through Azure CLI",
+        "code": {
+            "powerShell": 'az resource update --resource-group <resource-group-name> --name <app-name> --resource-type "Microsoft.Web/sites" --set properties.vnetImagePullEnabled=true --set properties.vnetContentShareEnabled=true',
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/overview-vnet-integration#routes",
+        "https://learn.microsoft.com/en-us/azure/app-service/configure-vnet-integration-routing#configure-configuration-routing",
+        "https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/cli/azure/resource?view=azure-cli-latest"
+    ],
+    "compliance": [
+        {
+            "name": "_ARG_1_",
+            "version": "_ARG_2_",
+            "reference": "_ARG_3_",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_app_services",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "properties.vnetContentShareEnabled",
+								"ne",
+								"True"
+                            ],
+							[
+                                "properties.vnetImagePullEnabled",
+								"ne",
+								"True"
+                            ]
+                        ],
+						"operator":"or"
+                    }
+                ]
+            },
+			{
+                "connectOperator": "and",
+                "filter": [
+                    {
+                        "include": "_ARG_4_"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"properties.vnetContentShareEnabled":"Route content sharing",
+					"properties.vnetImagePullEnabled":"Route container image pulls"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"resourceGroupName",
+						"properties"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"properties.vnetContentShareEnabled":"Route content sharing",
+					"properties.vnetImagePullEnabled":"Route container image pulls"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure configuration is routed through the virtual network for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure__ARG_0__configuration_routing_not_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_app_service__ARG_5_"
+}

@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Identity Services",
-    "serviceName": "Identity Services",
+    "serviceType": "Subscription Identity",
+    "serviceName": "Subscription",
     "displayName": "Ensure there are between _ARG_0_ and _ARG_1_ subscription owners",
     "description": "The Owner role in Azure grants full control over all resources in a subscription, including the ability to assign roles to others.",
     "rationale": "Limit the number of security principals (users, groups, service principals, and managed identities) assigned the Owner role to between 2 and 3. If groups are used, ensure their membership is tightly controlled and regularly reviewed to avoid privilege sprawl.",

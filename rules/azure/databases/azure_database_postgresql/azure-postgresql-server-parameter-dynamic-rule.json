@@ -1,0 +1,138 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Database for PostgreSQL",
+    "serviceName": "Databases",
+    "displayName": "_ARG_0_",
+    "description": "_ARG_1_",
+    "rationale": "_ARG_2_",
+    "impact": "_ARG_3_",
+    "remediation": {
+        "text": "_ARG_4_",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/how-toconfigure-server-parameters-using-portal",
+        "https://learn.microsoft.com/enus/rest/api/postgresql/flexibleserver/configurations/list-by-server",
+		"_ARG_5_"
+    ],
+    "compliance": [
+        {
+            "name": "_ARG_6_",
+            "version": "_ARG_7_",
+            "reference": "_ARG_8_",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_postgresql_servers",
+        "subPath": null,
+        "selectCondition": {},
+		"data": {
+            "properties": {
+                "Name": "name",
+                "type": "objectType",
+                "location": "location",
+                "resourceGroupName": "resourceGroupName",
+				"configuration.parameterName":"ParameterName",
+				"configuration.parameterDescription":"ParameterDescription",
+				"configuration.parameterValue":"ParameterValue"
+            },
+            "expandObject": "configuration"
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "parameterName",
+                                "eq",
+                                "_ARG_9_"
+                            ],
+							[
+                                "ParameterValue",
+                                "_ARG_10_",
+                                "_ARG_11_"
+                            ]
+                        ],
+						"operator":"and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"parameterName":"ParameterName",
+					"parameterDescription":"ParameterDescription",
+					"parameterValue":"ParameterValue"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"parameterName":"ParameterName",
+					"parameterDescription":"ParameterDescription",
+					"parameterValue":"ParameterValue"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["_ARG_12_"],
+                "message": "_ARG_13_",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_postgresql__ARG_9__not_configured",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_postgresql__ARG_14_"
+}

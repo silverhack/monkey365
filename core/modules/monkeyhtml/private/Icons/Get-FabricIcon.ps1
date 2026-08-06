@@ -56,6 +56,8 @@ Function Get-FabricIcon{
             'Storage' = 'StorageAcount'
             'Compute' = 'Devices2'
             'Subscription' = 'AzureIcon'
+            'Diagnostic Settings' = 'Diagnostic'
+            'Application Insights' = 'Insights'
         }
     }
     Process{

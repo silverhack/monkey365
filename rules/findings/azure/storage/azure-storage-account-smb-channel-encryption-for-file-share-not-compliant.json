@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Storage Services",
-    "serviceName": "Storage Services",
+    "serviceType": "Storage Accounts",
+    "serviceName": "Storage",
     "displayName": "Ensure 'SMB channel encryption' is set to 'AES-256-GCM' or higher for SMB file shares",
     "description": "Implement SMB channel encryption with AES-256-GCM for SMB file shares to ensure data confidentiality and integrity in transit. This method offers strong protection against eavesdropping and man-in-the-middle attacks, safeguarding sensitive information.",
     "rationale": "AES-256-GCM encryption enhances the security of data transmitted over SMB channels by safeguarding it from unauthorized interception and tampering.",

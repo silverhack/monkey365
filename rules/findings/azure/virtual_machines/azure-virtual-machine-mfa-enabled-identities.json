@@ -1,5 +1,4 @@
 {
-    "args": [],
     "provider": "Azure",
     "serviceType": "Virtual Machines",
     "serviceName": "Compute",
@@ -45,8 +44,8 @@
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
-            "version": "2.0.0",
-            "reference": "20.9",
+            "version": "6.0.0",
+            "reference": "3.1.1",
             "profile": [
                 "Level 2"
             ]
@@ -92,7 +91,7 @@
             "status": {
                 "keyName": ["name"],
                 "message": "Ensure only MFA enabled identities can access privileged Virtual Machine",
-                "defaultMessage": null
+                "defaultMessage": "Ensure only MFA enabled identities can access privileged Virtual Machine"
             },
             "properties": {
                 "resourceName": "name",

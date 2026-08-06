@@ -1,0 +1,137 @@
+{
+    "provider": "Azure",
+    "serviceType": "Identity Services",
+    "serviceName": "Identity Services",
+    "displayName": "Ensure all non-privileged role assignments are periodically reviewed",
+    "description": "Perform a periodic review of non-privileged role assignments to ensure that the non- privileged roles assigned to users are appropriate.<br/><br/>Note: Determining 'appropriate' assignments requires a clear understanding of your organization's personnel, systems, policies, and security requirements. This cannot be effectively prescribed in a procedure.",
+    "rationale": "To ensure the principle of least privilege is followed, non-privileged role assignments should be reviewed periodically to confirm that users are granted only the minimum level of permissions they need to perform their tasks.",
+    "impact": "Increased administrative effort to manage and remove role assignments appropriately.",
+    "remediation": {
+        "text": "
+			##### Remediate from Azure Portal 
+			1. Go to Subscriptions. 
+			2. Click the name of a subscription. 
+			3. Click Access control (IAM). 
+			4. Click Role assignments. 
+			5. Click Job function roles. 
+			6. Check the box next to any inappropriate assignments. 
+			7. Click Delete. 
+			8. Click Yes. 
+			9. Repeat steps 1-8 for each subscription.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "5.3.7",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_role_assignment",
+        "subPath": null,
+        "selectCondition": {},
+		"data": {
+            "properties": {
+                "effectiveUsers.*": null,
+                "name": "roleName",
+                "description": "roleDescription",
+				"isBuiltIn": "isBuiltIn",
+				"roleType": "roleType",
+				"assignableScopes": "assignableScopes",
+                "templateId": "templateId"
+            },
+            "expandObject": "effectiveUsers"
+        },
+        "query": [
+			{
+                "filter": [
+                    {
+                        "include": "_ARG_0_"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "id": "Id",
+					"userPrincipalName": "userPrincipalName",
+					"roleName": "Role",
+					"roleDescription": "Role Description"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"userPrincipalName",
+						"roleName",
+						"roleDescription"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "id": "Id",
+					"userPrincipalName": "userPrincipalName",
+					"roleName": "Role",
+					"roleDescription": "Role Description"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [
+					"userPrincipalName",
+					"roleName"
+				],
+                "message": "Ensure that {roleName} role is periodically reviewed for {userPrincipalName}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_non_privileged_role_assignment_are_reviewed",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"id"
+	],
+    "id": ""
+}

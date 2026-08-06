@@ -1,0 +1,129 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "SQL Database",
+    "serviceName": "Databases",
+    "displayName": "Ensure that Microsoft Entra authentication is Configured for SQL Servers",
+    "description": "Use Microsoft Entra authentication for authentication with SQL Database to manage credentials in a single place.",
+    "rationale": "Microsoft Entra authentication is a mechanism to connect to Microsoft Azure SQL Database and SQL Data Warehouse by using identities in the Microsoft Entra ID directory. With Entra ID authentication, identities of database users and other Microsoft services can be managed in one central location. Central ID management provides a single place to manage database users and simplifies permission management.\n• It provides an alternative to SQL Server authentication.\n• Helps stop the proliferation of user identities across database servers.\n• Allows password rotation in a single place.\n• Customers can manage database permissions using external (Entra ID) groups.\n• It can eliminate storing passwords by enabling integrated Windows authentication and other forms of authentication supported by Microsoft Entra.\n• Entra ID authentication uses contained database users to authenticate identities at the database level.\n• Entra ID supports token-based authentication for applications connecting to SQL Database.\n• Entra ID authentication supports ADFS (domain federation) or native user/password authentication for a local Active Directory without domain synchronization.\n• Entra ID supports connections from SQL Server Management Studio that use Active Directory Universal Authentication, which includes Multi-Factor Authentication (MFA). MFA includes strong authentication with a range of easy verification options — phone call, text message, smart cards with pin, or mobile app notification.",
+    "impact": "This will create administrative overhead with user account and permission management. For further security on these administrative accounts, you may want to consider licensing which supports features like Multi Factor Authentication.",
+    "remediation": {
+        "text": "
+			##### Remediate From Azure Portal 
+			1. Go to SQL servers 
+			2. For each SQL server, click on Microsoft Entra admin 
+			3. Click on Set admin 
+			4. Select an admin 
+			5. Click Save
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-configure?view=azuresql&tabs=azure-portal",
+        "https://learn.microsoft.com/en-us/azure/azure-sql/database/authentication-aad-overview?view=azuresql",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identity-management#im-1-use-centralized-identity-and-authentication-system",
+        "https://learn.microsoft.com/en-us/cli/azure/sql/server/ad-admin?view=azure-cli-latest#az_sql_server_ad_admin_list"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.5",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_sql_servers",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "sqlAd.enabled",
+                                "eq",
+								"False"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"sqlAd.enabled":"Entra Authentication Enabled"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+                        "name",
+                        "location",
+                        "sqlAd"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"sqlAd.enabled":"Entra Authentication Enabled"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that Microsoft Entra authentication is Configured for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_sql_entra_authentication_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_sql_005"
+}

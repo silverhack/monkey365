@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Management and Governance Services",
-    "serviceName": "Management and Governance Services",
+    "serviceType": "Diagnostic Settings",
+    "serviceName": "Diagnostic Settings",
     "displayName": "Ensure that a Microsoft Entra diagnostic setting exists to send Microsoft Graph activity logs to an appropriate destination",
     "description": "Ensure that a Microsoft Entra diagnostic setting is configured to send Microsoft Graph activity logs to a suitable destination, such as a Log Analytics workspace, storage account, or event hub. This enables centralized monitoring and analysis of all HTTP requests that the Microsoft Graph service receives and processes for a tenant.",
     "rationale": "Microsoft Graph activity logs provide visibility into HTTP requests made to the Microsoft Graph service, helping detect unauthorized access, suspicious activity, and security threats. Configuring diagnostic settings in Microsoft Entra ensures these logs are collected and sent to an appropriate destination for monitoring, analysis, and retention.",

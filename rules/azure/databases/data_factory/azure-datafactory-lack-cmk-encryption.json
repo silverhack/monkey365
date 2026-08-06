@@ -1,0 +1,98 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Data Factory",
+    "serviceName": "Databases",
+    "displayName": "Ensure Data Factory is encrypted using Customer Managed Keys",
+    "description": "Customer-managed keys introduce additional depth to security by providing a means to manage access control for encryption keys. Where compliance and security frameworks indicate the need, and organizational capacity allows, sensitive data at rest can be encrypted using customer-managed keys (CMK) rather than Microsoft-managed keys.",
+    "rationale": "By default in Azure, data at rest tends to be encrypted using Microsoft-managed keys. If your organization wants to control and manage encryption keys for compliance and defense-in-depth, customer-managed keys can be established.<br/><br/>Configuring the storage account with the activity log export container to use CMKs provides additional confidentiality controls on log data, as a given user must have read permission on the corresponding storage account and must be granted decrypt permission by the CMK.<br/><br/>While it is possible to automate the assessment of this recommendation, the assessment status for this recommendation remains 'Manual' due to ideally limited scope. The scope of application—which workloads CMK is applied to—should be carefully considered to account for organizational capacity and targeted to workloads with specific need for CMK.",
+    "impact": "If the key expires due to setting the 'activation date' and 'expiration date', the key must be rotated manually.<br/><br/>Using customer-managed keys may also incur additional man-hour requirements to create, store, manage, and protect the keys as needed.",
+    "remediation": {
+        "text": "
+			##### Remediate from Azure Portal 
+			1. Retrieve the key identifier for a key in a Key Vault located in the same subscription and region as your Azure Data Factory. 
+			2. From the Azure Data Factory service, select the Data Factory to audit. 
+			3. From the Overview selection scroll down and select Launch Studio. 
+			4. Select the wrench and briefcase icon named Manage. 
+			5. In the left column scroll down to under Security and select Customer managed key. 
+			6. Select Add key. 
+			7. Under Azure Key Vault key URL enter in the key identifier of the key to be used. 
+			8. Select Save.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/data-factory/enable-customer-managed-key"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "4.1",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "Normal",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [],
+    "id": "azure_data_factory_001"
+}

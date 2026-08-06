@@ -1,0 +1,118 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cache for Redis",
+    "serviceName": "Databases",
+    "displayName": "Ensure that 'Access Policies' are Implemented and Reviewed",
+    "description": "Access Policies provide an Access Control List (ACL) functionality allowing administrators to define which identities or identity groups have access to what data and commands. This is an implementation of the Role Based Access Control (RBAC) concept and will require careful consideration to deploy and maintain.",
+    "rationale": "Role Based Access Control (RBAC) using Access Control Lists (ACLs) is a method of implementing the principle of least privilege by ensuring that users and user groups with differing needs are presented with the privilege that fulfills their needs and any unnecessary access or functionality is prevented.",
+    "impact": "Implementing RBAC for any system requires a careful analysis of `who` needs access to the system, and `what` privileges or functionality they need to perform. The time required to implement RBAC will increase based on the complexity and size of an environment.<br/><br/>If RBAC is deployed without careful analysis, it may prevent users from accessing data or functionality that they require from the system. Conversely, it may present privilege which is unnecessary and introduce vulnerability to a system.<br/><br/>Once RBAC has been deployed, there should be periodically scheduled access review.<br/><br/>During the access review, all entries in the Access Control List and all identities are reviewed for fitness and necessity.",
+    "remediation": {
+        "text": "No prescriptive remediation is available due to the specific and unique nature of implementing RBAC for any given system. Implementing RBAC for any system requires a careful analysis of 'who' needs access to the system, and `what` privileges or functionality they require. The time required to implement RBAC will increase based on the complexity and size of an environment.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-configure-role-based-access-control"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.4",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_redis",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "eq",
+                                "dataAccess.accessPolicyAssignments"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"dataAccess.accessPolicyAssignments": "Access Policy Assignments"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+						"location",
+						"dataAccess"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"dataAccess.accessPolicyAssignments": "Access Policy Assignments"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that 'Access Policies' are Implemented and Reviewed for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cache_redis_rbac_policy_assignment_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_redis_004"
+}

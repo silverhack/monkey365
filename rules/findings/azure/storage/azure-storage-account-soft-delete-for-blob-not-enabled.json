@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Storage Services",
-    "serviceName": "Storage Services",
+    "serviceType": "Storage Accounts",
+    "serviceName": "Storage",
     "displayName": "Ensure that soft delete for blobs on Azure Blob Storage storage accounts is Enabled",
     "description": "Blobs in Azure storage accounts may contain sensitive or personal data, such as ePHI or financial information. Data that is erroneously modified or deleted by an application or a user can lead to data loss or unavailability.<br/><br/>It is recommended that soft delete be enabled on Azure storage accounts with blob storage to allow for the preservation and recovery of data when blobs or blob snapshots are deleted.",
     "rationale": "Blobs can be deleted incorrectly. An attacker or malicious user may do this deliberately in order to cause disruption. Deleting an Azure storage blob results in immediate data loss. Enabling this configuration for Azure storage accounts ensures that even if blobs are deleted from the storage account, the blobs are recoverable for a specific period of time, which is defined in the \"Retention policies,\" ranging from 7 to 365 days.",

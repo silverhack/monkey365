@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Management and Governance Services",
-    "serviceName": "Management and Governance Services",
+    "serviceType": "Application Insights",
+    "serviceName": "Application Insights",
     "displayName": "Ensure that SKU Basic/Consumption is not used on artifacts that need to be monitored (Particularly for Production Workloads)",
     "description": "The use of Basic or Free SKUs in Azure whilst cost effective have significant limitations in terms of what can be monitored and what support can be realized from Microsoft.<br/><br/>Typically, these SKUs do not have a service SLA and Microsoft may refuse to provide support for them. Consequently Basic/Free SKUs should never be used for production workloads.<br/><br/>While an automated assessment procedure exists for this recommendation, the assessment status remains manual. Determining appropriate SKUs depends on the context and requirements of each organization and environment.",
     "rationale": "Typically, production workloads need to be monitored and should have an SLA with Microsoft, using Basic SKUs for any deployed product will mean that that these capabilities do not exist.<br/><br/>The following resource types should use standard SKUs as a minimum.\n• Public IP Addresses\n• Network Load Balancers\n• REDIS Cache\n• SQL PaaS Databases\n• VPN Gateways",

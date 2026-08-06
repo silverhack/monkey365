@@ -1,0 +1,130 @@
+{
+    "provider": "Azure",
+    "serviceType": "Networking Services",
+    "serviceName": "Networking Services",
+    "displayName": "Ensure that network security group flow log retention days is set to greater than or equal to _ARG_0_",
+    "description": "Network security group flow logs should be enabled and the retention period set to greater than or equal to _ARG_0_ days.<br/><br/>Retirement Notice On September 30, 2027, network security group (NSG) flow logs will be retired. As of June 30, 2025, creating new NSG flow logs is no longer possible. Azure recommends migrating to virtual network flow logs. Review https://azure.microsoft.com/en- us/updates?id=Azure-NSG-flow-logs-Retirement for more information.<br/><br/>For virtual network flow logs, consider applying the recommendation Ensure that virtual network flow log retention days is set to greater than or equal to 90 in this section.",
+    "rationale": "Flow logs enable capturing information about IP traffic flowing in and out of network security groups. Logs can be used to check for anomalies and give insight into suspected breaches.",
+    "impact": "This will keep IP traffic logs for 90 days or longer. As a level 2, first determine your need to retain data, then apply your selection here. As this is data stored for a longer period, your monthly storage costs will increase depending on your data use.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Go to Network Watcher. 2. Under Logs, select Flow logs. 3. Click the name of a network security group flow log. 4. Set Status to On. 5. Set Retention days to 0, _ARG_0_, or a number greater than _ARG_0_. If Retention days is set to 0, the logs are retained indefinitely with no retention policy. 6. Click Save. 7. Repeat steps 1-6 for each network security flow log requiring remediation.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/network-watcher/nsg-flow-logs-overview",
+        "https://learn.microsoft.com/en-us/cli/azure/network/watcher/flow-log?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-6-configure-log-storage-retention",
+        "https://learn.microsoft.com/en-gb/azure/network-watcher/nsg-flow-logs-migrate"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "7.5",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_network_watcher",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "properties.enabled",
+                                "ne",
+								"true"
+                            ],
+							[
+                                "properties.retentionPolicy.days",
+                                "lt",
+								"_ARG_0_"
+                            ]
+                        ],
+						"operator":"or",
+						"whereObject":"flowLogs"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"flowLogs.id": "id",
+                    "flowLogs.name": "Name",
+                    "flowLogs.location": "Location",
+                    "flowLogs.properties.retentionPolicy.days": "Retention Policy"
+                },
+                "expandObject": "flowLogs"
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"properties"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"flowLogs.id": "id",
+                    "flowLogs.name": "Name",
+                    "flowLogs.location": "Location",
+                    "flowLogs.properties.retentionPolicy.days": "Retention Policy"
+                },
+                "expandObject": "flowLogs"
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that network security group flow log retention days is set to greater than or equal to _ARG_0_ for {name}",
+                "defaultMessage": "Ensure that network security group flow log retention days is set to greater than or equal to _ARG_0_"
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "AzureNetworkFlowLog"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "network_watcher_flowlogs_retention_days_not_compliant",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "azure_networking_001"
+}

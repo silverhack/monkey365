@@ -1,0 +1,129 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Database for PostgreSQL",
+    "serviceName": "Databases",
+    "displayName": "Ensure `Public Network Access` is `Disabled` for Azure Database for PostgreSQL",
+    "description": "Setting public networks to disabled prevents requests from the public internet.",
+    "rationale": "Disabling public network access prevents Azure Database for PostgreSQL servers from communicating with the public internet and requires the use of Private endpoints for granular network control and segmentation.",
+    "impact": "Disabling `Public Network Access` forces the requirement of the use of Private Endpoints for network connectivity which will require some additional consideration from a network architecture perspective and will introduce cost based on the inbound/outbound data being processed by the Private Endpoint.",
+    "remediation": {
+        "text": "
+			##### Remediate from Azure Portal 
+			1. Login to Azure Portal using https://portal.azure.com. 
+			2. Go to Azure Database for PostgreSQL servers. 
+			3. For each server, under Settings, click Networking. 
+			4. Ensure that Public network access is not selected
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/postgresql/security/security-firewall-rules",
+        "https://learn.microsoft.com/en-us/azure/postgresql/network/how-to-networking",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-network-security#ns-1-establish-network-segmentation-boundaries",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-network-security#ns-6-deploy-web-application-firewall",
+        "https://learn.microsoft.com/en-us/azure/postgresql/network/how-to-networking-servers-deployed-public-access-disable-public-access?tabs=portal-disable-public-access"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.5",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_postgresql_servers",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "networking.publicNetworkAccess",
+                                "eq",
+								"Enabled"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.publicNetworkAccess": "Public Network Access"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+						"location",
+						"networking"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.publicNetworkAccess": "Public Network Access"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure `Public Network Access` is `Disabled` for Azure Database for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_postgresql_public_network_access",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_postgresql_003"
+}

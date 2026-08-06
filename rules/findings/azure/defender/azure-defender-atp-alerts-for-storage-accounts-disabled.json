@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Security Services",
-    "serviceName": "Security Services",
+    "serviceType": "Defender for Cloud",
+    "serviceName": "Subscription",
     "displayName": "Ensure Advanced Threat Protection Alerts for Storage Accounts Are Monitored",
     "description": "After enabling Microsoft Defender for Storage, configure an alert monitoring and response process to ensure that alerts are actioned in a timely manner. Integrate with SIEM solutions like Microsoft Sentinel, or configure email/webhook notifications to security teams.",
     "rationale": "Enabling Microsoft Defender for Storage without a monitoring process limits its value.<br/><br/>Continuous monitoring and alert triage ensure that detected threats are acted upon quickly, reducing risk exposure.",
@@ -77,8 +77,7 @@
         ],
         "shouldExist": "true",
         "returnObject": {
-			"name":"automations",
-			"type":"Microsoft.Security/automations",
+			"subAssessments":"subAssessments",
 			"status":"Missing"
 		},
         "removeIfNotExists": null

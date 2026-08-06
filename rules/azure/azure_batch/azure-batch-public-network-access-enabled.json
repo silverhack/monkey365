@@ -1,0 +1,92 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Batch",
+    "serviceName": "Batch",
+    "displayName": "Ensure public network access is disabled for Batch accounts",
+    "description": "Disabling public network access ensures all connectivity occurs through private endpoints or approved virtual networks.",
+    "rationale": "Public network access exposes Batch accounts to internet threats like DDoS attacks and unauthorized access, violating Zero Trust principles and compliance requirements for secure data processing environments.",
+    "impact": "A virtual network or private endpoint should be implemented for the Batch account prior to disabling public network access.",
+    "remediation": {
+        "text": "Remediation Procedure 1. Login to https://portal.azure.com 2. For each Batch Account, click on the Batch account name 3. Navigate to the Settings drop-down, then click Networking. 4. Under the Public access tab, ensure that Public Network Access is set to Disabled. 5. Click Save Repeat for each Batch account in scope.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/baselines/batchsecurity-baseline#ns-4",
+        "https://learn.microsoft.com/en-us/azure/batch/private-connectivityPage"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "15.5",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure public network access is disabled for Batch accounts",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_batch_public_network_access",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_batch_007"
+}

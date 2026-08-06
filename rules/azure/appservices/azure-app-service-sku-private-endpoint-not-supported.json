@@ -1,0 +1,109 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "App Service",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure App Service plan SKU supports private endpoints",
+    "description": "Ensure that your App Service plan SKU supports private endpoints. Private endpoints provide secure access over Azure Private Link, which keeps traffic on the Microsoft backbone network and eliminates exposure to the public internet. Note that not all SKUs support private endpoints.",
+    "rationale": "An appropriately configured private endpoint eliminates public exposure and helps prevent data exfiltration.",
+    "impact": "App Service plan costs vary based on the selected SKU.\n• App Service on Linux pricing: https://azure.microsoft.com/en- us/pricing/details/app-service/linux/\n• App Service on Windows pricing: https://azure.microsoft.com/en- us/pricing/details/app-service/windows/",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal
+			1. Go to App Services.
+			2. Click the name of an app.
+			3. In the Properties pane, under Hosting, next to Name, click the App Service plan name.
+			4. Under Current App Service plan, next to Name, click the App Service plan name.
+			5. Under Essentials, next to Pricing plan, click the pricing plan name.
+			6. Select a pricing plan where the plan tier is one of the following: Basic, Standard, ElasticPremium, Premium, PremiumV2, Premium0V3, PremiumV3, PremiumMV3, IsolatedV2, IsolatedMV2, WorkflowStandard, FlexConsumption, and the plan name is one of the following: B1, B2, B3, S1, S2, S3, EP1, EP2, EP3, P1, P2, P3, P1V2, P2V2, P3V2, P0V3, P1V3, P2V3, P3V3, P1MV3, P2MV3, P3MV3, P4MV3, P5MV3, I1V2, I2V2, I3V2, I4V2, I5V2, I6V2, I1MV2, I2MV2, I3MV2, I4MV2, I5MV2, WS1, WS2, WS3, FC1.
+			7. Click Select.
+			8. Click Downgrade or Upgrade to confirm the change.
+			9. Repeat steps 1-8 for each app and App Service plan requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/overview-hosting-plans",
+        "https://learn.microsoft.com/en-us/azure/app-service/overview-private-endpoint",
+        "https://learn.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/cli/azure/appservice/plan?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/powershell/module/az.websites/get-azwebapp?view=azps-15.4.0",
+        "https://learn.microsoft.com/en-us/powershell/module/az.websites/get-azappserviceplan?view=azps-15.4.0",
+        "https://azure.microsoft.com/en-us/pricing/details/app-service/linux/",
+        "https://azure.microsoft.com/en-us/pricing/details/app-service/windows/"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "2.1.15",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "Ensure App Service plan SKU supports private endpoints",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_app_service_sku_private_endpoint_not_supported",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_app_service_085"
+}

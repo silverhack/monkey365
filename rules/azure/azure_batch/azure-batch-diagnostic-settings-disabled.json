@@ -1,0 +1,92 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Batch",
+    "serviceName": "Batch",
+    "displayName": "Ensure Diagnostics settings logs for Batch accounts are enabled",
+    "description": "Azure Batch resource logs give important operational data such as job scheduling, pool management, and node communication. Having these logs enabled is necessary for monitoring, troubleshooting, and compliance auditing.",
+    "rationale": "Enable resource logging for:\n• Operational Visibility — Keep track of any job failures, node allocation issues, or API activities.\n• Security Compliance — Needed for audits (ISO 27001, SOC 2, GDPR).\n• Forensic Investigations — Acts as evidence in case of security incidents or performance bottlenecks.",
+    "impact": "Costs for monitoring varies with Log Volume and storage destination. Not every resource needs to have logging enabled. It is important to determine the security classification of the data being processed by the given resource and adjust the logging based on which events need to be tracked. This is typically determined by governance and compliance requirements.<br/><br/>Retention is not addressed in this recommendation and should be considered depending on the needs of your organization. A 30-day minimum is recommended and longer may be required depending on the security or compliance framework your organization is following.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Login to Azure portal https://portal.azure.com 2. Go to Batch Accounts For each Batch account perform the following: 1. Expand the Monitoring section and click on Diagnostic settings 2. Click +Add diagnostic setting 3. Enter an appropriate name, then ensure that the following categories are checked: o ServiceLog (Tracks Batch service operations) o AuditLog (Records management-plane activities) 4. Configure to send to a valid destination based on what is used within your tenant: o Log Analytics workspace (Recommended for querying) o Storage account (For long-term retention) o Event Hub (For real-time streaming) 5. Click Save",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/batch/monitoring-overview#diagnosticlogs",
+        "https://learn.microsoft.com/en-us/azure/batch/batch-diagnostics#service-logsPage"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "15.7",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure Diagnostics settings logs for Batch accounts are enabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_batch_diagnostic_settings_not_configured",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_batch_003"
+}

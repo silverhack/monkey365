@@ -1,0 +1,121 @@
+{
+    "provider": "Azure",
+    "serviceType": "Security Services",
+    "serviceName": "Security Services",
+    "displayName": "Ensure Azure DDoS Network Protection is enabled on virtual networks",
+    "description": "Azure DDoS Network Protection defends resources in virtual networks against distributed denial-of-service (DDoS) attacks.<br/><br/>While an automated assessment procedure exists for this recommendation, the assessment status remains manual. Determining the appropriateness of enabling Azure DDoS Network Protection depends on the context and requirements of each organization and environment.",
+    "rationale": "Virtual networks and resources are protected against attacks, helping to ensure reliability and availability for critical workloads.",
+    "impact": "Azure DDoS Network Protection incurs a significant fixed monthly charge, with additional charges if more than 100 public IP resources are protected. Careful consideration and analysis should be applied before enabling DDoS protection. Refer to https://azure.microsoft.com/en-us/pricing/details/ddos-protection for detailed pricing information.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Go to Virtual networks. 2. Click the name of a virtual network. 3. Under Settings, click DDoS protection. 4. Next to DDoS Network Protection, click Enable. 5. Provide a DDoS protection plan resource ID, or select a DDoS protection plan from the drop-down menu. 6. Click Save. 7. Repeat steps 1-6 for each virtual network requiring remediation. Remediate from Azure CLI For each virtual network requiring remediation, run the following command to enable DDoS protection:",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/ddos-protection/ddos-protection-overview2",
+        "https://learn.microsoft.com/en-us/azure/ddos-protection/manage-ddos-protection",
+        "https://azure.microsoft.com/en-us/pricing/details/ddos-protection4",
+        "https://learn.microsoft.com/en-us/cli/azure/network/vnet"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "8.5",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_virtual_network",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "enableDdosProtection",
+                                "eq",
+                                "False"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "id",
+                    "name": "name",
+                    "location": "Location",
+                    "enableDdosProtection": "DDOS Protection"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+				{
+					"itemName": "DDOS Protections",
+					"itemValue": "false",
+					"className": "badge badge-danger badge-xl"
+				}
+			],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"id": "id",
+                    "name": "name",
+                    "location": "Location",
+                    "enableDdosProtection": "DDOS Protection"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure Azure DDoS Network Protection is enabled on {name} virtual network",
+                "defaultMessage": "Ensure Azure DDoS Network Protection is enabled on virtual networks"
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "AzureVirtualNetwork"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_virtual_network_lacks_ddos_protection",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [],
+    "id": "azure_networking_014"
+}

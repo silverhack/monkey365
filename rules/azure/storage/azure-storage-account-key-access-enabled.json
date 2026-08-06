@@ -1,0 +1,126 @@
+{
+    "provider": "Azure",
+    "serviceType": "Storage Services",
+    "serviceName": "Storage Services",
+    "displayName": "Ensure 'Allow storage account key access' for Azure Storage Accounts is 'Disabled'",
+    "description": "Every secure request to an Azure Storage account must be authorized. By default, requests can be authorized with either Microsoft Entra credentials or by using the account access key for Shared Key authorization.",
+    "rationale": "Microsoft Entra ID provides superior security and ease of use compared to Shared Key and is recommended by Microsoft. To require clients to use Microsoft Entra ID for authorizing requests, you can disallow requests to the storage account that are authorized with Shared Key.",
+    "impact": "When you disallow Shared Key authorization for a storage account, any requests to the account that are authorized with Shared Key, including shared access signatures (SAS), will be denied. Client applications that currently access the storage account using the Shared Key will no longer function.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Go to Storage accounts. 2. Click on a storage account. 3. Under Settings, click Configuration. 4. Under Allow storage account key access, click the radio button next to Disabled. 5. Click Save. 6. Repeat steps 1-5 for each storage account requiring remediation.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/storage/common/shared-key-authorization-prevent?tabs=portal",
+        "https://learn.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/powershell/module/az.storage/get-azstorageaccount?view=azps-15.4.0",
+        "https://learn.microsoft.com/en-us/powershell/module/az.storage/set-azstorageaccount?view=azps-15.4.0"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "9.3.1.3",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_storage_accounts",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "allowSharedKeyAccess",
+                                "eq",
+                                "True"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "id",
+                    "name": "name",
+                    "location": "Location",
+                    "allowSharedKeyAccess": "Shared Key Access"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+				{
+					"itemName": "Versioning",
+					"itemValue": "enabled",
+					"className": "badge badge-danger badge-xl"
+				}
+			],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"properties"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure 'Allow storage account key access' for Azure Storage Accounts is 'Disabled' for {name}",
+                "defaultMessage": "Ensure 'Allow storage account key access' for Azure Storage Accounts is 'Disabled'"
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "AzureStorageAccount"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "storage_accounts_key_access_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "azure_storage_009"
+}

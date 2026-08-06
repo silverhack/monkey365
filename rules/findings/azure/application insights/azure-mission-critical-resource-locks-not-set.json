@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Management and Governance Services",
-    "serviceName": "Management and Governance Services",
+    "serviceType": "Application Insights",
+    "serviceName": "Application Insights",
     "displayName": "Ensure that Resource Locks are set for Mission-Critical Azure Resources",
     "description": "Resource Manager Locks provide a way for administrators to lock down Azure resources to prevent deletion of, or modifications to, a resource. These locks sit outside of the Role Based Access Controls (RBAC) hierarchy and, when applied, will place restrictions on the resource for all users. These locks are very useful when there is an important resource in a subscription that users should not be able to delete or change.<br/><br/>Locks can help prevent accidental and malicious changes or deletion.<br/><br/>While an automated assessment procedure exists for this recommendation, the assessment status remains manual. Determining resources that require resource locks depends on the context and requirements of each organization and environment.",
     "rationale": "As an administrator, it may be necessary to lock a subscription, resource group, or resource to prevent other users in the organization from accidentally deleting or modifying critical resources. The lock level can be set to to CanNotDelete or ReadOnly to achieve this purpose.\n• CanNotDelete means authorized users can still read and modify a resource, but they cannot delete the resource.\n• ReadOnly means authorized users can read a resource, but they cannot delete or update the resource. Applying this lock is similar to restricting all authorized users to the permissions granted by the Reader role.",

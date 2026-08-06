@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Identity Services",
-    "serviceName": "Identity Services",
+    "serviceType": "Subscription Identity",
+    "serviceName": "Subscription",
     "displayName": "Ensure that a custom role is assigned permissions for administering resource locks",
     "description": "Resource locking is a powerful protection mechanism that can prevent inadvertent modification or deletion of resources within Azure subscriptions and resource groups, and it is a recommended NIST configuration.",
     "rationale": "Given that the resource lock functionality is outside of standard Role-Based Access Control (RBAC), it would be prudent to create a resource lock administrator role to prevent inadvertent unlocking of resources.",

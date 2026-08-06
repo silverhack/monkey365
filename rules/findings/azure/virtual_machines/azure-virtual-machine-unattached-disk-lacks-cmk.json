@@ -1,5 +1,4 @@
 {
-    "args": [],
     "provider": "Azure",
     "serviceType": "Disks",
     "serviceName": "Compute",

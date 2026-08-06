@@ -1,0 +1,136 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cache for Redis",
+    "serviceName": "Databases",
+    "displayName": "Ensure 'Access Keys Authentication' is set to 'Disabled'",
+    "description": "Ensure access key authentication is disabled for Azure Cache for Redis instances. Use Microsoft Entra for secure cache authentication.",
+    "rationale": "Access keys introduce security risks and management challenges, as they are long-lived secrets vulnerable to expose or misuse. Microsoft Entra authentication provides centralized identity and access management, reducing risk and improving overall security.",
+    "impact": "Disabling access key authentication terminates all existing client connections. Ensure retry mechanisms are in place for reconnection via Microsoft Entra.<br/><br/>Ensure Microsoft Entra authentication is enabled and configured before disabling access key authentication.<br/><br/>",
+    "remediation": {
+        "text": "
+			##### Remediate from Azure Portal 
+			1. Go to Azure Cache for Redis. 
+			2. Select the name of a cache. 
+			3. Under Settings, select Authentication. 
+			4. Select Access keys. 
+			5. Check Disable Access Keys Authentication. 
+			6. Select Save. 
+			7. Select Yes to confirm. 
+			8. Repeat steps 1-7 for each cache.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-gb/azure/azure-cache-for-redis/cache-azure-active-directory-for-authentication"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.9",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_redis",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "properties.disableAccessKeyAuthentication",
+                                "ne",
+								"true"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+				"properties": {
+					"name": "Name",
+					"location": "location",
+					"resourceGroupName": "Resource Group Name",
+					"properties.disableAccessKeyAuthentication": "Access Key Authentication"
+				},
+				"expandObject": null
+			},
+            "table": "default",
+            "decorate": [
+				{
+					"itemName": "Access Key Authentication",
+					"itemValue": "disabled",
+					"className": "badge badge-danger badge-xl",
+					"invert": true
+				}
+			],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+						"location",
+						"properties"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+				"properties": {
+					"name": "Name",
+					"location": "location",
+					"resourceGroupName": "Resource Group Name",
+					"properties.disableAccessKeyAuthentication": "Access Key Authentication"
+				},
+				"expandObject": null
+			},
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure 'Access Keys Authentication' is set to 'Disabled' for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cache_redis_access_key_authentication_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_redis_009"
+}

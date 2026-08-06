@@ -1,0 +1,122 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "App Service Environments",
+    "serviceName": "Hosted Services",
+    "displayName": "Ensure App Service Environment is provisioned with v3 or higher",
+    "description": "Ensure App Service Environment is provisioned with v3 or higher to benefit from the latest enhancements.",
+    "rationale": "Older versions of App Service Environment require manual management of Azure resources and have greater scaling limitations.",
+    "impact": "Manual configuration may be required to complete the migration and to optimize your App Service plan SKU choice to meet your needs.",
+    "remediation": {
+        "text": "Remediate from Azure Portal When creating an App Service Environment from the portal, after clicking + Add, ensure that Create App Service Environment v3 is displayed.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/app-service/environment/overview",
+        "https://azure.microsoft.com/en-gb/updates?id=App-Service-Environment-v1v2-Retirement-Update-1",
+        "https://learn.microsoft.com/en-us/azure/app-service/environment/auto-migration",
+        "https://learn.microsoft.com/en-us/cli/azure/appservice/ase?view=azure-cli-latest"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "2.7",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_app_service_environment",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "kind",
+                                "notmatch",
+								"ASEV3|ASEV4"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"kind":"kind"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"name",
+						"location",
+						"properties",
+						"kind"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"kind":"kind"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure App Service Environment is provisioned with v3 or higher for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_app_service_environment_unsupported_version",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_appservice_environment_004"
+}

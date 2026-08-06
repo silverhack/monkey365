@@ -1,0 +1,134 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cosmos DB",
+    "serviceName": "Databases",
+    "displayName": "Ensure `Public Network Access` is `Disabled`",
+    "description": "Setting public networks to disabled prevents requests from the public internet.",
+    "rationale": "Allowlisting secures Azure Cosmos DB from the public internet and prevents unauthorized access requests.",
+    "impact": "If improperly configured, network communication to the Azure Cosmos DB Account will be interrupted, including Azure web portal access potentially. Be certain to check the additional resources linked here and allowlist appropriate IPs for your environment before selecting apply.<br/><br/>Disabling 'Public Network Access' forces the requirement of the use of Private Endpoints for network connectivity which will require some additional consideration from a network architecture perspective and will introduce cost based on the inbound/outbound data being processed by the Private Endpoint.",
+    "remediation": {
+        "text": "
+			##### Remediate from Azure Portal 
+			1. Select or search for Azure CosmosDB. 
+			2. Select your Azure CosmosDB Account. 
+			3. In the left column expand > Settings. 
+			4. Select Networking. 
+			5. Under Public Access select the radial button Disabled. 
+			6. Select Save Remediate
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-configure-firewall",
+        "https://learn.microsoft.com/en-us/powershell/module/az.cosmosdb/update-azcosmosdbaccount?view=azps-15.4.0&viewFallbackFrom=azps-15.0.0#-publicnetworkaccess"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.4",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_cosmosdb",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "networking.publicNetworkAccess",
+                                "ne",
+                                "Disabled"
+                            ],
+							[
+                                "networking.ipRules.Count",
+                                "gt",
+                                "0"
+                            ]
+                        ],
+						"operator":"and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.publicNetworkAccess": "Public Network Access"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"location",
+						"networking"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.publicNetworkAccess": "Public Network Access"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure `Public Network Access` is `Disabled` for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cosmosdb_public_network_access_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_cosmosdb_004"
+}

@@ -1,0 +1,102 @@
+{
+    "provider": "Azure",
+    "serviceType": "Management and Governance Services",
+    "serviceName": "Management and Governance Services",
+    "displayName": "Ensure that Intune logs are captured and sent to Log",
+    "description": "Ensure that Intune logs are captured and fed into a central log analytics workspace.",
+    "rationale": "Intune includes built-in logs that provide information about your environments. Sending logs to a Log Analytics workspace enables centralized analysis, correlation, and alerting for faster threat detection and response.",
+    "impact": "A Microsoft Intune plan is required to access Intune: https://www.microsoft.com/en- us/security/business/microsoft-intune-pricing.<br/><br/>The amount of data logged and, thus, the cost incurred can vary significantly depending on the tenant size.<br/><br/>For information on Log Analytics workspace costs, visit: https://learn.microsoft.com/en- us/azure/azure-monitor/logs/cost-logs.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Go to Intune. 2. Click Reports. 3. Under Azure monitor, click Diagnostic settings. 4. Click + Add diagnostic setting. 5. Provide a Diagnostic setting name. 6. Under Logs > Categories, check the box next to each of the following logs: o AuditLogs o OperationalLogs o DeviceComplianceOrg o Devices o Windows365AuditLogs 7. Under Destination details, check the box next to Send to Log Analytics workspace. 8. Select a Subscription. 9. Select a Log Analytics workspace. 10. Click Save.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/review-logs-using-azure-monitor",
+        "https://www.microsoft.com/en-us/security/business/microsoft-intune-pricing",
+        "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/cost-logs"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "6.1.1.10",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": []
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_intune_activity_log_missing_diag_setting",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+        
+    ],
+    "id": "azure_diagnostic_setting_010"
+}

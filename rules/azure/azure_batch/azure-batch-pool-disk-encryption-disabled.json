@@ -1,0 +1,92 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Batch",
+    "serviceName": "Batch",
+    "displayName": "Ensure Batch pools disk encryption is set enabled",
+    "description": "Azure Batch pools must have disk encryption enabled to protect data at rest on both OS and temporary disks, using Azure-managed encryption keys by default.",
+    "rationale": "Enabling disk encryption meets compliance requirements, follows security best practices, and safeguards against unauthorized access to cached data and task outputs stored on VM disks.",
+    "impact": "This ensures automatic encryption with minimal performance impact, though it requires pool recreation and is unsupported on Basic A-series VMs.",
+    "remediation": {
+        "text": "NOTE: Encrypted pools must be created as replacements for unencrypted pools. Please ensure that necessary precautions are taken to backup and restore data from persistent disk pools. Remediate from Azure Portal 1. Navigate to Azure Batch accounts 2. Select your Batch account 3. Click Pools in the left menu 4. For each unencrypted pool, click Create new pool 5. Under Advanced settings, enable Disk encryption and select OS disk or All disks 6. Configure all other settings to match your existing pool 7. Click Create to deploy the encrypted pool 8. Resize the old unencrypted pool to 0 nodes after verifying the new pool is operational Repeat steps 4-8 for each unencrypted pool",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/batch/disk-encryption2",
+        "https://docs.microsoft.com/en-us/cli/azure/batch/pool#az-batch-pool-create"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "15.2",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure Batch pools disk encryption is set enabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_batch_pool_disk_encryption_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_batch_006"
+}

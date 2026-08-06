@@ -1,0 +1,127 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cache for Redis",
+    "serviceName": "Databases",
+    "displayName": "Ensure 'Update Channel' is set to 'Stable'",
+    "description": "Ensure all Azure Cache for Redis instances are configured to use the stable update channel.",
+    "rationale": "By using the stable update channel, organizations minimize the risk of introducing issues that may exist in preview update streams. The stable update channel improves security posture and reduces exposure to vulnerabilities.",
+    "impact": "Updates and new features will take longer to arrive when using the stable update channel.",
+    "remediation": {
+        "text": "
+			##### Remediate from Azure Portal 
+			1. Go to Azure Cache for Redis. 
+			2. Select the name of a cache. 
+			3. Under Settings, select Schedule updates. 
+			4. Set Update Channel to Stable. 
+			5. Select Save. 
+			6. Repeat steps 1-5 for each cache requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-administration#update-channel-and-schedule-updates"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.10",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_redis",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "properties.updateChannel",
+                                "ne",
+								"Stable"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+				"properties": {
+					"name": "Name",
+					"location": "location",
+					"resourceGroupName": "Resource Group Name",
+					"properties.updateChannel": "Update channel"
+				},
+				"expandObject": null
+			},
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+						"location",
+						"properties"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+				"properties": {
+					"name": "Name",
+					"location": "location",
+					"resourceGroupName": "Resource Group Name",
+					"properties.updateChannel": "Update channel"
+				},
+				"expandObject": null
+			},
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure 'Update Channel' is set to 'Stable' for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cache_redis_update_channel_preview_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_redis_010"
+}

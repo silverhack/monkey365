@@ -1,0 +1,149 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cosmos DB",
+    "serviceName": "Databases",
+    "displayName": "Ensure that Cosmos DB uses Private Endpoints where possible",
+    "description": "Private endpoints limit network traffic to approved sources.",
+    "rationale": "For sensitive data, private endpoints allow granular control of which services can communicate with Cosmos DB and ensure that this network traffic is private. This can be set this up on a case by case basis for each service to be connected.",
+    "impact": "Only whitelisted services will have access to communicate with the Cosmos DB.",
+    "remediation": {
+        "text": "
+			##### Remediate From Azure Portal 
+			1. Open the portal menu. 
+			2. Select the Azure Cosmos DB blade. 
+			3. Select the Azure Cosmos DB account. 
+			4. Select Networking. 
+			5. Select Private access. 
+			6. Click + Private Endpoint. 
+			7. Provide a Name. 
+			8. Click Next. 
+			9. From the Resource type drop down, select Microsoft.AzureCosmosDB/databaseAccounts. 
+			10. From the Resource drop down, select the Cosmos DB account. 
+			11. Click Next. 
+			12. Provide appropriate Virtual Network details. 
+			13. Click Next. 
+			14. Provide appropriate DNS details. 
+			15. Click Next. 
+			16. Optionally provide Tags. 
+			17. Click Next : Review + create. 
+			18. Click Create.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-configure-private-endpoints?tabs=arm-bicep",
+        "https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-configure-private-endpoints?tabs=arm-bicep",
+        "https://learn.microsoft.com/en-us/cli/azure/cosmosdb/private-endpoint-connection?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/cli/azure/network/private-endpoint?view=azure-cli-latest#az-network-private-endpoint-create",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-network-security#ns-2-secure-cloud-native-services-with-network-controls"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.2",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_cosmosdb",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"ne",
+                                "id"
+                            ],
+							[
+                                "privateLinkServiceConnectionState.status",
+                                "eq",
+								"Approved"
+                            ]
+                        ],
+						"whereObject":"networking.privateEndpointConnections",
+						"operator":"and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.privateEndpointConnections.id": "Private Endpoint"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"location",
+						"networking"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"networking.privateEndpointConnections.id": "Private Endpoint"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that Cosmos DB uses Private Endpoints where possible for {name}",
+                "defaultMessage": "Ensure that Cosmos DB uses Private Endpoints where possible"
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cosmosdb_lack_private_endpoint",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_cosmosdb_002"
+}

@@ -1,0 +1,98 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Data Factory",
+    "serviceName": "Databases",
+    "displayName": "Ensure that Data Factory is using RBAC to manage privilege assignment",
+    "description": "Role Based Access Control (RBAC) is setting permissions to the role that a user occupies. Often the user is added to a group which the account inherits permissions from. This is different than Access Policies which are used on an individual case by case basis for each user.",
+    "rationale": "RBAC enhances security by limiting user privilege to only what is necessary for a job role, reducing the risk of unauthorized access. Additionally, RBAC aids compliance with regulations and provides clear accountability by tracking access activities linked to specific roles.",
+    "impact": "There will be a slight increase in technical overhead in that user permissions will need to be manually assigned. However once added to a group, permissions may be edited for every account in the group at one time.",
+    "remediation": {
+        "text": "
+			##### Remediate from Azure Portal 
+			1. From Data Factories select a data factory to audit. 
+			2. In the left column select Access control (IAM). 
+			3. Select + Add \\/ and then Add role assignment. 
+			4. Select the builtin or custom role to be added. Then select Next. 
+			5. Next to Assign access to select either User, group, or service principal or Managed identity to be added to this role. 
+			6. Choose Select members, then search for the resource that is to be added to this role. 
+			7. Enter a description if desired. 
+			8. Select Next, review your choices, then Review + assign.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/data-factory/concepts-roles-permissions"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "4.4",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "Normal",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [],
+    "id": "azure_data_factory_004"
+}

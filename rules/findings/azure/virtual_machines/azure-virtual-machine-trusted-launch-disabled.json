@@ -1,5 +1,4 @@
 {
-    "args": [],
     "provider": "Azure",
     "serviceType": "Virtual Machines",
     "serviceName": "Compute",

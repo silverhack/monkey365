@@ -1,0 +1,101 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Container Instances",
+    "serviceName": "Compute",
+    "displayName": "Ensure the principle of least privilege is used when assigning roles to a Managed Identity",
+    "description": "When using either a user-assigned or system-assigned managed identity, those identities may require a role or privilege assignment to perform a desired function. The roles or privileges assigned to that identity should be assigned with the principle of least privilege in mind - the identity is given the minimum levels of access or permissions needed to perform the job.",
+    "rationale": "Threat actors may attempt to compromise service accounts as anomalous activity on these accounts can sometimes be more challenging to detect. Limiting the permissions or roles available to a managed identity or service account assists in mitigating the systemic exploitation that a service account can perform if compromised.",
+    "impact": "All service accounts should be inventoried and reviewed from time to time for necessity and role or privilege assignment.",
+    "remediation": {
+        "text": "
+			*NOTE*: Remediation will vary based on the needs of your environment. Before remediating, determine the scope and requirements of the Role Assignments necessary for your environment: https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference 
+			#### Remediate from Azure Portal For each Container Instance that uses an identity or credential:
+			1. Open the Container Instances blade.
+			2. Select a named container instance.
+			3. Click on Identity under the Settings section.
+			4. Review the System Assigned and User Assigned tabs for assigned identities. For a System Assigned identity, click on Azure role assignments and Add or Remove assigned roles for appropriate restriction. For User assigned identities, click on the name of each User assigned managed identity, then click on Azure role assignments in the left panel to Add or Remove assigned roles for appropriate restriction.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/container-instances/container-instances-managed-identity",
+        "https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal",
+        "https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal-managed-identity",
+        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "3.3",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "high",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": null,
+                "message": "Ensure the principle of least privilege is used when assigning roles to a Managed Identity",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_container_registry_lacks_minimum_privileges",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_container_002"
+}

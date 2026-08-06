@@ -1,0 +1,133 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cosmos DB",
+    "serviceName": "Databases",
+    "displayName": "Ensure That 'Firewalls & Networks' Is Limited to Use Selected Networks Instead of All Networks",
+    "description": "Limiting your Cosmos DB to only communicate on whitelisted networks lowers its attack footprint.",
+    "rationale": "Selecting certain networks for your Cosmos DB to communicate restricts the number of networks including the internet that can interact with what is stored within the database.",
+    "impact": "WARNING: Failure to whitelist the correct networks will result in a connection loss. If using NoSQL / Table / Graph APIs for Cosmos DB Data Explorer end user IPs must be allowed. Other APIs are proxied and shouldn't require end user IPs.<br/><br/>WARNING: Changes to Cosmos DB firewalls may take up to 15 minutes to apply.<br/><br/>Ensure that sufficient time is planned for remediation or changes to avoid disruption.",
+    "remediation": {
+        "text": "
+			##### Remediate From Azure Portal 
+			1. Open the portal menu. 
+			2. Select the Azure Cosmos DB blade. 
+			3. Select a Cosmos DB account to audit.
+			4. Select Networking. 
+			5. Under Public network access, select Selected networks. 
+			6. Under Virtual networks, select + Add existing virtual network or + Add a new virtual network. 
+			7. For existing networks, select subscription, virtual network, subnet and click Add. For new networks, provide a name, update the default values if required, and click Create. 
+			8. Click Save.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-configure-private-endpoints?tabs=arm-bicep",
+        "https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-configure-vnet-service-endpoint",
+        "https://learn.microsoft.com/en-us/cli/azure/cosmosdb?view=azure-cli-latest#az-cosmosdb-show",
+        "https://learn.microsoft.com/en-us/powershell/module/az.cosmosdb/?view=azps-15.4.0&viewFallbackFrom=azps-8.1.0",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-network-security#ns-2-secure-cloud-native-services-with-network-controls"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.1",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_cosmosdb",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "properties.isVirtualNetworkFilterEnabled",
+                                "ne",
+                                "true"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"properties.isVirtualNetworkFilterEnabled": "Virtual Network Filter Enabled"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"location",
+						"properties"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"properties.isVirtualNetworkFilterEnabled": "Virtual Network Filter Enabled"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure That 'Firewalls & Networks' Is Limited to Use Selected Networks Instead of All Networks for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cosmosdb_allow_access_all_networks",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_cosmosdb_001"
+}

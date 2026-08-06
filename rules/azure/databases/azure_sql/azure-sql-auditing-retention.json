@@ -1,0 +1,147 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "SQL Database",
+    "serviceName": "Databases",
+    "displayName": "Ensure that 'Auditing' Retention is 'greater than _ARG_0_ days'",
+    "description": "SQL Server Audit Retention should be configured to be greater than _ARG_0_ days.",
+    "rationale": "Audit Logs can be used to check for anomalies and give insight into suspected breaches or misuse of information and access.",
+    "impact": "",
+    "remediation": {
+        "text": "
+			##### Remediate From Azure Portal 
+			1. Go to SQL servers 
+			2. For each server instance 
+			3. Click on Auditing 
+			4. If storage is selected, expand Advanced properties 
+			5. Set the Retention (days) setting greater than 90 days or 0 for unlimited retention. 
+			6. Select Save
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-sql/database/auditing-overview?view=azuresql",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-6-configure-log-storage-retention"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.7",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_sql_servers",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "eq",
+								"auditing.retentionDays"
+                            ],
+                            [
+                                "auditing.retentionDays",
+                                "lt",
+                                "_ARG_0_"
+                            ],
+                            [
+                                "auditing.retentionDays",
+                                "eq",
+                                "-1"
+                            ],
+                            [
+                                "auditing.enabled",
+                                "eq",
+                                "Disabled"
+                            ]
+                        ],
+                        "operator": "or"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Server Name",
+                    "location": "Location",
+                    "resourceGroupName": "Resource group name",
+                    "fqdn": "FQDN",
+                    "auditing.retentionDays": "Auditing policy state"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+                        "name",
+                        "location",
+                        "auditing"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Server Name",
+                    "location": "Location",
+                    "resourceGroupName": "Resource group name",
+                    "fqdn": "FQDN",
+                    "auditing.retentionDays": "Auditing policy state"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that 'Auditing' Retention is 'greater than _ARG_0_ days' for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_sql_auditing_retention_not_compliant",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "aure_sql_007"
+}

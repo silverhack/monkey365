@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Storage Services",
-    "serviceName": "Storage Services",
+    "serviceType": "Storage Accounts",
+    "serviceName": "Storage",
     "displayName": "Ensure that 'Default to Microsoft Entra authorization in the Azure portal' is set to 'Enabled'",
     "description": "When this property is enabled, the Azure portal authorizes requests to blobs, files, queues, and tables with Microsoft Entra ID by default.",
     "rationale": "Microsoft Entra ID provides superior security and ease of use over Shared Key.",

@@ -1,0 +1,91 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Batch",
+    "serviceName": "Batch",
+    "displayName": "Ensure local authentication methods for accounts are disabled",
+    "description": "This recommendation disables local authentication and ensures that a centralized identity provider is used.",
+    "rationale": "Identity and Authentication silos with stale or persistent keys and tokens can increase vulnerability and risk by preventing detection mechanisms from capturing anomalous activity and may not produce an auditable trail of evidence that can be used for pattern detection and forensic investigation. Centralized Identity providers such as Microsoft Entra ID are strongly preferred for all identity, authentication, authorization, and accountability (IAAA) systems and activities.",
+    "impact": "",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Login to Azure portal https://portal.azure.com 2. Navigate to Batch Accounts For each Batch Account shown: 1. Click to open the Batch Account name 2. Under the Settings section, click on Authentication modes 3. In the main window, click the Authentication Mode drop-down list 4. Check the box for Microsoft Entra ID (or other centralized IdP) 5. (If checked) Uncheck the box for Shared Key 6. (If checked) Uncheck the box for Task Authentication Token 7. Click Save",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/batch/security-best-practices#batchaccount-authentication"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "15.3",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure local authentication methods for accounts are disabled",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_batch_local_authentication_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_batch_004"
+}

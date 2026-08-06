@@ -1,0 +1,133 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cosmos DB",
+    "serviceName": "Databases",
+    "displayName": "Ensure that Cosmos DB Logging is Enabled",
+    "description": "Cosmos DB logs should be captured to track events relevant to auditing and diagnostics.",
+    "rationale": "Logging of changes, events, and information related to Cosmos DB provides a diagnostic tool and a forensic record of activity. An effective set of logs help provide integrity and availability to the service and contribute to the effectiveness of detective systems such as a SIEM.",
+    "impact": "There may be additional storage costs for logging a large amount of events. Potentially only keep logs for a certain timeframe before they are deleted.",
+    "remediation": {
+        "text": "
+			*NOTE*: This procedure assumes a Log Analytics Workspace or other logging destination already exists. Please see attached resources on this setup. 
+			##### Remediate from Azure Portal 
+			1. From Azure CosmosDB, select the database you wish to audit. 
+			2. Scroll down in the left column and select > Monitoring. 
+			3. Select Diagnostic Settings. 
+			4. Select + Add Diagnostic Setting 
+			5. Enter your name for this setting in Diagnostic Setting Name. 
+			6. Select allLogs under Category groups 
+			7. Select Send to Log Analytics workspace or other logging solution under Destination details. 
+			8. Select your Azure subscription, and your log analytics workspace, or other connection details depending on your logging solution. 
+			9. Select Save in the top left corner.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/quick-create-workspace?tabs=azure-portal",
+        "https://learn.microsoft.com/en-us/azure/cosmos-db/monitor?tabs=resource-specific-diagnostics",
+        "https://www.azadvertizer.net/azpolicyadvertizer/45c6bfc7-4520-4d64-a158-730cd92eedbc.html"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.7",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_cosmosdb",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "diagnosticSettings.enabled",
+                                "ne",
+                                "true"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"diagnosticSettings.enabled": "Diagnostic Settings"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"location",
+						"diagnosticSettings"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"diagnosticSettings.enabled": "Diagnostic Settings"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that Cosmos DB Logging is Enabled for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cosmosdb_diagnostic_setting_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_cosmosdb_007"
+}

@@ -1,0 +1,147 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cache for Redis Enterprise",
+    "serviceName": "Databases",
+    "displayName": "Ensure Azure Cache for Redis is Using a Private Link",
+    "description": "Private links make resources available via a private endpoint to a network you select.<br/><br/>Tunneling between subscriptions, resource groups, without the need for traditional network routing.",
+    "rationale": "Networking communication should be segmented to prevent undesired interception.",
+    "impact": "If improperly configured network communication between your Azure Cache for Redis and other resources may be interrupted. This is only concerning resources or services being offered to other Azure tenants.",
+    "remediation": {
+        "text": "
+			##### Remediate From Azure Portal 
+			1. Go to Azure Cache for Redis. 
+			2. Select the name of a cache. 
+			3. In the left column expand Administration. 
+			4. Select Networking. 
+			5. In the top heading select Private Endpoints. 
+			6. Select + Private Endpoint. 
+			7. Select your subscription and resource group then select Next : Resource >. 
+			8. Select Connect to an Azure resource in my directory. 
+			9. Enter your subscription id or select from the dropdown. 
+			10. Under Resource type select Microsoft.Cache/redisEnterprise from the dropdown. 
+			11. Select your resource and your sub-resource of redisEnterprise. 
+			12. Select your desired virtual network. 
+			13. Select your desired subnet. 
+			14. Determine whether you want to dynamically or statically allocate an IP address. 
+			15. Select your network application security group or select + Create to create a new one, the select Next. 
+			16. Determine if you want to create a dns entry in a private DNS zone or on your own DNS servers. If in a private DNS zone select the desired subscription and resource group. Select next. 
+			17. Enter any tags necessary, then click next. 
+			18. Review the settings and select Create. 
+			19. After creation your Cache will be available in your network at the FQDN and IP address listed under Settings and DNS configuration.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/baselines/azure-cache-for-redis-security-baseline",
+        "https://learn.microsoft.com/en-us/cli/azure/network/private-endpoint?view=azure-cli-latest",
+        "https://learn.microsoft.com/en-us/powershell/module/az.network/get-azprivateendpoint?view=azps-14.6.0",
+        "https://learn.microsoft.com/en-us/azure/private-link/private-link-overview"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.7",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_redis_enterprise",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"ne",
+                                "privateEndpointConnections.id"
+                            ],
+							[
+                                "networking.privateEndpointConnections.privateLinkServiceConnectionState.status",
+                                "eq",
+								"Approved"
+                            ]
+                        ],
+						"operator":"and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": "true",
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+				"properties": {
+					"name": "Name",
+					"location": "location",
+					"resourceGroupName": "Resource Group Name"
+				},
+				"expandObject": null
+			},
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+						"location",
+						"networking"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+				"properties": {
+					"name": "Name",
+					"location": "location",
+					"resourceGroupName": "Resource Group Name"
+				},
+				"expandObject": null
+			},
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure Azure Cache for Redis is Using a Private Link for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cache_redis_enterprise_lacks_private_link_connection",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_redis_enterprise_006"
+}

@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Security Services",
-    "serviceName": "Security Services",
+    "serviceType": "Azure KeyVault",
+    "serviceName": "Storage",
     "displayName": "Ensure certificate 'Validity Period (in months)' is less than or equal to '_ARG_0_'",
     "description": "Restrict the validity period of certificates stored in Azure Key Vault to _ARG_0_ months or less.",
     "rationale": "Limiting certificate validity reduces the risk of misuse if compromised and helps ensure timely renewal, improving security and reliability.",

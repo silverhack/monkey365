@@ -1,0 +1,126 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cosmos DB",
+    "serviceName": "Databases",
+    "displayName": "Ensure critical data is encrypted with customer-managed keys",
+    "description": "Customer-managed keys introduce additional depth to security by providing control over encryption keys. Where required, and organizational capacity allows, sensitive data at rest can be encrypted using customer-managed keys.<br/><br/>While it is possible to automate the assessment of this recommendation, the assessment status remains \"Manual\" due to ideally limited scope. The scope of application should be carefully considered to account for organizational capacity, and targeted to workloads with specific need for CMK.",
+    "rationale": "Customer-managed keys provide greater control over the creation, rotation, and revocation of encryption keys, supporting strict security and compliance requirements.",
+    "impact": "Implementing customer-managed keys introduces additional administrative effort to create, rotate, monitor, and secure encryption keys.",
+    "remediation": {
+        "text": "
+			##### Remediate from Azure Portal 
+			1. Go to Azure Cosmos DB. 
+			2. Select the name of an Azure Cosmos DB account. 
+			3. Under Settings, select Data Encryption. 
+			4. Set Encryption Key Type to Customer-managed key. 
+			5. Provide a key URI. 
+			6. Select Save. 
+			7. Repeat steps 1-6 for each account requiring remediation.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-gb/azure/cosmos-db/how-to-setup-customer-managed-keys-existing-accounts"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.5",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_cosmosdb",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "dataEncryption",
+                                "ne",
+                                "cmk"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"location",
+						"dataEncryption"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure critical data is encrypted with customer-managed keys for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cosmosdb_lack_cmk_encryption",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_cosmosdb_005"
+}

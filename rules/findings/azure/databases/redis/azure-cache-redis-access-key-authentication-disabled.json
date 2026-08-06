@@ -97,8 +97,8 @@
                     "expandObject": null,
                     "limit": null
                 },
-                "showGoToButton": "True",
-                "showModalButton": "True",
+                "showGoToButton": true,
+                "showModalButton": true,
                 "directLink": null
             }
         },

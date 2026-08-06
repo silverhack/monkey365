@@ -1,0 +1,95 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Batch",
+    "serviceName": "Batch",
+    "displayName": "Ensure private DNS zones for private endpoints that connect to Batch accounts are configured",
+    "description": "Private DNS zones for Azure Batch private endpoints provide secure internal name resolution, preventing public internet exposure. When a private endpoint is created for a Batch account, Azure requires a private DNS zone (privatelink..batch.azure.com) to map the Batch service’s domain name to a private IP address within your virtual network (VNet).",
+    "rationale": "To enable secure and private access to Azure Batch accounts, private DNS zones must be properly configured for private endpoints so as not to expose them publicly and allow for internal name resolution. Proper configuration of DNS provides assurance that DNS resolves to private IPs, reducing data exposure risk and support for security policy adherence. In the absence of proper DNS configuration, Batch services are open to connectivity failure, job interruption, or misconfigured public internet routing. Well- meshed private DNS zones hold traffic within the virtual network as intended, as a Zero Trust architecture and regulatory standard would dictate. Organizations need to audit and automate the configurations for secure and stable Batch processing.",
+    "impact": "NOTE: This recommendation assumes that a Private DNS Zone already exists. If one has not yet been created for Batch accounts [e.g. privatelink.batch.azure.com], that must be completed before it can be assigned to a Batch account's Private Endpoint.<br/><br/>Network architecture must be carefully considered when deploying Private DNS Zones.<br/><br/>DNS Zones should be used to associate like services. Private DNS zones should not be used to resolve public endpoints.",
+    "remediation": {
+        "text": "NOTE: This instruction assumes a Private Endpoint already exists for the Batch Account, and that a Private DNS Zone has already been created. Remediate from Azure Portal 1. Login to Azure portal https://portal.azure.com 2. Navigate to Batch accounts in the Azure portal For each batch account perform the following: 1. Expand Settings then click on Networking 2. Click the Private access tab, [If no Private Endpoints exist, one must be created before proceeding. Instruction for configuring Private Endpoints on Batch Accounts can be found in the recommendation titled \"Ensure to Configure Batch accounts with private endpoints\"] For each Private endpoint perform the following: 1. Click the name of the Private Endpoint 2. Expand Settings then click on DNS Configuration 3. Click the + Add Configuration button 4. Select each field appropriately (e.g. Private DNS zone \"privatelink.batch.azure.com\" - other zone names in additional information below) and enter a custom Configuration Name if desired 5. Click the Add button then allow a moment for deployment Refresh the DNS Configuration page, then scroll down and ensure an entry exists (e.g. \"privatelink.batch.azure.com\") under the Private DNS zone column in the Configuration entry table.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns2",
+        "https://learn.microsoft.com/en-us/azure/batch/private-connectivity",
+        "https://learn.microsoft.com/en-us/azure/privatelink/private-endpoint-dns#compute",
+        "https://learn.microsoft.com/en-us/azure/privatelink/private-endpoint-dns#compute-1",
+        "https://learn.microsoft.com/en-us/azure/private-link/privateendpoint-dns#compute-2"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "15.6",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure private DNS zones for private endpoints that connect to Batch accounts are configured",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_batch_private_dns_not_configured",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_batch_005"
+}

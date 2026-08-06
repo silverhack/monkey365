@@ -1,0 +1,127 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Virtual Machines",
+    "serviceName": "Compute",
+    "displayName": "Ensure that Only Approved Extensions Are Installed",
+    "description": "For added security, only install organization-approved extensions on VMs.",
+    "rationale": "Azure virtual machine extensions are small applications that provide post-deployment configuration and automation tasks on Azure virtual machines. These extensions run with administrative privileges and could potentially access anything on a virtual machine. The Azure Portal and community provide several such extensions. Each organization should carefully evaluate these extensions and ensure that only those that are approved for use are actually implemented.",
+    "impact": "Functionality by unsupported extensions will be disabled.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal
+			1. Go to Virtual machines.
+			2. For each virtual machine, go to Settings.
+			3. Click on Extensions + applications.
+			4. If there are unapproved extensions, uninstall them.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/features-windows",
+        "https://learn.microsoft.com/en-us/powershell/module/az.compute/?view=azps-15.4.0&viewFallbackFrom=azps-7.5.0#vm-extensions",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-asset-management#am-2-use-only-approved-services",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-asset-management#am-5-use-only-approved-applications-in-virtual-machine"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "20.6",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "az_virtual_machines",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+								"ne",
+                                "resources"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "VM Name",
+                    "location": "Location",
+                    "resources.name": "Extensions"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "name",
+                        "location",
+                        "ResourceGroupName",
+                        "resources"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "VM Name",
+                    "location": "Location",
+                    "resources.name": "Extensions"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that Only Approved Extensions Are Installed for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_os_allowed_extensions",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_virtual_machines_001"
+}

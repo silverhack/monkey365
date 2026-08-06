@@ -1,0 +1,134 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Virtual Machines",
+    "serviceName": "Compute",
+    "displayName": "[Legacy] Ensure that VHDs are Encrypted",
+    "description": "NOTE: This is a legacy recommendation. Managed Disks are encrypted by default and recommended for all new VM implementations.<br/><br/>VHD (Virtual Hard Disks) are stored in blob storage and are the old-style disks that were attached to Virtual Machines. The blob VHD was then leased to the VM. By default, storage accounts are not encrypted, and Microsoft Defender will then recommend that the OS disks should be encrypted. Storage accounts can be encrypted as a whole using PMK or CMK. This should be turned on for storage accounts containing VHDs.",
+    "rationale": "While it is recommended to use Managed Disks which are encrypted by default, \"legacy\" VHDs may exist for a variety of reasons and may need to remain in VHD format. VHDs are not encrypted by default, so this recommendation intends to address the security of these disks. In these niche cases, VHDs should be encrypted using the procedures in this recommendation to encrypt and protect the data content.<br/><br/>If a virtual machine is using a VHD and can be converted to a managed disk, instructions for this procedure can be found in the resources section of this recommendation under the title \"Convert VHD to Managed Disk.\"",
+    "impact": "Depending on how the encryption is implemented will change the size of the impact. If provider-managed keys(PMK) are utilized, the impact is relatively low, but processes need to be put in place to regularly rotate the keys. If Customer-managed keys(CMK) are utilized, a key management process needs to be implemented to store and manage key rotation, thus the impact is medium to high depending on user maturity with key management.",
+    "remediation": {
+        "text": "Remediate from Azure Portal 1. Navigate to the storage account that you wish to encrypt 2. Select encryption 3. Select the encryption type that you wish to use If you wish to use a Microsoft-managed key (the default), you can save at this point and encryption will be applied to the account. If you select Customer-managed keys, it will ask for the location of the key (The default is an Azure Key Vault) and the key name. Once these are captured, save the configuration and the account will be encrypted using the provided key.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-cli-quickstart",
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-powershell-quickstart",
+		"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-4-enable-data-at-rest-encryption-by-default",
+		"https://learn.microsoft.com/en-us/previous-versions/azure/virtual-machines/scripts/virtual-machines-powershell-sample-create-managed-disk-from-vhd"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "20.8",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        "Legacy"
+    ],
+    "rule": {
+        "path": "az_virtual_machines",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "osDisk.disk.properties.osType",
+                                "ne",
+                                ""
+                            ],
+                            [
+                                "osDisk.isEncrypted",
+                                "ne",
+                                "true"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Disk Name",
+                    "location": "Location",
+                    "sku.name": "SKU Name",
+                    "properties.osType": "OS Type",
+                    "osDisk": "Disk"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "name",
+                        "location",
+                        "ResourceGroupName",
+                        "osDisk"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Disk Name",
+                    "location": "Location",
+                    "sku.name": "SKU Name",
+                    "properties.osType": "OS Type",
+                    "osDisk": "Disk"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "[Legacy] Ensure that VHDs are Encrypted for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "azure_os_disk_encryption_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_virtual_machines_005"
+}

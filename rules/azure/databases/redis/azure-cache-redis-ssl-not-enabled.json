@@ -1,0 +1,127 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cache for Redis",
+    "serviceName": "Databases",
+    "displayName": "Ensure that 'Allow access only via SSL' is set to 'Yes'",
+    "description": "Setting `Allow access only via SSL` to `Yes` ensures that data in transit to and from Azure Cache for Redis is encrypted using TLS.",
+    "rationale": "Data in transit which is not encrypted is vulnerable to attacks including adversary-in-the- middle (AITM or MITM), eavesdropping, or session hijack. These attacks can result in the compromise and exfiltration of data.",
+    "impact": "No additional cost is required to implement this recommendation. Aside from expected network changes (no unencrypted communications), performance should not be impacted.",
+    "remediation": {
+        "text": "
+			##### Remediate From Azure Portal 
+			1. Search for and open the Azure Cache for Redis service 
+			2. For each instance, repeat the remaining steps 
+			3. Click on the name of the instance 
+			4. In the blade menu on the left, under Settings, click on Advanced Settings 
+			5. Select Yes under the Allow access only via SSL heading
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-best-practices-development",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/baselines/azure-cache-for-redis-security-baseline#microsoft-defender-for-cloud-monitoring-1"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.2",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_redis",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "properties.enableNonSslPort",
+                                "eq",
+                                "true"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"properties.enableNonSslPort": "Non-SSL port enabled"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "id",
+						"name",
+						"location",
+						"properties"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"properties.enableNonSslPort": "Non-SSL port enabled"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that 'Allow access only via SSL' is set to 'Yes' for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cache_redis_force_ssl_disabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_redis_002"
+}

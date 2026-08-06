@@ -1,0 +1,124 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Cosmos DB",
+    "serviceName": "Databases",
+    "displayName": "Ensure that 'disableLocalAuth' is set to 'true'",
+    "description": "Ensure that key-based authentication (including resource owner password credential authentication) is disabled for Azure Cosmos DB accounts by setting disableLocalAuth to true. Instead, use Microsoft Entra ID for authentication, as it provides stronger security through managed credentials, multi-factor authentication (MFA), centralized access control, and seamless integration with Azure RBAC.",
+    "rationale": "Disabling key-based authorization ensures that access to your Azure Cosmos DB account relies on the more secure Microsoft Entra ID authentication, reducing the risk of credential misuse and unauthorized access.",
+    "impact": "Administrative overhead in configuring, managing, and monitoring Entra ID authentication and role-based access.",
+    "remediation": {
+        "text": "
+			Map all the resources that currently have access to the Azure Cosmos DB account with keys or access tokens. 
+			Create an Entra ID identity for each of these resources: 
+			* For Azure resources, you can create a managed identity. You may choose between system-assigned and user-assigned managed identities.
+			* For non-Azure resources, create Entra ID service principals. Grant each Entra ID service principal the minimum permissions it requires. We recommend using one of the two built-in role definitions: Cosmos DB Built-in Data Reader or Cosmos DB Built-in Data Contributor. Validate that the new resource is functioning correctly. After new permissions are granted to identities, it may take a few hours for them to propagate. When all resources work correctly with the new identities, continue to the next step.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/cosmos-db/how-to-connect-role-based-access-control?pivots=azure-cli"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.3",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_cosmosdb",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "properties.disableLocalAuth",
+                                "ne",
+                                "true"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"properties.disableLocalAuth": "Local Auth Enabled"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+						"id",
+						"name",
+						"location",
+						"properties"
+					],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Name",
+                    "location": "location",
+                    "resourceGroupName": "Resource Group Name",
+					"properties.disableLocalAuth": "Local Auth Enabled"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that 'disableLocalAuth' is set to 'true' for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "cosmosdb_local_auth_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_cosmosdb_003"
+}

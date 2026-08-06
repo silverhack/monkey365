@@ -1,0 +1,125 @@
+{
+    "args": [],
+    "provider": "Azure",
+    "serviceType": "Virtual Machines",
+    "serviceName": "Compute",
+    "displayName": "Ensure that Endpoint Protection for all Virtual Machines is installed",
+    "description": "Install endpoint protection for all virtual machines.",
+    "rationale": "Installing endpoint protection systems (like anti-malware for Azure) provides for real- time protection capability that helps identify and remove viruses, spyware, and other malicious software. These also offer configurable alerts when known-malicious or unwanted software attempts to install itself or run on Azure systems.",
+    "impact": "Endpoint protection will incur an additional cost to you.",
+    "remediation": {
+        "text": "Follow Microsoft Azure documentation to install endpoint protection from the security center. Alternatively, you can employ your own endpoint protection tool for your OS.",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/azure/security/fundamentals/antimalware",
+        "https://learn.microsoft.com/en-us/cli/azure/vm/extension?view=azure-cli-latest#az_vm_extension_list",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-endpoint-security#es-1-use-endpoint-detection-and-response-edr"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "20.7",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "az_virtual_machines",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "defaultExtensions.isAVAgentInstalled",
+                                "eq",
+                                "false"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "name": "Disk Name",
+                    "localNic.localIpAddress": "Local IP Address",
+                    "location": "Location",
+                    "osDisk.isEncrypted": "OS disk encryption",
+                    "defaultExtensions.isAVAgentInstalled": "Antimalware agent installed"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "name",
+                        "location",
+                        "ResourceGroupName",
+                        "defaultExtensions"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "name": "Disk Name",
+                    "localNic.localIpAddress": "Local IP Address",
+                    "location": "Location",
+                    "osDisk.isEncrypted": "OS disk encryption",
+                    "defaultExtensions.isAVAgentInstalled": "Antimalware agent installed"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["name"],
+                "message": "Ensure that Endpoint Protection for all Virtual Machines is installed for {name}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "name",
+                "resourceId": "id",
+                "resourceType": "type"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "az_vm_endpoint_protection_not_installed",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": "azure_virtual_machines_003"
+}

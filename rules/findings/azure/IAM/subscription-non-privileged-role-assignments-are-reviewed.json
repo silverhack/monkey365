@@ -1,7 +1,7 @@
 {
     "provider": "Azure",
-    "serviceType": "Identity Services",
-    "serviceName": "Identity Services",
+    "serviceType": "Subscription Identity",
+    "serviceName": "Subscription",
     "displayName": "Ensure all non-privileged role assignments are periodically reviewed",
     "description": "Perform a periodic review of non-privileged role assignments to ensure that the non- privileged roles assigned to users are appropriate.<br/><br/>Note: Determining 'appropriate' assignments requires a clear understanding of your organization's personnel, systems, policies, and security requirements. This cannot be effectively prescribed in a procedure.",
     "rationale": "To ensure the principle of least privilege is followed, non-privileged role assignments should be reviewed periodically to confirm that users are granted only the minimum level of permissions they need to perform their tasks.",
