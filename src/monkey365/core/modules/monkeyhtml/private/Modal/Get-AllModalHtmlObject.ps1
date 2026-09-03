@@ -73,7 +73,7 @@ Function Get-AllModalHtmlObject{
         #Add to array
         [void]$modals.Add($aboutTool);
         #Add rest of modals
-        Foreach($finding in @($Report).Where({$_.level -notin @('good', 'manual')})){
+        Foreach($finding in @($Report).Where({$_.level.ToLower() -ne "good" -or $_.level.ToLower() -ne "manual"})){
             $extendedData = $finding.output.html.extendedData
             If($null -ne $extendedData){
                 Foreach($rawObject in @($extendedData)){

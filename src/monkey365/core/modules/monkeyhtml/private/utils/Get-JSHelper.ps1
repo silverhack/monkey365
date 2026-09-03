@@ -71,10 +71,10 @@ Function Get-JSHelper{
                         );
                         If($null -ne $properties){
                             ForEach($prop in $properties.Psobject.Properties){
-                                If($prop.Name -eq 'crossorigin' -and ($Script:mode -notmatch '(?i)cdn_(branch|latest|tag)' -and $Script:mode -notmatch '^localcdn$')){
+                                If($prop.Name -eq 'crossorigin' -and ($Script:mode -notmatch '(?i)cdn_(branch|latest|tag)' -or $Script:mode -notmatch '^localcdn$')){
                                     continue
                                 }
-                                If($prop.Name -eq 'integrity' -and ($Script:mode -notmatch '(?i)cdn_(branch|latest|tag)' -and $Script:mode -notmatch '^localcdn$')){
+                                If($prop.Name -eq 'integrity' -and ($Script:mode -notmatch '(?i)cdn_(branch|latest|tag)' -or $Script:mode -notmatch '^localcdn$')){
                                     continue
                                 }
                                 If($Script:mode -match '(?i)cdn_(branch|latest|tag)' -and $prop.Name -in @("src","href")){

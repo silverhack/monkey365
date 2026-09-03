@@ -1,7 +1,7 @@
 {
-	"filter": [
+	filter: [
 		{
-			"conditions": [
+			conditions : [
 				["displayName", "imatch", "demo"],
 				["displayName", "imatch", "test"],
 				["displayName", "imatch", "trial"],
@@ -15,7 +15,7 @@
 				["displayName", "imatch", "dev"],
 				["displayName", "imatch", "staging"]
 			],
-			"operator": "or"
+			operator : 'or'
 		}
 	]
 }

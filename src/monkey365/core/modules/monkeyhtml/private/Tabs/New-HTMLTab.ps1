@@ -156,7 +156,7 @@ function New-HTMLTab{
             $count = 0;
             #Iterate over each element
             Foreach($tab in $PSBoundParameters['Tabs']){
-                $linkId = ("{0}_{1}" -f $navLinkId, ($count + 1))
+                $linkId = $navLinkId+1
                 If($count -eq 0){
                     #Create new A active element
                     $aProperties = @{
@@ -202,7 +202,7 @@ function New-HTMLTab{
                 #Set id
                 [void]$_DivTabPane.SetAttribute('id',$linkId);
                 If($count -eq 0){
-                    $_class = $_DivTabPane.GetAttribute('class')
+                    $_class = $_DivTabPane.class
                     [void]$_DivTabPane.SetAttribute('class',("{0} active show" -f $_Class));
                 }
                 #Add to tab content
@@ -215,9 +215,10 @@ function New-HTMLTab{
             [void]$defaultTabObject.AppendChild($DivContent)
             #Set Class name
             If($ClassName){
+                $_tab = $defaultTabObject.SelectSingleNode('//div[@class="tab"]')
                 $_Class = [String]::Join(' ',$ClassName);
                 $div_class = ("card {0}" -f $_Class)
-                [void]$defaultTabObject.SetAttribute('class',$div_class)
+                [void]$_tab.SetAttribute('class',$div_class)
             }
         }
     }

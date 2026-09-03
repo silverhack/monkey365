@@ -1,7 +1,7 @@
 {
-	"filter": [
+	filter: [
 		{
-			"conditions": [
+			conditions : [
 				["roleDefinitionId", "imatch", "62e90394-69f5-4237-9190-012177145e10"],
 				["roleDefinitionId", "imatch", "9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3"],
 				["roleDefinitionId", "imatch", "cf1c38e5-3621-4004-a7cb-879624dced7c"],
@@ -18,7 +18,7 @@
 				["roleDefinitionId", "imatch", "729827e3-9c14-49f7-bb1b-9608f156bbb8"],
 				["roleDefinitionId", "imatch", "7be44c8a-adaf-4e2a-84d6-ab2649e08a13"]
 			],
-			"operator": "or"
+			operator : 'or'
 		}			
 	]
 }

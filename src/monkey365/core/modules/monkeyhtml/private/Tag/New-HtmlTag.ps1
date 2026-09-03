@@ -166,9 +166,6 @@ Function New-HtmlTag{
         }
     }
     End{
-        If($null -eq $tag){
-            return
-        }
         #Close if no childnodes
         If($tag.HasChildNodes -eq $false){
             $tag.InnerText = [string]::Empty

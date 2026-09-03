@@ -195,7 +195,7 @@ Function New-HtmlModal{
                     $modalSize = "modal-xl"
                 }
             }
-            $current_class = $modalDialog.GetAttribute('class')
+            $current_class = $modalDialog.class
             $div_class = ('{0} {1}' -f $current_class,$modalSize)
             [void]$modalDialog.SetAttribute('class',$div_class)
         }
@@ -207,15 +207,17 @@ Function New-HtmlModal{
         }
         #Check if a centered or centered scrollable class should be added
         If($Centered){
-            $current_class = $modalDialog.GetAttribute('class')
+            $dialog_div = $modal.SelectSingleNode('//div[contains(@class,"modal-dialog")]')
+            $current_class = $dialog_div.class
             $div_class = ('{0} modal-dialog-centered' -f $current_class)
-            [void]$modalDialog.SetAttribute('class',$div_class)
+            [void]$dialog_div.SetAttribute('class',$div_class)
         }
         #Check if an scrollable class should be added
         If($CenteredScrollable){
-            $current_class = $modalDialog.GetAttribute('class')
+            $dialog_div = $modal.SelectSingleNode('//div[contains(@class,"modal-dialog")]')
+            $current_class = $dialog_div.class
             $div_class = ('{0} modal-dialog-centered modal-dialog-scrollable' -f $current_class)
-            [void]$modalDialog.SetAttribute('class',$div_class)
+            [void]$dialog_div.SetAttribute('class',$div_class)
         }
     }
     Process{

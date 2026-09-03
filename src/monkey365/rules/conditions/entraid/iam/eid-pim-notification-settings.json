@@ -1,7 +1,7 @@
 {
-	"filter": [
+	filter: [
 		{
-			"conditions": [
+			conditions : [
 				["policyId", "eq", "Notification_Admin_Admin_Eligibility"],
 				["policyId", "eq", "Notification_Requestor_Admin_Eligibility"],
 				["policyId", "eq", "Notification_Approver_Admin_Eligibility"],
@@ -12,7 +12,7 @@
 				["policyId", "eq", "Notification_Requestor_EndUser_Assignment"],
 				["policyId", "eq", "Notification_Approver_EndUser_Assignment"]
 			],
-			"operator": "or"
+			operator : 'or'
 		}			
 	]
 }

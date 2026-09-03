@@ -1,7 +1,7 @@
 {
-	"filter": [
+	filter: [
 		{
-			"conditions": [
+			conditions : [
 				[
 					"conditions.signInRiskLevels",
 					"match",

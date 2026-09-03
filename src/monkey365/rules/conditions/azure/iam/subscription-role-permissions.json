@@ -1,10 +1,10 @@
 {
-	"filter": [
+	filter: [
 		{
-			"conditions": [
+			conditions : [
 				["properties.permissions.actions", "match", "\\*"]
 			],
-			"operator": "or"
+			operator : 'or'
 		}
 	]
 }

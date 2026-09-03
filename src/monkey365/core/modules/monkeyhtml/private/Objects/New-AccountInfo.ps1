@@ -68,7 +68,7 @@ function New-AccountInfo{
                     $span.InnerText = $Script:ExecutionInfo.subscription.displayName
                     #Add Logo
                     $logo = $AccountInfo.SelectSingleNode('//i[@id="Provider"]')
-                    [void]$logo.SetAttribute('class', 'ms-Icon ms-Icon--AzureIcon cloud-monkey-color')
+                    $logo.class = "ms-Icon ms-Icon--AzureIcon cloud-monkey-color"
                     #Set Name
                     $CloudType = $AccountInfo.SelectSingleNode('//span[@id="Provider"]')
                     $CloudType.InnerText = 'Microsoft Azure'
@@ -79,7 +79,7 @@ function New-AccountInfo{
                     $span.InnerText = $Script:ExecutionInfo.tenant.TenantName
                     #Add Logo
                     $logo = $AccountInfo.SelectSingleNode('//i[@id="Provider"]')
-                    [void]$logo.SetAttribute('class', 'ms-Icon ms-Icon--OfficeLogo cloud-monkey-color')
+                    $logo.class = "ms-Icon ms-Icon--OfficeLogo cloud-monkey-color"
                     #Set Name
                     $CloudType = $AccountInfo.SelectSingleNode('//span[@id="Provider"]')
                     $CloudType.InnerText = 'Microsoft 365'
@@ -90,7 +90,7 @@ function New-AccountInfo{
                     $span.InnerText = $Script:ExecutionInfo.tenant.TenantName
                     #Add Logo
                     $logo = $AccountInfo.SelectSingleNode('//i[@id="Provider"]')
-                    [void]$logo.SetAttribute('class', 'ms-Icon ms-Icon--AADLogo cloud-monkey-color')
+                    $logo.class = "ms-Icon ms-Icon--AADLogo cloud-monkey-color"
                     #Set Name
                     $CloudType = $AccountInfo.SelectSingleNode('//span[@id="Provider"]')
                     $CloudType.InnerText = 'Microsoft Entra ID'
@@ -101,7 +101,7 @@ function New-AccountInfo{
                     $span.InnerText = $Script:ExecutionInfo.tenant.TenantName
                     #Add Logo
                     $logo = $AccountInfo.SelectSingleNode('//i[@id="Provider"]')
-                    [void]$logo.SetAttribute('class', 'bi bi-cloud cloud-monkey-color')
+                    $logo.class = "bi bi-cloud cloud-monkey-color"
                     #Set Name
                     $CloudType = $AccountInfo.SelectSingleNode('//span[@id="Provider"]')
                     $CloudType.InnerText = 'Microsoft Azure'

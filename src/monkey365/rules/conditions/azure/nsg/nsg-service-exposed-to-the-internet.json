@@ -1,21 +1,21 @@
 {
-	"operator": "and",
-	"filter": [
+	operator: 'and',
+	filter: [
 		{
-			"conditions": [
+			conditions : [
 				["properties.direction", "eq", "Inbound"],
 				["properties.access", "eq", "Allow"]
 			],
-			"operator": "and"
+			operator : 'and'
 		},
 		{
-			"conditions": [
+			conditions : [
 				[ "properties.SourceAddressPrefix", "eq", "*" ],
 				[ "properties.SourceAddressPrefix", "eq", "Internet" ],
 				[ "properties.SourceAddressPrefixes", "eq", "*" ],
 				[ "properties.SourceAddressPrefixes", "eq", "Internet" ]
 			],
-			"operator": "or"
+			operator : 'or'
 		}
 	]
 }

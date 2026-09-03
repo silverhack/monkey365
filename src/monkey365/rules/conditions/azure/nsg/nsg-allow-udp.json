@@ -1,11 +1,11 @@
 {
-	"filter": [
+	filter: [
 		{
-			"conditions": [
+			conditions : [
 				["properties.protocol", "eq", "*"],
 				["properties.protocol", "eq", "UDP"]
 			],
-			"operator": "or"
+			operator : 'or'
 		}
 	]
 }

@@ -1,7 +1,7 @@
 {
-	"filter": [
+	filter: [
 		{
-			"conditions": [
+			conditions : [
 				["ClaimValue", "eq", "Application.ReadWrite.All"],
 				["ClaimValue", "eq", "Directory.ReadWrite.All"],
 				["ClaimValue", "eq", "Domain.ReadWrite.All"],
@@ -30,7 +30,7 @@
 				["ClaimValue", "eq", "Financials.ReadWrite.All"],
 				["ClaimValue", "eq", "RoleManagement.ReadWrite.Directory"]
 			],
-			"operator": "or"
+			operator : 'or'
 		}
 	]
 }

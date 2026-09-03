@@ -96,8 +96,7 @@ Function New-HtmlTableFromObject{
                 #Import table
                 $newxmlTable = $TemplateObject.ImportNode($xmlTable.get_DocumentElement(), $True)
                 #Set class
-                $baseTableClass = 'table monkey-table-vertical table-borderless no-footer'
-                [void]$newxmlTable.SetAttribute('class',$baseTableClass);
+                [void]$newxmlTable.SetAttribute('class',"table monkey-table-vertical table-borderless no-footer");
                 #Set Table mode
                 [void]$newxmlTable.SetAttribute('type',"asList")
                 #emphasis data
@@ -123,8 +122,8 @@ Function New-HtmlTableFromObject{
                 #Import table
                 $newxmlTable = $TemplateObject.ImportNode($xmlTable.get_DocumentElement(), $True)
                 #Set class
-                $baseTableClass = 'table monkey-table'
-                [void]$newxmlTable.SetAttribute('class',$baseTableClass);
+                #[void]$newxmlTable.SetAttribute('class',"table monkey-table");
+                [void]$newxmlTable.SetAttribute('class',"table monkey-table");
                 #Set Table mode
                 [void]$newxmlTable.SetAttribute('type',"Default")
                 #Set Table style
@@ -295,7 +294,7 @@ Function New-HtmlTableFromObject{
                                     class = 'btn btn-primary me-2';
                                     title = "showModal";
                                     type = 'button';
-                                    "data-bs-target" = $id;
+                                    "data-bs-target" = $Id;
                                     "data-bs-toggle" = "modal";
                                 };
                                 AppendObject = $i;
@@ -304,10 +303,9 @@ Function New-HtmlTableFromObject{
                             $showGotoObjButton = New-HtmlTag @buttonProperties
                             [void]$td.AppendChild($showGotoObjButton);
                         }
-                        $row = $tbody.ChildNodes.Item($idx)
-                        [void]$row.AppendChild($td)
+                        [void]$tbody.ChildNodes.Item($idx).LastChild.AppendChild($td)
                         #Close i tags
-                        $i_tags = $row.SelectNodes('.//i')
+                        $i_tags = $tbody.ChildNodes.Item($idx).SelectNodes("//i")
                         $i_tags | ForEach-Object {$_.InnerText = [string]::Empty}
                     }
                 }
@@ -322,8 +320,9 @@ Function New-HtmlTableFromObject{
             }
             #Set Class name
             If($PSBoundParameters.ContainsKey('ClassName') -and $PSBoundParameters['ClassName']){
+                $oldClass = $newxmlTable.table.class
                 $_Class = [String]::Join(' ',$PSBoundParameters['ClassName']);
-                $tableClass = ("{0} {1}" -f $baseTableClass,$_Class)
+                $tableClass = ("{0} {1}" -f $oldClass,$_Class)
                 [void]$newxmlTable.SetAttribute('class',$tableClass);
             }
             #Add table to main div

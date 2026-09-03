@@ -185,8 +185,8 @@ Function Get-StackedBarChartOption{
         return $newChart
     }
     End{
-        If($null -ne $reader){$reader.Dispose()}
-        If($null -ne $streamWriter){$streamWriter.Dispose()}
-        If($null -ne $ms){$ms.Dispose()}
+        $ms.Dispose()
+        $streamWriter.Dispose()
+        $reader.Dispose()
     }
 }
