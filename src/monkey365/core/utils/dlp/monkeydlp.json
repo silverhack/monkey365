@@ -1,0 +1,849 @@
+[{
+        "Name": "DLP Policies for Government Data",
+        "Tag": "Government_Data",
+        "Sits": [{
+                "Geo": "AUS",
+                "Name": "Australia Tax File Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Passport Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Social Insurance Number"
+            }, {
+                "Geo": "AUS",
+                "Name": "Australia Driver\u0027s License Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Driver\u0027s License Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Social Security Number (INSEE)"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Driver\u0027s License Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Passport Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France National ID Card (CNI)"
+            }, {
+                "Geo": "EUR",
+                "Name": "German Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "German Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain DNI"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain social security number (SSN)"
+            }, {
+                "Geo": "APC",
+                "Name": "Israel National ID"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japan Resident Registration Number"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japan Social Insurance Number (SIN)"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. / U.K. Passport Number"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. Individual Taxpayer Identification Number (ITIN)"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. Social Security Number (SSN)"
+            }, {
+                "Geo": "APC",
+                "Name": "Saudi Arabia National ID"
+            }
+        ]
+    }, {
+        "Name": "DLP Policies for Company Sensitive Information",
+        "Tag": "Company_Sensitive_Information",
+        "Sits": [{
+                "Geo": "AUS",
+                "Name": "Australia Tax File Number"
+            }, {
+                "Geo": "AUS",
+                "Name": "Australia Driver\u0027s License Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Passport Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Social Insurance Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Health Service Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Personal Health Identification Number (PHIN)"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Driver\u0027s License Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Bank Account Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Social Security Number (INSEE)"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Driver\u0027s License Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Passport Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France National ID Card (CNI)"
+            }, {
+                "Geo": "EUR",
+                "Name": "German Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "German Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain DNI"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain Social Security Number (SSN)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain Driver\u0027s License Number"
+            }, {
+                "Geo": "APC",
+                "Name": "Israel National ID"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japan Resident Registration Number"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japan Social Insurance Number (SIN)"
+            }, {
+                "Geo": "GBR",
+                "Name": "U.K. National Health Service Number"
+            }, {
+                "Geo": "INTL",
+                "Name": "SWIFT Code"
+            }, {
+                "Geo": "GBR",
+                "Name": "U.K. National Insurance Number (NINO)"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. / U.K. Passport Number"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. Individual Taxpayer Identification Number (ITIN)"
+            }, {
+                "Geo": "INTL",
+                "Name": "Credit Card Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "EU Debit Card Number"
+            }, {
+                "Geo": "APC",
+                "Name": "Israel Bank Account Number"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. Bank Account Number"
+            }, {
+                "Geo": "NAM",
+                "Name": "ABA Routing Number"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japan Bank Account Number"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. Social Security Number (SSN)"
+            }, {
+                "Geo": "APC",
+                "Name": "Saudi Arabia National ID"
+            }, {
+                "Geo": "INTL",
+                "Name": "Azure DocumentDB Auth Key"
+            }, {
+                "Geo": "INTL",
+                "Name": "Azure IAAS Database Connection String and Azure SQL Connection String"
+            }, {
+                "Geo": "INTL",
+                "Name": "Azure IoT Connection String"
+            }, {
+                "Geo": "INTL",
+                "Name": "Azure Redis Cache Connection String"
+            }, {
+                "Geo": "INTL",
+                "Name": "Azure SAS"
+            }, {
+                "Geo": "INTL",
+                "Name": "Azure Publish Setting Password"
+            }, {
+                "Geo": "INTL",
+                "Name": "Azure Storage Account Key (Generic)"
+            }, {
+                "Geo": "INTL",
+                "Name": "SQL Server Connection String"
+            }, {
+                "Geo": "INTL",
+                "Name": "Azure Service Bus Connection String"
+            }, {
+                "Geo": "INTL",
+                "Name": "IP Address"
+            }
+        ]
+    }, {
+        "Name": "DLP Policies for ePHI",
+        "Tag": "Health_Information",
+        "Sits": [{
+                "Geo": "INTL",
+                "Name": "International Classification of Diseases (ICD-9-CM)"
+            }, {
+                "Geo": "INTL",
+                "Name": "International Classification of Diseases (ICD-10-CM)"
+            }, {
+                "Geo": "AUS",
+                "Name": "New Zealand Ministry of Health Number"
+            }, {
+                "Geo": "NAM",
+                "Name": "Drug Enforcement Agency (DEA) Number"
+            }, {
+                "Geo": "INTL",
+                "Name": "Medicare Beneficiary Identifier (MBI) card"
+            }, {
+                "Geo": "AUS",
+                "Name": "Australia Tax File Number"
+            }, {
+                "Geo": "AUS",
+                "Name": "Australia Medical Account Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Passport Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Social Insurance Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Health Service Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Personal Health Identification Number (PHIN)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain Social Security Number (SSN)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain Tax Identification Number"
+            }
+        ]
+    }, {
+        "Name": "DLP Policies for Personally Identifiable Information",
+        "Tag": "PII",
+        "Sits": [{
+                "Geo": "LAM",
+                "Name": "Argentina National Identity (DNI) Number"
+            }, {
+                "Geo": "AUS",
+                "Name": "Australia Tax File Number"
+            }, {
+                "Geo": "AUS",
+                "Name": "Australia Passport Number"
+            }, {
+                "Geo": "AUS",
+                "Name": "Australia Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Belgium National Number"
+            }, {
+                "Geo": "LAM",
+                "Name": "Brazil National ID Card (RG)"
+            }, {
+                "Geo": "LAM",
+                "Name": "Brazil CPF Number"
+            }, {
+                "Geo": "LAM",
+                "Name": "Brazil Legal Entity Number (CNPJ)"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Passport Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Social Insurance Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Health Service Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Personal Health Identification Number (PHIN)"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Driver\u0027s License Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Bank Account Number"
+            }, {
+                "Geo": null,
+                "Name": "â€¯ \n              "
+            }, {
+                "Geo": "LAM",
+                "Name": "Chile Identity Card Number"
+            }, {
+                "Geo": "APC",
+                "Name": "China Resident Identity Card (PRC) Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Croatia Identity Card Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Croatia Personal Identification (OIB) Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Czech Personal Identity Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Denmark Personal Identification Number"
+            }, {
+                "Geo": null,
+                "Name": "â€¯ \n              "
+            }, {
+                "Geo": "EUR",
+                "Name": "EU Social Security Number (SSN) or Equivalent ID"
+            }, {
+                "Geo": "EUR",
+                "Name": "EU Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "EU National Identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "EU Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "EU Tax Identification Number (TIN)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Finland National ID"
+            }, {
+                "Geo": "EUR",
+                "Name": "Finland Passport Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Social Security Number (INSEE)"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Driver\u0027s License Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Passport Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France National ID Card (CNI)"
+            }, {
+                "Geo": "EUR",
+                "Name": "German Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Germany Identity Card Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "German Passport Number"
+            }, {
+                "Geo": null,
+                "Name": "         â€¯ \n              "
+            }, {
+                "Geo": "EUR",
+                "Name": "Greece National ID Card"
+            }, {
+                "Geo": "APC",
+                "Name": "Hong Kong Identity Card (HKID) Number"
+            }, {
+                "Geo": "IND",
+                "Name": "India Unique Identification (Aadhaar) Number"
+            }, {
+                "Geo": "IND",
+                "Name": "India Permanent Account Number (PAN)"
+            }, {
+                "Geo": "APC",
+                "Name": "Indonesia Identity Card (KTP) Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Ireland Personal Public Service (PPS) Number"
+            }, {
+                "Geo": "APC",
+                "Name": "Israel Bank Account Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Italy Driver\u0027s License Number"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japan Driver\u0027s License Number"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japan Bank Account Number"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japanese Residence Card Number"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japan Passport Number"
+            }, {
+                "Geo": "APC",
+                "Name": "Malaysia Identity Card Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Netherlands Citizen\u0027s Service (BSN) Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Norway Identity Number"
+            }, {
+                "Geo": "APC",
+                "Name": "Philippines Unified Multi-Purpose ID Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Poland Passport"
+            }, {
+                "Geo": "EUR",
+                "Name": "Poland National ID (PESEL)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Poland Identity Card"
+            }, {
+                "Geo": "EUR",
+                "Name": "Portugal Citizen Card Number"
+            }, {
+                "Geo": "APC",
+                "Name": "Singapore National Registration Identity Card (NRIC) Number"
+            }, {
+                "Geo": "ZAF",
+                "Name": "South Africa Identification Number"
+            }, {
+                "Geo": "KOR",
+                "Name": "South Korea Resident Registration Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain Social Security Number (SSN)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Sweden Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Sweden National ID"
+            }, {
+                "Geo": "APC",
+                "Name": "Taiwan National ID"
+            }, {
+                "Geo": "APC",
+                "Name": "Taiwan Resident Certificate (ARC/TARC)"
+            }, {
+                "Geo": "APC",
+                "Name": "Taiwan Passport Number"
+            }, {
+                "Geo": "APC",
+                "Name": "Thai Population Identification Code"
+            }, {
+                "Geo": "APC",
+                "Name": "Turkish National Identification number"
+            }, {
+                "Geo": "GBR",
+                "Name": "U.K. Driver\u0027s License Number"
+            }, {
+                "Geo": "GBR",
+                "Name": "U.K. Electoral Roll Number"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. Bank Account Number"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. Driver\u0027s License Number"
+            }, {
+                "Geo": "APC",
+                "Name": "Israel National ID"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japan Resident Registration Number"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japan Social Insurance Number (SIN)"
+            }, {
+                "Geo": "GBR",
+                "Name": "U.K. National Health Service Number"
+            }, {
+                "Geo": "INTL",
+                "Name": "SWIFT Code"
+            }, {
+                "Geo": "GBR",
+                "Name": "U.K. National Insurance Number (NINO)"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. / U.K. Passport Number"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. Individual Taxpayer Identification Number (ITIN)"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. Social Security Number (SSN)"
+            }, {
+                "Geo": "APC",
+                "Name": "Saudi Arabia National ID"
+            }, {
+                "Geo": "AUS",
+                "Name": "Australian Company Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Austria Value Added Tax (VAT) Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Ukraine Passport Number (Domestic)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Ukraine Passport Number (International)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Belgium Value Added Tax Number"
+            }, {
+                "Geo": "AUS",
+                "Name": "New Zealand Driver License Number"
+            }, {
+                "Geo": "AUS",
+                "Name": "New Zealand Social Welfare Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Austria Tax Identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Luxemburg National Identification Number (Non-natural persons)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Netherlands Tax Identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Slovenia Tax Identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Italy Fiscal Code"
+            }, {
+                "Geo": "EUR",
+                "Name": "Lithuania Personal Code"
+            }, {
+                "Geo": "EUR",
+                "Name": "Malta Identity Card Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Slovenia Unique Master Citizen Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Sweden Tax Identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Latvia Personal Code"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain DNI"
+            }, {
+                "Geo": "EUR",
+                "Name": "Finland European Health Insurance Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Health Insurance Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Italy Value Added Tax Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Hungarian Value Added Tax Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Greek Tax identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Hungary Personal Identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Hungary Tax identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Malta Tax ID Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain Tax Identification Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Value Added Tax Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Russian Passport Number (Domestic)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Russian Passport Number (International)"
+            }, {
+                "Geo": "AUS",
+                "Name": "Australian Business Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Polish REGON Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Swiss Social Security Number AHV"
+            }, {
+                "Geo": "EUR",
+                "Name": "Germany Value Added Tax Number"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japanese My Number Corporate"
+            }, {
+                "Geo": "EUR",
+                "Name": "Netherlands Value Added Tax Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Luxemburg National Identification Number (Natural persons)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Poland Tax Identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Austria Identity Card"
+            }, {
+                "Geo": "EUR",
+                "Name": "Bulgaria Uniform Civil Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Cyprus Identity Card"
+            }, {
+                "Geo": "EUR",
+                "Name": "Cyprus Tax Identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Estonia Personal Identification Code"
+            }, {
+                "Geo": "GBR",
+                "Name": "U.K. Unique Taxpayer Reference Number"
+            }, {
+                "Geo": "FRA",
+                "Name": "France Tax Identification Number (numÃ©ro SPI.)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Germany Tax Identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Portugal Tax Identification Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Romania Personal Numerical Code (CNP)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Slovakia Personal Number"
+            }, {
+                "Geo": "LAM",
+                "Name": "Argentina Unique Tax Identification Key (CUIT/CUIL)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Austria Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Austria Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Austria Social Security Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Belgium Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Belgium Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Bulgaria Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Bulgaria Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Croatia Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Croatia Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Cyprus Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Cyprus Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Czech Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Czech Republic Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Denmark Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Denmark Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Estonia Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Estonia Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Finland Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Greece Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Greece Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Greece Social Security Number (AMKA)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Hungarian Social Security Number (TAJ)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Hungary Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Hungary Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Ireland Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Ireland Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Italy Passport Number"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japanese My Number Personal"
+            }, {
+                "Geo": "EUR",
+                "Name": "Latvia Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Latvia Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Lithuania Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Lithuania Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Luxemburg Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Luxemburg Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Malta Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Malta Passport Number"
+            }, {
+                "Geo": "NAM",
+                "Name": "Mexico Unique Population Registry Code (CURP)"
+            }, {
+                "Geo": "EUR",
+                "Name": "Netherlands Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Netherlands Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Poland Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Portugal Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Portugal Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Romania Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Romania Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Slovakia Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Slovakia Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Slovenia Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Slovenia Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain Driver\u0027s License Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Spain Passport Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "Sweden Driver\u0027s License Number"
+            }
+        ]
+    }, {
+        "Name": "DLP Policies for Sensitive Financial Information",
+        "Tag": "Sensitive_Financial_Information",
+        "Sits": [{
+                "Geo": "INTL",
+                "Name": "SWIFT Code"
+            }, {
+                "Geo": "AUS",
+                "Name": "Australia Tax File Number"
+            }, {
+                "Geo": "AUS",
+                "Name": "Australia Bank Account Number"
+            }, {
+                "Geo": "INTL",
+                "Name": "Credit Card Number"
+            }, {
+                "Geo": "CAN",
+                "Name": "Canada Bank Account Number"
+            }, {
+                "Geo": "EUR",
+                "Name": "EU Debit Card Number"
+            }, {
+                "Geo": "APC",
+                "Name": "Israel Bank Account Number"
+            }, {
+                "Geo": "NAM",
+                "Name": "U.S. Bank Account Number"
+            }, {
+                "Geo": "JPN",
+                "Name": "Japan Bank Account Number"
+            }, {
+                "Geo": "AUS",
+                "Name": "New Zealand bank account number"
+            }, {
+                "Geo": "AUS",
+                "Name": "New Zealand Inland Revenue number"
+            }, {
+                "Geo": "INTL",
+                "Name": "International Banking Account Number (IBAN)"
+            }
+        ]
+    }
+]

@@ -1,0 +1,10 @@
+{
+	"filter": [
+		{
+			"conditions": [
+				["properties.permissions.actions", "match", "\\*"]
+			],
+			"operator": "or"
+		}
+	]
+}

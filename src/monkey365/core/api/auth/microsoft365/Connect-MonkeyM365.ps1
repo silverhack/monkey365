@@ -1,0 +1,618 @@
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specIfic language governing permissions and
+# limitations under the License.
+
+Function Connect-MonkeyM365{
+    <#
+        .SYNOPSIS
+        Connect to Microsoft 365 services
+
+        .DESCRIPTION
+        Connect to Microsoft 365 services
+
+        .INPUTS
+
+        .OUTPUTS
+
+        .EXAMPLE
+
+        .NOTES
+	        Author		: Juan Garrido
+            Twitter		: @tr1ana
+            File Name	: Connect-MonkeyM365
+            Version     : 1.0
+
+        .LINK
+            https://github.com/silverhack/monkey365
+    #>
+    [CmdletBinding()]
+    Param (
+        [parameter(Mandatory=$false, HelpMessage="Used when tokens are imported from init param")]
+        [Switch]$Connected
+    )
+    #First we will try to connect to generic Microsoft 365 services
+    $msg = @{
+        MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Right Management Services")
+        callStack = (Get-PSCallStack | Select-Object -First 1);
+        logLevel = 'info';
+        InformationAction = $O365Object.InformationAction;
+        Tags = @('TokenRequestInfoMessage');
+    }
+    Write-Information @msg
+    #Connect to Microsoft Rights Management Services
+    $p = @{
+        Resource = $O365Object.Environment.AADRM;
+        AzureService = "AzurePowershell";
+        InformationAction = $O365Object.InformationAction;
+        Verbose = $O365Object.verbose;
+        Debug = $O365Object.debug;
+    }
+    $O365Object.auth_tokens.AADRM = Connect-MonkeyGenericApplication @p
+    #$O365Object.auth_tokens.AADRM = Connect-MonkeyAADRM
+    If($null -ne $O365Object.auth_tokens.AADRM){
+        #Get Service locator url
+        $service_locator = Get-AADRMServiceLocatorUrl
+        #set internal object
+        If($O365Object.Environment.ContainsKey('aadrm_service_locator')){
+            $O365Object.Environment.aadrm_service_locator = $service_locator;
+        }
+        Else{
+            $O365Object.Environment.Add('aadrm_service_locator',$service_locator)
+        }
+        $O365Object.onlineServices.Item("AADRM") = $true
+    }
+    Else{
+        $msg = @{
+            MessageData = ($message.NotConnectedTo -f "Microsoft Right Management Services");
+            callStack = (Get-PSCallStack | Select-Object -First 1);
+            logLevel = 'warning';
+            InformationAction = $O365Object.InformationAction;
+            Tags = @('Monkey365FormsError');
+        }
+        Write-Warning @msg
+    }
+    #Check if scope for Microsoft Forms is present
+    $msg = @{
+        MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Forms")
+        callStack = (Get-PSCallStack | Select-Object -First 1);
+        logLevel = 'info';
+        InformationAction = $O365Object.InformationAction;
+        Tags = @('TokenRequestInfoMessage');
+    }
+    Write-Information @msg
+    #Connect to Microsoft Forms
+    If($null -ne $O365Object.auth_tokens.MSGraph){
+        #Get scopes
+        $scopes = Read-JWTtoken -token $O365Object.auth_tokens.MSGraph.AccessToken | Select-Object -ExpandProperty scp -ErrorAction Ignore
+        If($scopes -match 'OrgSettings-Forms\.Read(?:Write)?\.All'){
+            $O365Object.onlineServices.Item("Forms") = $true
+        }
+        Else{
+            $msg = @{
+                MessageData = ($message.NotConnectedTo -f "Microsoft Forms. Scope OrgSettings-Forms.Read.All was not detected");
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'warning';
+                InformationAction = $O365Object.InformationAction;
+                Tags = @('Monkey365FormsError');
+            }
+            Write-Warning @msg
+        }
+    }
+    ForEach ($service in $O365Object.initParams.Collect){
+        switch ($service.ToLower()) {
+            #Connect to Exchange Online
+            'exchangeonline'{
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Exchange Online")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
+                If(!$Connected.IsPresent){
+                    $O365Object.auth_tokens.ExchangeOnline = Get-TokenForEXO
+                }
+                If($null -ne $O365Object.auth_tokens.ExchangeOnline){
+                    #Get ExchangeOnline module file
+                    $p = @{
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                    }
+                    $moduleFile = Get-PSExoModuleFile @p
+                    If($moduleFile){
+                        $O365Object.onlineServices.Item($service) = $true
+                        $msg = @{
+                            MessageData = ($message.ConnectedTo -f "Exchange Online");
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'info';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('TokenReceivedInfoMessage');
+                        }
+                        Write-Information @msg
+                    }
+                    Else{
+                        $msg = @{
+                            MessageData = ($message.NotConnectedTo -f $service);
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365ExchangeOnlineError');
+                        }
+                        Write-Warning @msg
+                    }
+                }
+                Else{
+                    $msg = @{
+                        MessageData = ($message.NotConnectedTo -f $service);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('Monkey365ExOError');
+                    }
+                    Write-Warning @msg;
+                }
+            }
+            #Connect to Microsoft Purview
+            'purview'{
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Purview")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
+                #Add resource for ComplianceCenter
+                If(!$Connected.IsPresent){
+                    $O365Object.auth_tokens.ComplianceCenter = Get-TokenForEXO
+                }
+                #Get Backend URI
+                If($null -ne $O365Object.auth_tokens.ComplianceCenter){
+                    #Update TenantId in Compliance Center Auth token
+                    $tid = Read-JWTtoken -token $O365Object.auth_tokens.ComplianceCenter.AccessToken | Select-Object -ExpandProperty tid -ErrorAction Ignore
+                    $O365Object.auth_tokens.ComplianceCenter | Add-Member -type NoteProperty -name TenantId -value $tid -Force
+                    $O365Object.SecCompBackendUri = Get-MonkeySecCompBackendUri
+                    If($null -ne $O365Object.SecCompBackendUri){
+                        #Get ExchangeOnline module file
+                        $p = @{
+                            Purview = $true;
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                        }
+                        $moduleFile = Get-PSExoModuleFile @p
+                        If($moduleFile){
+                            $O365Object.onlineServices.Item($service) = $true
+                            $msg = @{
+                                MessageData = ($message.ConnectedTo -f "Microsoft Purview");
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'info';
+                                InformationAction = $O365Object.InformationAction;
+                                Tags = @('TokenReceivedInfoMessage');
+                            }
+                            Write-Information @msg
+                        }
+                        Else{
+                            $msg = @{
+                                MessageData = ($message.NotConnectedTo -f $service);
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'warning';
+                                InformationAction = $O365Object.InformationAction;
+                                Tags = @('Monkey365PurviewError');
+                            }
+                            Write-Warning @msg
+                        }
+                    }
+                    Else{
+                        $msg = @{
+                            MessageData = "Unable to get Purview backend Uri";
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365PurviewError');
+                        }
+                        Write-Warning @msg;
+                        $msg = @{
+                            MessageData = ($message.NotConnectedTo -f $service);
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365PurviewError');
+                        }
+                        Write-Warning @msg;
+                    }
+                }
+                Else{
+                    $msg = @{
+                        MessageData = ($message.NotConnectedTo -f $service);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('Monkey365PurviewError');
+                    }
+                    Write-Warning @msg;
+                }
+            }
+            #Connect to SharePoint Online
+            'sharepointonline'{
+                #Set null
+                $initialDomain = $null;
+                #Get config
+                [bool]$scanSites = $false
+                [void][System.Boolean]::TryParse($O365Object.internal_config.o365.SharePointOnline.sitePermissionsOptions.scanAllSites.ToString(),[ref]$scanSites)
+                If($O365Object.AuthType.ToLower() -eq 'client_credentials'){
+                    $msg = @{
+                        MessageData = ($message.SPSConfidentialAppErrorMessage);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('Monkey365ConfidentialAppSPOError');
+                    }
+                    Write-Warning @msg
+                    #Set sharepoint admin flag
+                    $O365Object.isSharePointAdministrator = $false
+                    $O365Object.onlineServices.Item($service) = $false
+                    $msg = @{
+                        MessageData = ($message.NotConnectedTo -f $service);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('Monkey365SharePointError');
+                    }
+                    Write-Warning @msg
+                    continue;
+                }
+                #Get initial domain
+                If($O365Object.initParams.ContainsKey('SpoSites') -and @($O365Object.initParams.SpoSites).Count -gt 0){
+                    [uri]$dnsName = $O365Object.initParams.SpoSites | Select-Object -First 1
+                    $initialDomain = ("{0}" -f $dnsName.DnsSafeHost)
+                }
+                ElseIf($null -ne $O365Object.Tenant.CompanyInfo){
+                    $initialDomain = $O365Object.Tenant.CompanyInfo.verIfiedDomains.Where({$_.capabilities -like "*OfficeCommunicationsOnline*" -and $_.isDefault -eq $true}) | Select-Object -ExpandProperty name
+                }
+                ElseIf($O365Object.isValidTenantGuid -eq $false){
+                    $initialDomain = $O365Object.TenantId
+                }
+                If($null -eq $initialDomain){
+                    $msg = @{
+                        MessageData = ($message.NotConnectedTo -f $service);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('Monkey365SharePointError');
+                    }
+                    Write-Warning @msg
+                    $msg = @{
+                        MessageData = "Unable to connect SharePoint online. No valid host was found";
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('Monkey365SharePointError');
+                    }
+                    Write-Warning @msg
+                    continue
+                }
+                #Set params
+                $p = @{
+                    Endpoint = $initialDomain;
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                #Connect to SharePoint Online admin site
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "SharePoint Online admin site")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
+                If(!$Connected.IsPresent){
+                    $O365Object.auth_tokens.SharePointAdminOnline = Connect-MonkeySPO @p -Admin
+                }
+                #Always try to connect to root site
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "SharePoint Online")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
+                If(!$Connected.IsPresent){
+                    $O365Object.auth_tokens.SharePointOnline = Connect-MonkeySPO @p -RootSite
+                }
+                If($null -ne $O365Object.auth_tokens.SharePointAdminOnline){
+                    #Check If user is SharePoint administrator
+                    $p = @{
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                    }
+                    $O365Object.isSharePointAdministrator = Test-IsUserSharepointAdministrator @p
+                    If($O365Object.isSharePointAdministrator -eq $false){
+                        $msg = @{
+                            MessageData = ($message.NotConnectedTo -f "SharePoint Online admin site");
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365SharePointError');
+                        }
+                        Write-Warning @msg
+                    }
+                    #Check If SpoSites
+                    If(($O365Object.initParams.ContainsKey('SpoSites') -and @($O365Object.initParams.SpoSites).Count -gt 0) -and $null -ne $O365Object.auth_tokens.SharePointOnline){
+                        $p = @{
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                        }
+                        #Execute command
+                        $O365Object.spoSites = ($O365Object.initParams.SpoSites.GetEnumerator() | ForEach-Object {Get-MonkeyCSOMSite @p -Endpoint $_}) | Sort-Object -Unique -Property Url
+                    }
+                    ElseIf($scanSites -and $null -ne $O365Object.auth_tokens.SharePointOnline){
+                        $p = @{
+                            All = $scanSites;
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                        }
+                        #Get Webs for user
+                        $O365Object.spoSites = Get-MonkeyCSOMSite @p
+                    }
+                    Else{
+                        $p = @{
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                        }
+                        #Get Webs for user
+                        $O365Object.spoSites = Get-MonkeyCSOMSite @p
+                    }
+                    #Check If connected to SharePoint
+                    If($O365Object.isSharePointAdministrator -or $null -ne $O365Object.spoSites){
+                        $O365Object.onlineServices.Item($service) = $true
+                        $msg = @{
+                            MessageData = ($message.ConnectedTo -f "SharePoint Online admin site");
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'info';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('TokenReceivedInfoMessage');
+                        }
+                        Write-Information @msg
+                    }
+                }
+            }
+            #Connect to Microsoft Teams
+            'microsoftteams'{
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Teams")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
+                $p = @{
+                    Resource = (Get-WellKnownAzureService -AzureService TeamsAdminApi);
+                    AzureService = "AzurePowershell";
+                    InformationAction = $O365Object.InformationAction;
+                    Verbose = $O365Object.verbose;
+                    Debug = $O365Object.debug;
+                }
+                If(!$Connected.IsPresent){
+                    $O365Object.auth_tokens.Teams = Connect-MonkeyGenericApplication @p
+                }
+                #$O365Object.auth_tokens.Teams = Connect-MonkeyTeamsForOffice
+                If($null -ne $O365Object.auth_tokens.Teams){
+                    #Get Backend URI
+                    $p = @{
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                    }
+                    $backend = Get-MonkeyTeamsServiceDiscovery @p
+                    If($backend -and $null -ne $backend.Psobject.Properties.Item('Endpoints')){
+                        $O365Object.Environment.Teams = ("https://{0}" -f $backend.Endpoints.ConfigApiEndpoint)
+                    }
+                    #Test If connection to Teams is allowed
+                    $p = @{
+                        InformationAction = $O365Object.InformationAction;
+                        Verbose = $O365Object.verbose;
+                        Debug = $O365Object.debug;
+                    }
+                    $isConnected = Test-TeamsConnection @p
+                    If($isConnected){
+                        $O365Object.onlineServices.Item($service) = $true
+                    }
+                    Else{
+                        $msg = @{
+                            MessageData = ($message.NotConnectedTo -f $service);
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365TeamsError');
+                        }
+                        Write-Warning @msg
+                    }
+                }
+                Else{
+                    $msg = @{
+                        MessageData = ($message.NotConnectedTo -f $service);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('Monkey365TeamsError');
+                    }
+                    Write-Warning @msg;
+                }
+            }
+            #Connect to Fabric
+            'microsoftfabric'{
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft Fabric")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
+                #Connect to Fabric
+                If($O365Object.isConfidentialApp){
+                    If($O365Object.initParams.GetEnumerator().Where({$_.Key -eq 'PowerBIClientId'}).Count -gt 0){
+                        $application = $O365Object.msal_confidential_applications.Where({$_.AppConfig.ClientId -eq $O365Object.initParams.Item('PowerBIClientId')}) | Select-Object -First 1 -ErrorAction Ignore
+                        If($application){
+                            $p = @{
+                                Resource = $O365Object.Environment.Fabric;
+                                Application = $application;
+                                InformationAction = $O365Object.InformationAction;
+                                Verbose = $O365Object.verbose;
+                                Debug = $O365Object.debug;
+                            }
+                            #Connect to Microsoft Fabric
+                            $O365Object.auth_tokens.Fabric = Connect-MonkeyGenericApplication @p
+                        }
+                        Else{
+                            $msg = @{
+                                MessageData = "Unable to connect to Microsoft Fabric. Confidential application was not found";
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'warning';
+                                InformationAction = $O365Object.InformationAction;
+                                Tags = @('Monkey365FabricError');
+                            }
+                            Write-Warning @msg
+                            continue
+                        }
+                    }
+                    Else{
+                        $msg = @{
+                            MessageData = "Unable to connect to Microsoft Fabric. Confidential application was not found";
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365FabricError');
+                        }
+                        Write-Warning @msg
+                        continue
+                    }
+                }
+                Else{
+                    IF(!$Connected.IsPresent){
+                        $p = @{
+                            Resource = $O365Object.Environment.Fabric;
+                            AzureService = "AzurePowershell";
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                        }
+                        #Connect to Microsoft Fabric
+                        $O365Object.auth_tokens.Fabric = Connect-MonkeyGenericApplication @p
+                    }
+                }
+                If($null -ne $O365Object.auth_tokens.Fabric){
+                    $O365Object.onlineServices.Item('PowerBI') = $true
+                }
+                Else{
+                    $msg = @{
+                        MessageData = ($message.NotConnectedTo -f $service);
+                        callStack = (Get-PSCallStack | Select-Object -First 1);
+                        logLevel = 'warning';
+                        InformationAction = $O365Object.InformationAction;
+                        Tags = @('Monkey365FabricError');
+                    }
+                    Write-Warning @msg
+                }
+                #Connect to PowerBI
+                $msg = @{
+                    MessageData = ($message.TokenRequestInfoMessage -f "Microsoft PowerBI")
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'info';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('TokenRequestInfoMessage');
+                }
+                Write-Information @msg
+                If($O365Object.isConfidentialApp){
+                    If($O365Object.initParams.GetEnumerator().Where({$_.Key -eq 'PowerBIClientId'}).Count -gt 0){
+                        $application = $O365Object.msal_confidential_applications.Where({$_.AppConfig.ClientId -eq $O365Object.initParams.Item('PowerBIClientId')}) | Select-Object -First 1 -ErrorAction Ignore
+                        If($application){
+                            $p = @{
+                                Resource = $O365Object.Environment.PowerBI;
+                                Application = $application;
+                                InformationAction = $O365Object.InformationAction;
+                                Verbose = $O365Object.verbose;
+                                Debug = $O365Object.debug;
+                            }
+                            #Connect to Microsoft Fabric
+                            $O365Object.auth_tokens.PowerBI = Connect-MonkeyGenericApplication @p
+                        }
+                        Else{
+                            $msg = @{
+                                MessageData = "Unable to connect to Microsoft PowerBI. Confidential application was not found";
+                                callStack = (Get-PSCallStack | Select-Object -First 1);
+                                logLevel = 'warning';
+                                InformationAction = $O365Object.InformationAction;
+                                Tags = @('Monkey365FabricError');
+                            }
+                            Write-Warning @msg
+                            continue
+                        }
+                    }
+                    Else{
+                        $msg = @{
+                            MessageData = "Unable to connect to Microsoft PowerBI. Confidential application was not found";
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365FabricError');
+                        }
+                        Write-Warning @msg
+                        continue
+                    }
+                }
+                Else{
+                    If(!$Connected.IsPresent){
+                        #Connect to PowerBI
+                        $p = @{
+                            Resource = $O365Object.Environment.PowerBI;
+                            AzureService = "AzurePowershell";
+                            InformationAction = $O365Object.InformationAction;
+                            Verbose = $O365Object.verbose;
+                            Debug = $O365Object.debug;
+                        }
+                        $O365Object.auth_tokens.PowerBI = Connect-MonkeyGenericApplication @p
+                    }
+                }
+                If($null -ne $O365Object.auth_tokens.PowerBI){
+                    #Get Backend URI
+                    $O365Object.PowerBIBackendUri = Get-MonkeyPowerBIBackend
+                    If($null -ne $O365Object.PowerBIBackendUri){
+                        $O365Object.onlineServices.Item($service) = $true
+                    }
+                    Else{
+                        $msg = @{
+                            MessageData = ($message.NotConnectedTo -f $service);
+                            callStack = (Get-PSCallStack | Select-Object -First 1);
+                            logLevel = 'warning';
+                            InformationAction = $O365Object.InformationAction;
+                            Tags = @('Monkey365FabricError');
+                        }
+                        Write-Warning @msg
+                    }
+                }
+            }
+        }
+    }
+}
