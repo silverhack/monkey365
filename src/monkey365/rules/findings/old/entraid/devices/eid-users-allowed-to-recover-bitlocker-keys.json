@@ -1,129 +1,120 @@
 {
-    "provider": "EntraID",
-    "serviceType": "Devices",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure users are restricted from recovering BitLocker keys",
-    "description": "This setting determines if users can self-service recover their BitLocker key(s). 'Yes' restricts non-admin users from being able to see the BitLocker key(s) for their owned devices if there are any. 'No' allows all users to recover their BitLocker key(s).\r\nThe recommended state is `Yes`.",
-	"rationale": "Restricting user access to the self-service BitLocker recovery key portal helps mitigate the risk of recovery key exposure in the event of a compromised user account. If an attacker gains access to both the user’s credentials and the physical device, they could potentially retrieve the recovery key and decrypt sensitive data. The recovery key itself is also considered sensitive information.",
-    "impact": "Restricting this setting will increase administrative overhead and may introduce friction between end users and the helpdesk, as users will no longer be able to retrieve BitLocker recovery keys through the self-service portal. This portal was originally designed to streamline recovery and reduce support burden. During the CrowdStrike Falcon Sensor outage in July 2024, many endpoints entered recovery mode, and delays in accessing recovery keys contributed to prolonged downtime. Limiting self-service access could exacerbate such delays in future incidents, especially in large or distributed environments.",
-    "remediation": {
-        "text": "Remediate from Azure Portal
-			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
-			2. Click to expand Entra ID > Devices select Device settings.
-			3. Set `Restrict users from recovering the BitLocker key(s) for their owned devices` to `Yes`.
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/identity/devices/manage-device-identities#configure-device-settings",
-        "https://learn.microsoft.com/en-us/graph/api/authorizationpolicy-get?view=graph-rest-1.0&tabs=http",
-		"https://techcommunity.microsoft.com/blog/intunecustomersuccess/user-self-service-bitlocker-recovery-key-access-with-intune-company-portal-websi/4150458",
-		"https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-process#self-recovery"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "7.0.0",
-            "reference": "5.1.4.6",
-            "profile": [
-                "E3 Level 2",
-				"E5 Level 2"
+  "provider": "EntraID",
+  "serviceType": "Devices",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure users are restricted from recovering BitLocker keys",
+  "description": "This setting determines if users can self-service recover their BitLocker key(s). \u0027Yes\u0027 restricts non-admin users from being able to see the BitLocker key(s) for their owned devices if there are any. \u0027No\u0027 allows all users to recover their BitLocker key(s).\r\nThe recommended state is \u0060Yes\u0060.",
+  "rationale": "Restricting user access to the self-service BitLocker recovery key portal helps mitigate the risk of recovery key exposure in the event of a compromised user account. If an attacker gains access to both the user\u2019s credentials and the physical device, they could potentially retrieve the recovery key and decrypt sensitive data. The recovery key itself is also considered sensitive information.",
+  "impact": "Restricting this setting will increase administrative overhead and may introduce friction between end users and the helpdesk, as users will no longer be able to retrieve BitLocker recovery keys through the self-service portal. This portal was originally designed to streamline recovery and reduce support burden. During the CrowdStrike Falcon Sensor outage in July 2024, many endpoints entered recovery mode, and delays in accessing recovery keys contributed to prolonged downtime. Limiting self-service access could exacerbate such delays in future incidents, especially in large or distributed environments.",
+  "remediation": {
+    "text": "Remediate from Azure Portal\n\t\t\t1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\n\t\t\t2. Click to expand Entra ID \u003E Devices select Device settings.\n\t\t\t3. Set \u0060Restrict users from recovering the BitLocker key(s) for their owned devices\u0060 to \u0060Yes\u0060.\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/devices/manage-device-identities#configure-device-settings",
+    "https://learn.microsoft.com/en-us/graph/api/authorizationpolicy-get?view=graph-rest-1.0\u0026tabs=http",
+    "https://techcommunity.microsoft.com/blog/intunecustomersuccess/user-self-service-bitlocker-recovery-key-access-with-intune-company-portal-websi/4150458",
+    "https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-process#self-recovery"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "7.0.0",
+      "reference": "5.1.4.6",
+      "profile": [
+        "E3 Level 2",
+        "E5 Level 2"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "aad_authorization_policy",
+    "subPath": null,
+    "selectCondition": [],
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "tenantAuthPolicy.defaultUserRolePermissions.allowedToReadBitlockerKeysForOwnedDevice",
+                "ne",
+                "False"
+              ]
             ]
-        }
+          }
+        ]
+      }
     ],
-    "level": "medium",
-    "tags": [],
-    "rule": {
-        "path": "aad_authorization_policy",
-        "subPath": null,
-        "selectCondition": [],
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "tenantAuthPolicy.defaultUserRolePermissions.allowedToReadBitlockerKeysForOwnedDevice",
-                                "ne",
-                                "False"
-                            ]
-                        ]
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-					"tenantAuthPolicy.displayName": "Display Name",
-                    "tenantAuthPolicy.description": "Description",
-					"tenantAuthPolicy.defaultUserRolePermissions.allowedToReadBitlockerKeysForOwnedDevice": "Allow To Recover Bitlocker Keys"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-				{
-					"itemName": "Allow To Recover Bitlocker Keys",
-					"itemValue": "enabled",
-					"className": "badge badge-danger badge-xl"
-				}
-			],
-            "emphasis": [
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "tenantAuthPolicy.displayName": "Display Name",
+          "tenantAuthPolicy.description": "Description",
+          "tenantAuthPolicy.defaultUserRolePermissions.allowedToReadBitlockerKeysForOwnedDevice": "Allow To Recover Bitlocker Keys"
         },
-        "text": {
-            "data": {
-                "properties": {
-					"tenantAuthPolicy.displayName": "Display Name",
-                    "tenantAuthPolicy.description": "Description",
-					"tenantAuthPolicy.defaultUserRolePermissions.allowedToReadBitlockerKeysForOwnedDevice": "Allow To Recover Bitlocker Keys"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [],
-                "message": "Ensure users are restricted from recovering BitLocker keys",
-                "defaultMessage": "Ensure users are restricted from recovering BitLocker keys"
-            },
-            "properties": {
-                "resourceName": "displayName",
-                "resourceId": "id",
-                "resourceType": "EntraAuthorizationPolicy"
-            },
-            "onlyStatus": false
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [
+        {
+          "itemName": "Allow To Recover Bitlocker Keys",
+          "itemValue": "enabled",
+          "className": "badge badge-danger badge-xl"
         }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "eid_users_allowed_to_recover_bitlocker_keys",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"id"
-    ],
-    "id": "entraid_tenant_003"
+    "text": {
+      "data": {
+        "properties": {
+          "tenantAuthPolicy.displayName": "Display Name",
+          "tenantAuthPolicy.description": "Description",
+          "tenantAuthPolicy.defaultUserRolePermissions.allowedToReadBitlockerKeysForOwnedDevice": "Allow To Recover Bitlocker Keys"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure users are restricted from recovering BitLocker keys",
+        "defaultMessage": "Ensure users are restricted from recovering BitLocker keys"
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "EntraAuthorizationPolicy"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_users_allowed_to_recover_bitlocker_keys",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "entraid_tenant_003"
 }

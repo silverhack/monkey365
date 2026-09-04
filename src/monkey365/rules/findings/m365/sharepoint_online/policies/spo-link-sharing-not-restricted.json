@@ -1,131 +1,113 @@
 {
-    "args": [
-        
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "SharePoint Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure link sharing is restricted in SharePoint and OneDrive",
+  "description": "\r\n\t\tThis setting sets the default link type that a user will see when sharing content in OneDrive or SharePoint. It does not restrict or exclude any other options. \r\n\t\tThe recommended state is \u0060Specific people (only the people the user specifies)\u0060\r\n  ",
+  "rationale": "By defaulting to specific people, the user will first need to consider whether or not the content being shared should be accessible by the entire organization versus select individuals. This aids in reinforcing the concept of least privilege.",
+  "impact": null,
+  "remediation": {
+    "text": "\r\n\t\t###### To remediate using the UI: \r\n\t\t1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint \r\n\t\t2. Click to expand Policies \u003E Sharing. \r\n\t\t3. Scroll to File and folder links. \r\n\t\t4. Set Choose the type of link that\u0027s selected by default when users share files and folders in SharePoint and OneDrive to Specific people (only the people the user specifies) \r\n\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "6.1.0",
+      "reference": "7.2.7",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_spo_tenant_admin_details",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "DefaultSharingLinkType",
+                "ne",
+                "1"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "provider": "Microsoft365",
-    "serviceType": "SharePoint Online",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure link sharing is restricted in SharePoint and OneDrive",
-    "description": "\r\n\t\tThis setting sets the default link type that a user will see when sharing content in OneDrive or SharePoint. It does not restrict or exclude any other options. \r\n\t\tThe recommended state is `Specific people (only the people the user specifies)`\r\n  ",
-    "rationale": "By defaulting to specific people, the user will first need to consider whether or not the content being shared should be accessible by the entire organization versus select individuals. This aids in reinforcing the concept of least privilege.",
-    "impact": null,
-    "remediation": {
-        "text": "\r\n\t\t###### To remediate using the UI: \r\n\t\t1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint \r\n\t\t2. Click to expand Policies \u003e Sharing. \r\n\t\t3. Scroll to File and folder links. \r\n\t\t4. Set Choose the type of link that\u0027s selected by default when users share files and folders in SharePoint and OneDrive to Specific people (only the people the user specifies) \r\n\t",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "6.1.0",
-            "reference": "7.2.7",
-            "profile": [
-				"E3 Level 1",
-				"E5 Level 1"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_spo_tenant_admin_details",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "rootSiteUrl": "Root Site",
+          "allowEditing": "Allow Editing",
+          "anyoneLinkTrackUsers": "Link Track Users",
+          "defaultSharingLinkType": "Default Sharing Link Type"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "DefaultSharingLinkType",
-                                "ne",
-                                "1"
-                            ]
-                        ]
-                    }
-                ]
-            }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "RootSiteUrl"
         ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "RootSiteUrl": "Root Site",
-                    "AllowEditing": "Allow Editing",
-                    "AnyoneLinkTrackUsers": "Link Track Users",
-                    "DefaultSharingLinkType": "Default Sharing Link Type"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-					"RootSiteUrl"
-                ],
-                "message": "Ensure link sharing is restricted in SharePoint and OneDrive for {RootSiteUrl}",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "RootSiteUrl",
-                "resourceId": "_ObjectIdentity_",
-                "resourceType": "SPOTenantAdmin"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "spo_link_sharing_not_restricted",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"_ObjectType_",
-		"_ObjectIdentity_",
-		"RootSiteUrl"
-    ],
-    "id": "microsoft365_2190"
+        "message": "Ensure link sharing is restricted in SharePoint and OneDrive for {RootSiteUrl}",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "RootSiteUrl",
+        "resourceId": "_ObjectIdentity_",
+        "resourceType": "SPOTenantAdmin"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "spo_link_sharing_not_restricted",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "_ObjectType_",
+    "_ObjectIdentity_",
+    "RootSiteUrl"
+  ],
+  "id": "microsoft365_2190"
 }

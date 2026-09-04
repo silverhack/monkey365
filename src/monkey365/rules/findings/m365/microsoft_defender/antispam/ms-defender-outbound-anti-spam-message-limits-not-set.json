@@ -1,170 +1,136 @@
 {
-    "args": [
-        
-    ],
-    "provider": "Microsoft365",
-    "serviceType": "Defender",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure outbound anti-spam message limits are in place",
-    "description": "The default outbound anti-spam policy in Microsoft Defender automatically applies to all users and is designed to detect and limit suspicious email-sending behavior. The policy enforces limits based on both volume and spam detection. If a user sends too many emails too quickly or if a high percentage of their messages are flagged as spam, their ability to send email can be temporarily restricted. This helps prevent abuse from compromised accounts or inadvertent spam campaigns.\r\nWhen these limits are exceeded, Microsoft routes the messages through a high-risk delivery pool to protect its IP reputation and notifies administrators through built-in alert policies.\r\n
-		The recommended state is:
-			* External: `Restrict sending to external recipients (per hour) - 500`
-			* Internal: `Restrict sending to internal recipients (per hour) - 1000`
-			* Daily: `Maximum recipient limit per day - 1000`
-			* Action: `Over limit action - Restrict the user from sending mail`
-	",
-    "rationale": "Message limit settings help lessen the impact of a Business Email Compromise (BEC) by automatically restricting accounts that send unusually high volumes of email. This containment prevents compromised accounts from launching large-scale attacks and helps ensure the organization’s email remains trusted and deliverable. Without these limits, excessive or suspicious outbound traffic could result in Microsoft blocking the organization’s email, disrupting communication and damaging reputation.",
-    "impact": "Enforcing message limits may result in legitimate users being temporarily blocked from sending email if their bulk messaging activity resembles spam or exceeds volume thresholds. This can disrupt business operations, delay communication, and require administrative effort to investigate and restore access. However, these adverse effects typically stem from a lack of planning around mass mailings. To avoid triggering these limits, Microsoft recommends sending bulk email through custom subdomains or third-party bulk email providers.",
-    "remediation": {
-        "text": "
-			###### To remediate using the UI:
-			
-			1. Navigate to Microsoft 365 Defender https://security.microsoft.com.
-			2. Click to expand Email & collaboration select Policies & rules> Threat policies.
-			3. Under Policies select Anti-spam and click to open Anti-spam outbound policy (Default).
-			4. Select Edit protection settings.
-			5. Set the following settings to the recommended values, or more restrictive values.
-				* External: Set an external message limit - 500
-				* Internal: Set an internal message limit - 1000
-				* Daily: Set a daily message limit - 1000
-				* Action: Restriction placed on users who reach the message limit - Restrict the user from sending mail
-			6. Ensure Notify these users and groups if a sender is blocked due to sending outbound spam contains a monitored mailbox
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/defender-office-365/outbound-spam-protection-about",
-		"https://learn.microsoft.com/en-us/defender-office-365/recommended-settings-for-eop-and-office365#outbound-spam-policy-settings",
-		"https://learn.microsoft.com/en-us/office365/servicedescriptions/exchange-online-service-description/exchange-online-limits#sending-limits-1"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "6.0.1",
-            "reference": "2.1.15",
-            "profile": [
-				"E3 Level 1",
-				"E5 Level 1"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_exo_hosted_spam_policy",
-        "subPath": null,
-        "selectCondition": {
-            
-        },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "RecipientLimitExternalPerHour",
-                                "ne",
-                                "500"
-                            ],
-							[
-								"RecipientLimitInternalPerHour",
-								"ne",
-								"1000"
-							],
-							[
-								"RecipientLimitPerDay",
-								"ne",
-								"1000"
-							],
-							[
-								"ActionWhenThresholdReached",
-								"ne",
-								"BlockUser"
-							],
-							[
-								"NotifyOutboundSpamRecipients.Count",
-								"eq",
-								"0"
-							]
-                        ],
-						"operator": "or"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "Name": "Name",
-                    "RecipientLimitExternalPerHour": "Recipient Limit External Per Hour",
-                    "RecipientLimitInternalPerHour": "Recipient Limit Per Hour",
-					"RecipientLimitPerDay": "Recipient Limit",
-					"ActionWhenThresholdReached": "Action",
-					"NotifyOutboundSpamRecipients": "Notifications"
-                },
-                "expandObject": null
-            },
-            "table": "asList",
-            "decorate": [                
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Defender",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure outbound anti-spam message limits are in place",
+  "description": "The default outbound anti-spam policy in Microsoft Defender automatically applies to all users and is designed to detect and limit suspicious email-sending behavior. The policy enforces limits based on both volume and spam detection. If a user sends too many emails too quickly or if a high percentage of their messages are flagged as spam, their ability to send email can be temporarily restricted. This helps prevent abuse from compromised accounts or inadvertent spam campaigns.\r\nWhen these limits are exceeded, Microsoft routes the messages through a high-risk delivery pool to protect its IP reputation and notifies administrators through built-in alert policies.\r\n\n\t\tThe recommended state is:\n\t\t\t* External: \u0060Restrict sending to external recipients (per hour) - 500\u0060\n\t\t\t* Internal: \u0060Restrict sending to internal recipients (per hour) - 1000\u0060\n\t\t\t* Daily: \u0060Maximum recipient limit per day - 1000\u0060\n\t\t\t* Action: \u0060Over limit action - Restrict the user from sending mail\u0060\n\t",
+  "rationale": "Message limit settings help lessen the impact of a Business Email Compromise (BEC) by automatically restricting accounts that send unusually high volumes of email. This containment prevents compromised accounts from launching large-scale attacks and helps ensure the organization\u2019s email remains trusted and deliverable. Without these limits, excessive or suspicious outbound traffic could result in Microsoft blocking the organization\u2019s email, disrupting communication and damaging reputation.",
+  "impact": "Enforcing message limits may result in legitimate users being temporarily blocked from sending email if their bulk messaging activity resembles spam or exceeds volume thresholds. This can disrupt business operations, delay communication, and require administrative effort to investigate and restore access. However, these adverse effects typically stem from a lack of planning around mass mailings. To avoid triggering these limits, Microsoft recommends sending bulk email through custom subdomains or third-party bulk email providers.",
+  "remediation": {
+    "text": "\n\t\t\t###### To remediate using the UI:\n\t\t\t\n\t\t\t1. Navigate to Microsoft 365 Defender https://security.microsoft.com.\n\t\t\t2. Click to expand Email \u0026 collaboration select Policies \u0026 rules\u003E Threat policies.\n\t\t\t3. Under Policies select Anti-spam and click to open Anti-spam outbound policy (Default).\n\t\t\t4. Select Edit protection settings.\n\t\t\t5. Set the following settings to the recommended values, or more restrictive values.\n\t\t\t\t* External: Set an external message limit - 500\n\t\t\t\t* Internal: Set an internal message limit - 1000\n\t\t\t\t* Daily: Set a daily message limit - 1000\n\t\t\t\t* Action: Restriction placed on users who reach the message limit - Restrict the user from sending mail\n\t\t\t6. Ensure Notify these users and groups if a sender is blocked due to sending outbound spam contains a monitored mailbox\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/defender-office-365/outbound-spam-protection-about",
+    "https://learn.microsoft.com/en-us/defender-office-365/recommended-settings-for-eop-and-office365#outbound-spam-policy-settings",
+    "https://learn.microsoft.com/en-us/office365/servicedescriptions/exchange-online-service-description/exchange-online-limits#sending-limits-1"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "6.0.1",
+      "reference": "2.1.15",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_exo_hosted_spam_policy",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "RecipientLimitExternalPerHour",
+                "ne",
+                "500"
+              ],
+              [
+                "RecipientLimitInternalPerHour",
+                "ne",
+                "1000"
+              ],
+              [
+                "RecipientLimitPerDay",
+                "ne",
+                "1000"
+              ],
+              [
+                "ActionWhenThresholdReached",
+                "ne",
+                "BlockUser"
+              ],
+              [
+                "NotifyOutboundSpamRecipients.Count",
+                "eq",
+                "0"
+              ]
             ],
-            "emphasis": [                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "recipientLimitExternalPerHour": "Recipient Limit External Per Hour",
+          "recipientLimitInternalPerHour": "Recipient Limit Per Hour",
+          "recipientLimitPerDay": "Recipient Limit",
+          "actionWhenThresholdReached": "Action",
+          "notifyOutboundSpamRecipients": "Notifications"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                ],
-                "message": "Ensure outbound anti-spam message limits are in place",
-                "defaultMessage": "Ensure outbound anti-spam message limits are in place"
-            },
-            "properties": {
-                "resourceName": "Name",
-                "resourceId": "ExchangeObjectId",
-                "resourceType": "EXOHostedSpamPolicy"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "m365_exo_outbound_anti_spam_message_limit_not_set",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"ExchangeObjectId"
-    ],
-    "id": "microsoft365_2109"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure outbound anti-spam message limits are in place",
+        "defaultMessage": "Ensure outbound anti-spam message limits are in place"
+      },
+      "properties": {
+        "resourceName": "Name",
+        "resourceId": "ExchangeObjectId",
+        "resourceType": "EXOHostedSpamPolicy"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_exo_outbound_anti_spam_message_limit_not_set",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "ExchangeObjectId"
+  ],
+  "id": "microsoft365_2109"
 }

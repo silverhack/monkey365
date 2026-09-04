@@ -1,101 +1,95 @@
 {
-    "provider": "Azure",
-    "serviceType": "Diagnostic Settings",
-    "serviceName": "Diagnostic Settings",
-    "displayName": "Ensure that a Microsoft Entra diagnostic setting exists to send Microsoft Entra activity logs to an appropriate destination",
-    "description": "Ensure that a Microsoft Entra diagnostic setting is configured to send Microsoft Entra activity logs to a suitable destination, such as a Log Analytics workspace, storage account, or event hub. This enables centralized monitoring and analysis of Microsoft Entra activity logs.",
-    "rationale": "Microsoft Entra activity logs enables you to assess many aspects of your Microsoft Entra tenant. Configuring diagnostic settings in Microsoft Entra ensures these logs are collected and sent to an appropriate destination for monitoring, analysis, and retention.",
-    "impact": "To export sign-in data, your organization needs an Azure AD P1 or P2 license.<br/><br/>The amount of data logged and, thus, the cost incurred can vary significantly depending on the tenant size.<br/><br/>See the following pricing calculations for respective services:\n• Log Analytics: https://learn.microsoft.com/en-us/azure/azure-monitor/logs/cost- logs#pricing-model.\n• Azure Storage: https://azure.microsoft.com/en-us/pricing/details/storage/blobs/.\n• Event Hubs: https://azure.microsoft.com/en-us/pricing/details/event-hubs/.",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. Go to Microsoft Entra ID. 2. Under Monitoring, click Diagnostic settings. 3. Click + Add diagnostic setting. 4. Provide a Diagnostic setting name. 5. Under Logs > Categories, check the box next to each of the following logs: o AuditLogs o SignInLogs o NonInteractiveUserSignInLogs o ServicePrincipalSignInLogs o ManagedIdentitySignInLogs o ProvisioningLogs o ADFSSignInLogs o RiskyUsers o UserRiskEvents o NetworkAccessTrafficLogs o RiskyServicePrincipals o ServicePrincipalRiskEvents o EnrichedOffice365AuditLogs o MicrosoftGraphActivityLogs o RemoteNetworkHealthLogs o NetworkAccessAlerts 6. Configure an appropriate destination for the logs. 7. Click Save.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-configure-diagnostic-settings",
-        "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-access-activity-logs"
+  "provider": "Azure",
+  "serviceType": "Diagnostic Settings",
+  "serviceName": "Diagnostic Settings",
+  "displayName": "Ensure that a Microsoft Entra diagnostic setting exists to send Microsoft Entra activity logs to an appropriate destination",
+  "description": "Ensure that a Microsoft Entra diagnostic setting is configured to send Microsoft Entra activity logs to a suitable destination, such as a Log Analytics workspace, storage account, or event hub. This enables centralized monitoring and analysis of Microsoft Entra activity logs.",
+  "rationale": "Microsoft Entra activity logs enables you to assess many aspects of your Microsoft Entra tenant. Configuring diagnostic settings in Microsoft Entra ensures these logs are collected and sent to an appropriate destination for monitoring, analysis, and retention.",
+  "impact": "To export sign-in data, your organization needs an Azure AD P1 or P2 license.\u003Cbr/\u003E\u003Cbr/\u003EThe amount of data logged and, thus, the cost incurred can vary significantly depending on the tenant size.\u003Cbr/\u003E\u003Cbr/\u003ESee the following pricing calculations for respective services:\n\u2022 Log Analytics: https://learn.microsoft.com/en-us/azure/azure-monitor/logs/cost- logs#pricing-model.\n\u2022 Azure Storage: https://azure.microsoft.com/en-us/pricing/details/storage/blobs/.\n\u2022 Event Hubs: https://azure.microsoft.com/en-us/pricing/details/event-hubs/.",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. Go to Microsoft Entra ID. 2. Under Monitoring, click Diagnostic settings. 3. Click \u002B Add diagnostic setting. 4. Provide a Diagnostic setting name. 5. Under Logs \u003E Categories, check the box next to each of the following logs: o AuditLogs o SignInLogs o NonInteractiveUserSignInLogs o ServicePrincipalSignInLogs o ManagedIdentitySignInLogs o ProvisioningLogs o ADFSSignInLogs o RiskyUsers o UserRiskEvents o NetworkAccessTrafficLogs o RiskyServicePrincipals o ServicePrincipalRiskEvents o EnrichedOffice365AuditLogs o MicrosoftGraphActivityLogs o RemoteNetworkHealthLogs o NetworkAccessAlerts 6. Configure an appropriate destination for the logs. 7. Click Save.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-configure-diagnostic-settings",
+    "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-access-activity-logs"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "6.1.1.9",
+      "profile": [
+        "Level 2"
+      ]
+    }
+  ],
+  "level": "",
+  "tags": [],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": []
+          }
+        ]
+      }
     ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "6.1.1.9",
-            "profile": [
-                "Level 2"
-            ]
-        }
-    ],
-    "level": "",
-    "tags": [],
-    "rule": {
-        "path": "",
-        "subPath": null,
-        "selectCondition": {},
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": []
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
         },
-        "text": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [],
-                "message": "",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": null,
-                "resourceId": null,
-                "resourceType": null
-            },
-            "onlyStatus": false
-        }
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_microsoft_entra_activity_log_missing_diag_setting",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-        
-    ],
-    "id": "azure_diagnostic_setting_009"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_microsoft_entra_activity_log_missing_diag_setting",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "azure_diagnostic_setting_009"
 }

@@ -1,128 +1,126 @@
 {
-    "provider": "Azure",
-    "serviceType": "Storage Accounts",
-    "serviceName": "Storage",
-    "displayName": "Ensure that 'Default to Microsoft Entra authorization in the Azure portal' is set to 'Enabled'",
-    "description": "When this property is enabled, the Azure portal authorizes requests to blobs, files, queues, and tables with Microsoft Entra ID by default.",
-    "rationale": "Microsoft Entra ID provides superior security and ease of use over Shared Key.",
-    "impact": "",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. Go to Storage accounts. 2. Click the name of a storage account. 3. Under Settings, click Configuration. 4. Under Default to Microsoft Entra authorization in the Azure portal, click the radio button next to Enabled. 5. Click Save. 6. Repeat steps 1-5 for each storage account requiring remediation.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-data-operationsportal#default-to-microsoft-entra-authorization-in-the-azure-portal",
-        "https://learn.microsoft.com/en-us/cli/azure/storage/account"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "9.3.3.1",
-            "profile": [
-                "Level 1"
+  "provider": "Azure",
+  "serviceType": "Storage Accounts",
+  "serviceName": "Storage",
+  "displayName": "Ensure that \u0027Default to Microsoft Entra authorization in the Azure portal\u0027 is set to \u0027Enabled\u0027",
+  "description": "When this property is enabled, the Azure portal authorizes requests to blobs, files, queues, and tables with Microsoft Entra ID by default.",
+  "rationale": "Microsoft Entra ID provides superior security and ease of use over Shared Key.",
+  "impact": "",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. Go to Storage accounts. 2. Click the name of a storage account. 3. Under Settings, click Configuration. 4. Under Default to Microsoft Entra authorization in the Azure portal, click the radio button next to Enabled. 5. Click Save. 6. Repeat steps 1-5 for each storage account requiring remediation.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-data-operationsportal#default-to-microsoft-entra-authorization-in-the-azure-portal",
+    "https://learn.microsoft.com/en-us/cli/azure/storage/account"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "9.3.3.1",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "low",
+  "tags": [],
+  "rule": {
+    "path": "az_storage_accounts",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "properties.defaultToOAuthAuthentication",
+                "eq",
+                "False"
+              ]
             ]
-        }
+          }
+        ]
+      }
     ],
-    "level": "low",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "az_storage_accounts",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "location": "Location",
+          "resourceGroupName": "ResourceGroupName",
+          "properties.defaultToOAuthAuthentication": "Microsoft Entra Authorization"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "properties.defaultToOAuthAuthentication",
-                                "eq",
-                                "False"
-                            ]
-                        ]
-                    }
-                ]
-            }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [
+        {
+          "itemName": "Microsoft Entra Authorization",
+          "itemValue": "disabled",
+          "className": "badge badge-danger badge-xl"
+        }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "name",
+            "location",
+            "ResourceGroupName",
+            "properties"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "location": "Location",
+          "resourceGroupName": "ResourceGroupName",
+          "properties.defaultToOAuthAuthentication": "Microsoft Entra Authorization"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "name"
         ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "name": "Name",
-                    "location": "Location",
-                    "ResourceGroupName": "ResourceGroupName",
-                    "properties.defaultToOAuthAuthentication": "Microsoft Entra Authorization"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-				{
-					"itemName": "Microsoft Entra Authorization",
-					"itemValue": "disabled",
-					"className": "badge badge-danger badge-xl"
-				}
-			],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "name",
-                        "location",
-                        "ResourceGroupName",
-                        "properties"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    "name": "Name",
-                    "location": "Location",
-                    "ResourceGroupName": "ResourceGroupName",
-                    "properties.defaultToOAuthAuthentication": "Microsoft Entra Authorization"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": ["name"],
-                "message": "Ensure that 'Default to Microsoft Entra authorization in the Azure portal' is set to 'Enabled' for {name}",
-                "defaultMessage": "Ensure that 'Default to Microsoft Entra authorization in the Azure portal' is set to 'Enabled'"
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "AzureStorageAccount"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "storage_account_entra_auth_disabled",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [
-		"id"
-	],
-    "id": "azure_storage_013"
+        "message": "Ensure that \u0027Default to Microsoft Entra authorization in the Azure portal\u0027 is set to \u0027Enabled\u0027 for {name}",
+        "defaultMessage": "Ensure that \u0027Default to Microsoft Entra authorization in the Azure portal\u0027 is set to \u0027Enabled\u0027"
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "AzureStorageAccount"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "storage_account_entra_auth_disabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "azure_storage_013"
 }

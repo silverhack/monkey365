@@ -1,11 +1,19 @@
 {
-	filter: [
-		{
-			conditions : [
-				["properties.protocol", "eq", "*"],
-				["properties.protocol", "eq", "TCP"]
-			],
-			operator : 'or'
-		}
-	]
+  "filter": [
+    {
+      "conditions": [
+        [
+          "properties.protocol",
+          "eq",
+          "*"
+        ],
+        [
+          "properties.protocol",
+          "eq",
+          "TCP"
+        ]
+      ],
+      "operator": "or"
+    }
+  ]
 }

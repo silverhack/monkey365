@@ -1,11 +1,19 @@
 {
-	filter: [
-		{
-			conditions : [
-				["Protocol", "eq", "*"],
-				["Protocol", "eq", "UDP"]
-			],
-			operator : 'or'
-		}
-	]
+  "filter": [
+    {
+      "conditions": [
+        [
+          "Protocol",
+          "eq",
+          "*"
+        ],
+        [
+          "Protocol",
+          "eq",
+          "UDP"
+        ]
+      ],
+      "operator": "or"
+    }
+  ]
 }

@@ -1,132 +1,116 @@
 {
-    "args": [
-        
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "SharePoint Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure the SharePoint default sharing link permission is set",
+  "description": "\r\n\t\tThis setting configures the permission that is selected by default for sharing link from a SharePoint site. \r\n\t\tThe recommended state is \u0060View\u0060. \r\n  ",
+  "rationale": "Setting the view permission as the default ensures that users must deliberately select the edit permission when sharing a link. This approach reduces the risk of unintentionally granting edit privileges to a resource that only requires read access, supporting the principle of least privilege.",
+  "impact": "Not applicable.",
+  "remediation": {
+    "text": "\r\n\t\t###### To remediate using the UI: \r\n\t\t1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint \r\n\t\t2. Click to expand Policies \u003E Sharing. \r\n\t\t3. Scroll to File and folder links. \r\n\t\t4. Set Choose the permission that\u0027s selected by default for sharing links to View. \r\n\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "6.1.0",
+      "reference": "7.2.11",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_spo_tenant_admin_details",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "DefaultLinkPermission",
+                "eq",
+                "2"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "provider": "Microsoft365",
-    "serviceType": "SharePoint Online",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure the SharePoint default sharing link permission is set",
-    "description": "\r\n\t\tThis setting configures the permission that is selected by default for sharing link from a SharePoint site. \r\n\t\tThe recommended state is `View`. \r\n  ",
-    "rationale": "Setting the view permission as the default ensures that users must deliberately select the edit permission when sharing a link. This approach reduces the risk of unintentionally granting edit privileges to a resource that only requires read access, supporting the principle of least privilege.",
-    "impact": "Not applicable.",
-    "remediation": {
-        "text": "\r\n\t\t###### To remediate using the UI: \r\n\t\t1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint \r\n\t\t2. Click to expand Policies \u003e Sharing. \r\n\t\t3. Scroll to File and folder links. \r\n\t\t4. Set Choose the permission that\u0027s selected by default for sharing links to View. \r\n\t",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "6.1.0",
-            "reference": "7.2.11",
-            "profile": [
-				"E3 Level 1",
-				"E5 Level 1"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_spo_tenant_admin_details",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "rootSiteUrl": "Root Site",
+          "defaultLinkPermission": "Default Link Permission",
+          "sharingCapability": "Sharing Capability"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "DefaultLinkPermission",
-                                "eq",
-                                "2"
-                            ]
-                        ]
-                    }
-                ]
-            }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          "rootSiteUrl": "Root Site",
+          "defaultLinkPermission": "Default Link Permission",
+          "sharingCapability": "Sharing Capability"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "RootSiteUrl"
         ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "RootSiteUrl": "Root Site",
-                    "DefaultLinkPermission": "Default Link Permission",
-                    "SharingCapability": "Sharing Capability"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    "RootSiteUrl": "Root Site",
-                    "DefaultLinkPermission": "Default Link Permission",
-                    "SharingCapability": "Sharing Capability"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-					"RootSiteUrl"
-                ],
-                "message": "Ensure the SharePoint default sharing link permission is set for {RootSiteUrl}",
-                "defaultMessage": "Ensure the SharePoint default sharing link permission is set"
-            },
-            "properties": {
-                "resourceName": "RootSiteUrl",
-                "resourceId": "_ObjectIdentity_",
-                "resourceType": "SPOTenantAdmin"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "spo_link_sharing_permission_not_set",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"_ObjectType_",
-		"_ObjectIdentity_",
-		"RootSiteUrl"
-    ],
-    "id": "microsoft365_2196"
+        "message": "Ensure the SharePoint default sharing link permission is set for {RootSiteUrl}",
+        "defaultMessage": "Ensure the SharePoint default sharing link permission is set"
+      },
+      "properties": {
+        "resourceName": "RootSiteUrl",
+        "resourceId": "_ObjectIdentity_",
+        "resourceType": "SPOTenantAdmin"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "spo_link_sharing_permission_not_set",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "_ObjectType_",
+    "_ObjectIdentity_",
+    "RootSiteUrl"
+  ],
+  "id": "microsoft365_2196"
 }

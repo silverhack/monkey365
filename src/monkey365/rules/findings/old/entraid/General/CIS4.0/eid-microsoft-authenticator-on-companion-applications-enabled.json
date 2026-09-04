@@ -1,149 +1,131 @@
 {
-    "provider": "EntraID",
-    "serviceType": "General",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure Microsoft Authenticator on companion applications is disabled",
-    "description": "Microsoft Entra ID includes a feature called Authenticator Lite, which embeds a subset of Microsoft Authenticator functionality into companion applications such as Outlook mobile. When enabled, users can satisfy MFA requirements using push notifications or time-based one-time passcodes (TOTP) directly from the companion application without installing the standalone Microsoft Authenticator app.\r\nThe recommended state is `Microsoft Authenticator on companion applications` set to `Disabled`.",
-    "rationale": "Authenticator Lite does not support application name or geographic location context in push notifications, regardless of tenant-wide Authenticator feature settings. These are key defenses against MFA fatigue attacks that are only available in the full Microsoft Authenticator app. Authenticator Lite also does not satisfy Conditional Access authentication strength requirements, does not support passwordless authentication, and does not support SSPR via push notifications. Disabling this feature ensures users authenticate through the full Microsoft Authenticator app where all available security protections are active.",
-    "impact": "Users who have registered Authenticator Lite as their only MFA method will be unable to complete MFA until they install and register the standalone Microsoft Authenticator app. Administrators should communicate this change in advance and verify that affected users have registered an alternative MFA method before disabling this feature to avoid authentication lockouts.",
-    "remediation": {
-        "text": "
-			##### To remediate using the UI:
-			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
-			2. Click to expand Entra ID > Authentication methods.
-			3. Select `Policies`.
-			4. Under Method select Microsoft Authenticator
-			5. Select Configure. 
-			6. Set Microsoft Authenticator on companion applications: Status to Disabled. 
-			7. Select Save.
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-mfa-authenticator-lite",
-        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-default-enablement",
-		"https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-mfa-additional-context"
+  "provider": "EntraID",
+  "serviceType": "General",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure Microsoft Authenticator on companion applications is disabled",
+  "description": "Microsoft Entra ID includes a feature called Authenticator Lite, which embeds a subset of Microsoft Authenticator functionality into companion applications such as Outlook mobile. When enabled, users can satisfy MFA requirements using push notifications or time-based one-time passcodes (TOTP) directly from the companion application without installing the standalone Microsoft Authenticator app.\r\nThe recommended state is \u0060Microsoft Authenticator on companion applications\u0060 set to \u0060Disabled\u0060.",
+  "rationale": "Authenticator Lite does not support application name or geographic location context in push notifications, regardless of tenant-wide Authenticator feature settings. These are key defenses against MFA fatigue attacks that are only available in the full Microsoft Authenticator app. Authenticator Lite also does not satisfy Conditional Access authentication strength requirements, does not support passwordless authentication, and does not support SSPR via push notifications. Disabling this feature ensures users authenticate through the full Microsoft Authenticator app where all available security protections are active.",
+  "impact": "Users who have registered Authenticator Lite as their only MFA method will be unable to complete MFA until they install and register the standalone Microsoft Authenticator app. Administrators should communicate this change in advance and verify that affected users have registered an alternative MFA method before disabling this feature to avoid authentication lockouts.",
+  "remediation": {
+    "text": "\n\t\t\t##### To remediate using the UI:\n\t\t\t1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\n\t\t\t2. Click to expand Entra ID \u003E Authentication methods.\n\t\t\t3. Select \u0060Policies\u0060.\n\t\t\t4. Under Method select Microsoft Authenticator\n\t\t\t5. Select Configure. \n\t\t\t6. Set Microsoft Authenticator on companion applications: Status to Disabled. \n\t\t\t7. Select Save.\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-mfa-authenticator-lite",
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-authentication-default-enablement",
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/how-to-mfa-additional-context"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "7.0.0",
+      "reference": "5.2.3.10",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "aad_auth_method_policies",
+    "subPath": "authenticationMethodConfigurations",
+    "selectCondition": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "id",
+                "eq",
+                "MicrosoftAuthenticator"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "7.0.0",
-            "reference": "5.2.3.10",
-            "profile": [
-				"E3 Level 1",
-				"E5 Level 1"
-			]
-        }
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "featureSettings.companionAppAllowedState.state",
+                "ne",
+                "disabled"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "aad_auth_method_policies",
-        "subPath": "authenticationMethodConfigurations",
-		"selectCondition": [
-			{
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-								"id",
-								"eq",
-								"MicrosoftAuthenticator"
-							]
-                        ]
-                    }
-                ]
-            }
-		],
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "featureSettings.companionAppAllowedState.state",
-                                "ne",
-                                "disabled"
-                            ]
-                        ]
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-					"id": "Id",
-					"@odata.type": "Type",
-                    "state": "state",
-                    "featureSettings.companionAppAllowedState.state": "companionAppAllowedState"
-                },
-                "expandObject": null
-            },
-            "table": null,
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": false,
-                "showModalButton": false,
-                "directLink": null
-            }
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "id": "Id",
+          "@odata.type": "Type",
+          "state": "state",
+          "featureSettings.companionAppAllowedState.state": "companionAppAllowedState"
         },
-        "text": {
-            "data": {
-                "properties": {
-					"id": "Id",
-					"@odata.type": "Type",
-                    "state": "state",
-                    "featureSettings.companionAppAllowedState.state": "companionAppAllowedState"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                ],
-                "message": "Ensure Microsoft Authenticator on companion applications is disabled",
-                "defaultMessage": "Ensure Microsoft Authenticator on companion applications is disabled"
-            },
-            "properties": {
-                "resourceName": "id",
-                "resourceId": "id",
-                "resourceType": "EntraAuthMethodSetting"
-            },
-            "onlyStatus": true
-        }
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
     },
-    "idSuffix": "entra_authenticator_on_companion_application_enabled",
-    "notes": [
-    ],
-    "categories": [
-    ],
-    "immutable_properties": [
-		"id"
-    ],
-    "id": "entraid_1173"
+    "text": {
+      "data": {
+        "properties": {
+          "id": "Id",
+          "@odata.type": "Type",
+          "state": "state",
+          "featureSettings.companionAppAllowedState.state": "companionAppAllowedState"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure Microsoft Authenticator on companion applications is disabled",
+        "defaultMessage": "Ensure Microsoft Authenticator on companion applications is disabled"
+      },
+      "properties": {
+        "resourceName": "id",
+        "resourceId": "id",
+        "resourceType": "EntraAuthMethodSetting"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "entra_authenticator_on_companion_application_enabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "entraid_1173"
 }

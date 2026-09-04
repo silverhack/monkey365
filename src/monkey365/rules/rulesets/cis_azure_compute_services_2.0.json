@@ -1,1398 +1,1398 @@
 {
-	"about": "This ruleset contains a collection of rules for Azure based on CIS benchmark. The rules are used as a mechanism to evaluate the configuration of Azure resources and to determine whether controls within a standard are being adhered to. Rules are also divided into categories and subcategories according to the rule's type. This will ensures that Azure cloud will meet the industry standards.",
-	"framework": {
-		"name" : "CIS Microsoft Azure Compute Services Benchmark",
-		"version" : "2.0.0",
-		"tou" : "https://www.cisecurity.org/terms-of-use-for-non-member-cis-products",
-		"url" : "https://www.cisecurity.org/benchmark/azure"
-	},
-	"rules": {
-		"azure-app-service-latest-java-version.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.1",
-					"21",
-					"isAppService.json",
-					"001"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.1",
-					"21",
-					"isAppServiceDeploymentSlot.json",
-					"002"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.1",
-					"21",
-					"isFunctionApp.json",
-					"003"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.1",
-					"21",
-					"isFunctionAppDeploymentSlot.json",
-					"004"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-latest-python-version.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.2",
-					"3.10",
-					"isAppService.json",
-					"005"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.2",
-					"3.10",
-					"isAppServiceDeploymentSlot.json",
-					"006"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.2",
-					"3.10",
-					"isFunctionApp.json",
-					"007"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.2",
-					"3.10",
-					"isFunctionAppDeploymentSlot.json",
-					"008"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-latest-php-version.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.3",
-					"8.5",
-					"isAppService.json",
-					"009"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.3",
-					"8.5",
-					"isAppServiceDeploymentSlot.json",
-					"010"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.3",
-					"8.5",
-					"isFunctionApp.json",
-					"011"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.3",
-					"8.5",
-					"isFunctionAppDeploymentSlot.json",
-					"012"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-basic-publishing-credentials-enabled.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.4",
-					"isAppService.json",
-					"013"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.4",
-					"isAppServiceDeploymentSlot.json",
-					"014"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.4",
-					"isFunctionApp.json",
-					"015"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.4",
-					"isFunctionAppDeploymentSlot.json",
-					"016"
-				],
-				"enabled": true,
-				"level": "high"
-			}
-		],
-		"azure-app-service-ftp-enabled.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.5",
-					"isAppService.json",
-					"017"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.5",
-					"isAppServiceDeploymentSlot.json",
-					"018"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.5",
-					"isFunctionApp.json",
-					"019"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.5",
-					"isFunctionAppDeploymentSlot.json",
-					"020"
-				],
-				"enabled": true,
-				"level": "high"
-			}
-		],
-		"azure-app-service-http-20-version-disabled.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.6",
-					"isAppService.json",
-					"021"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.6",
-					"isAppServiceDeploymentSlot.json",
-					"022"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.6",
-					"isFunctionApp.json",
-					"023"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.6",
-					"isFunctionAppDeploymentSlot.json",
-					"024"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-httponly-disabled.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.7",
-					"isAppService.json",
-					"025"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.7",
-					"isAppServiceDeploymentSlot.json",
-					"026"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.7",
-					"isFunctionApp.json",
-					"027"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.7",
-					"isFunctionAppDeploymentSlot.json",
-					"028"
-				],
-				"enabled": true,
-				"level": "high"
-			}
-		],
-		"azure-app-service-min-tls-version-not-set.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.8",
-					"isAppService.json",
-					"029"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.8",
-					"isAppServiceDeploymentSlot.json",
-					"030"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.8",
-					"isFunctionApp.json",
-					"031"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.8",
-					"isFunctionAppDeploymentSlot.json",
-					"032"
-				],
-				"enabled": true,
-				"level": "high"
-			}
-		],
-		"azure-app-service-e2e-encryption-not-set.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.9",
-					"isAppService.json",
-					"033"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.9",
-					"isAppServiceDeploymentSlot.json",
-					"034"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.9",
-					"isFunctionApp.json",
-					"035"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.9",
-					"isFunctionAppDeploymentSlot.json",
-					"036"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-remote-debugging-enabled.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.10",
-					"isAppService.json",
-					"037"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.10",
-					"isAppServiceDeploymentSlot.json",
-					"038"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.10",
-					"isFunctionApp.json",
-					"039"
-				],
-				"enabled": true,
-				"level": "high"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.10",
-					"isFunctionAppDeploymentSlot.json",
-					"040"
-				],
-				"enabled": true,
-				"level": "high"
-			}
-		],
-		"azure-app-service-client-certificate-disabled.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.11",
-					"isAppService.json",
-					"041"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.11",
-					"isAppServiceDeploymentSlot.json",
-					"042"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.11",
-					"isFunctionApp.json",
-					"043"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.11",
-					"isFunctionAppDeploymentSlot.json",
-					"044"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-authentication-disabled.json": [
-			{
-				"args": [
-					"App Service",
-					"isAppService.json",
-					"app_service",
-					"045"
-				],
-				"enabled": true,
-				"level": "low",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "2.1.12",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"isAppServiceDeploymentSlot.json",
-					"app_slot",
-					"046"
-				],
-				"enabled": true,
-				"level": "low",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "2.1.12",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-app-service-managed-identity-disabled.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.13",
-					"isAppService.json",
-					"045"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.12",
-					"isAppServiceDeploymentSlot.json",
-					"046"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.12",
-					"isFunctionApp.json",
-					"047"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.11",
-					"isFunctionAppDeploymentSlot.json",
-					"048"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-public-network-access-enabled.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.14",
-					"isAppService.json",
-					"049"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.13",
-					"isAppServiceDeploymentSlot.json",
-					"050"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.13",
-					"isFunctionApp.json",
-					"051"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.12",
-					"isFunctionAppDeploymentSlot.json",
-					"052"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-sku-private-endpoint-not-supported.json": [
-			{
-				"enabled": true,
-				"level": "low"
-			}
-		],
-		"azure-app-service-private-endpoint-not-configured.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.16",
-					"isAppService.json"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-private-dns-not-configured.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Foundations",
-						"version": "2.0.0",
-						"reference": "2.1.17",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-app-service-virtual-network-not-integrated.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.18",
-					"isAppService.json",
-					"053"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.14",
-					"isAppServiceDeploymentSlot.json",
-					"054"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.14",
-					"isFunctionApp.json",
-					"055"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.13",
-					"isFunctionAppDeploymentSlot.json",
-					"056"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-lacks-routing-traffic-through-vnet.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.19",
-					"isAppService.json",
-					"057"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.15",
-					"isAppServiceDeploymentSlot.json",
-					"058"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.15",
-					"isFunctionApp.json",
-					"059"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.14",
-					"isFunctionAppDeploymentSlot.json",
-					"060"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-all-traffic-not-routed-through-vnet.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.20",
-					"isAppService.json",
-					"061"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.16",
-					"isAppServiceDeploymentSlot.json",
-					"062"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.16",
-					"isFunctionApp.json",
-					"063"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.15",
-					"isFunctionAppDeploymentSlot.json",
-					"064"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-cors-all-origins.allowed.json": [
-			{
-				"args": [
-					"App Service",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.1.21",
-					"isAppService.json",
-					"065"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"App Service Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.2.17",
-					"isAppServiceDeploymentSlot.json",
-					"066"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.3.17",
-					"isFunctionApp.json",
-					"067"
-				],
-				"enabled": true,
-				"level": "medium"
-			},
-			{
-				"args": [
-					"Functions Slot",
-					"CIS Microsoft Azure Compute Services Benchmark",
-					"2.0.0",
-					"2.4.16",
-					"isFunctionAppDeploymentSlot.json",
-					"068"
-				],
-				"enabled": true,
-				"level": "medium"
-			}
-		],
-		"azure-app-service-keyvault-not-used.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "2.5",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-app-service-environment-lacks-load-balancer.json": [
-			{
-				"enabled": true,
-				"level": "low",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "2.6",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-app-service-environment-latest-kind-version.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "2.7",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-app-service-environment-internal-encryption-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "2.8",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-app-service-environment-minimum-tls-version.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "2.9",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-app-service-environment-cipher-suite-order.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "2.10",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-container-instances-private-network-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "3.1",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-container-instances-lacks-managed-identity.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "3.2",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-container-instances-lacks-minimum-privileged.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "3.3",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cycle-cloud-ssl-not-configured.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "4.1",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-batch-account-lacks-cmk.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "15.1",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-batch-pool-disk-encryption-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "15.2",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-batch-local-authentication-enabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "15.3",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-batch-lacks-private-endpoint-connection.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "15.4",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-batch-public-network-access-enabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "15.5",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-batch-private-dns-not-enabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "15.6",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-batch-diagnostic-settings-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "15.7",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-virtual-machine-lacks-managed-disk.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "20.1",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-virtual-machine-os-and-data-disk-lacks-cmk.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "20.2",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-virtual-machine-unattached-disk-lacks-cmk.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "20.3",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-virtual-machine-disk-network-access-allow-all-networks.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "20.4",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-virtual-machine-data-access-auth-mode-not-enabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "20.5",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-virtual-machine-approved-extensions.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "20.6",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-virtual-machine-lacks-endpoint-protection.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "20.7",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-virtual-machine-lacks-vhd-encryption.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "20.8",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-virtual-machine-mfa-enabled-identities.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "20.9",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-virtual-machine-trusted-launch-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "20.10",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-virtual-machine-encryption-at-host-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Compute Services Benchmark",
-						"version": "2.0.0",
-						"reference": "20.11",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		]
-	}
+  "about": "This ruleset contains a collection of rules for Azure based on CIS benchmark. The rules are used as a mechanism to evaluate the configuration of Azure resources and to determine whether controls within a standard are being adhered to. Rules are also divided into categories and subcategories according to the rule\u0027s type. This will ensures that Azure cloud will meet the industry standards.",
+  "framework": {
+    "name": "CIS Microsoft Azure Compute Services Benchmark",
+    "version": "2.0.0",
+    "tou": "https://www.cisecurity.org/terms-of-use-for-non-member-cis-products",
+    "url": "https://www.cisecurity.org/benchmark/azure"
+  },
+  "rules": {
+    "azure-app-service-latest-java-version.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.1",
+          "21",
+          "isAppService.json",
+          "001"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.1",
+          "21",
+          "isAppServiceDeploymentSlot.json",
+          "002"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.1",
+          "21",
+          "isFunctionApp.json",
+          "003"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.1",
+          "21",
+          "isFunctionAppDeploymentSlot.json",
+          "004"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-latest-python-version.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.2",
+          "3.10",
+          "isAppService.json",
+          "005"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.2",
+          "3.10",
+          "isAppServiceDeploymentSlot.json",
+          "006"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.2",
+          "3.10",
+          "isFunctionApp.json",
+          "007"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.2",
+          "3.10",
+          "isFunctionAppDeploymentSlot.json",
+          "008"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-latest-php-version.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.3",
+          "8.5",
+          "isAppService.json",
+          "009"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.3",
+          "8.5",
+          "isAppServiceDeploymentSlot.json",
+          "010"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.3",
+          "8.5",
+          "isFunctionApp.json",
+          "011"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.3",
+          "8.5",
+          "isFunctionAppDeploymentSlot.json",
+          "012"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-basic-publishing-credentials-enabled.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.4",
+          "isAppService.json",
+          "013"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.4",
+          "isAppServiceDeploymentSlot.json",
+          "014"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.4",
+          "isFunctionApp.json",
+          "015"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.4",
+          "isFunctionAppDeploymentSlot.json",
+          "016"
+        ],
+        "enabled": true,
+        "level": "high"
+      }
+    ],
+    "azure-app-service-ftp-enabled.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.5",
+          "isAppService.json",
+          "017"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.5",
+          "isAppServiceDeploymentSlot.json",
+          "018"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.5",
+          "isFunctionApp.json",
+          "019"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.5",
+          "isFunctionAppDeploymentSlot.json",
+          "020"
+        ],
+        "enabled": true,
+        "level": "high"
+      }
+    ],
+    "azure-app-service-http-20-version-disabled.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.6",
+          "isAppService.json",
+          "021"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.6",
+          "isAppServiceDeploymentSlot.json",
+          "022"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.6",
+          "isFunctionApp.json",
+          "023"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.6",
+          "isFunctionAppDeploymentSlot.json",
+          "024"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-httponly-disabled.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.7",
+          "isAppService.json",
+          "025"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.7",
+          "isAppServiceDeploymentSlot.json",
+          "026"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.7",
+          "isFunctionApp.json",
+          "027"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.7",
+          "isFunctionAppDeploymentSlot.json",
+          "028"
+        ],
+        "enabled": true,
+        "level": "high"
+      }
+    ],
+    "azure-app-service-min-tls-version-not-set.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.8",
+          "isAppService.json",
+          "029"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.8",
+          "isAppServiceDeploymentSlot.json",
+          "030"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.8",
+          "isFunctionApp.json",
+          "031"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.8",
+          "isFunctionAppDeploymentSlot.json",
+          "032"
+        ],
+        "enabled": true,
+        "level": "high"
+      }
+    ],
+    "azure-app-service-e2e-encryption-not-set.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.9",
+          "isAppService.json",
+          "033"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.9",
+          "isAppServiceDeploymentSlot.json",
+          "034"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.9",
+          "isFunctionApp.json",
+          "035"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.9",
+          "isFunctionAppDeploymentSlot.json",
+          "036"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-remote-debugging-enabled.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.10",
+          "isAppService.json",
+          "037"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.10",
+          "isAppServiceDeploymentSlot.json",
+          "038"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.10",
+          "isFunctionApp.json",
+          "039"
+        ],
+        "enabled": true,
+        "level": "high"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.10",
+          "isFunctionAppDeploymentSlot.json",
+          "040"
+        ],
+        "enabled": true,
+        "level": "high"
+      }
+    ],
+    "azure-app-service-client-certificate-disabled.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.11",
+          "isAppService.json",
+          "041"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.11",
+          "isAppServiceDeploymentSlot.json",
+          "042"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.11",
+          "isFunctionApp.json",
+          "043"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.11",
+          "isFunctionAppDeploymentSlot.json",
+          "044"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-authentication-disabled.json": [
+      {
+        "args": [
+          "App Service",
+          "isAppService.json",
+          "app_service",
+          "045"
+        ],
+        "enabled": true,
+        "level": "low",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "2.1.12",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "isAppServiceDeploymentSlot.json",
+          "app_slot",
+          "046"
+        ],
+        "enabled": true,
+        "level": "low",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "2.1.12",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-app-service-managed-identity-disabled.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.13",
+          "isAppService.json",
+          "045"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.12",
+          "isAppServiceDeploymentSlot.json",
+          "046"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.12",
+          "isFunctionApp.json",
+          "047"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.11",
+          "isFunctionAppDeploymentSlot.json",
+          "048"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-public-network-access-enabled.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.14",
+          "isAppService.json",
+          "049"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.13",
+          "isAppServiceDeploymentSlot.json",
+          "050"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.13",
+          "isFunctionApp.json",
+          "051"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.12",
+          "isFunctionAppDeploymentSlot.json",
+          "052"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-sku-private-endpoint-not-supported.json": [
+      {
+        "enabled": true,
+        "level": "low"
+      }
+    ],
+    "azure-app-service-private-endpoint-not-configured.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.16",
+          "isAppService.json"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-private-dns-not-configured.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "2.0.0",
+            "reference": "2.1.17",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-app-service-virtual-network-not-integrated.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.18",
+          "isAppService.json",
+          "053"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.14",
+          "isAppServiceDeploymentSlot.json",
+          "054"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.14",
+          "isFunctionApp.json",
+          "055"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.13",
+          "isFunctionAppDeploymentSlot.json",
+          "056"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-lacks-routing-traffic-through-vnet.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.19",
+          "isAppService.json",
+          "057"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.15",
+          "isAppServiceDeploymentSlot.json",
+          "058"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.15",
+          "isFunctionApp.json",
+          "059"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.14",
+          "isFunctionAppDeploymentSlot.json",
+          "060"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-all-traffic-not-routed-through-vnet.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.20",
+          "isAppService.json",
+          "061"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.16",
+          "isAppServiceDeploymentSlot.json",
+          "062"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.16",
+          "isFunctionApp.json",
+          "063"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.15",
+          "isFunctionAppDeploymentSlot.json",
+          "064"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-cors-all-origins.allowed.json": [
+      {
+        "args": [
+          "App Service",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.1.21",
+          "isAppService.json",
+          "065"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "App Service Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.2.17",
+          "isAppServiceDeploymentSlot.json",
+          "066"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.3.17",
+          "isFunctionApp.json",
+          "067"
+        ],
+        "enabled": true,
+        "level": "medium"
+      },
+      {
+        "args": [
+          "Functions Slot",
+          "CIS Microsoft Azure Compute Services Benchmark",
+          "2.0.0",
+          "2.4.16",
+          "isFunctionAppDeploymentSlot.json",
+          "068"
+        ],
+        "enabled": true,
+        "level": "medium"
+      }
+    ],
+    "azure-app-service-keyvault-not-used.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "2.5",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-app-service-environment-lacks-load-balancer.json": [
+      {
+        "enabled": true,
+        "level": "low",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "2.6",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-app-service-environment-latest-kind-version.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "2.7",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-app-service-environment-internal-encryption-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "2.8",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-app-service-environment-minimum-tls-version.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "2.9",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-app-service-environment-cipher-suite-order.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "2.10",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-container-instances-private-network-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "3.1",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-container-instances-lacks-managed-identity.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "3.2",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-container-instances-lacks-minimum-privileged.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "3.3",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cycle-cloud-ssl-not-configured.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "4.1",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-batch-account-lacks-cmk.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "15.1",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-batch-pool-disk-encryption-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "15.2",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-batch-local-authentication-enabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "15.3",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-batch-lacks-private-endpoint-connection.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "15.4",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-batch-public-network-access-enabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "15.5",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-batch-private-dns-not-enabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "15.6",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-batch-diagnostic-settings-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "15.7",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-virtual-machine-lacks-managed-disk.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "20.1",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-virtual-machine-os-and-data-disk-lacks-cmk.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "20.2",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-virtual-machine-unattached-disk-lacks-cmk.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "20.3",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-virtual-machine-disk-network-access-allow-all-networks.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "20.4",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-virtual-machine-data-access-auth-mode-not-enabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "20.5",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-virtual-machine-approved-extensions.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "20.6",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-virtual-machine-lacks-endpoint-protection.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "20.7",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-virtual-machine-lacks-vhd-encryption.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "20.8",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-virtual-machine-mfa-enabled-identities.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "20.9",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-virtual-machine-trusted-launch-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "20.10",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-virtual-machine-encryption-at-host-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Compute Services Benchmark",
+            "version": "2.0.0",
+            "reference": "20.11",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

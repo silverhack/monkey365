@@ -1,139 +1,121 @@
 {
-    "args": [
-        
-    ],
-    "provider": "Microsoft365",
-    "serviceType": "Microsoft Teams",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure only organizers and co-organizers can present",
-    "description": "\r\n\t\tThis policy setting controls who can present in a Teams meeting. \r\n\t\t**Note** : Organizers and co-organizers can change this setting when the meeting is set up. \r\n  ",
-    "rationale": "Ensuring that only authorized individuals are able to present reduces the risk that a malicious user can inadvertently show content that is not appropriate.",
-    "impact": "Only organizers and co-organizers will be able to present without being granted permission.",
-    "remediation": {
-        "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com. \r\n\t\t\t2. Click to expand Meetings select Meeting policies. \r\n\t\t\t3. Click Global (Org-wide default). \r\n\t\t\t4. Under content sharing set Who can present to Only organizers and co-organizers.\r\n\t",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-US/microsoftteams/meeting-who-present-request-control",
-        "https://learn.microsoft.com/en-us/microsoftteams/meeting-who-present-request-control#manage-who-can-present",
-        "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/reducing-attack-surface-in-microsoft-teams?view=o365-worldwide#configure-meeting-settings-restrict-presenters",
-        "https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "6.0.1",
-            "reference": "8.5.6",
-            "profile": [
-				"E3 Level 2",
-				"E5 Level 2"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_teams_skype_meeting_policies",
-        "subPath": null,
-        "selectCondition": {
-            
-        },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "Identity",
-                                "eq",
-                                "Global"
-                            ],
-                            [
-                                "DesignatedPresenterRoleMode",
-                                "ne",
-                                "OrganizerOnlyUserOverride"
-                            ]
-                        ],
-                        "operator": "and"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "Identity": "Identity",
-					"Description": "Description",
-                    "DesignatedPresenterRoleMode": "Who can present"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-                
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Microsoft Teams",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure only organizers and co-organizers can present",
+  "description": "\r\n\t\tThis policy setting controls who can present in a Teams meeting. \r\n\t\t**Note** : Organizers and co-organizers can change this setting when the meeting is set up. \r\n  ",
+  "rationale": "Ensuring that only authorized individuals are able to present reduces the risk that a malicious user can inadvertently show content that is not appropriate.",
+  "impact": "Only organizers and co-organizers will be able to present without being granted permission.",
+  "remediation": {
+    "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com. \r\n\t\t\t2. Click to expand Meetings select Meeting policies. \r\n\t\t\t3. Click Global (Org-wide default). \r\n\t\t\t4. Under content sharing set Who can present to Only organizers and co-organizers.\r\n\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-US/microsoftteams/meeting-who-present-request-control",
+    "https://learn.microsoft.com/en-us/microsoftteams/meeting-who-present-request-control#manage-who-can-present",
+    "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/reducing-attack-surface-in-microsoft-teams?view=o365-worldwide#configure-meeting-settings-restrict-presenters",
+    "https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "6.0.1",
+      "reference": "8.5.6",
+      "profile": [
+        "E3 Level 2",
+        "E5 Level 2"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_teams_skype_meeting_policies",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "Identity",
+                "eq",
+                "Global"
+              ],
+              [
+                "DesignatedPresenterRoleMode",
+                "ne",
+                "OrganizerOnlyUserOverride"
+              ]
             ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "identity": "Identity",
+          "description": "Description",
+          "designatedPresenterRoleMode": "Who can present"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    
-                ],
-                "message": "Ensure only organizers and co-organizers can present",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "Description",
-                "resourceId": "ConfigId",
-                "resourceType": "TeamsMeetingPolicy"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "teams_organizers_and_co_organizers_can_present_not_configured",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"Description",
-		"ConfigId",
-		"Key.SchemaId.XName.name"
-    ],
-    "id": "microsoft365_2176"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure only organizers and co-organizers can present",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "Description",
+        "resourceId": "ConfigId",
+        "resourceType": "TeamsMeetingPolicy"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "teams_organizers_and_co_organizers_can_present_not_configured",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "Description",
+    "ConfigId",
+    "Key.SchemaId.XName.name"
+  ],
+  "id": "microsoft365_2176"
 }

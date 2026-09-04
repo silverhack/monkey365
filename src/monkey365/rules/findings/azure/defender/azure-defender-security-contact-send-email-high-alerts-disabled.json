@@ -1,137 +1,123 @@
 {
-    "provider": "Azure",
-    "serviceType": "Subscription Security",
-    "serviceName": "Subscription",
-    "displayName": "Ensure that 'Notify about alerts with the following severity (or higher)' is enabled",
-    "description": "Enables emailing security alerts to the subscription owner or other designated security contact.",
-    "rationale": "Enabling security alert emails ensures that security alert emails are received from Microsoft. This ensures that the right people are aware of any potential security issues and are able to mitigate the risk.",
-    "impact": null,
-    "remediation": {
-        "text": "###### From Azure Console\r\n\t\t\t\t\t1. Navigate to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Click on Pricing \u0026 settings\r\n\t\t\t\t\t3. Click on the appropriate Management Group, Subscription, or Workspace\r\n\t\t\t\t\t4. Click on `Email notifications`\r\n\t\t\t\t\t5. Under \"Notification types\", check the check box next to `Notify about alerts with the following severity (or higher):` and select `High` from the drop down menu\r\n\t\t\t\t\t6. Click Save",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email-notifications",
-        "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts?view=rest-defenderforcloud-2023-12-01-preview",
-        "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts/list?view=rest-defenderforcloud-2023-12-01-preview&tabs=HTTP",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-incident-response#ir-2-preparation---setup-incident-notification"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "8.1.14",
-            "profile": [
-                "Level 2"
-            ]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-    ],
-    "rule": {
-        "path": "az_defender",
-        "subPath": null,
-        "selectCondition": {
-            
-        },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "securityContacts.properties.alertNotifications.state",
-                                "ne",
-                                "On"
-                            ],
-                            [
-                                "securityContacts.properties.alertNotifications.minimalSeverity",
-                                "ne",
-                                "High"
-                            ]
-                        ],
-                        "operator": "or"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "name": "Name",
-                    "securityContacts.properties.email": "Email",
-                    "securityContacts.properties.phone": "Phone",
-                    "securityContacts.properties.alertNotifications.state": "Alert notification status",
-                    "securityContacts.properties.alertNotifications.minimalSeverity": "Minimal severity alert"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-                
+  "provider": "Azure",
+  "serviceType": "Subscription Security",
+  "serviceName": "Subscription",
+  "displayName": "Ensure that \u0027Notify about alerts with the following severity (or higher)\u0027 is enabled",
+  "description": "Enables emailing security alerts to the subscription owner or other designated security contact.",
+  "rationale": "Enabling security alert emails ensures that security alert emails are received from Microsoft. This ensures that the right people are aware of any potential security issues and are able to mitigate the risk.",
+  "impact": null,
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Navigate to \u0060Microsoft Defender for Cloud\u0060\r\n\t\t\t\t\t2. Click on Pricing \u0026 settings\r\n\t\t\t\t\t3. Click on the appropriate Management Group, Subscription, or Workspace\r\n\t\t\t\t\t4. Click on \u0060Email notifications\u0060\r\n\t\t\t\t\t5. Under \u0022Notification types\u0022, check the check box next to \u0060Notify about alerts with the following severity (or higher):\u0060 and select \u0060High\u0060 from the drop down menu\r\n\t\t\t\t\t6. Click Save",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email-notifications",
+    "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts?view=rest-defenderforcloud-2023-12-01-preview",
+    "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts/list?view=rest-defenderforcloud-2023-12-01-preview\u0026tabs=HTTP",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-incident-response#ir-2-preparation---setup-incident-notification"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "8.1.14",
+      "profile": [
+        "Level 2"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "az_defender",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "securityContacts.properties.alertNotifications.state",
+                "ne",
+                "On"
+              ],
+              [
+                "securityContacts.properties.alertNotifications.minimalSeverity",
+                "ne",
+                "High"
+              ]
             ],
-            "emphasis": [
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": null,
-                "showModalButton": null,
-                "directLink": null
-            }
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "securityContacts.properties.email": "Email",
+          "securityContacts.properties.phone": "Phone",
+          "securityContacts.properties.alertNotifications.state": "Alert notification status",
+          "securityContacts.properties.alertNotifications.minimalSeverity": "Minimal severity alert"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    "name": "Name",
-                    "securityContacts.properties.email": "Email",
-                    "securityContacts.properties.phone": "Phone",
-                    "securityContacts.properties.alertNotifications.state": "Alert notification status",
-                    "securityContacts.properties.alertNotifications.minimalSeverity": "Minimal severity alert"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    
-                ],
-                "message": "Ensure that 'Notify about alerts with the following severity (or higher)' is enabled",
-                "defaultMessage": "Ensure that 'Notify about alerts with the following severity (or higher)' is enabled"
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "type"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
     },
-    "idSuffix": "security_contact_high_severity_notification_disabled",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"id"
-    ],
-    "id": "azure_defender_020"
+    "text": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "securityContacts.properties.email": "Email",
+          "securityContacts.properties.phone": "Phone",
+          "securityContacts.properties.alertNotifications.state": "Alert notification status",
+          "securityContacts.properties.alertNotifications.minimalSeverity": "Minimal severity alert"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure that \u0027Notify about alerts with the following severity (or higher)\u0027 is enabled",
+        "defaultMessage": "Ensure that \u0027Notify about alerts with the following severity (or higher)\u0027 is enabled"
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "type"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "security_contact_high_severity_notification_disabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "azure_defender_020"
 }

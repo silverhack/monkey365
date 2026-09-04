@@ -1,131 +1,115 @@
 {
-    "args": [
-        
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "SharePoint Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure Office 365 SharePoint infected files are disallowed for download",
+  "description": "By default, SharePoint online allows files that Defender for Office 365 has detected as infected to be downloaded.",
+  "rationale": "Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams protects your organization from inadvertently sharing malicious files. When an infected file is detected, that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization\u0027s security team.",
+  "impact": "The only potential impact associated with implementation of this setting is potential inconvenience associated with the small percentage of false positive detections that may occur.",
+  "remediation": {
+    "text": "###### To set O365 SharePoint to disallow download of infected files, use Powershell:\r\n\t\t\t\t\t1. Connect using \u0060Connect-SPOService\u0060, you will need to enter the URL for your Sharepoint Online admin page https://*-admin.sharepoint.com as well as a Global Admin account.\r\n\t\t\t\t\t2. Run the following Powershell command to set the value to True\r\n\t\t\t\t\t\u0060\u0060\u0060Powershell\r\n\t\t\t\t\tSet-SPOTenant \u00C3\u0192\u00C2\u00A2\u00C3\u00A2\u00E2\u20AC\u0161\u00C2\u00AC\u00C3\u00A2\u00E2\u201A\u00AC\u00C5\u201CDisallowInfectedFileDownload $true\r\n\t\t\t\t\t\u0060\u0060\u0060\r\n\t\t\t\t\t3. After several minutes run the following to verify the value for \u0060DisallowInfectedFileDownload\u0060 has been set to True.\r\n\t\t\t\t\t\u0060\u0060\u0060Powershell\r\n\t\t\t\t\tGet-SPOTenant | Select-Object DisallowInfectedFileDownload\r\n\t\t\t\t\t\u0060\u0060\u0060",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/turn-on-atp-for-spo-odb-and-teams",
+    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/virus-detection-in-spo?view=o365-worldwide"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "6.1.0",
+      "reference": "7.3.1",
+      "profile": [
+        "E5 Level 2"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_spo_tenant_admin_details",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "DisallowInfectedFileDownload",
+                "eq",
+                "false"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "provider": "Microsoft365",
-    "serviceType": "SharePoint Online",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure Office 365 SharePoint infected files are disallowed for download",
-    "description": "By default, SharePoint online allows files that Defender for Office 365 has detected as infected to be downloaded.",
-    "rationale": "Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams protects your organization from inadvertently sharing malicious files. When an infected file is detected, that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization\u0027s security team.",
-    "impact": "The only potential impact associated with implementation of this setting is potential inconvenience associated with the small percentage of false positive detections that may occur.",
-    "remediation": {
-        "text": "###### To set O365 SharePoint to disallow download of infected files, use Powershell:\r\n\t\t\t\t\t1. Connect using `Connect-SPOService`, you will need to enter the URL for your Sharepoint Online admin page https://*-admin.sharepoint.com as well as a Global Admin account.\r\n\t\t\t\t\t2. Run the following Powershell command to set the value to True\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tSet-SPOTenant ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“DisallowInfectedFileDownload $true\r\n\t\t\t\t\t```\r\n\t\t\t\t\t3. After several minutes run the following to verify the value for `DisallowInfectedFileDownload` has been set to True.\r\n\t\t\t\t\t```Powershell\r\n\t\t\t\t\tGet-SPOTenant | Select-Object DisallowInfectedFileDownload\r\n\t\t\t\t\t```",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/turn-on-atp-for-spo-odb-and-teams",
-        "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/virus-detection-in-spo?view=o365-worldwide"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "6.1.0",
-            "reference": "7.3.1",
-            "profile": [
-				"E5 Level 2"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_spo_tenant_admin_details",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "rootSiteUrl": "Root Site",
+          "sharingCapability": "Sharing Capability",
+          "conditionalAccessPolicy": "Conditional Access Policy",
+          "disallowInfectedFileDownload": "Disallow Infected File Download"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "DisallowInfectedFileDownload",
-                                "eq",
-                                "false"
-                            ]
-                        ]
-                    }
-                ]
-            }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "RootSiteUrl"
         ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "RootSiteUrl": "Root Site",
-                    "SharingCapability": "Sharing Capability",
-                    "ConditionalAccessPolicy": "Conditional Access Policy",
-                    "DisallowInfectedFileDownload": "Disallow Infected File Download"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-					"RootSiteUrl"
-                ],
-                "message": "Ensure Office 365 SharePoint infected files are disallowed for download for {RootSiteUrl}",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "RootSiteUrl",
-                "resourceId": "_ObjectIdentity_",
-                "resourceType": "SPOTenantAdmin"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "spo_m365_infected_files_allowed_download",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"_ObjectType_",
-		"_ObjectIdentity_",
-		"RootSiteUrl"
-    ],
-    "id": "microsoft365_2191"
+        "message": "Ensure Office 365 SharePoint infected files are disallowed for download for {RootSiteUrl}",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "RootSiteUrl",
+        "resourceId": "_ObjectIdentity_",
+        "resourceType": "SPOTenantAdmin"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "spo_m365_infected_files_allowed_download",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "_ObjectType_",
+    "_ObjectIdentity_",
+    "RootSiteUrl"
+  ],
+  "id": "microsoft365_2191"
 }

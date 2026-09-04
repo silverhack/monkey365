@@ -1,113 +1,89 @@
 {
-    "args": [
-        
-    ],
-    "provider": "EntraID",
-    "serviceType": "Identity Protection",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure the Entra ID \u0027Risky sign-ins\u0027 report is reviewed at least weekly",
-    "description": "\r\n\t\tThis report contains records of accounts that have had activity that could indicate they are compromised, such as accounts that have: \r\n\t\t* Successfully signed in after multiple failures, which is an indication that the accounts have cracked passwords. \r\n\t\t* Signed in to tenant from a client IP address that has been recognized by Microsoft as an anonymous proxy IP address (such as a TOR network). \r\n\t\t* Successful sign-ins from users where two sign-ins appeared to originate from different regions and the time between sign-ins makes it impossible for the user to have travelled between those regions. \r\n  ",
-    "rationale": "Reviewing this report on a regular basis allows for identification and remediation of compromised accounts.",
-    "impact": null,
-    "remediation": {
-        "text": "\r\n\t\t\t###### To review the \u0027Risky sign-ins\u0027 report: \r\n\t\t\t1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com. \r\n\t\t\t2. Click expand Protection select Risky activities. \r\n\t\t\t3. Under Report click on Risky sign-ins. \r\n\t\t\t4. Review by Risk level (aggregate). \r\n\t",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/overview-identity-protection",
-        "https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/howto-identity-protection-remediate-unblock"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "3.1.0",
-            "reference": "5.2.6.1",
-            "profile": "E5 Level 1"
-        }
-    ],
-    "level": "info",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "",
-        "subPath": null,
-        "selectCondition": {
-            
+  "args": [],
+  "provider": "EntraID",
+  "serviceType": "Identity Protection",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure the Entra ID \u0027Risky sign-ins\u0027 report is reviewed at least weekly",
+  "description": "\r\n\t\tThis report contains records of accounts that have had activity that could indicate they are compromised, such as accounts that have: \r\n\t\t* Successfully signed in after multiple failures, which is an indication that the accounts have cracked passwords. \r\n\t\t* Signed in to tenant from a client IP address that has been recognized by Microsoft as an anonymous proxy IP address (such as a TOR network). \r\n\t\t* Successful sign-ins from users where two sign-ins appeared to originate from different regions and the time between sign-ins makes it impossible for the user to have travelled between those regions. \r\n  ",
+  "rationale": "Reviewing this report on a regular basis allows for identification and remediation of compromised accounts.",
+  "impact": null,
+  "remediation": {
+    "text": "\r\n\t\t\t###### To review the \u0027Risky sign-ins\u0027 report: \r\n\t\t\t1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com. \r\n\t\t\t2. Click expand Protection select Risky activities. \r\n\t\t\t3. Under Report click on Risky sign-ins. \r\n\t\t\t4. Review by Risk level (aggregate). \r\n\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/overview-identity-protection",
+    "https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/howto-identity-protection-remediate-unblock"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "3.1.0",
+      "reference": "5.2.6.1",
+      "profile": "E5 Level 1"
+    }
+  ],
+  "level": "info",
+  "tags": [],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
         },
-        "query": [
-            
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
+        "isManual": false,
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
     },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "table": null,
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "isManual": false,
-                "showGoToButton": false,
-                "showModalButton": false,
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    
-                ],
-                "message": "Ensure the Entra ID\u0027Risky sign-ins\u0027 report is reviewed at least weekly",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": null,
-                "resourceId": null,
-                "resourceType": null
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "eid_sign_in_report_is_reviewed",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-        
-    ],
-    "id": "entraid_1158"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure the Entra ID\u0027Risky sign-ins\u0027 report is reviewed at least weekly",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_sign_in_report_is_reviewed",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "entraid_1158"
 }

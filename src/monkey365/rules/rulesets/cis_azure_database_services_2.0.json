@@ -1,1265 +1,1148 @@
 {
-	"about": "This ruleset contains a collection of rules for Azure based on CIS benchmark. The rules are used as a mechanism to evaluate the configuration of Azure resources and to determine whether controls within a standard are being adhered to. Rules are also divided into categories and subcategories according to the rule's type. This will ensures that Azure cloud will meet the industry standards.",
-	"framework": {
-		"name" : "CIS Microsoft Azure Database Services Benchmark",
-		"version" : "2.0.0",
-		"tou" : "https://www.cisecurity.org/terms-of-use-for-non-member-cis-products",
-		"url" : "https://www.cisecurity.org/benchmark/azure"
-	},
-	"rules": {
-		"azure-cache-redis-entra-auth-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.1",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-redis-enterprise-entra-auth-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.1",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-ssl-not-enabled.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.2",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-minimum-tls-version.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.3",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-enterprise-minimum-tls-version.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.3",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-access-policies-not-implemented.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.4",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-lack-of-system-managed-identity.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.5",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-enterprise-lack-of-system-managed-identity.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.5",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-public-network-access.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.6",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-enterprise-public-network-access.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.6",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-lacks-private-link.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.7",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-enterprise-lacks-private-link.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.7",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-lacks-cmk.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.8",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-access-key-authentication-disabled.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.9",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-enterprise-access-key-authentication-disabled.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.9",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cache-redis-update-channel.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "2.10",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cosmosdb-allow-all-networks.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "3.1",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cosmosdb-lacks-private-endpoint.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "3.2",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-cosmosdb-local-auth-enabled.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "3.3",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cosmosdb-public-network-access-enabled.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "3.4",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-cosmosdb-lacks-cmk-encryption.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "3.5",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-cosmosdb-fw-allow-all-traffic.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "3.6",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-cosmosdb-logging-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "3.7",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-datafactory-lack-cmk-encryption.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "4.1",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-datafactory-lack-managed-identity.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "4.2",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-datafactory-lack-keyvault.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "4.3",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-datafactory-lack-rbac.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "4.4",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-mysql-lack-cmk-encryption.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "5.1",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-mysql-entra-authentication-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "5.2",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-mysql-public-network-access-enabled.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "5.3",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-mysql-lack-private-endpoint.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "5.4",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-mysql-server-parameter-dynamic-rule.json": [
-			{
-				"args": [
-					"Ensure server parameter 'audit_log_enabled' is set to 'ON' for MySQL flexible server",
-					"Enable audit_log_enabled on MySQL flexible servers.",
-					"Enabling audit_log_enabled helps MySQL Database to log items such as connection attempts to the server, DDL/DML access, and more. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
-					"There are further costs incurred for storage of logs. For high traffic databases these logs will be significant. Determine your organization's needs before enabling.",
-					"https://www.azadvertizer.net/azpolicyadvertizer/4dc90661-5d91-41f1-be00-d243f6f3fe9c.html",
-					"
-						#### Remediate from Azure Portal 
-						##### Part 1 - Turn on audit logs 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for MySQL flexible servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. Set audit_log_enabled to ON. 
-						5. Click Save. 
-						##### Part 2 
-						- Capture audit logs (diagnostic settings is for example only, send these logs to the appropriate data sink for your logging needs) 
-						1. Under Monitoring, select Diagnostic settings. 
-						2. Select + Add diagnostic setting. 
-						3. Provide a diagnostic setting name. 
-						4. Under Categories, select MySQL Audit Logs. 
-						5. Specify destination details. 
-						6. Click Save. It may take up to 10 minutes for the logs to appear in the configured destination.
-					",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"5.5",
-					"audit_log_enabled",
-					"eq",
-					"OFF",
-					"name",
-					"Ensure server parameter 'audit_log_enabled' is set to 'ON' for {name}",
-					"020"
-				],
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "5.5",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"Ensure server parameter 'audit_log_events' has 'CONNECTION' set for MySQL flexible server",
-					"Set `audit_log_events` to include `CONNECTION` on `MySQL flexible servers`.",
-					"Enabling `CONNECTION` helps MySQL Database to log items such as successful and failed connection attempts to the server. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
-					"There are further costs incurred for storage of logs. For high traffic databases these logs will be significant. Determine your organization's needs before enabling.",
-					"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threatdetection#lt-3-enable-logging-for-security-investigation",
-					"
-						#### Remediate from Azure Portal 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for MySQL flexible servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. In the filter bar, type audit_log. 
-						5. Set audit_log_enabled to ON. 
-						6. In the drop-down next to audit_log_events, check CONNECTION. 
-						7. Click Save. 
-						8. Under Monitoring, select Diagnostic settings. 
-						9. Select + Add diagnostic setting. 
-						10. Provide a diagnostic setting name. 
-						11. Under Categories, select MySQL Audit Logs. 
-						12. Specify destination details. 
-						13. Click Save. It may take up to 10 minutes for the logs to appear in the configured destination.
-					",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"5.6",
-					"audit_log_events",
-					"eq",
-					"CONNECTION",
-					"name",
-					"Ensure server parameter 'audit_log_events' has 'CONNECTION' set for {name}",
-					"021"
-				],
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "5.6",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"Ensure server parameter 'error_server_log_file' is Enabled for MySQL flexible server",
-					"Enable error logs on MySQL flexible servers.",
-					"With error_server_log_file enabled, MySQL Database will log database errors to a logging solution. These logs assist in producing a forensic trail that can be used for investigation or for detection when paired with a SIEM.",
-					"There are further costs incurred for storage of logs. For high traffic databases these logs will be significant. Determine your organization's needs before enabling.",
-					"
-						#### Remediate from Azure Portal 
-						##### Part 1 - Turn on audit logs 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for MySQL flexible servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. Set error_server_log_file to ON. 
-						5. Click Save. 
-						##### Part 2 
-						- Capture audit logs (diagnostic settings is for example only, send these logs to the appropriate data sink for your logging needs) 
-						1. Under Monitoring, select Diagnostic settings. 
-						2. Select + Add diagnostic setting. 
-						3. Provide a diagnostic setting name. 
-						4. Under Categories, select MySQL Audit Logs. 
-						5. Specify destination details. 
-						6. Click Save. It may take up to 10 minutes for the logs to appear in the configured destination.
-					",
-					"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"5.7",
-					"error_server_log_file",
-					"eq",
-					"OFF",
-					"name",
-					"Ensure server parameter 'error_server_log_file' is Enabled for {name}",
-					"022"
-				],
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "5.7",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"Ensure server parameter 'require_secure_transport' is set to 'ON' for MySQL Server",
-					"Enable require_secure_transport on MySQL flexible servers",
-					"The Secure Sockets Layer (SSL) protocol encrypts network traffic transiting between server and client. Enforcing SSL connections between database server and client applications helps protect against `man in the middle` attacks by encrypting the data stream between the server and application.",
-					"",
-					"
-						##### Remediate from Azure Portal 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for MySQL flexible servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. Set require_secure_transport to ON. 
-						5. Click Save.
-					",
-					"https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-networking#tls-and-ssl",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"5.8",
-					"require_secure_transport",
-					"eq",
-					"OFF",
-					"name",
-					"Ensure server parameter 'require_secure_transport' is set to 'ON' for {name}",
-					"023"
-				],
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "5.8",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"Ensure server parameter 'tls_version' is set to 'TLSv1.2' (or higher) for MySQL flexible server",
-					"Ensure tls_version on MySQL flexible servers is set to use TLS version 1.2 or higher.",
-					"The Secure Sockets Layer (SSL) protocol encrypts network traffic transiting between server and client.<br/><br/>Using only the most recent versions of SSL protocols (TLS version 1.2 and higher) eliminates susceptibility to known exploited vulnerabilities of outdated versions of TLS. If TLS 1.2 does not provide additional granular configuration options for supported cipher suites, there's a chance that default ciphers which employ Cipher Block Chaining (CBC) mode may be enabled which would introduce Padding Oracle types of vulnerabilities.<br/><br/>TLS 1.3 does not support CBC mode ciphers by default and by default supports GCM ciphers which include an extra authentication step during the clear text to cipher text encryption process.<br/><br/>TLS version 1.3 is preferable where it is possible to implement.<br/><br/>Versions 1.0 and 1.1 of TLS are no longer considered secure. These versions should not be used or permitted where data integrity and confidentiality are required.",
-					"",
-					"
-						##### Remediate from Azure Portal 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for MySQL flexible servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. In the filter bar, type tls_version. 
-						5. Click on the VALUE dropdown next to tls_version, and check TLSv1.2 (or higher). 
-						6. Uncheck anything lower than TLSv1.2. 
-						7. Click Save.
-					",
-					"https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-networking#tls-and-ssl",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"5.9",
-					"tls_version",
-					"match",
-					"^TLSv1\\\\.2$",
-					"name",
-					"Ensure server parameter 'tls_version' is set to 'TLSv1.2' (or higher) for {name}",
-					"024"
-				],
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "5.9",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-postgresql-lack-cmk-encryption.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "6.1",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-postgresql-entra-authentication-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "6.2",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-postgresql-public-network-access-enabled.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "6.3",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-postgresql-lack-private-endpoint.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "6.4",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-postgresql-server-parameter-dynamic-rule.json": [
-			{
-				"args": [
-					"Ensure server parameter 'connection_throttle.enable' is set to 'ON' for PostgreSQL server",
-					"Enable connection_throttling on PostgreSQL flexible servers.",
-					"Enabling connection_throttling helps the PostgreSQL Database to Set the verbosity of logged messages. This in turn generates query and error logs with respect to concurrent connections that could lead to a successful Denial of Service (DoS) attack by exhausting connection resources. A system can also fail or be degraded by an overload of legitimate users. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
-					"",
-					"
-						##### Remediate from Azure Portal 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for PostgreSQL servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. In the filter bar, type connection_throttle.enable. 
-						5. Set connection_throttle.enable to ON. 
-						6. Click Save.
-					",
-					"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"6.5",
-					"connection_throttle.enable",
-					"ne",
-					"on",
-					"name",
-					"Ensure server parameter 'connection_throttle.enable' is set to 'ON' for {name}",
-					"020"
-				],
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "6.5",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"Ensure server parameter 'logfiles.retention_days' is greater than 3 days for PostgreSQL server",
-					"Ensure logfiles.retention_days on PostgreSQL flexible servers is set to an appropriate value.",
-					"Configuring logfiles.retention_days determines the duration in days that Azure Database for PostgreSQL retains log files. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
-					"Configuring this setting will result in logs being retained for the specified number of days. If this is configured on a high traffic server, the log may grow quickly to occupy a large amount of disk space. In this case you may want to set this to a lower number.",
-					"
-						##### Remediate from Azure Portal 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for PostgreSQL servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. In the filter bar, type logfiles.retention_days. 
-						5. Input a value between 4 and 7 (inclusive). 
-						6. Click Save.
-					",
-					"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-6-configure-log-storage-retention",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"6.6",
-					"logfiles.retention_days",
-					"le",
-					"3",
-					"name",
-					"Ensure server parameter 'logfiles.retention_days' is greater than 3 days for {name}",
-					"021"
-				],
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "6.6",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"Ensure server parameter 'log_checkpoints' is set to 'ON' for PostgreSQL server",
-					"Enable log_checkpoints on PostgreSQL flexible servers.",
-					"Enabling log_checkpoints helps the PostgreSQL Database to Log each checkpoint, which in turn generates query and error logs. However, access to transaction logs is not supported. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
-					"",
-					"
-						##### Remediate from Azure Portal 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for PostgreSQL servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. In the filter bar, type log_checkpoints. 
-						5. Set the VALUE for log_checkpoints to ON. 
-						6. Click Save.
-					",
-					"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-6-configure-log-storage-retention",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"6.7",
-					"log_checkpoints",
-					"ne",
-					"on",
-					"name",
-					"Ensure server parameter 'log_checkpoints' is set to 'ON' for {name}",
-					"022"
-				],
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "6.7",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"Ensure server parameter 'log_disconnections' is set to 'ON' for PostgreSQL servers",
-					"Enable log_disconnections on PostgreSQL servers.",
-					"Enabling log_disconnections helps PostgreSQL Database to Logs end of a session, including duration, which in turn generates query and error logs. Query and error logs can be used.",
-					"Enabling this setting will enable a log of all disconnections. If this is enabled for a high traffic server, the log may grow exponentially.",
-					"
-						##### Remediate from Azure Portal 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for PostgreSQL servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. In the filter bar, type log_disconnections. 
-						5. Ensure that log_disconnections is set to ON
-					",
-					"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-6-configure-log-storage-retention",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"6.8",
-					"log_disconnections",
-					"ne",
-					"on",
-					"name",
-					"Ensure server parameter 'log_disconnections' is set to 'ON' for {name}",
-					"023"
-				],
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "6.8",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"Ensure server parameter 'log_connections' is set to 'ON' for PostgreSQL servers",
-					"Enable log_connections on PostgreSQL servers.",
-					"Enabling log_connections helps PostgreSQL Database to log attempted connection to the server, as well as successful completion of client authentication. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
-					"",
-					"
-						##### Remediate from Azure Portal 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for PostgreSQL servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. In the filter bar, type log_connections. 
-						5. Set log_connections to ON. 
-						6. Click Save.
-					",
-					"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"6.9",
-					"log_connections",
-					"ne",
-					"on",
-					"name",
-					"Ensure server parameter 'log_connections' is set to 'ON' for {name}",
-					"024"
-				],
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "6.9",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"Ensure server parameter 'require_secure_transport' is set to 'ON' for PostgreSQL server",
-					"Enable require_secure_transport on PostgreSQL flexible servers.",
-					"SSL connectivity helps to provide a new layer of security by connecting database server to client applications using Secure Sockets Layer (SSL). Enforcing SSL connections between database server and client applications helps protect against `man in the middle` attacks by encrypting the data stream between the server and application.",
-					"",
-					"
-						##### Remediate from Azure Portal 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for PostgreSQL servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. In the filter bar, type require_secure_transport. 
-						5. Ensure that the VALUE for require_secure_transport is set to ON
-					",
-					"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"6.10",
-					"require_secure_transport",
-					"ne",
-					"on",
-					"name",
-					"Ensure server parameter 'require_secure_transport' is set to 'ON' for {name}",
-					"025"
-				],
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "6.10",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"Ensure server parameter 'ssl_min_protocol_version' is set to 'TLSv1.2' or higher for PostgreSQL server",
-					"Note: It is not possible to set the minimal TLS version on PostgreSQL flexible server to lower than 1.2. Incoming connections which try to encrypt the traffic using TLS 1.0 and TLS 1.1 are denied.\r\nSetting 'ssl_min_protocol_version' to 'TLSv1.2' or higher reduces TLS protocol vulnerabilities by preventing the use of significantly outdated versions of TLS.",
-					"The Secure Sockets Layer (SSL) protocol encrypts network traffic transiting between server and client.<br/><br/>Using only the most recent versions of SSL protocols (TLS version 1.2 and higher) eliminates susceptibility to known exploited vulnerabilities of outdated versions of TLS. If TLS 1.2 does not provide additional granular configuration options for supported cipher suites, there's a chance that default ciphers which employ Cipher Block Chaining (CBC) mode may be enabled which would introduce Padding Oracle types of vulnerabilities.<br/><br/>TLS 1.3 does not support CBC mode ciphers by default and by default supports GCM ciphers which include an extra authentication step during the clear text to cipher text encryption process.<br/><br/>TLS version 1.3 is preferable where it is possible to implement.<br/><br/>Versions 1.0 and 1.1 of TLS are no longer considered secure. These versions should not be used or permitted where data integrity and confidentiality are required.",
-					"TLS 1.3 is not compatible with older versions, so must be supported by all clients to be implemented.\r\nCipher suites may be able to be specified for TLS 1.2 if a premium SKU is in use.",
-					"
-						##### Remediate from Azure Portal 
-						1. Login to Azure Portal using https://portal.azure.com. 
-						2. Go to Azure Database for PostgreSQL servers. 
-						3. For each database, under Settings, click Server parameters. 
-						4. In the filter bar, type ssl_min_protocol_version. 
-						5. Ensure ssl_min_protocol_version is set to TLSV1.2 or higher. 
-						6. Repeat steps 1-5 for each server
-					",
-					"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation",
-					"CIS Microsoft Azure Database Services",
-					"2.0.0",
-					"6.11",
-					"ssl_min_protocol_version",
-					"ne",
-					"TLSv1.2",
-					"name",
-					"Ensure server parameter 'ssl_min_protocol_version' is set to 'TLSv1.2' or higher for {name}",
-					"026"
-				],
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "6.11",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-sql-lack-auditing.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.1",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-sql-public-network-access-enabled.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.2",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-sql-firewall-rule-overly-permissive.json": [
-			{
-				"args": [
-					"0.0.0.0",
-					"255.255.255.255"
-				],
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.3",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			},
-			{
-				"args": [
-					"0.0.0.0",
-					"0.0.0.0"
-				],
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.3",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-sql-tde-lacks-cmk.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.4",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-managed-sql-tde-lacks-cmk.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.4",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-sql-entra-authentication-disabled.json": [
-			{
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.5",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-sql-lacks-data-encryption.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.6",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-managed-sql-lacks-data-encryption.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.6",
-						"profile": [
-							"Level 2"
-						]
-					}
-				]
-			}
-		],
-		"azure-sql-auditing-retention.json": [
-			{
-				"args": [
-					"90"
-				],
-				"enabled": true,
-				"level": "medium",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.7",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-sql-minimum-tls-version.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.8",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		],
-		"azure-managed-sql-minimum-tls-version.json": [
-			{
-				"enabled": true,
-				"level": "high",
-				"compliance": [
-					{
-						"name": "CIS Microsoft Azure Database Services",
-						"version": "2.0.0",
-						"reference": "9.8",
-						"profile": [
-							"Level 1"
-						]
-					}
-				]
-			}
-		]
-	}
+  "about": "This ruleset contains a collection of rules for Azure based on CIS benchmark. The rules are used as a mechanism to evaluate the configuration of Azure resources and to determine whether controls within a standard are being adhered to. Rules are also divided into categories and subcategories according to the rule\u0027s type. This will ensures that Azure cloud will meet the industry standards.",
+  "framework": {
+    "name": "CIS Microsoft Azure Database Services Benchmark",
+    "version": "2.0.0",
+    "tou": "https://www.cisecurity.org/terms-of-use-for-non-member-cis-products",
+    "url": "https://www.cisecurity.org/benchmark/azure"
+  },
+  "rules": {
+    "azure-cache-redis-entra-auth-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.1",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-redis-enterprise-entra-auth-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.1",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-ssl-not-enabled.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.2",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-minimum-tls-version.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.3",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-enterprise-minimum-tls-version.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.3",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-access-policies-not-implemented.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.4",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-lack-of-system-managed-identity.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.5",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-enterprise-lack-of-system-managed-identity.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.5",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-public-network-access.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.6",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-enterprise-public-network-access.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.6",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-lacks-private-link.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.7",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-enterprise-lacks-private-link.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.7",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-lacks-cmk.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.8",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-access-key-authentication-disabled.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.9",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-enterprise-access-key-authentication-disabled.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.9",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cache-redis-update-channel.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "2.10",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cosmosdb-allow-all-networks.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.1",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cosmosdb-lacks-private-endpoint.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.2",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cosmosdb-local-auth-enabled.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.3",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cosmosdb-public-network-access-enabled.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.4",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cosmosdb-lacks-cmk-encryption.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.5",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cosmosdb-fw-allow-all-traffic.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.6",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-cosmosdb-logging-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "3.7",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-datafactory-lack-cmk-encryption.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "4.1",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-datafactory-lack-managed-identity.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "4.2",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-datafactory-lack-keyvault.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "4.3",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-datafactory-lack-rbac.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "4.4",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-mysql-lack-cmk-encryption.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "5.1",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-mysql-entra-authentication-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "5.2",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-mysql-public-network-access-enabled.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "5.3",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-mysql-lack-private-endpoint.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "5.4",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-mysql-server-parameter-dynamic-rule.json": [
+      {
+        "args": [
+          "Ensure server parameter \u0027audit_log_enabled\u0027 is set to \u0027ON\u0027 for MySQL flexible server",
+          "Enable audit_log_enabled on MySQL flexible servers.",
+          "Enabling audit_log_enabled helps MySQL Database to log items such as connection attempts to the server, DDL/DML access, and more. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
+          "There are further costs incurred for storage of logs. For high traffic databases these logs will be significant. Determine your organization\u0027s needs before enabling.",
+          "https://www.azadvertizer.net/azpolicyadvertizer/4dc90661-5d91-41f1-be00-d243f6f3fe9c.html",
+          "\n\t\t\t\t\t\t#### Remediate from Azure Portal \n\t\t\t\t\t\t##### Part 1 - Turn on audit logs \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for MySQL flexible servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. Set audit_log_enabled to ON. \n\t\t\t\t\t\t5. Click Save. \n\t\t\t\t\t\t##### Part 2 \n\t\t\t\t\t\t- Capture audit logs (diagnostic settings is for example only, send these logs to the appropriate data sink for your logging needs) \n\t\t\t\t\t\t1. Under Monitoring, select Diagnostic settings. \n\t\t\t\t\t\t2. Select \u002B Add diagnostic setting. \n\t\t\t\t\t\t3. Provide a diagnostic setting name. \n\t\t\t\t\t\t4. Under Categories, select MySQL Audit Logs. \n\t\t\t\t\t\t5. Specify destination details. \n\t\t\t\t\t\t6. Click Save. It may take up to 10 minutes for the logs to appear in the configured destination.\n\t\t\t\t\t",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "5.5",
+          "audit_log_enabled",
+          "eq",
+          "OFF",
+          "name",
+          "Ensure server parameter \u0027audit_log_enabled\u0027 is set to \u0027ON\u0027 for {name}",
+          "020"
+        ],
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "5.5",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "Ensure server parameter \u0027audit_log_events\u0027 has \u0027CONNECTION\u0027 set for MySQL flexible server",
+          "Set \u0060audit_log_events\u0060 to include \u0060CONNECTION\u0060 on \u0060MySQL flexible servers\u0060.",
+          "Enabling \u0060CONNECTION\u0060 helps MySQL Database to log items such as successful and failed connection attempts to the server. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
+          "There are further costs incurred for storage of logs. For high traffic databases these logs will be significant. Determine your organization\u0027s needs before enabling.",
+          "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threatdetection#lt-3-enable-logging-for-security-investigation",
+          "\n\t\t\t\t\t\t#### Remediate from Azure Portal \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for MySQL flexible servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. In the filter bar, type audit_log. \n\t\t\t\t\t\t5. Set audit_log_enabled to ON. \n\t\t\t\t\t\t6. In the drop-down next to audit_log_events, check CONNECTION. \n\t\t\t\t\t\t7. Click Save. \n\t\t\t\t\t\t8. Under Monitoring, select Diagnostic settings. \n\t\t\t\t\t\t9. Select \u002B Add diagnostic setting. \n\t\t\t\t\t\t10. Provide a diagnostic setting name. \n\t\t\t\t\t\t11. Under Categories, select MySQL Audit Logs. \n\t\t\t\t\t\t12. Specify destination details. \n\t\t\t\t\t\t13. Click Save. It may take up to 10 minutes for the logs to appear in the configured destination.\n\t\t\t\t\t",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "5.6",
+          "audit_log_events",
+          "eq",
+          "CONNECTION",
+          "name",
+          "Ensure server parameter \u0027audit_log_events\u0027 has \u0027CONNECTION\u0027 set for {name}",
+          "021"
+        ],
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "5.6",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "Ensure server parameter \u0027error_server_log_file\u0027 is Enabled for MySQL flexible server",
+          "Enable error logs on MySQL flexible servers.",
+          "With error_server_log_file enabled, MySQL Database will log database errors to a logging solution. These logs assist in producing a forensic trail that can be used for investigation or for detection when paired with a SIEM.",
+          "There are further costs incurred for storage of logs. For high traffic databases these logs will be significant. Determine your organization\u0027s needs before enabling.",
+          "\n\t\t\t\t\t\t#### Remediate from Azure Portal \n\t\t\t\t\t\t##### Part 1 - Turn on audit logs \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for MySQL flexible servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. Set error_server_log_file to ON. \n\t\t\t\t\t\t5. Click Save. \n\t\t\t\t\t\t##### Part 2 \n\t\t\t\t\t\t- Capture audit logs (diagnostic settings is for example only, send these logs to the appropriate data sink for your logging needs) \n\t\t\t\t\t\t1. Under Monitoring, select Diagnostic settings. \n\t\t\t\t\t\t2. Select \u002B Add diagnostic setting. \n\t\t\t\t\t\t3. Provide a diagnostic setting name. \n\t\t\t\t\t\t4. Under Categories, select MySQL Audit Logs. \n\t\t\t\t\t\t5. Specify destination details. \n\t\t\t\t\t\t6. Click Save. It may take up to 10 minutes for the logs to appear in the configured destination.\n\t\t\t\t\t",
+          "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "5.7",
+          "error_server_log_file",
+          "eq",
+          "OFF",
+          "name",
+          "Ensure server parameter \u0027error_server_log_file\u0027 is Enabled for {name}",
+          "022"
+        ],
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "5.7",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "Ensure server parameter \u0027require_secure_transport\u0027 is set to \u0027ON\u0027 for MySQL Server",
+          "Enable require_secure_transport on MySQL flexible servers",
+          "The Secure Sockets Layer (SSL) protocol encrypts network traffic transiting between server and client. Enforcing SSL connections between database server and client applications helps protect against \u0060man in the middle\u0060 attacks by encrypting the data stream between the server and application.",
+          "",
+          "\n\t\t\t\t\t\t##### Remediate from Azure Portal \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for MySQL flexible servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. Set require_secure_transport to ON. \n\t\t\t\t\t\t5. Click Save.\n\t\t\t\t\t",
+          "https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-networking#tls-and-ssl",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "5.8",
+          "require_secure_transport",
+          "eq",
+          "OFF",
+          "name",
+          "Ensure server parameter \u0027require_secure_transport\u0027 is set to \u0027ON\u0027 for {name}",
+          "023"
+        ],
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "5.8",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "Ensure server parameter \u0027tls_version\u0027 is set to \u0027TLSv1.2\u0027 (or higher) for MySQL flexible server",
+          "Ensure tls_version on MySQL flexible servers is set to use TLS version 1.2 or higher.",
+          "The Secure Sockets Layer (SSL) protocol encrypts network traffic transiting between server and client.\u003Cbr/\u003E\u003Cbr/\u003EUsing only the most recent versions of SSL protocols (TLS version 1.2 and higher) eliminates susceptibility to known exploited vulnerabilities of outdated versions of TLS. If TLS 1.2 does not provide additional granular configuration options for supported cipher suites, there\u0027s a chance that default ciphers which employ Cipher Block Chaining (CBC) mode may be enabled which would introduce Padding Oracle types of vulnerabilities.\u003Cbr/\u003E\u003Cbr/\u003ETLS 1.3 does not support CBC mode ciphers by default and by default supports GCM ciphers which include an extra authentication step during the clear text to cipher text encryption process.\u003Cbr/\u003E\u003Cbr/\u003ETLS version 1.3 is preferable where it is possible to implement.\u003Cbr/\u003E\u003Cbr/\u003EVersions 1.0 and 1.1 of TLS are no longer considered secure. These versions should not be used or permitted where data integrity and confidentiality are required.",
+          "",
+          "\n\t\t\t\t\t\t##### Remediate from Azure Portal \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for MySQL flexible servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. In the filter bar, type tls_version. \n\t\t\t\t\t\t5. Click on the VALUE dropdown next to tls_version, and check TLSv1.2 (or higher). \n\t\t\t\t\t\t6. Uncheck anything lower than TLSv1.2. \n\t\t\t\t\t\t7. Click Save.\n\t\t\t\t\t",
+          "https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-networking#tls-and-ssl",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "5.9",
+          "tls_version",
+          "match",
+          "^TLSv1\\\\.2$",
+          "name",
+          "Ensure server parameter \u0027tls_version\u0027 is set to \u0027TLSv1.2\u0027 (or higher) for {name}",
+          "024"
+        ],
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "5.9",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-postgresql-lack-cmk-encryption.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.1",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-postgresql-entra-authentication-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.2",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-postgresql-public-network-access-enabled.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.3",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-postgresql-lack-private-endpoint.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.4",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-postgresql-server-parameter-dynamic-rule.json": [
+      {
+        "args": [
+          "Ensure server parameter \u0027connection_throttle.enable\u0027 is set to \u0027ON\u0027 for PostgreSQL server",
+          "Enable connection_throttling on PostgreSQL flexible servers.",
+          "Enabling connection_throttling helps the PostgreSQL Database to Set the verbosity of logged messages. This in turn generates query and error logs with respect to concurrent connections that could lead to a successful Denial of Service (DoS) attack by exhausting connection resources. A system can also fail or be degraded by an overload of legitimate users. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
+          "",
+          "\n\t\t\t\t\t\t##### Remediate from Azure Portal \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for PostgreSQL servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. In the filter bar, type connection_throttle.enable. \n\t\t\t\t\t\t5. Set connection_throttle.enable to ON. \n\t\t\t\t\t\t6. Click Save.\n\t\t\t\t\t",
+          "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "6.5",
+          "connection_throttle.enable",
+          "ne",
+          "on",
+          "name",
+          "Ensure server parameter \u0027connection_throttle.enable\u0027 is set to \u0027ON\u0027 for {name}",
+          "020"
+        ],
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.5",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "Ensure server parameter \u0027logfiles.retention_days\u0027 is greater than 3 days for PostgreSQL server",
+          "Ensure logfiles.retention_days on PostgreSQL flexible servers is set to an appropriate value.",
+          "Configuring logfiles.retention_days determines the duration in days that Azure Database for PostgreSQL retains log files. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
+          "Configuring this setting will result in logs being retained for the specified number of days. If this is configured on a high traffic server, the log may grow quickly to occupy a large amount of disk space. In this case you may want to set this to a lower number.",
+          "\n\t\t\t\t\t\t##### Remediate from Azure Portal \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for PostgreSQL servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. In the filter bar, type logfiles.retention_days. \n\t\t\t\t\t\t5. Input a value between 4 and 7 (inclusive). \n\t\t\t\t\t\t6. Click Save.\n\t\t\t\t\t",
+          "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-6-configure-log-storage-retention",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "6.6",
+          "logfiles.retention_days",
+          "le",
+          "3",
+          "name",
+          "Ensure server parameter \u0027logfiles.retention_days\u0027 is greater than 3 days for {name}",
+          "021"
+        ],
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.6",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "Ensure server parameter \u0027log_checkpoints\u0027 is set to \u0027ON\u0027 for PostgreSQL server",
+          "Enable log_checkpoints on PostgreSQL flexible servers.",
+          "Enabling log_checkpoints helps the PostgreSQL Database to Log each checkpoint, which in turn generates query and error logs. However, access to transaction logs is not supported. Query and error logs can be used to identify, troubleshoot, and repair configuration errors and sub-optimal performance.",
+          "",
+          "\n\t\t\t\t\t\t##### Remediate from Azure Portal \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for PostgreSQL servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. In the filter bar, type log_checkpoints. \n\t\t\t\t\t\t5. Set the VALUE for log_checkpoints to ON. \n\t\t\t\t\t\t6. Click Save.\n\t\t\t\t\t",
+          "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-6-configure-log-storage-retention",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "6.7",
+          "log_checkpoints",
+          "ne",
+          "on",
+          "name",
+          "Ensure server parameter \u0027log_checkpoints\u0027 is set to \u0027ON\u0027 for {name}",
+          "022"
+        ],
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.7",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "Ensure server parameter \u0027log_disconnections\u0027 is set to \u0027ON\u0027 for PostgreSQL servers",
+          "Enable log_disconnections on PostgreSQL servers.",
+          "Enabling log_disconnections helps PostgreSQL Database to Logs end of a session, including duration, which in turn generates query and error logs. Query and error logs can be used.",
+          "Enabling this setting will enable a log of all disconnections. If this is enabled for a high traffic server, the log may grow exponentially.",
+          "\n\t\t\t\t\t\t##### Remediate from Azure Portal \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for PostgreSQL servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. In the filter bar, type log_disconnections. \n\t\t\t\t\t\t5. Ensure that log_disconnections is set to ON\n\t\t\t\t\t",
+          "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-6-configure-log-storage-retention",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "6.8",
+          "log_disconnections",
+          "ne",
+          "on",
+          "name",
+          "Ensure server parameter \u0027log_disconnections\u0027 is set to \u0027ON\u0027 for {name}",
+          "023"
+        ],
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.8",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "Ensure server parameter \u0027log_connections\u0027 is set to \u0027ON\u0027 for PostgreSQL servers",
+          "Enable log_connections on PostgreSQL servers.",
+          "Enabling log_connections helps PostgreSQL Database to log attempted connection to the server, as well as successful completion of client authentication. Log data can be used to identify, troubleshoot, and repair configuration errors and suboptimal performance.",
+          "",
+          "\n\t\t\t\t\t\t##### Remediate from Azure Portal \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for PostgreSQL servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. In the filter bar, type log_connections. \n\t\t\t\t\t\t5. Set log_connections to ON. \n\t\t\t\t\t\t6. Click Save.\n\t\t\t\t\t",
+          "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "6.9",
+          "log_connections",
+          "ne",
+          "on",
+          "name",
+          "Ensure server parameter \u0027log_connections\u0027 is set to \u0027ON\u0027 for {name}",
+          "024"
+        ],
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.9",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "Ensure server parameter \u0027require_secure_transport\u0027 is set to \u0027ON\u0027 for PostgreSQL server",
+          "Enable require_secure_transport on PostgreSQL flexible servers.",
+          "SSL connectivity helps to provide a new layer of security by connecting database server to client applications using Secure Sockets Layer (SSL). Enforcing SSL connections between database server and client applications helps protect against \u0060man in the middle\u0060 attacks by encrypting the data stream between the server and application.",
+          "",
+          "\n\t\t\t\t\t\t##### Remediate from Azure Portal \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for PostgreSQL servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. In the filter bar, type require_secure_transport. \n\t\t\t\t\t\t5. Ensure that the VALUE for require_secure_transport is set to ON\n\t\t\t\t\t",
+          "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "6.10",
+          "require_secure_transport",
+          "ne",
+          "on",
+          "name",
+          "Ensure server parameter \u0027require_secure_transport\u0027 is set to \u0027ON\u0027 for {name}",
+          "025"
+        ],
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.10",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "Ensure server parameter \u0027ssl_min_protocol_version\u0027 is set to \u0027TLSv1.2\u0027 or higher for PostgreSQL server",
+          "Note: It is not possible to set the minimal TLS version on PostgreSQL flexible server to lower than 1.2. Incoming connections which try to encrypt the traffic using TLS 1.0 and TLS 1.1 are denied.\r\nSetting \u0027ssl_min_protocol_version\u0027 to \u0027TLSv1.2\u0027 or higher reduces TLS protocol vulnerabilities by preventing the use of significantly outdated versions of TLS.",
+          "The Secure Sockets Layer (SSL) protocol encrypts network traffic transiting between server and client.\u003Cbr/\u003E\u003Cbr/\u003EUsing only the most recent versions of SSL protocols (TLS version 1.2 and higher) eliminates susceptibility to known exploited vulnerabilities of outdated versions of TLS. If TLS 1.2 does not provide additional granular configuration options for supported cipher suites, there\u0027s a chance that default ciphers which employ Cipher Block Chaining (CBC) mode may be enabled which would introduce Padding Oracle types of vulnerabilities.\u003Cbr/\u003E\u003Cbr/\u003ETLS 1.3 does not support CBC mode ciphers by default and by default supports GCM ciphers which include an extra authentication step during the clear text to cipher text encryption process.\u003Cbr/\u003E\u003Cbr/\u003ETLS version 1.3 is preferable where it is possible to implement.\u003Cbr/\u003E\u003Cbr/\u003EVersions 1.0 and 1.1 of TLS are no longer considered secure. These versions should not be used or permitted where data integrity and confidentiality are required.",
+          "TLS 1.3 is not compatible with older versions, so must be supported by all clients to be implemented.\r\nCipher suites may be able to be specified for TLS 1.2 if a premium SKU is in use.",
+          "\n\t\t\t\t\t\t##### Remediate from Azure Portal \n\t\t\t\t\t\t1. Login to Azure Portal using https://portal.azure.com. \n\t\t\t\t\t\t2. Go to Azure Database for PostgreSQL servers. \n\t\t\t\t\t\t3. For each database, under Settings, click Server parameters. \n\t\t\t\t\t\t4. In the filter bar, type ssl_min_protocol_version. \n\t\t\t\t\t\t5. Ensure ssl_min_protocol_version is set to TLSV1.2 or higher. \n\t\t\t\t\t\t6. Repeat steps 1-5 for each server\n\t\t\t\t\t",
+          "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation",
+          "CIS Microsoft Azure Database Services",
+          "2.0.0",
+          "6.11",
+          "ssl_min_protocol_version",
+          "ne",
+          "TLSv1.2",
+          "name",
+          "Ensure server parameter \u0027ssl_min_protocol_version\u0027 is set to \u0027TLSv1.2\u0027 or higher for {name}",
+          "026"
+        ],
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "6.11",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-sql-lack-auditing.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.1",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-sql-public-network-access-enabled.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.2",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-sql-firewall-rule-overly-permissive.json": [
+      {
+        "args": [
+          "0.0.0.0",
+          "255.255.255.255"
+        ],
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.3",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      },
+      {
+        "args": [
+          "0.0.0.0",
+          "0.0.0.0"
+        ],
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.3",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-sql-tde-lacks-cmk.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.4",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-managed-sql-tde-lacks-cmk.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.4",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-sql-entra-authentication-disabled.json": [
+      {
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.5",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-sql-lacks-data-encryption.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.6",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-managed-sql-lacks-data-encryption.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.6",
+            "profile": [
+              "Level 2"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-sql-auditing-retention.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "medium",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.7",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-sql-minimum-tls-version.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.8",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ],
+    "azure-managed-sql-minimum-tls-version.json": [
+      {
+        "enabled": true,
+        "level": "high",
+        "compliance": [
+          {
+            "name": "CIS Microsoft Azure Database Services",
+            "version": "2.0.0",
+            "reference": "9.8",
+            "profile": [
+              "Level 1"
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

@@ -1,174 +1,153 @@
 {
-    "args": [
-        
+  "args": [],
+  "provider": "EntraID",
+  "serviceType": "Conditional Access",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure a managed device is required to register security information",
+  "description": "Conditional Access (CA) can be configured to enforce access based on the device\u0027s compliance status or whether it is Entra hybrid joined. Collectively this allows CA to classify devices as managed or not, providing more granular control over whether or not a user can register MFA on a device.\r\n\n\t\tWhen using \u0060Require device to be marked as compliant\u0060, the device must pass checks configured in Compliance policies defined within Intune (Endpoint Manager). Before these checks can be applied, the device must first be enrolled in Intune MDM.\n\nBy selecting \u0060Require Microsoft Entra hybrid joined device\u0060 this means the device must first be synchronized from an on-premises Active Directory to qualify for authentication.\r\n When configured to the recommended state below only one condition needs to be met for the user to register MFA from the device. This functions as an \u0060OR\u0060 operator.\r\n The recommended state is to restrict Register security information to a device that is marked as compliant or Entra hybrid joined. \n\t",
+  "rationale": "Requiring registration on a managed device significantly reduces the risk of bad actors using stolen credentials to register security information. Accounts that are created but never registered with an MFA method are particularly vulnerable to this type of attack. Enforcing this requirement will both reduce the attack surface for fake registrations and ensure that legitimate users register using trusted devices which typically have additional security measures in place already.",
+  "impact": "The organization will be required to have a mature device management process. New devices provided to users will need to be pre-enrolled in Intune, auto-enrolled or be Entra hybrid joined. Otherwise, the user will be unable to complete registration, requiring additional resources from I.T. This could be more disruptive in remote worker environments where the MDM maturity is low.\r\n\n\t\tIn these cases where the person enrolling in MFA (enrollee) doesn\u0027t have physical access to a managed device, a help desk process can be created using a Teams meeting to complete enrollment using:\n\t\t\n\t\t* A durable process to verify the enrollee\u0027s identity including government identification with a photograph held up to the camera, information only the enrollee should know, and verification by the enrollee\u0027s direct manager in the same meeting;\n\t\t* Complete enrollment in the same Teams meeting with the enrollee being granted screen and keyboard access to the help desk person\u0027s InPrivate Edge browser session. \n\t",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select \u0060Security\u0060\r\n\t\t\t\t\t3. Select on the left side \u0060Conditional Access\u0060\r\n\t\t\t\t\t4. Click the \u0060\u002B New policy\u0060",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-grant#require-device-to-be-marked-as-compliant",
+    "https://learn.microsoft.com/en-us/entra/identity/devices/concept-hybrid-join",
+    "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/deployment-guide-enrollment",
+    "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#user-actions"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "5.0.0",
+      "reference": "5.2.2.10",
+      "profile": "E3 Level 1"
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "aad_conditional_access_policy",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "state",
+                "eq",
+                "enabled"
+              ],
+              [
+                "conditions.users.includeUsers",
+                "eq",
+                "All"
+              ],
+              [
+                "conditions.applications.includeUserActions",
+                "match",
+                "urn:user:registersecurityinfo"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "grantControls.operator",
+                "eq",
+                "OR"
+              ],
+              [
+                "grantControls.builtInControls",
+                "match",
+                "compliantDevice|domainJoinedDevice"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
     ],
-    "provider": "EntraID",
-    "serviceType": "Conditional Access",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure a managed device is required to register security information",
-    "description": "Conditional Access (CA) can be configured to enforce access based on the device's compliance status or whether it is Entra hybrid joined. Collectively this allows CA to classify devices as managed or not, providing more granular control over whether or not a user can register MFA on a device.\r\n
-		When using `Require device to be marked as compliant`, the device must pass checks configured in Compliance policies defined within Intune (Endpoint Manager). Before these checks can be applied, the device must first be enrolled in Intune MDM.\n\nBy selecting `Require Microsoft Entra hybrid joined device` this means the device must first be synchronized from an on-premises Active Directory to qualify for authentication.\r\n When configured to the recommended state below only one condition needs to be met for the user to register MFA from the device. This functions as an `OR` operator.\r\n The recommended state is to restrict Register security information to a device that is marked as compliant or Entra hybrid joined. 
-	",
-    "rationale": "Requiring registration on a managed device significantly reduces the risk of bad actors using stolen credentials to register security information. Accounts that are created but never registered with an MFA method are particularly vulnerable to this type of attack. Enforcing this requirement will both reduce the attack surface for fake registrations and ensure that legitimate users register using trusted devices which typically have additional security measures in place already.",
-    "impact": "The organization will be required to have a mature device management process. New devices provided to users will need to be pre-enrolled in Intune, auto-enrolled or be Entra hybrid joined. Otherwise, the user will be unable to complete registration, requiring additional resources from I.T. This could be more disruptive in remote worker environments where the MDM maturity is low.\r\n
-		In these cases where the person enrolling in MFA (enrollee) doesn't have physical access to a managed device, a help desk process can be created using a Teams meeting to complete enrollment using:
-		
-		* A durable process to verify the enrollee's identity including government identification with a photograph held up to the camera, information only the enrollee should know, and verification by the enrollee's direct manager in the same meeting;
-		* Complete enrollment in the same Teams meeting with the enrollee being granted screen and keyboard access to the help desk person's InPrivate Edge browser session. 
-	",
-    "remediation": {
-        "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-grant#require-device-to-be-marked-as-compliant",
-        "https://learn.microsoft.com/en-us/entra/identity/devices/concept-hybrid-join",
-        "https://learn.microsoft.com/en-us/intune/intune-service/fundamentals/deployment-guide-enrollment",
-        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#user-actions"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "5.0.0",
-            "reference": "5.2.2.10",
-            "profile": "E3 Level 1"
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "aad_conditional_access_policy",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": "true",
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "displayName": "Name",
+          "state": "Status",
+          "conditions.applications.includeApplications": "Applications",
+          "conditions.users.includeUsers": "Users",
+          "grantControls.operator": "Operator",
+          "grantControls.builtInControls": "BuiltIn Controls"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "state",
-                                "eq",
-                                "enabled"
-                            ],
-                            [
-                                "conditions.users.includeUsers",
-                                "eq",
-                                "All"
-                            ],
-							[
-                                "conditions.applications.includeUserActions",
-                                "match",
-                                "urn:user:registersecurityinfo"
-                            ]
-                        ],
-                        "operator": "and"
-                    }
-                ]
-            },
-            {
-                "connectOperator": "and",
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "grantControls.operator",
-                                "eq",
-                                "OR"
-                            ],
-                            [
-                                "grantControls.builtInControls",
-                                "match",
-                                "compliantDevice|domainJoinedDevice"
-                            ]
-                        ],
-                        "operator": "and"
-                    }
-                ]
-            }
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          "displayName": "Name",
+          "state": "Status",
+          "conditions.applications.includeApplications": "Applications",
+          "conditions.users.includeUsers": "Users",
+          "grantControls.operator": "Operator",
+          "grantControls.builtInControls": "BuiltIn Controls"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "displayName"
         ],
-        "shouldExist": "true",
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "displayName": "Name",
-                    "state": "Status",
-                    "conditions.applications.includeApplications": "Applications",
-                    "conditions.users.includeUsers": "Users",
-                    "grantControls.operator": "Operator",
-                    "grantControls.builtInControls": "BuiltIn Controls"
-                },
-                "expandObject": null
-            },
-            "table": null,
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": false,
-                "showModalButton": false,
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    "displayName": "Name",
-                    "state": "Status",
-                    "conditions.applications.includeApplications": "Applications",
-                    "conditions.users.includeUsers": "Users",
-                    "grantControls.operator": "Operator",
-                    "grantControls.builtInControls": "BuiltIn Controls"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    "displayName"
-                ],
-                "message": "The {displayName} policy is not configured to require a compliant or hybrid Entra ID joined device",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "displayName",
-                "resourceId": "id",
-                "resourceType": "EntraConditionalAccess"
-            },
-            "onlyStatus": true
-        }
-    },
-    "idSuffix": "aad_cap_managed_device_to_register_mfa",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"id"
-    ],
-    "id": "entraid_1122"
+        "message": "The {displayName} policy is not configured to require a compliant or hybrid Entra ID joined device",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "EntraConditionalAccess"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "aad_cap_managed_device_to_register_mfa",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "entraid_1122"
 }

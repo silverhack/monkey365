@@ -1,130 +1,130 @@
 {
-    "provider": "Azure",
-    "serviceType": "Storage Accounts",
-    "serviceName": "Storage",
-    "displayName": "Ensure 'SMB channel encryption' is set to 'AES-256-GCM' or higher for SMB file shares",
-    "description": "Implement SMB channel encryption with AES-256-GCM for SMB file shares to ensure data confidentiality and integrity in transit. This method offers strong protection against eavesdropping and man-in-the-middle attacks, safeguarding sensitive information.",
-    "rationale": "AES-256-GCM encryption enhances the security of data transmitted over SMB channels by safeguarding it from unauthorized interception and tampering.",
-    "impact": "Using the AES-256-GCM SMB channel encryption may impact client compatibility.",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. Go to Storage accounts. 2. Click the name of a storage account. 3. Under Data storage, click File shares. 4. Under File share settings, click the link next to Security. 5. If Profile is set to Maximum compatibility, click the drop-down menu and select Maximum security or Custom. 6. If selecting Custom, under SMB channel encryption, uncheck the boxes next to AES-128-CCM and AES-128-GCM. 7. Click Save. 8. Repeat steps 1-7 for each storage account requiring remediation.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/well-architected/service-guides/azure-files#recommendations-for-smb-file-shares",
-        "https://learn.microsoft.com/en-us/azure/storage/files/files-smb-protocol?tabs=azure-portal#smb-security-settings",
-        "https://learn.microsoft.com/en-us/cli/azure/storage/account/file-service-properties?view=azure-cli-latest",
-        "https://learn.microsoft.com/en-us/powershell/module/az.storage/get-azstoragefileserviceproperty?view=azps-15.4.0",
-        "https://learn.microsoft.com/en-us/powershell/module/az.storage/update-azstoragefileserviceproperty?view=azps-15.4.0"
+  "provider": "Azure",
+  "serviceType": "Storage Accounts",
+  "serviceName": "Storage",
+  "displayName": "Ensure \u0027SMB channel encryption\u0027 is set to \u0027AES-256-GCM\u0027 or higher for SMB file shares",
+  "description": "Implement SMB channel encryption with AES-256-GCM for SMB file shares to ensure data confidentiality and integrity in transit. This method offers strong protection against eavesdropping and man-in-the-middle attacks, safeguarding sensitive information.",
+  "rationale": "AES-256-GCM encryption enhances the security of data transmitted over SMB channels by safeguarding it from unauthorized interception and tampering.",
+  "impact": "Using the AES-256-GCM SMB channel encryption may impact client compatibility.",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. Go to Storage accounts. 2. Click the name of a storage account. 3. Under Data storage, click File shares. 4. Under File share settings, click the link next to Security. 5. If Profile is set to Maximum compatibility, click the drop-down menu and select Maximum security or Custom. 6. If selecting Custom, under SMB channel encryption, uncheck the boxes next to AES-128-CCM and AES-128-GCM. 7. Click Save. 8. Repeat steps 1-7 for each storage account requiring remediation.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/well-architected/service-guides/azure-files#recommendations-for-smb-file-shares",
+    "https://learn.microsoft.com/en-us/azure/storage/files/files-smb-protocol?tabs=azure-portal#smb-security-settings",
+    "https://learn.microsoft.com/en-us/cli/azure/storage/account/file-service-properties?view=azure-cli-latest",
+    "https://learn.microsoft.com/en-us/powershell/module/az.storage/get-azstoragefileserviceproperty?view=azps-15.4.0",
+    "https://learn.microsoft.com/en-us/powershell/module/az.storage/update-azstoragefileserviceproperty?view=azps-15.4.0"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "9.1.3",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "low",
+  "tags": [],
+  "rule": {
+    "path": "az_storage_accounts",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "dataStorage.fileShares.Count",
+                "gt",
+                "0"
+              ],
+              [
+                "fileProtection.properties.protocolSettings.smb.channelEncryption",
+                "notmatch",
+                "^(?:AES-256-GCM)(?:;AES-256-GCM)*;?$"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
     ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "9.1.3",
-            "profile": [
-                "Level 1"
-            ]
-        }
-    ],
-    "level": "low",
-    "tags": [],
-    "rule": {
-        "path": "az_storage_accounts",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "name": "name",
+          "location": "Location",
+          "fileProtection.properties.protocolSettings.smb.encryptionInTransit.required": "Encryption In Transit",
+          "fileProtection.properties.protocolSettings.smb.channelEncryption": "Channel Encryption"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "dataStorage.fileShares.Count",
-                                "gt",
-                                "0"
-                            ],
-							[
-                                "fileProtection.properties.protocolSettings.smb.channelEncryption",
-                                "notmatch",
-                                "^(?:AES-256-GCM)(?:;AES-256-GCM)*;?$"
-                            ]
-                        ],
-						"operator":"and"
-                    }
-                ]
-            }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "id",
+            "name",
+            "fileProtection"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "name": "name",
+          "location": "Location",
+          "fileProtection.properties.protocolSettings.smb.encryptionInTransit.required": "Encryption In Transit",
+          "fileProtection.properties.protocolSettings.smb.channelEncryption": "Channel Encryption"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "name"
         ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-					"id": "id",
-                    "name": "name",
-                    "location": "Location",
-                    "fileProtection.properties.protocolSettings.smb.encryptionInTransit.required": "Encryption In Transit",
-					"fileProtection.properties.protocolSettings.smb.channelEncryption": "Channel Encryption"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [
-						"id",
-						"name",
-						"fileProtection"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-					"id": "id",
-                    "name": "name",
-                    "location": "Location",
-                    "fileProtection.properties.protocolSettings.smb.encryptionInTransit.required": "Encryption In Transit",
-					"fileProtection.properties.protocolSettings.smb.channelEncryption": "Channel Encryption"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": ["name"],
-                "message": "Ensure 'SMB channel encryption' is set to 'AES-256-GCM' or higher for {name} SMB file shares",
-                "defaultMessage": "Ensure 'SMB channel encryption' is set to 'AES-256-GCM' or higher for SMB file shares"
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "AzureStorageAccount"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "azure_storage_smb_version_file_share_not_compliant",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [
-		"id"
-	],
-    "id": "azure_storage_003"
+        "message": "Ensure \u0027SMB channel encryption\u0027 is set to \u0027AES-256-GCM\u0027 or higher for {name} SMB file shares",
+        "defaultMessage": "Ensure \u0027SMB channel encryption\u0027 is set to \u0027AES-256-GCM\u0027 or higher for SMB file shares"
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "AzureStorageAccount"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_storage_smb_version_file_share_not_compliant",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "azure_storage_003"
 }

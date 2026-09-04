@@ -1,149 +1,133 @@
 {
-    "args": [
-        
-    ],
-    "provider": "Microsoft365",
-    "serviceType": "Defender",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure Safe Attachments policy is enabled",
-    "description": "The Safe Attachments policy helps protect users from malware in email attachments by scanning attachments for viruses, malware, and other malicious content. When an email attachment is received by a user, Safe Attachments will scan the attachment in a secure environment and provide a verdict on whether the attachment is safe or not.",
-    "rationale": "Enabling Safe Attachments policy helps protect against malware threats in email attachments by analyzing suspicious attachments in a secure, cloud-based environment before they are delivered to the user\u0027s inbox. This provides an additional layer of security and can prevent new or unseen types of malware from infiltrating the organization\u0027s network.",
-    "impact": "Delivery of email with attachments may be delayed while scanning is occurring.",
-    "remediation": {
-        "text": "###### To enable the ATP Safe Attachments policy, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Click `Security` to open the `Security portal`.\r\n\t\t\t\t\t2. Navigate to `Threat management`, then `Policy`, and select `Safe Attachments`.\r\n\t\t\t\t\t3. Click `+`.\r\n\t\t\t\t\t4. Enter Policy Name and Description followed by the Users, Groups, or Domains it will \r\n\t\t\t\t\tapply to.\r\n\t\t\t\t\t5. Select `Block`, `Monitor`, `Replace` or `Dynamic Delivery` based on your organizational policies.\r\n\t\t\t\t\t6. Select `Next`.\r\n\t\t\t\t\t7. Select `Submit` followed by `Done`.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-attachments?view=o365-worldwide"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "6.1.0",
-            "reference": "2.1.4",
-            "profile": [
-				"E5 Level 2"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_exo_safe_attachment_info",
-        "subPath": null,
-        "selectCondition": {
-            
-        },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "isEnabled",
-                                "eq",
-                                "true"
-                            ],
-							[
-                                "rule.priority",
-                                "eq",
-                                "0"
-                            ],
-							[
-                                "policy.Action",
-                                "eq",
-                                "Block"
-                            ],
-							[
-                                "policy.QuarantineTag",
-                                "eq",
-                                "AdminOnlyAccessPolicy"
-                            ]
-                        ],
-						"operator":"and"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": true,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "policy": "Policy",
-                    "isEnabled": "Enabled",
-					"rule.priority": "Rule Priority",
-					"policy.Action": "Action",
-					"policy.QuarantineTag": "QuarantineTag"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-                
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Defender",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure Safe Attachments policy is enabled",
+  "description": "The Safe Attachments policy helps protect users from malware in email attachments by scanning attachments for viruses, malware, and other malicious content. When an email attachment is received by a user, Safe Attachments will scan the attachment in a secure environment and provide a verdict on whether the attachment is safe or not.",
+  "rationale": "Enabling Safe Attachments policy helps protect against malware threats in email attachments by analyzing suspicious attachments in a secure, cloud-based environment before they are delivered to the user\u0027s inbox. This provides an additional layer of security and can prevent new or unseen types of malware from infiltrating the organization\u0027s network.",
+  "impact": "Delivery of email with attachments may be delayed while scanning is occurring.",
+  "remediation": {
+    "text": "###### To enable the ATP Safe Attachments policy, use the Microsoft 365 Admin Center\r\n\t\t\t\t\t1. Click \u0060Security\u0060 to open the \u0060Security portal\u0060.\r\n\t\t\t\t\t2. Navigate to \u0060Threat management\u0060, then \u0060Policy\u0060, and select \u0060Safe Attachments\u0060.\r\n\t\t\t\t\t3. Click \u0060\u002B\u0060.\r\n\t\t\t\t\t4. Enter Policy Name and Description followed by the Users, Groups, or Domains it will \r\n\t\t\t\t\tapply to.\r\n\t\t\t\t\t5. Select \u0060Block\u0060, \u0060Monitor\u0060, \u0060Replace\u0060 or \u0060Dynamic Delivery\u0060 based on your organizational policies.\r\n\t\t\t\t\t6. Select \u0060Next\u0060.\r\n\t\t\t\t\t7. Select \u0060Submit\u0060 followed by \u0060Done\u0060.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-attachments?view=o365-worldwide"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "6.1.0",
+      "reference": "2.1.4",
+      "profile": [
+        "E5 Level 2"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_exo_safe_attachment_info",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "isEnabled",
+                "eq",
+                "true"
+              ],
+              [
+                "rule.priority",
+                "eq",
+                "0"
+              ],
+              [
+                "policy.Action",
+                "eq",
+                "Block"
+              ],
+              [
+                "policy.QuarantineTag",
+                "eq",
+                "AdminOnlyAccessPolicy"
+              ]
             ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": true,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "policy": "Policy",
+          "isEnabled": "Enabled",
+          "rule.priority": "Rule Priority",
+          "policy.Action": "Action",
+          "policy.QuarantineTag": "QuarantineTag"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    "policy": "Policy",
-                    "isEnabled": "Enabled",
-					"rule.priority": "Rule Priority",
-					"policy.Action": "Action",
-					"policy.QuarantineTag": "QuarantineTag"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    
-                ],
-                "message": "Check if Safe Attachments policy is enabled",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "policyName",
-                "resourceId": "policyId",
-                "resourceType": "EXOSafeAttachmentInfo"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "m365_exo_safe_attachment_policy_disabled",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"policyId"
-    ],
-    "id": "microsoft365_2103"
+    "text": {
+      "data": {
+        "properties": {
+          "policy": "Policy",
+          "isEnabled": "Enabled",
+          "rule.priority": "Rule Priority",
+          "policy.Action": "Action",
+          "policy.QuarantineTag": "QuarantineTag"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Check if Safe Attachments policy is enabled",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "policyName",
+        "resourceId": "policyId",
+        "resourceType": "EXOSafeAttachmentInfo"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_exo_safe_attachment_policy_disabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "policyId"
+  ],
+  "id": "microsoft365_2103"
 }

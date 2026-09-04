@@ -1,141 +1,113 @@
 {
-    "args": [
-        
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Microsoft Teams",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure the organization cannot communicate with accounts in trial Teams tenants",
+  "description": "This setting controls the organization\u0027s external access with Teams \u0060trial-only\u0060 tenants. These are tenants that don\u0027t have any purchased seats.\r\nWhen set to Blocked, users from these trial-only tenants aren\u0027t able to search and contact your users via chats, Teams calls, and meetings (using the users\u0027 authenticated identities) and your users aren\u0027t able to reach users in these trial-only tenants. Users from the trial-only tenant are also removed from existing chats.\r\nThe recommended state for \u0060People in my organization can communicate with accounts in trial Teams tenant\u0060 is \u0060Off\u0060.",
+  "rationale": "Microsoft introduced this setting as \u0060Off\u0060 by default on July 29, 2024 in order to block attack vectors being exploited by threat actors who have abused trial tenants. Enforcing the default ensures the setting is not reenabled for any reason.\r\nAllowing users to communicate with unmanaged Teams users presents a potential security threat as little effort is required by threat actors to gain access to a trial or free Microsoft Teams account.\n\t\tSome real-world attacks and exploits delivered via Teams over external access channels include:\n\t\t* DarkGate malware\n\t\t* Social engineering / Phishing attacks by \u0060Midnight Blizzard\u0060\n\t\t* GIFShell\n\t\t* Username enumeration\n\t",
+  "impact": "There is minimal to no legitimate business need for users to communicate with accounts in trial tenants. For temporary or testing scenarios, alternative communication methods are readily available that do not require enabling this setting.",
+  "remediation": {
+    "text": "###### To remediate using the UI:\n\t\t\t\t1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com/.\n\t\t\t\t2. Click to expand Users select External access.\n\t\t\t\t3. Select the \u0060Organization settings\u0060 tab.\n\t\t\t\t4. Set \u0060People in my organization can communicate with accounts in trial Teams tenant\u0060 to \u0060Off\u0060.\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoftteams/trusted-organizations-external-meetings-chat?tabs=organization-settings#block-federation-with-teams-trial-only-tenants",
+    "https://www.microsoft.com/en-us/security/blog/2023/08/02/midnight-blizzard-conducts-targeted-social-engineering-over-microsoft-teams/",
+    "https://www.bitdefender.com/en-us/blog/hotforsecurity/gifshell-attack-lets-hackers-create-reverse-shell-through-microsoft-teams-gifs"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "6.0.1",
+      "reference": "8.2.4",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_teams_skype_federation_settings",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "ExternalAccessWithTrialTenants",
+                "ne",
+                "Blocked"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "provider": "Microsoft365",
-    "serviceType": "Microsoft Teams",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure the organization cannot communicate with accounts in trial Teams tenants",
-    "description": "This setting controls the organization's external access with Teams `trial-only` tenants. These are tenants that don't have any purchased seats.\r\nWhen set to Blocked, users from these trial-only tenants aren't able to search and contact your users via chats, Teams calls, and meetings (using the users' authenticated identities) and your users aren't able to reach users in these trial-only tenants. Users from the trial-only tenant are also removed from existing chats.\r\nThe recommended state for `People in my organization can communicate with accounts in trial Teams tenant` is `Off`.",
-    "rationale": "Microsoft introduced this setting as `Off` by default on July 29, 2024 in order to block attack vectors being exploited by threat actors who have abused trial tenants. Enforcing the default ensures the setting is not reenabled for any reason.\r\nAllowing users to communicate with unmanaged Teams users presents a potential security threat as little effort is required by threat actors to gain access to a trial or free Microsoft Teams account.
-		Some real-world attacks and exploits delivered via Teams over external access channels include:
-		* DarkGate malware
-		* Social engineering / Phishing attacks by `Midnight Blizzard`
-		* GIFShell
-		* Username enumeration
-	",
-    "impact": "There is minimal to no legitimate business need for users to communicate with accounts in trial tenants. For temporary or testing scenarios, alternative communication methods are readily available that do not require enabling this setting.",
-    "remediation": {
-        "text": "###### To remediate using the UI:
-				1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com/.
-				2. Click to expand Users select External access.
-				3. Select the `Organization settings` tab.
-				4. Set `People in my organization can communicate with accounts in trial Teams tenant` to `Off`.
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/microsoftteams/trusted-organizations-external-meetings-chat?tabs=organization-settings#block-federation-with-teams-trial-only-tenants",
-        "https://www.microsoft.com/en-us/security/blog/2023/08/02/midnight-blizzard-conducts-targeted-social-engineering-over-microsoft-teams/",
-		"https://www.bitdefender.com/en-us/blog/hotforsecurity/gifshell-attack-lets-hackers-create-reverse-shell-through-microsoft-teams-gifs"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "6.0.1",
-            "reference": "8.2.4",
-            "profile": [
-				"E3 Level 1",
-				"E5 Level 1"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_teams_skype_federation_settings",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "identity": "Identity",
+          "externalAccessWithTrialTenants": "Allow communicate with trial tenants"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "ExternalAccessWithTrialTenants",
-                                "ne",
-                                "Blocked"
-                            ]
-                        ]
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "Identity": "Identity",
-                    "ExternalAccessWithTrialTenants": "Allow communicate with trial tenants"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
         },
-        "text": {
-            "data": {
-                "properties": {
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    
-                ],
-                "message": "Ensure the organization cannot communicate with accounts in trial Teams tenants",
-                "defaultMessage": "Ensure the organization cannot communicate with accounts in trial Teams tenants"
-            },
-            "properties": {
-                "resourceName": "Identity",
-                "resourceId": "ConfigId",
-                "resourceType": "TeamsFederationConfig"
-            },
-            "onlyStatus": false
-        }
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "teams_organization_cannot_communicate_trial_tenants_enabled",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"Description",
-		"ConfigId",
-		"Key.SchemaId.XName.name"
-    ],
-    "id": "microsoft365_2178"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure the organization cannot communicate with accounts in trial Teams tenants",
+        "defaultMessage": "Ensure the organization cannot communicate with accounts in trial Teams tenants"
+      },
+      "properties": {
+        "resourceName": "Identity",
+        "resourceId": "ConfigId",
+        "resourceType": "TeamsFederationConfig"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "teams_organization_cannot_communicate_trial_tenants_enabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "Description",
+    "ConfigId",
+    "Key.SchemaId.XName.name"
+  ],
+  "id": "microsoft365_2178"
 }

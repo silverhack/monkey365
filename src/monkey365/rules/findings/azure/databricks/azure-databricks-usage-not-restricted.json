@@ -1,91 +1,92 @@
 {
-    "provider": "Azure",
-    "serviceType": "Databricks",
-    "serviceName": "Analytics Services",
-    "displayName": "Ensure that usage is restricted and expiry is enforced for Databricks personal access tokens",
-    "description": "Databricks personal access tokens (PATs) provide API-based authentication for users and applications. By default, users can generate API tokens without expiration, leading to potential security risks if tokens are leaked, improperly stored, or not rotated regularly.<br/><br/>To mitigate these risks, administrators should:\n• Restrict token creation to approved users and service principals.\n• Enforce expiration policies to prevent long-lived tokens.\n• Monitor token usage and revoke unused or compromised tokens.",
-    "rationale": "Restricting usage and enforcing expiry for personal access tokens reduces exposure to long-lived tokens, minimizes the risk of API abuse if compromised, and aligns with security best practices through controlled issuance and enforced expiry.",
-    "impact": "If revoked improperly, applications relying on these tokens may fail, requiring a remediation plan for token rotation. Increased administrative effort is required to track and manage API tokens effectively.",
-    "remediation": {
-        "text": "Remediate from Azure Portal Disable personal access tokens: If your workspace does not require PATs, you can disable them entirely to prevent their use. 1. Navigate to your Azure Databricks workspace. 2. Click the Settings icon and select Admin Console. 3. Go to the Advanced tab. 4. Under Personal Access Tokens, toggle the setting to Disabled.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/databricks/admin/access-control/tokens",
-        "https://learn.microsoft.com/en-us/azure/databricks/dev-tools/auth/"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "6.0.0",
-            "reference": "2.1.6",
-            "profile": [
-                "Level 1"
-            ]
-        }
-    ],
-    "level": "medium",
-    "tags": [],
-    "rule": {
-        "path": "",
-        "subPath": null,
-        "selectCondition": {},
-        "query": [
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+  "provider": "Azure",
+  "serviceType": "Databricks",
+  "serviceName": "Analytics Services",
+  "displayName": "Ensure that usage is restricted and expiry is enforced for Databricks personal access tokens",
+  "description": "Databricks personal access tokens (PATs) provide API-based authentication for users and applications. By default, users can generate API tokens without expiration, leading to potential security risks if tokens are leaked, improperly stored, or not rotated regularly.\u003Cbr/\u003E\u003Cbr/\u003ETo mitigate these risks, administrators should:\n\u2022 Restrict token creation to approved users and service principals.\n\u2022 Enforce expiration policies to prevent long-lived tokens.\n\u2022 Monitor token usage and revoke unused or compromised tokens.",
+  "rationale": "Restricting usage and enforcing expiry for personal access tokens reduces exposure to long-lived tokens, minimizes the risk of API abuse if compromised, and aligns with security best practices through controlled issuance and enforced expiry.",
+  "impact": "If revoked improperly, applications relying on these tokens may fail, requiring a remediation plan for token rotation. Increased administrative effort is required to track and manage API tokens effectively.",
+  "remediation": {
+    "text": "Remediate from Azure Portal Disable personal access tokens: If your workspace does not require PATs, you can disable them entirely to prevent their use. 1. Navigate to your Azure Databricks workspace. 2. Click the Settings icon and select Admin Console. 3. Go to the Advanced tab. 4. Under Personal Access Tokens, toggle the setting to Disabled.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/databricks/admin/access-control/tokens",
+    "https://learn.microsoft.com/en-us/azure/databricks/dev-tools/auth/"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "6.0.0",
+      "reference": "2.1.6",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
         },
-        "text": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "status": {
-                "keyName": ["name"],
-                "message": "Ensure that users and groups are synced from Microsoft Entra ID to Azure Databricks",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "type"
-            },
-            "onlyStatus": false
-        }
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_databricks_usage_not_restricted",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [
-		"name",
-		"id"
-	],
-    "id": "az_databricks_006"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "name"
+        ],
+        "message": "Ensure that users and groups are synced from Microsoft Entra ID to Azure Databricks",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "type"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_databricks_usage_not_restricted",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "name",
+    "id"
+  ],
+  "id": "az_databricks_006"
 }

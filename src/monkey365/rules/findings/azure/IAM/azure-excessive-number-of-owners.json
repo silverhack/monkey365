@@ -1,148 +1,141 @@
 {
-    "provider": "Azure",
-    "serviceType": "Subscription Identity",
-    "serviceName": "Subscription",
-    "displayName": "Ensure there are between _ARG_0_ and _ARG_1_ subscription owners",
-    "description": "The Owner role in Azure grants full control over all resources in a subscription, including the ability to assign roles to others.",
-    "rationale": "Limit the number of security principals (users, groups, service principals, and managed identities) assigned the Owner role to between 2 and 3. If groups are used, ensure their membership is tightly controlled and regularly reviewed to avoid privilege sprawl.",
-    "impact": "Implementation may require changes in administrative workflows or the redistribution of roles and responsibilities. The recommendation to have between 2 and 3 Owners per subscription must account for all security principals that can be assigned the Owner role, not just individual users. This includes:\n• User accounts\n• Entra ID groups\n• Service principals (used by applications or automation)\n• Managed identities (system-assigned or user-assigned)",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. Go to Subscriptions. 2. Click the name of a subscription. 3. Click Access Controls (IAM). 4. Click Role assignments. 5. Click Role : All. 6. Click the arrow next to All. 7. Click Owner. 8. Check the box next to members from whom the owner role should be removed. 9. Click Delete. 10. Click Yes. 11. Repeat steps 1-10 for each subscription requiring remediation. Remediate from Azure CLI Run the following command to delete role assignments by role assignment id:",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
+  "provider": "Azure",
+  "serviceType": "Subscription Identity",
+  "serviceName": "Subscription",
+  "displayName": "Ensure there are between _ARG_0_ and _ARG_1_ subscription owners",
+  "description": "The Owner role in Azure grants full control over all resources in a subscription, including the ability to assign roles to others.",
+  "rationale": "Limit the number of security principals (users, groups, service principals, and managed identities) assigned the Owner role to between 2 and 3. If groups are used, ensure their membership is tightly controlled and regularly reviewed to avoid privilege sprawl.",
+  "impact": "Implementation may require changes in administrative workflows or the redistribution of roles and responsibilities. The recommendation to have between 2 and 3 Owners per subscription must account for all security principals that can be assigned the Owner role, not just individual users. This includes:\n\u2022 User accounts\n\u2022 Entra ID groups\n\u2022 Service principals (used by applications or automation)\n\u2022 Managed identities (system-assigned or user-assigned)",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. Go to Subscriptions. 2. Click the name of a subscription. 3. Click Access Controls (IAM). 4. Click Role assignments. 5. Click Role : All. 6. Click the arrow next to All. 7. Click Owner. 8. Check the box next to members from whom the owner role should be removed. 9. Click Delete. 10. Click Yes. 11. Repeat steps 1-10 for each subscription requiring remediation. Remediate from Azure CLI Run the following command to delete role assignments by role assignment id:",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/cli/azure/role/assignment?view=azure-cli-latest",
+    "https://learn.microsoft.com/en-us/powershell/module/az.resources/get-azroleassignment?view=azps-15.4.0",
+    "https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/privileged#owner",
+    "https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal-subscription-admin"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "5.27",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "high",
+  "tags": [],
+  "rule": {
+    "path": "az_role_assignment",
+    "subPath": null,
+    "selectCondition": {},
+    "data": {
+      "properties": {
+        "effectiveUsers.*": null,
+        "name": "roleName",
+        "description": "roleDescription",
+        "templateId": "templateId"
+      },
+      "expandObject": "effectiveUsers"
     },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/cli/azure/role/assignment?view=azure-cli-latest",
-        "https://learn.microsoft.com/en-us/powershell/module/az.resources/get-azroleassignment?view=azps-15.4.0",
-        "https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/privileged#owner",
-        "https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-portal-subscription-admin"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "5.27",
-            "profile": [
-                "Level 1"
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "templateId",
+                "eq",
+                "8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+              ]
             ]
-        }
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "effectiveUsers.Count",
+                "lt",
+                "_ARG_0_"
+              ],
+              [
+                "effectiveUsers.Count",
+                "gt",
+                "_ARG_1_"
+              ]
+            ],
+            "operator": "or"
+          }
+        ]
+      }
     ],
-    "level": "high",
-    "tags": [],
-    "rule": {
-        "path": "az_role_assignment",
-        "subPath": null,
-        "selectCondition": {
+    "moreThan": null,
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "userPrincipalName": "User Principal Name",
+          "id": "Object Id",
+          "roleName": "Role Assigned"
+        }
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
         },
-        "data": {
-            "properties": {
-                "effectiveUsers.*": null,
-                "name": "roleName",
-                "description": "roleDescription",
-                "templateId": "templateId"
-            },
-            "expandObject": "effectiveUsers"
-        },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "templateId",
-                                "eq",
-                                "8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
-                            ]
-                        ]
-                    }
-                ]
-            },
-			{
-                "connectOperator":"and",
-				"filter": [
-                    {
-                        "conditions": [
-                            [
-                                "effectiveUsers.Count",
-                                "lt",
-                                "_ARG_0_"
-                            ],
-							[
-                                "effectiveUsers.Count",
-                                "gt",
-                                "_ARG_1_"
-                            ]
-                        ],
-						"operator":"or"
-                    }
-                ]
-            }
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          "userPrincipalName": "User Principal Name",
+          "id": "Object Id",
+          "roleName": "Role Assigned"
+        }
+      },
+      "status": {
+        "keyName": [
+          "userPrincipalName"
         ],
-        "moreThan": null,
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "userPrincipalName": "User Principal Name",
-                    "id": "Object Id",
-                    "roleName": "Role Assigned"
-                }
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [
-					],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    "userPrincipalName": "User Principal Name",
-                    "id": "Object Id",
-                    "roleName": "Role Assigned"
-                }
-            },
-            "status": {
-                "keyName": [
-					"userPrincipalName"
-                ],
-                "message": "The {userPrincipalName} was found to be assigned the Owner role",
-                "defaultMessage": "Ensure there are between _ARG_0_ and _ARG_1_ subscription owners"
-            },
-            "properties": {
-                "resourceName": "userPrincipalName",
-                "resourceId": "id",
-                "resourceType": "EntraUser"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "azure_iam_excessive_owners",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-    ],
-    "id": "azure_iam_003"
+        "message": "The {userPrincipalName} was found to be assigned the Owner role",
+        "defaultMessage": "Ensure there are between _ARG_0_ and _ARG_1_ subscription owners"
+      },
+      "properties": {
+        "resourceName": "userPrincipalName",
+        "resourceId": "id",
+        "resourceType": "EntraUser"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_iam_excessive_owners",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "azure_iam_003"
 }

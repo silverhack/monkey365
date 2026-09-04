@@ -1,89 +1,88 @@
 {
-    "provider": "Azure",
-    "serviceType": "Networking Services",
-    "serviceName": "Networking Services",
-    "displayName": "Ensure Azure Web Application Firewall (WAF) is enabled on Azure Application Gateway",
-    "description": "Azure Web Application Firewall helps protect applications from common exploits and attacks by inspecting and filtering incoming traffic.",
-    "rationale": "Using Azure Web Application Firewall with Azure Application Gateway reduces exposure to external threats by mitigating attacks on public facing applications.",
-    "impact": "The WAF V2 tier for Azure Application Gateways costs more than the Basic and Standard V2 tiers. Pricing includes a fixed hourly charge plus a charge per capacity- unit hour. Refer to https://azure.microsoft.com/en-gb/pricing/details/application-gateway/ for details.",
-    "remediation": {
-        "text": "Note: Basic tier application gateways cannot be upgraded to the WAF V2 tier. Create a new WAF V2 tier application gateway to replace a Basic tier application gateway. Remediate from Azure Portal To remediate a Standard V2 tier application gateway: 1. Go to Application gateways. 2. Click Add filter. 3. From the Filter drop-down menu, select SKU size. 4. Check the box next to Standard_v2 only. 5. Click Apply. 6. Click the name of an application gateway. 7. Under Settings, click Web application firewall. 8. Under Configure, next to Tier, click WAF V2. 9. Select an existing or create a new WAF policy. 10. Click Save. 11. Repeat steps 1-10 for each Standard V2 tier application gateway requiring remediation.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/application-gateway/features",
-        "https://learn.microsoft.com/en-us/cli/azure/network/application-gateway?view=azure-cli-latest",
-        "https://azure.microsoft.com/en-us/pricing/details/application-gateway/"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "7.10",
-            "profile": [
-                "Level 2"
-            ]
-        }
-    ],
-    "level": "",
-    "tags": [],
-    "rule": {
-        "path": "",
-        "subPath": null,
-        "selectCondition": {},
-        "query": [
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+  "provider": "Azure",
+  "serviceType": "Networking Services",
+  "serviceName": "Networking Services",
+  "displayName": "Ensure Azure Web Application Firewall (WAF) is enabled on Azure Application Gateway",
+  "description": "Azure Web Application Firewall helps protect applications from common exploits and attacks by inspecting and filtering incoming traffic.",
+  "rationale": "Using Azure Web Application Firewall with Azure Application Gateway reduces exposure to external threats by mitigating attacks on public facing applications.",
+  "impact": "The WAF V2 tier for Azure Application Gateways costs more than the Basic and Standard V2 tiers. Pricing includes a fixed hourly charge plus a charge per capacity- unit hour. Refer to https://azure.microsoft.com/en-gb/pricing/details/application-gateway/ for details.",
+  "remediation": {
+    "text": "Note: Basic tier application gateways cannot be upgraded to the WAF V2 tier. Create a new WAF V2 tier application gateway to replace a Basic tier application gateway. Remediate from Azure Portal To remediate a Standard V2 tier application gateway: 1. Go to Application gateways. 2. Click Add filter. 3. From the Filter drop-down menu, select SKU size. 4. Check the box next to Standard_v2 only. 5. Click Apply. 6. Click the name of an application gateway. 7. Under Settings, click Web application firewall. 8. Under Configure, next to Tier, click WAF V2. 9. Select an existing or create a new WAF policy. 10. Click Save. 11. Repeat steps 1-10 for each Standard V2 tier application gateway requiring remediation.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/application-gateway/features",
+    "https://learn.microsoft.com/en-us/cli/azure/network/application-gateway?view=azure-cli-latest",
+    "https://azure.microsoft.com/en-us/pricing/details/application-gateway/"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "7.10",
+      "profile": [
+        "Level 2"
+      ]
+    }
+  ],
+  "level": "",
+  "tags": [],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
         },
-        "text": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [],
-                "message": "",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": null,
-                "resourceId": null,
-                "resourceType": null
-            },
-            "onlyStatus": false
-        }
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [],
-    "id": "azure_networking_006"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "azure_networking_006"
 }

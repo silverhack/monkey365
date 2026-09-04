@@ -1,133 +1,115 @@
 {
-    "provider": "Azure",
-    "serviceType": "Defender for Cloud",
-    "serviceName": "Subscription",
-    "displayName": "Ensure That Microsoft Defender for IoT Hub Is Set To \u0027On\u0027",
-    "description": "Microsoft Defender for IoT acts as a central security hub for IoT devices within your organization.",
-    "rationale": "IoT devices are very rarely patched and can be potential attack vectors for enterprise networks. Updating their network configuration to use a central security hub allows for detection of these breaches.",
-    "impact": "Enabling Microsoft Defender for IoT will incur additional charges dependent on the level of usage.",
-    "remediation": {
-        "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to `Microsoft Defender for Cloud`\r\n\t\t\t\t\t2. Select `Environment settings`\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the `Defender plans` blade\r\n\t\t\t\t\t5. Review the chosen pricing tier. For the `IoT` resource type the radial button should be set to `On`\r\n\t\t\t\t\t6. Select `Save`",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://www.microsoft.com/en-us/security/business/endpoint-security/microsoft-defender-iot#overview",
-        "https://learn.microsoft.com/en-us/azure/defender-for-iot/",
-        "https://www.microsoft.com/en-us/security/business/endpoint-security/microsoft-defender-iot-pricing",
-		"https://learn.microsoft.com/en-us/security/benchmark/azure/baselines/microsoft-defender-for-iot-security-baseline",
-		"https://learn.microsoft.com/en-us/cli/azure/iot?view=azure-cli-latest",
-		"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-1-enable-threat-detection-capabilities",
-		"https://learn.microsoft.com/en-us/azure/defender-for-iot/device-builders/quickstart-onboard-iot-hub"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "8.2.1",
-            "profile": "Level 2"
-        }
-    ],
-    "level": "info",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "az_pricing_tier",
-        "subPath": null,
-        "selectCondition": {
-            
-        },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "name",
-                                "eq",
-                                "IoT"
-                            ],
-                            [
-                                "properties.pricingTier",
-                                "eq",
-                                "Free"
-                            ]
-                        ],
-                        "operator": "and"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "name": "Resource Name",
-                    "properties.pricingTier": "Pricing Tier"
-                },
-                "expandObject": null
-            },
-            "table": "asList",
-            "decorate": [
-                
+  "provider": "Azure",
+  "serviceType": "Defender for Cloud",
+  "serviceName": "Subscription",
+  "displayName": "Ensure That Microsoft Defender for IoT Hub Is Set To \u0027On\u0027",
+  "description": "Microsoft Defender for IoT acts as a central security hub for IoT devices within your organization.",
+  "rationale": "IoT devices are very rarely patched and can be potential attack vectors for enterprise networks. Updating their network configuration to use a central security hub allows for detection of these breaches.",
+  "impact": "Enabling Microsoft Defender for IoT will incur additional charges dependent on the level of usage.",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. Go to \u0060Microsoft Defender for Cloud\u0060\r\n\t\t\t\t\t2. Select \u0060Environment settings\u0060\r\n\t\t\t\t\t3. Click on the subscription name\r\n\t\t\t\t\t4. Select the \u0060Defender plans\u0060 blade\r\n\t\t\t\t\t5. Review the chosen pricing tier. For the \u0060IoT\u0060 resource type the radial button should be set to \u0060On\u0060\r\n\t\t\t\t\t6. Select \u0060Save\u0060",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://www.microsoft.com/en-us/security/business/endpoint-security/microsoft-defender-iot#overview",
+    "https://learn.microsoft.com/en-us/azure/defender-for-iot/",
+    "https://www.microsoft.com/en-us/security/business/endpoint-security/microsoft-defender-iot-pricing",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/baselines/microsoft-defender-for-iot-security-baseline",
+    "https://learn.microsoft.com/en-us/cli/azure/iot?view=azure-cli-latest",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-1-enable-threat-detection-capabilities",
+    "https://learn.microsoft.com/en-us/azure/defender-for-iot/device-builders/quickstart-onboard-iot-hub"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "8.2.1",
+      "profile": "Level 2"
+    }
+  ],
+  "level": "info",
+  "tags": [],
+  "rule": {
+    "path": "az_pricing_tier",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "name",
+                "eq",
+                "IoT"
+              ],
+              [
+                "properties.pricingTier",
+                "eq",
+                "Free"
+              ]
             ],
-            "emphasis": [
-                "Pricing Tier"
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": null,
-                "showModalButton": null,
-                "directLink": null
-            }
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Resource Name",
+          "properties.pricingTier": "Pricing Tier"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    
-                ],
-                "message": "",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": null,
-                "resourceId": null,
-                "resourceType": null
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "asList",
+      "decorate": [],
+      "emphasis": [
+        "Pricing Tier"
+      ],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": null,
+        "showModalButton": null,
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_defender_missing_iot_protection",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-        
-    ],
-    "id": "azure_defender_022"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_defender_missing_iot_protection",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "azure_defender_022"
 }

@@ -1,143 +1,125 @@
 {
-    "provider": "EntraID",
-    "serviceType": "General",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure \u0027third-party storage services\u0027 are restricted in \u0027Microsoft 365 on the web\u0027",
-    "description": "Third-party storage can be enabled for users in Microsoft 365, allowing them to store and share documents using services such as Dropbox, alongside OneDrive and team sites.\r\n\t\t\t\t  Ensure `Microsoft 365 on the web` third-party storage services are restricted.",
-    "rationale": "By using external storage services an organization may increases the risk of data breaches and unauthorized access to confidential information. Additionally, third-party services may not adhere to the same security standards as the organization, making it difficult to maintain data privacy and security.",
-    "impact": "Impact associated with this change is highly dependent upon current practices in the tenant. If users do not use other storage providers, then minimal impact is likely. However, if users do regularly utilize providers outside of the tenant this will affect their ability to continue to do so.",
-    "remediation": {
-        "text": "
-			1. Navigate to Microsoft 365 admin center
-			2. Go to `Settings` -> `Org Settings` -> `Services` -> `Microsoft 365 on the web
-			3. Ensure `Let users open files stored in third-party storage services in Microsoft 365 on the web` is not checked.
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/microsoft-365/admin/setup/set-up-file-storage-and-sharing?view=o365-worldwide#enable-or-disable-third-party-storage-services"
+  "provider": "EntraID",
+  "serviceType": "General",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure \u0027third-party storage services\u0027 are restricted in \u0027Microsoft 365 on the web\u0027",
+  "description": "Third-party storage can be enabled for users in Microsoft 365, allowing them to store and share documents using services such as Dropbox, alongside OneDrive and team sites.\r\n\t\t\t\t  Ensure \u0060Microsoft 365 on the web\u0060 third-party storage services are restricted.",
+  "rationale": "By using external storage services an organization may increases the risk of data breaches and unauthorized access to confidential information. Additionally, third-party services may not adhere to the same security standards as the organization, making it difficult to maintain data privacy and security.",
+  "impact": "Impact associated with this change is highly dependent upon current practices in the tenant. If users do not use other storage providers, then minimal impact is likely. However, if users do regularly utilize providers outside of the tenant this will affect their ability to continue to do so.",
+  "remediation": {
+    "text": "\n\t\t\t1. Navigate to Microsoft 365 admin center\n\t\t\t2. Go to \u0060Settings\u0060 -\u003E \u0060Org Settings\u0060 -\u003E \u0060Services\u0060 -\u003E \u0060Microsoft 365 on the web\n\t\t\t3. Ensure \u0060Let users open files stored in third-party storage services in Microsoft 365 on the web\u0060 is not checked.\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoft-365/admin/setup/set-up-file-storage-and-sharing?view=o365-worldwide#enable-or-disable-third-party-storage-services"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "7.0.0",
+      "reference": "5.1.6.1",
+      "profile": [
+        "E3 Level 2",
+        "E5 Level 2"
+      ]
+    }
+  ],
+  "level": "low",
+  "tags": [],
+  "rule": {
+    "path": "aad_enterprise_applications",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "appId",
+                "eq",
+                "c1f33bc0-bdb4-4248-ba9b-096807ddb43e"
+              ],
+              [
+                "accountEnabled",
+                "eq",
+                "False"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
     ],
-    "compliance": [
+    "shouldExist": true,
+    "returnObject": {
+      "name": "Third-Party Storage Services",
+      "value": "Enabled"
+    },
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "displayName": "Name",
+          "appId": "Application Id",
+          "signInAudience": "signInAudience",
+          "accountEnabled": "Enabled"
+        },
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [
         {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "7.0.0",
-            "reference": "5.1.6.1",
-            "profile": [
-				"E3 Level 2",
-				"E5 Level 2"
-			]
+          "itemName": "Value",
+          "itemValue": "Enabled",
+          "className": "badge badge-danger badge-xl"
         }
-    ],
-    "level": "low",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "aad_enterprise_applications",
-        "subPath": null,
-        "selectCondition": {
-            
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "appId",
-                                "eq",
-                                "c1f33bc0-bdb4-4248-ba9b-096807ddb43e"
-                            ],
-							[
-                                "accountEnabled",
-                                "eq",
-                                "False"
-                            ]
-                        ],
-						"operator":"and"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": true,
-        "returnObject": {
-			"Name":"Third-Party Storage Services",
-			"Value": "Enabled"
-		},
-        "removeIfNotExists": null
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
     },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "displayName": "Name",
-                    "appId": "Application Id",
-                    "signInAudience": "signInAudience",
-                    "accountEnabled": "Enabled"
-                },
-                "expandObject": null
-            },
-            "table": null,
-            "decorate": [
-				{
-					"itemName": "Value",
-					"itemValue": "Enabled",
-					"className": "badge badge-danger badge-xl"
-				}
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": false,
-                "showModalButton": false,
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    
-                ],
-                "message": "Ensure third-party storage services are restricted in Microsoft 365 on the web",
-                "defaultMessage": "Ensure third-party storage services are restricted in Microsoft 365 on the web"
-            },
-            "properties": {
-                "resourceName": "displayName",
-                "resourceId": "id",
-                "resourceType": "EntraIDServicePrincipal"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "entra_thirdparty_storage_allowed",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"id"
-    ],
-    "id": "microsoft365_2125"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure third-party storage services are restricted in Microsoft 365 on the web",
+        "defaultMessage": "Ensure third-party storage services are restricted in Microsoft 365 on the web"
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "EntraIDServicePrincipal"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "entra_thirdparty_storage_allowed",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "microsoft365_2125"
 }

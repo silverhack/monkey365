@@ -1,151 +1,136 @@
 {
-    "args": [
-        
-    ],
-    "provider": "Microsoft365",
-    "serviceType": "Purview",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure DLP policies are published for Copilot users",
-    "description": "Microsoft Purview Data Loss Prevention (DLP) policies can be scoped to Microsoft 365 Copilot and Copilot Chat interactions. When active, these policies can restrict Copilot from processing or surfacing content that matches configured sensitive information types. Organizations must define the sensitive data categories relevant to their environment and configure at least one DLP policy that covers Copilot interactions in enforcement mode.\r\nThe recommended state is to configure at least one DLP policy that includes **Microsoft 365 Copilot and Copilot Chat - All accounts** as a location with rules specific to the organization's needs.",
-    "rationale": "Microsoft 365 Copilot can retrieve, summarize, and generate content based on data the authenticated user has access to across M365 workloads, including SharePoint, OneDrive, Teams, and Exchange. Without a DLP policy scoped to Copilot interactions, no technical control exists to prevent sensitive information such as PII, financial data, or health records from being incorporated into Copilot-generated responses and potentially exposed to users who would not otherwise have direct access to the source content. Enforcing DLP policies for Copilot ensures that sensitive data categories defined by the organization are intercepted before they are processed or surfaced by AI-generated responses.",
-    "impact": "Users may find that Copilot declines to process or respond to prompts that involve content matching the organization's configured sensitive information types. In these cases, Copilot will notify the user that the request was blocked by policy. Users who rely on Copilot to summarize, draft, or retrieve content containing sensitive data such as documents with PII, financial records, or health information may need to rephrase their prompts or work with the content directly outside of Copilot. Administrators should communicate the scope of active DLP policies to affected users prior to enforcement.",
-    "remediation": {
-        "text": null,
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/purview/dlp-microsoft365-copilot-location-learn-about",
-        "https://learn.microsoft.com/en-us/purview/dlp-microsoft365-copilot-location-default-policy",
-        "https://learn.microsoft.com/en-us/powershell/exchange/connect-to-scc-powershell?view=exchange-ps"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "7.0.0",
-            "reference": "3.2.3",
-            "profile": [
-				"E5 Level 1"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_secomp_dlp_compliance_info",
-        "subPath": null,
-        "selectCondition": {
-            
-        },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "isEnabled",
-                                "eq",
-                                "True"
-                            ],
-							[
-                                "policy.mode",
-                                "eq",
-                                "Enabled"
-                            ],
-                            [
-                                "policy.EnforcementPlanes",
-                                "match",
-                                "CopilotExperience"
-                            ],
-							[
-                                "policy.LocationInclusions",
-                                "contains",
-                                "All"
-                            ]
-                        ],
-                        "operator": "and"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": true,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "Rule.Name": "Rule Name",
-                    "policyName": "Policy Name",
-                    "isEnabled": "Enabled",
-					"policy.EnforcementPlanes": "Enforcement Plans",
-                    "policy.LocationInclusions": "Location Inclusions"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-                
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Purview",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure DLP policies are published for Copilot users",
+  "description": "Microsoft Purview Data Loss Prevention (DLP) policies can be scoped to Microsoft 365 Copilot and Copilot Chat interactions. When active, these policies can restrict Copilot from processing or surfacing content that matches configured sensitive information types. Organizations must define the sensitive data categories relevant to their environment and configure at least one DLP policy that covers Copilot interactions in enforcement mode.\r\nThe recommended state is to configure at least one DLP policy that includes **Microsoft 365 Copilot and Copilot Chat - All accounts** as a location with rules specific to the organization\u0027s needs.",
+  "rationale": "Microsoft 365 Copilot can retrieve, summarize, and generate content based on data the authenticated user has access to across M365 workloads, including SharePoint, OneDrive, Teams, and Exchange. Without a DLP policy scoped to Copilot interactions, no technical control exists to prevent sensitive information such as PII, financial data, or health records from being incorporated into Copilot-generated responses and potentially exposed to users who would not otherwise have direct access to the source content. Enforcing DLP policies for Copilot ensures that sensitive data categories defined by the organization are intercepted before they are processed or surfaced by AI-generated responses.",
+  "impact": "Users may find that Copilot declines to process or respond to prompts that involve content matching the organization\u0027s configured sensitive information types. In these cases, Copilot will notify the user that the request was blocked by policy. Users who rely on Copilot to summarize, draft, or retrieve content containing sensitive data such as documents with PII, financial records, or health information may need to rephrase their prompts or work with the content directly outside of Copilot. Administrators should communicate the scope of active DLP policies to affected users prior to enforcement.",
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/purview/dlp-microsoft365-copilot-location-learn-about",
+    "https://learn.microsoft.com/en-us/purview/dlp-microsoft365-copilot-location-default-policy",
+    "https://learn.microsoft.com/en-us/powershell/exchange/connect-to-scc-powershell?view=exchange-ps"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "7.0.0",
+      "reference": "3.2.3",
+      "profile": [
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_secomp_dlp_compliance_info",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "isEnabled",
+                "eq",
+                "True"
+              ],
+              [
+                "policy.mode",
+                "eq",
+                "Enabled"
+              ],
+              [
+                "policy.EnforcementPlanes",
+                "match",
+                "CopilotExperience"
+              ],
+              [
+                "policy.LocationInclusions",
+                "contains",
+                "All"
+              ]
             ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "Policy"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": true,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "rule.Name": "Rule Name",
+          "policyName": "Policy Name",
+          "isEnabled": "Enabled",
+          "policy.EnforcementPlanes": "Enforcement Plans",
+          "policy.LocationInclusions": "Location Inclusions"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    "Rule.Name": "Rule Name",
-                    "policyName": "Policy Name",
-                    "isEnabled": "Enabled",
-					"policy.EnforcementPlanes": "Enforcement Plans",
-                    "policy.LocationInclusions": "Location Inclusions"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                ],
-                "message": "Ensure DLP policies are published for Copilot users",
-                "defaultMessage": "Ensure DLP policies are published for Copilot users"
-            },
-            "properties": {
-                "resourceName": "policyName",
-                "resourceId": "policyId",
-                "resourceType": "PurviewDLPComplianceInfo"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "Policy"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "m365_exo_dlp_copilot_users_disabled",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"policyId",
-		"ruleId"
-    ],
-    "id": "microsoft365_2161"
+    "text": {
+      "data": {
+        "properties": {
+          "rule.Name": "Rule Name",
+          "policyName": "Policy Name",
+          "isEnabled": "Enabled",
+          "policy.EnforcementPlanes": "Enforcement Plans",
+          "policy.LocationInclusions": "Location Inclusions"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure DLP policies are published for Copilot users",
+        "defaultMessage": "Ensure DLP policies are published for Copilot users"
+      },
+      "properties": {
+        "resourceName": "policyName",
+        "resourceId": "policyId",
+        "resourceType": "PurviewDLPComplianceInfo"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_exo_dlp_copilot_users_disabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "policyId",
+    "ruleId"
+  ],
+  "id": "microsoft365_2161"
 }

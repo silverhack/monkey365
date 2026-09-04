@@ -1,19 +1,19 @@
 {
-	filter: [
-		{
-			conditions : [
-				[
-					"kind",
-					"match",
-					"^(functionapp)(,linux)?$"
-				],
-				[
-					"type",
-					"match",
-					"^Microsoft\\.Web/sites/slots(/.*)?$"
-				]
-			],
-			"operator":"and"
-		}
-	]
+  "filter": [
+    {
+      "conditions": [
+        [
+          "kind",
+          "match",
+          "^(functionapp)(,linux)?$"
+        ],
+        [
+          "type",
+          "match",
+          "^Microsoft\\.Web/sites/slots(/.*)?$"
+        ]
+      ],
+      "operator": "and"
+    }
+  ]
 }
