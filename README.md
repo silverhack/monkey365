@@ -46,7 +46,7 @@ Monkey365 simplifies Microsoft cloud security assessments without requiring user
   - Service principals
   - Certificate-based authentication
   - Direct access token authentication
-- CIS benchmark and compliance checks
+- Declarative security rules and rulesets configured with JSON files
 - Structured HTML, JSON, and CSV reporting for automation and analysis workflows
 - Support for Azure Public, China, and Government cloud environments
 - Collector-based and extensible architecture
@@ -54,29 +54,31 @@ Monkey365 simplifies Microsoft cloud security assessments without requiring user
 
 ---
 
-# Get Started
+## Get Started
 
-Install the Monkey365 PowerShell module and start assessing your environment.
-
-[Zero configuration](https://silverhack.github.io/monkey365/install/install-instructions/) and no external Microsoft modules are required.
+Install Monkey365 from the PowerShell Gallery:
 
 ```powershell
 Install-Module -Name monkey365 -Scope CurrentUser
-Import-Module monkey365
+```
 
+Run a Microsoft 365 assessment and include Microsoft Entra ID:
+
+```powershell
 $options = @{
-    Instance        = 'Microsoft365'
-    Collect         = @('ExchangeOnline', 'SharePointOnline')
-    PromptBehavior  = 'SelectAccount'
-    IncludeEntraID  = $true
-    ExportTo        = 'HTML'
+    Instance       = 'Microsoft365';
+    Collect        = @('ExchangeOnline','MicrosoftTeams','SharePointOnline');
+    PromptBehavior = 'SelectAccount';
+    IncludeEntraID = $true;
+    ExportTo       = 'HTML';
 }
 
 Invoke-Monkey365 @options
 ```
 
-> [!NOTE]
-> Monkey365 includes bundled dependencies and does not require additional Microsoft PowerShell modules.
+Monkey365 prompts you to sign in when the selected authentication flow requires it. The services available to the scan depend on the permissions granted to the signed-in identity.
+
+Before scanning a production environment, review the [installation guide](https://silverhack.github.io/monkey365/install/install-instructions/), [required permissions](https://silverhack.github.io/monkey365/getting_started/permissions/), and [authentication options](https://silverhack.github.io/monkey365/authentication/overview/).
 
 ---
 
