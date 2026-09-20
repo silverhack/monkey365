@@ -19,7 +19,11 @@
   <a href="https://www.powershellgallery.com/packages/monkey365"><img src="https://img.shields.io/powershellgallery/dt/monkey365.svg?style=flat&logo=powershell&label=PSGallery%20Download" alt="PowerShell Gallery Downloads"></a>
 </p>
 
-Monkey365 is an open-source security assessment framework for Microsoft 365, Azure, and Microsoft Entra ID. It helps security professionals, consultants, administrators, and incident responders identify misconfigurations, review cloud security posture, and evaluate environments against industry security best practices and compliance standards.
+Monkey365 is a PowerShell-based security assessment framework for Microsoft 365, Microsoft Entra ID, and Azure. It collects configuration data, evaluates it against security rules, and produces reports with the evidence and remediation guidance needed to review each finding.
+
+The module is self-contained: its runtime dependencies are bundled, so it does not require the Azure CLI, Az PowerShell, ExchangeOnlineManagement, or the Microsoft Graph PowerShell SDK.
+
+It helps security professionals, consultants, administrators, and incident responders identify misconfigurations, review cloud security posture, and evaluate environments against industry security best practices and compliance standards.
 
 Monkey365 simplifies Microsoft cloud security assessments without requiring users to learn complex APIs, install multiple Microsoft modules, or navigate multiple administration portals.
 
