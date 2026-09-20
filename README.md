@@ -114,51 +114,33 @@ Authentication documentation:
   https://silverhack.github.io/monkey365/authentication/access_token/
 
 > [!NOTE]
-> Specific rrequirements for authentication may vary by workload. For example, some Microsoft 365 services will require a certificate rather than a client secret for app-only access. Use the [authentication support matrix](https://silverhack.github.io/monkey365/authentication/supported_auth_methods_byapp/) before choosing an unattended authentication flow.
+> Specific requirements for authentication may vary by workload. For example, some Microsoft 365 services will require a certificate rather than a client secret for app-only access. Use the [authentication support matrix](https://silverhack.github.io/monkey365/authentication/supported_auth_methods_byapp/) before choosing an unattended authentication flow.
  
 Monkey365 is designed to read configuration data and does not remediate or modify cloud resources. Use least-privilege roles and API permissions, protect assessment output as sensitive data, and remove tenant identifiers and secrets before sharing logs or reports.
 
 ---
 
-# Basic Usage
+## Basic Usage
 
-Display available command options:
+| Section | Link |
+| --- | --- |
+| Install Monkey365 | [Installation guide](https://silverhack.github.io/monkey365/install/install-instructions/) |
+| Run a scan | [Basic usage](https://silverhack.github.io/monkey365/getting_started/basic-usage/) |
+| Configure a scan | [General options](https://silverhack.github.io/monkey365/configuration/general-options/) |
+| Choose an authentication flow | [Authentication overview](https://silverhack.github.io/monkey365/authentication/overview/) |
+| Grant access | [Required permissions](https://silverhack.github.io/monkey365/getting_started/permissions/) |
+| Run in a container | [Docker guide](https://silverhack.github.io/monkey365/docker/docker/) |
+| Write custom checks | [Security checks](https://silverhack.github.io/monkey365/security_checks/overview/) |
 
-```powershell
-Get-Help Invoke-Monkey365
-```
-
-Display usage examples:
-
-```powershell
-Get-Help Invoke-Monkey365 -Examples
-```
-
-Display detailed help information:
+For command syntax and examples, use PowerShell's built-in help:
 
 ```powershell
 Get-Help Invoke-Monkey365 -Detailed
+Get-Help Invoke-Monkey365 -Examples
 ```
-
-Example assessment:
-
-```powershell
-$options = @{
-    Instance        = 'Microsoft365'
-    Collect         = @('ExchangeOnline','MicrosoftFabric','MicrosoftTeams','SharePointOnline')
-    PromptBehavior  = 'SelectAccount'
-    IncludeEntraID  = $true
-    ExportTo        = 'HTML'
-}
-
-Invoke-Monkey365 @options
-```
-
-If credentials are not supplied, Monkey365 prompts for authentication.
-
 ---
 
-# Running Monkey365 in National or Government Cloud Environments
+## Running Monkey365 in National or Government Cloud Environments
 
 Use the `-Environment` parameter with `Invoke-Monkey365` to specify the target cloud environment.
 
