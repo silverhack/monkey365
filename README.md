@@ -82,6 +82,16 @@ Before scanning a production environment, review the [installation guide](https:
 
 ---
 
+## How it works
+
+Monkey365 separates an assessment into three stages:
+
+1. **Collect** configuration data from the selected cloud services.
+2. **Evaluate** the collected data with the selected rulesets.
+3. **Report** findings, supporting evidence, and remediation guidance.
+
+Security rules are declarative and configured in JSON files. They are evaluated separately from collectors, so you can add organization-specific checks without changing the scan engine. Review the [bundled rules](https://github.com/silverhack/monkey365/tree/main/rules) or see [Custom checks and rulesets](https://silverhack.github.io/monkey365/security_checks/overview/) for the configuration model.
+
 # Introduction
 
 Monkey365 is a collector-based PowerShell security assessment framework distributed as a self-contained module that helps assess the security posture of cloud environments. It scans Microsoft 365, Azure, and Microsoft Entra ID for potential security issues, configuration weaknesses, and deviations from security best practices.
