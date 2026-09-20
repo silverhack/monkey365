@@ -167,7 +167,7 @@ Invoke-Monkey365 @options
 
 ---
 
-## Regulatory Compliance Checks
+## Reports and automation
 
 Monkey365 includes hundreds of built-in checks aligned with industry security best practices and compliance frameworks for Microsoft cloud environments.
 
