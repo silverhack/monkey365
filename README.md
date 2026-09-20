@@ -29,10 +29,8 @@ Monkey365 simplifies Microsoft cloud security assessments without requiring user
 
 ---
 
-# Features
+## Features
 
-- Self-contained PowerShell module with bundled dependencies
-- No dependency on external Microsoft modules or tools, including ExchangeOnlineManagement, Az PowerShell / Azure CLI, or the Microsoft Graph PowerShell SDK
 - Security posture assessment for:
   - Microsoft 365
   - Azure
@@ -45,7 +43,6 @@ Monkey365 simplifies Microsoft cloud security assessments without requiring user
   - Microsoft Fabric
 - Supports multiple authentication methods including:
   - Interactive authentication
-  - MFA-enabled authentication
   - Service principals
   - Certificate-based authentication
   - Direct access token authentication
