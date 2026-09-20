@@ -92,22 +92,15 @@ Monkey365 separates an assessment into three stages:
 
 Security rules are declarative and configured in JSON files. They are evaluated separately from collectors, so you can add organization-specific checks without changing the scan engine. Review the [bundled rules](https://github.com/silverhack/monkey365/tree/main/rules) or see [Custom checks and rulesets](https://silverhack.github.io/monkey365/security_checks/overview/) for the configuration model.
 
-# Introduction
-
-Monkey365 is a collector-based PowerShell security assessment framework distributed as a self-contained module that helps assess the security posture of cloud environments. It scans Microsoft 365, Azure, and Microsoft Entra ID for potential security issues, configuration weaknesses, and deviations from security best practices.
-
-The framework provides recommendations to help organizations strengthen cloud security posture and improve compliance readiness.
-
 ---
 
-# Authentication
+## Authentication
 
 Monkey365 supports multiple authentication methods for both interactive and automated assessments.
 
 Supported authentication workflows include:
 
 - Interactive authentication
-- MFA-enabled authentication
 - Service principals
 - Certificate-based authentication
 - Direct access token authentication
@@ -117,8 +110,13 @@ Authentication documentation:
 - Authentication overview  
   https://silverhack.github.io/monkey365/authentication/overview/
 
-- Access token authentication  
+- Direct Access token authentication  
   https://silverhack.github.io/monkey365/authentication/access_token/
+
+> [!NOTE]
+> Specific rrequirements for authentication may vary by workload. For example, some Microsoft 365 services will require a certificate rather than a client secret for app-only access. Use the [authentication support matrix](https://silverhack.github.io/monkey365/authentication/supported_auth_methods_byapp/) before choosing an unattended authentication flow.
+ 
+Monkey365 is designed to read configuration data and does not remediate or modify cloud resources. Use least-privilege roles and API permissions, protect assessment output as sensitive data, and remove tenant identifiers and secrets before sharing logs or reports.
 
 ---
 
