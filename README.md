@@ -187,27 +187,19 @@ Assessment reports include structured findings and remediation guidance for rapi
 
 ---
 
-# Supported Standards
+## Rulesets
 
-By default, the HTML report displays CIS (Center for Internet Security) benchmark mappings for Microsoft Azure and Microsoft 365 environments.
-
-Currently supported standards include:
+The bundled rulesets currently include:
 
 - CIS Microsoft Azure Foundations Benchmark v6.0.0
 - CIS Microsoft Azure Database Services Benchmark v2.0.0
 - CIS Microsoft Azure Compute Services Benchmark v2.0.0
 - CIS Microsoft 365 Foundations Benchmark v7.0.0
-
-Additional standards and frameworks may be added in future releases, including:
-
-- NIST
-- HIPAA
-- GDPR
-- PCI-DSS
+- Monkey365 Microsoft Entra ID ruleset
 
 ---
 
-# Documentation
+## Documentation
 
 Detailed installation guides, advanced usage examples, configuration references, and additional documentation are available at:
 
@@ -220,12 +212,12 @@ https://silverhack.github.io/monkey365/
 
 ---
 
-# Star History
+## Star History
 
-<a href="https://www.star-history.com/?repos=silverhack%2Fmonkey365&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=silverhack%2Fmonkey365&type=timeline&legend=bottom-right">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=silverhack/monkey365&type=date&theme=dark&legend=top-left&sealed_token=AMLq3w8HQ4zphU_FsNWXLYVt_8wZLFcQRolk9Y8T2hdTMDCUuDjv0-jXyw48xcblVOdJGcMBN341fLnzAygwsphuit2XXFd67DimfcwDlCLzG0f_UOKbLpZEft0LJq3l0fTEgBtDApz591EZFngaot_5_R2TcX8dBSTtSUgMtStBEBYZPpfSZRR7VX4X" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=silverhack/monkey365&type=date&legend=top-left&sealed_token=AMLq3w8HQ4zphU_FsNWXLYVt_8wZLFcQRolk9Y8T2hdTMDCUuDjv0-jXyw48xcblVOdJGcMBN341fLnzAygwsphuit2XXFd67DimfcwDlCLzG0f_UOKbLpZEft0LJq3l0fTEgBtDApz591EZFngaot_5_R2TcX8dBSTtSUgMtStBEBYZPpfSZRR7VX4X" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=silverhack/monkey365&type=date&legend=top-left&sealed_token=AMLq3w8HQ4zphU_FsNWXLYVt_8wZLFcQRolk9Y8T2hdTMDCUuDjv0-jXyw48xcblVOdJGcMBN341fLnzAygwsphuit2XXFd67DimfcwDlCLzG0f_UOKbLpZEft0LJq3l0fTEgBtDApz591EZFngaot_5_R2TcX8dBSTtSUgMtStBEBYZPpfSZRR7VX4X" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=silverhack/monkey365&type=timeline&theme=dark&legend=bottom-right" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=silverhack/monkey365&type=timeline&legend=bottom-right" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=silverhack/monkey365&type=timeline&legend=bottom-right" />
  </picture>
 </a>
