@@ -122,8 +122,6 @@ Monkey365 is designed to read configuration data and does not remediate or modif
 
 ## Basic Usage
 
-<div align="center">
-
 | Section | Link |
 | --- | --- |
 | Install Monkey365 | [Installation guide](https://silverhack.github.io/monkey365/install/install-instructions/) |
@@ -133,8 +131,6 @@ Monkey365 is designed to read configuration data and does not remediate or modif
 | Grant access | [Required permissions](https://silverhack.github.io/monkey365/getting_started/permissions/) |
 | Run in a container | [Docker guide](https://silverhack.github.io/monkey365/docker/docker/) |
 | Write custom checks | [Security checks](https://silverhack.github.io/monkey365/security_checks/overview/) |
-
-</div>
 
 For command syntax and examples, use PowerShell's built-in help:
 
@@ -171,17 +167,17 @@ Invoke-Monkey365 @options
 
 ---
 
-# Regulatory Compliance Checks
+## Regulatory Compliance Checks
 
 Monkey365 includes hundreds of built-in checks aligned with industry security best practices and compliance frameworks for Microsoft cloud environments.
 
-The framework helps organizations:
+Use `-ExportTo` to select one or more output formats:
 
-- Identify security gaps
-- Review cloud configuration posture
-- Validate tenant hardening
-- Analyze identity and access controls
-- Assess compliance readiness
+| Format | Description |
+| --- | --- |
+| `HTML` | Interactive review of findings, evidence, and remediation steps |
+| `JSON` | Pipelines, APIs, and structured post-processing |
+| `CSV` | Spreadsheet analysis and data exchange |
 
 Assessment reports include structured findings and remediation guidance for rapid analysis and verification.
 
