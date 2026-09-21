@@ -66,7 +66,7 @@ Function New-FindingBySeverityChart{
     Process{
         Try{
             #Get chart data
-            $chartData = @($InputObject).Where({$_.level.ToLower() -ne 'good' -and $_.level.ToLower() -ne 'manual'}) | Group-Object -Property level | Sort-Object -Descending Name | Select-Object Name, Count
+            $chartData = @($InputObject).Where({$_.level.ToLower() -ne 'good' -and $_.level.ToLower() -ne 'manual'}) | Group-Object -Property { $_.level } | Sort-Object -Descending Name | Select-Object Name, Count
             #Populate data
             Foreach($service in @($chartData)){
                 If($null -ne $service.Name){
@@ -75,7 +75,7 @@ Function New-FindingBySeverityChart{
                     #Add data
                     [void]$data.Add($service.Count);
                     #Add color
-                    $color = $service.Name | Get-ColorFromLevel
+                    $color = Get-ColorFromLevel -InputObject $service.Name
                     [void]$colors.Add(("var(--{0})" -f $color))
                 }
             }

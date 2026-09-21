@@ -149,8 +149,8 @@ Function Get-PolarAreaChartOption{
         return $newChart
     }
     End{
-        $ms.Dispose()
-        $streamWriter.Dispose()
-        $reader.Dispose()
+        If($null -ne $reader){$reader.Dispose()}
+        If($null -ne $streamWriter){$streamWriter.Dispose()}
+        If($null -ne $ms){$ms.Dispose()}
     }
 }

@@ -251,7 +251,7 @@ Function New-FindingCard{
                                 [void][bool]::TryParse($findingObj.output.html.actions.showModalButton,[ref]$out);
                                 $showModalButton = $out
                                 $out = $null;
-                                [void][bool]::TryParse($findingObj.output.html.actions.showGoToButton,[ref]$null)
+                                [void][bool]::TryParse($findingObj.output.html.actions.showGoToButton,[ref]$out)
                                 $showGoToButton = $out
                             }
                             Catch{
@@ -281,7 +281,7 @@ Function New-FindingCard{
                             [void]$_div.AppendChild($myTable);
                         }
                         Else{
-                            Write-Warning ($Scripts:messages.EmptySectionMessage -f "data",$findingObj.displayName);
+                            Write-Warning ($Script:messages.EmptySectionMessage -f "data",$findingObj.displayName);
                         }
                     }
                     #Add to body
