@@ -1,0 +1,76 @@
+name: Pester Tests
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: pester-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pester-test:
+    name: Pester / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Pester 6
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module Pester `
+            -RequiredVersion 6.0.1 `
+            -Scope CurrentUser `
+            -Force
+
+      - name: Run mandatory Pester suite
+        shell: pwsh
+        working-directory: ./tests
+        run: |
+          Import-Module Pester -RequiredVersion 6.0.1 -Force -ErrorAction Stop
+          $outputPath = Join-Path $env:GITHUB_WORKSPACE 'logs'
+          ./Invoke-Tests.ps1 `
+            -TestPath ./ `
+            -Summary `
+            -Output $outputPath `
+            -CI `
+            -TestSuiteName monkey365-pester `
+            -CodeCoverage `
+            -CodeCoveragePath ../src/monkey365/core/modules/
+
+      - name: Publish test results
+        if: >-
+          ${{
+            !cancelled() &&
+            hashFiles(
+              'logs/pester-results.xml',
+              'logs/coverage.xml',
+              'logs/pester-summary.json',
+              'logs/pester-failures.json'
+            ) != ''
+          }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pester-results-${{ matrix.os }}-${{ github.run_id }}
+          path: |
+            logs/pester-results.xml
+            logs/coverage.xml
+            logs/pester-summary.json
+            logs/pester-failures.json
+          if-no-files-found: warn
