@@ -3,20 +3,24 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/silverhack/monkey365/releases"><img src="https://img.shields.io/github/v/release/silverhack/monkey365?display_name=tag&sort=semver" alt="GitHub release"></a>
-  <a href="https://www.powershellgallery.com/packages/monkey365/"><img src="https://img.shields.io/powershellgallery/v/monkey365" alt="PowerShell Gallery"></a>
-  <a href="https://github.com/silverhack/monkey365/stargazers"><img src="https://img.shields.io/github/stars/silverhack/monkey365?style=social" alt="Stars"></a>
-  <a href="https://twitter.com/tr1ana"><img src="https://img.shields.io/twitter/follow/tr1ana?style=social" alt="Follow @tr1ana"></a>
+  <a href="https://github.com/silverhack/monkey365/releases"><img alt="GitHub Release" src="https://img.shields.io/github/v/release/silverhack/monkey365"></a>
+  <a href="https://www.powershellgallery.com/packages/monkey365"><img src="https://img.shields.io/powershellgallery/v/monkey365" alt="PowerShell Gallery version"></a>
+  <a href="https://github.com/silverhack/monkey365/actions/workflows/pester.yml"><img src="https://github.com/silverhack/monkey365/actions/workflows/pester.yml/badge.svg" alt="Pester tests"></a>
 </p>
 
 <p align="center">
   <a href="https://github.com/silverhack/monkey365/issues"><img alt="Issues" src="https://img.shields.io/github/issues/silverhack/monkey365"></a>
-  <a href="https://github.com/silverhack/monkey365/blob/main/LICENSE"><img src="https://img.shields.io/github/license/silverhack/monkey365" alt="License"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/silverhack/monkey365" alt="Apache 2.0 license"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/silverhack/monkey365/releases"><img src="https://img.shields.io/github/downloads/silverhack/monkey365/total?style=flat&logo=powershell&label=GitHub%20Release%20Download" alt="GitHub Downloads"></a>
-  <a href="https://www.powershellgallery.com/packages/monkey365"><img src="https://img.shields.io/powershellgallery/dt/monkey365.svg?style=flat&logo=powershell&label=PSGallery%20Download" alt="PowerShell Gallery Downloads"></a>
+  <a href="https://github.com/silverhack/monkey365/releases"><img src="https://img.shields.io/github/downloads/silverhack/monkey365/total?logo=powershell&label=GitHub%20downloads" alt="GitHub downloads"></a>
+  <a href="https://www.powershellgallery.com/packages/monkey365"><img src="https://img.shields.io/powershellgallery/dt/monkey365.svg?logo=powershell&label=PowerShell%20Gallery%20downloads" alt="PowerShell Gallery downloads"></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/silverhack/monkey365/stargazers"><img src="https://img.shields.io/github/stars/silverhack/monkey365?style=social" alt="Stars"></a>
+  <a href="https://twitter.com/tr1ana"><img src="https://img.shields.io/twitter/follow/tr1ana?style=social" alt="Follow @tr1ana"></a>
 </p>
 
 Monkey365 is a PowerShell-based security assessment framework for Microsoft 365, Microsoft Entra ID, and Azure. It collects configuration data, evaluates it against security rules, and produces reports with the evidence and remediation guidance needed to review each finding.
