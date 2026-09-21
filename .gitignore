@@ -4,6 +4,7 @@ azurereview.log
 
 # Data folder
 monkey-reports*
+monkey365-output*
 
 # Azurite
 __azurite_db_queue__.json
