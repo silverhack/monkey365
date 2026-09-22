@@ -1,0 +1,65 @@
+name: PSScriptAnalyzer
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: pssa-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  static-analysis:
+    name: PSScriptAnalyzer
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module PSScriptAnalyzer `
+            -RequiredVersion 1.24.0 `
+            -Scope CurrentUser `
+            -Force
+
+      - name: Run static analysis
+        shell: pwsh
+        run: |
+          Import-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -ErrorAction Stop
+          ./tests/Invoke-Analyzer.ps1 `
+            -Path ./src/monkey365 `
+            -Recurse `
+            -OutputFormat SARIF `
+            -ModuleName monkey365 `
+            -Output ./logs/PSScriptAnalyzer.sarif `
+            -FailOnSeverity Error `
+            -Force
+
+      - name: Upload results to GitHub code scanning
+        if: ${{ !cancelled() && hashFiles('logs/PSScriptAnalyzer.sarif') != '' }}
+        uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          sarif_file: logs/PSScriptAnalyzer.sarif
+          category: PSScriptAnalyzer
+
+      - name: Publish analyzer artifact
+        if: ${{ !cancelled() && hashFiles('logs/PSScriptAnalyzer.sarif') != '' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: psscriptanalyzer-${{ github.run_id }}
+          path: logs/PSScriptAnalyzer.sarif
+          if-no-files-found: warn
