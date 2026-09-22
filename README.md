@@ -7,6 +7,7 @@
   <a href="https://www.powershellgallery.com/packages/monkey365"><img src="https://img.shields.io/powershellgallery/v/monkey365" alt="PowerShell Gallery version"></a>
   <a href="https://github.com/silverhack/monkey365/actions/workflows/pester.yml"><img src="https://github.com/silverhack/monkey365/actions/workflows/pester.yml/badge.svg" alt="Pester tests"></a>
   <a href="https://github.com/silverhack/monkey365/actions/workflows/psscriptanalyzer.yml"><img src="https://github.com/silverhack/monkey365/actions/workflows/psscriptanalyzer.yml/badge.svg" alt="PSScriptAnalyzer"></a>
+  <a href="https://app.codacy.com/gh/silverhack/monkey365/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/f1633c7261f74232931a59b2adee7ec7"/></a>
 </p>
 
 <p align="center">
