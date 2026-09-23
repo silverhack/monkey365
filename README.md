@@ -175,6 +175,12 @@ Get-Help Invoke-Monkey365 -Detailed
 Get-Help Invoke-Monkey365 -Examples
 ```
 
+Detailed installation guides, advanced usage examples, configuration references, and additional documentation are available at:
+
+https://silverhack.github.io/monkey365/
+
+---
+
 ## Contributing and support
 
 Contributions to code, tests, documentation, collectors, and security checks are
@@ -188,12 +194,6 @@ and follow the [Code of Conduct](.github/CODE_OF_CONDUCT.md).
 
 Do not post credentials, tokens, tenant data, or unredacted assessment reports
 in a public issue or discussion.
-
-## Documentation
-
-Detailed installation guides, advanced usage examples, configuration references, and additional documentation are available at:
-
-https://silverhack.github.io/monkey365/
 
 ---
 
