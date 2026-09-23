@@ -1,0 +1,33 @@
+name: Validate main pull request source
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, edited]
+
+permissions: {}
+
+jobs:
+  validate-source:
+    name: Validate main PR source
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Require the repository develop branch
+        shell: bash
+        env:
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          CURRENT_REPOSITORY: ${{ github.repository }}
+        run: |
+          if [[ "$HEAD_BRANCH" != "develop" ]]; then
+            echo "::error::Feature and fix pull requests must target develop. Only develop may be merged into main. Change this pull request's base branch to develop."
+            exit 1
+          fi
+
+          if [[ "$HEAD_REPOSITORY" != "$CURRENT_REPOSITORY" ]]; then
+            echo "::error::The develop branch must belong to $CURRENT_REPOSITORY."
+            exit 1
+          fi
+
+          echo "Valid promotion: develop -> main"
