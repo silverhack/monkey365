@@ -190,7 +190,7 @@ and follow the [Code of Conduct](.github/CODE_OF_CONDUCT.md).
 - Ask usage questions in [GitHub Discussions](https://github.com/silverhack/monkey365/discussions).
 - Report reproducible bugs through [GitHub Issues](https://github.com/silverhack/monkey365/issues).
 - Follow [SECURITY.md](SECURITY.md) to report a vulnerability privately.
-- See [SUPPORT.md](SUPPORT.md) for the project's support policy.
+- See [support](https://silverhack.github.io/monkey365/support/support/) for the project's support policy.
 
 Do not post credentials, tokens, tenant data, or unredacted assessment reports
 in a public issue or discussion.
