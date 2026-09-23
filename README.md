@@ -189,6 +189,25 @@ and follow the [Code of Conduct](.github/CODE_OF_CONDUCT.md).
 Do not post credentials, tokens, tenant data, or unredacted assessment reports
 in a public issue or discussion.
 
-## License
+## Documentation
 
-Monkey365 is licensed under the [Apache License 2.0](LICENSE).
+Detailed installation guides, advanced usage examples, configuration references, and additional documentation are available at:
+
+https://silverhack.github.io/monkey365/
+
+---
+
+> [!TIP]
+> **Give us a Star!** If you find Monkey365 useful, please consider starring the repository on GitHub. It helps improve visibility and supports ongoing development.
+
+---
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=silverhack%2Fmonkey365&type=date&legend=bottom-right">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=silverhack/monkey365&type=date&theme=dark&legend=bottom-right" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=silverhack/monkey365&type=date&legend=bottom-right" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=silverhack/monkey365&type=date&legend=bottom-right" />
+ </picture>
+</a>
