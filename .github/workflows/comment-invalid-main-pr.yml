@@ -1,0 +1,58 @@
+name: Explain invalid main pull request
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, reopened, synchronize, edited]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  comment:
+    name: Explain main PR policy
+    if: >-
+      github.event.pull_request.head.ref != 'develop' ||
+      github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-24.04
+
+    steps:
+      # This workflow deliberately does not check out or execute pull-request code.
+      - name: Add or update policy comment
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPOSITORY: ${{ github.repository }}
+          COMMENT_MARKER: '<!-- main-pr-source-policy -->'
+          COMMENT_BODY: |
+            <!-- main-pr-source-policy -->
+            ## Pull request targets `main`
+
+            This pull request cannot be merged because only the repository's
+            `develop` branch may be merged into `main`.
+
+            For a feature or bug fix, change the pull request's base branch to
+            `develop`. The maintainer will promote tested changes from `develop`
+            to `main` as part of the release process.
+        run: |
+          comment_id="$(
+            gh api --paginate \
+              "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
+              --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | contains(\"${COMMENT_MARKER}\"))) | .id" \
+              | head -n 1
+          )"
+
+          if [[ -n "$comment_id" ]]; then
+            gh api --method PATCH \
+              "repos/${REPOSITORY}/issues/comments/${comment_id}" \
+              -f body="$COMMENT_BODY" \
+              > /dev/null
+            echo "Updated policy comment ${comment_id}."
+          else
+            gh api --method POST \
+              "repos/${REPOSITORY}/issues/${PR_NUMBER}/comments" \
+              -f body="$COMMENT_BODY" \
+              > /dev/null
+            echo "Added policy comment."
+          fi
