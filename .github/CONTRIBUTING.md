@@ -2,7 +2,7 @@
 
 Thank you for considering a contribution to Monkey365. Contributions can include bug fixes, tests, documentation, collectors, security checks, and focused improvements to the developer experience.
 
-By participating, you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md). Use [SUPPORT.md](../SUPPORT.md) for usage questions and [SECURITY.md](../SECURITY.md) for suspected vulnerabilities.
+By participating, you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md). Use [support](https://silverhack.github.io/monkey365/support/support/) for usage questions and [SECURITY.md](../SECURITY.md) for suspected vulnerabilities.
 
 ## Before starting
 
