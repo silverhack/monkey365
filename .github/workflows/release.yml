@@ -1,0 +1,150 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  monkeyversion:
+    name: Create Monkey365 draft release
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Get current version
+        id: monkey365version
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-StrictMode -Version Latest
+
+          $manifest = Test-ModuleManifest `
+            -Path './src/monkey365/monkey365.psd1' `
+            -ErrorAction Stop
+          $version = $manifest.Version.ToString()
+          $prerelease = [string]$manifest.PrivateData.PSData['Prerelease']
+
+          if ([string]::IsNullOrWhiteSpace($prerelease)) {
+              $isPrerelease = 'false'
+          }
+          else {
+              $version = '{0}-{1}' -f $version, $prerelease.TrimStart('-')
+              $isPrerelease = 'true'
+          }
+
+          $releaseTag = "v$version"
+          $releaseName = ("Monkey365 v{0}" -f $version)
+
+          $utf8WithoutBom = [System.Text.UTF8Encoding]::new($false)
+          [System.IO.File]::AppendAllText(
+              $env:GITHUB_OUTPUT,
+              "module_version=$version`nrelease_tag=$releaseTag`nrelease_name=$releaseName`nis_prerelease=$isPrerelease`n",
+              $utf8WithoutBom
+          )
+
+      - name: Build release archive
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p build
+          git archive \
+            --format zip \
+            --prefix monkey365/ \
+            --add-file LICENSE \
+            --output ./build/monkey365.zip \
+            "${GITHUB_SHA}:src/monkey365"
+          sha256sum ./build/monkey365.zip | awk '{print $1}' > ./build/monkey365.zip.sha256
+          sha512sum ./build/monkey365.zip | awk '{print $1}' > ./build/monkey365.zip.sha512
+
+      - name: Check for existing release
+        id: check_release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if release_details=$(gh release view "$RELEASE_TAG" --json tagName,name,isDraft,isPrerelease --jq '[.tagName, .name, .isDraft, .isPrerelease] | @tsv' 2>/dev/null); then
+            IFS=$'\t' read -r existing_tag existing_name existing_is_draft existing_is_prerelease <<< "$release_details"
+            if [[ "$existing_tag" != "$RELEASE_TAG" || "$existing_name" != "$RELEASE_NAME" ]]; then
+              echo "::error::Release tag '$RELEASE_TAG' already exists with the name '$existing_name'; expected '$RELEASE_NAME'."
+              exit 1
+            fi
+            if [[ "$existing_is_prerelease" != "$IS_PRERELEASE" ]]; then
+              echo "::error::Release '$RELEASE_TAG' prerelease state is '$existing_is_prerelease'; expected '$IS_PRERELEASE'."
+              exit 1
+            fi
+
+            if [[ "$existing_is_draft" != "true" ]]; then
+              echo "release_exists=true" >> "$GITHUB_OUTPUT"
+              echo "release_is_draft=false" >> "$GITHUB_OUTPUT"
+              echo "Release '$RELEASE_TAG' is already published; its artifacts will not be modified."
+              exit 0
+            fi
+
+            echo "release_exists=true" >> "$GITHUB_OUTPUT"
+            echo "release_is_draft=true" >> "$GITHUB_OUTPUT"
+            echo "Draft release '$RELEASE_NAME' with tag '$RELEASE_TAG' already exists; its artifacts will be updated."
+          else
+            echo "release_exists=false" >> "$GITHUB_OUTPUT"
+            echo "release_is_draft=false" >> "$GITHUB_OUTPUT"
+            echo "Draft release '$RELEASE_NAME' with tag '$RELEASE_TAG' does not exist and will be created."
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.monkey365version.outputs.release_tag }}
+          RELEASE_NAME: ${{ steps.monkey365version.outputs.release_name }}
+          IS_PRERELEASE: ${{ steps.monkey365version.outputs.is_prerelease }}
+
+      - name: Create Release
+        id: create_release
+        if: steps.check_release.outputs.release_exists != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          release_args=(
+            release create "$RELEASE_TAG"
+            --title "$RELEASE_NAME"
+            --notes "$RELEASE_NOTES"
+            --target "$GITHUB_SHA"
+            --draft
+          )
+          if [[ "$IS_PRERELEASE" == "true" ]]; then
+            release_args+=(--prerelease)
+          fi
+          gh "${release_args[@]}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.monkey365version.outputs.release_tag }}
+          RELEASE_NAME: ${{ steps.monkey365version.outputs.release_name }}
+          IS_PRERELEASE: ${{ steps.monkey365version.outputs.is_prerelease }}
+          RELEASE_NOTES: Thanks for following [Monkey365](https://github.com/silverhack/monkey365)!
+
+      - name: Publish release artifacts
+        if: steps.check_release.outputs.release_is_draft == 'true' || steps.create_release.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          gh release upload "$RELEASE_TAG" \
+            ./build/monkey365.zip \
+            ./build/monkey365.zip.sha256 \
+            ./build/monkey365.zip.sha512 \
+            --clobber
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.monkey365version.outputs.release_tag }}
