@@ -1,4 +1,4 @@
-Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version Latest
 
 Describe 'Invoke-Monkey365 credential-free smoke test' {
     BeforeAll {

@@ -1,4 +1,4 @@
-# PSScriptAnalyzer - ignore test file
+﻿# PSScriptAnalyzer - ignore test file
 Set-StrictMode -Version Latest
 
 Describe 'Monkey web request API integration' -Tag 'Network' {

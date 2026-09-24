@@ -1,4 +1,4 @@
-Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version Latest
 
 Describe 'MonkeyHTML assets and metadata rendering' {
     BeforeAll {
