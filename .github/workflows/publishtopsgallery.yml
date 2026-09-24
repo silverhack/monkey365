@@ -1,0 +1,203 @@
+name: Publish Monkey365 to PowerShell Gallery
+
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: read
+
+concurrency:
+  group: powershell-gallery-${{ github.event.release.tag_name || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      ${{
+        github.event_name == 'release' ||
+        github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+      }}
+    name: Publish Monkey365
+    runs-on: windows-latest
+    timeout-minutes: 20
+    environment:
+      name: powershell-gallery
+
+    steps:
+      - name: Checkout released source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.release.tag_name || github.ref }}
+
+      - name: Install publishing tools
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-StrictMode -Version Latest
+
+          Install-PackageProvider `
+              -Name NuGet `
+              -RequiredVersion 2.8.5.208 `
+              -Scope CurrentUser `
+              -Force
+
+          Import-PackageProvider `
+              -Name NuGet `
+              -RequiredVersion 2.8.5.208 `
+              -Force `
+              -ErrorAction Stop
+
+          Set-PSRepository `
+              -Name PSGallery `
+              -InstallationPolicy Trusted
+
+          Install-Module `
+              -Name PowerShellGet `
+              -RequiredVersion 2.2.5 `
+              -Scope CurrentUser `
+              -AllowClobber `
+              -Force
+
+      - name: Prepare and validate package
+        id: package
+        shell: powershell
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-StrictMode -Version Latest
+
+          Import-PackageProvider `
+              -Name NuGet `
+              -RequiredVersion 2.8.5.208 `
+              -Force `
+              -ErrorAction Stop
+          Import-Module PowerShellGet -RequiredVersion 2.2.5 -Force -ErrorAction Stop
+
+          Write-Host "PowerShell version: $($PSVersionTable.PSVersion)"
+          Write-Host "PowerShellGet version: $((Get-Module PowerShellGet).Version)"
+          Write-Host "Workspace: $env:GITHUB_WORKSPACE"
+          Write-Host "Ref: $env:GITHUB_REF"
+
+          $moduleSource = Join-Path $env:GITHUB_WORKSPACE 'src/monkey365'
+
+          $moduleManifests = @(
+              Get-ChildItem `
+                  -Path $moduleSource `
+                  -Filter '*.psd1' `
+                  -File
+          )
+
+          if ($moduleManifests.Count -ne 1) {
+              $found = $moduleManifests.FullName -join ', '
+              throw "Expected exactly one root module manifest, found $($moduleManifests.Count): $found"
+          }
+
+          $moduleManifest = $moduleManifests[0]
+          $manifest = Test-ModuleManifest -Path $moduleManifest.FullName
+
+          $moduleName = $moduleManifest.BaseName
+          $prerelease = [string]$manifest.PrivateData.PSData['Prerelease']
+
+          if ([string]::IsNullOrWhiteSpace($prerelease)) {
+              $version = $manifest.Version.ToString()
+          }
+          else {
+              $version = '{0}-{1}' -f (
+                  $manifest.Version.ToString(),
+                  $prerelease.TrimStart('-')
+              )
+          }
+
+          Write-Host "Module: $moduleName"
+          Write-Host "Version: $version"
+
+          if (
+              $env:GITHUB_EVENT_NAME -eq 'release' -and
+              $env:RELEASE_TAG -ne "v$version"
+          ) {
+              throw "Release tag '$env:RELEASE_TAG' does not match expected tag 'v$version'."
+          }
+
+          $modulePath = Join-Path $env:RUNNER_TEMP $moduleName
+          New-Item -Path $modulePath -ItemType Directory -Force | Out-Null
+
+          Get-ChildItem -Path $moduleSource -Force |
+              Copy-Item -Destination $modulePath -Recurse -Force
+
+          Copy-Item `
+              -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'LICENSE') `
+              -Destination $modulePath
+
+          $stagedManifest = Join-Path $modulePath "$moduleName.psd1"
+
+          if (-not (Test-Path -LiteralPath $stagedManifest)) {
+              throw "Staged module manifest not found: $stagedManifest"
+          }
+
+          Test-ModuleManifest -Path $stagedManifest | Out-Null
+
+          $findParameters = @{
+              Name            = $moduleName
+              RequiredVersion = $version
+              Repository      = 'PSGallery'
+              ErrorAction     = 'SilentlyContinue'
+          }
+
+          if ($prerelease) {
+              $findParameters.AllowPrerelease = $true
+          }
+
+          $existingModule = Find-Module @findParameters
+
+          if ($existingModule) {
+              Write-Host "$moduleName $version is already published."
+              $alreadyPublished = 'true'
+          }
+          else {
+              $alreadyPublished = 'false'
+          }
+
+          $utf8WithoutBom = [System.Text.UTF8Encoding]::new($false)
+          [System.IO.File]::AppendAllText(
+              $env:GITHUB_OUTPUT,
+              "already_published=$alreadyPublished`nmodule_path=$modulePath`nversion=$version`n",
+              $utf8WithoutBom
+          )
+
+      - name: Publish Monkey365
+        if: steps.package.outputs.already_published != 'true'
+        shell: powershell
+        env:
+          NUGET_KEY: ${{ secrets.PSGALLERY }}
+          MODULE_PATH: ${{ steps.package.outputs.module_path }}
+          MODULE_VERSION: ${{ steps.package.outputs.version }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-StrictMode -Version Latest
+
+          if ([string]::IsNullOrWhiteSpace($env:NUGET_KEY)) {
+              throw "The PSGALLERY environment secret is missing or empty."
+          }
+          if (-not (Test-Path -LiteralPath $env:MODULE_PATH -PathType Container)) {
+              throw "Staged module path not found: $env:MODULE_PATH"
+          }
+
+          Import-PackageProvider `
+              -Name NuGet `
+              -RequiredVersion 2.8.5.208 `
+              -Force `
+              -ErrorAction Stop
+          Import-Module PowerShellGet -RequiredVersion 2.2.5 -Force -ErrorAction Stop
+
+          Publish-Module `
+              -Path $env:MODULE_PATH `
+              -Repository PSGallery `
+              -NuGetApiKey $env:NUGET_KEY `
+              -Force
+
+          Write-Host "Publish request completed for Monkey365 $env:MODULE_VERSION."
