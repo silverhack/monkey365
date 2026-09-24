@@ -1,4 +1,4 @@
-Function Split-Array {
+﻿Function Split-Array {
     <#
         .SYNOPSIS
 		Separates elements into small arrays

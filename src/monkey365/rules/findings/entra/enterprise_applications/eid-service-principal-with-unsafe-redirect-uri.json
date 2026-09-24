@@ -7,7 +7,7 @@
   "rationale": "Unsafe redirect URI configurations included the use of insecure HTTP schemes for non-localhost URIs (exposing tokens to network interception), wildcard patterns in URI definitions (such as https://*.company.com enabling attackers to redirect to any subdomain including attacker-controlled ones), URN schemes that do not follow absolute URI requirements specified in RFC 6749 section 3.1.2, redirect URIs pointing to domains no longer owned or controlled by the organisation (creating takeover opportunities), and excessively large lists of redirect URIs that increase the attack surface and make security audits more difficult.",
   "impact": "For applications using the implicit grant flow with unsafe redirect URIs, prioritise migration to the authorisation code flow with Proof Key for Code Exchange (PKCE), which is more resistant to token interception attacks. Implement additional security controls including mandatory use of the state parameter for CSRF protection, validation that redirect URIs match exactly (including case sensitivity and trailing slashes), monitoring of sign-in logs for unusual redirect patterns or failed validation attempts, and regular penetration testing specifically targeting OAuth redirect URI manipulation vulnerabilities.",
   "remediation": {
-    "text": "\r\n\t\t\t###### To remediate using the UI:\r\n\t\t\t1. Navigate to Microsoft Entra admin centre https://entra.microsoft.com/.\r\n\t\t\t2. Click to expand Identity, select Enterprise Apps.\r\n\t\t\t3. Search for the application with client secrets.\r\n\t\t\t4. Document applications.\r\n\t\t\t5. Prioritise applications with long-lived secrets (expiration > 90 days) or privileged permissions for immediate migration.\r\n\t\t",
+    "text": "\r\n\t\t\t###### To remediate using the UI:\r\n\t\t\t1. Navigate to Microsoft Entra admin centre https://entra.microsoft.com/.\r\n\t\t\t2. Click to expand Identity, select Enterprise Apps.\r\n\t\t\t3. Search for the application with client secrets.\r\n\t\t\t4. Document applications.\r\n\t\t\t5. Prioritise applications with long-lived secrets (expiration \u003E 90 days) or privileged permissions for immediate migration.\r\n\t\t",
     "code": {
       "powerShell": null,
       "iac": null,
@@ -154,7 +154,7 @@
   "idSuffix": "aad_service_principals_with_unsafe_redirect_uri",
   "notes": [],
   "categories": [],
-  "immutable_properties": [
+  "immutableProperties": [
     "id"
   ],
   "id": "entraid_1174"

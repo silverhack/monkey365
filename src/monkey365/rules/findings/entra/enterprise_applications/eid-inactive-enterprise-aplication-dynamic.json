@@ -1,144 +1,127 @@
 {
-    "provider": "EntraID",
-    "serviceType": "Enterprise Applications",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure Inactive Enterprise Applications are removed or disabled",
-    "description": "Dormant applications represent abandoned integrations, decommissioned services, discontinued automation workflows, deprecated third-party connections, or legacy systems that have been replaced but never properly removed from the identity infrastructure. Despite their inactivity, these applications maintain authentication capabilities through unexpired client secrets or certificates, retain granted API permissions that may include sensitive data access, and continue consuming licensing resources whilst contributing nothing to business operations.",
-    "rationale": "Inactive enterprise applications fundamentally violate the principle of least privilege and attack surface minimisation by maintaining unnecessary access pathways into the organisation's cloud environment. Each dormant application with valid credentials represents a potential entry point for attackers who specifically target service principal credentials through various attack vectors including source code repository scanning for leaked secrets, compromise of development environments where credentials may be stored, exploitation of backup systems containing configuration files, social engineering targeting former application owners, and supply chain attacks against deprecated integration partners or vendors who may retain copies of authentication materials.",
-    "impact": "",
-    "remediation": {
-        "text": "
-			**Audit All Enterprise Applications for Sign-In Activity:**
-		   - Navigate to **Microsoft Entra Admin Centre** → **Identity** → **Applications** → **Enterprise applications**
-		   - Enable the **Sign-in activity** column to display last authentication timestamps
-		   - Sort applications by last sign-in date to identify those inactive for _ARG_0_+ days
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/what-is-application-management",
-		"https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-in-log-activity-details"
+  "provider": "EntraID",
+  "serviceType": "Enterprise Applications",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure Inactive Enterprise Applications are removed or disabled",
+  "description": "Dormant applications represent abandoned integrations, decommissioned services, discontinued automation workflows, deprecated third-party connections, or legacy systems that have been replaced but never properly removed from the identity infrastructure. Despite their inactivity, these applications maintain authentication capabilities through unexpired client secrets or certificates, retain granted API permissions that may include sensitive data access, and continue consuming licensing resources whilst contributing nothing to business operations.",
+  "rationale": "Inactive enterprise applications fundamentally violate the principle of least privilege and attack surface minimisation by maintaining unnecessary access pathways into the organisation\u0027s cloud environment. Each dormant application with valid credentials represents a potential entry point for attackers who specifically target service principal credentials through various attack vectors including source code repository scanning for leaked secrets, compromise of development environments where credentials may be stored, exploitation of backup systems containing configuration files, social engineering targeting former application owners, and supply chain attacks against deprecated integration partners or vendors who may retain copies of authentication materials.",
+  "impact": "",
+  "remediation": {
+    "text": "\n\t\t\t**Audit All Enterprise Applications for Sign-In Activity:**\n\t\t   - Navigate to **Microsoft Entra Admin Centre** \u2192 **Identity** \u2192 **Applications** \u2192 **Enterprise applications**\n\t\t   - Enable the **Sign-in activity** column to display last authentication timestamps\n\t\t   - Sort applications by last sign-in date to identify those inactive for _ARG_0_\u002B days\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/what-is-application-management",
+    "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-in-log-activity-details"
+  ],
+  "compliance": [
+    {
+      "name": "",
+      "version": "",
+      "reference": "",
+      "profile": []
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "aad_managed_app",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "eq",
+                "signInActivity"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "connectOperator": "or",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "signInActivity.lastSignInActivity.lastSignInDateTime",
+                "lt",
+                "{$cutoffDateInDays(_ARG_0_)}"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "compliance": [
-        {
-            "name": "",
-            "version": "",
-            "reference": "",
-            "profile": [
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "aad_managed_app",
-        "subPath": null,
-        "selectCondition": {
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "id": "Id",
+          "appId": "Application Id",
+          "displayName": "Application Name"
         },
-        "query": [
-			{
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "eq",
-                                "signInActivity"
-                            ]
-                        ]
-                    }
-                ]
-            },
-			{
-                "connectOperator":"or",
-				"filter": [
-                    {
-                        "conditions": [
-                            [
-                                "signInActivity.lastSignInActivity.lastSignInDateTime",
-                                "lt",
-                                "{$cutoffDateInDays(_ARG_0_)}"
-                            ]
-                        ]
-                    }
-                ]
-            }
+        "expandObject": null
+      },
+      "table": "default",
+      "table": null,
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          "id": "Id",
+          "appId": "Application Id",
+          "displayName": "Application Name"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "displayName"
         ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-					"id": "Id",
-					"appId": "Application Id",
-					"displayName": "Application Name"
-                },
-				"expandObject": null
-            },
-            "table": "default",
-            "table": null,
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": false,
-                "showModalButton": false,
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-					"id": "Id",
-					"appId": "Application Id",
-					"displayName": "Application Name"
-                },
-				"expandObject": null
-            },
-            "status": {
-                "keyName": [
-					"displayName"
-				],
-                "message": "Ensure unsafe redirect URIs are removed from {displayName}",
-                "defaultMessage": "Ensure unsafe redirect URIs are removed from service principals"
-            },
-            "properties": {
-                "resourceName": "displayName",
-                "resourceId": "id",
-                "resourceType": "EntraApplication"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "aad_service_principals_with_unsafe_redirect_uri",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"id"
-    ],
-    "id": "entraid_1174"
+        "message": "Ensure unsafe redirect URIs are removed from {displayName}",
+        "defaultMessage": "Ensure unsafe redirect URIs are removed from service principals"
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "EntraApplication"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "aad_service_principals_with_unsafe_redirect_uri",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "entraid_1174"
 }

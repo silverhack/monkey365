@@ -1,120 +1,112 @@
 {
-    "provider": "EntraID",
-    "serviceType": "Users",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure SSPR registration and authentication reconfirmation are required",
-    "description": "The `Require users to register when signing in?` setting controls whether users are prompted to register their self-service password reset (SSPR) authentication methods at their next sign-in. When set to `Yes`, users who have not yet registered are prompted to do so upon signing in.\r\nThe `Number of days before users are asked to re-confirm their authentication information` setting designates the period of time before registered users are prompted to re-confirm their existing authentication information is still valid, up to a maximum of 730 days. If set to _ARG_0_ days, registered users will never be prompted to re-confirm their authentication information.",
-    "rationale": "Without requiring users to register, users may never establish SSPR authentication methods, rendering the re-confirmation setting ineffective regardless of the value it is set to. When users do register authentication methods for self-service password reset (SSPR), those methods may become stale over time as phone numbers, email addresses, or other contact information changes. If re-confirmation is disabled, outdated recovery information persists indefinitely. An attacker who gains access to a former phone number or email address associated with a user's account can exploit that stale recovery information to reset the user's password and take over the account. Requiring registration and periodic re-confirmation ensures that the authentication methods on record remain accurate and under the user's control.",
-    "impact": "Because both settings default to the compliant state, organizations that have not altered them will experience no impact. Re-enabling registration prompts unregistered users to register at their next sign-in; re-enabling re-confirmation prompts registered users to verify their information on the configured interval. Organizations with large user populations and short re-confirmation intervals should expect increased SSPR support volume.",
-    "remediation": {
-        "text": "
-			##### Remediate from Azure Portal 
-			1. From Azure Home select the Portal Menu. 
-			2. Expand Entra ID > Password reset and select Registration. 
-			3. Verify that Require users to register when signing in? is set to Yes. 
-			4. Verify that Number of days before users are asked to re-confirm their authentication information is not set to _ARG_0_. 
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-ssprhowitworks#registration",
-        "https://support.microsoft.com/en-us/account-billing/reset-your-work-or-schoolpassword-using-security-info-23dde81f-08bb-4776-ba72-e6b72b9dda9e",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-governancestrategy#gs-6-define-and-implement-identity-and-privileged-access-strategy",
-        "https://learn.microsoft.com/en-us/entra/identity/authentication/conceptauthentication-methods"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "7.0.0",
-            "reference": "5.2.4.3",
-            "profile": [
-                "E3 Level 1",
-				"E5 Level 1"
+  "provider": "EntraID",
+  "serviceType": "Users",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure SSPR registration and authentication reconfirmation are required",
+  "description": "The \u0060Require users to register when signing in?\u0060 setting controls whether users are prompted to register their self-service password reset (SSPR) authentication methods at their next sign-in. When set to \u0060Yes\u0060, users who have not yet registered are prompted to do so upon signing in.\r\nThe \u0060Number of days before users are asked to re-confirm their authentication information\u0060 setting designates the period of time before registered users are prompted to re-confirm their existing authentication information is still valid, up to a maximum of 730 days. If set to _ARG_0_ days, registered users will never be prompted to re-confirm their authentication information.",
+  "rationale": "Without requiring users to register, users may never establish SSPR authentication methods, rendering the re-confirmation setting ineffective regardless of the value it is set to. When users do register authentication methods for self-service password reset (SSPR), those methods may become stale over time as phone numbers, email addresses, or other contact information changes. If re-confirmation is disabled, outdated recovery information persists indefinitely. An attacker who gains access to a former phone number or email address associated with a user\u0027s account can exploit that stale recovery information to reset the user\u0027s password and take over the account. Requiring registration and periodic re-confirmation ensures that the authentication methods on record remain accurate and under the user\u0027s control.",
+  "impact": "Because both settings default to the compliant state, organizations that have not altered them will experience no impact. Re-enabling registration prompts unregistered users to register at their next sign-in; re-enabling re-confirmation prompts registered users to verify their information on the configured interval. Organizations with large user populations and short re-confirmation intervals should expect increased SSPR support volume.",
+  "remediation": {
+    "text": "\n\t\t\t##### Remediate from Azure Portal \n\t\t\t1. From Azure Home select the Portal Menu. \n\t\t\t2. Expand Entra ID \u003E Password reset and select Registration. \n\t\t\t3. Verify that Require users to register when signing in? is set to Yes. \n\t\t\t4. Verify that Number of days before users are asked to re-confirm their authentication information is not set to _ARG_0_. \n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-ssprhowitworks#registration",
+    "https://support.microsoft.com/en-us/account-billing/reset-your-work-or-schoolpassword-using-security-info-23dde81f-08bb-4776-ba72-e6b72b9dda9e",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-governancestrategy#gs-6-define-and-implement-identity-and-privileged-access-strategy",
+    "https://learn.microsoft.com/en-us/entra/identity/authentication/conceptauthentication-methods"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "7.0.0",
+      "reference": "5.2.4.3",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "aad_password_reset_policy",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "registrationReconfirmIntevalInDays",
+                "eq",
+                "_ARG_0_"
+              ]
             ]
-        }
+          }
+        ]
+      }
     ],
-    "level": "medium",
-    "tags": [],
-    "rule": {
-        "path": "aad_password_reset_policy",
-        "subPath": null,
-        "selectCondition": {
-            
-        },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "registrationReconfirmIntevalInDays",
-                                "eq",
-                                "_ARG_0_"
-                            ]
-                        ]
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "objectId": "ObjectId",
-                    "enablementType": "enablementType",
-                    "registrationReconfirmIntevalInDays": "registrationReconfirmIntevalInDays"
-                }
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    "objectId": "ObjectId",
-                    "enablementType": "enablementType",
-                    "registrationReconfirmIntevalInDays": "registrationReconfirmIntevalInDays"
-                }
-            },
-            "status": {
-                "keyName": [],
-                "message": "Ensure SSPR registration and authentication reconfirmation are required",
-                "defaultMessage": "Ensure SSPR registration and authentication reconfirmation are required"
-            },
-            "properties": {
-                "resourceName": "objectId",
-                "resourceId": "objectId",
-                "resourceType": "EntraSSPR"
-            },
-            "onlyStatus": false
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "objectId": "ObjectId",
+          "enablementType": "enablementType",
+          "registrationReconfirmIntevalInDays": "registrationReconfirmIntevalInDays"
         }
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "eid_sspr_mfa_auth_reconfirm_disabled",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [
-		"id"
-	],
-    "id": "entraid_sspr_002"
+    "text": {
+      "data": {
+        "properties": {
+          "objectId": "ObjectId",
+          "enablementType": "enablementType",
+          "registrationReconfirmIntevalInDays": "registrationReconfirmIntevalInDays"
+        }
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure SSPR registration and authentication reconfirmation are required",
+        "defaultMessage": "Ensure SSPR registration and authentication reconfirmation are required"
+      },
+      "properties": {
+        "resourceName": "objectId",
+        "resourceId": "objectId",
+        "resourceType": "EntraSSPR"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_sspr_mfa_auth_reconfirm_disabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "entraid_sspr_002"
 }

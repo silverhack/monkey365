@@ -1,4 +1,4 @@
-Function Get-OsInfo {
+﻿Function Get-OsInfo {
     [CmdletBinding(ConfirmImpact = 'None')]
     [OutputType([System.Management.Automation.PSObject])]
     param ()

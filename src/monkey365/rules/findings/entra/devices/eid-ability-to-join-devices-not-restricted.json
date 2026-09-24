@@ -3,11 +3,11 @@
   "serviceType": "Devices",
   "serviceName": "Microsoft Entra ID",
   "displayName": "Ensure the ability to join devices to Entra is restricted",
-  "description": "This setting enables you to select the users who can register their devices as Microsoft Entra joined devices.\r\nThe recommended state is `Selected` or `None`.\r\nNote: This setting is applicable only to Microsoft Entra join on Windows 10 or newer. This setting doesn't apply to Microsoft Entra hybrid joined devices, Microsoft Entra joined VMs in Azure, or Microsoft Entra joined devices that use Windows Autopilot self-deployment mode because these methods work in a userless context.",
-  "rationale": "If a threat actor compromises a standard user account, they can enroll a rogue device under that user's identity. This device may inherit MDM policies and appear compliant, giving attackers persistent access to cloud resources without triggering MFA.\r\nIn a 2023 blog, Microsoft IR reports that it has detected threat actors registering their own devices to the Microsoft Entra tenant, giving them a platform to escalate the cyberattack. While simply joining a device to a Microsoft Entra tenant may present limited immediate risk, it could allow a threat actor to establish a foothold in the environment.",
+  "description": "This setting enables you to select the users who can register their devices as Microsoft Entra joined devices.\r\nThe recommended state is \u0060Selected\u0060 or \u0060None\u0060.\r\nNote: This setting is applicable only to Microsoft Entra join on Windows 10 or newer. This setting doesn\u0027t apply to Microsoft Entra hybrid joined devices, Microsoft Entra joined VMs in Azure, or Microsoft Entra joined devices that use Windows Autopilot self-deployment mode because these methods work in a userless context.",
+  "rationale": "If a threat actor compromises a standard user account, they can enroll a rogue device under that user\u0027s identity. This device may inherit MDM policies and appear compliant, giving attackers persistent access to cloud resources without triggering MFA.\r\nIn a 2023 blog, Microsoft IR reports that it has detected threat actors registering their own devices to the Microsoft Entra tenant, giving them a platform to escalate the cyberattack. While simply joining a device to a Microsoft Entra tenant may present limited immediate risk, it could allow a threat actor to establish a foothold in the environment.",
   "impact": "Restricting the setting requires IT teams to assign enrollment permissions to specific staff, such as helpdesk or provisioning personnel, which may impact user-driven Autopilot scenarios and increase administrative overhead for device onboarding and support.",
   "remediation": {
-    "text": "Remediate from Azure Portal\r\n\t\t\t1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\r\n\t\t\t2. Click to expand Entra ID > Devices select Device settings.\r\n\t\t\t3. Set `Users may join devices to Microsoft Entra` to `Selected` (and add members) or `None`.\r\n\t\t",
+    "text": "Remediate from Azure Portal\r\n\t\t\t1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.\r\n\t\t\t2. Click to expand Entra ID \u003E Devices select Device settings.\r\n\t\t\t3. Set \u0060Users may join devices to Microsoft Entra\u0060 to \u0060Selected\u0060 (and add members) or \u0060None\u0060.\r\n\t\t",
     "code": {
       "powerShell": null,
       "iac": null,
@@ -115,7 +115,7 @@
   "idSuffix": "eid_allow_to_join_devices_not_restricted",
   "notes": [],
   "categories": [],
-  "immutable_properties": [
+  "immutableProperties": [
     "id"
   ],
   "id": "entraid_tenant_003"

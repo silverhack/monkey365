@@ -1,157 +1,128 @@
 {
-    "args": [
-        
-    ],
-    "provider": "EntraID",
-    "serviceType": "Entra Role Assignment",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure Guest Users Are Not Assigned to Privileged Roles",
-    "description": "Guest users represent external identities that originate from different Microsoft Entra tenants, Microsoft accounts, or federated identity providers, and are invited to access resources within the organisation's tenant through B2B collaboration. Unlike internal member accounts, guest users maintain their primary authentication and management within their home organisations, creating significant security dependencies on external entities when these accounts possess privileged access.",
-    "rationale": "Ensuring administrative accounts do not use licenses with applications assigned to them will reduce the attack surface of high privileged identities in the organization\u0027s environment. Granting access to a mailbox or other collaborative tools increases the likelihood that privileged users might interact with these applications, raising the risk of exposure to social engineering attacks or malicious content. These activities should be restricted to an unprivileged `daily driver` account.",
-    "impact": "Assigning privileged roles such as Global Administrator, Privileged Role Administrator, Security Administrator, User Administrator, or other high-impact directory roles to guest accounts fundamentally violates the principle of least privilege and introduces critical security risks that extend beyond the organisation's direct control. Guest accounts with privileged access enable external parties to perform sensitive administrative operations including user account creation, role assignment modifications, security policy changes, conditional access rule alterations, application registration management, and privileged access grants, whilst the organisation lacks complete visibility into the authentication security, credential hygiene, and access controls enforced by the external user's home organisation.",
-    "remediation": {
-        "text": "
-			###### Remediate from UI
-			1. Sign in to the [Microsoft Entra admin centre](https://entra.microsoft.com/) with an account assigned the Privileged Role Administrator or Global Administrator role
-			2. Navigate to **Identity** > **Roles & administrators** to display all available Microsoft Entra directory roles
-			3. Select **All roles** to view the complete list of directory roles available in the tenant
-			4. For each privileged role requiring review, select the role name (e.g., `Global Administrator`) to open the role assignments page
-			5. Review the **Assignments** list and examine the **User type** column for each assigned principal
-			6. Identify entries where **User type** shows `Guest`, indicating an external user with privileged access
-			7. Note the guest user's display name, user principal name (typically containing `#EXT#`), and role assignment details
-			8. Record the business justification for the guest user's privileged access by contacting the administrator who created the assignment
-			9. Select each guest user privileged assignment requiring removal
-			10. Choose **Remove assignment** from the toolbar or context menu
-			11. Confirm the removal when prompted, acknowledging that the guest user will immediately lose privileged access
-			12. Repeat steps 4-11 for all privileged roles 
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
+  "args": [],
+  "provider": "EntraID",
+  "serviceType": "Entra Role Assignment",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure Guest Users Are Not Assigned to Privileged Roles",
+  "description": "Guest users represent external identities that originate from different Microsoft Entra tenants, Microsoft accounts, or federated identity providers, and are invited to access resources within the organisation\u0027s tenant through B2B collaboration. Unlike internal member accounts, guest users maintain their primary authentication and management within their home organisations, creating significant security dependencies on external entities when these accounts possess privileged access.",
+  "rationale": "Ensuring administrative accounts do not use licenses with applications assigned to them will reduce the attack surface of high privileged identities in the organization\u0027s environment. Granting access to a mailbox or other collaborative tools increases the likelihood that privileged users might interact with these applications, raising the risk of exposure to social engineering attacks or malicious content. These activities should be restricted to an unprivileged \u0060daily driver\u0060 account.",
+  "impact": "Assigning privileged roles such as Global Administrator, Privileged Role Administrator, Security Administrator, User Administrator, or other high-impact directory roles to guest accounts fundamentally violates the principle of least privilege and introduces critical security risks that extend beyond the organisation\u0027s direct control. Guest accounts with privileged access enable external parties to perform sensitive administrative operations including user account creation, role assignment modifications, security policy changes, conditional access rule alterations, application registration management, and privileged access grants, whilst the organisation lacks complete visibility into the authentication security, credential hygiene, and access controls enforced by the external user\u0027s home organisation.",
+  "remediation": {
+    "text": "\n\t\t\t###### Remediate from UI\n\t\t\t1. Sign in to the [Microsoft Entra admin centre](https://entra.microsoft.com/) with an account assigned the Privileged Role Administrator or Global Administrator role\n\t\t\t2. Navigate to **Identity** \u003E **Roles \u0026 administrators** to display all available Microsoft Entra directory roles\n\t\t\t3. Select **All roles** to view the complete list of directory roles available in the tenant\n\t\t\t4. For each privileged role requiring review, select the role name (e.g., \u0060Global Administrator\u0060) to open the role assignments page\n\t\t\t5. Review the **Assignments** list and examine the **User type** column for each assigned principal\n\t\t\t6. Identify entries where **User type** shows \u0060Guest\u0060, indicating an external user with privileged access\n\t\t\t7. Note the guest user\u0027s display name, user principal name (typically containing \u0060#EXT#\u0060), and role assignment details\n\t\t\t8. Record the business justification for the guest user\u0027s privileged access by contacting the administrator who created the assignment\n\t\t\t9. Select each guest user privileged assignment requiring removal\n\t\t\t10. Choose **Remove assignment** from the toolbar or context menu\n\t\t\t11. Confirm the removal when prompted, acknowledging that the guest user will immediately lose privileged access\n\t\t\t12. Repeat steps 4-11 for all privileged roles \n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoft-365/admin/add-users/add-users?view=o365-worldwide",
+    "https://learn.microsoft.com/en-us/microsoft-365/enterprise/protect-your-global-administrator-accounts?view=o365-worldwide",
+    "https://learn.microsoft.com/en-us/entra/fundamentals/whatis",
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "6.1.0",
+      "reference": "1.1.4",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "aad_role_assignment",
+    "subPath": null,
+    "selectCondition": {},
+    "data": {
+      "properties": {
+        "effectiveUsers.*": null,
+        "displayName": "roleName",
+        "description": "roleDescription",
+        "templateId": "templateId"
+      },
+      "expandObject": "effectiveUsers"
     },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/microsoft-365/admin/add-users/add-users?view=o365-worldwide",
-        "https://learn.microsoft.com/en-us/microsoft-365/enterprise/protect-your-global-administrator-accounts?view=o365-worldwide",
-        "https://learn.microsoft.com/en-us/entra/fundamentals/whatis",
-        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference"
+    "query": [
+      {
+        "filter": [
+          {
+            "include": "_ARG_0_"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "userPrincipalName",
+                "like",
+                "*#ext#*"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "6.1.0",
-            "reference": "1.1.4",
-            "profile": [
-				"E3 Level 1",
-				"E5 Level 1"
-			]
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": "true"
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "userPrincipalName": "User Principal Name",
+          "id": "Object Id",
+          "roleName": "Role Assigned"
         }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "aad_role_assignment",
-        "subPath": null,
-        "selectCondition": {
-            
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": "",
+          "limit": null
         },
-		"data": {
-            "properties": {
-                "effectiveUsers.*": null,
-                "displayName": "roleName",
-                "description": "roleDescription",
-                "templateId": "templateId"
-            },
-            "expandObject": "effectiveUsers"
-        },
-        "query": [
-			{
-                "filter": [
-                    {
-                        "include": "_ARG_0_"
-                    }
-                ]
-            },
-			{
-                "connectOperator": "and",
-				"filter": [
-                    {
-                        "conditions": [
-                            [
-                                "userPrincipalName",
-                                "like",
-                                "*#ext#*"
-                            ]
-                        ]
-                    }
-                ]
-            }
+        "showGoToButton": "False",
+        "showModalButton": "False",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {},
+      "status": {
+        "keyName": [
+          "userPrincipalName"
         ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": "true"
-    },
-    "output": {
-        "html": {
-            "data": {
-				"properties": {
-					"userPrincipalName": "User Principal Name",
-                    "id": "Object Id",
-                    "roleName": "Role Assigned"
-                }
-            },
-            "table": "default",
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": "",
-                    "limit": null
-                },
-                "showGoToButton": "False",
-                "showModalButton": "False",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {                
-            },
-            "status": {
-                "keyName": [
-					"userPrincipalName"
-                ],
-                "message": "Ensure {userPrincipalName} Guest User Is Not Assigned to Privileged Roles",
-                "defaultMessage": "Ensure Guest Users Are Not Assigned to Privileged Roles"
-            },
-            "properties": {
-                "resourceName": "userPrincipalName",
-                "resourceId": "id",
-                "resourceType": "EntraUser"
-            },
-            "onlyStatus": true
-        }
-    },
-    "idSuffix": "eid_guest_user_assigned_to_privileged_role",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"id"
-    ],
-    "id": "entraid_1141"
+        "message": "Ensure {userPrincipalName} Guest User Is Not Assigned to Privileged Roles",
+        "defaultMessage": "Ensure Guest Users Are Not Assigned to Privileged Roles"
+      },
+      "properties": {
+        "resourceName": "userPrincipalName",
+        "resourceId": "id",
+        "resourceType": "EntraUser"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "eid_guest_user_assigned_to_privileged_role",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "entraid_1141"
 }

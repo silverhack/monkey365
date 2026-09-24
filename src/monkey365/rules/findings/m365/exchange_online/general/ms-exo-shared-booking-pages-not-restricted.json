@@ -1,151 +1,135 @@
 {
-    "args": [
-        
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure shared bookings pages are restricted to select users",
+  "description": "Shared Bookings allows you to invite your team members and create booking pages and let your customers book time with you and your team. It contains various settings to define services, manage staff members, configure schedules and availability, business hours and customize how appointments are scheduled. These pages can be customized to fit the diverse needs of your organization. It is an extension of Person Bookings.\r\nThe recommended state is to restrict the \u0060OwaMailboxPolicy-Default\u0060 policy or disable at the organization level.",
+  "rationale": "Shared Bookings pages can be exploited by threat actors to impersonate legitimate users using convincing internal email addresses. A compromised low-privilege account could be used to mimic high-profile identities (e.g., the CEO) and bypass impersonation filters to initiate fraudulent actions like fund transfers.\r\nAdditionally, attackers may create authoritative-looking addresses (e.g., admin@, hostmaster@) to conduct social engineering attacks on external parties aimed at the transfer of infrastructure control.\r\nTo reduce this risk, access to Shared Bookings should be limited to users with a clear business need and subject to monitoring and governance.",
+  "impact": "Disabling Shared Bookings will limit users\u2019 ability to create self-service scheduling pages, which may reduce convenience for teams that rely on automated meeting coordination. Approved users will need to be added to a separate OWA Policy which will increase administrative overhead.\r\nNote: Before modifying the default owa policy, ensure that any users who rely on Shared Bookings are assigned a separate policy that explicitly allows its use. This will help prevent unintended service disruptions.",
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoft-365/bookings/turn-bookings-on-or-off?view=o365-worldwide",
+    "https://learn.microsoft.com/en-us/microsoft-365/bookings/best-practices-shared-bookings?view=o365-worldwide\u0026source=recommendations",
+    "https://www.cyberis.com/article/microsoft-bookings-facilitating-impersonation"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "6.0.1",
+      "reference": "1.3.9",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_exo_owa_mbox_policy",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "Identity",
+                "eq",
+                "OwaMailboxPolicy-Default"
+              ],
+              [
+                "BookingsMailboxCreationEnabled",
+                "ne",
+                "False"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      },
+      {
+        "connectOperator": "or",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "BookingsEnabled",
+                "ne",
+                "False"
+              ]
+            ],
+            "getValue": "o365_exo_org_config"
+          }
+        ]
+      }
     ],
-    "provider": "Microsoft365",
-    "serviceType": "Exchange Online",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure shared bookings pages are restricted to select users",
-    "description": "Shared Bookings allows you to invite your team members and create booking pages and let your customers book time with you and your team. It contains various settings to define services, manage staff members, configure schedules and availability, business hours and customize how appointments are scheduled. These pages can be customized to fit the diverse needs of your organization. It is an extension of Person Bookings.\r\nThe recommended state is to restrict the `OwaMailboxPolicy-Default` policy or disable at the organization level.",
-    "rationale": "Shared Bookings pages can be exploited by threat actors to impersonate legitimate users using convincing internal email addresses. A compromised low-privilege account could be used to mimic high-profile identities (e.g., the CEO) and bypass impersonation filters to initiate fraudulent actions like fund transfers.\r\nAdditionally, attackers may create authoritative-looking addresses (e.g., admin@, hostmaster@) to conduct social engineering attacks on external parties aimed at the transfer of infrastructure control.\r\nTo reduce this risk, access to Shared Bookings should be limited to users with a clear business need and subject to monitoring and governance.",
-    "impact": "Disabling Shared Bookings will limit users’ ability to create self-service scheduling pages, which may reduce convenience for teams that rely on automated meeting coordination. Approved users will need to be added to a separate OWA Policy which will increase administrative overhead.\r\nNote: Before modifying the default owa policy, ensure that any users who rely on Shared Bookings are assigned a separate policy that explicitly allows its use. This will help prevent unintended service disruptions.",
-    "remediation": {
-        "text": null,
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/microsoft-365/bookings/turn-bookings-on-or-off?view=o365-worldwide",
-        "https://learn.microsoft.com/en-us/microsoft-365/bookings/best-practices-shared-bookings?view=o365-worldwide&source=recommendations",
-        "https://www.cyberis.com/article/microsoft-bookings-facilitating-impersonation"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "6.0.1",
-            "reference": "1.3.9",
-            "profile": [
-				"E3 Level 1",
-				"E5 Level 1"
-			]			
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_exo_owa_mbox_policy",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "organizationalUnitRoot": "Organization",
+          "bookingsMailboxCreationEnabled": "Bookings Mailbox Creation"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "Identity",
-                                "eq",
-                                "OwaMailboxPolicy-Default"
-                            ],
-							[
-                                "BookingsMailboxCreationEnabled",
-                                "ne",
-                                "False"
-                            ]
-                        ],
-						"operator":"and"
-                    }					
-                ]
-            },
-			{
-				"connectOperator":"or",
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "BookingsEnabled",
-                                "ne",
-                                "False"
-                            ]
-                        ],
-						"getValue":"o365_exo_org_config"
-                    }
-                ]
-            }
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "Name"
         ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "Name": "Name",
-                    "OrganizationalUnitRoot": "Organization",
-                    "BookingsMailboxCreationEnabled": "Bookings Mailbox Creation"
-                },
-                "expandObject": null
-            },
-            "table": null,
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": false,
-                "showModalButton": false,
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-					"Name"
-                ],
-                "message": "Ensure shared bookings pages are restricted in {Name} to select users",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "Name",
-                "resourceId": "ExchangeObjectId",
-                "resourceType": "EXOOWAMailboxPolicy"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "m365_exo_shared_bookings_not_restricted",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"ExchangeObjectId"
-    ],
-    "id": "microsoft365_2123"
+        "message": "Ensure shared bookings pages are restricted in {Name} to select users",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "Name",
+        "resourceId": "ExchangeObjectId",
+        "resourceType": "EXOOWAMailboxPolicy"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_exo_shared_bookings_not_restricted",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "ExchangeObjectId"
+  ],
+  "id": "microsoft365_2123"
 }

@@ -1,129 +1,94 @@
 {
-    "args": [
-        
-    ],
-    "provider": "Microsoft365",
-    "serviceType": "Exchange Online",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure Direct Send submissions are rejected",
-    "description": "Direct Send is a method used to send emails directly to an Exchange Online customer’s hosted mailboxes from on-premises devices, applications, or third-party cloud services using the customer’s own accepted domain. This method does not require any form of authentication because, by its nature, it mimics incoming anonymous emails from the internet, apart from the sender domain.\r\nThe recommended state is to configure `RejectDirectSend` to `True`.",
-    "rationale": "
-		Direct Send allows devices and applications to transmit unauthenticated email directly to Exchange Online. While this method may support legacy systems such as printers or scanners, it introduces significant security risks:
-		* Unauthenticated Email Delivery: Direct Send does not require authentication, making it an attractive vector for threat actors to deliver spoofed or malicious emails that appear to originate from trusted internal sources.
-		* Phishing and Spoofing Risks: Because these emails bypass standard authentication mechanisms, they can easily impersonate internal users or services, increasing the likelihood of successful phishing attacks.
-		* Lack of Visibility and Control: Emails sent via Direct Send may not be subject to the same security policies, logging, or filtering as authenticated traffic, reducing the organization's ability to monitor and respond to threats effectively
-		
-		Threat research from Varonis has shown that attackers are actively exploiting Direct Send to impersonate internal accounts and distribute malicious content without needing to compromise any credentials. These campaigns have successfully targeted organizations by leveraging predictable infrastructure and public user data to craft convincing phishing emails. Because these messages originate from outside the tenant but appear internal, they often evade detection and filtering mechanisms.
-	",
-    "impact": "
-		Microsoft has identified some known issues with disabling Direct Send:
-		* There is a forwarding scenario that could be affected by this feature. It is possible that someone in your organization sends a message to a 3rd party and they in turn forward it to another mailbox in your organization. If the 3rd party’s email provider does not support Sender Rewriting Scheme (SRS), the message will return with the original sender’s address. Prior to this feature being enabled, those messages will already be punished by SPF failing but could still end up in inboxes. Enabling the Reject Direct Send feature without a partner mail flow connector being set up will lead to these messages being rejected outright
-		* If you are using the Azure Communication Services (ACS) to send emails to your tenant, and if those emails are sent using a `MAIL FROM` address that is one of your Microsoft 365 accepted domains, enabling RejectDirectSend would block those emails sent to your Microsoft 365 tenant. A solution for ACS traffic to be compatible with the setting is being worked on. In case the domains used to send emails from ACS are not one of the Microsoft 365 accepted domains or sub-domains, enabling RejectDirectSend should not have an impact on ACS traffic. If ACS email traffic is using an Exchange Online domain where the MX is pointed to a 3rd party service, please refer to the FAQ’s below, which provide instructions on mail connectors required to enable traffic in Exchange Online.
-	",
-    "remediation": {
-        "text": null,
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://techcommunity.microsoft.com/blog/exchange/introducing-more-control-over-direct-send-in-exchange-online/4408790?WT.mc_id=M365-MVP-9501",
-        "https://techcommunity.microsoft.com/blog/exchange/direct-send-vs-sending-directly-to-an-exchange-online-tenant/4439865",
-        "https://learn.microsoft.com/en-us/powershell/module/exchangepowershell/set-organizationconfig?view=exchange-ps",
-		"https://www.varonis.com/blog/direct-send-exploit",
-		"https://techcommunity.microsoft.com/discussions/microsoft-365/disable-direct-send-in-exchange-online-to-mitigate-ongoing-phishing-threats/4434649"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "6.0.1",
-            "reference": "6.5.5",
-            "profile": [
-				"E3 Level 2",
-				"E5 Level 2"
-			]			
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "",
-        "subPath": null,
-        "selectCondition": {
-            
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure Direct Send submissions are rejected",
+  "description": "Direct Send is a method used to send emails directly to an Exchange Online customer\u2019s hosted mailboxes from on-premises devices, applications, or third-party cloud services using the customer\u2019s own accepted domain. This method does not require any form of authentication because, by its nature, it mimics incoming anonymous emails from the internet, apart from the sender domain.\r\nThe recommended state is to configure \u0060RejectDirectSend\u0060 to \u0060True\u0060.",
+  "rationale": "\n\t\tDirect Send allows devices and applications to transmit unauthenticated email directly to Exchange Online. While this method may support legacy systems such as printers or scanners, it introduces significant security risks:\n\t\t* Unauthenticated Email Delivery: Direct Send does not require authentication, making it an attractive vector for threat actors to deliver spoofed or malicious emails that appear to originate from trusted internal sources.\n\t\t* Phishing and Spoofing Risks: Because these emails bypass standard authentication mechanisms, they can easily impersonate internal users or services, increasing the likelihood of successful phishing attacks.\n\t\t* Lack of Visibility and Control: Emails sent via Direct Send may not be subject to the same security policies, logging, or filtering as authenticated traffic, reducing the organization\u0027s ability to monitor and respond to threats effectively\n\t\t\n\t\tThreat research from Varonis has shown that attackers are actively exploiting Direct Send to impersonate internal accounts and distribute malicious content without needing to compromise any credentials. These campaigns have successfully targeted organizations by leveraging predictable infrastructure and public user data to craft convincing phishing emails. Because these messages originate from outside the tenant but appear internal, they often evade detection and filtering mechanisms.\n\t",
+  "impact": "\n\t\tMicrosoft has identified some known issues with disabling Direct Send:\n\t\t* There is a forwarding scenario that could be affected by this feature. It is possible that someone in your organization sends a message to a 3rd party and they in turn forward it to another mailbox in your organization. If the 3rd party\u2019s email provider does not support Sender Rewriting Scheme (SRS), the message will return with the original sender\u2019s address. Prior to this feature being enabled, those messages will already be punished by SPF failing but could still end up in inboxes. Enabling the Reject Direct Send feature without a partner mail flow connector being set up will lead to these messages being rejected outright\n\t\t* If you are using the Azure Communication Services (ACS) to send emails to your tenant, and if those emails are sent using a \u0060MAIL FROM\u0060 address that is one of your Microsoft 365 accepted domains, enabling RejectDirectSend would block those emails sent to your Microsoft 365 tenant. A solution for ACS traffic to be compatible with the setting is being worked on. In case the domains used to send emails from ACS are not one of the Microsoft 365 accepted domains or sub-domains, enabling RejectDirectSend should not have an impact on ACS traffic. If ACS email traffic is using an Exchange Online domain where the MX is pointed to a 3rd party service, please refer to the FAQ\u2019s below, which provide instructions on mail connectors required to enable traffic in Exchange Online.\n\t",
+  "remediation": {
+    "text": null,
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://techcommunity.microsoft.com/blog/exchange/introducing-more-control-over-direct-send-in-exchange-online/4408790?WT.mc_id=M365-MVP-9501",
+    "https://techcommunity.microsoft.com/blog/exchange/direct-send-vs-sending-directly-to-an-exchange-online-tenant/4439865",
+    "https://learn.microsoft.com/en-us/powershell/module/exchangepowershell/set-organizationconfig?view=exchange-ps",
+    "https://www.varonis.com/blog/direct-send-exploit",
+    "https://techcommunity.microsoft.com/discussions/microsoft-365/disable-direct-send-in-exchange-online-to-mitigate-ongoing-phishing-threats/4434649"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "6.0.1",
+      "reference": "6.5.5",
+      "profile": [
+        "E3 Level 2",
+        "E5 Level 2"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
         },
-        "query": [
-            
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
     },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "table": null,
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": false,
-                "showModalButton": false,
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    
-                ],
-                "message": "Ensure Direct Send submissions are rejected",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": null,
-                "resourceId": null,
-                "resourceType": null
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "m365_exo_direct_send_submissions_not_rejected",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-        
-    ],
-    "id": "microsoft365_2123"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure Direct Send submissions are rejected",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_exo_direct_send_submissions_not_rejected",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "microsoft365_2123"
 }

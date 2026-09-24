@@ -1,131 +1,113 @@
 {
-    "args": [
-        
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Microsoft Teams",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure users can\u0027t send emails to a channel email address",
+  "description": "Teams channel email addresses are an optional feature that allows users to email the Teams channel directly.",
+  "rationale": "Channel email addresses are not under the tenant\u00C3\u0192\u00C2\u00A2\u00C3\u00A2\u00E2\u20AC\u0161\u00C2\u00AC\u00C3\u00A2\u00E2\u20AC\u017E\u00C2\u00A2s domain and organizations do not have control over the security settings for this email address. An attacker could email channels directly if they discover the channel email address.",
+  "impact": "Users will not be able to email the channel directly.",
+  "remediation": {
+    "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com. \r\n\t\t\t2. Click to expand Teams select Teams settings. \r\n\t\t\t3. Under email integration set Users can send emails to a channel email address to Off. \r\n\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/reducing-attack-surface-in-microsoft-teams?view=o365-worldwide#restricting-channel-email-messages-to-approved-domains",
+    "https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsclientconfiguration?view=skype-ps"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "6.1.0",
+      "reference": "8.1.2",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_teams_client_settings",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "AllowEmailIntoChannel",
+                "eq",
+                "false"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "provider": "Microsoft365",
-    "serviceType": "Microsoft Teams",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure users can\u0027t send emails to a channel email address",
-    "description": "Teams channel email addresses are an optional feature that allows users to email the Teams channel directly.",
-    "rationale": "Channel email addresses are not under the tenantÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s domain and organizations do not have control over the security settings for this email address. An attacker could email channels directly if they discover the channel email address.",
-    "impact": "Users will not be able to email the channel directly.",
-    "remediation": {
-        "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com. \r\n\t\t\t2. Click to expand Teams select Teams settings. \r\n\t\t\t3. Under email integration set Users can send emails to a channel email address to Off. \r\n\t",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/reducing-attack-surface-in-microsoft-teams?view=o365-worldwide#restricting-channel-email-messages-to-approved-domains",
-        "https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsclientconfiguration?view=skype-ps"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "6.1.0",
-            "reference": "8.1.2",
-            "profile": [
-				"E3 Level 1",
-				"E5 Level 1"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_teams_client_settings",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "configId": "Identity",
+          "allowEmailIntoChannel": "Allow Email Into Channel",
+          "allowGuestUser": "Allow guest user"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "AllowEmailIntoChannel",
-                                "eq",
-                                "false"
-                            ]
-                        ]
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "ConfigId": "Identity",
-                    "AllowEmailIntoChannel": "Allow Email Into Channel",
-                    "AllowGuestUser": "Allow guest user"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
         },
-        "text": {
-            "data": {
-                "properties": {
-                    
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    
-                ],
-                "message": "Ensure users can\u0027t send emails to a channel email address",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": null,
-                "resourceId": "ConfigId",
-                "resourceType": "TeamsClientConfiguration"
-            },
-            "onlyStatus": false
-        }
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "teams_users_sending_emails_to_channel_email_address",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"Identity",
-		"ConfigId",
-		"Key.SchemaId.XName.name"
-    ],
-    "id": "microsoft365_2168"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure users can\u0027t send emails to a channel email address",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": "ConfigId",
+        "resourceType": "TeamsClientConfiguration"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "teams_users_sending_emails_to_channel_email_address",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "Identity",
+    "ConfigId",
+    "Key.SchemaId.XName.name"
+  ],
+  "id": "microsoft365_2168"
 }

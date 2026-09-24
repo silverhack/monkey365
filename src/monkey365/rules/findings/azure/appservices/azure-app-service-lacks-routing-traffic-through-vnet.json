@@ -4,13 +4,13 @@
   "serviceType": "_ARG_0_",
   "serviceName": "Hosted Services",
   "displayName": "Ensure configuration is routed through the virtual network",
-  "description": "By default, configuration traffic for App Service apps goes directly over the public route.<br/><br/>Container image pulls and content sharing can be routed through the virtual network integration.<br/><br/>This recommendation should be applied after integrating an App Service app with a virtual network.",
+  "description": "By default, configuration traffic for App Service apps goes directly over the public route.\u003Cbr/\u003E\u003Cbr/\u003EContainer image pulls and content sharing can be routed through the virtual network integration.\u003Cbr/\u003E\u003Cbr/\u003EThis recommendation should be applied after integrating an App Service app with a virtual network.",
   "rationale": "Route container image pulls and content sharing through a virtual network integration for increased security and control.",
   "impact": "Additional configuration may be required to ensure that traffic is routed properly.",
   "remediation": {
     "text": "Remediation should be done through Azure CLI",
     "code": {
-      "powerShell": "az resource update --resource-group <resource-group-name> --name <app-name> --resource-type \"Microsoft.Web/sites\" --set properties.vnetImagePullEnabled=true --set properties.vnetContentShareEnabled=true",
+      "powerShell": "az resource update --resource-group \u003Cresource-group-name\u003E --name \u003Capp-name\u003E --resource-type \u0022Microsoft.Web/sites\u0022 --set properties.vnetImagePullEnabled=true --set properties.vnetContentShareEnabled=true",
       "iac": null,
       "terraform": null,
       "other": null
@@ -132,7 +132,7 @@
   "idSuffix": "azure__ARG_0__configuration_routing_not_enabled",
   "notes": [],
   "categories": [],
-  "immutable_properties": [
+  "immutableProperties": [
     "name",
     "id"
   ],

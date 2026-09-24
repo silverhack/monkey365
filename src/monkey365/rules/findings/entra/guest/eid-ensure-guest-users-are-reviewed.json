@@ -1,135 +1,121 @@
 {
-    "args": [],
-    "provider": "EntraID",
-    "serviceType": "External Collaboration",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure that guest users are reviewed on a regular basis",
-    "description": "Microsoft Entra ID has native and extended identity functionality allowing you to invite people from outside your organization to be guest users in your cloud account and sign in with their own work, school, or social identities.<br/><br/>While an automated assessment procedure exists for this recommendation, the assessment status remains manual. Evaluating the appropriateness of guest users requires a manual review, as it depends on the specific needs and context of each organization and environment.",
-    "rationale": "Guest users are typically added outside your employee on-boarding/off-boarding process and could potentially be overlooked indefinitely. To prevent this, guest users should be reviewed on a regular basis. During this audit, guest users should also be determined to not have administrative privileges.",
-    "impact": "Before removing guest users, determine their use and scope. Like removing any user, there may be unforeseen consequences to systems if an account is removed without careful consideration.",
-    "remediation": {
-        "text": "
-			###### Remediate from Azure Portal 
-			1. From Azure Home select the Portal Menu 
-			2. Select Microsoft Entra ID 
-			3. Under Manage, select Users 
-			4. Click on Add filter 
-			5. Select User type 
-			6. Select Guest from the Value dropdown 
-			7. Click Apply 
-			8. Check the box next to all Guest users that are no longer required or are inactive 
-			9. Click Delete 
-			10. Click OK 
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/external-id/user-properties",
-        "https://learn.microsoft.com/en-us/entra/fundamentals/how-to-create-delete-users#delete-a-user",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-privileged-access#pa-4-review-and-reconcile-user-access-regularly",
-        "https://www.microsoft.com/en-us/security/business/microsoft-entra-pricing",
-        "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-manage-inactive-user-accounts?tabs=admin-center",
-        "https://learn.microsoft.com/en-us/entra/fundamentals/users-restore"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "5.3.2",
-            "profile": [
-                "Level 1"
+  "args": [],
+  "provider": "EntraID",
+  "serviceType": "External Collaboration",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure that guest users are reviewed on a regular basis",
+  "description": "Microsoft Entra ID has native and extended identity functionality allowing you to invite people from outside your organization to be guest users in your cloud account and sign in with their own work, school, or social identities.\u003Cbr/\u003E\u003Cbr/\u003EWhile an automated assessment procedure exists for this recommendation, the assessment status remains manual. Evaluating the appropriateness of guest users requires a manual review, as it depends on the specific needs and context of each organization and environment.",
+  "rationale": "Guest users are typically added outside your employee on-boarding/off-boarding process and could potentially be overlooked indefinitely. To prevent this, guest users should be reviewed on a regular basis. During this audit, guest users should also be determined to not have administrative privileges.",
+  "impact": "Before removing guest users, determine their use and scope. Like removing any user, there may be unforeseen consequences to systems if an account is removed without careful consideration.",
+  "remediation": {
+    "text": "\n\t\t\t###### Remediate from Azure Portal \n\t\t\t1. From Azure Home select the Portal Menu \n\t\t\t2. Select Microsoft Entra ID \n\t\t\t3. Under Manage, select Users \n\t\t\t4. Click on Add filter \n\t\t\t5. Select User type \n\t\t\t6. Select Guest from the Value dropdown \n\t\t\t7. Click Apply \n\t\t\t8. Check the box next to all Guest users that are no longer required or are inactive \n\t\t\t9. Click Delete \n\t\t\t10. Click OK \n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/external-id/user-properties",
+    "https://learn.microsoft.com/en-us/entra/fundamentals/how-to-create-delete-users#delete-a-user",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-privileged-access#pa-4-review-and-reconcile-user-access-regularly",
+    "https://www.microsoft.com/en-us/security/business/microsoft-entra-pricing",
+    "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-manage-inactive-user-accounts?tabs=admin-center",
+    "https://learn.microsoft.com/en-us/entra/fundamentals/users-restore"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "5.3.2",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "low",
+  "tags": [],
+  "rule": {
+    "path": "aad_domain_users",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "userType",
+                "eq",
+                "Guest"
+              ]
             ]
-        }
+          }
+        ]
+      }
     ],
-    "level": "low",
-    "tags": [],
-    "rule": {
-        "path": "aad_domain_users",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "displayName": "Display Name",
+          "userPrincipalName": "userPrincipalName"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "userType",
-                                "eq",
-                                "Guest"
-                            ]
-                        ]
-                    }
-                ]
-            }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "id",
+            "userPrincipalName"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "displayName": "Display Name",
+          "userPrincipalName": "userPrincipalName"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "userPrincipalName"
         ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "id": "id",
-					"displayName": "Display Name",
-                    "userPrincipalName": "userPrincipalName"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [
-						"id",
-						"userPrincipalName"
-					],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-                    "id": "id",
-					"displayName": "Display Name",
-                    "userPrincipalName": "userPrincipalName"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-					"userPrincipalName"
-				],
-                "message": "The {userPrincipalName} Guest user was detected",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "userPrincipalName",
-                "resourceId": "id",
-                "resourceType": "EntraUser"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "eid_guest_users_are_reviewed",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [
-		"id"
-	],
-    "id": "entraid_guest_users_001"
+        "message": "The {userPrincipalName} Guest user was detected",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "userPrincipalName",
+        "resourceId": "id",
+        "resourceType": "EntraUser"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_guest_users_are_reviewed",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "entraid_guest_users_001"
 }

@@ -1,144 +1,121 @@
 {
-    "args": [
-        
-    ],
-    "provider": "Microsoft365",
-    "serviceType": "Defender",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure AIR remediation is enabled",
-    "description": "Automated Investigation and Response (AIR) investigates alerts and correlates related signals into investigations. When AIR identifies malicious email messages, it groups them into clusters based on shared characteristics like common malicious file, URL, or sending attributes and produces remediation actions for each cluster.\r\nThis setting controls whether AIR-identified malicious message clusters are remediated automatically, without requiring SecOps approval. Administrators can enable automatic remediation for one or more cluster types:
-		* **Similar files**: Clusters sharing a similar malicious file
-		* **Similar URLs**: Clusters sharing a similar malicious URL 
-		* **Multiple similar attributes**: Clusters grouped by multiple shared attributes such as sender IP address, sender domain, or message subject
-		
-		When enabled, the configured remediation action is applied immediately upon cluster identification.\r\nThe recommended state is to automatically remediate message clusters.
-	",
-    "rationale": "When automatic remediation is disabled, malicious message clusters identified by AIR remain in users' mailboxes as pending actions until a security analyst manually approves each remediation. During this approval window, users may interact with, open, or forward malicious messages, increasing the risk of a successful compromise. Enabling automatic remediation ensures identified threats are contained immediately upon detection, minimizing the exposure window and reducing the operational burden on security teams to manually review and approve routine threat clusters.",
-    "impact": "Automatic remediation removes the manual SecOps approval step for qualifying message cluster actions. If AIR incorrectly classifies a legitimate message cluster as malicious, affected messages will be soft deleted without prior review. Soft deleted messages are moved to the Recoverable Items folder and can be restored through the Action center, Threat Explorer, or Advanced Hunting, subject to each mailbox's deleted item retention period (14 days by default).\r\nOrganizations should verify retention policies and legal obligations before enabling this setting, as retention configuration affects whether soft deleted messages remain recoverable.\r\nClusters exceeding 10,000 messages are always excluded from automatic remediation and will continue to require manual approval.\r\nLicense Requirement: This setting requires **Defender for Office 365 Plan 2** which is included in **Microsoft 365 E5**.",
-    "remediation": {
-        "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Defender https://security.microsoft.com/ \r\n\t\t\t2. Click to expand System select Settings \u003e Email \u0026 collaboration \u003e  MDO automation settings. \r\n\t\t\t3. Under **Message clusters** check the following\r\n\t* Similar files\r\n\t* Similar URLs\r\n\t* Multiple similar attributes\r\n\t",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/defender-office-365/air-auto-remediation",
-        "https://learn.microsoft.com/en-us/defender-office-365/air-about",
-		"https://learn.microsoft.com/en-us/exchange/security-and-compliance/recoverable-items-folder/recoverable-items-folder",
-		"https://learn.microsoft.com/en-us/exchange/recipients-in-exchange-online/manage-user-mailboxes/change-deleted-item-retention",
-		"https://www.modernsecurity.nl/defender-for-office365-air-auto%E2%80%91remediation/"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "7.0.0",
-            "reference": "2.4.5",
-            "profile": [
-				"E5 Level 1"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_exo_org_config",
-        "subPath": null,
-        "selectCondition": {
-        },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "AutoRemediateMaliciousEmail",
-                                "eq",
-                                false
-                            ],
-							[
-                                "AutoRemediateMaliciousEmailWithURLs",
-                                "eq",
-                                false
-                            ]
-                        ],
-						"operator":"or"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "Identity": "Identity",
-                    "AutoRemediateMaliciousEmail": "Auto-Remediate Malicious Email",
-                    "AutoRemediateMaliciousEmailWithURLs": "Auto-Remediate Malicious Email With Urls"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-                
+  "args": [],
+  "provider": "Microsoft365",
+  "serviceType": "Defender",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure AIR remediation is enabled",
+  "description": "Automated Investigation and Response (AIR) investigates alerts and correlates related signals into investigations. When AIR identifies malicious email messages, it groups them into clusters based on shared characteristics like common malicious file, URL, or sending attributes and produces remediation actions for each cluster.\r\nThis setting controls whether AIR-identified malicious message clusters are remediated automatically, without requiring SecOps approval. Administrators can enable automatic remediation for one or more cluster types:\n\t\t* **Similar files**: Clusters sharing a similar malicious file\n\t\t* **Similar URLs**: Clusters sharing a similar malicious URL \n\t\t* **Multiple similar attributes**: Clusters grouped by multiple shared attributes such as sender IP address, sender domain, or message subject\n\t\t\n\t\tWhen enabled, the configured remediation action is applied immediately upon cluster identification.\r\nThe recommended state is to automatically remediate message clusters.\n\t",
+  "rationale": "When automatic remediation is disabled, malicious message clusters identified by AIR remain in users\u0027 mailboxes as pending actions until a security analyst manually approves each remediation. During this approval window, users may interact with, open, or forward malicious messages, increasing the risk of a successful compromise. Enabling automatic remediation ensures identified threats are contained immediately upon detection, minimizing the exposure window and reducing the operational burden on security teams to manually review and approve routine threat clusters.",
+  "impact": "Automatic remediation removes the manual SecOps approval step for qualifying message cluster actions. If AIR incorrectly classifies a legitimate message cluster as malicious, affected messages will be soft deleted without prior review. Soft deleted messages are moved to the Recoverable Items folder and can be restored through the Action center, Threat Explorer, or Advanced Hunting, subject to each mailbox\u0027s deleted item retention period (14 days by default).\r\nOrganizations should verify retention policies and legal obligations before enabling this setting, as retention configuration affects whether soft deleted messages remain recoverable.\r\nClusters exceeding 10,000 messages are always excluded from automatic remediation and will continue to require manual approval.\r\nLicense Requirement: This setting requires **Defender for Office 365 Plan 2** which is included in **Microsoft 365 E5**.",
+  "remediation": {
+    "text": "\r\n\t\t\t###### To remediate using the UI: \r\n\t\t\t1. Navigate to Microsoft Defender https://security.microsoft.com/ \r\n\t\t\t2. Click to expand System select Settings \u003E Email \u0026 collaboration \u003E  MDO automation settings. \r\n\t\t\t3. Under **Message clusters** check the following\r\n\t* Similar files\r\n\t* Similar URLs\r\n\t* Multiple similar attributes\r\n\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/defender-office-365/air-auto-remediation",
+    "https://learn.microsoft.com/en-us/defender-office-365/air-about",
+    "https://learn.microsoft.com/en-us/exchange/security-and-compliance/recoverable-items-folder/recoverable-items-folder",
+    "https://learn.microsoft.com/en-us/exchange/recipients-in-exchange-online/manage-user-mailboxes/change-deleted-item-retention",
+    "https://www.modernsecurity.nl/defender-for-office365-air-auto%E2%80%91remediation/"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "7.0.0",
+      "reference": "2.4.5",
+      "profile": [
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_exo_org_config",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "AutoRemediateMaliciousEmail",
+                "eq",
+                false
+              ],
+              [
+                "AutoRemediateMaliciousEmailWithURLs",
+                "eq",
+                false
+              ]
             ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": false,
-                "showModalButton": true,
-                "directLink": null
-            }
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "identity": "Identity",
+          "autoRemediateMaliciousEmail": "Auto-Remediate Malicious Email",
+          "autoRemediateMaliciousEmailWithURLs": "Auto-Remediate Malicious Email With Urls"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    "Identity": "Identity",
-                    "AutoRemediateMaliciousEmail": "Auto-Remediate Malicious Email",
-                    "AutoRemediateMaliciousEmailWithURLs": "Auto-Remediate Malicious Email With Urls"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    
-                ],
-                "message": "Ensure AIR remediation is enabled",
-                "defaultMessage": "Ensure AIR remediation is enabled"
-            },
-            "properties": {
-                "resourceName": "Identity",
-                "resourceId": "ExchangeObjectId",
-                "resourceType": "ExchangeOrgConfig"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": true,
+        "directLink": null
+      }
     },
-    "idSuffix": "m365_defender_air_remediation_disabled",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-        
-    ],
-    "id": "microsoft365_2112"
+    "text": {
+      "data": {
+        "properties": {
+          "identity": "Identity",
+          "autoRemediateMaliciousEmail": "Auto-Remediate Malicious Email",
+          "autoRemediateMaliciousEmailWithURLs": "Auto-Remediate Malicious Email With Urls"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure AIR remediation is enabled",
+        "defaultMessage": "Ensure AIR remediation is enabled"
+      },
+      "properties": {
+        "resourceName": "Identity",
+        "resourceId": "ExchangeObjectId",
+        "resourceType": "ExchangeOrgConfig"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_defender_air_remediation_disabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "microsoft365_2112"
 }

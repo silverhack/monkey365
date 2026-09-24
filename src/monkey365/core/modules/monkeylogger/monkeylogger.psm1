@@ -1,4 +1,4 @@
-Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version Latest
 
 #Set modulepath var
 Set-Variable modulePath -Value $PSScriptRoot -Scope Script -Force

@@ -1,116 +1,106 @@
 {
-    "args": [],
-    "provider": "EntraID",
-    "serviceType": "Groups",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure that 'Owners can manage group membership requests in My Groups' is set to 'No'",
-    "description": "Restrict security group management to administrators only.",
-    "rationale": "Restricting security group management to administrators only prohibits users from making changes to security groups. This ensures that security groups are appropriately managed and their management is not delegated to non-administrators.",
-    "impact": "Group Membership for user accounts will need to be handled by Admins and cause administrative overhead.",
-    "remediation": {
-        "text": "
-			#### Remediate from Azure Portal 
-			1. From Azure Home select the Portal Menu 
-			2. Select Microsoft Entra ID 
-			3. Under Manage, select Groups 
-			4. Under Settings, select General 
-			5. Under Self Service Group Management, set `Owners can manage group membership requests in My Groups` to `No`
-			6. Click Save
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/identity/users/groups-self-servicemanagement#making-a-group-available-for-end-user-self-service",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-privilegedaccess#pa-1-separate-and-limit-highly-privilegedadministrative-users",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-privilegedaccess#pa-3-manage-lifecycle-of-identities-and-entitlements",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-privilegedaccess#pa-8-determine-access-process-for-cloud-provider-support",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-governancestrategy#gs-2-define-and-implement-enterprise-segmentationseparation-of-",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-governancestrategy#gs-6-define-and-implement-identity-and-privileged-access-strategy"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "5.20",
-            "profile": [
-                "Level 2"
+  "args": [],
+  "provider": "EntraID",
+  "serviceType": "Groups",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure that \u0027Owners can manage group membership requests in My Groups\u0027 is set to \u0027No\u0027",
+  "description": "Restrict security group management to administrators only.",
+  "rationale": "Restricting security group management to administrators only prohibits users from making changes to security groups. This ensures that security groups are appropriately managed and their management is not delegated to non-administrators.",
+  "impact": "Group Membership for user accounts will need to be handled by Admins and cause administrative overhead.",
+  "remediation": {
+    "text": "\n\t\t\t#### Remediate from Azure Portal \n\t\t\t1. From Azure Home select the Portal Menu \n\t\t\t2. Select Microsoft Entra ID \n\t\t\t3. Under Manage, select Groups \n\t\t\t4. Under Settings, select General \n\t\t\t5. Under Self Service Group Management, set \u0060Owners can manage group membership requests in My Groups\u0060 to \u0060No\u0060\n\t\t\t6. Click Save\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/users/groups-self-servicemanagement#making-a-group-available-for-end-user-self-service",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-privilegedaccess#pa-1-separate-and-limit-highly-privilegedadministrative-users",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-privilegedaccess#pa-3-manage-lifecycle-of-identities-and-entitlements",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-privilegedaccess#pa-8-determine-access-process-for-cloud-provider-support",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-governancestrategy#gs-2-define-and-implement-enterprise-segmentationseparation-of-",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-governancestrategy#gs-6-define-and-implement-identity-and-privileged-access-strategy"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "5.20",
+      "profile": [
+        "Level 2"
+      ]
+    }
+  ],
+  "level": "low",
+  "tags": [],
+  "rule": {
+    "path": "aad_group_settings",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "selfServiceGroupManagementEnabled",
+                "eq",
+                "True"
+              ]
             ]
-        }
+          }
+        ]
+      }
     ],
-    "level": "low",
-    "tags": [],
-    "rule": {
-        "path": "aad_group_settings",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "selfServiceGroupManagementEnabled",
-                                "eq",
-                                "True"
-                            ]
-                        ]
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [],
-                "message": "Ensure that 'Owners can manage group membership requests in My Groups' is set to 'No'",
-                "defaultMessage": "Ensure that 'Owners can manage group membership requests in My Groups' is set to 'No'"
-            },
-            "properties": {
-                "resourceName": null,
-                "resourceId": null,
-                "resourceType": null
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "eid_security_group_management_not_restricted",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [],
-    "id": "entraid_groups_004"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure that \u0027Owners can manage group membership requests in My Groups\u0027 is set to \u0027No\u0027",
+        "defaultMessage": "Ensure that \u0027Owners can manage group membership requests in My Groups\u0027 is set to \u0027No\u0027"
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_security_group_management_not_restricted",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "entraid_groups_004"
 }

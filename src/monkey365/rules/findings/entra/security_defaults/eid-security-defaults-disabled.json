@@ -1,121 +1,114 @@
 {
-    "args": [],
-    "provider": "EntraID",
-    "serviceType": "Security Defaults",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure that 'security defaults' is enabled in Microsoft Entra",
-    "description": "[IMPORTANT - Please read the section overview: If your organization pays for Microsoft Entra ID licensing (included in Microsoft 365 E3, E5, F5, or Business Premium, and EM&S E3 or E5 licenses) and CAN use Conditional Access, ignore the recommendations in this section and proceed to the Conditional Access section.] Security defaults in Microsoft Entra ID make it easier to be secure and help protect your organization. Security defaults contain preconfigured security settings for common attacks.<br/><br/>Security defaults is available to everyone. The goal is to ensure that all organizations have a basic level of security enabled at no extra cost. You may turn on security defaults in the Azure portal.",
-    "rationale": "Security defaults provide secure default settings that we manage on behalf of organizations to keep customers safe until they are ready to manage their own identity security settings.<br/><br/>For example, doing the following:\n• Requiring all users and admins to register for MFA.\n• Challenging users with MFA - when necessary, based on factors such as location, device, role, and task.\n• Disabling authentication from legacy authentication clients, which can’t do MFA.",
-    "impact": "This recommendation should be implemented initially and then may be overridden by other service/product specific CIS Benchmarks. Administrators should also be aware that certain configurations in Microsoft Entra ID may impact other Microsoft services such as Microsoft 365.",
-    "remediation": {
-        "text": "
-			##### Remediate from Azure Portal To enable security defaults in your directory:
-			1. From Azure Home select the Portal Menu.
-			2. Browse to `Microsoft Entra ID` > Properties. 
-			3. Select Manage security defaults.
-			4. Under Security defaults, select Enabled (recommended).
-			5. Select Save.
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/fundamentals/security-defaults",
-        "https://techcommunity.microsoft.com/blog/microsoft-entra-blog/introducing-security-defaults/1061414",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identitymanagement#im-2-protect-identity-and-authentication-systems"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "5.1.1",
-            "profile": [
-                "Level 1"
+  "args": [],
+  "provider": "EntraID",
+  "serviceType": "Security Defaults",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure that \u0027security defaults\u0027 is enabled in Microsoft Entra",
+  "description": "[IMPORTANT - Please read the section overview: If your organization pays for Microsoft Entra ID licensing (included in Microsoft 365 E3, E5, F5, or Business Premium, and EM\u0026S E3 or E5 licenses) and CAN use Conditional Access, ignore the recommendations in this section and proceed to the Conditional Access section.] Security defaults in Microsoft Entra ID make it easier to be secure and help protect your organization. Security defaults contain preconfigured security settings for common attacks.\u003Cbr/\u003E\u003Cbr/\u003ESecurity defaults is available to everyone. The goal is to ensure that all organizations have a basic level of security enabled at no extra cost. You may turn on security defaults in the Azure portal.",
+  "rationale": "Security defaults provide secure default settings that we manage on behalf of organizations to keep customers safe until they are ready to manage their own identity security settings.\u003Cbr/\u003E\u003Cbr/\u003EFor example, doing the following:\n\u2022 Requiring all users and admins to register for MFA.\n\u2022 Challenging users with MFA - when necessary, based on factors such as location, device, role, and task.\n\u2022 Disabling authentication from legacy authentication clients, which can\u2019t do MFA.",
+  "impact": "This recommendation should be implemented initially and then may be overridden by other service/product specific CIS Benchmarks. Administrators should also be aware that certain configurations in Microsoft Entra ID may impact other Microsoft services such as Microsoft 365.",
+  "remediation": {
+    "text": "\n\t\t\t##### Remediate from Azure Portal To enable security defaults in your directory:\n\t\t\t1. From Azure Home select the Portal Menu.\n\t\t\t2. Browse to \u0060Microsoft Entra ID\u0060 \u003E Properties. \n\t\t\t3. Select Manage security defaults.\n\t\t\t4. Under Security defaults, select Enabled (recommended).\n\t\t\t5. Select Save.\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/fundamentals/security-defaults",
+    "https://techcommunity.microsoft.com/blog/microsoft-entra-blog/introducing-security-defaults/1061414",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identitymanagement#im-2-protect-identity-and-authentication-systems"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "5.1.1",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "aad_security_default",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "isEnabled",
+                "eq",
+                "False"
+              ]
             ]
-        }
+          }
+        ]
+      }
     ],
-    "level": "medium",
-    "tags": [],
-    "rule": {
-        "path": "aad_security_default",
-        "subPath": null,
-        "selectCondition": {},
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "isEnabled",
-                                "eq",
-                                "False"
-                            ]
-                        ]
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "displayName": "Name",
-                    "description": "Description",
-                    "isEnabled": "Enabled"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "displayName": "Name",
+          "description": "Description",
+          "isEnabled": "Enabled"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    "displayName": "Name",
-                    "description": "Description",
-                    "isEnabled": "Enabled"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [],
-                "message": "Ensure that 'security defaults' is enabled in Microsoft Entra",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "EntraIDPolicy"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "entra_security_defaults_disabled",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [
-		"name",
-		"id"
-	],
-    "id": "entra_id_001"
+    "text": {
+      "data": {
+        "properties": {
+          "displayName": "Name",
+          "description": "Description",
+          "isEnabled": "Enabled"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure that \u0027security defaults\u0027 is enabled in Microsoft Entra",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "EntraIDPolicy"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "entra_security_defaults_disabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "name",
+    "id"
+  ],
+  "id": "entra_id_001"
 }

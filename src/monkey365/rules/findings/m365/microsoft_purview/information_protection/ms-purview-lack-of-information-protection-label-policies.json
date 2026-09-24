@@ -4,9 +4,9 @@
   "serviceType": "Purview",
   "serviceName": "Microsoft 365",
   "displayName": "Ensure Information Protection sensitivity label policies are published",
-  "description": "Sensitivity labels enable organizations to classify and label content across Microsoft 365 based on its sensitivity and business impact. These labels can be applied manually by users or automatically based on the content. When applied, labels can automatically encrypt content, provide \"Confidential\" watermarks, restrict access, and offer various data protection features.",
+  "description": "Sensitivity labels enable organizations to classify and label content across Microsoft 365 based on its sensitivity and business impact. These labels can be applied manually by users or automatically based on the content. When applied, labels can automatically encrypt content, provide \u0022Confidential\u0022 watermarks, restrict access, and offer various data protection features.",
   "rationale": "Consistent usage of sensitivity labels can help reduce the risk of data loss or exposure and enable more effective incident response if a breach does occur. They can also help organizations comply with regulatory requirements and provide visibility and control over sensitive information.",
-  "impact": "Encryption configurations (control access, DKE, BYOK) in the individual labels may impact users’ ability to access site documents and information. Careful consideration of the individual sensitivity label configurations should be exercised prior to applying an auto labeling policy, publishing policy, sensitivity label configuration, or PowerShell based label settings to SharePoint sites.\r\nAdditionally, when updating or deleting Sensitivity Labels, an assessment of the potential impacts should be conducted to avoid unintended consequences. If tenants are configured for sharing with guests or external domains and Sensitivity Labels have encryption applied, this can affect the ability to share documents via email stored in SharePoint. Some recipients may be unable to open the document depending on their email client, which could trigger Purview Advanced Encryptions and OME flows based on the recipient type and the cloud license from which the email is sent (e.g., government clouds vs. commercial clouds).",
+  "impact": "Encryption configurations (control access, DKE, BYOK) in the individual labels may impact users\u2019 ability to access site documents and information. Careful consideration of the individual sensitivity label configurations should be exercised prior to applying an auto labeling policy, publishing policy, sensitivity label configuration, or PowerShell based label settings to SharePoint sites.\r\nAdditionally, when updating or deleting Sensitivity Labels, an assessment of the potential impacts should be conducted to avoid unintended consequences. If tenants are configured for sharing with guests or external domains and Sensitivity Labels have encryption applied, this can affect the ability to share documents via email stored in SharePoint. Some recipients may be unable to open the document depending on their email client, which could trigger Purview Advanced Encryptions and OME flows based on the recipient type and the cloud license from which the email is sent (e.g., government clouds vs. commercial clouds).",
   "remediation": {
     "text": "\r\n\t\t###### To set up Information Protection: \r\n\t\t1. Navigate to Microsoft Purview compliance portal https://purview.microsoft.com. \r\n\t\t2. Under Solutions select Information protection. \r\n\t\t3. Click on the Label policies tab. \r\n\t\t4. Click Create a label to create a label. \r\n\t\t5. Select the label and click on the Publish label. \r\n\t\t6. Fill out the forms to create the policy.\r\n\t",
     "code": {
@@ -72,10 +72,10 @@
     "html": {
       "data": {
         "properties": {
-          "Name": "Label Policy",
-          "Comment": "Comment",
-          "Enabled": "Enabled",
-          "Mode": "Mode"
+          "name": "Label Policy",
+          "comment": "Comment",
+          "enabled": "Enabled",
+          "mode": "Mode"
         },
         "expandObject": null
       },
@@ -96,10 +96,10 @@
     "text": {
       "data": {
         "properties": {
-          "Name": "Label Policy",
-          "Comment": "Comment",
-          "Enabled": "Enabled",
-          "Mode": "Mode"
+          "name": "Label Policy",
+          "comment": "Comment",
+          "enabled": "Enabled",
+          "mode": "Mode"
         },
         "expandObject": null
       },
@@ -119,6 +119,6 @@
   "idSuffix": "m365_purview_lack_information_protection_policies",
   "notes": [],
   "categories": [],
-  "immutable_properties": [],
+  "immutableProperties": [],
   "id": "microsoft365_2162"
 }

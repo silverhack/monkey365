@@ -1,92 +1,93 @@
 {
-    "provider": "Azure",
-    "serviceType": "Databricks",
-    "serviceName": "Analytics Services",
-    "displayName": "Ensure 'No Public IP' is set to 'Enabled'",
-    "description": "Enable secure cluster connectivity (also known as no public IP) on Azure Databricks workspaces to ensure that clusters do not have public IP addresses and communicate with the control plane over a secure connection.",
-    "rationale": "Enabling secure cluster connectivity limits exposure to the public internet, improving security and reducing the risk of external attacks.",
-    "impact": "Enabling secure cluster connectivity requires careful network configuration. Before secure cluster connectivity can be enabled, Azure Databricks workspaces must be deployed in a customer-managed virtual network (VNet injection)—refer to the recommendation Ensure that Azure Databricks is deployed in a customer- managed virtual network (VNet).",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. Go to Azure Databricks. 2. Click the name of a workspace. 3. Under Settings, click Networking. 4. Under Network access, next to Deploy Azure Databricks workspace with Secure Cluster Connectivity (No Public IP), click the radio button next to Enabled. 5. Click Save. 6. Repeat steps 1-5 for each workspace requiring remediation.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/databricks/security/network/classic/secure-cluster-connectivity",
-        "https://learn.microsoft.com/en-us/cli/azure/databricks/workspace?view=azure-cli-latest",
-        "https://learn.microsoft.com/en-us/powershell/module/az.databricks/?view=azps-15.4.0"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "6.0.0",
-            "reference": "2.1.9",
-            "profile": [
-                "Level 1"
-            ]
-        }
-    ],
-    "level": "medium",
-    "tags": [],
-    "rule": {
-        "path": "",
-        "subPath": null,
-        "selectCondition": {},
-        "query": [
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+  "provider": "Azure",
+  "serviceType": "Databricks",
+  "serviceName": "Analytics Services",
+  "displayName": "Ensure \u0027No Public IP\u0027 is set to \u0027Enabled\u0027",
+  "description": "Enable secure cluster connectivity (also known as no public IP) on Azure Databricks workspaces to ensure that clusters do not have public IP addresses and communicate with the control plane over a secure connection.",
+  "rationale": "Enabling secure cluster connectivity limits exposure to the public internet, improving security and reducing the risk of external attacks.",
+  "impact": "Enabling secure cluster connectivity requires careful network configuration. Before secure cluster connectivity can be enabled, Azure Databricks workspaces must be deployed in a customer-managed virtual network (VNet injection)\u2014refer to the recommendation Ensure that Azure Databricks is deployed in a customer- managed virtual network (VNet).",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. Go to Azure Databricks. 2. Click the name of a workspace. 3. Under Settings, click Networking. 4. Under Network access, next to Deploy Azure Databricks workspace with Secure Cluster Connectivity (No Public IP), click the radio button next to Enabled. 5. Click Save. 6. Repeat steps 1-5 for each workspace requiring remediation.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/databricks/security/network/classic/secure-cluster-connectivity",
+    "https://learn.microsoft.com/en-us/cli/azure/databricks/workspace?view=azure-cli-latest",
+    "https://learn.microsoft.com/en-us/powershell/module/az.databricks/?view=azps-15.4.0"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "6.0.0",
+      "reference": "2.1.9",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
         },
-        "text": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "status": {
-                "keyName": ["name"],
-                "message": "Ensure that diagnostic log delivery is configured for Azure Databricks",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "type"
-            },
-            "onlyStatus": false
-        }
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_databricks_public_ip_enabled",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [
-		"name",
-		"id"
-	],
-    "id": "az_databricks_009"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "name"
+        ],
+        "message": "Ensure that diagnostic log delivery is configured for Azure Databricks",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "type"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_databricks_public_ip_enabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "name",
+    "id"
+  ],
+  "id": "az_databricks_009"
 }

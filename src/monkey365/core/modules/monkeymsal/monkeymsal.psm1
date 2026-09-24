@@ -1,4 +1,4 @@
-param(
+﻿param(
     [parameter(Position=0,Mandatory=$false)][Object[]]$ForceDesktop
 )
 Set-StrictMode -Version Latest
