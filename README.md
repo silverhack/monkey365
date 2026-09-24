@@ -86,9 +86,7 @@ $options = @{
 Invoke-Monkey365 @options
 ```
 
-Monkey365 prompts you to sign in when the selected authentication flow requires
-it. The services available to the scan depend on the permissions granted to the
-signed-in identity.
+Monkey365 prompts you to sign in when the selected authentication flow requires it. The services available to the scan depend on the permissions granted to the signed-in identity.
 
 Before scanning a production environment, review the
 [installation guide](https://silverhack.github.io/monkey365/install/install-instructions/),
@@ -103,11 +101,7 @@ Monkey365 separates an assessment into three stages:
 2. **Evaluate** the collected data with the selected rulesets.
 3. **Report** findings, supporting evidence, and remediation guidance.
 
-Security rules are declarative and configured in JSON files. They are evaluated
-separately from collectors, so you can add organization-specific checks without
-changing the scan engine. Review the [bundled rules](https://github.com/silverhack/monkey365/tree/main/rules)
-or see [Custom checks and rulesets](https://silverhack.github.io/monkey365/security_checks/overview/)
-for the configuration model.
+Security rules are declarative and configured in JSON files. They are evaluated separately from collectors, so you can add organization-specific checks without changing the scan engine. Review the [rules](https://github.com/silverhack/monkey365/tree/main/rules) or see [Custom checks and rulesets](https://silverhack.github.io/monkey365/security_checks/overview/) for the configuration model.
 
 ## Reports and automation
 
@@ -123,14 +117,11 @@ Use `-ExportTo` to select one or more output formats:
   <img src="docs/docs/assets/images/htmlreport.png" alt="Example Monkey365 HTML report">
 </p>
 
-The documentation includes details for
-[exporting results](https://silverhack.github.io/monkey365/exporting/exporting-data/),
-[rate limits and retries](https://silverhack.github.io/monkey365/configuration/rate-limit/),
-and [logging](https://silverhack.github.io/monkey365/logging/introduction/).
+The documentation includes details for [exporting results](https://silverhack.github.io/monkey365/exporting/exporting-data/), [rate limits and retries](https://silverhack.github.io/monkey365/configuration/rate-limit/), and [logging](https://silverhack.github.io/monkey365/logging/introduction/).
 
 ## Rulesets
 
-The bundled rulesets currently include:
+Built-In rulesets currently include:
 
 - CIS Microsoft Azure Foundations Benchmark v6.0.0
 - CIS Microsoft Azure Database Services Benchmark v2.0.0
@@ -138,23 +129,12 @@ The bundled rulesets currently include:
 - CIS Microsoft 365 Foundations Benchmark v7.0.0
 - Monkey365 Microsoft Entra ID ruleset
 
-A benchmark mapping identifies the control associated with a finding; it does
-not by itself establish certification or compliance. Review each result in the
-context of the assessed environment and its licensing, business, and risk
-requirements.
+A benchmark mapping identifies the control associated with a finding; it does not by itself establish certification or compliance. Review each result in the context of the assessed environment and its licensing, business, and risk requirements.
 
 ## Authentication and permissions
 
-Monkey365 supports both delegated and application authentication. Support
-varies by workload—for example, some Microsoft 365 services require a
-certificate rather than a client secret for app-only access. Use the
-[authentication support matrix](https://silverhack.github.io/monkey365/authentication/supported_auth_methods_byapp/)
-before choosing an unattended authentication flow.
-
-Monkey365 is designed to read configuration data and does not remediate or
-modify cloud resources. Use least-privilege roles and API permissions, protect
-assessment output as sensitive data, and remove tenant identifiers and secrets
-before sharing logs or reports.
+Monkey365 supports both delegated and application authentication. Support varies by workload—for example, some Microsoft 365 services require a certificate rather than a client secret for app-only access. Use the [authentication support matrix](https://silverhack.github.io/monkey365/authentication/supported_auth_methods_byapp/) before choosing an unattended authentication flow.
+Monkey365 is designed to read configuration data and does not remediate or modify cloud resources. Use least-privilege roles and API permissions, treat output as sensitive data, and remove tenant identifiers and secrets before sharing logs or reports.
 
 ## Documentation
 
