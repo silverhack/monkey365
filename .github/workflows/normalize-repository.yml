@@ -18,7 +18,7 @@ jobs:
   validate-normalization:
     if: github.event_name == 'pull_request'
     name: Validate repository normalization
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
@@ -58,7 +58,7 @@ jobs:
   publish-normalization:
     if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/heads/')
     name: Normalize repository files
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: write
