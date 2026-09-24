@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ Function Get-MonkeySystemInfo {
             OSVersion = $null;
             ProcArch = $null;
             OSArch = $null;
+            CIProvider = $null;
         }
     }
     Process{
@@ -64,6 +65,13 @@ Function Get-MonkeySystemInfo {
         }
         catch{
             Write-Warning -Message 'Unable to get OS architecture'
+        }
+        #Get Ci Environment
+        try{
+            $sysObj.CIProvider = Get-MonkeyCIProvider
+        }
+        catch{
+            Write-Warning -Message 'Unable to get CI provider'
         }
     }
     End{

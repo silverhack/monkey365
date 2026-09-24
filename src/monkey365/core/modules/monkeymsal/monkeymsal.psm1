@@ -1,4 +1,4 @@
-﻿param(
+param(
     [parameter(Position=0,Mandatory=$false)][Object[]]$ForceDesktop
 )
 Set-StrictMode -Version Latest
@@ -116,6 +116,7 @@ $LocalizedDataParams = @{
 #Import localized data
 Import-LocalizedData @LocalizedDataParams;
 
+<#
 $listofFiles = [System.IO.Directory]::EnumerateFiles(("{0}" -f $PSScriptRoot),"*.ps1","AllDirectories")
 $all_files = $listofFiles.Where({($_ -like "*public*") -or ($_ -like "*private*")})
 $content = $all_files.ForEach({
@@ -124,6 +125,7 @@ $content = $all_files.ForEach({
 
 #Set-Content -Path $tmpFile -Value $content
 . ([scriptblock]::Create($content))
+#>
 
 If($Script:IsWindowsEnvironment){
     If ($PSVersionTable.PSEdition.ToLower() -eq 'desktop'){
@@ -157,3 +159,23 @@ Else{
     }
 }
 
+#Get public functions
+$PublicFolder = Join-Path -Path $PSScriptRoot -ChildPath "public"
+$publicFunctions = (Get-ChildItem -Path $PublicFolder -Filter *.ps1 -File).BaseName
+#Import public and private files
+$sourceFolders = @('private', 'public')
+ForEach ($folder in $sourceFolders) {
+    $path = Join-Path $PSScriptRoot $folder
+    If (-not (Test-Path $path)) {
+        continue
+    }
+    $files = [System.IO.Directory]::EnumerateFiles($path,'*',[System.IO.SearchOption]::AllDirectories)
+    ForEach ($file in ($files | Sort-Object)) {
+        If ([System.IO.Path]::GetExtension($file) -ne '.ps1') {
+            continue
+        }
+        . $file
+    }
+}
+#Export module members
+Export-ModuleMember -Function $publicFunctions

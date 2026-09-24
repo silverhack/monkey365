@@ -1,4 +1,4 @@
-﻿Set-StrictMode -Version Latest
+Set-StrictMode -Version Latest
 
 #Get public functions
 $PublicFolder = Join-Path -Path $PSScriptRoot -ChildPath "public"
@@ -34,5 +34,6 @@ ForEach ($folder in $sourceFolders) {
         . $file
     }
 }
+
 #Export module members
 Export-ModuleMember -Function $publicFunctions

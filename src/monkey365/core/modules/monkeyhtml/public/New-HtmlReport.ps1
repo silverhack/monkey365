@@ -246,6 +246,7 @@ Function New-HtmlReport{
             }
             $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
             [System.IO.File]::WriteAllLines($outFile, $_decodedHtml, $Utf8NoBomEncoding)
+            Write-Verbose ($Script:messages.WriteHtmlReportMessage -f $outFile)
         }
     }
     End{

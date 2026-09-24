@@ -16,4 +16,5 @@
     JsDelivrInfoMessage            = Url converted to {0}
     FileNotFoundErrorMessage       = Could not find file {0}
     AddNewModalObjectTo            = Add modal object into {0}
+    WriteHtmlReportMessage         = Writing HTML report to {0}
 '@
