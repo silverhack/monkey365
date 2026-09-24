@@ -1,175 +1,150 @@
 {
-    "provider": "EntraID",
-    "serviceType": "Enterprise Applications",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "_ARG_0_",
-    "description": "Orphaned applications with elevated permissions create significant security, operational, and governance risks. Without designated owners, there is no clear accountability for managing the application, responding to security incidents, conducting access reviews, or ensuring the application continues to serve a legitimate business purpose.",
-    "rationale": "Enterprise applications without owners present multiple critical concerns. When an application possesses high privilege Microsoft Graph API permissions such as `Directory.ReadWrite.All`, `Application.ReadWrite.All`, `User.ReadWrite.All`, or `RoleManagement.ReadWrite.Directory`, it can perform extensive operations across the organisation's Microsoft 365 environment. These permissions grant capabilities including reading and modifying user profiles, managing applications, accessing mailboxes, manipulating directory roles, and controlling organisational resources. Without assigned owners, there is no designated individual responsible for monitoring the application's usage, rotating credentials, responding to anomalous activity, or justifying the continued necessity of these privileges.",
-    "impact": "The absence of application ownership creates operational blind spots. When security teams detect suspicious activity associated with an orphaned application, they cannot quickly identify the business stakeholder to validate whether the activity is legitimate or malicious.",
-    "remediation": {
-        "text": "
-			###### To remediate using the UI:
-			1 Navigate to **Microsoft Entra Admin Centre** → **Identity** → **Applications** → **Enterprise applications**
-			2 Select the application and navigate to **Permissions**
-			3 Select the **Admin consent** tab to review granted permissions
-			4 Identify permissions that exceed application's functional requirements
-			6 Apply principle of least privilege
-				* `Directory.ReadWrite.All` → Consider scoped alternatives like `User.ReadWrite.All` or `Group.ReadWrite.All`
-				* `Application.ReadWrite.All` → Consider `Application.Read.All` if write access unnecessary
-				* `Mail.ReadWrite` → Consider `Mail.Read` or specific mailbox access through application access policies
-				* `AppRoleAssignment.ReadWrite.All` → Remove if application doesn't manage permissions
-			7 Revoke unnecessary permissions by selecting the **...** control and choosing **Revoke permission**
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
+  "provider": "EntraID",
+  "serviceType": "Enterprise Applications",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "_ARG_0_",
+  "description": "Orphaned applications with elevated permissions create significant security, operational, and governance risks. Without designated owners, there is no clear accountability for managing the application, responding to security incidents, conducting access reviews, or ensuring the application continues to serve a legitimate business purpose.",
+  "rationale": "Enterprise applications without owners present multiple critical concerns. When an application possesses high privilege Microsoft Graph API permissions such as \u0060Directory.ReadWrite.All\u0060, \u0060Application.ReadWrite.All\u0060, \u0060User.ReadWrite.All\u0060, or \u0060RoleManagement.ReadWrite.Directory\u0060, it can perform extensive operations across the organisation\u0027s Microsoft 365 environment. These permissions grant capabilities including reading and modifying user profiles, managing applications, accessing mailboxes, manipulating directory roles, and controlling organisational resources. Without assigned owners, there is no designated individual responsible for monitoring the application\u0027s usage, rotating credentials, responding to anomalous activity, or justifying the continued necessity of these privileges.",
+  "impact": "The absence of application ownership creates operational blind spots. When security teams detect suspicious activity associated with an orphaned application, they cannot quickly identify the business stakeholder to validate whether the activity is legitimate or malicious.",
+  "remediation": {
+    "text": "\n\t\t\t###### To remediate using the UI:\n\t\t\t1 Navigate to **Microsoft Entra Admin Centre** \u2192 **Identity** \u2192 **Applications** \u2192 **Enterprise applications**\n\t\t\t2 Select the application and navigate to **Permissions**\n\t\t\t3 Select the **Admin consent** tab to review granted permissions\n\t\t\t4 Identify permissions that exceed application\u0027s functional requirements\n\t\t\t6 Apply principle of least privilege\n\t\t\t\t* \u0060Directory.ReadWrite.All\u0060 \u2192 Consider scoped alternatives like \u0060User.ReadWrite.All\u0060 or \u0060Group.ReadWrite.All\u0060\n\t\t\t\t* \u0060Application.ReadWrite.All\u0060 \u2192 Consider \u0060Application.Read.All\u0060 if write access unnecessary\n\t\t\t\t* \u0060Mail.ReadWrite\u0060 \u2192 Consider \u0060Mail.Read\u0060 or specific mailbox access through application access policies\n\t\t\t\t* \u0060AppRoleAssignment.ReadWrite.All\u0060 \u2192 Remove if application doesn\u0027t manage permissions\n\t\t\t7 Revoke unnecessary permissions by selecting the **...** control and choosing **Revoke permission**\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/overview-assign-app-owners",
+    "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/manage-application-permissions?pivots=portal",
+    "https://learn.microsoft.com/en-us/graph/permissions-reference",
+    "https://learn.microsoft.com/en-us/entra/identity-platform/security-best-practices-for-app-registration"
+  ],
+  "compliance": [
+    {
+      "name": "",
+      "version": "",
+      "reference": "",
+      "profile": []
+    }
+  ],
+  "level": "high",
+  "tags": [],
+  "rule": {
+    "path": "aad_managed_app",
+    "subPath": null,
+    "selectCondition": {},
+    "data": {
+      "properties": {
+        "id": "id",
+        "accountEnabled": "accountEnabled",
+        "appDisplayName": "appDisplayName",
+        "appDescription": "appDescription",
+        "appId": "appId",
+        "displayName": "displayName",
+        "signInAudience": "signInAudience",
+        "foreign": "foreign",
+        "owners": "owners",
+        "permissions.*": "permissions"
+      },
+      "expandObject": "permissions"
     },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/overview-assign-app-owners",
-        "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/manage-application-permissions?pivots=portal",
-		"https://learn.microsoft.com/en-us/graph/permissions-reference",
-		"https://learn.microsoft.com/en-us/entra/identity-platform/security-best-practices-for-app-registration"
+    "query": [
+      {
+        "filter": [
+          {
+            "include": "enterprise-app-permissions.json"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "eq",
+                "owners"
+              ],
+              [
+                "foreign",
+                "eq",
+                "_ARG_1_"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
     ],
-    "compliance": [
-        {
-            "name": "",
-            "version": "",
-            "reference": "",
-            "profile": [
-			]
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "id": "Application Id",
+          "appDisplayName": "Display Name",
+          "apiName": "Resource Display Name",
+          "claimValue": "Permision",
+          "permissionDisplayName": "Permission Name",
+          "foreign": "Foreign",
+          "owners": "Owners"
         }
-    ],
-    "level": "high",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "aad_managed_app",
-        "subPath": null,
-        "selectCondition": {
-            
+      },
+      "table": null,
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
         },
-		"data": {
-            "properties": {
-				"id": "id",
-                "accountEnabled": "accountEnabled",
-                "appDisplayName": "appDisplayName",
-				"appDescription": "appDescription",
-				"appId": "appId",
-				"displayName": "displayName",
-				"signInAudience": "signInAudience",
-				"foreign":"foreign",
-				"owners": "owners",
-				"permissions.*": "permissions"
-            },
-            "expandObject": "permissions"
-        },
-        "query": [
-			{
-				"filter": [
-				    {
-					    "include": "enterprise-app-permissions.json"
-				    }
-                ]
-            },
-			{
-                "connectOperator":"and",
-				"filter": [
-                    {
-                        "conditions": [
-							[
-                                "eq",
-								"owners"
-                            ],
-							[
-                                "foreign",
-								"eq",
-								"_ARG_1_"
-                            ]
-                        ],
-						"operator":"and"
-                    }
-                ]
-            }
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          "id": "Application Id",
+          "appDisplayName": "Display Name",
+          "apiName": "Resource Display Name",
+          "claimValue": "Permision",
+          "permissionDisplayName": "Permission Name",
+          "foreign": "Foreign",
+          "owners": "Owners"
+        }
+      },
+      "status": {
+        "keyName": [
+          "principalDisplayName"
         ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-					"id": "Application Id",
-					"appDisplayName": "Display Name",
-					"apiName": "Resource Display Name",
-					"ClaimValue": "Permision",
-					"PermissionDisplayName": "Permission Name",
-					"foreign":"Foreign",
-					"owners":"Owners"
-                }
-            },
-            "table": null,
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": false,
-                "showModalButton": false,
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-					"id": "Application Id",
-					"appDisplayName": "Display Name",
-					"apiName": "Resource Display Name",
-					"ClaimValue": "Permision",
-					"PermissionDisplayName": "Permission Name",
-					"foreign":"Foreign",
-					"owners":"Owners"
-                }
-            },
-            "status": {
-                "keyName": [
-					"principalDisplayName"
-				],
-                "message": "Ensure {principalDisplayName} with High Privilege API Permissions Have Owners Assigned",
-                "defaultMessage": "_ARG_0_"
-            },
-            "properties": {
-                "resourceName": "displayName",
-                "resourceId": "id",
-                "resourceType": "EntraEnterpriseApplication"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "eid_app_with_high_priv_lacks_owner__ARG_2_",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"id",
-		"displayName"
-    ],
-    "id": "entraid__ARG_3_"
+        "message": "Ensure {principalDisplayName} with High Privilege API Permissions Have Owners Assigned",
+        "defaultMessage": "_ARG_0_"
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "EntraEnterpriseApplication"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_app_with_high_priv_lacks_owner__ARG_2_",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id",
+    "displayName"
+  ],
+  "id": "entraid__ARG_3_"
 }

@@ -1,93 +1,94 @@
 {
-    "provider": "Azure",
-    "serviceType": "Databricks",
-    "serviceName": "Analytics Services",
-    "displayName": "Ensure that diagnostic log delivery is configured for Azure Databricks",
-    "description": "Azure Databricks Diagnostic Logging provides insights into system operations, user activities, and security events within a Databricks workspace. Enabling diagnostic logs helps organizations:\n• Detect security threats by logging access, job executions, and cluster activities.\n• Ensure compliance with industry regulations such as SOC 2, HIPAA, and GDPR.\n• Monitor operational performance and troubleshoot issues proactively.",
-    "rationale": "Diagnostic logging provides visibility into security and operational activities within Databricks workspaces while maintaining an audit trail for forensic investigations, and it supports compliance with regulatory standards that require logging and monitoring.",
-    "impact": "Logs consume storage and may require additional monitoring tools, leading to increased operational overhead and costs. Incomplete log configurations may result in missing critical events, reducing monitoring effectiveness.",
-    "remediation": {
-        "text": "Remediate from Azure Portal Enable diagnostic logging for Azure Databricks: 1. Navigate to your Azure Databricks workspace. 2. In the left-hand menu, select Monitoring > Diagnostic settings. 3. Click + Add diagnostic setting. 4. Under Category details, select the log categories you wish to capture, such as AuditLogs, Clusters, Notebooks, and Jobs. 5. Choose a destination for the logs: o Log Analytics workspace: For advanced querying and monitoring. o Storage account: For long-term retention. o Event Hub: For integration with third-party systems. 6. Provide a Name for the diagnostic setting. 7. Click Save. Implement log retention policies: 1. Navigate to your Log Analytics workspace. 2. Under General, select Usage and estimated costs. 3. Click Data Retention. 4. Adjust the retention period slider to the desired number of days (up to 730 days). 5. Click OK. Monitor logs for anomalies: 1. Navigate to Azure Monitor. 2. Select Alerts > + New alert rule. 3. Under Scope, specify the Databricks resource. 4. Define Condition based on log queries that identify anomalies (e.g. unauthorized access attempts). 5. Configure Actions to notify stakeholders or trigger automated responses. 6. Provide an Alert rule name and description. 7. Click Create alert rule.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/databricks/admin/account-settings/audit-log-delivery",
-        "https://learn.microsoft.com/en-us/troubleshoot/azure/azure-monitor/log-analytics/billing/configure-data-retention",
-        "https://docs.azure.cn/en-us/databricks/admin/account-settings/audit-logs",
-        "https://learn.microsoft.com/en-us/azure/azure-monitor/reference/supported-logs/microsoft-databricks-workspaces-logs"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "6.0.0",
-            "reference": "2.1.7",
-            "profile": [
-                "Level 1"
-            ]
-        }
-    ],
-    "level": "medium",
-    "tags": [],
-    "rule": {
-        "path": "",
-        "subPath": null,
-        "selectCondition": {},
-        "query": [
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+  "provider": "Azure",
+  "serviceType": "Databricks",
+  "serviceName": "Analytics Services",
+  "displayName": "Ensure that diagnostic log delivery is configured for Azure Databricks",
+  "description": "Azure Databricks Diagnostic Logging provides insights into system operations, user activities, and security events within a Databricks workspace. Enabling diagnostic logs helps organizations:\n\u2022 Detect security threats by logging access, job executions, and cluster activities.\n\u2022 Ensure compliance with industry regulations such as SOC 2, HIPAA, and GDPR.\n\u2022 Monitor operational performance and troubleshoot issues proactively.",
+  "rationale": "Diagnostic logging provides visibility into security and operational activities within Databricks workspaces while maintaining an audit trail for forensic investigations, and it supports compliance with regulatory standards that require logging and monitoring.",
+  "impact": "Logs consume storage and may require additional monitoring tools, leading to increased operational overhead and costs. Incomplete log configurations may result in missing critical events, reducing monitoring effectiveness.",
+  "remediation": {
+    "text": "Remediate from Azure Portal Enable diagnostic logging for Azure Databricks: 1. Navigate to your Azure Databricks workspace. 2. In the left-hand menu, select Monitoring \u003E Diagnostic settings. 3. Click \u002B Add diagnostic setting. 4. Under Category details, select the log categories you wish to capture, such as AuditLogs, Clusters, Notebooks, and Jobs. 5. Choose a destination for the logs: o Log Analytics workspace: For advanced querying and monitoring. o Storage account: For long-term retention. o Event Hub: For integration with third-party systems. 6. Provide a Name for the diagnostic setting. 7. Click Save. Implement log retention policies: 1. Navigate to your Log Analytics workspace. 2. Under General, select Usage and estimated costs. 3. Click Data Retention. 4. Adjust the retention period slider to the desired number of days (up to 730 days). 5. Click OK. Monitor logs for anomalies: 1. Navigate to Azure Monitor. 2. Select Alerts \u003E \u002B New alert rule. 3. Under Scope, specify the Databricks resource. 4. Define Condition based on log queries that identify anomalies (e.g. unauthorized access attempts). 5. Configure Actions to notify stakeholders or trigger automated responses. 6. Provide an Alert rule name and description. 7. Click Create alert rule.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/databricks/admin/account-settings/audit-log-delivery",
+    "https://learn.microsoft.com/en-us/troubleshoot/azure/azure-monitor/log-analytics/billing/configure-data-retention",
+    "https://docs.azure.cn/en-us/databricks/admin/account-settings/audit-logs",
+    "https://learn.microsoft.com/en-us/azure/azure-monitor/reference/supported-logs/microsoft-databricks-workspaces-logs"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "6.0.0",
+      "reference": "2.1.7",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
         },
-        "text": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "status": {
-                "keyName": ["name"],
-                "message": "Ensure that diagnostic log delivery is configured for Azure Databricks",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "type"
-            },
-            "onlyStatus": false
-        }
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_databricks_log_delivery_not_configured",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [
-		"name",
-		"id"
-	],
-    "id": "az_databricks_007"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "name"
+        ],
+        "message": "Ensure that diagnostic log delivery is configured for Azure Databricks",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "type"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_databricks_log_delivery_not_configured",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "name",
+    "id"
+  ],
+  "id": "az_databricks_007"
 }
