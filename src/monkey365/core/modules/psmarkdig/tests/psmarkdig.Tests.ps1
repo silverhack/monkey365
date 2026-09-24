@@ -1,4 +1,4 @@
-# Tests for psmarkdig PowerShell module
+﻿# Tests for psmarkdig PowerShell module
 # PSScriptAnalyzer - ignore test file
 
 Describe 'Convert-MarkDownToHtml' {

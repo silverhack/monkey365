@@ -1,4 +1,4 @@
-Function Get-MonkeyMsGraphMFAUserDetail {
+﻿Function Get-MonkeyMsGraphMFAUserDetail {
     <#
         .SYNOPSIS
         Get MFA details for user

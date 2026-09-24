@@ -1,4 +1,4 @@
-Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version Latest
 $mj_path = ("{0}/helpers/MonkeyJob.cs" -f $PSScriptRoot)
 $exists = [System.IO.File]::Exists($mj_path)
 #$mj_helper = Get-ChildItem -Path $mj_path | Where-Object {$_.Extension -in ".cs"} | Select-Object FullName -ErrorAction Ignore

@@ -1,4 +1,4 @@
-Set-StrictMode -Version 1.0
+﻿Set-StrictMode -Version 1.0
 
 #Get public functions
 $PublicFolder = Join-Path -Path $PSScriptRoot -ChildPath "public"

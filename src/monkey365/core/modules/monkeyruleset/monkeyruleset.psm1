@@ -1,4 +1,4 @@
-Set-StrictMode -Version 1.0
+﻿Set-StrictMode -Version 1.0
 
 #Import monkey utils
 $modulesRoot = Split-Path -Parent $PSScriptRoot

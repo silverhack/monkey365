@@ -1,4 +1,4 @@
-ConvertFrom-StringData @'
+﻿ConvertFrom-StringData @'
     ResponseHeaders                = Response-Headers: {0}
     UnableToProcessUrl             = Unable to process URL: {0}
     StatusCode                     = Status-Code: {0}
