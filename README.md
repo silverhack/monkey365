@@ -123,11 +123,11 @@ The documentation includes details for [exporting results](https://silverhack.gi
 
 Built-In rulesets currently include:
 
-- CIS Microsoft Azure Foundations Benchmark v6.0.0
-- CIS Microsoft Azure Database Services Benchmark v2.0.0
-- CIS Microsoft Azure Compute Services Benchmark v2.0.0
-- CIS Microsoft 365 Foundations Benchmark v7.0.0
-- Monkey365 Microsoft Entra ID ruleset
+* CIS Microsoft Azure Foundations Benchmark v6.0.0
+* CIS Microsoft Azure Database Services Benchmark v2.0.0
+* CIS Microsoft Azure Compute Services Benchmark v2.0.0
+* CIS Microsoft 365 Foundations Benchmark v7.0.0
+* Monkey365 ruleset for Microsoft Entra ID
 
 A benchmark mapping identifies the control associated with a finding; it does not by itself establish certification or compliance. Review each result in the context of the assessed environment and its licensing, business, and risk requirements.
 

@@ -118,14 +118,22 @@ The ruleset file stores metadata of the Ruleset, as described [here](custom-rule
 
 # Supported standards
 
-By default, the HTML report shows you the CIS (Center for Internet Security) Benchmark. The CIS Benchmarks for Azure and Microsoft 365 are guidelines for security and compliance best practices.
+By default, the HTML report displays the CIS (Center for Internet Security) Benchmarks. The CIS Benchmarks for Azure and Microsoft 365 provide security and compliance best-practice recommendations.
 
-The following standards are supported by Monkey365:
+The following CIS standards are supported by Monkey365:
 
-* CIS Microsoft Azure Foundations Benchmark v3.0.0
-* CIS Microsoft 365 Foundations Benchmark v3.0.0 and v4.0.0
+* CIS Microsoft Azure Foundations Benchmark v6.0.0
+* CIS Microsoft Azure Database Services Benchmark v2.0.0
+* CIS Microsoft Azure Compute Services Benchmark v2.0.0
+* CIS Microsoft 365 Foundations Benchmark v7.0.0
 
-More standards will be added in next releases (NIST, HIPAA, GDPR, PCI-DSS, etc..) as they are available.
+## Microsoft Entra ruleset
+
+Monkey365 also includes a dedicated security ruleset for Microsoft Entra. This is a **Monkey365-specific ruleset and is not part of the CIS Benchmarks**.
+
+The Microsoft Entra ruleset is decoupled from the Azure and Microsoft 365 benchmark rulesets and is maintained independently. This allows it to evolve separately from CIS benchmark releases and provides expanded coverage through a comprehensive set of security checks focused exclusively on Microsoft Entra environments.
+
+Additional standards and compliance frameworks, including NIST, HIPAA, GDPR, and PCI DSS, are planned for future releases as they become available.
 
 # Notes about security controls
 
