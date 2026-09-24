@@ -2505,13 +2505,18 @@ The Monkey365 core analyzer processes user-defined rules, assesses them against 
 <p>A ruleset is formed by placing one or more JSON rule files in a directory and creating a ruleset.json within it.</p>
 <p>The ruleset file stores metadata of the Ruleset, as described <a href="../custom-ruleset/">here</a> </p>
 <h1 id="supported-standards">Supported standards<a class="headerlink" href="#supported-standards" title="Permanent link">&para;</a></h1>
-<p>By default, the HTML report shows you the CIS (Center for Internet Security) Benchmark. The CIS Benchmarks for Azure and Microsoft 365 are guidelines for security and compliance best practices.</p>
-<p>The following standards are supported by Monkey365:</p>
+<p>By default, the HTML report displays the CIS (Center for Internet Security) Benchmarks. The CIS Benchmarks for Azure and Microsoft 365 provide security and compliance best-practice recommendations.</p>
+<p>The following CIS standards are supported by Monkey365:</p>
 <ul>
-<li>CIS Microsoft Azure Foundations Benchmark v3.0.0</li>
-<li>CIS Microsoft 365 Foundations Benchmark v3.0.0 and v4.0.0</li>
+<li>CIS Microsoft Azure Foundations Benchmark v6.0.0</li>
+<li>CIS Microsoft Azure Database Services Benchmark v2.0.0</li>
+<li>CIS Microsoft Azure Compute Services Benchmark v2.0.0</li>
+<li>CIS Microsoft 365 Foundations Benchmark v7.0.0</li>
 </ul>
-<p>More standards will be added in next releases (NIST, HIPAA, GDPR, PCI-DSS, etc..) as they are available.</p>
+<h2 id="microsoft-entra-ruleset">Microsoft Entra ruleset<a class="headerlink" href="#microsoft-entra-ruleset" title="Permanent link">&para;</a></h2>
+<p>Monkey365 also includes a dedicated security ruleset for Microsoft Entra. This is a <strong>Monkey365-specific ruleset and is not part of the CIS Benchmarks</strong>.</p>
+<p>The Microsoft Entra ruleset is decoupled from the Azure and Microsoft 365 benchmark rulesets and is maintained independently. This allows it to evolve separately from CIS benchmark releases and provides expanded coverage through a comprehensive set of security checks focused exclusively on Microsoft Entra environments.</p>
+<p>Additional standards and compliance frameworks, including NIST, HIPAA, GDPR, and PCI DSS, are planned for future releases as they become available.</p>
 <h1 id="notes-about-security-controls">Notes about security controls<a class="headerlink" href="#notes-about-security-controls" title="Permanent link">&para;</a></h1>
 <p>For each standard, and depending on the environment, there is a list of applicable controls. Depending on the standard, some checks may be procedure, or process related best-practices, so this can't be verified by Monkey365. Some of them don't have any rule implemented yet, but will have in the future.</p>
 
