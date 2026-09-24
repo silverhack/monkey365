@@ -1,0 +1,192 @@
+{
+    "provider": "EntraID",
+    "serviceType": "Entra Role Assignment",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "_ARG_0_",
+    "description": "Workload identities represent software workloads such as applications, services, scripts, automation tools, CI/CD pipelines, and containerised applications that require authentication to access cloud resources. Unlike human user accounts, workload identities operate without interactive authentication, multifactor authentication challenges, or approval workflows, creating significant security risks when granted privileged administrative access.",
+    "rationale": "Assigning privileged directory roles such as Global Administrator, Privileged Role Administrator, User Administrator, Application Administrator, or Security Administrator to workload identities fundamentally violates the principle of least privilege and dramatically increases the organisation's attack surface. These assignments provide automated systems and applications with standing privileged access that cannot be challenged through additional verification steps, enabling any compromise of the application, its hosting environment, or its credentials to immediately result in full tenant compromise without detection opportunities that would exist with interactive user sessions.",
+    "impact": "",
+    "remediation": {
+        "text": "
+			###### To remediate using the UI:
+			1. Sign in to the [Microsoft Entra admin centre](https://entra.microsoft.com/) with an account assigned the Privileged Role Administrator or Global Administrator role
+			2. Navigate to **Identity** > **Applications** > **Enterprise applications**
+			3. Locate the service principal that currently has privileged role assignments
+			4. Select the service principal to open its properties page
+			5. Under **Security** section, select **Permissions** to review current API permission grants
+			6. Select **Roles and administrators** to view currently assigned directory roles
+			7. Document the current privileged role assignments and assess what specific capabilities the workload requires
+			8. Return to the **Permissions** page and select **Add a permission**
+			9. Choose **Microsoft Graph** as the API
+			10. Select **Application permissions** (not delegated permissions, which require user sign-in)
+			11. Search for and select the specific granular permissions required for the workload's operations:
+				- For user management: `User.ReadWrite.All` (instead of User Administrator role)
+				- For group management: `Group.ReadWrite.All` or `GroupMember.ReadWrite.All`
+				- For application management: `Application.ReadWrite.All` (instead of Application Administrator role)
+				- For role assignment: `RoleManagement.ReadWrite.Directory` (use sparingly and only when absolutely necessary)
+				- For directory operations: Specific read or write permissions for the objects being managed
+			12. Select **Add permissions** to configure the API permissions
+			13. Select **Grant admin consent for [Organisation]** to activate the permissions (application permissions require admin consent)
+			14. Verify the permissions are properly granted and appear in the **Configured permissions** list with status `Granted`
+			15. Test the workload's functionality to confirm it operates correctly with the new API permissions
+			16. Navigate back to **Roles and administrators** for the service principal
+			17. Select each privileged role assignment that is no longer needed
+			18. Choose **Remove assignment** to revoke the directory role
+			19. Confirm the removal in the dialogue box
+			20. Repeat for all unnecessary privileged role assignments
+			21. Document the changes in your change management system including before/after permission states
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/workload-id/workload-identities-overview",
+        "https://learn.microsoft.com/en-us/entra/identity-platform/app-objects-and-service-principals?tabs=browser",
+		"https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/best-practices",
+		"https://learn.microsoft.com/en-us/security/zero-trust/develop/identity-non-user-applications",
+		"https://learn.microsoft.com/en-us/entra/architecture/service-accounts-principal",
+        "https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation",
+		"https://csrc.nist.gov/projects/cprt/catalog#/cprt/framework/version/SP_800_53_5_2_0/home?element=AC-06"
+    ],
+    "compliance": [
+        {
+            "name": "",
+            "version": "",
+            "reference": "",
+            "profile": [
+				""
+			]
+        }
+    ],
+    "level": "high",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_role_assignment",
+        "subPath": null,
+        "selectCondition": [
+			{
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "servicePrincipals.Count",
+								"gt",
+								"0"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+		"data": {
+            "properties": {
+				"servicePrincipals.*": "servicePrincipals",
+                "roleName": "roleName",
+                "description": "description",
+                "templateId": "templateId"
+            },
+            "expandObject": "servicePrincipals"
+        },
+        "query": [
+			{
+				"filter": [
+				    {
+					    "include": "aad-m365-privileged-roles.json"
+				    }
+                ]
+            },
+			{
+				"connectOperator":"and",
+				"filter": [
+                    {
+                        "conditions": [
+							[
+                                "foreign",
+								"eq",
+								"_ARG_1_"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "id",
+                    "displayName": "displayName",
+					"foreign": "foreign",
+					"roleName": "roleName",
+                    "description": "description"
+                }
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"id": "id",
+                    "displayName": "displayName",
+					"foreign": "foreign",
+					"roleName": "roleName",
+                    "description": "description"
+                }
+            },
+            "status": {
+                "keyName": [
+					"displayName"
+				],
+                "message": "Ensure {displayName} Service Principal is not assigned to High Privileged Roles",
+                "defaultMessage": "_ARG_0_"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "templateId",
+                "resourceType": "PIMRoleAssigned"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_workload_identity_with_privileged_role__ARG_2_",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"templateId",
+		"displayName"
+    ],
+    "id": "entraid__ARG_3_"
+}

@@ -1,0 +1,115 @@
+{
+    "args": [],
+    "provider": "EntraID",
+    "serviceType": "Groups",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure that 'Restrict user ability to access groups features in My Groups' is set to 'Yes'",
+    "description": "Restrict access to group web interface in the Access Panel portal.",
+    "rationale": "Self-service group management enables users to create and manage security groups or Office 365 groups in Microsoft Entra ID. Unless a business requires this day-to-day delegation for some users, self-service group management should be disabled. Any user can access the Access Panel, where they can reset their passwords, view their information, etc. By default, users are also allowed to access the Group feature, which shows groups, members, related resources (SharePoint URL, Group email address, Yammer URL, and Teams URL). By setting this feature to 'Yes', users will no longer have access to the web interface, but still have access to the data using the API. This is useful to prevent non-technical users from enumerating groups-related information, but technical users will still be able to access this information using APIs.",
+    "impact": "Setting to Yes could create administrative overhead by customers seeking certain group memberships that will have to be manually managed by administrators with appropriate permissions.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal 
+			1. From Azure Home select the Portal Menu 
+			2. Select Microsoft Entra ID 
+			3. Under Manage, select Groups 
+			4. Under Settings, select General 
+			5. Under Self Service Group Management, set `Restrict user ability to access groups features in My Groups` to `Yes`
+			6. Click Save
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/users/groups-self-servicemanagement",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-privilegedaccess#pa-1-separate-and-limit-highly-privilegedadministrative-users",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-privilegedaccess#pa-3-manage-lifecycle-of-identities-and-entitlements",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-governancestrategy#gs-2-define-and-implement-enterprise-segmentationseparation-of-",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-governancestrategy#gs-6-define-and-implement-identity-and-privileged-access-strategy"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "5.18",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "low",
+    "tags": [],
+    "rule": {
+        "path": "aad_directory_properties",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "groupsInAccessPanelEnabled",
+                                "eq",
+                                "True"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "Ensure that 'Restrict user ability to access groups features in My Groups' is set to 'Yes'",
+                "defaultMessage": "Ensure that 'Restrict user ability to access groups features in My Groups' is set to 'Yes'"
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_group_features_enabled",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [],
+    "id": "entraid_groups_001"
+}

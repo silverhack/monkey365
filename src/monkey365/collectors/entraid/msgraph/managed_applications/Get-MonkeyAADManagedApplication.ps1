@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ function Get-MonkeyAADManagedApplication {
 	begin {
 		#Collector metadata
 		$monkey_metadata = @{
-			Id = "aad0030";
+			Id = "aad0033";
 			Provider = "EntraID";
 			Resource = "EntraID";
 			ResourceType = $null;
@@ -99,19 +99,19 @@ function Get-MonkeyAADManagedApplication {
 			Tags = @('EntraIDManagedApplicationInfo');
 		}
 		Write-Information @msg
-		#Get managed applications
-		$p = @{
+		#Get all enterprise applications
+        $p = @{
 			APIVersion = $aadConf.api_version;
-			Expand = 'owners';
-			Filter = "tags/Any(monkey: monkey eq 'WindowsAzureActiveDirectoryIntegratedApp')";
 			InformationAction = $O365Object.InformationAction;
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;
 		}
-		$managed_apps = Get-MonkeyMSGraphAADServicePrincipal @p
-		#Get service principal permissions
-		$p = @{
-			ScriptBlock = { Get-MonkeyMSGraphAADServicePrincipalPermission -InputObject $_ };
+		$all_managed_apps = Get-MonkeyMSGraphServicePrincipal @p
+        #Get enterprise applications
+        $enterpriseApps = @($all_managed_apps).Where({$null -ne $_ -and $_.tags -eq 'WindowsAzureActiveDirectoryIntegratedApp' -or $_.signInAudience -eq 'AzureADMyOrg' -and $_.createdByAppId -ne "00000001-0000-0000-c000-000000000000"})
+        #Update enterprise applications
+        $p = @{
+			ScriptBlock = { Update-ServicePrincipal -InputObject $_ };
 			Runspacepool = $O365Object.monkey_runspacePool;
 			ReuseRunspacePool = $true;
 			Debug = $O365Object.VerboseOptions.Debug;
@@ -120,76 +120,36 @@ function Get-MonkeyAADManagedApplication {
 			BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
 			BatchSize = $O365Object.nestedRunspaces.BatchSize;
 		}
-		$managed_app_perms = $managed_apps | Invoke-MonkeyJob @p
-		#Get user consented apps
-		$p = @{
-			APIVersion = $aadConf.api_version;
-			InformationAction = $O365Object.InformationAction;
-			Verbose = $O365Object.Verbose;
-			Debug = $O365Object.Debug;
-		}
-		$user_consented_apps = Get-MonkeyMSGraphServicePrincipalUserConsentPermission @p
-	}
-	end {
-		#Return managed apps properties
-		if ($managed_apps) {
-			$managed_apps.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.managed_applications.properties')
+        $enterpriseApps = $enterpriseApps | Invoke-MonkeyJob @p
+		#Get service principal application permissions
+		$new_arg = @{
+	        APIVersion = $aadConf.api_version;
+        }
+        $p.ScriptBlock = {Get-MonkeyMSGraphEnterpriseApplicationPermission -InputObject $_ -AddToObject}
+        $p.Arguments = $new_arg;
+        $enterpriseApps = $enterpriseApps | Invoke-MonkeyJob @p
+		#Get delegated user consent permissions
+		$p.ScriptBlock = {Get-MonkeyMSGraphEnterpriseAppUserConsentPermission -InputObject $_ -AddToObject}
+        $p.Arguments = $new_arg;
+        $enterpriseApps = $enterpriseApps | Invoke-MonkeyJob @p
+        #Add to returnobject
+        #Return managed apps properties
+		If ($enterpriseApps) {
+			$enterpriseApps.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.enterprise.applications.properties')
 			[pscustomobject]$obj = @{
-				Data = $managed_apps;
+				Data = $enterpriseApps;
 				Metadata = $monkey_metadata;
 			}
 			$returnData.aad_managed_app = $obj
 		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID managed applications",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Tags = @('AzureMSGraphManagedAppEmptyResponse')
-			}
-			Write-Verbose @msg
-		}
-		#Return managed apps permissions properties
-		if ($managed_app_perms) {
-			$managed_app_perms.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.managed_applications.permissions')
+        #Return all managed apps
+		If ($all_managed_apps) {
+			$all_managed_apps.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.enterprise.applications')
 			[pscustomobject]$obj = @{
-				Data = $managed_app_perms;
+				Data = $all_managed_apps;
 				Metadata = $monkey_metadata;
 			}
-			$returnData.aad_managed_app_perms = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID managed app permissions",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Tags = @('AzureMSGraphManagedAppEmptyResponse')
-			}
-			Write-Verbose @msg
-		}
-		#Return user consented apps
-		if ($user_consented_apps) {
-			$user_consented_apps.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.app.user.consent')
-			[pscustomobject]$obj = @{
-				Data = $user_consented_apps;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.aad_user_consented_apps = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID user consented applications",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Tags = @('AzureMSGraphAppUserConsentEmptyResponse')
-			}
-			Write-Verbose @msg
+			$returnData.aad_enterprise_applications = $obj
 		}
 	}
 }

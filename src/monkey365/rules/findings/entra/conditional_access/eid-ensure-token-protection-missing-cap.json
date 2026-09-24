@@ -1,0 +1,124 @@
+{
+    "provider": "EntraID",
+    "serviceType": "Conditional Access",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure a Token Protection Conditional Access policy is considered",
+    "description": "This recommendation ensures that issued tokens are only issued to the intended device.",
+    "rationale": "When properly configured, conditional access can aid in preventing attacks involving token theft, via hijacking or reply, as part of the attack flow. Although currently considered a rare event, the impact from token impersonation can be severe.",
+    "impact": "A Microsoft Entra ID P1 or P2 license is required.<br/><br/>Start with a Conditional Access policy in \"Report Only\" mode prior to enforcing for all users.",
+    "remediation": {
+        "text": "
+			###### Remediate from Azure Portal 
+			1. Sign in to the Microsoft Entra admin center as at least a Conditional Access Administrator. 
+			2. Browse to Protection > Conditional Access > Policies. 
+			3. Select New policy. 
+			4. Give your policy a name. 
+			5. Under Assignments, select Users or workload identities. 
+				1. Under Include, select the users or groups to apply this policy. 
+				2. Under Exclude, select Users and groups and choose your organization's emergency access or break-glass accounts (if applicable). 
+			6. Under Target resources > Resources > Include > Select resources 
+				1. Under Select, select the following applications: 
+					1. Office 365 Exchange Online 
+					2. Office 365 SharePoint Online 
+				2. Choose Select 
+			7. Under Conditions: 
+				1. Under Device platforms 
+					1. Set Configure to Yes. 
+					2. Include > Select device platforms > Windows. 
+					3. Select Done. 
+				2. Under Client apps: 
+					1. Set Configure to Yes 
+					2. Under Modern authentication clients, only select Mobile apps and desktop clients. 
+					3. Select Done 
+			8. Under Access controls > Session, select Require token protection for sign-in sessions and select Select. 
+			9. Confirm your settings and set Enable policy to On. 
+			10. Select Create to enable your policy.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-tokenprotection",
+        "https://www.microsoft.com/en-gb/security/business/microsoft-entra-pricingPage"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "5.2.8",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": []
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {},
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": null,
+                "resourceId": null,
+                "resourceType": null
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "entra_missing_token_protection_cap",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"name",
+		"id"
+	],
+    "id": ""
+}

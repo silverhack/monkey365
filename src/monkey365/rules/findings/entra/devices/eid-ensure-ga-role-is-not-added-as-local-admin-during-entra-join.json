@@ -1,0 +1,130 @@
+{
+    "provider": "EntraID",
+    "serviceType": "Devices",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure the GA role is not added as a local administrator during Entra join",
+    "description": "This setting controls whether the Global Administrator role is automatically added to the local administrators group on a device during the Microsoft Entra join process.\r\nThe recommended state is `No`.",
+	"rationale": "System administrators may be inclined to use over-privileged accounts for convenience when managing devices. Enforcing this control helps discourage that behavior by requiring administrative actions to be performed using accounts specifically designated for local administration. This promotes adherence to the principle of least privilege and reduces the risk associated with using high-level roles for routine tasks. For example, using a Global Administrator account to authenticate to a compromised endpoint and continue performing tasks significantly increases the risk of broader organizational compromise.",
+    "impact": "Restricting the default behavior and requiring manual assignment to least privilege roles introduces minor administrative overhead. During the Microsoft Entra join process, the Microsoft Entra Joined Device Local Administrator role is automatically added to the device's local administrators group and should be used instead.",
+    "remediation": {
+        "text": "Remediate from Azure Portal
+			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
+			2. Click to expand Entra ID > Devices select Device settings.
+			3. Set `Global administrator role is added as local administrator on the device during Microsoft Entra join` (Preview) to `No`.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/devices/manage-device-identities#configure-device-settings",
+        "https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta",
+		"https://learn.microsoft.com/en-us/entra/identity/devices/assign-local-admin"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "7.0.0",
+            "reference": "5.1.4.3",
+            "profile": [
+                "E3 Level 1",
+				"E5 Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "aad_device_settings",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "azureADJoin.localAdmins.enableGlobalAdmins",
+                                "ne",
+                                "False"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Display Name",
+                    "multiFactorAuthConfiguration": "Require MFA setting",
+                    "azureADJoin.localAdmins.enableGlobalAdmins": "Enable Global Admins"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+				{
+					"itemName": "Enable Global Admins",
+					"itemValue": "enabled",
+					"className": "badge badge-danger badge-xl"
+				}
+			],
+            "emphasis": [
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "displayName": "Display Name",
+                    "multiFactorAuthConfiguration": "Require MFA setting",
+                    "azureADJoin.localAdmins.enableGlobalAdmins": "Enable Global Admins"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "Ensure the GA role is not added as a local administrator during Entra join",
+                "defaultMessage": "Ensure the GA role is not added as a local administrator during Entra join"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraDeviceRegistrationPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_ga_role_added_as_admin_during_entra_join",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_tenant_003"
+}

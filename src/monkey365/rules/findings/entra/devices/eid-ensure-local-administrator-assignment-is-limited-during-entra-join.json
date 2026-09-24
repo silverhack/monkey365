@@ -1,0 +1,128 @@
+{
+    "provider": "EntraID",
+    "serviceType": "Devices",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure local administrator assignment is limited during Entra join",
+    "description": "This setting determines if the Microsoft Entra user registering their device as Microsoft Entra join be added to the local administrators group. This setting applies only once during the actual registration of the device as Microsoft Entra join.\r\nThe recommended state is `Selected` or `None`.",
+	"rationale": "To uphold the principle of least privilege, the assignment of local administrator rights during Microsoft Entra join should be centrally managed using appropriate built-in roles through Intune. This approach minimizes the number of disparate users with elevated privileges, reducing the attack surface and potential for misuse. Centralized management also streamlines the deprovisioning process, ensuring that administrative access can be revoked efficiently and consistently across all devices, rather than requiring manual intervention on each individual endpoint.",
+    "impact": "Restricting the default behavior and requiring manual assignment to built-in roles introduces minor administrative overhead. During the Microsoft Entra join process, the Microsoft Entra Joined Device Local Administrator role is automatically added to the device's local administrators group and should be used instead.",
+    "remediation": {
+        "text": "Remediate from Azure Portal
+			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
+			2. Click to expand Entra ID > Devices select Device settings.
+			3. Set `Registering user is added as local administrator on the device during Microsoft Entra join (Preview)` to `Selected` (and add members) or `None`.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/devices/manage-device-identities#configure-device-settings",
+        "https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta",
+		"https://learn.microsoft.com/en-us/entra/identity/devices/assign-local-admin"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "7.0.0",
+            "reference": "5.1.4.4",
+            "profile": [
+                "E3 Level 1",
+				"E5 Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "aad_device_settings",
+        "subPath": null,
+        "selectCondition": [],
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "azureADJoin.localAdmins.registeringUsers.@odata.type",
+                                "eq",
+                                "enumeratedDeviceRegistrationMembership"
+                            ],
+							[
+                                "azureADJoin.localAdmins.registeringUsers.@odata.type",
+                                "eq",
+                                "noDeviceRegistrationMembership"
+                            ]
+                        ],
+						"operator":"or"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": true,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Display Name",
+                    "multiFactorAuthConfiguration": "Require MFA setting",
+                    "azureADJoin.localAdmins.registeringUsers.@odata.type": "Registering Users"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "displayName": "Display Name",
+                    "multiFactorAuthConfiguration": "Require MFA setting",
+                    "azureADJoin.localAdmins.registeringUsers.@odata.type": "Registering Users"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "Ensure local administrator assignment is limited during Entra join",
+                "defaultMessage": "Ensure local administrator assignment is limited during Entra join"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraDeviceRegistrationPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_local_admin_assignment_during_entra_join_not_limited",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_tenant_003"
+}

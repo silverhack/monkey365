@@ -46,7 +46,7 @@ Function New-LoggerSessionState{
         [Parameter(HelpMessage="ApartmentState of the thread")]
         [ValidateSet("STA","MTA")]
         [String]
-        $ApartmentState = "STA"
+        $ApartmentState = "MTA"
     )
     $sessionstate = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
     if($ImportVariables){

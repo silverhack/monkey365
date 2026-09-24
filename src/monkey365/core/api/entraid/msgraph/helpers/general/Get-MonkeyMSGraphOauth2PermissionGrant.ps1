@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ Function Get-MonkeyMSGraphOauth2PermissionGrant {
         [Parameter(Mandatory=$false, ValueFromPipeline = $True)]
         [String]$Filter,
 
-        [parameter(ValueFromPipeline = $True,ValueFromPipeLineByPropertyName = $True)]
+        [parameter(Mandatory=$false, HelpMessage="API version")]
         [ValidateSet("v1.0","beta")]
         [String]$APIVersion = "v1.0"
     )
@@ -53,7 +53,7 @@ Function Get-MonkeyMSGraphOauth2PermissionGrant {
         $oauthPermission = $null
     }
     Process{
-        $params = @{
+        $p = @{
             Authentication = $graphAuth;
             ObjectType = 'oauth2PermissionGrants';
             Environment = $Environment;
@@ -65,9 +65,6 @@ Function Get-MonkeyMSGraphOauth2PermissionGrant {
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
-        $oauthPermission = Get-MonkeyMSGraphObject @params
-    }
-    End{
-        return $oauthPermission
+        Get-MonkeyMSGraphObject @p
     }
 }

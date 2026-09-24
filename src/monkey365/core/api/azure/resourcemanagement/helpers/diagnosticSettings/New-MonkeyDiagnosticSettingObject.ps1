@@ -1,0 +1,80 @@
+﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+Function New-MonkeyDiagnosticSettingObject {
+<#
+        .SYNOPSIS
+		Create a new diagnostic setting object
+
+        .DESCRIPTION
+		Create a new diagnostic setting object
+
+        .INPUTS
+
+        .OUTPUTS
+
+        .EXAMPLE
+
+        .NOTES
+	        Author		: Juan Garrido
+            Twitter		: @tr1ana
+            File Name	: New-MonkeyDiagnosticSettingObject
+            Version     : 1.0
+
+        .LINK
+            https://github.com/silverhack/monkey365
+    #>
+
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
+	[CmdletBinding()]
+	Param (
+        [parameter(Mandatory= $True, ValueFromPipeline = $True, HelpMessage="Diag object")]
+        [Object]$InputObject
+    )
+    Process{
+        try{
+            #Create ordered dictionary
+            $diagObject = [ordered]@{
+                id = $InputObject | Select-Object -ExpandProperty id -ErrorAction Ignore;
+                name = $InputObject | Select-Object -ExpandProperty name -ErrorAction Ignore;
+                type = $InputObject | Select-Object -ExpandProperty type -ErrorAction Ignore;
+                location = $InputObject | Select-Object -ExpandProperty location -ErrorAction Ignore;
+                kind = $InputObject | Select-Object -ExpandProperty kind -ErrorAction Ignore;
+                tags = $InputObject | Select-Object -ExpandProperty tags -ErrorAction Ignore;
+                properties = $InputObject | Select-Object -ExpandProperty properties -ErrorAction Ignore;
+                metrics = $InputObject.properties | Select-Object -ExpandProperty metrics -ErrorAction Ignore;
+                logs = $InputObject.properties | Select-Object -ExpandProperty logs -ErrorAction Ignore;
+                identity = $InputObject | Select-Object -ExpandProperty identity -ErrorAction Ignore;
+                rawObject = $InputObject
+            }
+            #Create PsObject
+            New-Object -TypeName PsObject -Property $diagObject
+        }
+        catch{
+            $msg = @{
+			    MessageData = ($message.MonkeyObjectCreationFailed -f "Diagnostic object");
+			    callStack = (Get-PSCallStack | Select-Object -First 1);
+			    logLevel = 'error';
+			    InformationAction = $O365Object.InformationAction;
+			    Tags = @('DiagnosticObjectError');
+		    }
+		    Write-Error @msg
+            $msg.MessageData = $_
+            $msg.LogLevel = "Verbose"
+            $msg.Tags+= "DiagnosticObjectError"
+            [void]$msg.Add('verbose',$O365Object.verbose)
+		    Write-Verbose @msg
+        }
+    }
+}

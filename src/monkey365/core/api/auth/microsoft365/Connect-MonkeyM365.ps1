@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -251,7 +251,7 @@ Function Connect-MonkeyM365{
                 $initialDomain = $null;
                 #Get config
                 [bool]$scanSites = $false
-                [void][System.Boolean]::TryParse($O365Object.internal_config.o365.SharePointOnline.sitePermissionsOptions.scanAllSites.ToString(),[ref]$scanSites)
+                [void][System.Boolean]::TryParse($O365Object.internal_config.o365.SharePointOnline.scanAllSites.ToString(),[ref]$scanSites)
                 If($O365Object.AuthType.ToLower() -eq 'client_credentials'){
                     $msg = @{
                         MessageData = ($message.SPSConfidentialAppErrorMessage);

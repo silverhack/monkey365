@@ -1,0 +1,153 @@
+{
+    "provider": "EntraID",
+    "serviceType": "Enterprise Applications",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Enterprise Applications with High Privilege API Permissions",
+    "description": "Over-privileged applications represent a critical security risk in modern identity environments. When an application is granted broad permissions such as `Directory.ReadWrite.All`, `Application.ReadWrite.All`, or `RoleManagement.ReadWrite.Directory`, it gains unrestricted capabilities to read and modify critical directory resources, manage other applications, manipulate administrative role assignments, and access sensitive organisational data. In many cases, these applications only require a narrow subset of these capabilities—for example, an application might need to read user profiles but has been granted permissions to modify them, or an application might need to read group memberships but has been granted permissions to create and delete groups across the entire tenant.",
+    "rationale": "The security implications of excessive permissions compound over time. Applications granted `AppRoleAssignment.ReadWrite.All` can elevate their own privileges or grant permissions to other applications, effectively allowing them to bypass governance controls. Applications with `User.ReadWrite.All` can modify user attributes, reset passwords, update authentication methods, and disable accounts—capabilities often unnecessary for automation tasks that only need to read user information. Applications granted `Mail.ReadWrite` across all mailboxes can access executive communications, regulatory correspondence, and confidential business information when they might only need to send automated notifications.",
+    "impact": "",
+    "remediation": {
+        "text": "
+			###### To remediate using the UI:
+			1 Navigate to **Microsoft Entra Admin Centre** → **Enterprise Applications**
+			2 Select the application and navigate to **Permissions**
+			3 Select the **Admin consent** tab to review granted permissions
+			4 Identify permissions that exceed application's functional requirements
+			6 Apply principle of least privilege
+				* `Directory.ReadWrite.All` → Consider scoped alternatives like `User.ReadWrite.All` or `Group.ReadWrite.All`
+				* `Application.ReadWrite.All` → Consider `Application.Read.All` if write access unnecessary
+				* `Mail.ReadWrite` → Consider `Mail.Read` or specific mailbox access through application access policies
+				* `AppRoleAssignment.ReadWrite.All` → Remove if application doesn't manage permissions
+			7 Revoke unnecessary permissions by selecting the **...** control and choosing **Revoke permission**
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/graph/permissions-overview?tabs=http",
+        "https://learn.microsoft.com/en-us/graph/permissions-reference",
+		"https://learn.microsoft.com/en-us/security/zero-trust/develop/identity",
+		"https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/manage-app-consent-policies?pivots=ms-powershell"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "5.3.4",
+            "profile": [
+				"E5 Level 1"
+			]
+        }
+    ],
+    "level": "high",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_managed_app",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+		"data": {
+            "properties": {
+				"id": "id",
+                "accountEnabled": "accountEnabled",
+                "appDisplayName": "appDisplayName",
+				"appDescription": "appDescription",
+				"appId": "appId",
+				"displayName": "displayName",
+				"signInAudience": "signInAudience",
+				"foreign":"foreign",
+				"owners": "owners",
+				"permissions.*": "permissions"
+            },
+            "expandObject": "permissions"
+        },
+        "query": [
+			{
+				"filter": [
+				    {
+					    "include": "enterprise-app-permissions.json"
+				    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "Application Id",
+					"appDisplayName": "Display Name",
+					"apiName": "Resource Display Name",
+					"ClaimValue": "Permision",
+					"PermissionDisplayName": "Permission Name"
+                }
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"id": "Application Id",
+					"appDisplayName": "Display Name",
+					"apiName": "Resource Display Name",
+					"ClaimValue": "Permision",
+					"PermissionDisplayName": "Permission Name"
+                }
+            },
+            "status": {
+                "keyName": [
+					"principalDisplayName"
+				],
+                "message": "{principalDisplayName} with High Privilege API Permissions",
+                "defaultMessage": "Enterprise Applications with High Privilege API Permissions"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraEnterpriseApplication"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_app_with_high_priv_lacks_owner",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id",
+		"displayName"
+    ],
+    "id": "entraid_1128"
+}

@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,21 +50,14 @@ Function Get-MonkeyMSGraphAuthorizationPolicy{
             tenantFlowsPolicy = $null;
             tenantFlowsPolicyId = $null;
         }
-        $Environment = $O365Object.Environment
-        #Get Graph Auth
-        $graphAuth = $O365Object.auth_tokens.MSGraph
-        $params = @{
-            Authentication = $graphAuth;
-            ObjectType = "policies/authorizationPolicy";
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
+        $p = @{
+            PolicyType = "authorizationPolicy";
             APIVersion = $APIVersion;
             InformationAction = $O365Object.InformationAction;
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
-        $tenant_auth_policy = Get-MonkeyMSGraphObject @params
+        $tenant_auth_policy = Get-MonkeyMSGraphPolicy @p
         If($APIVersion.ToLower() -eq 'beta'){
             #normalize data to match with V1.0
             $permissionGrant = $tenant_auth_policy | Select-Object -ExpandProperty permissionGrantPolicyIdsAssignedToDefaultUserRole -ErrorAction Ignore
@@ -78,18 +71,14 @@ Function Get-MonkeyMSGraphAuthorizationPolicy{
             $auth_policy.tenantAuthPolicyId = $tenant_auth_policy.id;
         }
         #Get flows policy
-        $params = @{
-            Authentication = $graphAuth;
-            ObjectType = "policies/authenticationFlowsPolicy";
-            Environment = $Environment;
-            ContentType = 'application/json';
-            Method = "GET";
+        $p = @{
+            PolicyType = "authenticationFlowsPolicy";
             APIVersion = $APIVersion;
             InformationAction = $O365Object.InformationAction;
             Verbose = $O365Object.verbose;
             Debug = $O365Object.debug;
         }
-        $tenant_flows_policy = Get-MonkeyMSGraphObject @params
+        $tenant_flows_policy = Get-MonkeyMSGraphPolicy @p
         #Add to object
         If($tenant_flows_policy){
             $auth_policy.tenantFlowsPolicy = $tenant_flows_policy;

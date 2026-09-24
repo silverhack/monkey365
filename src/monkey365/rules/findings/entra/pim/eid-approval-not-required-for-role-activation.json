@@ -1,0 +1,177 @@
+{
+    "provider": "EntraID",
+    "serviceType": "Privileged Identity Management",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure approval is required for _ARG_0_ role activation",
+    "description": "_ARG_1_",
+    "rationale": "_ARG_2_",
+    "impact": "_ARG_3_",
+    "remediation": {
+        "text": "
+			###### To remediate using the UI: 
+			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/. 
+			2. Click to expand Identity Governance select Privileged Identity Management. 
+			3. Under Manage select Microsoft Entra Roles. 
+			4. Under Manage select Roles. 
+			5. Select _ARG_0_ in the list. 
+			6. Select Role settings and click Edit. 
+			7. Check the Require approval to activate box. 
+			8. Add at least two approvers. 
+			9. Click Update. 
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/groups-role-settings#require-approval-to-activate"
+    ],
+    "compliance": [
+        {
+            "name": "Monkey365 Entra",
+            "version": "0.0.1",
+            "reference": "5.3.1",
+            "profile": [
+			]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_pim_roleAssignment",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+		"data": {
+            "properties": {
+                "policy.settings.@odata.type": "@odata.type",
+				"policy.settings.id": "policyId",
+				"policy.settings.setting": "policySetting",
+                "roleName": "displayName",
+                "description": "description",
+                "templateId": "templateId"
+            },
+            "expandObject": "policy.settings"
+        },
+        "query": [
+			{
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "templateId",
+                                "eq",
+								"_ARG_4_"
+                            ],
+							[
+                                "@odata.type",
+                                "like",
+								"*unifiedRoleManagementPolicyApprovalRule*"
+                            ]
+                        ],
+						"operator":"and"
+                    }
+                ]
+            },
+			{
+				"connectOperator": "and",
+                "filter": [
+                    {
+                        "conditions": [
+							[
+                                "isApprovalRequired",
+                                "eq",
+								"False"
+                            ],
+							[
+                                "approvalStages.primaryApproversCount",
+                                "lt",
+								"2"
+                            ]
+                        ],
+						"operator":"or",
+						"whereObject":"policySetting"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"templateId": "templateId",
+                    "displayName": "displayName",
+                    "description": "description",
+                    "policySetting.isApprovalRequired": "Approval Required",
+					"policySetting.approvalStages.primaryApproversCount": "Primary Approvers Count"
+                }
+            },
+            "table": "default",
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "templateId": "templateId",
+					"displayName": "displayName",
+                    "description": "description",
+                    "policySetting.isApprovalRequired": "Approval Required",
+					"policySetting.approvalStages.primaryApproversCount": "Primary Approvers Count"
+                }
+            },
+            "status": {
+                "keyName": "",
+                "message": "Ensure approval is required for _ARG_0_ role activation",
+                "defaultMessage": "Ensure approval is required for _ARG_0_ role activation"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "templateId",
+                "resourceType": "PIMUnifiedRoleManagementPolicyApprovalRule"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_approval_for__ARG_0__not_enabled",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"templateId",
+		"displayName"
+    ],
+    "id": "monkey_entra__ARG_5_"
+}

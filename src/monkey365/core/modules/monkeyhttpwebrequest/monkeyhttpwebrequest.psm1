@@ -1,4 +1,4 @@
-﻿Set-StrictMode -Version Latest
+Set-StrictMode -Version Latest
 
 if (-not ([System.Management.Automation.PSTypeName]'System.Net.Http.HttpClientHandler').Type){
     Add-Type -AssemblyName System.Net.Http

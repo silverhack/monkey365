@@ -1,4 +1,4 @@
-﻿Set-StrictMode -Version Latest
+Set-StrictMode -Version Latest
 
 $script:ScriptPath = $PSScriptRoot
 
@@ -12,38 +12,35 @@ $LocalizedDataParams = @{
 #Import localized data
 Import-LocalizedData @LocalizedDataParams;
 
-function Get-MonkeySourceFile {
-    param(
-        [Parameter(Mandatory)]
-        [string] $RelativePath
+Function Get-MonkeySourceFile {
+    [CmdletBinding()]
+	Param (
+        [Parameter(Mandatory=$True, ValueFromPipeline = $True)]
+        [System.String]$RelativePath,
+
+        [parameter(Mandatory=$false, HelpMessage="Enumerate Files")]
+        [Switch]$Enumerate
     )
-
-    $path = Join-Path $PSScriptRoot $RelativePath
-
-    If ([System.IO.File]::Exists($path) -and ([System.IO.Path]::GetExtension($path) -eq '.ps1')) {
-        return $path
+    Process{
+        $path = Join-Path $PSScriptRoot $RelativePath
+        IF($Enumerate.IsPresent){
+            If (-not [System.IO.Directory]::Exists($path)) {
+                return
+            }
+            #Enumerate files
+            [System.IO.Directory]::EnumerateFiles(
+                $path,
+                '*',
+                [System.IO.SearchOption]::AllDirectories
+            ) | Sort-Object
+        }
+        Else{
+            If ([System.IO.File]::Exists($path) -and ([System.IO.Path]::GetExtension($path) -eq '.ps1')) {
+                return $path
+            }
+            throw "Source file not found: $RelativePath"
+        }
     }
-
-    throw "Source file not found: $RelativePath"
-}
-
-Function Get-MonkeySourceFiles {
-    param(
-        [Parameter(Mandatory)]
-        [string] $RelativePath
-    )
-
-    $path = Join-Path $PSScriptRoot $RelativePath
-
-    If (-not [System.IO.Directory]::Exists($path)) {
-        return
-    }
-
-    [System.IO.Directory]::EnumerateFiles(
-        $path,
-        '*',
-        [System.IO.SearchOption]::AllDirectories
-    ) | Sort-Object
 }
 
 # Import core functions
@@ -61,7 +58,7 @@ $sourceFolders = @(
 )
 
 $sourceFolders.ForEach({
-    ForEach ($file in Get-MonkeySourceFiles -RelativePath $_) {
+    ForEach ($file in Get-MonkeySourceFile -RelativePath $_ -Enumerate) {
         If ([System.IO.Path]::GetExtension($file) -ne '.ps1') {
             continue
         }
@@ -71,21 +68,6 @@ $sourceFolders.ForEach({
 
 $script:azure_plugins = @(Get-MonkeySupportedService -Azure)
 $script:m365_plugins = @(Get-MonkeySupportedService -Microsoft365)
-
-Function Get-MonkeyAzurePlugins {
-    If (-not $script:azure_plugins) {
-        $script:azure_plugins = Get-MonkeySupportedService -Azure
-    }
-    return $script:azure_plugins
-}
-
-Function Get-MonkeyM365Plugins {
-    If (-not $script:m365_plugins) {
-        $script:m365_plugins = Get-MonkeySupportedService -Microsoft365
-    }
-
-    return $script:m365_plugins
-}
 
 # Import core functions
 $sourceFiles = @(
@@ -110,7 +92,7 @@ $sourceFiles = @(
     'core/api/entraid/msgraph/helpers/users/Get-MonkeyMSGraphUser.ps1'
     'core/api/entraid/msgraph/helpers/groups/Get-MonkeyMSGraphGroup.ps1'
     'core/api/entraid/msgraph/helpers/groups/Get-MonkeyMSGraphGroupTransitiveMember.ps1'
-    'core/api/entraid/msgraph/helpers/serviceprincipals/Get-MonkeyMSGraphAADServicePrincipal.ps1'
+    'core/api/entraid/msgraph/helpers/serviceprincipals/Get-MonkeyMSGraphServicePrincipal.ps1'
     'core/api/entraid/msgraph/helpers/directoryrole/Get-MonkeyMSGraphEntraDirectoryRole.ps1'
     'core/api/entraid/msgraph/helpers/directoryrole/Get-MonkeyMSGraphEntraRoleAssignment.ps1'
     'core/api/entraid/msgraph/helpers/directoryrole/Get-MonkeyMSGraphObjectDirectoryRole.ps1'

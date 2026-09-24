@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,6 +41,9 @@ Function Get-MonkeyMSGraphDirectoryObjectById{
         [Parameter(Mandatory=$true)]
         [String[]]$Ids,
 
+        [parameter(Mandatory=$False, HelpMessage='Select objects')]
+        [String[]]$Select,
+
         [parameter(Mandatory=$false)]
         [ValidateSet("v1.0","beta")]
         [String]$APIVersion = "v1.0"
@@ -68,6 +71,7 @@ Function Get-MonkeyMSGraphDirectoryObjectById{
                     Authentication = $graphAuth;
                     ObjectType = 'directoryObjects/getByIds';
                     Environment = $Environment;
+                    Select = $Select;
                     Method = "Post";
                     Data= $batchId;
                     APIVersion = $APIVersion;

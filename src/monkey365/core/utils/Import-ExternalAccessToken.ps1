@@ -57,7 +57,8 @@ function Import-ExternalAccessToken {
             If($allAuthObjects.Count -gt 0){
                 #Check if mixed tokens were passed
                 $nonMixedTokens = @($allAuthObjects | Select-Object -ExpandProperty TenantId -Unique).Count -eq 1
-                If($nonMixedTokens -and $nonMixedTokens -eq $O365Object.TenantId){
+                $_tenantId = $allAuthObjects | Select-Object -ExpandProperty TenantId -Unique -ErrorAction Ignore
+                If($nonMixedTokens -and $_tenantId -eq $O365Object.TenantId){
                     #Get Tokens for SPO
                     $spoAt = $allAuthObjects.Where({$_.resource -eq '00000003-0000-0ff1-ce00-000000000000'})
                     If($spoAt.Count -gt 0){

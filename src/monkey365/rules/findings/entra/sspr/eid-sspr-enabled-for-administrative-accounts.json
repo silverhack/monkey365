@@ -1,0 +1,134 @@
+{
+    "args": [
+        
+    ],
+    "provider": "EntraID",
+    "serviceType": "Users",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure Self service password reset is disabled for High Privileged Roles",
+    "description": "Self-service password reset for administrator accounts fundamentally undermines the security principle that privileged accounts require elevated protection, enhanced monitoring, and human oversight for sensitive identity operations. Whilst SSPR provides valuable self-service capabilities for standard user accounts—reducing helpdesk burden and improving user productivity—extending this functionality to accounts with Global Administrator, Privileged Role Administrator, Security Administrator, User Administrator, or other administrative roles creates attack surface that sophisticated threat actors deliberately target to establish persistence and evade defensive measures after initial compromise.",
+    "rationale": "This configuration creates significant security vulnerabilities by enabling attackers who have compromised administrator credentials through initial access techniques (phishing, credential stuffing, session hijacking) to maintain persistent access by resetting account passwords using SSPR's standard verification methods, effectively bypassing the heightened security controls that should protect privileged identity lifecycle operations.",
+    "impact": "",
+    "remediation": {
+        "text": null,
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-sspr-policy?tabs=ms-powershell#administrator-reset-policy-differences",
+        "https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-deployment"
+    ],
+    "compliance": [
+        {
+            "name": "",
+            "version": "",
+            "reference": "",
+            "profile": [
+			]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_authorization_policy",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "tenantAuthPolicy.allowedToUseSSPR",
+                                "eq",
+                                "true"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "tenantAuthPolicy.id": "id",
+					"tenantAuthPolicy.displayName": "displayName",
+                    "tenantAuthPolicy.description": "Description",
+                    "tenantAuthPolicy.allowedToUseSSPR": "Allow Admins To Use SSPR"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [
+				{
+					"itemName": "Allow Admins To Use SSPR",
+					"itemValue": "enabled",
+					"className": "badge badge-danger badge-xl"
+				}
+			],
+            "emphasis": [
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "tenantAuthPolicy"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "isManual": false,
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "tenantAuthPolicy.id": "id",
+					"tenantAuthPolicy.displayName": "displayName",
+                    "tenantAuthPolicy.description": "Description",
+                    "tenantAuthPolicy.allowedToUseSSPR": "Allow Admins To Use SSPR"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [ 
+                ],
+                "message": "Ensure Self service password reset is disabled for High Privileged Roles",
+                "defaultMessage": "Ensure Self service password reset is disabled for High Privileged Roles"
+            },
+            "properties": {
+                "resourceName": "objectId",
+                "resourceId": "objectId",
+                "resourceType": "EntraSSPR"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_sspr_disabled_enabled_for_admins",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+	],
+    "id": "entraid_1167"
+}

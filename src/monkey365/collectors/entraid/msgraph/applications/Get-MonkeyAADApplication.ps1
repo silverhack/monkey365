@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -87,7 +87,6 @@ function Get-MonkeyAADApplication {
 			Write-Verbose @msg
 			break
 		}
-		$app_perms = $null
 	}
 	process {
 		$msg = @{
@@ -106,13 +105,13 @@ function Get-MonkeyAADApplication {
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;
 		}
-		$all_applications = Get-MonkeyMSGraphAADApplication @p | Format-AADApplicationCredential
+		$all_applications = Get-MonkeyMSGraphApplication @p | Format-EIDApplicationCredential
         $new_arg = @{
             APIVersion = $aadConf.api_version;
         }
 		#Get Application permissions
         $jobParam = @{
-	        ScriptBlock = {Get-MonkeyMSGraphAADAPPPermission -Application $_};
+	        ScriptBlock = {Get-MonkeyMSGraphApplicationPermission -InputObject $_ -AddToObject};
             Arguments = $new_arg;
 	        Runspacepool = $O365Object.monkey_runspacePool;
 	        ReuseRunspacePool = $true;
@@ -122,73 +121,19 @@ function Get-MonkeyAADApplication {
 	        BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
 	        BatchSize = $O365Object.nestedRunspaces.BatchSize;
         }
-		$app_perms = $all_applications | Invoke-MonkeyJob @jobParam
-		<#
-		#Get libs for runspace
-        $rsOptions = Initialize-MonkeyScan -Provider EntraID
-        $p = @{
-            Command = "Get-MonkeyMSGraphAADAPPPermission";
-            ImportCommands = $rsOptions.libCommands;
-            ImportVariables = $O365Object.runspace_vars;
-            ImportModules = $O365Object.runspaces_modules;
-            StartUpScripts = $O365Object.runspace_init;
-            ThrowOnRunspaceOpenError = $true;
-            Debug = $O365Object.VerboseOptions.Debug;
-            Verbose = $O365Object.VerboseOptions.Verbose;
-            Throttle = $O365Object.nestedRunspaceMaxThreads;
-            MaxQueue = $O365Object.MaxQueue;
-            BatchSleep = $O365Object.BatchSleep;
-            BatchSize = $O365Object.BatchSize;
-        }
-        #>
-	}
-	end {
-		if ($all_applications) {
-			$all_applications.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.app_registrations')
+		$all_applications = $all_applications | Invoke-MonkeyJob @jobParam
+        #Get Application management policies
+        $jobParam.ScriptBlock = {Get-MonkeyMSGraphApplicationManagementPolicy -InputObject $_ -AddToObject};
+		$all_applications = $all_applications | Invoke-MonkeyJob @jobParam
+        If($all_applications){
+            #Add to returndata object
+            $all_applications.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.app_registrations')
 			[pscustomobject]$obj = @{
 				Data = $all_applications;
 				Metadata = $monkey_metadata;
 			}
 			$returnData.aad_app_registrations = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID applications",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Tags = @('AzureMSGraphApplicationsEmptyResponse')
-			}
-			Write-Verbose @msg
-		}
-		if ($app_perms) {
-			$app_perms.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.application_permissions')
-			[pscustomobject]$obj = @{
-				Data = $app_perms;
-				Metadata = $monkey_metadata;
-			}
-			$returnData.aad_app_permissions = $obj
-		}
-		else {
-			$msg = @{
-				MessageData = ($message.MonkeyEmptyResponseMessage -f "Microsoft Entra ID application's permissions",$O365Object.TenantID);
-				callStack = (Get-PSCallStack | Select-Object -First 1);
-				logLevel = "verbose";
-				InformationAction = $O365Object.InformationAction;
-				Verbose = $O365Object.Verbose;
-				Tags = @('AzureMSGraphAppRBACEmptyResponse')
-			}
-			Write-Verbose @msg
-		}
+        }
+        
 	}
 }
-
-
-
-
-
-
-
-
-

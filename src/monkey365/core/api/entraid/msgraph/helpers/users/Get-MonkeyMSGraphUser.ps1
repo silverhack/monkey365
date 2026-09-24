@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,6 +59,9 @@ Function Get-MonkeyMSGraphUser {
         [Parameter(Mandatory=$false, HelpMessage="Bypass MFA check")]
         [Switch]$BypassMFACheck,
 
+        [Parameter(Mandatory=$false, HelpMessage="Get Per-User MFA")]
+        [Switch]$PerUserMFA,
+
         [parameter(Mandatory=$false,HelpMessage="API version")]
         [ValidateSet("v1.0","beta")]
         [String]$APIVersion = "v1.0"
@@ -67,10 +70,11 @@ Function Get-MonkeyMSGraphUser {
         $Environment = $O365Object.Environment
         #Get Graph Auth
         $graphAuth = $O365Object.auth_tokens.MSGraph
+        $monkeyJob = $null -ne (Get-Command -Name Invoke-MonkeyJob -ErrorAction Ignore)
     }
     Process{
-        if($PSCmdlet.ParameterSetName -eq 'UserId'){
-            $params = @{
+        If($PSCmdlet.ParameterSetName -eq 'UserId'){
+            $p = @{
                 Authentication = $graphAuth;
                 ObjectType = 'users';
                 ObjectId = $UserId;
@@ -85,10 +89,10 @@ Function Get-MonkeyMSGraphUser {
                 Debug = $O365Object.debug;
             }
         }
-        elseif($PSCmdlet.ParameterSetName -eq 'UserPrincipalName'){
+        ElseIf($PSCmdlet.ParameterSetName -eq 'UserPrincipalName'){
             #Set filter
             $filter = ("startswith(userPrincipalName,'{0}')" -f $UserPrincipalName)
-            $params = @{
+            $p = @{
                 Authentication = $graphAuth;
                 ObjectType = 'users';
                 Filter = $filter;
@@ -103,8 +107,8 @@ Function Get-MonkeyMSGraphUser {
                 Debug = $O365Object.debug;
             }
         }
-        else{
-            $params = @{
+        Else{
+            $p = @{
                 Authentication = $graphAuth;
                 ObjectType = 'users';
                 Environment = $Environment;
@@ -120,12 +124,81 @@ Function Get-MonkeyMSGraphUser {
                 Debug = $O365Object.debug;
             }
         }
-        $user = Get-MonkeyMSGraphObject @params
-        #return data
+        $user = Get-MonkeyMSGraphObject @p
+        #Get Per-User MFA if present
+        If($PerUserMFA.IsPresent){
+            #Set null
+            $PerUserMFASettings = $null;
+            #Check if MonkeyJob is present
+            If($monkeyJob -and $null -ne $O365Object.monkey_runspacePool -and @($user).Count -gt 1){
+                $new_arg = @{
+				    APIVersion = 'beta';
+			    }
+			    $p = @{
+				    ScriptBlock = { Get-MonkeyMSGraphPerUserMFA -User $_ };
+				    Arguments = $new_arg;
+				    Runspacepool = $O365Object.monkey_runspacePool;
+				    ReuseRunspacePool = $true;
+				    Debug = $O365Object.VerboseOptions.Debug;
+				    Verbose = $O365Object.VerboseOptions.Verbose;
+				    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				    BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			    }
+			    $PerUserMFASettings = $user | Invoke-MonkeyJob @p | ForEach-Object {
+                    $uid = $_.'@odata.context'.Split('()')[1].Replace("'",'').Trim()
+                    If($uid){
+                        $_ | Add-Member -MemberType NoteProperty -Name id -Value $uid
+                    }
+                    $_
+                }
+            }
+            Else{
+                #Get per-user's MFA details
+                $PerUserMFASettings = $user | Get-MonkeyMSGraphPerUserMFA -APIVersion beta | ForEach-Object {
+                    $uid = $_.'@odata.context'.Split('()')[1].Replace("'",'').Trim()
+                    If($uid){
+                        $_ | Add-Member -MemberType NoteProperty -Name id -Value $uid
+                    }
+                    $_
+                }
+            }
+            If($null -ne $PerUserMFASettings){
+                ForEach($u in @($user).GetEnumerator()){
+                    $uid = @($PerUserMFASettings).Where({$_.id -match $u.id});
+                    $perUserMfaState = ($uid | Select-Object -ExpandProperty perUserMfaState -ErrorAction Ignore)
+                    If($uid.count -gt 0){
+                        $u | Add-Member -MemberType NoteProperty -Name perUserMfaState -Value $perUserMfaState
+                    }
+                    Else{
+                        $u | Add-Member -MemberType NoteProperty -Name perUserMfaState -Value "Unknown"
+                    }
+                }
+            }
+        }
         #Azure PowerShell client is not able to get details about user's MFA
         If($user -and $BypassMFACheck.IsPresent -eq $false -and $graphAuth.clientId -ne (Get-WellKnownAzureService -AzureService AzurePowerShell)){
-            #Get user's MFA details
-            $user | Get-MonkeyMsGraphMFAUserDetail
+            If($monkeyJob -and $null -ne $O365Object.monkey_runspacePool -and @($user).Count -gt 1){
+                $new_arg = @{
+				    APIVersion = $APIVersion;
+			    }
+			    $p = @{
+				    ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -User $_ };
+				    Arguments = $new_arg;
+				    Runspacepool = $O365Object.monkey_runspacePool;
+				    ReuseRunspacePool = $true;
+				    Debug = $O365Object.VerboseOptions.Debug;
+				    Verbose = $O365Object.VerboseOptions.Verbose;
+				    MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+				    BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+				    BatchSize = $O365Object.nestedRunspaces.BatchSize;
+			    }
+			    $user | Invoke-MonkeyJob @p
+            }
+            Else{
+                #Get user's MFA details
+                $user | Get-MonkeyMsGraphMFAUserDetail
+            }
         }
         Else{
             $user

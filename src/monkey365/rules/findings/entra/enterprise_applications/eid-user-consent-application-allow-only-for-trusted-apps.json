@@ -1,0 +1,130 @@
+{
+    "args": [],
+    "provider": "EntraID",
+    "serviceType": "Enterprise Applications",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure that 'User consent for applications' is set to 'Allow user consent for apps from verified publishers, for selected permissions'",
+    "description": "Allow users to provide consent for selected permissions when a request is coming from a verified publisher.",
+    "rationale": "If Microsoft Entra ID is running as an identity provider for third-party applications, permissions and consent should be limited to administrators or pre-approved. Malicious applications may attempt to exfiltrate data or abuse privileged user accounts.",
+    "impact": "Enforcing this setting may create additional requests that administrators need to review.",
+    "remediation": {
+        "text": "
+			#### Remediate from Azure Portal 
+			1. From Azure Home select the Portal Menu 
+			2. Select Microsoft Entra ID 
+			3. Under Manage, select Enterprise applications 
+			4. Under Security, select `Consent and permissions` 
+			5. Under Manage, select User consent settings 
+			6. Under `User consent for applications`, select `Allow user consent for apps from verified publishers, for selected permissions` 
+			7. Click `Save`
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-userconsent?pivots=ms-graph#configure-user-consent-to-applications",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-privilegedaccess#pa-1-separate-and-limit-highly-privilegedadministrative-users",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-governancestrategy#gs-2-define-and-implement-enterprise-segmentationseparation-of-",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-governancestrategy#gs-6-define-and-implement-identity-and-privileged-access-strategy",
+        "https://learn.microsoft.com/enus/powershell/module/microsoft.graph.identity.signins/get-"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "5.13",
+            "profile": [
+                "Level 2"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "aad_authorization_policy",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "tenantAuthPolicy.defaultUserRolePermissions.permissionGrantPoliciesAssigned.Count",
+                                "ne",
+                                "0"
+                            ],
+                            [
+                                "tenantAuthPolicy.defaultUserRolePermissions.permissionGrantPoliciesAssigned",
+                                "eq",
+                                "ManagePermissionGrantsForSelf.microsoft-user-default-legacy"
+                            ]
+                        ],
+                        "operator": "and"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"tenantAuthPolicy.displayName": "Display Name",
+                    "tenantAuthPolicy.description": "Description"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"tenantAuthPolicy.displayName": "Display Name",
+                    "tenantAuthPolicy.description": "Description"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "Ensure that 'User consent for applications' is set to 'Allow user consent for apps from verified publishers, for selected permissions'",
+                "defaultMessage": "Ensure that 'User consent for applications' is set to 'Allow user consent for apps from verified publishers, for selected permissions'"
+            },
+            "properties": {
+                "resourceName": "tenantAuthPolicy.displayName",
+                "resourceId": "tenantAuthPolicyId",
+                "resourceType": "EntraAuthorizationPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_allow_consent_apps_from_trusted_publishers",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"tenantAuthPolicyId"
+    ],
+    "id": "entraid_applications_002"
+}

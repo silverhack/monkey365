@@ -1,0 +1,639 @@
+{
+    "title": "Monkey365 config file",
+    "httpSettings": {
+        "userAgent": ""
+    },
+    "performance": {
+		"BatchSleep": 10000,
+		"BatchSize": 50,
+        "nestedRunspaces": {
+          "MaxQueue": "5"
+        }
+    },
+    "htmlSettings": {
+        "convertPassFindingToGood": true,
+		"assets":{
+			"repository":"https://github.com/silverhack/monkey365assets",
+			"branch":"main",
+			"useLatestTag":"true"
+		},
+		"localHtmlReport": {
+			"assetsPath": "localassets",
+			"enabled": "false"
+		},
+		"htmlReportFromCDN": "true"
+    },
+    "ruleSettings": {
+        "rules": "rules/",
+        "azureDefaultRuleset": "rules/rulesets/cis_azure_3.0.json",
+        "m365DefaultRuleset": "rules/rulesets/cis_m365_5.0.json"
+    },
+    "logging": {
+        "default":[
+            {
+                "name": "File",
+                "type": "file",
+                "configuration": {
+                    "filename": "monkey365_yyyyMMddhhmmss.log",
+                    "includeExceptions": true,
+                    "includeDebug": true,
+                    "includeVerbose": true,
+                    "includeError": true
+                }
+            }
+        ],
+        "loggers":[
+            {
+                "name": "File",
+                "type": "file",
+                "configuration": {
+                    "filename": "monkey365_exceptions_yyyyMMddhhmmss.log",
+                    "includeExceptions": true,
+					"includeError": true
+                }
+            }
+        ]
+    },
+    "o365": {
+        "licenseInfo": "core/utils/licenses/licenses.json",
+        "SharePointOnline": {
+			"sitePermissionsOptions": {
+				"scanAllSites": "false",
+				"excludeFolders": "true",
+				"includeLists": "true",
+				"includeListItems": "true",
+				"includeInheritedPermissions": "true"
+			},
+			"Identity": {
+				"ExpandMembers": "true"
+			},
+			"Subsites": {
+				"Recursive": "true",
+				"Depth": "10"
+			},
+			"SharingLinks": {
+				"Include":[
+					"Documents"
+				]
+			}
+        },
+        "ExchangeOnline": {
+          "GetExchangeGroups": "true",
+          "GetPurViewGroups": "false",
+		  "userRoleAssignmentPolicy":{
+		      "excludedRoles":[
+			      "My Custom Apps",
+				  "My Marketplace Apps",
+				  "My ReadWriteMailbox Apps"
+			  ]
+		  }
+        }
+    },
+    "entraId": {
+		"forceRequestMFA": "false",
+		"auditLog":{
+			"enabled": "false",
+			"AuditLogDaysAgo": "-7"
+		},
+		"mgGraph":{
+			"useMgGraph": "false",
+			"scopes": [
+				"User.Read.All",
+				"Application.Read.All",
+				"Policy.Read.All",
+				"Policy.Read.AuthenticationMethod",
+				"Organization.Read.All",
+				"OrgSettings-AppsAndServices.Read.All",
+				"OrgSettings-Forms.Read.All",
+				"RoleManagement.Read.Directory",
+				"GroupMember.Read.All",
+				"Directory.Read.All",
+				"PrivilegedEligibilitySchedule.Read.AzureADGroup",
+				"PrivilegedAccess.Read.AzureADGroup",
+				"RoleManagementPolicy.Read.AzureADGroup",
+				"Group.Read.All",
+				"SecurityEvents.Read.All",
+				"IdentityRiskEvent.Read.All",
+				"UserAuthenticationMethod.Read.All",
+				"AuditLog.Read.All",
+				"AccessReview.Read.All",
+				"DeviceManagementConfiguration.Read.All",
+				"DeviceManagementServiceConfig.Read.All"
+			]
+		},
+		"provider": {
+			"portal":{
+				"GetManagedApplicationsByPrincipalId": "true"
+			},
+			"msgraph":{
+				"api_version": "beta"
+			}
+		}
+    },
+    "resourceManager": [
+        {
+            "name": "azureDocumentDB",
+            "resource": {
+              "api_version": "2025-11-01-preview",
+              "provider": "Microsoft.DocumentDB"
+            }
+        },
+        {
+            "name": "azureBotServices",
+            "resource": {
+              "api_version": "2023-09-15-preview",
+              "provider": "Microsoft.BotService"
+            }
+        },
+        {
+            "name": "azureWebApps",
+            "resource": {
+              "api_version": "2022-03-01",
+              "provider": "Microsoft.Web"
+            }
+        },
+		{
+            "name": "azureAppServiceEnvironment",
+            "resource": {
+              "api_version": "2025-03-01",
+              "provider": "Microsoft.Web"
+            }
+        },
+        {
+            "name": "azureForSQL",
+            "resource": {
+              "api_version": "2025-01-01",
+              "provider": "Microsoft.Sql"
+           }
+        },
+		{
+            "name": "managedInstances",
+            "resource": {
+              "api_version": "2024-11-01-preview",
+              "provider": "Microsoft.Sql"
+           }
+        },
+		{
+            "name": "SqlVirtualMachines",
+            "resource": {
+              "api_version": "2023-10-01",
+              "provider": "Microsoft.Sql"
+           }
+        },
+		{
+            "name": "azureForSQLFW",
+            "resource": {
+              "api_version": "2014-04-01",
+              "provider": "Microsoft.Sql"
+           }
+        },
+        {
+            "name": "azureForPostgreSQL",
+            "resource": {
+              "api_version": "2024-11-01-preview",
+              "provider": "Microsoft.DBforPostgreSQL"
+            }
+        },
+		{
+            "name": "azureForPostgreSQLFlexible",
+            "resource": {
+              "api_version": "2025-08-01",
+              "provider": "Microsoft.DBforPostgreSQL"
+            }
+        },
+		{
+            "name": "azureForPostgreSQLFW",
+            "resource": {
+              "api_version": "2017-12-01",
+              "provider": "Microsoft.DBforPostgreSQL"
+            }
+        },
+        {
+            "name": "azureForMySQL",
+            "resource": {
+              "api_version": "2017-12-01",
+              "provider": "Microsoft.DBforMySQL"
+            }
+        },
+		{
+            "name": "azureForMySQLFlexible",
+            "resource": {
+              "api_version": "2025-06-30",
+              "provider": "Microsoft.DBforMySQL"
+            }
+        },
+        {
+            "name": "azureClassicVM",
+            "resource": {
+              "api_version": "2017-04-01",
+              "provider": "microsoft.ClassicCompute"
+            }
+        },
+        {
+            "name": "azureVm",
+            "resource": {
+              "api_version": "2025-04-01",
+              "provider": "microsoft.Compute"
+            }
+        },
+        {
+            "name": "azureDisk",
+            "resource": {
+              "api_version": "2024-03-02",
+              "provider": "microsoft.Compute"
+            }
+        },
+        {
+            "name": "azureSecurityStatuses",
+            "resource": {
+              "api_version": "2015-06-01-preview",
+              "provider": "microsoft.Security"
+            }
+        },
+        {
+            "name": "azureAlerts",
+            "resource": {
+              "api_version": "2021-01-01",
+              "provider": "microsoft.Security"
+            }
+        },
+        {
+            "name": "azureContacts",
+            "resource": {
+              "api_version": "2023-12-01-preview",
+              "provider": "microsoft.Security"
+            }
+        },
+        {
+            "name": "azurePricings",
+            "resource": {
+              "api_version": "2025-10-01-preview",
+              "provider": "microsoft.Security"
+            }
+        },
+		{
+            "name": "autoProvisioning",
+            "resource": {
+              "api_version": "2017-08-01-preview",
+              "provider": "microsoft.Security"
+            }
+        },
+        {
+            "name": "azureInsights",
+            "resource": {
+              "api_version": "2020-10-01",
+              "provider": "microsoft.insights"
+            }
+        },
+        {
+            "name": "azureLogProfile",
+            "resource": {
+              "api_version": "2016-03-01",
+              "provider": "microsoft.insights"
+            }
+        },
+        {
+            "name": "azureNSG",
+            "resource": {
+              "api_version": "2025-03-01",
+              "provider": "Microsoft.Network"
+            }
+        },
+        {
+            "name": "azureAuthorization",
+            "resource": {
+              "api_version": "2015-06-01",
+              "provider": "Microsoft.Authorization"
+            }
+        },
+        {
+            "name": "azureStorage",
+            "resource": {
+              "api_version": "2025-08-01",
+              "provider": "Microsoft.Storage"
+            }
+        },
+        {
+            "name": "azureClassicStorage",
+            "resource": {
+              "api_version": "2016-11-01",
+              "provider": "Microsoft.ClassicStorage"
+            }
+        },
+        {
+            "name": "azureKeyVault",
+            "resource": {
+              "api_version": "2026-02-01",
+              "provider": "Microsoft.KeyVault"
+            }
+        },
+        {
+            "name": "azureSecurityPolicies",
+            "resource": {
+              "api_version": "2015-06-01-preview",
+              "provider": "Microsoft.Security"
+            }
+        },
+		{
+            "name": "defenderSetting",
+            "resource": {
+              "api_version": "2022-05-01",
+              "provider": "Microsoft.Security"
+            }
+        },
+        {
+            "name": "azureAppGateway",
+            "resource": {
+              "api_version": "2023-02-01",
+              "provider": "Microsoft.Network"
+            }
+        },
+        {
+            "name": "azureCognitive",
+            "resource": {                
+              "api_version": "2024-10-01",
+              "provider": "Microsoft.CognitiveServices"
+            }
+        },
+        {
+            "name": "azureContainerRegistry",
+            "resource": {
+              "api_version": "2022-02-01-preview",
+              "provider": "Microsoft.ContainerRegistry"
+            }
+        },
+		{
+            "name": "azurePublicIPAddress",
+            "resource": {
+              "api_version": "2024-01-01",
+              "provider": "Microsoft.Network"
+            }
+        },
+        {
+            "name": "aadds",
+            "resource": {
+              "api_version": "2017-06-01",
+              "provider": "Microsoft.AAD"
+            }
+        },
+        {
+            "name": "resourceGraph",
+            "resource": {
+              "api_version": "2019-04-01",
+              "provider": "Microsoft.ResourceGraph"
+            }
+        },
+        {
+            "name": "azureKubernetes",
+            "resource": {
+              "api_version": "2023-06-01",
+              "provider": "Microsoft.ContainerService/managedClusters"
+            }
+        },
+        {
+            "name": "azureLocks",
+            "resource": {
+              "api_version": "2016-09-01",
+              "provider": "Microsoft.Authorization"
+            }
+        },
+        {
+            "name": "azureRecommendations",
+            "resource": {
+              "api_version": "2025-05-01-preview",
+              "provider": "Microsoft.Advisor"
+            }
+        },
+		{
+            "name": "bastionHost",
+            "resource": {
+              "api_version": "2025-03-01",
+              "provider": "Microsoft.Network"
+            }
+        },
+        {
+            "name": "azureContainers",
+            "resource": {
+              "api_version": "2025-09-01",
+              "provider": "Microsoft.ContainerInstance"
+            }
+        },
+		{
+            "name": "policyAssignments",
+            "resource": {
+              "api_version": "2025-11-01",
+              "provider": "Microsoft.Authorization"
+            }
+        },
+		{
+            "name": "standardAssignments",
+            "resource": {
+              "api_version": "2024-08-01",
+              "provider": "Microsoft.Security"
+            }
+        },
+		{
+            "name": "serverVulnerabilityAssessment",
+            "resource": {
+              "api_version": "2023-05-01",
+              "provider": "Microsoft.Security"
+            }
+        },
+		{
+            "name": "roleAssignments",
+            "resource": {
+              "api_version": "2022-04-01",
+              "provider": "Microsoft.Authorization"
+            }
+        },
+		{
+            "name": "roleDefinition",
+            "resource": {
+              "api_version": "2022-04-01",
+              "provider": "Microsoft.Authorization"
+            }
+        },
+		{
+            "name": "resourceGroup",
+            "resource": {
+              "api_version": "2022-09-01",
+              "provider": "false"
+            }
+        },
+		{
+            "name": "resources",
+            "resource": {
+              "api_version": "2022-09-01",
+              "provider": "false"
+            }
+        },
+		{
+            "name": "tenant",
+            "resource": {
+              "api_version": "2022-09-01",
+              "provider": "false"
+            }
+        },
+		{
+            "name": "suscriptions",
+            "resource": {
+              "api_version": "2022-09-01",
+              "provider": "false"
+            }
+        },
+		{
+            "name": "Microsoft.Subscription",
+            "resource": {
+              "api_version": "2021-01-01-privatepreview",
+              "provider": "Microsoft.Subscription"
+            }
+        },
+		{
+            "name": "DiagnosticSettings",
+            "resource": {
+              "api_version": "2021-05-01-preview",
+              "provider": "Microsoft.Insights"
+            }
+        },
+		{
+            "name": "APIManagement",
+            "resource": {
+              "api_version": "2022-09-01-preview",
+              "provider": "Microsoft.ApiManagement"
+            }
+        },
+		{
+            "name": "ProviderOperations",
+            "resource": {
+              "api_version": "2022-04-01",
+              "provider": "Microsoft.Authorization"
+            }
+        },
+		{
+            "name": "azureAssessments",
+            "resource": {
+              "api_version": "2021-06-01",
+              "provider": "Microsoft.Security"
+            }
+        },
+		{
+            "name": "defenderAutomations",
+            "resource": {
+              "api_version": "2023-12-01-preview",
+              "provider": "Microsoft.Security"
+            }
+        },
+		{
+            "name": "azureSubAssessments",
+            "resource": {
+              "api_version": "2020-01-01",
+              "provider": "Microsoft.Security"
+            }
+        },
+		{
+            "name": "azureRedis",
+            "resource": {
+              "api_version": "2025-08-01-preview",
+              "provider": "Microsoft.Cache"
+            }
+        },
+		{
+            "name": "azureVMScaleSet",
+            "resource": {
+              "api_version": "2024-11-01",
+              "provider": "Microsoft.Compute"
+            }
+        },
+		{
+            "name": "azureVMNetworkInterface",
+            "resource": {
+              "api_version": "2023-09-01",
+              "provider": "Microsoft.Network"
+            }
+        },
+		{
+            "name": "azureVPNConnection",
+            "resource": {
+              "api_version": "2024-05-01",
+              "provider": "Microsoft.Network"
+            }
+        },
+		{
+            "name": "azureVirtualNetwork",
+            "resource": {
+              "api_version": "2024-05-01",
+              "provider": "Microsoft.Network"
+            }
+        },
+		{
+            "name": "azureVPNGateway",
+            "resource": {
+              "api_version": "2024-05-01",
+              "provider": "Microsoft.Network"
+            }
+        },
+		{
+            "name": "azureFirewall",
+            "resource": {
+              "api_version": "2024-01-01",
+              "provider": "Microsoft.Network"
+            }
+        },
+		{
+            "name": "azureAnalysisServices",
+            "resource": {
+              "api_version": "2017-08-01",
+              "provider": "Microsoft.AnalysisServices"
+            }
+        },
+		{
+            "name": "azureDataBricksAccessConnector",
+            "resource": {
+              "api_version": "2026-01-01",
+              "provider": "Microsoft.Databricks"
+            }
+        },
+		{
+            "name": "azureDataFactory",
+            "resource": {
+              "api_version": "2018-06-01",
+              "provider": "Microsoft.DataFactory"
+            }
+        },
+		{
+            "name": "azureMachineLearningServices",
+            "resource": {
+              "api_version": "2024-10-01",
+              "provider": "Microsoft.MachineLearningServices"
+            }
+        },
+		{
+            "name": "azureNetworkWatcher",
+            "resource": {
+              "api_version": "2025-05-01",
+              "provider": "Microsoft.Network"
+            }
+        },
+		{
+            "name": "azureInsightsComponent",
+            "resource": {
+              "api_version": "2020-02-02",
+              "provider": "microsoft.insights"
+            }
+        },
+		{
+            "name": "azureVault",
+            "resource": {
+              "api_version": "2025-02-01",
+              "provider": "Microsoft.RecoveryServices"
+            }
+        },
+		{
+            "name": "managedIdentity",
+            "resource": {
+              "api_version": "2024-11-30",
+              "provider": "Microsoft.ManagedIdentity"
+            }
+        }
+    ]   
+}

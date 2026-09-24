@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -99,6 +99,33 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                 }
             }
         }
+        #Set Service Principal param
+        $sps_arg = @{
+            APIVersion = $APIVersion;
+            Expand = 'owners';
+        }
+        $sp_job = @{
+			ScriptBlock = { Get-MonkeyMSGraphServicePrincipal -ServicePrincipalId $_};
+            Arguments = $sps_arg;
+	        Runspacepool = $O365Object.monkey_runspacePool;
+	        ReuseRunspacePool = $true;
+	        Debug = $O365Object.VerboseOptions.Debug;
+	        Verbose = $O365Object.VerboseOptions.Verbose;
+	        MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+	        BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+	        BatchSize = $O365Object.nestedRunspaces.BatchSize;
+		}
+        #Set Service Principal update property job param
+        $update_sp_job = @{
+			ScriptBlock = { Update-ServicePrincipal -InputObject $_ };
+	        Runspacepool = $O365Object.monkey_runspacePool;
+	        ReuseRunspacePool = $true;
+	        Debug = $O365Object.VerboseOptions.Debug;
+	        Verbose = $O365Object.VerboseOptions.Verbose;
+	        MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+	        BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+	        BatchSize = $O365Object.nestedRunspaces.BatchSize;
+		}
     }
     Process{
         $p = @{
@@ -147,9 +174,10 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                     #Get effective users and remove duplicate members
                     $uniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
                     $extendedUniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
+                    $allServicePrincipals = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
                     $alluniqueUsers = @($users).Where({$_.'@odata.type' -match '#microsoft.graph.user'}) | Sort-Object -Property Id -Unique -ErrorAction Ignore
-                    if($null -ne $alluniqueUsers){
-                        foreach($usr in @($alluniqueUsers)){
+                    If($null -ne $alluniqueUsers){
+                        ForEach($usr in @($alluniqueUsers)){
                             [void]$uniqueUsers.Add($usr);
                         }
                     }
@@ -169,11 +197,26 @@ Function Get-MonkeyMSGraphEntraRoleAssignment {
                     $servicePrincipals = @($allMembers).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
                     #Check if transitive members had service principals
                     $transitiveSps = @($users).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
-                    foreach($sp in $transitiveSps){
+                    ForEach($sp in $transitiveSps){
                         [void]$servicePrincipals.Add($sp)
                     }
+                    #Invoke Job
+                    If ($servicePrincipals.Count -gt 0){
+                        #Get sp's id
+                        $spIds = $servicePrincipals | Select-Object -ExpandProperty Id -ErrorAction Ignore
+                        #Invoke job
+                        $sps = $spIds | Invoke-MonkeyJob @sp_job
+                        #Update service principals
+                        $sps = $sps | Invoke-MonkeyJob @update_sp_job
+                        #Check if returned objects
+                        If($null -ne $sps -and @($sps).Count -gt 0){
+                            ForEach($sp in @($sps)){
+                                [void]$allServicePrincipals.Add($sp);
+                            }
+                        }
+                    }
                     #Add Serviceprincipals to object
-                    $roleObject.servicePrincipals = $servicePrincipals;
+                    $roleObject.servicePrincipals = $allServicePrincipals;
                     #Count objects
                     $roleObject.totalActiveusers = $roleObject.effectiveUsers.Count;
                     #Get duplicate users

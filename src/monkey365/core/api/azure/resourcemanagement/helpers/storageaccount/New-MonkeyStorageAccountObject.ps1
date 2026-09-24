@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ Function New-MonkeyStorageAccountObject {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
 	[CmdletBinding()]
 	Param (
-        [parameter(Mandatory= $True, ValueFromPipeline = $True, HelpMessage="Storate account object")]
+        [parameter(Mandatory= $True, ValueFromPipeline = $True, HelpMessage="Storage account object")]
         [Object]$InputObject
     )
     Process{
@@ -168,11 +168,18 @@ Function New-MonkeyStorageAccountObject {
                     defenderForStorage = $null;
                 };
                 containers = $null;
-                diagnosticSettings = [PSCustomObject]@{
+                classicDiagnosticSettings = [PSCustomObject]@{
                     file = $null;
                     queue = $null;
                     blob = $null;
                     table = $null;
+                };
+                diagnosticSettings = [PSCustomObject]@{
+                    root = [System.Collections.Generic.List[System.Object]]::new();
+                    file = [System.Collections.Generic.List[System.Object]]::new();
+                    queue = [System.Collections.Generic.List[System.Object]]::new();
+                    blob = [System.Collections.Generic.List[System.Object]]::new();
+                    table = [System.Collections.Generic.List[System.Object]]::new();
                 };
                 locks = $null;
                 rawObject = $InputObject;

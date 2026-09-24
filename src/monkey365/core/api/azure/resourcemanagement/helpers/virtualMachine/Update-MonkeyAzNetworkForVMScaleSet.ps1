@@ -35,9 +35,7 @@ Function Update-MonkeyAzNetworkForVMScaleSet {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
 	[CmdletBinding()]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
 	Param (
         [Parameter(Mandatory=$True, ValueFromPipeline = $True)]
         [Object]$InputObject,

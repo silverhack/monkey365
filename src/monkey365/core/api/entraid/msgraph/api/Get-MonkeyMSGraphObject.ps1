@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -67,6 +67,10 @@ Function Get-MonkeyMSGraphObject{
 
         [parameter(Mandatory=$False, HelpMessage='Me')]
         [Switch]$me,
+
+        [parameter(Mandatory=$false, HelpMessage="Source. Used in SignIn logs")]
+        [ValidateSet("kds")]
+        [String]$Source,
 
         [parameter(Mandatory=$False, HelpMessage='Add consistency level header')]
         [Switch]$AddConsistencyLevelHeader,
@@ -146,10 +150,10 @@ Function Get-MonkeyMSGraphObject{
         }
         If($orderBy){
             If($null -ne $my_filter){
-                $my_filter = ('{0}&$orderby={1}' -f $my_filter, $orderBy)
+                $my_filter = ('{0}&$orderby={1}' -f $my_filter, [uri]::EscapeDataString($orderBy))
             }
             Else{
-                $my_filter = ('?$orderby={0}' -f $orderBy)
+                $my_filter = ('?$orderby={0}' -f [uri]::EscapeDataString($orderBy))
             }
         }
         If($Top){
@@ -165,7 +169,15 @@ Function Get-MonkeyMSGraphObject{
                 $my_filter = ('{0}&$count=true' -f $my_filter)
             }
             Else{
-                $my_filter = ('?$count=true' -f $Top)
+                $my_filter = ('?$count=true')
+            }
+        }
+        If($Source){
+            If($null -ne $my_filter){
+                $my_filter = ('{0}&source={1}' -f $my_filter, $Source)
+            }
+            Else{
+                $my_filter = ('?source=={0}' -f $Source)
             }
         }
         If($me){

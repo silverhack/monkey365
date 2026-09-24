@@ -1,0 +1,166 @@
+{
+    "provider": "EntraID",
+    "serviceType": "Enterprise Applications",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure Enterprise Applications with High Privilege API Permissions Have Owners Assigned",
+    "description": "Orphaned applications with elevated permissions create significant security, operational, and governance risks. Without designated owners, there is no clear accountability for managing the application, responding to security incidents, conducting access reviews, or ensuring the application continues to serve a legitimate business purpose.",
+    "rationale": "Enterprise applications without owners present multiple critical concerns. When an application possesses high privilege Microsoft Graph API permissions such as `Directory.ReadWrite.All`, `Application.ReadWrite.All`, `User.ReadWrite.All`, or `RoleManagement.ReadWrite.Directory`, it can perform extensive operations across the organisation's Microsoft 365 environment. These permissions grant capabilities including reading and modifying user profiles, managing applications, accessing mailboxes, manipulating directory roles, and controlling organisational resources. Without assigned owners, there is no designated individual responsible for monitoring the application's usage, rotating credentials, responding to anomalous activity, or justifying the continued necessity of these privileges.",
+    "impact": "The absence of application ownership creates operational blind spots. When security teams detect suspicious activity associated with an orphaned application, they cannot quickly identify the business stakeholder to validate whether the activity is legitimate or malicious.",
+    "remediation": {
+        "text": "
+			###### To remediate using the UI:
+			1 Navigate to **Microsoft Entra Admin Centre** → **Identity** → **Applications** → **Enterprise applications**
+			2 Select the application and navigate to **Permissions**
+			3 Select the **Admin consent** tab to review granted permissions
+			4 Identify permissions that exceed application's functional requirements
+			6 Apply principle of least privilege
+				* `Directory.ReadWrite.All` → Consider scoped alternatives like `User.ReadWrite.All` or `Group.ReadWrite.All`
+				* `Application.ReadWrite.All` → Consider `Application.Read.All` if write access unnecessary
+				* `Mail.ReadWrite` → Consider `Mail.Read` or specific mailbox access through application access policies
+				* `AppRoleAssignment.ReadWrite.All` → Remove if application doesn't manage permissions
+			7 Revoke unnecessary permissions by selecting the **...** control and choosing **Revoke permission**
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/overview-assign-app-owners",
+        "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/manage-application-permissions?pivots=portal",
+		"https://learn.microsoft.com/en-us/graph/permissions-reference",
+		"https://learn.microsoft.com/en-us/entra/identity-platform/security-best-practices-for-app-registration"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "5.0.0",
+            "reference": "5.3.4",
+            "profile": [
+				"E5 Level 1"
+			]
+        }
+    ],
+    "level": "high",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_managed_app",
+        "subPath": null,
+        "selectCondition": {
+            
+        },
+		"data": {
+            "properties": {
+				"id": "id",
+                "accountEnabled": "accountEnabled",
+                "appDisplayName": "appDisplayName",
+				"appDescription": "appDescription",
+				"appId": "appId",
+				"displayName": "displayName",
+				"signInAudience": "signInAudience",
+				"foreign":"foreign",
+				"owners": "owners",
+				"permissions.*": "permissions"
+            },
+            "expandObject": "permissions"
+        },
+        "query": [
+			{
+				"filter": [
+				    {
+					    "include": "enterprise-app-permissions.json"
+				    }
+                ]
+            },
+			{
+                "connectOperator":"and",
+				"filter": [
+                    {
+                        "conditions": [
+							[
+                                "eq",
+								"owners"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "Application Id",
+					"appDisplayName": "Display Name",
+					"apiName": "Resource Display Name",
+					"ClaimValue": "Permision",
+					"PermissionDisplayName": "Permission Name"
+                }
+            },
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"id": "Application Id",
+					"appDisplayName": "Display Name",
+					"apiName": "Resource Display Name",
+					"ClaimValue": "Permision",
+					"PermissionDisplayName": "Permission Name"
+                }
+            },
+            "status": {
+                "keyName": [
+					"principalDisplayName"
+				],
+                "message": "Ensure {principalDisplayName} with High Privilege API Permissions Have Owners Assigned",
+                "defaultMessage": "Ensure Enterprise Applications with High Privilege API Permissions Have Owners Assigned"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraEnterpriseApplication"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_app_with_high_priv_lacks_owner",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id",
+		"displayName"
+    ],
+    "id": "entraid_1128"
+}

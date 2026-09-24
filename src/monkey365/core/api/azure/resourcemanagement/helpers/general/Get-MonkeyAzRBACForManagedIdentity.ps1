@@ -44,7 +44,7 @@ function Get-MonkeyAzRBACForManagedIdentity{
         #Set array
         $allIdentities = [System.Collections.Generic.List[System.Object]]::new()
         #Get Config
-        $_config = @($O365Object.internal_config.ResourceManager).Where{$_.Name -eq "managedIdentity"} | Select-Object -ExpandProperty resource
+        $_config = @($O365Object.internal_config.ResourceManager).Where({$_.Name -eq "managedIdentity"}) | Select-Object -ExpandProperty resource
     }
     Process{
         Try{

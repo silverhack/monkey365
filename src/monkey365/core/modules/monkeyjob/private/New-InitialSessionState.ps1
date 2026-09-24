@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ Function New-InitialSessionState{
 
         [Parameter(HelpMessage="ApartmentState of the thread")]
         [ValidateSet("STA","MTA")]
-        [String]$ApartmentState = "STA",
+        [String]$ApartmentState = "MTA",
 
         [Parameter(Mandatory=$False, HelpMessage='ThrowOnRunspaceOpenError')]
         [Switch]$ThrowOnRunspaceOpenError
@@ -72,19 +72,25 @@ Function New-InitialSessionState{
     Process{
         If($null -ne $sessionstate -and $sessionstate -is [System.Management.Automation.Runspaces.InitialSessionState]){
             If($ImportVariables){
-                $all_vars = New-Object System.Collections.ArrayList
+                $all_scopes = [System.Management.Automation.ScopedItemOptions]::AllScope
+                $allVars = [System.Collections.Generic.List[System.Management.Automation.Runspaces.SessionStateVariableEntry]]::new();
+                $all_vars = [System.Collections.ArrayList]::new()
+                #Set a Hashset collection of existing variables
+                $existing = [System.Collections.Generic.HashSet[string]]([System.StringComparer]::OrdinalIgnoreCase)
+                #Populate hashset
+                @($sessionState.Variables.Name).ForEach({[void]$existing.Add($_)})
                 If(([System.Collections.IDictionary]).IsAssignableFrom($ImportVariables.GetType())){
-                    $all_scopes = [System.Management.Automation.ScopedItemOptions]::AllScope
                     Foreach ($var in $ImportVariables.GetEnumerator()){
                         If($null -eq $var.Value){
                             Write-Verbose ($Script:messages.NullVariableMessage -f $var.Name)
                             continue
                         }
                         Else{
-                            #Removing variable if already exists
-                            $sessionstate.Variables.Remove($var.Name, $null)
-                            #Add Variable
-                            $sessionstate.Variables.Add((New-Object -TypeName System.Management.Automation.Runspaces.SessionStateVariableEntry -ArgumentList $var.Name, $var.Value, $null))
+                            If($existing.Add($var.Name)){
+                                $_newVar = New-Object -TypeName System.Management.Automation.Runspaces.SessionStateVariableEntry -ArgumentList $var.Name, $var.Value, $null
+                                #Add var
+                                $sessionState.Variables.Add($_newVar)
+                            }
                         }
                     }
                 }
@@ -110,19 +116,14 @@ Function New-InitialSessionState{
                         }
                     }
                     If ($all_vars.Count -gt 0){
-                        $all_scopes = [System.Management.Automation.ScopedItemOptions]::AllScope
                         #Add vars into session state
                         ForEach ($var in $all_vars){
                             $varToImport = [System.Management.Automation.Runspaces.SessionStateVariableEntry]::new($var.Name, `
                                                                                                                    $var.Value, `
                                                                                                                    $var.Description, `
                                                                                                                    $all_scopes)
-                            If($varToImport){
-                                #Removing variable if already exists
-                                $sessionstate.Variables.Remove($var.Name, $null)
-                                #Create variable
-                                $sessionstate.Variables.Add($varToImport)
-                            }
+                            #Add var
+                            $sessionState.Variables.Add($varToImport)
                         }
                     }
                 }
@@ -160,6 +161,18 @@ Function New-InitialSessionState{
             }
             If($ImportCommands){
                 $CommandsToImport = $ImportCommands | Find-FunctionFromFile -FindAll
+                $allcommands = [System.Collections.Generic.List[System.Management.Automation.Runspaces.SessionStateFunctionEntry]]::new();
+                $_commands = @($CommandsToImport).Where({$null -ne $_ -and $_ -is [System.Management.Automation.Language.FunctionDefinitionAst]});
+                ForEach($_command in $_commands.GetEnumerator()){
+                    Write-Verbose ($Script:messages.ImportingFunctionMessage -f $_command.Name)
+                    $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $_command.Name, $_command.Body.GetScriptBlock()                    
+                    [void]$allcommands.Add($SessionStateFunction);
+                }
+                # Add all entries
+                ForEach($cmd in $allcommands.GetEnumerator()){
+                    $sessionstate.Commands.Add($cmd)                    
+                }
+                <#
                 ForEach($fnc in @($CommandsToImport).Where({$null -ne $_})){
                     If($fnc -is [System.Management.Automation.Language.FunctionDefinitionAst]){
                         Write-Verbose ($Script:messages.ImportingFunctionMessage -f $fnc.Name)
@@ -168,8 +181,21 @@ Function New-InitialSessionState{
                         $sessionstate.Commands.Add($SessionStateFunction)
                     }
                 }
+                #>
             }
             If($ImportCommandsAst){
+                $allcommands = [System.Collections.Generic.List[System.Management.Automation.Runspaces.SessionStateFunctionEntry]]::new();
+                $_commands = @($ImportCommandsAst).Where({$null -ne $_ -and $_ -is [System.Management.Automation.Language.StatementAst]});
+                ForEach($_command in $_commands.GetEnumerator()){
+                    Write-Verbose ($Script:messages.ImportingStatementAstMessage -f $_command.Name)
+                    $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $_command.Name, $_command.Body.GetScriptBlock()                    
+                    [void]$allcommands.Add($SessionStateFunction);
+                }
+                # Add all entries
+                ForEach($cmd in $allcommands.GetEnumerator()){
+                    $sessionstate.Commands.Add($cmd)                    
+                }
+                <#
                 ForEach($fnc in @($ImportCommandsAst).Where({$null -ne $_})){
                     If($fnc -is [System.Management.Automation.Language.StatementAst]){
                         $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $fnc.Name, $fnc.Body.GetScriptBlock()
@@ -178,6 +204,7 @@ Function New-InitialSessionState{
                         $sessionstate.Commands.Add($SessionStateFunction)
                     }
                 }
+                #>
             }
             #Check if startup scripts
             If($StartUpScripts){

@@ -164,12 +164,12 @@ Function Invoke-PriorityAccountConfig{
             $priorityObj.properties.Id = $priorityObj.properties.emailTenantSettings | Select-Object -ExpandProperty Id -ErrorAction Ignore
         }
         #Check if protected users are present
-        If($null -ne $priorityObject.properties.protectedUsers){
+        If($priorityObj.properties.protectedUsers.Count -gt 0){
             $priorityObj.config.protectedUsers = $true;
         }
         #Iterate to each Phish and Malware alert policies
-        If($null -ne $priorityObject.properties.alertPolicies){
-            $policies = @($priorityObject.properties.alertPolicies).Where({
+        If(@($priorityObj.properties.alertPolicies).Count -gt 0){
+            $policies = @($priorityObj.properties.alertPolicies).Where({
                 $_.Disabled -eq $false -and `
                 $_.Severity -in @('High','Medium') -and `
                 $_.Mode -eq "Enforce" -and `

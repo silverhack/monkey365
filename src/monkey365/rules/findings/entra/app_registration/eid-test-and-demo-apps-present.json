@@ -1,0 +1,137 @@
+{
+    "provider": "EntraID",
+    "serviceType": "App Registrations",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure Test and Demo applications are removed from the tenant",
+    "description": "Test and demo applications are typically created during proof-of-concept phases, development activities, or temporary evaluation periods and often bypass the comprehensive engineering process, security reviews, and due diligence required for production enterprise applications.",
+    "rationale": "The presence of unmanaged test and demo applications in the tenant poses several security risks. These applications frequently contain overprivileged permissions that were granted during testing phases but never removed, lack proper credential management and rotation policies, may have credentials embedded in code repositories or documentation, and often have multiple owners or unclear ownership chains. Furthermore, test applications that are abandoned or forgotten can become attack vectors if their credentials are compromised, as they may retain access to sensitive organisational resources and data.",
+    "impact": "Removing test and demo applications will require extensive coordination between teams to avoid breaking active development workflows, continuous integration and deployment pipelines, automated testing frameworks, and integration environments that may have undocumented dependencies on these applications. Administrators must conduct thorough impact assessments by reaching out to application owners, development teams, and DevOps engineers to validate the current usage status of each application before decommissioning.",
+    "remediation": {
+        "text": "
+			###### To remediate using the UI:
+			1. Navigate to Microsoft Entra admin centre https://entra.microsoft.com/.
+			2. Click to expand Identity, select Applications, then select App registrations.
+			3. Select All applications from the dropdown to view all registered applications in the tenant.
+			4. Use the search filter to identify test and demo applications by common naming patterns (e.g., `test`, `demo`, `poc`, `dev`).
+			5. Select each identified test or demo application from the list.
+			6. Review the application's Overview page to note the creation date, owners, and last sign-in activity.
+			7. Select Owners from the left menu to verify if ownership is assigned to active employees still within the organisation.
+			8. Select API permissions to review the granted permissions and identify any overprivileged or unnecessary access.
+			9. Select Sign-in logs (available via Enterprise applications) to determine if the application has been actively used in recent months.
+			10. For applications confirmed as unused or no longer required, select Delete from the top menu bar.
+			11. Confirm the deletion by typing the application name when prompted.
+			12. Document the deleted application details for audit purposes, including app ID, name, permissions, and deletion date.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity-platform/how-applications-are-added",
+        "https://learn.microsoft.com/en-us/azure/security/develop/secure-design",
+		"https://learn.microsoft.com/en-us/azure/security/fundamentals/identity-management-best-practices",
+		"https://learn.microsoft.com/en-us/entra/identity-platform/security-best-practices-for-app-registration",
+		"https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/manage-application-permissions"
+    ],
+    "compliance": [
+        {
+            "name": "Monkey365 Entra",
+            "version": "0.0.1",
+            "reference": "5.3.1",
+            "profile": [
+			]
+        }
+    ],
+    "level": "medium",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_app_registrations",
+        "subPath": null,
+        "selectCondition": {
+        },
+        "query": [
+			{
+				"filter": [
+				    {
+					    "include": "test-names.json"
+				    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "Id",
+					"appId": "Application Id",
+					"displayName": "Application Name"
+                },
+				"expandObject": null
+            },
+            "table": "default",
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"id": "Id",
+					"appId": "Application Id",
+					"displayName": "Application Name"
+                },
+				"expandObject": null
+            },
+            "status": {
+                "keyName": [
+					"displayName"
+				],
+                "message": "Ensure {displayName} Test application is removed from the tenant",
+                "defaultMessage": "Test and Demo applications should be removed from the tenant"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraApplication"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "aad_test_application_present",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1174"
+}

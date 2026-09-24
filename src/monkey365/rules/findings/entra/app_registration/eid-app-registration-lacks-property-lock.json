@@ -1,0 +1,162 @@
+{
+    "provider": "EntraID",
+    "serviceType": "App Registrations",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure Property Lock Is Enabled In Applications",
+    "description": "Application instance property locks represent a security control mechanism in Microsoft Entra ID that enables application developers to prevent modifications to sensitive properties after an application has been provisioned in a tenant. When property locks are not configured, sensitive properties including authentication credentials used for token signing (SAML flows), verification credentials (OIDC client credentials flows), and token encryption key identifiers remain modifiable by administrators or compromised accounts, creating substantial security vulnerabilities that can undermine the entire authentication and authorisation framework for the affected applications.",
+    "rationale": "Property locks specifically protect three critical property categories that directly impact application authentication security. First, credentials where the usage type is `Sign` protect SAML authentication flows by preventing unauthorised modification of signing certificates that establish trust relationships between the application and Microsoft Entra ID. Second, credentials where the usage type is `Verify` protect OAuth 2.0 client credentials flows by locking the asymmetric key pairs or certificates that applications use to authenticate when acquiring access tokens. Third, the TokenEncryptionKeyId property specifies which public key from the keyCredentials collection Microsoft Entra ID uses to encrypt tokens issued to the application, with the corresponding private key required to decrypt tokens before they can be consumed. Modification of any of these properties without appropriate controls enables attackers to compromise authentication integrity, intercept encrypted tokens, or impersonate legitimate applications.",
+    "impact": "The absence of property locks violates defence-in-depth principles by eliminating an important layer of protection against insider threats and compromised administrator accounts. Even organisations implementing robust privileged access management (PAM) controls, time-bound role activations through Privileged Identity Management (PIM), and comprehensive audit logging remain vulnerable to attacks that exploit unlocked sensitive properties. An attacker who successfully compromises an administrator account for even brief periods can permanently modify application credentials, establishing persistent backdoor access that survives credential rotation, password changes, or even revocation of the administrator account that performed the malicious modification. The credential changes appear as legitimate administrative actions in audit logs, making detection significantly more challenging, particularly in environments where application configuration changes occur frequently as part of normal operations.",
+    "remediation": {
+        "text": "
+			###### To remediate using the UI:
+			1. Sign in to the [Microsoft Entra admin centre](https://entra.microsoft.com/) with Cloud Application Administrator or Application Administrator privileges
+			2. Navigate to **Identity** > **Applications** > **App registrations**
+			3. Select **All applications** from the view selector to display the complete application inventory
+			4. Locate and select the application requiring property lock configuration
+			5. From the left navigation menu, select **Authentication**
+			6. Scroll to the **App instance property lock** section
+			7. Select **Configure** to open the property lock configuration pane
+			8. In the property lock configuration interface:
+			   - Toggle **Enable property lock** to **On** to activate property lock functionality
+			   - Select **All properties** to lock all sensitive properties (recommended for maximum security), OR
+			   - Individually select specific property types to lock:
+				 - **Credentials used for verification**: Locks credentials with `Verify` usage (OAuth client credentials authentication)
+				 - **Credentials used for signing tokens**: Locks credentials with `Sign` usage (SAML authentication flows)
+				 - **Token Encryption KeyId**: Locks the tokenEncryptionKeyId property preventing unauthorised encryption key changes
+			9. Select **Save** to persist the property lock configuration
+			10. Verify the configuration by reviewing the **App instance property lock** section confirms `Enabled`
+			11. Document the property lock configuration decision in the application's notes or description field
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity-platform/howto-configure-app-instance-property-locks",
+		"https://learn.microsoft.com/en-us/graph/tutorial-applications-basics?tabs=http#lock-sensitive-properties-for-service-principals"
+    ],
+    "compliance": [
+        {
+            "name": "Monkey365 Entra",
+            "version": "0.0.1",
+            "reference": "5.3.1",
+            "profile": [
+			]
+        }
+    ],
+    "level": "low",
+    "tags": [
+        
+    ],
+    "rule": {
+        "path": "aad_app_registrations",
+        "subPath": null,
+        "selectCondition": {
+        },
+		"data": {
+            "properties": {
+				"id": "id",
+                "displayName": "displayName",
+				"appId": "appId",
+				"signInAudience": "signInAudience",
+				"owners": "owners",
+				"servicePrincipalLockConfiguration": "servicePrincipalLockConfiguration"
+            }
+        },
+        "query": [
+			{
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "eq",
+                                "servicePrincipalLockConfiguration"
+                            ],
+							[
+                                "servicePrincipalLockConfiguration.isEnabled",
+                                "eq",
+                                "false"
+                            ]
+                        ],
+						"operator":"or"
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "Id",
+					"appId": "Application Id",
+					"displayName": "Application Name",
+					"servicePrincipalLockConfiguration.isEnabled": "Lock Enabled"
+                },
+				"expandObject": null
+            },
+            "table": "default",
+            "table": null,
+            "decorate": [
+                
+            ],
+            "emphasis": [
+                
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [
+                        "*"
+                    ],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": false,
+                "showModalButton": false,
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+					"id": "Id",
+					"appId": "Application Id",
+					"displayName": "Application Name",
+					"servicePrincipalLockConfiguration.isEnabled": "Lock Enabled"
+                },
+				"expandObject": null
+            },
+            "status": {
+                "keyName": [
+					"displayName"
+				],
+                "message": "Ensure Property Lock Is Enabled In {displayName}",
+                "defaultMessage": "Ensure Property Lock Is Enabled In Applications"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraApplication"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "aad_application_lacks_property_locks",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_1174"
+}

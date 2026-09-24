@@ -1,0 +1,133 @@
+{
+    "args": [],
+    "provider": "EntraID",
+    "serviceType": "Security Defaults",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure that 'multifactor authentication' is 'enabled' for all users",
+    "description": "[IMPORTANT - Please read the section overview: If your organization pays for Microsoft Entra ID licensing (included in Microsoft 365 E3, E5, F5, or Business Premium, and EM&S E3 or E5 licenses) and CAN use Conditional Access, ignore the recommendations in this section and proceed to the Conditional Access section.] Enable multifactor authentication for all users.<br/><br/>Note: Since 2024, Azure has been rolling out mandatory multifactor authentication. For more information:\n• https://azure.microsoft.com/en-us/blog/announcing-mandatory-multi-factor-authentication-for-azure-sign-in\n• https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mandatory-multifactor-authentication",
+    "rationale": "Multifactor authentication requires an individual to present a minimum of two separate forms of authentication before access is granted. Multifactor authentication provides additional assurance that the individual attempting to gain access is who they claim to be. With multifactor authentication, an attacker would need to compromise at least two different authentication mechanisms, increasing the difficulty of compromise and thus reducing the risk.",
+    "impact": "Users would require two forms of authentication before any access is granted.<br/><br/>Additional administrative time will be required for managing dual forms of authentication when enabling multifactor authentication.",
+    "remediation": {
+        "text": "
+			##### Remediate from Azure Portal 
+			1. Go to Microsoft Entra ID. 
+			2. Under Manage, click Users. 
+			3. Click Per-user MFA from the top menu. 
+			4. Click the box next to a user with Status disabled. 
+			5. Click Enable MFA. 
+			6. Click Enable. 
+			7. Repeat steps 1-6 for each user requiring remediation. 
+			
+			##### Other options within Azure Portal 
+			* https://learn.microsoft.com/en-us/entra/identity/authentication/tutorial-enable-azure-mfa 
+			* https://learn.microsoft.com/en-us/entra/identity/authentication/howto-mfa-mfasettings 
+			* https://learn.microsoft.com/en-us/entra/identity/conditional-access/policy-old-require-mfa-admin 
+			* https://learn.microsoft.com/en-us/entra/identity/authentication/howto-mfa-getstarted#enable-multi-factor-authentication-with-conditional-access
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfahowitworks",
+        "https://learn.microsoft.com/en-us/entra/identity/authentication/conceptmandatory-multifactor-authentication",
+        "https://azure.microsoft.com/en-us/blog/announcing-mandatory-multi-factorauthentication-for-azure-sign-in/",
+        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identitymanagement#im-4-authenticate-server-and-services"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "5.0.0",
+            "reference": "5.1.2",
+            "profile": [
+                "Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "aad_domain_users",
+        "subPath": null,
+        "selectCondition": {},
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "perUserMfaState",
+                                "ne",
+                                "enabled"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+					"id": "Id",
+                    "userPrincipalName": "userPrincipalName",
+                    "perUserMfaState": "perUserMfaState"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "data": {
+                "properties": {
+					"id": "Id",
+                    "userPrincipalName": "userPrincipalName",
+                    "perUserMfaState": "perUserMfaState"
+                },
+                "expandObject": null
+            },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": ["userPrincipalName"],
+                "message": "Ensure that multifactor authentication is enabled for {userPrincipalName}",
+                "defaultMessage": null
+            },
+            "properties": {
+                "resourceName": "userPrincipalName",
+                "resourceId": "id",
+                "resourceType": "EntraUser"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "entra_ensure_mfa_all_users",
+    "notes": [],
+    "categories": [],
+    "immutable_properties": [
+		"userPrincipalName",
+		"id"
+	],
+    "id": "entra_id_002"
+}

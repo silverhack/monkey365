@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -82,13 +82,13 @@ function Get-MonkeySharePointOnlineSitePermissionsInfo {
 			#Splat params
 			$pWeb = @{
 				Authentication = $O365Object.auth_tokens.SharePointOnline;
-				Recurse = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.Subsites.Recursive);
-				Limit = $O365Object.internal_config.o365.SharePointOnline.Subsites.Depth;
-				Filter = $O365Object.internal_config.o365.SharePointOnline.SharingLinks.Include;
-				IncludeLists = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.sitePermissionsOptions.IncludeLists);
-				IncludeItems = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.sitePermissionsOptions.includeListItems);
-				ExcludeFolders = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.sitePermissionsOptions.ExcludeFolders);
-				IncludeInheritedPermission = [System.Convert]::ToBoolean($O365Object.internal_config.o365.SharePointOnline.sitePermissionsOptions.includeInheritedPermissions);
+				Recurse = $O365Object.internal_config.o365.SharePointOnline.Subsites.recursive;
+				Limit = $O365Object.internal_config.o365.SharePointOnline.subsites.depth;
+				Filter = $O365Object.internal_config.o365.SharePointOnline.sharingLinks.include;
+				IncludeLists = $O365Object.internal_config.o365.SharePointOnline.permissions.includeLists;
+				IncludeItems = $O365Object.internal_config.o365.SharePointOnline.permissions.includeListItems;
+				ExcludeFolders = $O365Object.internal_config.o365.SharePointOnline.permissions.excludeFolders;
+				IncludeInheritedPermission = $O365Object.internal_config.o365.SharePointOnline.permissions.includeInheritedPermissions;
 				InformationAction = $O365Object.InformationAction;
 				Verbose = $O365Object.Verbose;
 				Debug = $O365Object.Debug;

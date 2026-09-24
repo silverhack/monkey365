@@ -1,0 +1,122 @@
+{
+    "provider": "EntraID",
+    "serviceType": "Devices",
+    "serviceName": "Microsoft Entra ID",
+    "displayName": "Ensure the maximum number of devices per user is limited",
+    "description": "This setting defines the maximum number of Microsoft Entra joined or registered devices that a user can have in Microsoft Entra ID. Once this limit is reached, no additional devices can be added until existing ones are removed. Values above 100 are automatically capped at 100.\r\nThe recommended state is `20` or less.",
+	"rationale": "Microsoft incident response teams have observed threat actors enrolling their own devices to establish persistence after a non-privileged user has been compromised. High device quotas can exacerbate this risk by enabling attackers to register multiple devices that appear legitimate, while also contributing to unmanaged or personal devices cluttering the environment, driving up licensing costs and complicating compliance efforts.\r\nEnforcing a reasonable device limit per user supports good governance, reduces the attack surface, and encourages administrators to reassess and clean up legacy or unused device enrollments.",
+    "impact": "IT staff who need to enroll more than 20 devices on behalf of the organization must be assigned the role of Device Enrollment Manager in the Intune admin center. Device Enrollment Managers are non-administrator accounts that can enroll and manage up to 1,000 devices. It is recommended to use dedicated service accounts for this role rather than assigning it to users' primary or daily-use accounts.\r\n*Warning*: Do not delete accounts assigned as a Device enrollment manager if any devices were enrolled using the account. Doing so will lead to issues with these devices.",
+    "remediation": {
+        "text": "Remediate from Azure Portal
+			1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
+			2. Click to expand Entra ID > Devices select Device settings.
+			3. Set `Maximum number of devices per user` to `_ARG_0_` (Recommended) or less.
+		",
+        "code": {
+            "powerShell": null,
+            "iac": null,
+            "terraform": null,
+            "other": null
+        }
+    },
+    "recommendation": null,
+    "references": [
+        "https://learn.microsoft.com/en-us/entra/identity/devices/manage-device-identities#configure-device-settings",
+        "https://learn.microsoft.com/en-us/intune/intune-service/enrollment/device-enrollment-manager-enroll",
+		"https://learn.microsoft.com/en-us/graph/api/resources/deviceregistrationpolicy?view=graph-rest-beta"
+    ],
+    "compliance": [
+        {
+            "name": "CIS Microsoft 365 Foundations Benchmark",
+            "version": "7.0.0",
+            "reference": "5.1.4.2",
+            "profile": [
+                "E3 Level 1",
+				"E5 Level 1"
+            ]
+        }
+    ],
+    "level": "medium",
+    "tags": [],
+    "rule": {
+        "path": "aad_device_settings",
+        "subPath": null,
+        "selectCondition": [],
+        "query": [
+            {
+                "filter": [
+                    {
+                        "conditions": [
+                            [
+                                "userDeviceQuota",
+                                "gt",
+                                "_ARG_0_"
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ],
+        "shouldExist": null,
+        "returnObject": null,
+        "removeIfNotExists": null
+    },
+    "output": {
+        "html": {
+            "data": {
+                "properties": {
+                    "displayName": "Display Name",
+                    "multiFactorAuthConfiguration": "Require MFA setting",
+                    "userDeviceQuota": "User Device Quota"
+                },
+                "expandObject": null
+            },
+            "table": "default",
+            "decorate": [],
+            "emphasis": [
+            ],
+            "actions": {
+                "objectData": {
+                    "properties": [],
+                    "expandObject": null,
+                    "limit": null
+                },
+                "showGoToButton": "True",
+                "showModalButton": "True",
+                "directLink": null
+            }
+        },
+        "text": {
+            "data": {
+                "properties": {
+                    "displayName": "Display Name",
+                    "multiFactorAuthConfiguration": "Require MFA setting",
+                    "userDeviceQuota": "User Device Quota"
+                },
+                "expandObject": null
+            },
+            "status": {
+                "keyName": [],
+                "message": "Ensure the maximum number of devices per user is limited",
+                "defaultMessage": "Ensure the maximum number of devices per user is limited"
+            },
+            "properties": {
+                "resourceName": "displayName",
+                "resourceId": "id",
+                "resourceType": "EntraDeviceRegistrationPolicy"
+            },
+            "onlyStatus": false
+        }
+    },
+    "idSuffix": "eid_minimum_number_of_devices_not_limited",
+    "notes": [
+        
+    ],
+    "categories": [
+        
+    ],
+    "immutable_properties": [
+		"id"
+    ],
+    "id": "entraid_tenant_003"
+}

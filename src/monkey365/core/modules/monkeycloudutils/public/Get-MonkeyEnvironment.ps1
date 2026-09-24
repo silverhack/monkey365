@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@ Function Get-MonkeyEnvironment{
                 AADPortal = "https://main.iam.ad.ext.azure.com/api/";
                 AADRM = "https://aadrm.com";
                 Forms = "https://forms.office.com";
-                Storage = "https://storage.azure.com/";
+                Storage = "https://storage.azure.cn/";
                 Vaults = "https://vault.azure.net";
                 Servicemanagement = 'https://management.core.chinacloudapi.cn/';
                 Security = 'https://s2.security.ext.azure.com/api/';

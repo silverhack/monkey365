@@ -1,0 +1,161 @@
+{
+  "provider": "EntraID",
+  "serviceType": "Enterprise Applications",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure unsafe redirect URIs are removed from service principals",
+  "description": "Redirect URIs are critical security components in OAuth 2.0 and OpenID Connect authentication flows, as they specify the locations where the Microsoft Entra authentication server sends users after successful authentication, along with authorisation codes or access tokens. When redirect URIs are improperly configured, they create significant vulnerabilities that can lead to authorisation code interception, access token theft, and complete account compromise.",
+  "rationale": "Unsafe redirect URI configurations included the use of insecure HTTP schemes for non-localhost URIs (exposing tokens to network interception), wildcard patterns in URI definitions (such as https://*.company.com enabling attackers to redirect to any subdomain including attacker-controlled ones), URN schemes that do not follow absolute URI requirements specified in RFC 6749 section 3.1.2, redirect URIs pointing to domains no longer owned or controlled by the organisation (creating takeover opportunities), and excessively large lists of redirect URIs that increase the attack surface and make security audits more difficult.",
+  "impact": "For applications using the implicit grant flow with unsafe redirect URIs, prioritise migration to the authorisation code flow with Proof Key for Code Exchange (PKCE), which is more resistant to token interception attacks. Implement additional security controls including mandatory use of the state parameter for CSRF protection, validation that redirect URIs match exactly (including case sensitivity and trailing slashes), monitoring of sign-in logs for unusual redirect patterns or failed validation attempts, and regular penetration testing specifically targeting OAuth redirect URI manipulation vulnerabilities.",
+  "remediation": {
+    "text": "\r\n\t\t\t###### To remediate using the UI:\r\n\t\t\t1. Navigate to Microsoft Entra admin centre https://entra.microsoft.com/.\r\n\t\t\t2. Click to expand Identity, select Enterprise Apps.\r\n\t\t\t3. Search for the application with client secrets.\r\n\t\t\t4. Document applications.\r\n\t\t\t5. Prioritise applications with long-lived secrets (expiration > 90 days) or privileged permissions for immediate migration.\r\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity-platform/reply-url",
+    "https://learn.microsoft.com/en-us/entra/identity-platform/security-best-practices-for-app-registration",
+    "https://datatracker.ietf.org/doc/html/rfc6819",
+    "https://cwe.mitre.org/data/definitions/601.html"
+  ],
+  "compliance": [
+    {
+      "name": "Monkey365 Entra",
+      "version": "0.0.1",
+      "reference": "5.3.1",
+      "profile": []
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "aad_managed_app",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "replyUrls.Count",
+                "gt",
+                "0"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "operator": "or",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "{$_}",
+                "like",
+                "http://*"
+              ],
+              [
+                "{$_}",
+                "notlike",
+                "localhost*"
+              ],
+              [
+                "{$_}",
+                "notlike",
+                "127.0.0.1*"
+              ]
+            ],
+            "operator": "and",
+            "whereObject": "replyUrls"
+          },
+          {
+            "conditions": [
+              [
+                "{$_}",
+                "like",
+                "*azurewebsites.net*"
+              ],
+              [
+                "{$_}",
+                "match",
+                "\\*"
+              ]
+            ],
+            "operator": "or",
+            "whereObject": "replyUrls"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "id": "Id",
+          "appId": "Application Id",
+          "displayName": "Application Name"
+        },
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "id",
+            "appId",
+            "displayName",
+            "replyUrls"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": true,
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          "id": "Id",
+          "appId": "Application Id",
+          "displayName": "Application Name"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "displayName"
+        ],
+        "message": "Ensure unsafe redirect URIs are removed from {displayName}",
+        "defaultMessage": "Ensure unsafe redirect URIs are removed from service principals"
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "EntraApplication"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "aad_service_principals_with_unsafe_redirect_uri",
+  "notes": [],
+  "categories": [],
+  "immutable_properties": [
+    "id"
+  ],
+  "id": "entraid_1174"
+}

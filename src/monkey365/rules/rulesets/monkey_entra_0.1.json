@@ -1,0 +1,1239 @@
+{
+    "about": "This ruleset contains a collection of rules for Microsoft Entra. These rules perform static analysis on Entra ID artifacts and are used as a mechanism to evaluate the security configuration and best practices. Rules are also divided into categories and subcategories according to the rule's type. These rules are designed to determine whether security best practices are being adhered to. This will ensures that Microsoft Entra tenant will meet the industry standards.",
+    "framework": {
+		"name" : "Monkey365 Entra",
+		"version" : "0.0.1",
+		"tou" : "https://silverhack.github.io/monkey365/license/license-contributing/",
+		"url" : "https://silverhack.github.io/monkey365/"
+	},
+	"rules": {
+		"eid-id-missing-cloud-only-administrative-account.json": [
+            {
+                "enabled": true,
+                "level": "low",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.1.1"
+                    }
+                ]
+            }
+        ],
+		"eid-emergency-accounts.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.1.2"
+                    }
+                ]
+            }
+        ],
+		"eid-iam-excessive-global-admins.json": [
+            {
+                "args": [
+                    "4"
+                ],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.1.3"
+                    }
+                ]
+            }
+        ],
+		"eid-iam-privileged-users-use-licenses-with-reduced-application-footprint.json": [
+			{
+				"args": [
+					"aad-m365-privileged-roles.json"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.1.4"
+					}
+				]
+			}
+		],
+		"eid-public-group-detected.json": [
+            {
+                "enabled": true,
+                "level": "low",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.2.1"
+                    }
+                ]
+            }
+        ],
+		"eid-users-can-create-m365-groups.json": [
+            {
+                "enabled": true,
+                "level": "low",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.2.2"
+                    }
+                ]
+            }
+        ],
+		"eid-restrict-user-to-group-features-not-set.json": [
+            {
+                "enabled": true,
+                "level": "low",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.2.3"
+                    }
+                ]
+            }
+        ],
+		"eid-owners-can-manage-group-membership.json": [
+            {
+                "enabled": true,
+                "level": "low",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.2.4"
+                    }
+                ]
+            }
+        ],
+		"eid-password-expiring-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.3.1"
+                    }
+                ]
+            }
+        ],
+		"eid-idle-session-missing-cap.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.3.2"
+                    }
+                ]
+            }
+        ],
+		"eid-user-owned-apps-and-services-allowed.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.3.3"
+                    }
+                ]
+            }
+        ],
+		"eid-third-party-storage-allowed-microsoft365.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+				"compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "1.3.5"
+                    }
+                ]
+            }
+        ],
+		"eid-per-user-mfa-disabled.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.1"
+                    }
+                ]
+            }
+        ],
+		"eid-users-can-register-applications-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.2"
+                    }
+                ]
+            }
+        ],
+		"eid-non-admin-users-allowedto-create-tenants.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.3"
+                    }
+                ]
+            }
+        ],
+		"eid-restrict-users-entra-portal.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.4"
+                    }
+                ]
+            }
+        ],
+		"eid-stay-signed-policy-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.5"
+                    }
+                ]
+            }
+        ],
+		"eid-linkedin-sync-enabled.json": [
+            {
+                "enabled": true,
+                "level": "low",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.6"
+                    }
+                ]
+            }
+        ],
+		"eid-users-can-create-security-groups.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.8"
+                    }
+                ]
+            }
+        ],
+		"eid-ability-to-join-devices-not-restricted.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.9"
+                    }
+                ]
+            }
+        ],
+		"eid-maximum-number-of-devices-not-limited.json": [
+            {
+                "args":[
+					"20"
+				],
+				"enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.10"
+                    }
+                ]
+            }
+        ],
+		"eid-ensure-ga-role-is-not-added-as-local-admin-during-entra-join.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.11"
+                    }
+                ]
+            }
+        ],
+		"eid-ensure-local-administrator-assignment-is-limited-during-entra-join.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.12"
+                    }
+                ]
+            }
+        ],
+		"eid-ensure-local-administrator-password-solution-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.13"
+                    }
+                ]
+            }
+        ],
+		"eid-users-allowed-to-recover-bitlocker-keys.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.14"
+                    }
+                ]
+            }
+        ],
+		"eid-users-can-consent-apps-data-access.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.15"
+                    }
+                ]
+            }
+        ],
+		"eid-admin-consent-workflow-not-enabled.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.16"
+                    }
+                ]
+            }
+        ],
+		"eid-restrict-collaboration-specific-domains-disabled.json": [
+            {
+                "enabled": true,
+                "level": "low",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.17"
+                    }
+                ]
+            }
+        ],
+		"eid-guest-object-restriction-disabled.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.18"
+                    }
+                ]
+            }
+        ],
+		"eid-guest-invite-restriction-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.19"
+                    }
+                ]
+            }
+        ],
+		"eid-password-hash-sync-disabled.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "2.1.20"
+                    }
+                ]
+            }
+        ],
+		"eid-ensure-mfa-for-high-privileged-users-missing-cap.json": [
+            {
+                "args": [
+					"aad-cap-minimum-privileged-roles.json"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.0"
+                    }
+                ]
+            }
+        ],
+        "eid-ensure-mfa-for-all-users-missing-cap.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.1"
+                    }
+                ]
+            }
+        ],
+		"eid-cap-block-legacy-authentication-not-enabled.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.2"
+                    }
+                ]
+            }
+        ],
+		"eid-cap-lack-sign-in-frequency-browser-persistent-session.json": [
+            {
+                "args": [
+					"aad-cap-minimum-privileged-roles.json"
+				],
+				"enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.3"
+                    }
+                ]
+            }
+        ],
+		"eid-ensure-phishing-resistant-mfa-for-high-privileged-users-missing-cap.json": [
+            {
+                "args": [
+					"aad-cap-minimum-privileged-roles.json"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.4"
+                    }
+                ]
+            }
+        ],
+		"eid-cap-user-risk-policy-require-password-change.json": [
+            {
+                "args": [
+					"signInRiskLevel_medium.json"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.5"
+                    }
+                ]
+            }
+        ],
+		"eid-cap-sign-in-risk-policy-require-mfa.json": [
+            {
+                "args": [
+					"signInRiskLevel_high_medium.json"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.6"
+                    }
+                ]
+            }
+        ],
+		"eid-cap-block-sign-in-risk-not-enabled.json": [
+            {
+                "args": [
+					"signInRiskLevel_high_medium.json"
+				],
+				"enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.7"
+                    }
+                ]
+            }
+        ],
+		"eid-require-managed-device-compliant-all-apps-missing-cap.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.8"
+                    }
+                ]
+            }
+        ],
+		"eid-require-managed-device-compliant-to-register-security-info-missing-cap.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.9"
+                    }
+                ]
+            }
+        ],
+		"eid-sign-in-frequency-intune-enrollment-missing-cap.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.10"
+                    }
+                ]
+            }
+        ],
+		"eid-block-device-code-sign-in-flow-missing-cap.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.11"
+                    }
+                ]
+            }
+        ],
+		"eid-microsoft-authenticator-lack-mfa-fatigue-protection.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.1.12"
+                    }
+                ]
+            }
+        ],
+		"eid-custom-banned-password-list-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.2.1"
+                    }
+                ]
+            }
+        ],
+		"eid-password-protection-on-prem-not-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.2.2"
+                    }
+                ]
+            }
+        ],
+		"eid-non-mfa-capable-users-present.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.2.3"
+                    }
+                ]
+            }
+        ],
+		"eid-weak-authentication-methods-enabled.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.2.4"
+                    }
+                ]
+            }
+        ],
+		"eid-system-preferred-mfa-disabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.2.5"
+                    }
+                ]
+            }
+        ],
+		"eid-email-otp-authentication-enabled.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.2.6"
+                    }
+                ]
+            }
+        ],
+		"eid-sspr-enabled-set-to-all.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.2.7"
+                    }
+                ]
+            }
+        ],
+		"eid-sspr-enabled-for-administrative-accounts.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.2.8"
+                    }
+                ]
+            }
+        ],
+		"eid-pim-is-used-to-manage-roles.json": [
+            {
+                "enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "3.2.9"
+                    }
+                ]
+            }
+        ],
+		"eid-ensure-guest-users-are-reviewed.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.1.0"
+					}
+				]
+			}
+		],
+		"eid-access-reviews-for-guest-users-are-configured.json": [
+            {
+                "enabled": true,
+                "level": "medium",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.1.1"
+                    }
+                ]
+            }
+        ],
+		"eid-high-privileged-roles-access-reviews-not-configured.json": [
+            {
+                "args":[
+					"Global Administrator",
+					"62e90394-69f5-4237-9190-012177145e10"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.1.2"
+                    }
+                ]
+            },
+			{
+                "args":[
+					"Teams Administrator",
+					"69091246-20e8-4a56-aa4d-066075b2a7a8"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.1.2"
+                    }
+                ]
+            },
+			{
+                "args":[
+					"SharePoint Administrator",
+					"f28a1f50-f6e7-4571-818b-6a12f2af6b6c"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.1.2"
+                    }
+                ]
+            },
+			{
+                "args":[
+					"Exchange Administrator",
+					"29232cdf-9323-42fd-ade2-1d097af3e4de"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.1.2"
+                    }
+                ]
+            },
+			{
+                "args":[
+					"Security Administrator",
+					"194ae4cb-b126-40b2-bd5b-6091b380977d"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.1.2"
+                    }
+                ]
+            }
+        ],
+		"eid-approval-not-required-for-role-activation.json": [
+            {
+                "args":[
+					"Global Administrator",
+					"Microsoft Entra Privileged Identity Management can be used to audit roles, allow just in time activation of roles and allow for periodic role attestation. Requiring approval before activation allows one of the selected approvers to first review and then approve the activation prior to PIM granted the role. The approver doesn't have to be a group member or owner.\r\nThe recommended state is `Require approval to activate` for the `Global Administrator` role.",
+					"Requiring approval for Global Administrator role activation enhances visibility and accountability every time this highly privileged role is used. This process reduces the risk of an attacker elevating a compromised account to the highest privilege level, as any activation must first be reviewed and approved by a trusted party\r\n*Note*: This only acts as protection for eligible users that are activating a role. Directly assigning a role does require an approval workflow so therefore it is important to implement and use PIM correctly.",
+					"Approvers do not need to be assigned the same role or be members of the same group. It's important to have at least two approvers and an emergency access (break-glass) account to prevent a scenario where no Global Administrators are available. For example, if the last active Global Administrator leaves the organization, and only eligible but inactive Global Administrators remain, a trusted approver without the Global Administrator role or an emergency access account would be essential to avoid delays in critical administrative tasks.",
+					"62e90394-69f5-4237-9190-012177145e10",
+					"001"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.1"
+                    }
+                ]
+            },
+			{
+                "args":[
+					"Privileged Role Administrator",
+					"Microsoft Entra Privileged Identity Management can be used to audit roles, allow just in time activation of roles and allow for periodic role attestation. Requiring approval before activation allows one of the selected approvers to first review and then approve the activation prior to PIM granted the role. The approver doesn't have to be a group member or owner.\r\nThe recommended state is `Require approval to activate` for the ` Privileged Role Administrator` role.",
+					"This role grants the ability to manage assignments for all Microsoft Entra roles including the Global Administrator role. This role does not include any other privileged abilities in Microsoft Entra ID like creating or updating users. However, users assigned to this role can grant themselves or others additional privilege by assigning additional roles.\r\nRequiring approval for activation enhances visibility and accountability every time this highly privileged role is used. This process reduces the risk of an attacker elevating a compromised account to the highest privilege level, as any activation must first be reviewed and approved by a trusted party\r\n*Note*: This only acts as protection for eligible users that are activating a role. Directly assigning a role does require an approval workflow so therefore it is important to implement and use PIM correctly.",
+					"Requiring approvers for automatic role assignment can slightly increase administrative overhead and add delays to tasks.",
+					"e8611ab8-c189-46e8-94e1-60213ab1f814",
+					"002"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+                        "name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.2"
+                    }
+                ]
+            }
+        ],
+		"eid-privileged-roles-lacks-monitoring-and-alerting.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.3"
+					}
+				]
+			}
+		],
+		"eid-disabled-accounts-with-high-level-permissions.json": [
+			{
+				"args":[
+					"aad-m365-privileged-roles.json"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.4"
+					}
+				]
+			}
+		],
+		"eid-tenant-creator-role-is-reviewed.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.5"
+					}
+				]
+			}
+		],
+		"eid-pim-permanent-roles-assigned.json": [
+			{
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.6"
+					}
+				]
+			}
+		],
+		"eid-pim-permanent-privileged-roles-assigned.json": [
+            {
+                "args": [
+					"aad-m365-privileged-roles.json"
+				],
+				"enabled": true,
+                "level": "high",
+                "compliance": [
+                    {
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.7"
+					}
+                ]
+            }
+        ],
+		"eid-enterprise-app-with-high-entra-privileged-permissions-lacks-owner_dynamic_param.json": [
+			{
+				"args":[
+					"External Enterprise Applications with High Privilege API Permissions Lacks Assigned Owners",
+					"true",
+					"foreign",
+					"001"
+				],
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.8"
+					}
+				]
+			},
+			{
+				"args":[
+					"Internal Enterprise Applications with High Privilege API Permissions Lacks Assigned Owners",
+					"false",
+					"internal",
+					"002"
+				],
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.9"
+					}
+				]
+			}
+		],
+		"eid-enterprise-app-with-high-entra-privileged-permissions_dynamic_param.json": [
+			{
+				"args":[
+					"External Enterprise Applications with High Privilege Application API Permissions",
+					"Application",
+					"true",
+					"foreign",
+					"001"
+				],
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.10"
+					}
+				]
+			},
+			{
+				"args":[
+					"Internal Enterprise Applications with High Privilege Application API Permissions",
+					"Application",
+					"false",
+					"internal",
+					"002"
+				],
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.11"
+					}
+				]
+			},
+			{
+				"args":[
+					"External Enterprise Applications with High Privilege Delegated API Permissions",
+					"Delegated",
+					"true",
+					"foreign",
+					"003"
+				],
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.12"
+					}
+				]
+			},
+			{
+				"args":[
+					"Internal Enterprise Applications with High Privilege Delegated API Permissions",
+					"Delegated",
+					"false",
+					"internal",
+					"004"
+				],
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.13"
+					}
+				]
+			}
+		],
+		"eid-iam-enterprise-apps-with-high-privileged-entra-roles.dynamic.json": [
+			{
+				"args":[
+					"External Enterprise Applications with High Privileged Entra ID roles",
+					"true",
+					"foreign",
+					"001"
+				],
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.14"
+					}
+				]
+			},
+			{
+				"args":[
+					"Internal Enterprise Applications with High Privileged Entra ID roles",
+					"false",
+					"internal",
+					"002"
+				],
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.15"
+					}
+				]
+			}
+		],
+		"eid-application-with-high-entra-privileged-permissions.json": [
+			{
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.16"
+					}
+				]
+			}
+		],
+		"eid-iam-guest-users-members-of-privileged-roles.json": [
+			{
+				"args":[
+					"aad-m365-privileged-roles.json"
+				],
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "4.2.17"
+					}
+				]
+			}
+		],
+		"eid-test-and-demo-apps-present.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "5.1.0"
+					}
+				]
+			}
+		],
+		"eid-application-with-client-secrets.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "5.1.1"
+					}
+				]
+			}
+		],
+		"eid-service-principal-with-client-secret.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "5.1.2"
+					}
+				]
+			}
+		],
+		"eid-service-principal-with-unsafe-redirect-uri.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "5.1.3"
+					}
+				]
+			}
+		],
+		"eid-application-with-unsafe-redirect-uri.json": [
+			{
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "5.1.4"
+					}
+				]
+			}
+		],
+		"eid-application-with-long-lived-certificate-credentials.json": [
+			{
+				"args":[
+					"180"
+				],
+				"enabled": true,
+				"level": "high",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "5.1.5"
+					}
+				]
+			}
+		],
+		"eid-app-registration-lacks-property-lock.json": [
+			{
+				"enabled": true,
+				"level": "low",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "5.1.6"
+					}
+				]
+			}
+		],
+		"eid-multi-tenant-app-registration-lacks-property-lock.json": [
+			{
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "5.1.7"
+					}
+				]
+			}
+		],
+		"eid-inactive-enterprise-aplication-dynamic.json": [
+			{
+				"args":[
+					"90"
+				],
+				"enabled": true,
+				"level": "medium",
+				"compliance": [
+					{
+						"name": "Monkey365 for Entra ID",
+                        "version": "0.0.1",
+                        "reference": "5.1.8"
+					}
+				]
+			}
+		]
+    }
+}

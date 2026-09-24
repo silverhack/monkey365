@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,7 +46,6 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
             Select = $O365Object.userProperties;
         }
         #Set Job params
-        #Set Job params
         If($O365Object.isConfidentialApp){
             $jobParam = @{
 	            ScriptBlock = { Get-MonkeyMsGraphMFAUserDetail -UserId $_};
@@ -90,6 +89,34 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                 }
             }
         }
+        #Set Service Principal param
+        $sps_arg = @{
+            APIVersion = 'beta';
+            Expand = 'owners';
+        }
+        #Set Service Principal job param
+        $sp_job = @{
+			ScriptBlock = { Get-MonkeyMSGraphServicePrincipal -ServicePrincipalId $_};
+            Arguments = $sps_arg;
+	        Runspacepool = $O365Object.monkey_runspacePool;
+	        ReuseRunspacePool = $true;
+	        Debug = $O365Object.VerboseOptions.Debug;
+	        Verbose = $O365Object.VerboseOptions.Verbose;
+	        MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+	        BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+	        BatchSize = $O365Object.nestedRunspaces.BatchSize;
+		}
+        #Set Service Principal update property job param
+        $update_sp_job = @{
+			ScriptBlock = { Update-ServicePrincipal -InputObject $_ };
+	        Runspacepool = $O365Object.monkey_runspacePool;
+	        ReuseRunspacePool = $true;
+	        Debug = $O365Object.VerboseOptions.Debug;
+	        Verbose = $O365Object.VerboseOptions.Verbose;
+	        MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
+	        BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
+	        BatchSize = $O365Object.nestedRunspaces.BatchSize;
+		}
         #Set generic list
         $allroleAssignments = [System.Collections.Generic.List[System.Management.Automation.PsObject]]::new()
         #Get PIM role assignments
@@ -180,7 +207,7 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                     #Get service Principals
                     $allSP = @($identities).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
                     #get Real members
-                    foreach($grp in $groups){
+                    ForEach($grp in $groups){
                         $objMetadata = @($activeMembers).Where({$_.principalId -eq $grp.id}) | Select-Object * -First 1 -ErrorAction Ignore
                         $groupMember = Get-MonkeyMSGraphGroupTransitiveMember -GroupId $grp.id -Parents @($grp.id)
                         if($groupMember){
@@ -200,14 +227,22 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                             }
                             #Get Service Principals
                             $sps = @($groupMember).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
-                            foreach($sp in $sps){
-                                if($null -ne $objMetadata){
-                                    $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
-                                    $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
-                                    $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
-                                    $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                            #Get sp's id
+                            $spIds = $sps | Select-Object -ExpandProperty Id -ErrorAction Ignore
+                            #Invoke job
+                            $allSps = $spIds | Invoke-MonkeyJob @sp_job
+                            #Update service principals
+                            $allSps = $allSps | Invoke-MonkeyJob @update_sp_job
+                            If($null -ne $allSps){
+                                ForEach($sp in @($allSps)){
+                                    If($null -ne $objMetadata){
+                                        $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                                        $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                                        $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                                        $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                                    }
+                                    [void]$allServicePrincipals.Add($sp);
                                 }
-                                [void]$allServicePrincipals.Add($sp);
                             }
                         }
                     }
@@ -215,10 +250,10 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                     $ids = $users| Select-Object -ExpandProperty Id
                     #Invoke job
                     $members = $ids | Invoke-MonkeyJob @jobParam
-                    if($null -ne $members){
-                        foreach($member in @($members)){
+                    If($null -ne $members){
+                        ForEach($member in @($members)){
                             $objMetadata = @($activeMembers).Where({$_.principalId -eq $member.id}) | Select-Object * -First 1 -ErrorAction Ignore
-                            if($null -ne $objMetadata){
+                            If($null -ne $objMetadata){
                                 $member | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
                                 $member | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
                                 $member | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
@@ -228,7 +263,28 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                         }
                     }
                     #Populate Service principals
-                    foreach($sp in @($allSP)){
+                    #Get sp's id
+                    $spIds = $allSP | Select-Object -ExpandProperty Id -ErrorAction Ignore
+                    If($null -ne $spIds){
+                        #Invoke job
+                        $sps = $spIds | Invoke-MonkeyJob @sp_job
+                        #Update service principals
+                        $sps = $sps | Invoke-MonkeyJob @update_sp_job
+                        If($null -ne $sps -and @($sps).Count -gt 0){
+                            ForEach($sp in @($sps)){
+                                $objMetadata = @($activeMembers).Where({$_.principalId -eq $sp.id}) | Select-Object * -First 1 -ErrorAction Ignore
+                                If($null -ne $objMetadata){
+                                    $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                                    $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                                    $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                                    $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                                }
+                                [void]$allServicePrincipals.Add($sp)
+                            }
+                        }
+                    }
+                    <#
+                    ForEach($sp in @($allSP)){
                         $objMetadata = @($activeMembers).Where({$_.principalId -eq $sp.id}) | Select-Object * -First 1 -ErrorAction Ignore
                         if($null -ne $objMetadata){
                             $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
@@ -238,13 +294,14 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                         }
                         [void]$allServicePrincipals.Add($sp)
                     }
+                    #>
                     #Populate Groups
                     $myRole.activeAssignment.groups = $groups;
                     #Get effective users and remove duplicate members
                     $uniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
                     $alluniqueUsers = $allUsers | Sort-Object -Property Id -Unique -ErrorAction Ignore
-                    if($null -ne $alluniqueUsers){
-                        foreach($usr in @($alluniqueUsers)){
+                    If($null -ne $alluniqueUsers){
+                        ForEach($usr in @($alluniqueUsers)){
                             [void]$uniqueUsers.Add($usr);
                         }
                     }
@@ -255,7 +312,7 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                     #Count objects
                     $myRole.activeAssignment.totalActiveMembers = ($myRole.activeAssignment.users.Count + $myRole.activeAssignment.servicePrincipals.Count)
                     #Get duplicate users
-                    if($allUsers.Count -gt 0){
+                    If($allUsers.Count -gt 0){
                         $myRole.activeAssignment.duplicateUsers = Get-MonkeyDuplicateObjectsByProperty -ReferenceObject $allUsers -Property Id
                     }
                     Else{
@@ -312,16 +369,16 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                     #Get service Principals
                     $allSP = @($identities).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
                     #get Real members
-                    foreach($grp in $groups){
+                    ForEach($grp in $groups){
                         $objMetadata = @($eligibleMembers).Where({$_.principalId -eq $grp.id}) | Select-Object * -First 1 -ErrorAction Ignore
                         $groupMember = Get-MonkeyMSGraphGroupTransitiveMember -GroupId $grp.id -Parents @($grp.id)
-                        if($groupMember){
+                        If($groupMember){
                             $ids = @($groupMember).Where({$_.'@odata.type' -match '#microsoft.graph.user'}) | Select-Object -ExpandProperty Id
                             #Invoke job
                             $members = $ids | Invoke-MonkeyJob @jobParam
-                            if($members){
-                                foreach($member in @($members)){
-                                    if($null -ne $objMetadata){
+                            If($members){
+                                ForEach($member in @($members)){
+                                    If($null -ne $objMetadata){
                                         $member | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
                                         $member | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
                                         $member | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
@@ -332,14 +389,22 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                             }
                             #Get Service Principals
                             $sps = @($groupMember).Where({$_.'@odata.type' -match '#microsoft.graph.servicePrincipal'})
-                            foreach($sp in $sps){
-                                if($null -ne $objMetadata){
-                                    $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
-                                    $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
-                                    $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
-                                    $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                            #Get sp's id
+                            $spIds = $sps | Select-Object -ExpandProperty Id -ErrorAction Ignore
+                            #Invoke job
+                            $_sps = $spIds | Invoke-MonkeyJob @sp_job
+                            #Update service principals
+                            $_sps = $_sps | Invoke-MonkeyJob @update_sp_job
+                            If($null -ne $_sps){
+                                ForEach($sp in @($_sps)){
+                                    If($null -ne $objMetadata){
+                                        $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                                        $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                                        $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                                        $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                                    }
+                                    [void]$allServicePrincipals.Add($sp);
                                 }
-                                [void]$allServicePrincipals.Add($sp);
                             }
                         }
                     }
@@ -347,10 +412,10 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                     $ids = $users| Select-Object -ExpandProperty Id
                     #Invoke job
                     $members = $ids | Invoke-MonkeyJob @jobParam
-                    if($null -ne $members){
-                        foreach($member in @($members)){
+                    If($null -ne $members){
+                        ForEach($member in @($members)){
                             $objMetadata = @($eligibleMembers).Where({$_.principalId -eq $member.id}) | Select-Object * -First 1 -ErrorAction Ignore
-                            if($null -ne $objMetadata){
+                            If($null -ne $objMetadata){
                                 $member | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
                                 $member | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
                                 $member | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
@@ -359,24 +424,34 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                             [void]$allUsers.Add($member)
                         }
                     }
-                    #Populate Service principals
-                    foreach($sp in @($allSP)){
-                        $objMetadata = @($eligibleMembers).Where({$_.principalId -eq $sp.id}) | Select-Object * -First 1 -ErrorAction Ignore
-                        if($null -ne $objMetadata){
-                            $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
-                            $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
-                            $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
-                            $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                    #Get sp's id
+                    $spIds = $allSP | Select-Object -ExpandProperty Id -ErrorAction Ignore
+                    If($null -ne $spIds){
+                        #Invoke job
+                        $_sps = $spIds | Invoke-MonkeyJob @sp_job
+                        #Update service principals
+                        $_sps = $_sps | Invoke-MonkeyJob @update_sp_job
+                        If($null -ne $_sps -and @($_sps).Count -gt 0){
+                            #Populate Service principals
+                            ForEach($sp in @($_sps)){
+                                $objMetadata = @($eligibleMembers).Where({$_.principalId -eq $sp.id}) | Select-Object * -First 1 -ErrorAction Ignore
+                                If($null -ne $objMetadata){
+                                    $sp | Add-Member -MemberType NoteProperty -Name startDateTime -Value $objMetadata.startDateTime
+                                    $sp | Add-Member -MemberType NoteProperty -Name endDateTime -Value $objMetadata.endDateTime
+                                    $sp | Add-Member -MemberType NoteProperty -Name assignmentType -Value $objMetadata.assignmentType
+                                    $sp | Add-Member -MemberType NoteProperty -Name memberType -Value $objMetadata.memberType
+                                }
+                                [void]$allServicePrincipals.Add($sp)
+                            }
                         }
-                        [void]$allServicePrincipals.Add($sp)
                     }
                     #Populate Groups
                     $myRole.eligibleAssignment.groups = $groups;
                     #Get effective users and remove duplicate members
                     $uniqueUsers = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
                     $alluniqueUsers = $allUsers | Sort-Object -Property Id -Unique -ErrorAction Ignore
-                    if($null -ne $alluniqueUsers){
-                        foreach($usr in @($alluniqueUsers)){
+                    If($null -ne $alluniqueUsers){
+                        ForEach($usr in @($alluniqueUsers)){
                             [void]$uniqueUsers.Add($usr);
                         }
                     }
@@ -387,7 +462,7 @@ Function Get-MonkeyMSGraphPIMRoleAssignment{
                     #Count objects
                     $myRole.eligibleAssignment.totalEligibleMembers = ($myRole.eligibleAssignment.users.Count + $myRole.eligibleAssignment.servicePrincipals.Count)
                     #Get duplicate users
-                    if($allUsers.Count -gt 0){
+                    If($allUsers.Count -gt 0){
                         $myRole.eligibleAssignment.duplicateUsers = Get-MonkeyDuplicateObjectsByProperty -ReferenceObject $allUsers -Property Id
                     }
                     Else{

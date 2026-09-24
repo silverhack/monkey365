@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ Function Get-MonkeyAzStorageAccountInfo {
 					Debug = $O365Object.Debug;
 					InformationAction = $O365Object.InformationAction;
 				}
-				$strObject.diagnosticSettings.file = Get-MonkeyAzStorageAccountDiagnosticSetting @p
+				$strObject.classicDiagnosticSettings.file = Get-MonkeyAzStorageAccountClassicDiagnosticSetting @p
 				#Get queue diagnostic settings
 				$p = @{
 					StorageAccount = $strObject;
@@ -121,7 +121,7 @@ Function Get-MonkeyAzStorageAccountInfo {
 					Debug = $O365Object.Debug;
 					InformationAction = $O365Object.InformationAction;
 				}
-				$strObject.diagnosticSettings.queue = Get-MonkeyAzStorageAccountDiagnosticSetting @p
+				$strObject.classicDiagnosticSettings.queue = Get-MonkeyAzStorageAccountClassicDiagnosticSetting @p
 				#Get blob diagnostic settings
 				$p = @{
 					StorageAccount = $strObject;
@@ -130,7 +130,7 @@ Function Get-MonkeyAzStorageAccountInfo {
 					Debug = $O365Object.Debug;
 					InformationAction = $O365Object.InformationAction;
 				}
-				$strObject.diagnosticSettings.blob = Get-MonkeyAzStorageAccountDiagnosticSetting @p
+				$strObject.classicDiagnosticSettings.blob = Get-MonkeyAzStorageAccountClassicDiagnosticSetting @p
 				#Get table diagnostic settings
 				$p = @{
 					StorageAccount = $strObject;
@@ -139,8 +139,47 @@ Function Get-MonkeyAzStorageAccountInfo {
 					Debug = $O365Object.Debug;
 					InformationAction = $O365Object.InformationAction;
 				}
-				$strObject.diagnosticSettings.table = Get-MonkeyAzStorageAccountDiagnosticSetting @p
-				# Get container info
+				$strObject.classicDiagnosticSettings.table = Get-MonkeyAzStorageAccountClassicDiagnosticSetting @p
+				#### Get Diagnostic Settings
+                #Get root Diagnostic Settings
+                $rootDiag = $strObject | Get-MonkeyAzStorageAccountDiagnosticSetting -Type root
+                ForEach($_diag in @($rootDiag).Where({$null -ne $_})){
+                    [void]$strObject.diagnosticSettings.root.Add($_diag)
+                }
+                $blob = $strObject.properties.primaryEndpoints | Select-Object -ExpandProperty blob -ErrorAction Ignore
+                $queue = $strObject.properties.primaryEndpoints | Select-Object -ExpandProperty queue -ErrorAction Ignore
+                $table = $strObject.properties.primaryEndpoints | Select-Object -ExpandProperty table -ErrorAction Ignore
+                $file = $strObject.properties.primaryEndpoints | Select-Object -ExpandProperty file -ErrorAction Ignore
+                #Get diagnostic settings for blob storage
+                IF($blob){
+                    $blobDiag = $strObject | Get-MonkeyAzStorageAccountDiagnosticSetting -Type blob
+                    ForEach($_diag in @($blobDiag).Where({$null -ne $_})){
+                        [void]$strObject.diagnosticSettings.blob.Add($_diag)
+                    }
+                }
+                #Get diagnostic settings for queue storage
+                IF($queue){
+                    $queueDiag = $strObject | Get-MonkeyAzStorageAccountDiagnosticSetting -Type queue
+                    ForEach($_diag in @($queueDiag).Where({$null -ne $_})){
+                        [void]$strObject.diagnosticSettings.queue.Add($_diag)
+                    }
+                }
+                #Get diagnostic settings for table storage
+                IF($table){
+                    $tableDiag = $strObject | Get-MonkeyAzStorageAccountDiagnosticSetting -Type table
+                    ForEach($_diag in @($tableDiag).Where({$null -ne $_})){
+                        [void]$strObject.diagnosticSettings.table.Add($_diag)
+                    }
+                }
+                #Get diagnostic settings for file storage
+                IF($file){
+                    $fileDiag = $strObject | Get-MonkeyAzStorageAccountDiagnosticSetting -Type file
+                    ForEach($_diag in @($fileDiag).Where({$null -ne $_})){
+                        [void]$strObject.diagnosticSettings.file.Add($_diag)
+                    }
+                }
+                ### End Diagnostic Settings
+                # Get container info
                 $p = @{
 			        InputObject = $strObject;
                     ApiVersion = $APIVersion;

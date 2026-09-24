@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -79,7 +79,14 @@ Function Get-MonkeyAzurePortalObject{
              break
         }
         #Get Authorization Header
-        $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
+        $methods = $Authentication | Get-Member | Where-Object {$_.MemberType -eq 'Method'} | Select-Object -ExpandProperty Name
+        #Get Authorization Header
+        If($null -ne $methods -and $methods.Contains('CreateAuthorizationHeader')){
+            $AuthHeader = $Authentication.CreateAuthorizationHeader()
+        }
+        Else{
+            $AuthHeader = ("Bearer {0}" -f $Authentication.AccessToken)
+        }
         if($Query){
             #Construct URI
             $URI = '{0}/{1}' -f $Environment.AADPortal, $Query

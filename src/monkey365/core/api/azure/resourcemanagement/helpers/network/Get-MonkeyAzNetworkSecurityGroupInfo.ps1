@@ -98,7 +98,7 @@ Function Get-MonkeyAzNetworkSecurityGroupInfo {
                     }
                 }
                 #Flatten destinationPortRange and destinationPortRanges
-                ForEach($rule in $nsgObject.securityRules.Where({$null -ne $_})){
+                ForEach($rule in @($nsgObject.securityRules).Where({$null -ne $_})){
                     #Set integer arrays
 		            $destinationPortRange = [System.Collections.Generic.List[System.Int32]]::new()
                     $destinationPortRanges = [System.Collections.Generic.List[System.Int32]]::new()

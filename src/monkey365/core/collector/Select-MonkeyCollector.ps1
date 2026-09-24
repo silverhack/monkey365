@@ -1,4 +1,4 @@
-﻿# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
+# Monkey365 - the PowerShell Cloud Security Tool for Azure and Microsoft 365 (copyright 2022) by Juan Garrido
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -70,6 +70,19 @@ Function Select-MonkeyCollector{
                 [void]$p.Add('Provider',$PSBoundParameters['Provider']);
             }
             $allCollectors = Get-MetadataFromCollector @p
+            #Check for duplicate Ids
+            $duplicateIds = $allCollectors | Group-Object -Property Id | Where-Object {$_.Count -gt 1} | Select-Object -ExpandProperty Name -ErrorAction Ignore
+            If($null -ne $duplicateIds){
+                $message = ("Duplicated Id(s) were found in collector(s): {0}" -f [string]::join(",", $duplicateIds))
+                $msg = @{
+                    MessageData = $message;
+                    callStack = (Get-PSCallStack | Select-Object -First 1);
+                    logLevel = 'warning';
+                    InformationAction = $O365Object.InformationAction;
+                    Tags = @('Monkey365ConnectorWarning');
+                }
+                Write-Warning @msg                
+            }
             #Remove disabled plugins
             $allCollectors = @($allCollectors).Where({$_.enabled})
         }
@@ -150,8 +163,21 @@ Function Select-MonkeyCollector{
         }
     }
     End{
-        #Exclude collectors if present
-        if($null -ne $O365Object.excludeCollectors){
+        
+        If($null -ne $O365Object.includeCollectors){
+            $message = ("The following collectors will be selected: {0}" -f [string]::join(",", $O365Object.includeCollectors))
+            $msg = @{
+                MessageData = $message;
+                callStack = (Get-PSCallStack | Select-Object -First 1);
+                logLevel = 'verbose';
+                InformationAction = $O365Object.InformationAction;
+                Verbose = $O365Object.verbose;
+                Tags = @('IncludingCollectors');
+            }
+            Write-Verbose @msg
+            $collectors = @($collectors).Where({$_.Id -in $O365Object.includeCollectors})
+        }
+        ElseIf($null -ne $O365Object.excludeCollectors){#Exclude collectors if present
             $message = ("The following collectors will be excluded: {0}" -f [string]::join(",", $O365Object.excludeCollectors))
             $msg = @{
                 MessageData = $message;
