@@ -77,7 +77,7 @@ Function Connect-MonkeyGenericApplication {
             #Check if application is present
             ElseIf(($O365Object.msal_public_applications.Where({$_.AppConfig.ClientId -eq (Get-WellKnownAzureService -AzureService ("{0}" -f $AzureService))})).Count -gt 0){
                 If($RedirectUri){
-                    $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.AppConfig.ClientId -eq (Get-WellKnownAzureService -AzureService ("{0}" -f $AzureService)) -and $_.AppConfig.RedirectUri -eq $RedirectUri}) | Select-Object -First 1                    
+                    $new_params.publicApp = $O365Object.msal_public_applications.Where({$_.AppConfig.ClientId -eq (Get-WellKnownAzureService -AzureService ("{0}" -f $AzureService)) -and $_.AppConfig.RedirectUri -eq $RedirectUri}) | Select-Object -First 1
                     If($null -ne $new_params.publicApp){
                         #Add silent
                         If(-NOT $new_params.ContainsKey('Silent')){

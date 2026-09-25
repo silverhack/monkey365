@@ -74,7 +74,6 @@ Function Get-AvailableRule{
                     $ruleObj.path = $null;
                     $ruleObj.skipped = $true;
                     $ruleObj.reason = "Data is not present in dataset";
-                    
                 }
                 ElseIf($_path.Length -eq 0){
                     #removing rule

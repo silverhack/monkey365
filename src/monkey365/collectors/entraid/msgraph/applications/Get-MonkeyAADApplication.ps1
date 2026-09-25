@@ -134,6 +134,5 @@ function Get-MonkeyAADApplication {
 			}
 			$returnData.aad_app_registrations = $obj
         }
-        
 	}
 }

@@ -103,7 +103,7 @@ function Get-MonkeyEIDDefaultApplicationManagementPolicy {
 			Verbose = $O365Object.Verbose;
 			Debug = $O365Object.Debug;
 		}
-		$defaultAppManagementPolicy = Get-MonkeyMSGraphDefaultAppManagementPolicy
+		$defaultAppManagementPolicy = Get-MonkeyMSGraphDefaultAppManagementPolicy @p
         If($defaultAppManagementPolicy){
             #Add to returndata object
             $defaultAppManagementPolicy.PSObject.TypeNames.Insert(0,'Monkey365.EntraID.default.app.management.policy')

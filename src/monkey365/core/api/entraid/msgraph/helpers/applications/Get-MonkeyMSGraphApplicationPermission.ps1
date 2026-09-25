@@ -36,6 +36,7 @@ Function Get-MonkeyMSGraphApplicationPermission {
             https://github.com/silverhack/monkey365
     #>
 	[CmdletBinding()]
+    [OutputType([System.Collections.Generic.List[System.Object]])]
 	Param (
         [Parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Application")]
         [Object]$InputObject,
@@ -58,7 +59,7 @@ Function Get-MonkeyMSGraphApplicationPermission {
     Process{
         Try{
             #Set nulls
-            $servicePrincipals = $appRoleAssignment = $Oauth2Grants = $null
+            $appRoleAssignment = $Oauth2Grants = $null
             #Set arrays
             $all_sp_permissions = [System.Collections.Generic.List[System.Object]]::new()
             $all_permissions = [System.Collections.Generic.List[System.Object]]::new()

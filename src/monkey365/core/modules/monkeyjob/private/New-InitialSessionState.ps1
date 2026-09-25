@@ -73,7 +73,6 @@ Function New-InitialSessionState{
         If($null -ne $sessionstate -and $sessionstate -is [System.Management.Automation.Runspaces.InitialSessionState]){
             If($ImportVariables){
                 $all_scopes = [System.Management.Automation.ScopedItemOptions]::AllScope
-                $allVars = [System.Collections.Generic.List[System.Management.Automation.Runspaces.SessionStateVariableEntry]]::new();
                 $all_vars = [System.Collections.ArrayList]::new()
                 #Set a Hashset collection of existing variables
                 $existing = [System.Collections.Generic.HashSet[string]]([System.StringComparer]::OrdinalIgnoreCase)
@@ -165,12 +164,12 @@ Function New-InitialSessionState{
                 $_commands = @($CommandsToImport).Where({$null -ne $_ -and $_ -is [System.Management.Automation.Language.FunctionDefinitionAst]});
                 ForEach($_command in $_commands.GetEnumerator()){
                     Write-Verbose ($Script:messages.ImportingFunctionMessage -f $_command.Name)
-                    $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $_command.Name, $_command.Body.GetScriptBlock()                    
+                    $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $_command.Name, $_command.Body.GetScriptBlock()
                     [void]$allcommands.Add($SessionStateFunction);
                 }
                 # Add all entries
                 ForEach($cmd in $allcommands.GetEnumerator()){
-                    $sessionstate.Commands.Add($cmd)                    
+                    $sessionstate.Commands.Add($cmd)
                 }
                 <#
                 ForEach($fnc in @($CommandsToImport).Where({$null -ne $_})){
@@ -188,12 +187,12 @@ Function New-InitialSessionState{
                 $_commands = @($ImportCommandsAst).Where({$null -ne $_ -and $_ -is [System.Management.Automation.Language.StatementAst]});
                 ForEach($_command in $_commands.GetEnumerator()){
                     Write-Verbose ($Script:messages.ImportingStatementAstMessage -f $_command.Name)
-                    $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $_command.Name, $_command.Body.GetScriptBlock()                    
+                    $SessionStateFunction = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $_command.Name, $_command.Body.GetScriptBlock()
                     [void]$allcommands.Add($SessionStateFunction);
                 }
                 # Add all entries
                 ForEach($cmd in $allcommands.GetEnumerator()){
-                    $sessionstate.Commands.Add($cmd)                    
+                    $sessionstate.Commands.Add($cmd)
                 }
                 <#
                 ForEach($fnc in @($ImportCommandsAst).Where({$null -ne $_})){

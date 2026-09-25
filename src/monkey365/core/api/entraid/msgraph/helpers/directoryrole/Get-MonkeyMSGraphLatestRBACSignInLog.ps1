@@ -35,7 +35,7 @@ Function Get-MonkeyMSGraphLatestRBACSignInLog {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "", Scope="Function")]
 	[CmdletBinding(DefaultParameterSetName = 'IT')]
 	Param (
         [parameter(Mandatory=$false, HelpMessage="API version")]
@@ -60,9 +60,6 @@ Function Get-MonkeyMSGraphLatestRBACSignInLog {
         $all_sign_in_role_assignment = [System.Collections.Generic.List[System.Management.Automation.PSObject]]::new()
         #set null
         $signInLog = $null
-        $Environment = $O365Object.Environment
-        #Get Graph Auth
-        $graphAuth = $O365Object.auth_tokens.MSGraph
         If($APIVersion.ToLower() -eq 'v1.0'){
             #We need to switch to beta endpoint
             $APIVersion = 'beta';

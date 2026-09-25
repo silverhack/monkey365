@@ -36,6 +36,7 @@ Function Update-ServicePrincipal {
             https://github.com/silverhack/monkey365
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "", Scope="Function")]
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [CmdletBinding()]
 	Param (
@@ -46,11 +47,6 @@ Function Update-ServicePrincipal {
         [ValidateSet("v1.0","beta")]
         [String]$APIVersion = "v1.0"
     )
-    Begin{
-        $Environment = $O365Object.Environment
-        #Get Graph Auth
-        $graphAuth = $O365Object.auth_tokens.MSGraph
-    }
     Process{
         $foreign = $signInActivity = $null
         $appOwnerOrganizationId = $InputObject | Select-Object -ExpandProperty appOwnerOrganizationId -ErrorAction Ignore
@@ -60,7 +56,7 @@ Function Update-ServicePrincipal {
         Else{
             $foreign = $True
         }
-        #Add to object 
+        #Add to object
         $InputObject | Add-Member -MemberType NoteProperty -Name foreign -Value $foreign -Force
         #Get last sign in activity
         $appId = $InputObject | Select-Object -ExpandProperty appId -ErrorAction Ignore

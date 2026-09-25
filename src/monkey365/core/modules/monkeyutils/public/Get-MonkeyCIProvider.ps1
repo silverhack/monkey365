@@ -14,6 +14,7 @@
 
 Function Get-MonkeyCIProvider {
     [CmdletBinding()]
+    [OutputType([System.String])]
     param()
     # Use multiple signals to reduce accidental false positives
     #Test for GitHub

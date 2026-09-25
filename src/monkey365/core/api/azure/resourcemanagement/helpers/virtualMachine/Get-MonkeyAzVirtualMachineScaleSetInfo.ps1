@@ -73,7 +73,7 @@ Function Get-MonkeyAzVirtualMachineScaleSetInfo {
                     Debug = $O365Object.debug;
                     InformationAction = $O365Object.InformationAction;
 		        }
-                $scaleSetObject = $scaleSetObject | Update-MonkeyAzNetworkForVMScaleSet
+                $scaleSetObject = $scaleSetObject | Update-MonkeyAzNetworkForVMScaleSet @p
                 #Get instances
                 $p = @{
                     Verbose = $O365Object.verbose;

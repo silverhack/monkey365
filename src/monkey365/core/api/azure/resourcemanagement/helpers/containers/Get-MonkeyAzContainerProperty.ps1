@@ -35,8 +35,9 @@ Function Get-MonkeyAzContainerProperty {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "", Scope="Function")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "", Scope="Function")]
 	[CmdletBinding()]
+    [OutputType([System.Collections.Generic.List[System.Object]])]
 	Param (
         [Parameter(Mandatory=$True, ValueFromPipeline = $True)]
         [Object]$InputObject,

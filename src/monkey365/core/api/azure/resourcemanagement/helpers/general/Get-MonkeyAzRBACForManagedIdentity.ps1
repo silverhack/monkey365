@@ -125,7 +125,7 @@ function Get-MonkeyAzRBACForManagedIdentity{
                                 }
                                 #Add to array
                                 [void]$allIdentities.Add($_systemIdentity);
-                            }                    
+                            }
                         }
                         #Get user managed identities
                         $identities = $identity.userAssignedIdentities.PsObject.Properties | Select-Object -ExpandProperty Name -ErrorAction Ignore

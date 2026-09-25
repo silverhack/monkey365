@@ -69,7 +69,7 @@ Function Get-MonkeyAzContainerInfo {
             If($null -ne $newContainer.networking.subnetIds){
                 $subnetId = $newContainer.networking.subnetIds | Select-Object -First 1 -ErrorAction Ignore
                 If($null -ne $subnetId){
-                    $newContainer.networking.virtualNetworkId = $subnetId.id.Remove($subnetId.id.LastIndexOf('/subnets/'));   
+                    $newContainer.networking.virtualNetworkId = $subnetId.id.Remove($subnetId.id.LastIndexOf('/subnets/'));
                 }
             }
             #Get Containers

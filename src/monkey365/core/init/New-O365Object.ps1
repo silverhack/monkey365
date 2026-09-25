@@ -482,7 +482,7 @@ Function New-O365Object{
                 WriteLog = $MyParams.WriteLog;
                 userAgent = $UserAgent;
                 userProperties = $user_prop_json;
-                groupProperties = $user_prop_json;
+                groupProperties = $group_prop_json;
                 basicUserProperties = $basic_user_prop_json;
                 subscriptions = $null;
                 current_subscription = $null;

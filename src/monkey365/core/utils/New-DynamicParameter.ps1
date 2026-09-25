@@ -13,6 +13,8 @@
 # limitations under the License.
 
 Function New-DynamicParameter {
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact="Medium")]
+    [OutputType([System.Management.Automation.RuntimeDefinedParameter])]
     param(
         [Parameter(Mandatory = $true, HelpMessage= "Name")]
         [string] $Name,
@@ -30,24 +32,22 @@ Function New-DynamicParameter {
         [scriptblock] $ValidateScript
     )
 
+    If (-not $PSCmdlet.ShouldProcess($Name, 'Create dynamic parameter')) {
+        return
+    }
     $attributes = [System.Collections.ObjectModel.Collection[System.Attribute]]::new()
-
     $paramAttr = [System.Management.Automation.ParameterAttribute]::new()
     $paramAttr.Mandatory = $false
     $attributes.Add($paramAttr)
-
     If ($Alias) {
         $attributes.Add([System.Management.Automation.AliasAttribute]::new($Alias))
     }
-
     If ($ValidateSet) {
         $attributes.Add([System.Management.Automation.ValidateSetAttribute]::new([string[]]$ValidateSet))
     }
-
     If ($ValidateScript) {
         $attributes.Add([System.Management.Automation.ValidateScriptAttribute]::new($ValidateScript))
     }
-
     [System.Management.Automation.RuntimeDefinedParameter]::new(
         $Name,
         $Type,

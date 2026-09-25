@@ -49,8 +49,6 @@ Function Get-MonkeyMSGraphOauth2PermissionGrant {
         $Environment = $O365Object.Environment
         #Get Graph Auth
         $graphAuth = $O365Object.auth_tokens.MSGraph
-        #Set var
-        $oauthPermission = $null
     }
     Process{
         $p = @{

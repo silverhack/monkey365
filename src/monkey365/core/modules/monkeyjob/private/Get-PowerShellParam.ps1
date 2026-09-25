@@ -37,7 +37,7 @@ Function Get-PowerShellParam{
     #>
 
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([System.Collections.Specialized.OrderedDictionary])]
     Param (
         [Parameter(Mandatory=$True,position=0,ParameterSetName='ScriptBlock')]
         [System.Management.Automation.ScriptBlock]$ScriptBlock,

@@ -36,6 +36,7 @@ Function Get-MonkeyMSGraphEnterpriseAppUserConsentPermission {
             https://github.com/silverhack/monkey365
     #>
 	[CmdletBinding()]
+    [OutputType([System.Collections.Generic.List[System.Object]])]
 	Param (
         [Parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Service Principal")]
         [Object]$InputObject,
@@ -59,8 +60,6 @@ Function Get-MonkeyMSGraphEnterpriseAppUserConsentPermission {
     }
     Process{
         Try{
-            #Set nulls
-            $servicePrincipals = $null
             #Set arrays
             $all_permissions = [System.Collections.Generic.List[System.Object]]::new()
             #Get delegated permissions consent type through OauthGrants

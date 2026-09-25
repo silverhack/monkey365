@@ -35,7 +35,7 @@ Function Get-MonkeyMSGraphSummarizedSignInLog {
         .LINK
             https://github.com/silverhack/monkey365
     #>
-
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "", Scope="Function")]
 	[CmdletBinding(DefaultParameterSetName = 'NonIT')]
 	Param (
         [parameter(Mandatory=$false, HelpMessage="API version")]

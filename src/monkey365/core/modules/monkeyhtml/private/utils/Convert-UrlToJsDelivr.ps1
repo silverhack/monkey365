@@ -34,6 +34,7 @@ Function Convert-UrlToJsDelivr{
             https://github.com/silverhack/monkey365
     #>
 
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSReviewUnusedParameter", "", Scope="Function")]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "", Scope="Function")]
     [CmdletBinding(DefaultParameterSetName = 'default')]
     [OutputType([System.Uri])]
@@ -53,7 +54,7 @@ Function Convert-UrlToJsDelivr{
     Process{
         Try{
             #Set null
-            $repoUrl = $ghUser = $jsDelivrUrl = $absolutePath = $repository = $null
+            $ghUser = $jsDelivrUrl = $absolutePath = $repository = $null
             #Set URI
             $URI = [System.Uri]::new($Url);
             #Extract user, repository and absolutePath

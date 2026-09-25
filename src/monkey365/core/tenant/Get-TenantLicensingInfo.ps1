@@ -82,14 +82,14 @@ Function Get-TenantLicensingInfo{
             $activeLicenses = $allLicenses.Where({$_.capabilityStatus -eq "Enabled"});
             If($activeLicenses.Count -gt 0){
                 ForEach($activeLicense in $activeLicenses){
-                    [void]$licensingInfo.ActiveLicenses.Add($activeLicense);        
+                    [void]$licensingInfo.ActiveLicenses.Add($activeLicense);
                 }
             }
             #Find suspended licenses
             $suspendedLicenses = $allLicenses.Where({$_.capabilityStatus -eq "Suspended"});
             If($suspendedLicenses.Count -gt 0){
                 ForEach($suspendedLicense in $suspendedLicenses){
-                    [void]$licensingInfo.SuspendedLicenses.Add($suspendedLicense);        
+                    [void]$licensingInfo.SuspendedLicenses.Add($suspendedLicense);
                 }
             }
         }
