@@ -1,90 +1,89 @@
 {
-    "provider": "Azure",
-    "serviceType": "Networking Services",
-    "serviceName": "Networking Services",
-    "displayName": "Ensure 'HTTP2' is set to 'Enabled' on Azure Application Gateway",
-    "description": "Enable HTTP/2 for improved performance, efficiency, and security.<br/><br/>HTTP/2 protocol support is available to clients that connect to application gateway listeners only. Communication with backend server pools is always HTTP/1.1.",
-    "rationale": "Enabling HTTP/2 supports use of modern encrypted connections.",
-    "impact": "Clients and backend services that do not support HTTP/2 will fall back to HTTP/1.1.",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. Go to Application gateways. 2. Click the name of an application gateway. 3. Under Settings, click Configuration. 4. Under HTTP2, click Enabled. 5. Click Save. 6. Repeat steps 1-5 for each application gateway requiring remediation. Remediate from Azure CLI For each application gateway requiring remediation, run the following command to enable HTTP2:",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/application-gateway/features#websocket-and-http2-traffic",
-        "https://learn.microsoft.com/en-us/cli/azure/network/application-gateway?view=azure-cli-latest",
-        "https://learn.microsoft.com/en-us/powershell/module/az.network/get-azapplicationgateway?view=azps-15.4.0",
-        "https://learn.microsoft.com/en-us/powershell/module/az.network/set-azapplicationgateway?view=azps-15.4.0"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "7.13",
-            "profile": [
-                "Level 1"
-            ]
-        }
-    ],
-    "level": "low",
-    "tags": [],
-    "rule": {
-        "path": "",
-        "subPath": null,
-        "selectCondition": {},
-        "query": [
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+  "provider": "Azure",
+  "serviceType": "Networking Services",
+  "serviceName": "Networking Services",
+  "displayName": "Ensure \u0027HTTP2\u0027 is set to \u0027Enabled\u0027 on Azure Application Gateway",
+  "description": "Enable HTTP/2 for improved performance, efficiency, and security.\u003Cbr/\u003E\u003Cbr/\u003EHTTP/2 protocol support is available to clients that connect to application gateway listeners only. Communication with backend server pools is always HTTP/1.1.",
+  "rationale": "Enabling HTTP/2 supports use of modern encrypted connections.",
+  "impact": "Clients and backend services that do not support HTTP/2 will fall back to HTTP/1.1.",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. Go to Application gateways. 2. Click the name of an application gateway. 3. Under Settings, click Configuration. 4. Under HTTP2, click Enabled. 5. Click Save. 6. Repeat steps 1-5 for each application gateway requiring remediation. Remediate from Azure CLI For each application gateway requiring remediation, run the following command to enable HTTP2:",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/application-gateway/features#websocket-and-http2-traffic",
+    "https://learn.microsoft.com/en-us/cli/azure/network/application-gateway?view=azure-cli-latest",
+    "https://learn.microsoft.com/en-us/powershell/module/az.network/get-azapplicationgateway?view=azps-15.4.0",
+    "https://learn.microsoft.com/en-us/powershell/module/az.network/set-azapplicationgateway?view=azps-15.4.0"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "7.13",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "low",
+  "tags": [],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
         },
-        "text": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [],
-                "message": "",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": null,
-                "resourceId": null,
-                "resourceType": null
-            },
-            "onlyStatus": false
-        }
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [],
-    "id": "azure_networking_009"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "azure_networking_009"
 }

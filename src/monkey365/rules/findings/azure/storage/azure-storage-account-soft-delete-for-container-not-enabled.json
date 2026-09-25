@@ -1,126 +1,126 @@
 {
-    "provider": "Azure",
-    "serviceType": "Storage Accounts",
-    "serviceName": "Storage",
-    "displayName": "Ensure that soft delete for containers on Azure Blob Storage storage accounts is Enabled",
-    "description": "Containers in Azure storage accounts may contain sensitive or personal data, such as ePHI or financial information. Data that is erroneously modified or deleted by an application or a user can lead to data loss or unavailability.<br/><br/>It is recommended that soft delete for containers be enabled on Azure storage accounts with blob storage to allow for the preservation and recovery of data when containers are deleted.",
-    "rationale": "Containers can be deleted incorrectly. An attacker or malicious user may do this deliberately in order to cause disruption. Deleting a container results in immediate data loss. Enabling this configuration for Azure storage accounts ensures that even if containers are deleted from the storage account, the containers are recoverable for a specific period of time, which is defined in the \"Retention policies,\" ranging from 7 to 365 days.",
-    "impact": "All soft-deleted data is billed at the same rate as active data. Additional costs may be incurred for deleted containers until the soft delete period ends and the data is permanently removed.",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. Go to Storage accounts. 2. For each Storage Account with blob storage, under Data management, go to Data protection. 3. Check the box next to Enable soft delete for containers. 4. Set the retention period to a sufficient length for your organization. 5. Click Save. Remediate from Azure CLI Run the following command to update container retention:",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/storage/blobs/soft-delete-container-overview",
-        "https://learn.microsoft.com/en-us/azure/storage/blobs/soft-delete-container-enable?tabs=azure-portal"
+  "provider": "Azure",
+  "serviceType": "Storage Accounts",
+  "serviceName": "Storage",
+  "displayName": "Ensure that soft delete for containers on Azure Blob Storage storage accounts is Enabled",
+  "description": "Containers in Azure storage accounts may contain sensitive or personal data, such as ePHI or financial information. Data that is erroneously modified or deleted by an application or a user can lead to data loss or unavailability.\u003Cbr/\u003E\u003Cbr/\u003EIt is recommended that soft delete for containers be enabled on Azure storage accounts with blob storage to allow for the preservation and recovery of data when containers are deleted.",
+  "rationale": "Containers can be deleted incorrectly. An attacker or malicious user may do this deliberately in order to cause disruption. Deleting a container results in immediate data loss. Enabling this configuration for Azure storage accounts ensures that even if containers are deleted from the storage account, the containers are recoverable for a specific period of time, which is defined in the \u0022Retention policies,\u0022 ranging from 7 to 365 days.",
+  "impact": "All soft-deleted data is billed at the same rate as active data. Additional costs may be incurred for deleted containers until the soft delete period ends and the data is permanently removed.",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. Go to Storage accounts. 2. For each Storage Account with blob storage, under Data management, go to Data protection. 3. Check the box next to Enable soft delete for containers. 4. Set the retention period to a sufficient length for your organization. 5. Click Save. Remediate from Azure CLI Run the following command to update container retention:",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/storage/blobs/soft-delete-container-overview",
+    "https://learn.microsoft.com/en-us/azure/storage/blobs/soft-delete-container-enable?tabs=azure-portal"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "9.2.2",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "low",
+  "tags": [],
+  "rule": {
+    "path": "az_storage_accounts",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "dataProtection.containerDeleteRetentionPolicy.enabled",
+                "eq",
+                "False"
+              ],
+              [
+                "eq",
+                "dataProtection.containerDeleteRetentionPolicy.days"
+              ]
+            ],
+            "operator": "or"
+          }
+        ]
+      }
     ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "9.2.2",
-            "profile": [
-                "Level 1"
-            ]
-        }
-    ],
-    "level": "low",
-    "tags": [],
-    "rule": {
-        "path": "az_storage_accounts",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "name": "name",
+          "location": "Location",
+          "dataProtection.containerDeleteRetentionPolicy.enabled": "Container Soft Delete",
+          "dataProtection.containerDeleteRetentionPolicy.days": "Container Retention Days"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "dataProtection.containerDeleteRetentionPolicy.enabled",
-                                "eq",
-                                "False"
-                            ],
-							[
-                                "eq",
-                                "dataProtection.containerDeleteRetentionPolicy.days"
-                            ]
-                        ],
-						"operator":"or"
-                    }
-                ]
-            }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "id",
+            "name",
+            "dataProtection"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
+    },
+    "text": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "name": "name",
+          "location": "Location",
+          "dataProtection.containerDeleteRetentionPolicy.enabled": "Soft Delete",
+          "dataProtection.containerDeleteRetentionPolicy.days": "Retention Days"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "name"
         ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-					"id": "id",
-                    "name": "name",
-                    "location": "Location",
-                    "dataProtection.containerDeleteRetentionPolicy.enabled": "Container Soft Delete",
-					"dataProtection.containerDeleteRetentionPolicy.days": "Container Retention Days"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [
-						"id",
-						"name",
-						"dataProtection"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-					"id": "id",
-                    "name": "name",
-                    "location": "Location",
-                    "dataProtection.containerDeleteRetentionPolicy.enabled": "Soft Delete",
-					"dataProtection.containerDeleteRetentionPolicy.days": "Retention Days"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": ["name"],
-                "message": "Ensure that soft delete for containers on Azure Blob Storage storage accounts is Enabled for {name}",
-                "defaultMessage": "Ensure that soft delete for containers on Azure Blob Storage storage accounts is Enabled"
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "AzureStorageAccount"
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "azure_storage_soft_delete_container_not_enabled",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [
-		"id"
-	],
-    "id": "azure_storage_005"
+        "message": "Ensure that soft delete for containers on Azure Blob Storage storage accounts is Enabled for {name}",
+        "defaultMessage": "Ensure that soft delete for containers on Azure Blob Storage storage accounts is Enabled"
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "AzureStorageAccount"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_storage_soft_delete_container_not_enabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "azure_storage_005"
 }

@@ -1,179 +1,144 @@
 {
-    "provider": "EntraID",
-    "serviceType": "Privileged Identity Management",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure privileged role assignments are activated and not assigned",
-    "description": "Microsoft Entra Privileged Identity Management (PIM) provides just-in-time (JIT) activation workflows for privileged Entra ID and Microsoft 365 roles, enabling timebound access with approval and justification requirements. Rather than holding permanent role assignments, users are made eligible for a role and must explicitly activate it when needed. PIM supports requiring multi-factor authentication at activation, mandatory justification, approval workflows, and configurable activation durations.",
-    "rationale": "Permanent role assignments provide users with continuous access to privileged permissions without requiring just-in-time (JIT) activation, approval workflows, or multifactor authentication verification. This configuration significantly increases the attack surface and violates the principle of least privilege, as users retain elevated permissions even when not actively performing administrative tasks.",
-    "impact": "The implementation of Just in Time privileged access is likely to necessitate changes to administrator routine. Administrators will only be granted access to administrative roles when required. When administrators request role activation, they will need to document the reason for requiring role access, anticipated time required to have the access, and to reauthenticate to enable role access.",
-    "remediation": {
-        "text": "
-			###### To remediate using the UI:
-			1. Sign in to the [Microsoft Entra admin centre](https://entra.microsoft.com/) with an account assigned the Privileged Role Administrator or Global Administrator role
-			2. Navigate to **Identity Governance** > **Privileged Identity Management** > **Microsoft Entra roles**
-			3. Select **Roles** from the left navigation menu to display the complete list of Microsoft Entra directory roles
-			4. Identify roles with permanent active assignments requiring conversion (prioritise Global Administrator, Privileged Role Administrator, and other highly privileged roles)
-			5. Select the specific role (e.g., `Global Administrator`) to open the role details page
-			6. Select the **Assignments** tab to view all current role assignments for that role
-			7. Review users listed under the **Active assignments** section who have permanent active role assignments
-			8. Identify assignments where the **End time** column displays `Permanent` (indicating no expiration date)
-			9. Select the ellipsis (…) menu for each permanent active assignment that should be converted
-			10. Choose **Update assignment** from the context menu to open the assignment configuration pane
-			11. In the **Assignment type** dropdown, change from **Active** to **Eligible** to require just-in-time activation
-			12. Configure the **Assignment duration** settings to define how long the eligible assignment remains valid (permanent eligible or time-bound eligible with specific start and end dates)
-			13. Add business justification in the **Justification** field explaining the reason for converting to eligible assignment
-			14. Select **Update** to save the changes and convert the permanent active assignment to an eligible assignment
-			15. Repeat steps 9-14 for all permanent active assignments across all privileged roles requiring conversion
-			16. Navigate to **Settings** for each role to configure activation requirements
-			17. Under **Activation** settings, enable **Require Azure MFA on activation** to enforce multifactor authentication when users activate the role
-			18. Enable **Require justification on activation** to require users to provide a business reason when activating privileges
-			19. Enable **Require approval to activate** for highly sensitive roles (e.g., Global Administrator) and designate appropriate approvers
-			20. Configure **Activation maximum duration (hours)** to limit how long activated permissions remain valid (recommended: 1-8 hours depending on role sensitivity)
-			21. Under **Assignment** settings, configure **Require Azure MFA on active assignment** and **Require justification on active assignment** for any remaining active assignments
-			22. Enable **Require Conditional Access context on activation (Preview)** to enforce additional Conditional Access policies during role activation
-			23. Configure notification settings to alert administrators when privileged roles are activated, assigned, or when activation requests are submitted
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
+  "provider": "EntraID",
+  "serviceType": "Privileged Identity Management",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure privileged role assignments are activated and not assigned",
+  "description": "Microsoft Entra Privileged Identity Management (PIM) provides just-in-time (JIT) activation workflows for privileged Entra ID and Microsoft 365 roles, enabling timebound access with approval and justification requirements. Rather than holding permanent role assignments, users are made eligible for a role and must explicitly activate it when needed. PIM supports requiring multi-factor authentication at activation, mandatory justification, approval workflows, and configurable activation durations.",
+  "rationale": "Permanent role assignments provide users with continuous access to privileged permissions without requiring just-in-time (JIT) activation, approval workflows, or multifactor authentication verification. This configuration significantly increases the attack surface and violates the principle of least privilege, as users retain elevated permissions even when not actively performing administrative tasks.",
+  "impact": "The implementation of Just in Time privileged access is likely to necessitate changes to administrator routine. Administrators will only be granted access to administrative roles when required. When administrators request role activation, they will need to document the reason for requiring role access, anticipated time required to have the access, and to reauthenticate to enable role access.",
+  "remediation": {
+    "text": "\n\t\t\t###### To remediate using the UI:\n\t\t\t1. Sign in to the [Microsoft Entra admin centre](https://entra.microsoft.com/) with an account assigned the Privileged Role Administrator or Global Administrator role\n\t\t\t2. Navigate to **Identity Governance** \u003E **Privileged Identity Management** \u003E **Microsoft Entra roles**\n\t\t\t3. Select **Roles** from the left navigation menu to display the complete list of Microsoft Entra directory roles\n\t\t\t4. Identify roles with permanent active assignments requiring conversion (prioritise Global Administrator, Privileged Role Administrator, and other highly privileged roles)\n\t\t\t5. Select the specific role (e.g., \u0060Global Administrator\u0060) to open the role details page\n\t\t\t6. Select the **Assignments** tab to view all current role assignments for that role\n\t\t\t7. Review users listed under the **Active assignments** section who have permanent active role assignments\n\t\t\t8. Identify assignments where the **End time** column displays \u0060Permanent\u0060 (indicating no expiration date)\n\t\t\t9. Select the ellipsis (\u2026) menu for each permanent active assignment that should be converted\n\t\t\t10. Choose **Update assignment** from the context menu to open the assignment configuration pane\n\t\t\t11. In the **Assignment type** dropdown, change from **Active** to **Eligible** to require just-in-time activation\n\t\t\t12. Configure the **Assignment duration** settings to define how long the eligible assignment remains valid (permanent eligible or time-bound eligible with specific start and end dates)\n\t\t\t13. Add business justification in the **Justification** field explaining the reason for converting to eligible assignment\n\t\t\t14. Select **Update** to save the changes and convert the permanent active assignment to an eligible assignment\n\t\t\t15. Repeat steps 9-14 for all permanent active assignments across all privileged roles requiring conversion\n\t\t\t16. Navigate to **Settings** for each role to configure activation requirements\n\t\t\t17. Under **Activation** settings, enable **Require Azure MFA on activation** to enforce multifactor authentication when users activate the role\n\t\t\t18. Enable **Require justification on activation** to require users to provide a business reason when activating privileges\n\t\t\t19. Enable **Require approval to activate** for highly sensitive roles (e.g., Global Administrator) and designate appropriate approvers\n\t\t\t20. Configure **Activation maximum duration (hours)** to limit how long activated permissions remain valid (recommended: 1-8 hours depending on role sensitivity)\n\t\t\t21. Under **Assignment** settings, configure **Require Azure MFA on active assignment** and **Require justification on active assignment** for any remaining active assignments\n\t\t\t22. Enable **Require Conditional Access context on activation (Preview)** to enforce additional Conditional Access policies during role activation\n\t\t\t23. Configure notification settings to alert administrators when privileged roles are activated, assigned, or when activation requests are submitted\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
+    "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/security-planning",
+    "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-deployment-plan",
+    "https://learn.microsoft.com/en-us/azure/security/fundamentals/identity-management-best-practices",
+    "https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-strategy"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "7.0.0",
+      "reference": "5.2.2.17",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "high",
+  "tags": [],
+  "rule": {
+    "path": "aad_pim_roleAssignment",
+    "subPath": null,
+    "selectCondition": [
+      {
+        "filter": [
+          {
+            "include": "_ARG_0_"
+          }
+        ]
+      }
+    ],
+    "data": {
+      "properties": {
+        "activeAssignment.users.*": "users",
+        "roleName": "roleName",
+        "description": "description",
+        "templateId": "templateId"
+      },
+      "expandObject": "activeAssignment.users"
     },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-configure",
-        "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/security-planning",
-		"https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-deployment-plan",
-		"https://learn.microsoft.com/en-us/azure/security/fundamentals/identity-management-best-practices",
-		"https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-strategy"
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "eq",
+                "endDateTime"
+              ]
+            ]
+          }
+        ]
+      }
     ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "7.0.0",
-            "reference": "5.2.2.17",
-            "profile": [
-				"E3 Level 1",
-				"E5 Level 1"
-			]
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "userPrincipalName": "userPrincipalName",
+          "roleName": "roleName",
+          "description": "description",
+          "startDateTime": "startDateTime",
+          "endDateTime": "endDateTime",
+          "assignmentType": "assignmentType",
+          "memberType": "memberType"
         }
-    ],
-    "level": "high",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "aad_pim_roleAssignment",
-        "subPath": null,
-        "selectCondition": [
-			{
-                "filter": [
-                    {
-                        "include": "_ARG_0_"
-                    }
-                ]
-            }
-        ],
-		"data": {
-            "properties": {
-				"activeAssignment.users.*": "users",
-                "roleName": "roleName",
-                "description": "description",
-                "templateId": "templateId"
-            },
-            "expandObject": "activeAssignment.users"
+      },
+      "table": null,
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
         },
-        "query": [
-			{
-                "filter": [
-                    {
-                        "conditions": [
-							[
-                                "eq",
-								"endDateTime"
-                            ]
-                        ]
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
     },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-					"id": "id",
-                    "userPrincipalName": "userPrincipalName",
-					"roleName": "roleName",
-                    "description": "description",
-					"startDateTime": "startDateTime",
-                    "endDateTime": "endDateTime",
-					"assignmentType": "assignmentType",
-					"memberType": "memberType"
-                }
-            },
-            "table": null,
-            "decorate": [
-                
-            ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": false,
-                "showModalButton": false,
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {
-					"id": "id",
-                    "userPrincipalName": "userPrincipalName",
-					"roleName": "roleName",
-                    "description": "description",
-					"startDateTime": "startDateTime",
-                    "endDateTime": "endDateTime",
-					"assignmentType": "assignmentType",
-					"memberType": "memberType"
-                }
-            },
-            "status": {
-                "keyName": [
-					"userPrincipalName"
-				],
-                "message": "Ensure {userPrincipalName} privileged role assignment is not permanently active",
-                "defaultMessage": "Ensure privileged role assignments are not permanently active"
-            },
-            "properties": {
-                "resourceName": "displayName",
-                "resourceId": "templateId",
-                "resourceType": "PIMRoleAssigned"
-            },
-            "onlyStatus": false
+    "text": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "userPrincipalName": "userPrincipalName",
+          "roleName": "roleName",
+          "description": "description",
+          "startDateTime": "startDateTime",
+          "endDateTime": "endDateTime",
+          "assignmentType": "assignmentType",
+          "memberType": "memberType"
         }
-    },
-    "idSuffix": "eid_permanent_privileged_role_assignment",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"templateId",
-		"displayName"
-    ],
-    "id": "entraid_1128"
+      },
+      "status": {
+        "keyName": [
+          "userPrincipalName"
+        ],
+        "message": "Ensure {userPrincipalName} privileged role assignment is not permanently active",
+        "defaultMessage": "Ensure privileged role assignments are not permanently active"
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "templateId",
+        "resourceType": "PIMRoleAssigned"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "eid_permanent_privileged_role_assignment",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "templateId",
+    "displayName"
+  ],
+  "id": "entraid_1128"
 }

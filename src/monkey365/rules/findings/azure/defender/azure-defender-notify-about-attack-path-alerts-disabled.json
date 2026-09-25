@@ -1,123 +1,117 @@
 {
-    "provider": "Azure",
-    "serviceType": "Subscription Security",
-    "serviceName": "Subscription",
-    "displayName": "Ensure that 'Notify about attack paths with the following risk level (or higher)' is enabled",
-    "description": "Enables emailing attack paths to the subscription owner or other designated security contact.",
-    "rationale": "Enabling attack path emails ensures that attack path emails are sent by Microsoft. This ensures that the right people are aware of any potential security issues and can mitigate the risk.",
-    "impact": "Enabling attack path emails can cause alert fatigue, increasing the risk of missing important alerts. Select an appropriate risk level to manage notifications. Azure aims to reduce alert fatigue by limiting the daily email volume per risk level. Learn more:\nhttps://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email- notifications#email-frequency.",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. From Azure Home select the Portal Menu. 2. Select Microsoft Defender for Cloud. 3. Under Management, select Environment settings. 4. Click on the appropriate Subscription. 5. Click on Email notifications. 6. Under Notification types, check the box next to Notify about attack paths with the following risk level (or higher), and select an appropriate risk level from the drop-down menu. 7. Repeat steps 1-6 for each Subscription.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email-notifications",
-        "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts?view=rest-defenderforcloud-2023-12-01-preview",
-        "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts/list?view=rest-defenderforcloud-2023-12-01-preview&tabs=HTTP",
-		"https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-incident-response#ir-2-preparation---setup-incident-notification"
+  "provider": "Azure",
+  "serviceType": "Subscription Security",
+  "serviceName": "Subscription",
+  "displayName": "Ensure that \u0027Notify about attack paths with the following risk level (or higher)\u0027 is enabled",
+  "description": "Enables emailing attack paths to the subscription owner or other designated security contact.",
+  "rationale": "Enabling attack path emails ensures that attack path emails are sent by Microsoft. This ensures that the right people are aware of any potential security issues and can mitigate the risk.",
+  "impact": "Enabling attack path emails can cause alert fatigue, increasing the risk of missing important alerts. Select an appropriate risk level to manage notifications. Azure aims to reduce alert fatigue by limiting the daily email volume per risk level. Learn more:\nhttps://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email- notifications#email-frequency.",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. From Azure Home select the Portal Menu. 2. Select Microsoft Defender for Cloud. 3. Under Management, select Environment settings. 4. Click on the appropriate Subscription. 5. Click on Email notifications. 6. Under Notification types, check the box next to Notify about attack paths with the following risk level (or higher), and select an appropriate risk level from the drop-down menu. 7. Repeat steps 1-6 for each Subscription.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email-notifications",
+    "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts?view=rest-defenderforcloud-2023-12-01-preview",
+    "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts/list?view=rest-defenderforcloud-2023-12-01-preview\u0026tabs=HTTP",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-incident-response#ir-2-preparation---setup-incident-notification"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "8.1.15",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "info",
+  "tags": [],
+  "rule": {
+    "path": "az_defender",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "sourceType",
+                "eq",
+                "AttackPath"
+              ]
+            ],
+            "whereObject": "notificationsSources"
+          }
+        ]
+      }
     ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "8.1.15",
-            "profile": [
-                "Level 1"
-            ]
-        }
-    ],
-    "level": "info",
-    "tags": [],
-    "rule": {
-        "path": "az_defender",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": "true",
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "securityContacts.name": "Name",
+          "securityContacts.properties.emails": "Email",
+          "securityContacts.properties.phone": "Phone"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "sourceType",
-                                "eq",
-                                "AttackPath"
-                            ]
-                        ],
-						"whereObject":"notificationsSources"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": "true",
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "securityContacts.name": "Name",
-                    "securityContacts.properties.emails": "Email",
-                    "securityContacts.properties.phone": "Phone"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [
-						"securityContacts"
-					],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": null,
-                "showModalButton": "True",
-                "directLink": null
-            }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "securityContacts"
+          ],
+          "expandObject": null,
+          "limit": null
         },
-        "text": {
-            "data": {
-                "properties": {
-                    "securityContacts.name": "Name",
-                    "securityContacts.properties.emails": "Email",
-                    "securityContacts.properties.phone": "Phone",
-                    "securityContacts.properties.notificationsSources.sourceType": "Notification Source"
-                },
-                "expandObject": "securityContacts.properties.notificationsSources"
-            },
-            "status": {
-                "keyName": [],
-                "message": "Ensure that 'Notify about attack paths with the following risk level (or higher)' is enabled",
-                "defaultMessage": "Ensure that 'Notify about attack paths with the following risk level (or higher)' is enabled"
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "type"
-            },
-            "onlyStatus": false
-        }
+        "showGoToButton": null,
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_subscription_notify_attack_path_disabled",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"id"
-    ],
-    "id": "azure_defender_021"
+    "text": {
+      "data": {
+        "properties": {
+          "securityContacts.name": "Name",
+          "securityContacts.properties.emails": "Email",
+          "securityContacts.properties.phone": "Phone",
+          "securityContacts.properties.notificationsSources.sourceType": "Notification Source"
+        },
+        "expandObject": "securityContacts.properties.notificationsSources"
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure that \u0027Notify about attack paths with the following risk level (or higher)\u0027 is enabled",
+        "defaultMessage": "Ensure that \u0027Notify about attack paths with the following risk level (or higher)\u0027 is enabled"
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "type"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_subscription_notify_attack_path_disabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "azure_defender_021"
 }
