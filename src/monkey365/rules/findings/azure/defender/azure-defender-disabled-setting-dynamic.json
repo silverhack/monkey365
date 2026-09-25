@@ -1,146 +1,124 @@
 {
-    "provider": "Azure",
-    "serviceType": "Defender for Cloud",
-    "serviceName": "Subscription",
-    "displayName": "_ARG_0_",
-    "description": "_ARG_1_",
-    "rationale": "_ARG_2_",
-    "impact": "_ARG_3_",
-    "remediation": {
-        "text": "
-			#### Remediate from Azure Portal 
-			1. From Azure Home select the Portal Menu. 
-			2. Go to `Microsoft Defender for Cloud`. 
-			3. Under `Management`, select `Environment Settings`. 
-			4. Click on the subscription name. 
-			5. Click `Settings & monitoring`. 
-			6. _ARG_4_.
-			7. Click `Continue`. 
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
+  "provider": "Azure",
+  "serviceType": "Defender for Cloud",
+  "serviceName": "Subscription",
+  "displayName": "_ARG_0_",
+  "description": "_ARG_1_",
+  "rationale": "_ARG_2_",
+  "impact": "_ARG_3_",
+  "remediation": {
+    "text": "\n\t\t\t#### Remediate from Azure Portal \n\t\t\t1. From Azure Home select the Portal Menu. \n\t\t\t2. Go to \u0060Microsoft Defender for Cloud\u0060. \n\t\t\t3. Under \u0060Management\u0060, select \u0060Environment Settings\u0060. \n\t\t\t4. Click on the subscription name. \n\t\t\t5. Click \u0060Settings \u0026 monitoring\u0060. \n\t\t\t6. _ARG_4_.\n\t\t\t7. Click \u0060Continue\u0060. \n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/settings/list?view=rest-defenderforcloud-2021-06-01\u0026tabs=HTTP",
+    "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/settings/update?view=rest-defenderforcloud-2021-06-01\u0026tabs=HTTP",
+    "_ARG_5_"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "8.1.3.3",
+      "profile": [
+        "Level 2"
+      ]
+    }
+  ],
+  "level": "low",
+  "tags": [],
+  "rule": {
+    "path": "az_defender",
+    "subPath": null,
+    "selectCondition": {},
+    "data": {
+      "properties": {
+        "settings.*": null
+      },
+      "expandObject": "settings"
     },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/settings/list?view=rest-defenderforcloud-2021-06-01&tabs=HTTP",
-		"https://learn.microsoft.com/en-us/rest/api/defenderforcloud/settings/update?view=rest-defenderforcloud-2021-06-01&tabs=HTTP",
-		"_ARG_5_"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "8.1.3.3",
-            "profile": [
-                "Level 2"
-            ]
-        }
-    ],
-    "level": "low",
-    "tags": [
-    ],
-    "rule": {
-        "path": "az_defender",
-        "subPath": null,
-        "selectCondition": {
-            
-        },
-		"data": {
-            "properties": {
-                "settings.*": null
-            },
-            "expandObject": "settings"
-        },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "name",
-                                "eq",
-                                "_ARG_6_"
-                            ],
-                            [
-                                "properties.enabled",
-                                "eq",
-                                "False"
-                            ]
-                        ],
-                        "operator": "and"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "id": "id",
-					"name": "name",
-					"type": "Type",
-                    "properties.enabled": "Enabled"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "name",
+                "eq",
+                "_ARG_6_"
+              ],
+              [
+                "properties.enabled",
+                "eq",
+                "False"
+              ]
             ],
-            "emphasis": [
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "true",
-                "showModalButton": "true",
-                "directLink": null
-            }
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "name": "name",
+          "type": "Type",
+          "properties.enabled": "Enabled"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    "id": "id",
-					"name": "name",
-					"type": "Type",
-                    "properties.enabled": "Enabled"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                ],
-                "message": "_ARG_0_",
-                "defaultMessage": "_ARG_0_"
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "type"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "true",
+        "showModalButton": "true",
+        "directLink": null
+      }
     },
-    "idSuffix": "az_defender_disabled_setting_ARG_7_",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-        
-    ],
-    "id": "azure_defender_setting___ARG_8_"
+    "text": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "name": "name",
+          "type": "Type",
+          "properties.enabled": "Enabled"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "_ARG_0_",
+        "defaultMessage": "_ARG_0_"
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "type"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "az_defender_disabled_setting_ARG_7_",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "azure_defender_setting___ARG_8_"
 }
