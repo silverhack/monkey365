@@ -36,14 +36,11 @@ Function Update-MonkeyAzNetworkForVMScaleSet {
             https://github.com/silverhack/monkey365
     #>
 
-	[CmdletBinding()]
+	[CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact="Medium")]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseDeclaredVarsMoreThanAssignments", "", Scope="Function")]
 	Param (
         [Parameter(Mandatory=$True, ValueFromPipeline = $True)]
-        [Object]$InputObject,
-
-        [parameter(Mandatory=$false, HelpMessage="API version")]
-        [String]$APIVersion = "2026-03-01"
+        [Object]$InputObject
     )
     Process{
         try{
@@ -90,9 +87,12 @@ Function Update-MonkeyAzNetworkForVMScaleSet {
                 }
             }
             #Update object
-            $InputObject.networking.virtualNetworks = $vnetworks;
-            $InputObject.networking.networkSecurityGroups = $nsgs;
-            $InputObject.networking.subnets = $subnets;
+            $target = if($InputObject.id){$InputObject.id}elseif($InputObject.name){$InputObject.name}else{'Virtual Machine Scale Set'}
+            If($PSCmdlet.ShouldProcess($target, 'Update network configuration')){
+                $InputObject.networking.virtualNetworks = $vnetworks;
+                $InputObject.networking.networkSecurityGroups = $nsgs;
+                $InputObject.networking.subnets = $subnets;
+            }
             #return object
             return $InputObject
         }

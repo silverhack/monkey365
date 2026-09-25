@@ -36,6 +36,7 @@ Function Get-MonkeyMSGraphEnterpriseApplicationPermission {
             https://github.com/silverhack/monkey365
     #>
 	[CmdletBinding()]
+    [OutputType([System.Collections.Generic.List[System.Object]])]
 	Param (
         [Parameter(Mandatory=$true, ValueFromPipeline = $True, HelpMessage="Service Principal")]
         [Object]$InputObject,

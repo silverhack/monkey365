@@ -33,6 +33,7 @@ Function Get-Metadata{
         .LINK
             https://github.com/silverhack/monkey365
     #>
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseSingularNouns", "", Scope="Function")]
     [CmdletBinding()]
     [OutputType([System.Management.Automation.PSCustomObject])]
 	Param (

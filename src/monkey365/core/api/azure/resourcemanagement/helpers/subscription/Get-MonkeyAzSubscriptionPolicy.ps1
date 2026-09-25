@@ -56,8 +56,6 @@ Function Get-MonkeyAzSubscriptionPolicy {
             Write-Verbose @msg
             break
         }
-        #set var
-        $policy = $null
     }
     Process{
         If($PSCmdlet.ParameterSetName -eq 'PolicyName'){
@@ -108,8 +106,5 @@ Function Get-MonkeyAzSubscriptionPolicy {
 		    }
             Get-MonkeyRMObject @p
         }
-    }
-    End{
-        #nothing to do here
     }
 }

@@ -105,7 +105,7 @@ function Get-MonkeyAzDefender {
 				Tags = @('AzurePricingEmptyResponse');
 				Verbose = $O365Object.Verbose;
 			}
-			Write-Verbose @msg            
+			Write-Verbose @msg
         }
 	}
 }

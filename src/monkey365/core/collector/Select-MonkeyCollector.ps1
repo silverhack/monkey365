@@ -81,7 +81,7 @@ Function Select-MonkeyCollector{
                     InformationAction = $O365Object.InformationAction;
                     Tags = @('Monkey365ConnectorWarning');
                 }
-                Write-Warning @msg                
+                Write-Warning @msg
             }
             #Remove disabled plugins
             $allCollectors = @($allCollectors).Where({$_.enabled})
@@ -163,7 +163,7 @@ Function Select-MonkeyCollector{
         }
     }
     End{
-        
+
         If($null -ne $O365Object.includeCollectors){
             $message = ("The following collectors will be selected: {0}" -f [string]::join(",", $O365Object.includeCollectors))
             $msg = @{
