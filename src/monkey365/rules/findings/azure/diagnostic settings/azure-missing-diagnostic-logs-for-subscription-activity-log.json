@@ -1,124 +1,120 @@
 {
-    "provider": "Azure",
-    "serviceType": "Diagnostic Settings",
-    "serviceName": "Diagnostic Settings",
-    "displayName": "Ensure that a 'Diagnostic Setting' exists for Subscription Activity Logs",
-    "description": "Enable Diagnostic settings for exporting activity logs. Diagnostic settings are available for each individual resource within a subscription. Settings should be configured for all appropriate resources for your environment.",
-    "rationale": "A diagnostic setting controls how a diagnostic log is exported. By default, logs are retained only for 90 days. Diagnostic settings should be defined so that logs can be exported and stored for a longer duration to analyze security activities within an Azure subscription.",
-    "impact": "",
-    "remediation": {
-        "text": "Remediate from Azure Portal To enable Diagnostic Settings on a Subscription: 1. Go to Monitor 2. Click on Activity log 3. Click on Export Activity Logs 4. Click + Add diagnostic setting 5. Enter a Diagnostic setting name 6. Select Categories for the diagnostic setting 7. Select the appropriate Destination details (this may be Log Analytics, Storage Account, Event Hub, or Partner solution) 8. Click Save To enable Diagnostic Settings on a specific resource: 1. Go to Monitoring 2. Click Diagnostic settings 3. Select Add diagnostic setting 4. Enter a Diagnostic setting name 5. Select the appropriate log, metric, and destination (this may be Log Analytics, Storage Account, Event Hub, or Partner solution) 6. Click Save Repeat these step for all resources as needed.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/data-sources",
-        "https://learn.microsoft.com/en-us/cli/azure/monitor/diagnostic-settings?view=azure-cli-latest",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
+  "provider": "Azure",
+  "serviceType": "Diagnostic Settings",
+  "serviceName": "Diagnostic Settings",
+  "displayName": "Ensure that a \u0027Diagnostic Setting\u0027 exists for Subscription Activity Logs",
+  "description": "Enable Diagnostic settings for exporting activity logs. Diagnostic settings are available for each individual resource within a subscription. Settings should be configured for all appropriate resources for your environment.",
+  "rationale": "A diagnostic setting controls how a diagnostic log is exported. By default, logs are retained only for 90 days. Diagnostic settings should be defined so that logs can be exported and stored for a longer duration to analyze security activities within an Azure subscription.",
+  "impact": "",
+  "remediation": {
+    "text": "Remediate from Azure Portal To enable Diagnostic Settings on a Subscription: 1. Go to Monitor 2. Click on Activity log 3. Click on Export Activity Logs 4. Click \u002B Add diagnostic setting 5. Enter a Diagnostic setting name 6. Select Categories for the diagnostic setting 7. Select the appropriate Destination details (this may be Log Analytics, Storage Account, Event Hub, or Partner solution) 8. Click Save To enable Diagnostic Settings on a specific resource: 1. Go to Monitoring 2. Click Diagnostic settings 3. Select Add diagnostic setting 4. Enter a Diagnostic setting name 5. Select the appropriate log, metric, and destination (this may be Log Analytics, Storage Account, Event Hub, or Partner solution) 6. Click Save Repeat these step for all resources as needed.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/azure-monitor/fundamentals/data-sources",
+    "https://learn.microsoft.com/en-us/cli/azure/monitor/diagnostic-settings?view=azure-cli-latest",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "6.1.1.1",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "az_subscription",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "enabled",
+                "eq",
+                "true"
+              ]
+            ],
+            "whereObject": "diagnosticSettings"
+          }
+        ]
+      }
     ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "6.1.1.1",
-            "profile": [
-                "Level 1"
-            ]
-        }
-    ],
-    "level": "medium",
-    "tags": [],
-    "rule": {
-        "path": "az_subscription",
-        "subPath": null,
-        "selectCondition": {},
-        "query": [
-            {
-                "filter": [
-                    {
-						"conditions": [
-							[
-                                "enabled",
-                                "eq",
-								"true"
-                            ]
-                        ],
-						"whereObject":"diagnosticSettings"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": true,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-					"name":"Name",
-					"id":"Id",
-					"enabled":"Enabled"
-				},
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [
-						"name",
-						"id",
-						"enabled",
-						"properties"
-					],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+    "shouldExist": true,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "id": "Id",
+          "enabled": "Enabled"
         },
-        "text": {
-            "data": {
-                "properties": {
-					"name":"Name",
-					"id":"Id",
-					"enabled":"Enabled"
-				},
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-					"id"
-				],
-                "message": "Ensure that a 'Diagnostic Setting' exists for {id} Activity Logs",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "SubscriptionDiagnosticSetting"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "name",
+            "id",
+            "enabled",
+            "properties"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_diagnostic_settings_for_subscription_not_configured",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"id"
-    ],
-    "id": "azure_diagnostic_setting_001"
+    "text": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "id": "Id",
+          "enabled": "Enabled"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "id"
+        ],
+        "message": "Ensure that a \u0027Diagnostic Setting\u0027 exists for {id} Activity Logs",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "SubscriptionDiagnosticSetting"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_diagnostic_settings_for_subscription_not_configured",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "azure_diagnostic_setting_001"
 }

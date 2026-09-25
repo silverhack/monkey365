@@ -1,126 +1,118 @@
 {
-    "provider": "Azure",
-    "serviceType": "Subscription Security",
-    "serviceName": "Subscription",
-    "displayName": "Ensure that 'Subscription leaving Microsoft Entra tenant' and 'Subscription entering Microsoft Entra tenant' is set to 'Permit no one'",
-    "description": "Users who are set as subscription owners are able to make administrative changes to the subscriptions and move them into and out of Microsoft Entra ID.",
-    "rationale": "Permissions to move subscriptions in and out of a Microsoft Entra tenant must only be given to appropriate administrative personnel. A subscription that is moved into a Microsoft Entra tenant may be within a folder to which other users have elevated permissions. This prevents loss of data or unapproved changes of the objects within by potential bad actors.",
-    "impact": "Subscriptions will need to have these settings turned off to be moved.",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. From the Azure Portal Home select the portal menu 2. Select Subscriptions 3. In the Advanced options drop-down menu, select Manage Policies 4. Set Subscription leaving Microsoft Entra tenant and Subscription entering Microsoft Entra tenant to Permit no one 5. Click Save changes",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/cost-managementbilling/manage/manage-azure-subscription-policy",
-        "https://learn.microsoft.com/en-us/entra/fundamentals/how-subscriptionsassociated-directory",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identitymanagement#im-2-protect-identity-and-authentication-systems"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "5.25",
-            "profile": [
-                "Level 2"
+  "provider": "Azure",
+  "serviceType": "Subscription Security",
+  "serviceName": "Subscription",
+  "displayName": "Ensure that \u0027Subscription leaving Microsoft Entra tenant\u0027 and \u0027Subscription entering Microsoft Entra tenant\u0027 is set to \u0027Permit no one\u0027",
+  "description": "Users who are set as subscription owners are able to make administrative changes to the subscriptions and move them into and out of Microsoft Entra ID.",
+  "rationale": "Permissions to move subscriptions in and out of a Microsoft Entra tenant must only be given to appropriate administrative personnel. A subscription that is moved into a Microsoft Entra tenant may be within a folder to which other users have elevated permissions. This prevents loss of data or unapproved changes of the objects within by potential bad actors.",
+  "impact": "Subscriptions will need to have these settings turned off to be moved.",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. From the Azure Portal Home select the portal menu 2. Select Subscriptions 3. In the Advanced options drop-down menu, select Manage Policies 4. Set Subscription leaving Microsoft Entra tenant and Subscription entering Microsoft Entra tenant to Permit no one 5. Click Save changes",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/cost-managementbilling/manage/manage-azure-subscription-policy",
+    "https://learn.microsoft.com/en-us/entra/fundamentals/how-subscriptionsassociated-directory",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-identitymanagement#im-2-protect-identity-and-authentication-systems"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "5.25",
+      "profile": [
+        "Level 2"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "az_subscription_policies",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "operator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "name",
+                "eq",
+                "default"
+              ]
             ]
-        }
+          },
+          {
+            "conditions": [
+              [
+                "properties.blockSubscriptionsLeavingTenant",
+                "eq",
+                "False"
+              ],
+              [
+                "properties.blockSubscriptionsIntoTenant",
+                "eq",
+                "False"
+              ]
+            ],
+            "operator": "or"
+          }
+        ]
+      }
     ],
-    "level": "medium",
-    "tags": [],
-    "rule": {
-        "path": "az_subscription_policies",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
         },
-        "query": [
-            {
-                "operator": "and",
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "name",
-                                "eq",
-                                "default"
-                            ]
-                        ]
-                    },
-                    {
-                        "conditions": [
-                            [
-                                "properties.blockSubscriptionsLeavingTenant",
-                                "eq",
-                                "False"
-                            ],
-                            [
-                                "properties.blockSubscriptionsIntoTenant",
-                                "eq",
-                                "False"
-                            ]
-                        ],
-                        "operator": "or"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [],
-                "message": "Ensure that 'Subscription leaving Microsoft Entra tenant' and 'Subscription entering Microsoft Entra tenant' is set to 'Permit no one'",
-                "defaultMessage": "Ensure that 'Subscription leaving Microsoft Entra tenant' and 'Subscription entering Microsoft Entra tenant' is set to 'Permit no one'"
-            },
-            "properties": {
-                "resourceName": null,
-                "resourceId": null,
-                "resourceType": null
-            },
-            "onlyStatus": false
-        }
-    },
-    "idSuffix": "azure_subscription_permit_to_one_disabled",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-        
-    ],
-    "id": "azure_subscription_001"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure that \u0027Subscription leaving Microsoft Entra tenant\u0027 and \u0027Subscription entering Microsoft Entra tenant\u0027 is set to \u0027Permit no one\u0027",
+        "defaultMessage": "Ensure that \u0027Subscription leaving Microsoft Entra tenant\u0027 and \u0027Subscription entering Microsoft Entra tenant\u0027 is set to \u0027Permit no one\u0027"
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_subscription_permit_to_one_disabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "azure_subscription_001"
 }

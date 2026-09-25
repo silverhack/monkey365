@@ -1,152 +1,136 @@
 {
-    "provider": "Microsoft365",
-    "serviceType": "Exchange Online",
-    "serviceName": "Microsoft 365",
-    "displayName": "Ensure the ability to add personal email accounts and calendars is disabled",
-    "description": "Outlook on the web (OWA) mailbox policies include two settings that control personal account integration in Outlook. `PersonalAccountsEnabled` controls whether users can add personal email accounts (e.g., Outlook.com, Gmail, Yahoo) in the new Outlook for Windows. `PersonalAccountCalendarsEnabled` controls whether users can connect personal Outlook.com or Google calendars in Outlook on the web. Neither setting applies to classic Outlook for Windows, Outlook for Mac, or Outlook mobile apps.
-		The recommended state for the default OWA Mailbox Policy is:
-			* `PersonalAccountsEnabled` is set to `False `
-			* `PersonalAccountCalendarsEnabled` is set to `False`
-	",
-    "rationale": "Personal email accounts are not subject to corporate security controls such as antimalware scanning, data loss prevention (DLP), Safe Links, or audit logging. Allowing personal accounts alongside the corporate mailbox enables side-channel data exfiltration (e.g., forwarding sensitive content to a personal inbox) and creates an ingress path for malware and phishing payloads that bypass tenant mail-flow protections.",
-    "impact": "This control does not apply to classic Outlook for Windows, Outlook for Mac, or Outlook mobile apps. Organizations requiring broader coverage should evaluate additional controls like application management policies to restrict personal account usage on those clients. This also does not block users from accessing personal accounts via other email clients or web browsers.\r\nChanges to OWA mailbox policies may take up to 60 minutes to take effect. If users previously added personal accounts before this policy was applied, those accounts will be disabled once the policy is detected, and affected users will see a message advising them to remove the personal account from Outlook, which may generate helpdesk inquiries.\r\nThe audit only applies to the default OWA mailbox policy. Users assigned to a nondefault OWA mailbox policy are not covered; optionally, custom policies can be reviewed separately to ensure a level of enforcement beyond the compliance requirements of this control.",
-    "remediation": {
-        "text": "###### To disable Personal email accounts settings, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using `Connect-EXOPSSession`\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t```powershell\r\n\t\t\t\t\tSet-OwaMailboxPolicy -Identity OwaMailboxPolicy-Default -PersonalAccountsEnabled $false -PersonalAccountCalendarsEnabled\r\n\t\t\t\t\t```",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/powershell/module/exchangepowershell/set-owamailboxpolicy?view=exchange-ps#-personalaccountsenabled",
-		"https://learn.microsoft.com/en-us/microsoft-365-apps/outlook/get-started/supported-account-types#prevent-adding-personal-accounts",
-		"https://learn.microsoft.com/en-us/microsoft-365-apps/outlook/manage/policy-management"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "7.0.0",
-            "reference": "6.3.2",
-            "profile": [
-				"E3 Level 1",
-				"E5 Level 1"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "o365_exo_owa_mbox_policy",
-        "subPath": null,
-        "selectCondition": [],
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "IsDefault",
-                                "eq",
-                                true
-                            ]
-                        ]
-                    }
-                ]
-            },
-			{
-                "connectOperator":"and",
-				"filter": [
-                    {
-                        "conditions": [
-							[
-                                "PersonalAccountsEnabled",
-                                "eq",
-                                true
-                            ],
-							[
-                                "PersonalAccountCalendarsEnabled",
-                                "eq",
-                                true
-                            ]
-                        ],
-						"operator":"or"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "Name": "Name",
-                    "PersonalAccountsEnabled": "PersonalAccountsEnabled",
-                    "PersonalAccountCalendarsEnabled": "PersonalAccountCalendarsEnabled"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-                
+  "provider": "Microsoft365",
+  "serviceType": "Exchange Online",
+  "serviceName": "Microsoft 365",
+  "displayName": "Ensure the ability to add personal email accounts and calendars is disabled",
+  "description": "Outlook on the web (OWA) mailbox policies include two settings that control personal account integration in Outlook. \u0060PersonalAccountsEnabled\u0060 controls whether users can add personal email accounts (e.g., Outlook.com, Gmail, Yahoo) in the new Outlook for Windows. \u0060PersonalAccountCalendarsEnabled\u0060 controls whether users can connect personal Outlook.com or Google calendars in Outlook on the web. Neither setting applies to classic Outlook for Windows, Outlook for Mac, or Outlook mobile apps.\n\t\tThe recommended state for the default OWA Mailbox Policy is:\n\t\t\t* \u0060PersonalAccountsEnabled\u0060 is set to \u0060False \u0060\n\t\t\t* \u0060PersonalAccountCalendarsEnabled\u0060 is set to \u0060False\u0060\n\t",
+  "rationale": "Personal email accounts are not subject to corporate security controls such as antimalware scanning, data loss prevention (DLP), Safe Links, or audit logging. Allowing personal accounts alongside the corporate mailbox enables side-channel data exfiltration (e.g., forwarding sensitive content to a personal inbox) and creates an ingress path for malware and phishing payloads that bypass tenant mail-flow protections.",
+  "impact": "This control does not apply to classic Outlook for Windows, Outlook for Mac, or Outlook mobile apps. Organizations requiring broader coverage should evaluate additional controls like application management policies to restrict personal account usage on those clients. This also does not block users from accessing personal accounts via other email clients or web browsers.\r\nChanges to OWA mailbox policies may take up to 60 minutes to take effect. If users previously added personal accounts before this policy was applied, those accounts will be disabled once the policy is detected, and affected users will see a message advising them to remove the personal account from Outlook, which may generate helpdesk inquiries.\r\nThe audit only applies to the default OWA mailbox policy. Users assigned to a nondefault OWA mailbox policy are not covered; optionally, custom policies can be reviewed separately to ensure a level of enforcement beyond the compliance requirements of this control.",
+  "remediation": {
+    "text": "###### To disable Personal email accounts settings, use the Exchange Online PowerShell Module\r\n\t\t\t\t\t1. Connect to Exchange Online using \u0060Connect-EXOPSSession\u0060\r\n\t\t\t\t\t2. Run the following PowerShell command:\t\t\t\t\t\r\n\t\t\t\t\t\u0060\u0060\u0060powershell\r\n\t\t\t\t\tSet-OwaMailboxPolicy -Identity OwaMailboxPolicy-Default -PersonalAccountsEnabled $false -PersonalAccountCalendarsEnabled\r\n\t\t\t\t\t\u0060\u0060\u0060",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/powershell/module/exchangepowershell/set-owamailboxpolicy?view=exchange-ps#-personalaccountsenabled",
+    "https://learn.microsoft.com/en-us/microsoft-365-apps/outlook/get-started/supported-account-types#prevent-adding-personal-accounts",
+    "https://learn.microsoft.com/en-us/microsoft-365-apps/outlook/manage/policy-management"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "7.0.0",
+      "reference": "6.3.2",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "o365_exo_owa_mbox_policy",
+    "subPath": null,
+    "selectCondition": [],
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "IsDefault",
+                "eq",
+                true
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "PersonalAccountsEnabled",
+                "eq",
+                true
+              ],
+              [
+                "PersonalAccountCalendarsEnabled",
+                "eq",
+                true
+              ]
             ],
-            "emphasis": [
-                
-            ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+            "operator": "or"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "personalAccountsEnabled": "PersonalAccountsEnabled",
+          "personalAccountCalendarsEnabled": "PersonalAccountCalendarsEnabled"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    "Name": "Name",
-                    "PersonalAccountsEnabled": "PersonalAccountsEnabled",
-                    "PersonalAccountCalendarsEnabled": "PersonalAccountCalendarsEnabled"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    
-                ],
-                "message": "Ensure the ability to add personal email accounts and calendars is disabled",
-                "defaultMessage": "Ensure the ability to add personal email accounts and calendars is disabled"
-            },
-            "properties": {
-                "resourceName": "Identity",
-                "resourceId": "ExchangeObjectId",
-                "resourceType": "ExchangeMailBoxPolicy"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "m365_exo_owa_personal_email_allowed",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"DistinguishedName",
-		"ExchangeObjectId.Guid"		
-    ],
-    "id": "microsoft365_2221"
+    "text": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "personalAccountsEnabled": "PersonalAccountsEnabled",
+          "personalAccountCalendarsEnabled": "PersonalAccountCalendarsEnabled"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure the ability to add personal email accounts and calendars is disabled",
+        "defaultMessage": "Ensure the ability to add personal email accounts and calendars is disabled"
+      },
+      "properties": {
+        "resourceName": "Identity",
+        "resourceId": "ExchangeObjectId",
+        "resourceType": "ExchangeMailBoxPolicy"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "m365_exo_owa_personal_email_allowed",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "DistinguishedName",
+    "ExchangeObjectId.Guid"
+  ],
+  "id": "microsoft365_2221"
 }

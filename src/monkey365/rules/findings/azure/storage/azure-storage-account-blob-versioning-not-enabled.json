@@ -1,127 +1,127 @@
 {
-    "provider": "Azure",
-    "serviceType": "Storage Accounts",
-    "serviceName": "Storage",
-    "displayName": "Ensure 'Versioning' is set to 'Enabled' on Azure Blob Storage storage accounts",
-    "description": "Enabling blob versioning allows for the automatic retention of previous versions of objects. With blob versioning enabled, earlier versions of a blob are accessible for data recovery in the event of modifications or deletions.",
-    "rationale": "Blob versioning safeguards data integrity and enables recovery by retaining previous versions of stored objects, facilitating quick restoration from accidental deletion, modification, or malicious activity.",
-    "impact": "Enabling blob versioning for a storage account creates a new version with each write operation to a blob, which can increase storage costs. To control these costs, a lifecycle management policy can be applied to automatically delete older versions.",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. Go to Storage accounts. 2. Click the name of a storage account with blob storage. 3. In the Overview page, on the Properties tab, under Blob service, click Disabled next to Versioning. 4. Under Tracking, check the box next to Enable versioning for blobs. 5. Select the radio button next to Keep all versions or Delete versions after (in days). 6. If selecting to delete versions, enter a number of in the box after which to delete blob versions. 7. Click Save. 8. Repeat steps 1-7 for each storage account with blob storage.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest",
-        "https://learn.microsoft.com/en-us/cli/azure/storage/account/blob-service-properties?view=azure-cli-latest",
-        "https://learn.microsoft.com/en-us/powershell/module/az.storage/get-azstorageaccount?view=azps-15.4.0",
-        "https://learn.microsoft.com/en-us/powershell/module/az.storage/new-azstoragecontext?view=azps-15.4.0",
-        "https://learn.microsoft.com/en-us/powershell/module/az.storage/get-azstoragecontainer?view=azps-15.4.0",
-        "https://learn.microsoft.com/en-us/powershell/module/az.storage/get-azstorageblobserviceproperty?view=azps-15.4.0",
-        "https://learn.microsoft.com/en-us/powershell/module/az.storage/update-azstorageblobserviceproperty?view=azps-15.4.0",
-        "https://learn.microsoft.com/en-us/azure/storage/blobs/versioning-overview",
-        "https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "9.2.3",
-            "profile": [
-                "Level 2"
+  "provider": "Azure",
+  "serviceType": "Storage Accounts",
+  "serviceName": "Storage",
+  "displayName": "Ensure \u0027Versioning\u0027 is set to \u0027Enabled\u0027 on Azure Blob Storage storage accounts",
+  "description": "Enabling blob versioning allows for the automatic retention of previous versions of objects. With blob versioning enabled, earlier versions of a blob are accessible for data recovery in the event of modifications or deletions.",
+  "rationale": "Blob versioning safeguards data integrity and enables recovery by retaining previous versions of stored objects, facilitating quick restoration from accidental deletion, modification, or malicious activity.",
+  "impact": "Enabling blob versioning for a storage account creates a new version with each write operation to a blob, which can increase storage costs. To control these costs, a lifecycle management policy can be applied to automatically delete older versions.",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. Go to Storage accounts. 2. Click the name of a storage account with blob storage. 3. In the Overview page, on the Properties tab, under Blob service, click Disabled next to Versioning. 4. Under Tracking, check the box next to Enable versioning for blobs. 5. Select the radio button next to Keep all versions or Delete versions after (in days). 6. If selecting to delete versions, enter a number of in the box after which to delete blob versions. 7. Click Save. 8. Repeat steps 1-7 for each storage account with blob storage.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/cli/azure/storage/account?view=azure-cli-latest",
+    "https://learn.microsoft.com/en-us/cli/azure/storage/account/blob-service-properties?view=azure-cli-latest",
+    "https://learn.microsoft.com/en-us/powershell/module/az.storage/get-azstorageaccount?view=azps-15.4.0",
+    "https://learn.microsoft.com/en-us/powershell/module/az.storage/new-azstoragecontext?view=azps-15.4.0",
+    "https://learn.microsoft.com/en-us/powershell/module/az.storage/get-azstoragecontainer?view=azps-15.4.0",
+    "https://learn.microsoft.com/en-us/powershell/module/az.storage/get-azstorageblobserviceproperty?view=azps-15.4.0",
+    "https://learn.microsoft.com/en-us/powershell/module/az.storage/update-azstorageblobserviceproperty?view=azps-15.4.0",
+    "https://learn.microsoft.com/en-us/azure/storage/blobs/versioning-overview",
+    "https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "9.2.3",
+      "profile": [
+        "Level 2"
+      ]
+    }
+  ],
+  "level": "low",
+  "tags": [],
+  "rule": {
+    "path": "az_storage_accounts",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "dataProtection.isVersioningEnabled",
+                "eq",
+                "False"
+              ]
             ]
-        }
+          }
+        ]
+      }
     ],
-    "level": "low",
-    "tags": [],
-    "rule": {
-        "path": "az_storage_accounts",
-        "subPath": null,
-        "selectCondition": {
-            
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "name": "name",
+          "location": "Location",
+          "dataProtection.isVersioningEnabled": "Versioning"
         },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "dataProtection.isVersioningEnabled",
-                                "eq",
-                                "False"
-                            ]
-                        ]
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-					"id": "id",
-                    "name": "name",
-                    "location": "Location",
-                    "dataProtection.isVersioningEnabled": "Versioning"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-				{
-					"itemName": "Versioning",
-					"itemValue": "disabled",
-					"className": "badge badge-danger badge-xl"
-				}
-			],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [
-						"id",
-						"name",
-						"dataProtection"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
-        },
-        "text": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "status": {
-                "keyName": ["name"],
-                "message": "Ensure 'Versioning' is set to 'Enabled' on Azure Blob Storage for {name}",
-                "defaultMessage": "Ensure 'Versioning' is set to 'Enabled' on Azure Blob Storage storage accounts"
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "AzureStorageAccount"
-            },
-            "onlyStatus": false
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [
+        {
+          "itemName": "Versioning",
+          "itemValue": "disabled",
+          "className": "badge badge-danger badge-xl"
         }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "id",
+            "name",
+            "dataProtection"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_storage_blob_versioning_not_enabled",
-    "notes": [],
-    "categories": [],
-    "immutable_properties": [
-		"id"
-	],
-    "id": "azure_storage_006"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "name"
+        ],
+        "message": "Ensure \u0027Versioning\u0027 is set to \u0027Enabled\u0027 on Azure Blob Storage for {name}",
+        "defaultMessage": "Ensure \u0027Versioning\u0027 is set to \u0027Enabled\u0027 on Azure Blob Storage storage accounts"
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "AzureStorageAccount"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_storage_blob_versioning_not_enabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "azure_storage_006"
 }

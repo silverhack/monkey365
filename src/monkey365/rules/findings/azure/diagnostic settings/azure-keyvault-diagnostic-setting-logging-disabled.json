@@ -1,140 +1,136 @@
 {
-    "provider": "Azure",
-    "serviceType": "Diagnostic Settings",
-    "serviceName": "Diagnostic Settings",
-    "displayName": "Ensure that logging for Azure Key Vault is 'Enabled'",
-    "description": "Enable AuditEvent logging for key vault instances to ensure interactions with key vaults are logged and available.",
-    "rationale": "Monitoring how and when key vaults are accessed, and by whom, enables an audit trail of interactions with confidential information, keys, and certificates managed by Azure Key Vault. Enabling logging for Key Vault saves information in a user provided destination of either an Azure storage account or Log Analytics workspace. The same destination can be used for collecting logs for multiple Key Vaults.",
-    "impact": "",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. Go to Key vaults. 2. Select a Key vault. 3. Under Monitoring, select Diagnostic settings. 4. Click Edit setting to update an existing diagnostic setting, or Add diagnostic setting to create a new one. 5. If creating a new diagnostic setting, provide a name. 6. Configure an appropriate destination. 7. Under Category groups, check audit and allLogs. 8. Click Save. Remediate from Azure CLI To update an existing Diagnostic Settings",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/key-vault/general/howto-logging?tabs=azure-cli",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-8-ensure-security-of-key-and-certificate-repository",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "6.1.1.4",
-            "profile": [
-                "Level 1"
+  "provider": "Azure",
+  "serviceType": "Diagnostic Settings",
+  "serviceName": "Diagnostic Settings",
+  "displayName": "Ensure that logging for Azure Key Vault is \u0027Enabled\u0027",
+  "description": "Enable AuditEvent logging for key vault instances to ensure interactions with key vaults are logged and available.",
+  "rationale": "Monitoring how and when key vaults are accessed, and by whom, enables an audit trail of interactions with confidential information, keys, and certificates managed by Azure Key Vault. Enabling logging for Key Vault saves information in a user provided destination of either an Azure storage account or Log Analytics workspace. The same destination can be used for collecting logs for multiple Key Vaults.",
+  "impact": "",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. Go to Key vaults. 2. Select a Key vault. 3. Under Monitoring, select Diagnostic settings. 4. Click Edit setting to update an existing diagnostic setting, or Add diagnostic setting to create a new one. 5. If creating a new diagnostic setting, provide a name. 6. Configure an appropriate destination. 7. Under Category groups, check audit and allLogs. 8. Click Save. Remediate from Azure CLI To update an existing Diagnostic Settings",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/key-vault/general/howto-logging?tabs=azure-cli",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-data-protection#dp-8-ensure-security-of-key-and-certificate-repository",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-logging-threat-detection#lt-3-enable-logging-for-security-investigation"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "6.1.1.4",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "az_keyvault",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "operator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "diagnosticSettings.enabled",
+                "eq",
+                "false"
+              ],
+              [
+                "diagnosticSettings.properties.logs.categoryGroup",
+                "notcontains",
+                "allLogs"
+              ]
+            ],
+            "operator": "or"
+          },
+          {
+            "conditions": [
+              [
+                "diagnosticSettings.properties.logs.categoryGroup",
+                "notContains",
+                "audit"
+              ]
             ]
-        }
-    ],
-    "level": "medium",
-    "tags": [],
-    "rule": {
-        "path": "az_keyvault",
-        "subPath": null,
-        "selectCondition": {
-            
-        },
-        "query": [
-            {
-                "operator": "and",
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "diagnosticSettings.enabled",
-                                "eq",
-                                "false"
-                            ],
-                            [
-                                "diagnosticSettings.properties.logs.categoryGroup",
-                                "notcontains",
-                                "allLogs"
-                            ]
-                        ],
-                        "operator": "or"
-                    },
-                    {
-                        "conditions": [
-                            [
-                                "diagnosticSettings.properties.logs.categoryGroup",
-                                "notContains",
-                                "audit"
-                            ]
-                        ]
-                    }
-                ]
-            }
+          }
         ]
-	},
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-					"id": "id",
-                    "name": "Name",
-                    "location": "Location",
-                    "diagnosticSettings.enabled": "Diagnostic Settings Enabled",
-                    "diagnosticSettings.properties.logs.category": "Log Category"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "name",
-                        "kind",
-                        "location",
-                        "diagnosticSettings"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+      }
+    ]
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "name": "Name",
+          "location": "Location",
+          "diagnosticSettings.enabled": "Diagnostic Settings Enabled",
+          "diagnosticSettings.properties.logs.category": "Log Category"
         },
-        "text": {
-            "data": {
-                "properties": {
-					"id": "id",
-                    "name": "Name",
-                    "location": "Location",
-                    "diagnosticSettings.enabled": "Diagnostic Settings Enabled",
-                    "diagnosticSettings.properties.logs.category": "Log Category"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": ["name"],
-                "message": "Ensure that logging for Azure Key Vault is 'Enabled' for {name}",
-                "defaultMessage": "Ensure that logging for Azure Key Vault is 'Enabled'"
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "AzureKeyVault"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "name",
+            "kind",
+            "location",
+            "diagnosticSettings"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_key_vault_logging_disabled",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"id"        
-    ],
-    "id": "azure_diagnostic_setting_004"
+    "text": {
+      "data": {
+        "properties": {
+          "id": "id",
+          "name": "Name",
+          "location": "Location",
+          "diagnosticSettings.enabled": "Diagnostic Settings Enabled",
+          "diagnosticSettings.properties.logs.category": "Log Category"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "name"
+        ],
+        "message": "Ensure that logging for Azure Key Vault is \u0027Enabled\u0027 for {name}",
+        "defaultMessage": "Ensure that logging for Azure Key Vault is \u0027Enabled\u0027"
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "AzureKeyVault"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_key_vault_logging_disabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "azure_diagnostic_setting_004"
 }

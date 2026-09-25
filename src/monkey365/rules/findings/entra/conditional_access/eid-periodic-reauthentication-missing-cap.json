@@ -1,223 +1,213 @@
 {
-    "provider": "EntraID",
-    "serviceType": "Conditional Access",
-    "serviceName": "Microsoft Entra ID",
-    "displayName": "Ensure that periodic reauthentication is required for all users",
-    "description": "Sign-in frequency defines the time period before a user is asked to sign in again when attempting to access a resource. The Microsoft Entra ID default configuration for user sign-in frequency is a rolling window of 90 days.\r\nThe recommended state is a `periodic reauthentication` for `7` days or less.",
-    "rationale": "A 7-day interval balances security and user experience by reducing the maximum lifespan of compromised credentials or stolen tokens without introducing excessive reauthentication prompts that can increase phishing susceptibility and user fatigue.",
-    "impact": "Most users will not find weekly reauthentication requirements disruptive. Organizations with legacy applications, custom authentication workflows, or users relying on long-running sessions (such as shared or kiosk devices) may need to evaluate compatibility and apply appropriate exclusions to prevent user disruption.",
-    "remediation": {
-        "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select `Security`\r\n\t\t\t\t\t3. Select on the left side `Conditional Access`\r\n\t\t\t\t\t4. Click the `+ New policy`",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-session-lifetime"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft 365 Foundations Benchmark",
-            "version": "7.0.0",
-            "reference": "5.2.2.13",
-            "profile": [
-				"E3 Level 1",
-				"E5 Level 1"
-			]
-        }
-    ],
-    "level": "medium",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "aad_conditional_access_policy",
-        "subPath": null,
-        "selectCondition": [
-			{
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "sessionControls.signInFrequency.isEnabled",
-                                "eq",
-                                "enabled"
-                            ]
-                        ]
-                    }
-                ]
-            },
-			{
-                "connectOperator": "and",
-				"filter": [
-                    {
-                        "conditions": [
-                            [
-                                "conditions.signInRiskLevels.Count",
-                                "eq",
-                                0
-                            ],
-							[
-                                "conditions.userRiskLevels.Count",
-                                "eq",
-                                0
-                            ]
-                        ],
-						"operator":"and"
-                    }
-                ]
-            }
-        ],
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "state",
-                                "eq",
-                                "enabled"
-                            ],
-                            [
-                                "conditions.users.includeUsers",
-                                "eq",
-                                "All"
-                            ],
-                            [
-                                "conditions.applications.includeApplications",
-                                "match",
-                                "All"
-                            ]
-                        ],
-                        "operator": "and"
-                    }
-                ]
-            },
-            {
-                "connectOperator": "and",
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-								"MicrosoftAdminPortals",
-                                "notin",
-                                "conditions.applications.excludeApplications"
-                            ],
-                            [
-								"Office365",
-                                "notin",
-                                "conditions.applications.excludeApplications"
-                            ]
-                        ],
-                        "operator": "or"
-                    }
-                ]
-            },
-            {
-                "connectOperator": "and",
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "sessionControls.signInFrequency.frequencyInterval",
-                                "eq",
-                                "timeBased"
-                            ],
-                            [
-                                "sessionControls.signInFrequency.type",
-                                "eq",
-                                "days"
-                            ],
-							[
-                                "sessionControls.signInFrequency.value",
-                                "le",
-                                7
-                            ]
-                        ],
-                        "operator": "and"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": true,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "displayName": "Name",
-                    "state": "Status",
-                    "conditions.applications.includeApplications": "Applications",
-                    "conditions.users.includeUsers": "Users",
-                    "sessionControls.signInFrequency.frequencyInterval": "Frequency",
-                    "sessionControls.signInFrequency.type": "Type",
-					"sessionControls.signInFrequency.value": "Value"
-                },
-                "expandObject": null
-            },
-            "table": null,
-            "decorate": [
-                
+  "provider": "EntraID",
+  "serviceType": "Conditional Access",
+  "serviceName": "Microsoft Entra ID",
+  "displayName": "Ensure that periodic reauthentication is required for all users",
+  "description": "Sign-in frequency defines the time period before a user is asked to sign in again when attempting to access a resource. The Microsoft Entra ID default configuration for user sign-in frequency is a rolling window of 90 days.\r\nThe recommended state is a \u0060periodic reauthentication\u0060 for \u00607\u0060 days or less.",
+  "rationale": "A 7-day interval balances security and user experience by reducing the maximum lifespan of compromised credentials or stolen tokens without introducing excessive reauthentication prompts that can increase phishing susceptibility and user fatigue.",
+  "impact": "Most users will not find weekly reauthentication requirements disruptive. Organizations with legacy applications, custom authentication workflows, or users relying on long-running sessions (such as shared or kiosk devices) may need to evaluate compatibility and apply appropriate exclusions to prevent user disruption.",
+  "remediation": {
+    "text": "###### From Azure Console\r\n\t\t\t\t\t1. From Azure Home open the Portal Menu in top left, and select Microsoft Entra ID\r\n\t\t\t\t\t2. Scroll down in the menu on the left, and select \u0060Security\u0060\r\n\t\t\t\t\t3. Select on the left side \u0060Conditional Access\u0060\r\n\t\t\t\t\t4. Click the \u0060\u002B New policy\u0060",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/conditional-access/howto-conditional-access-session-lifetime"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft 365 Foundations Benchmark",
+      "version": "7.0.0",
+      "reference": "5.2.2.13",
+      "profile": [
+        "E3 Level 1",
+        "E5 Level 1"
+      ]
+    }
+  ],
+  "level": "medium",
+  "tags": [],
+  "rule": {
+    "path": "aad_conditional_access_policy",
+    "subPath": null,
+    "selectCondition": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "sessionControls.signInFrequency.isEnabled",
+                "eq",
+                "enabled"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "conditions.signInRiskLevels.Count",
+                "eq",
+                0
+              ],
+              [
+                "conditions.userRiskLevels.Count",
+                "eq",
+                0
+              ]
             ],
-            "emphasis": [
-                
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "state",
+                "eq",
+                "enabled"
+              ],
+              [
+                "conditions.users.includeUsers",
+                "eq",
+                "All"
+              ],
+              [
+                "conditions.applications.includeApplications",
+                "match",
+                "All"
+              ]
             ],
-            "actions": {
-                "objectData": {
-                    "properties": [
-                        "*"
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": false,
-                "showModalButton": false,
-                "directLink": null
-            }
+            "operator": "and"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "MicrosoftAdminPortals",
+                "notin",
+                "conditions.applications.excludeApplications"
+              ],
+              [
+                "Office365",
+                "notin",
+                "conditions.applications.excludeApplications"
+              ]
+            ],
+            "operator": "or"
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "sessionControls.signInFrequency.frequencyInterval",
+                "eq",
+                "timeBased"
+              ],
+              [
+                "sessionControls.signInFrequency.type",
+                "eq",
+                "days"
+              ],
+              [
+                "sessionControls.signInFrequency.value",
+                "le",
+                7
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": true,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "displayName": "Name",
+          "state": "Status",
+          "conditions.applications.includeApplications": "Applications",
+          "conditions.users.includeUsers": "Users",
+          "sessionControls.signInFrequency.frequencyInterval": "Frequency",
+          "sessionControls.signInFrequency.type": "Type",
+          "sessionControls.signInFrequency.value": "Value"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    "displayName": "Name",
-                    "state": "Status",
-                    "conditions.applications.includeApplications": "Applications",
-                    "conditions.users.includeUsers": "Users",
-                    "sessionControls.signInFrequency.frequencyInterval": "Frequency",
-                    "sessionControls.signInFrequency.type": "Type",
-					"sessionControls.signInFrequency.value": "Value"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                    "displayName"
-                ],
-                "message": "The {displayName} policy is not configured to require periodic reauthentication",
-                "defaultMessage": "Ensure that periodic reauthentication is required for all users"
-            },
-            "properties": {
-                "resourceName": "displayName",
-                "resourceId": "id",
-                "resourceType": "EntraConditionalAccess"
-            },
-            "onlyStatus": true
-        }
+        "expandObject": null
+      },
+      "table": null,
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [
+            "*"
+          ],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": false,
+        "showModalButton": false,
+        "directLink": null
+      }
     },
-    "idSuffix": "aad_cap_periodic_reauthentication_not_present",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-		"id"
-    ],
-    "id": "entraid_1173"
+    "text": {
+      "data": {
+        "properties": {
+          "displayName": "Name",
+          "state": "Status",
+          "conditions.applications.includeApplications": "Applications",
+          "conditions.users.includeUsers": "Users",
+          "sessionControls.signInFrequency.frequencyInterval": "Frequency",
+          "sessionControls.signInFrequency.type": "Type",
+          "sessionControls.signInFrequency.value": "Value"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [
+          "displayName"
+        ],
+        "message": "The {displayName} policy is not configured to require periodic reauthentication",
+        "defaultMessage": "Ensure that periodic reauthentication is required for all users"
+      },
+      "properties": {
+        "resourceName": "displayName",
+        "resourceId": "id",
+        "resourceType": "EntraConditionalAccess"
+      },
+      "onlyStatus": true
+    }
+  },
+  "idSuffix": "aad_cap_periodic_reauthentication_not_present",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "entraid_1173"
 }

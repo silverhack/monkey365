@@ -1,141 +1,135 @@
 {
-    "provider": "Azure",
-    "serviceType": "Subscription Security",
-    "serviceName": "Subscription",
-    "displayName": "Ensure That 'All users with the following roles' is set to 'Owner'",
-    "description": "Enable security alert emails to subscription owners.",
-    "rationale": "Enabling security alert emails to subscription owners ensures that they receive security alert emails from Microsoft. This ensures that they are aware of any potential security issues and can mitigate the risk in a timely fashion.",
-    "impact": "",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. From Azure Home select the Portal Menu 2. Select Microsoft Defender for Cloud 3. Under Management, select Environment Settings 4. Click on the appropriate Management Group, Subscription, or Workspace 5. Click on Email notifications 6. In the drop down of the All users with the following roles field select Owner 7. Click Save",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email-notifications",
-        "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts/list?view=rest-defenderforcloud-2023-12-01-preview&tabs=HTTP",
-        "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts?view=rest-defenderforcloud-2023-12-01-preview",
-        "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-incident-response#ir-2-preparation---setup-incident-notification"
-    ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "8.1.12",
-            "profile": [
-                "Level 1"
+  "provider": "Azure",
+  "serviceType": "Subscription Security",
+  "serviceName": "Subscription",
+  "displayName": "Ensure That \u0027All users with the following roles\u0027 is set to \u0027Owner\u0027",
+  "description": "Enable security alert emails to subscription owners.",
+  "rationale": "Enabling security alert emails to subscription owners ensures that they receive security alert emails from Microsoft. This ensures that they are aware of any potential security issues and can mitigate the risk in a timely fashion.",
+  "impact": "",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. From Azure Home select the Portal Menu 2. Select Microsoft Defender for Cloud 3. Under Management, select Environment Settings 4. Click on the appropriate Management Group, Subscription, or Workspace 5. Click on Email notifications 6. In the drop down of the All users with the following roles field select Owner 7. Click Save",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/configure-email-notifications",
+    "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts/list?view=rest-defenderforcloud-2023-12-01-preview\u0026tabs=HTTP",
+    "https://learn.microsoft.com/en-us/rest/api/defenderforcloud/security-contacts?view=rest-defenderforcloud-2023-12-01-preview",
+    "https://learn.microsoft.com/en-us/security/benchmark/azure/mcsb-incident-response#ir-2-preparation---setup-incident-notification"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "8.1.12",
+      "profile": [
+        "Level 1"
+      ]
+    }
+  ],
+  "level": "low",
+  "tags": [],
+  "rule": {
+    "path": "az_defender",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "ne",
+                "securityContacts"
+              ]
             ]
-        }
+          }
+        ]
+      },
+      {
+        "connectOperator": "and",
+        "filter": [
+          {
+            "conditions": [
+              [
+                "securityContacts.properties.notificationsByRole.state",
+                "eq",
+                "On"
+              ],
+              [
+                "securityContacts.properties.notificationsByRole.state",
+                "match",
+                "Owner"
+              ]
+            ],
+            "operator": "and"
+          }
+        ]
+      }
     ],
-    "level": "low",
-    "tags": [],
-    "rule": {
-        "path": "az_defender",
-        "subPath": null,
-        "selectCondition": {},
-        "query": [
-			{
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-								"ne",
-                                "securityContacts"
-                            ]
-                        ]
-                    }
-                ]
-            },
-            {
-                "connectOperator":"and",
-				"filter": [
-                    {
-                        "conditions": [
-                            [
-                                "securityContacts.properties.notificationsByRole.state",
-                                "eq",
-								"On"
-                            ],
-							[
-                                "securityContacts.properties.notificationsByRole.state",
-                                "match",
-								"Owner"
-                            ]
-                        ],
-						"operator":"and"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": "true",
-        "returnObject": {
-			"name":"default",
-			"type":"Microsoft.Security/securityContacts"
-		},
-        "removeIfNotExists": null
+    "shouldExist": "true",
+    "returnObject": {
+      "name": "default",
+      "type": "Microsoft.Security/securityContacts"
     },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-					"name": "Name",
-                    "type": "type",
-                    "properties.notificationsByRole.state": "Notification By Roles",
-                    "properties.notificationsByRole.roles": "Roles"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "type": "type",
+          "properties.notificationsByRole.state": "Notification By Roles",
+          "properties.notificationsByRole.roles": "Roles"
         },
-        "text": {
-            "data": {
-                "properties": {
-					"name": "Name",
-                    "type": "type",
-                    "properties.notificationsByRole.state": "Notification By Roles",
-                    "properties.notificationsByRole.roles": "Roles"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [],
-                "message": "Ensure That 'All users with the following roles' is set to 'Owner'",
-                "defaultMessage": "Ensure That 'All users with the following roles' is set to 'Owner'"
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "AzureAdvisor"
-            },
-            "onlyStatus": false
-        }
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_defender_notify_alerts_to_owners_disabled",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-        
-    ],
-    "id": "azure_defender_018"
+    "text": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "type": "type",
+          "properties.notificationsByRole.state": "Notification By Roles",
+          "properties.notificationsByRole.roles": "Roles"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "Ensure That \u0027All users with the following roles\u0027 is set to \u0027Owner\u0027",
+        "defaultMessage": "Ensure That \u0027All users with the following roles\u0027 is set to \u0027Owner\u0027"
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "AzureAdvisor"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_defender_notify_alerts_to_owners_disabled",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "azure_defender_018"
 }

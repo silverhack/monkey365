@@ -1,147 +1,130 @@
 {
-    "provider": "Azure",
-    "serviceType": "Defender for Cloud",
-    "serviceName": "Subscription",
-    "displayName": "_ARG_0_",
-    "description": "_ARG_1_",
-    "rationale": "_ARG_2_",
-    "impact": "_ARG_3_",
-    "remediation": {
-        "text": "
-			###### From Azure Console
-			1. Go to `Microsoft Defender for Cloud`
-			2. Select `Environment settings`
-			3. Click on the subscription name
-			4. Select the `Defender plans` blade
-			5. _ARG_4_
-			6. Select `Save`
-		",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
+  "provider": "Azure",
+  "serviceType": "Defender for Cloud",
+  "serviceName": "Subscription",
+  "displayName": "_ARG_0_",
+  "description": "_ARG_1_",
+  "rationale": "_ARG_2_",
+  "impact": "_ARG_3_",
+  "remediation": {
+    "text": "\n\t\t\t###### From Azure Console\n\t\t\t1. Go to \u0060Microsoft Defender for Cloud\u0060\n\t\t\t2. Select \u0060Environment settings\u0060\n\t\t\t3. Click on the subscription name\n\t\t\t4. Select the \u0060Defender plans\u0060 blade\n\t\t\t5. _ARG_4_\n\t\t\t6. Select \u0060Save\u0060\n\t\t",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/#pricing",
+    "https://learn.microsoft.com/en-us/cli/azure/security/pricing?view=azure-cli-latest",
+    "_ARG_5_"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "8.1.4.1",
+      "profile": [
+        "Level 2"
+      ]
+    }
+  ],
+  "level": "low",
+  "tags": [],
+  "rule": {
+    "path": "az_defender",
+    "subPath": null,
+    "selectCondition": {},
+    "data": {
+      "properties": {
+        "pricing.*": null
+      },
+      "expandObject": "pricing"
     },
-    "recommendation": null,
-    "references": [
-		"https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/#pricing",
-        "https://learn.microsoft.com/en-us/cli/azure/security/pricing?view=azure-cli-latest",
-		"_ARG_5_"
-	],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "8.1.4.1",
-            "profile": [
-                "Level 2"
-            ]
-        }
-    ],
-    "level": "low",
-    "tags": [
-        
-    ],
-    "rule": {
-        "path": "az_defender",
-        "subPath": null,
-        "selectCondition": {
-            
-        },
-		"data": {
-            "properties": {
-                "pricing.*": null
-            },
-            "expandObject": "pricing"
-        },
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": [
-                            [
-                                "name",
-                                "eq",
-                                "_ARG_6_"
-                            ],
-                            [
-                                "properties.pricingTier",
-                                "eq",
-                                "Free"
-                            ]
-                        ],
-                        "operator": "and"
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {
-                    "name": "Name",
-					"type": "Type",
-                    "properties.pricingTier": "Pricing Tier"
-                },
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [
-				{
-					"itemName": "Pricing Tier",
-					"itemValue": "Free",
-					"className": "badge badge-danger badge-xl"
-				}
-			],
-            "emphasis": [
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": [
+              [
+                "name",
+                "eq",
+                "_ARG_6_"
+              ],
+              [
+                "properties.pricingTier",
+                "eq",
+                "Free"
+              ]
             ],
-            "actions": {
-                "objectData": {
-                    "properties": [                        
-                    ],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "true",
-                "showModalButton": "true",
-                "directLink": null
-            }
+            "operator": "and"
+          }
+        ]
+      }
+    ],
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "type": "Type",
+          "properties.pricingTier": "Pricing Tier"
         },
-        "text": {
-            "data": {
-                "properties": {
-                    "name": "Name",
-					"type": "Type",
-                    "properties.pricingTier": "Pricing Tier"
-                },
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [
-                ],
-                "message": "_ARG_0_",
-                "defaultMessage": "_ARG_0_"
-            },
-            "properties": {
-                "resourceName": "name",
-                "resourceId": "id",
-                "resourceType": "type"
-            },
-            "onlyStatus": false
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [
+        {
+          "itemName": "Pricing Tier",
+          "itemValue": "Free",
+          "className": "badge badge-danger badge-xl"
         }
+      ],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
+        },
+        "showGoToButton": "true",
+        "showModalButton": "true",
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_defender_missing__ARG_7__protection",
-    "notes": [
-    ],
-    "categories": [
-    ],
-    "immutable_properties": [
-		"id"
-    ],
-    "id": "azure_defender__ARG_8_"
+    "text": {
+      "data": {
+        "properties": {
+          "name": "Name",
+          "type": "Type",
+          "properties.pricingTier": "Pricing Tier"
+        },
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "_ARG_0_",
+        "defaultMessage": "_ARG_0_"
+      },
+      "properties": {
+        "resourceName": "name",
+        "resourceId": "id",
+        "resourceType": "type"
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_defender_missing__ARG_7__protection",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [
+    "id"
+  ],
+  "id": "azure_defender__ARG_8_"
 }

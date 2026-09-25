@@ -1,104 +1,98 @@
 {
-    "provider": "Azure",
-    "serviceType": "Diagnostic Settings",
-    "serviceName": "Diagnostic Settings",
-    "displayName": "Ensure that a Microsoft Entra diagnostic setting exists to send Microsoft Graph activity logs to an appropriate destination",
-    "description": "Ensure that a Microsoft Entra diagnostic setting is configured to send Microsoft Graph activity logs to a suitable destination, such as a Log Analytics workspace, storage account, or event hub. This enables centralized monitoring and analysis of all HTTP requests that the Microsoft Graph service receives and processes for a tenant.",
-    "rationale": "Microsoft Graph activity logs provide visibility into HTTP requests made to the Microsoft Graph service, helping detect unauthorized access, suspicious activity, and security threats. Configuring diagnostic settings in Microsoft Entra ensures these logs are collected and sent to an appropriate destination for monitoring, analysis, and retention.",
-    "impact": "A Microsoft Entra ID P1 or P2 tenant license is required to access the Microsoft Graph activity logs.<br/><br/>The amount of data logged and, thus, the cost incurred can vary significantly depending on the tenant size and the applications in your tenant that interact with the Microsoft Graph APIs.<br/><br/>See the following pricing calculations for respective services:\n• Log Analytics: https://learn.microsoft.com/en-us/azure/azure-monitor/logs/cost- logs#pricing-model.\n• Azure Storage: https://azure.microsoft.com/en-us/pricing/details/storage/blobs/.\n• Event Hubs: https://azure.microsoft.com/en-us/pricing/details/event-hubs/.",
-    "remediation": {
-        "text": "Remediate from Azure Portal 1. Go to Microsoft Entra ID. 2. Under Monitoring, click Diagnostic settings. 3. Click + Add diagnostic setting. 4. Provide a Diagnostic setting name. 5. Under Logs > Categories, check the box next to MicrosoftGraphActivityLogs. 6. Configure an appropriate destination for the logs. 7. Click Save.",
-        "code": {
-            "powerShell": null,
-            "iac": null,
-            "terraform": null,
-            "other": null
-        }
-    },
-    "recommendation": null,
-    "references": [
-        "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-configure-diagnostic-settings",
-        "https://learn.microsoft.com/en-us/graph/microsoft-graph-activity-logs-overview",
-        "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/cost-logs#pricing-model",
-        "https://azure.microsoft.com/en-us/pricing/details/storage/blobs/",
-        "https://azure.microsoft.com/en-us/pricing/details/event-hubs/"
+  "provider": "Azure",
+  "serviceType": "Diagnostic Settings",
+  "serviceName": "Diagnostic Settings",
+  "displayName": "Ensure that a Microsoft Entra diagnostic setting exists to send Microsoft Graph activity logs to an appropriate destination",
+  "description": "Ensure that a Microsoft Entra diagnostic setting is configured to send Microsoft Graph activity logs to a suitable destination, such as a Log Analytics workspace, storage account, or event hub. This enables centralized monitoring and analysis of all HTTP requests that the Microsoft Graph service receives and processes for a tenant.",
+  "rationale": "Microsoft Graph activity logs provide visibility into HTTP requests made to the Microsoft Graph service, helping detect unauthorized access, suspicious activity, and security threats. Configuring diagnostic settings in Microsoft Entra ensures these logs are collected and sent to an appropriate destination for monitoring, analysis, and retention.",
+  "impact": "A Microsoft Entra ID P1 or P2 tenant license is required to access the Microsoft Graph activity logs.\u003Cbr/\u003E\u003Cbr/\u003EThe amount of data logged and, thus, the cost incurred can vary significantly depending on the tenant size and the applications in your tenant that interact with the Microsoft Graph APIs.\u003Cbr/\u003E\u003Cbr/\u003ESee the following pricing calculations for respective services:\n\u2022 Log Analytics: https://learn.microsoft.com/en-us/azure/azure-monitor/logs/cost- logs#pricing-model.\n\u2022 Azure Storage: https://azure.microsoft.com/en-us/pricing/details/storage/blobs/.\n\u2022 Event Hubs: https://azure.microsoft.com/en-us/pricing/details/event-hubs/.",
+  "remediation": {
+    "text": "Remediate from Azure Portal 1. Go to Microsoft Entra ID. 2. Under Monitoring, click Diagnostic settings. 3. Click \u002B Add diagnostic setting. 4. Provide a Diagnostic setting name. 5. Under Logs \u003E Categories, check the box next to MicrosoftGraphActivityLogs. 6. Configure an appropriate destination for the logs. 7. Click Save.",
+    "code": {
+      "powerShell": null,
+      "iac": null,
+      "terraform": null,
+      "other": null
+    }
+  },
+  "recommendation": null,
+  "references": [
+    "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-configure-diagnostic-settings",
+    "https://learn.microsoft.com/en-us/graph/microsoft-graph-activity-logs-overview",
+    "https://learn.microsoft.com/en-us/azure/azure-monitor/logs/cost-logs#pricing-model",
+    "https://azure.microsoft.com/en-us/pricing/details/storage/blobs/",
+    "https://azure.microsoft.com/en-us/pricing/details/event-hubs/"
+  ],
+  "compliance": [
+    {
+      "name": "CIS Microsoft Azure Foundations",
+      "version": "5.0.0",
+      "reference": "6.1.1.8",
+      "profile": [
+        "Level 2"
+      ]
+    }
+  ],
+  "level": "",
+  "tags": [],
+  "rule": {
+    "path": "",
+    "subPath": null,
+    "selectCondition": {},
+    "query": [
+      {
+        "filter": [
+          {
+            "conditions": []
+          }
+        ]
+      }
     ],
-    "compliance": [
-        {
-            "name": "CIS Microsoft Azure Foundations",
-            "version": "5.0.0",
-            "reference": "6.1.1.8",
-            "profile": [
-                "Level 2"
-            ]
-        }
-    ],
-    "level": "",
-    "tags": [],
-    "rule": {
-        "path": "",
-        "subPath": null,
-        "selectCondition": {},
-        "query": [
-            {
-                "filter": [
-                    {
-                        "conditions": []
-                    }
-                ]
-            }
-        ],
-        "shouldExist": null,
-        "returnObject": null,
-        "removeIfNotExists": null
-    },
-    "output": {
-        "html": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "table": "default",
-            "decorate": [],
-            "emphasis": [],
-            "actions": {
-                "objectData": {
-                    "properties": [],
-                    "expandObject": null,
-                    "limit": null
-                },
-                "showGoToButton": "True",
-                "showModalButton": "True",
-                "directLink": null
-            }
+    "shouldExist": null,
+    "returnObject": null,
+    "removeIfNotExists": null
+  },
+  "output": {
+    "html": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "table": "default",
+      "decorate": [],
+      "emphasis": [],
+      "actions": {
+        "objectData": {
+          "properties": [],
+          "expandObject": null,
+          "limit": null
         },
-        "text": {
-            "data": {
-                "properties": {},
-                "expandObject": null
-            },
-            "status": {
-                "keyName": [],
-                "message": "",
-                "defaultMessage": null
-            },
-            "properties": {
-                "resourceName": null,
-                "resourceId": null,
-                "resourceType": null
-            },
-            "onlyStatus": false
-        }
+        "showGoToButton": "True",
+        "showModalButton": "True",
+        "directLink": null
+      }
     },
-    "idSuffix": "azure_microsoft_graph_activity_log_missing_diag_setting",
-    "notes": [
-        
-    ],
-    "categories": [
-        
-    ],
-    "immutable_properties": [
-        
-    ],
-    "id": "azure_diagnostic_setting_008"
+    "text": {
+      "data": {
+        "properties": {},
+        "expandObject": null
+      },
+      "status": {
+        "keyName": [],
+        "message": "",
+        "defaultMessage": null
+      },
+      "properties": {
+        "resourceName": null,
+        "resourceId": null,
+        "resourceType": null
+      },
+      "onlyStatus": false
+    }
+  },
+  "idSuffix": "azure_microsoft_graph_activity_log_missing_diag_setting",
+  "notes": [],
+  "categories": [],
+  "immutableProperties": [],
+  "id": "azure_diagnostic_setting_008"
 }
