@@ -86,31 +86,11 @@ Function Get-MonkeyMSGraphConditionalAccessPolicy{
                 Debug = $O365Object.debug;
             }
             $caps_ = Get-MonkeyMSGraphObject @params
-            #Check if detailed cap
-            if($PSBoundParameters.ContainsKey('detailed') -and $PSBoundParameters.detailed){
-                $cap_ = New-Object System.Collections.Generic.List[System.Object]
-                foreach($cap in $caps_){
-                    $objectType = ('identity/conditionalAccess/policies/{0}' -f $cap.id)
-                    $params = @{
-                        Authentication = $graphAuth;
-                        ObjectType = $objectType;
-                        Environment = $Environment;
-                        ContentType = 'application/json';
-                        Method = "GET";
-                        APIVersion = $APIVersion;
-                        InformationAction = $O365Object.InformationAction;
-                        Verbose = $O365Object.verbose;
-                        Debug = $O365Object.debug;
-                    }
-                    $cap = Get-MonkeyMSGraphObject @params
-                    if($cap){
-                        #Add to array
-                        [void]$cap_.Add($cap);
-                    }
-                    Start-Sleep -Milliseconds 1000
-                }
-                $caps_ = $cap_
-            }
+            # The collection endpoint already returns the ConditionalAccessPolicy resources
+            # consumed by Monkey365 (conditions, grantControls and sessionControls included).
+            # Keep -Detailed for backward compatibility, but do not fan out into one GET per
+            # policy. Conditional Access is tightly throttled and batching those point GETs
+            # reduces envelopes rather than reducing Graph work.
         }
         if($null -ne $caps_){
             return $caps_
