@@ -39,26 +39,19 @@ Function Get-MonkeyMSGraphConditionalAccessPolicy{
     [cmdletbinding()]
     Param (
         [Parameter(Mandatory=$false, HelpMessage="Conditional Access Id")]
-        [String]$id,
-
-        [Parameter(Mandatory=$false, HelpMessage="Get detailed conditional access policies")]
-        [Switch]$detailed,
+        [String]$Id,
 
         [parameter(Mandatory=$false, HelpMessage="API version")]
         [ValidateSet("v1.0","beta")]
         [String]$APIVersion = "v1.0"
     )
     try{
-        $caps_ = $null
-        #Import Localized data
-        $LocalizedDataParams = $O365Object.LocalizedDataParams
-        Import-LocalizedData @LocalizedDataParams;
         $Environment = $O365Object.Environment
         #Get Graph Auth
         $graphAuth = $O365Object.auth_tokens.MSGraph
-        if($PSBoundParameters.ContainsKey('id') -and $PSBoundParameters.id){
+        If($PSBoundParameters.ContainsKey('id') -and $PSBoundParameters.id){
             $objectType = ('identity/conditionalAccess/policies/{0}' -f $id)
-            $params = @{
+            $p = @{
                 Authentication = $graphAuth;
                 ObjectType = $objectType;
                 Environment = $Environment;
@@ -69,12 +62,12 @@ Function Get-MonkeyMSGraphConditionalAccessPolicy{
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $caps_ = Get-MonkeyMSGraphObject @params
+            Get-MonkeyMSGraphObject @p
         }
-        else{
+        Else{
             #Get all conditional access policies
             $objectType = 'identity/conditionalAccess/policies'
-            $params = @{
+            $p = @{
                 Authentication = $graphAuth;
                 ObjectType = $objectType;
                 Environment = $Environment;
@@ -85,27 +78,7 @@ Function Get-MonkeyMSGraphConditionalAccessPolicy{
                 Verbose = $O365Object.verbose;
                 Debug = $O365Object.debug;
             }
-            $caps_ = Get-MonkeyMSGraphObject @params
-            # The collection endpoint already returns the ConditionalAccessPolicy resources
-            # consumed by Monkey365 (conditions, grantControls and sessionControls included).
-            # Keep -Detailed for backward compatibility, but do not fan out into one GET per
-            # policy. Conditional Access is tightly throttled and batching those point GETs
-            # reduces envelopes rather than reducing Graph work.
-        }
-        if($null -ne $caps_){
-            return $caps_
-        }
-        else{
-            $msg = @{
-                MessageData = $message.ConditionalAccessEmptyMessage;
-                callStack = (Get-PSCallStack | Select-Object -First 1);
-                logLevel = 'verbose';
-                InformationAction = $O365Object.InformationAction;
-                Verbose = $O365Object.verbose;
-                Debug = $O365Object.debug;
-                Tags = @('CAPEmptyMessage');
-            }
-            Write-Verbose @msg
+            Get-MonkeyMSGraphObject @p
         }
     }
     catch{
@@ -124,4 +97,3 @@ Function Get-MonkeyMSGraphConditionalAccessPolicy{
         Write-Verbose @msg
     }
 }
-
