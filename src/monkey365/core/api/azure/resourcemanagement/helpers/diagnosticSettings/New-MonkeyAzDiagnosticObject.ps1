@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Function New-MonkeyDiagnosticSettingObject {
+Function New-MonkeyAzDiagnosticObject {
 <#
         .SYNOPSIS
 		Create a new diagnostic setting object
@@ -29,7 +29,7 @@ Function New-MonkeyDiagnosticSettingObject {
         .NOTES
 	        Author		: Juan Garrido
             Twitter		: @tr1ana
-            File Name	: New-MonkeyDiagnosticSettingObject
+            File Name	: New-MonkeyAzDiagnosticObject
             Version     : 1.0
 
         .LINK
