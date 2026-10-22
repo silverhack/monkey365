@@ -73,6 +73,10 @@ Function Get-MonkeyAzDiagnosticSettingForResource {
         }
         catch{
             Write-Verbose $_
+            #Do not drop the resource if the lookup fails
+            If($AddToObject.IsPresent){
+                return $InputObject
+            }
         }
     }
 }
