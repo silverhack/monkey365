@@ -156,71 +156,7 @@ Function Get-MonkeyAzResource{
                             $rsrc | Add-Member -Type NoteProperty -name supportsDiagnosticSettings -value $false -Force
                         }
                         #Add to list
-                        #[void]$all_resources.Add($rsrc);
-                    }
-                }
-                If($PSBoundParameters.ContainsKey('AddDiagnosticSetting') -and $PSBoundParameters['AddDiagnosticSetting'].isPresent){
-                    Try{
-                        #Get resources that not support diagnostic settings
-                        $nonSupportedResources = $tmp_resources.Where({$_.supportsDiagnosticSettings -eq $false})
-                        ForEach($resource in $nonSupportedResources.GetEnumerator()){
-                            $resource | Add-Member -MemberType NoteProperty -Name diagnosticSettings -Value $null -Force
-                            #Add to list
-                            [void]$all_resources.Add($resource);
-                        }
-                        #Get diagnostic settings
-                        $supportedResources = $tmp_resources.Where({$_.supportsDiagnosticSettings -eq $true})
-                        #Get pool
-                        $scans = Initialize-MonkeyScan -Provider Azure -Throttle $O365Object.threads
-                        $myscan = $scans | Select-Object -First 1
-                        If($null -ne $myscan){
-                            #Get all libs
-                            $libs = $myscan.libCommands | Select-Object -Unique
-                            $nestedParam = @{
-                                ImportVariables = $myscan.vars;
-                                ImportModules = $myscan.modules;
-                                ImportCommands = $libs;
-                                ApartmentState = $myscan.apartmentState;
-                                Throttle = $myscan.threads;
-                                StartUpScripts = $myscan.startUpScripts;
-                                ThrowOnRunspaceOpenError = $true;
-                                Verbose = $O365Object.verbose;
-                                Debug = $O365Object.debug;
-                                InformationAction = $O365Object.InformationAction;
-                            }
-                            #Set a second runspace for nested executions
-                            $nestedRunspace = New-RunspacePool @nestedParam
-                            If($null -ne $nestedRunspace -and $nestedRunspace -is [System.Management.Automation.Runspaces.RunspacePool]){
-                                #Open runspace
-                                $nestedRunspace.Open();
-                                #Get diagnostic settings
-                                $new_arg = @{
-				                    APIVersion = $diag_settings_api_Version;
-			                    }
-                                $jobParam = @{
-	                                ScriptBlock = {Get-MonkeyAzDiagnosticSettingForResource -InputObject $_ -AddToObject};
-                                    Arguments = $new_arg;
-	                                Runspacepool = $nestedRunspace;
-	                                ReuseRunspacePool = $true;
-	                                Debug = $O365Object.VerboseOptions.Debug;
-	                                Verbose = $O365Object.VerboseOptions.Verbose;
-	                                MaxQueue = $O365Object.nestedRunspaces.MaxQueue;
-	                                BatchSleep = $O365Object.nestedRunspaces.BatchSleep;
-	                                BatchSize = $O365Object.nestedRunspaces.BatchSize;
-                                }
-		                        $supportedResources = $supportedResources | Invoke-MonkeyJob @jobParam
-                                #Add to list
-                                ForEach($resource in @($supportedResources).Where({$null -ne $_})){
-                                    #Add to list
-                                    [void]$all_resources.Add($resource);
-                                }
-                                #dispose runspace
-                                $nestedRunspace.Dispose()
-                            }
-                        }
-                    }
-                    Catch{
-                        Write-Error $_
+                        [void]$all_resources.Add($rsrc);
                     }
                 }
             }

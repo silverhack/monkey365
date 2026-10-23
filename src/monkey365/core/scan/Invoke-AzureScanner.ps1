@@ -94,7 +94,7 @@ Function Invoke-AzureScanner{
                     }
                     $O365Object.ResourceGroups = Get-MonkeyAzResourceGroup -ResourceGroupNames $rg_names
                     #Get all resources within subscription
-                    $O365Object.all_resources = Get-MonkeyAzResource -ResourceGroupNames $rg_names -DiagnosticSettingsSupport -AddDiagnosticSetting
+                    $O365Object.all_resources = Get-MonkeyAzResource -ResourceGroupNames $rg_names -DiagnosticSettingsSupport
                     #Check if should skip resources from being scanned
                     Skip-MonkeyAzResource
                     #Set synchronized hashtable
