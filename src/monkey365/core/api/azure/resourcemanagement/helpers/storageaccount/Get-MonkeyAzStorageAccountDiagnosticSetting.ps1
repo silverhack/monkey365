@@ -53,7 +53,7 @@ Function Get-MonkeyAzStorageAccountDiagnosticSetting {
                     'root'{
                         $diag = $objectId | Get-MonkeyAzDiagnosticSettingsById
                         If($null -ne $diag){
-                            $diag | New-MonkeyDiagnosticSettingObject
+                            $diag | New-MonkeyAzDiagnosticObject
                         }
                     }
                     'blob'{
@@ -61,7 +61,7 @@ Function Get-MonkeyAzStorageAccountDiagnosticSetting {
                         #Get diagnostic settings
                         $diag = $blobEndpoint | Get-MonkeyAzDiagnosticSettingsById
                         If($null -ne $diag){
-                            $diag | New-MonkeyDiagnosticSettingObject
+                            $diag | New-MonkeyAzDiagnosticObject
                         }
                     }
                     'queue'{
@@ -69,7 +69,7 @@ Function Get-MonkeyAzStorageAccountDiagnosticSetting {
                         #Get diagnostic settings
                         $diag = $queueEndpoint | Get-MonkeyAzDiagnosticSettingsById
                         If($null -ne $diag){
-                            $diag | New-MonkeyDiagnosticSettingObject
+                            $diag | New-MonkeyAzDiagnosticObject
                         }
                     }
                     'table'{
@@ -77,7 +77,7 @@ Function Get-MonkeyAzStorageAccountDiagnosticSetting {
                         #Get diagnostic settings
                         $diag = $tableEndpoint | Get-MonkeyAzDiagnosticSettingsById
                         If($null -ne $diag){
-                            $diag | New-MonkeyDiagnosticSettingObject
+                            $diag | New-MonkeyAzDiagnosticObject
                         }
                     }
                     'file'{
@@ -85,7 +85,7 @@ Function Get-MonkeyAzStorageAccountDiagnosticSetting {
                         #Get diagnostic settings
                         $diag = $fileEndpoint | Get-MonkeyAzDiagnosticSettingsById
                         If($null -ne $diag){
-                            $diag | New-MonkeyDiagnosticSettingObject
+                            $diag | New-MonkeyAzDiagnosticObject
                         }
                     }
                 }

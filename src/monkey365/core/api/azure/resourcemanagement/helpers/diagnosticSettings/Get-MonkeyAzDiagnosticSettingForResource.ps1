@@ -60,19 +60,25 @@ Function Get-MonkeyAzDiagnosticSettingForResource {
                     InformationAction = $O365Object.InformationAction;
 		        }
 		        $_diag = Get-MonkeyAzObjectById @p
-                #Format object
-                $_diag = New-MonkeyDiagnosticSettingObject -InputObject $_diag
-                If($AddToObject.IsPresent){
-                    $InputObject | Add-Member -MemberType NoteProperty -Name diagnosticSettings -Value $_diag -Force
-                    return $InputObject
-                }
-                Else{
-                    return $_diag
+                If($null -ne $_diag){
+                    #Format object
+                    $_diag = New-MonkeyDiagnosticSettingObject -InputObject $_diag
+                    If($AddToObject.IsPresent){
+                        $InputObject | Add-Member -MemberType NoteProperty -Name diagnosticSettings -Value $_diag -Force
+                        return $InputObject
+                    }
+                    Else{
+                        return $_diag
+                    }
                 }
             }
         }
         catch{
             Write-Verbose $_
+            #Do not drop the resource if the lookup fails
+            If($AddToObject.IsPresent){
+                return $InputObject
+            }
         }
     }
 }
